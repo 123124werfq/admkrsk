@@ -29,6 +29,13 @@ class BookController extends \yii\web\Controller
         ];
     }
 
+    public function beforeAction($action)
+    {
+        $this->enableCsrfValidation = false;
+
+        return parent::beforeAction($action);
+    }
+
     public function actionIndex()
     {
         //if(Yii::$app->user->isGuest)
