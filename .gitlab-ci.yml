@@ -1,0 +1,67 @@
+image: $CI_REGISTRY/admkrsk/php-fpm
+
+cache:
+  paths:
+    - vendor/
+
+stages:
+  - test
+  - build
+  - deploy_staging
+
+test:
+  stage: test
+  services:
+    - name: $CI_REGISTRY/admkrsk/postgres
+      alias: postgres
+    - name: $CI_REGISTRY/admkrsk/redis
+      alias: redis
+  variables:
+    POSTGRES_USER: admkrsk
+    POSTGRES_DB: admkrsk
+    POSTGRES_TEST_DB: admkrskr_test
+    POSTGRES_PASSWORD: admkrsk_secret
+  script:
+    - cp .env-test-dist .env
+    - composer install
+    - php init --env=Development --overwrite=All
+    - php yii_test env
+    - php yii_test migrate --interactive=0
+    - vendor/bin/codecept build
+    - vendor/bin/codecept run
+
+build:
+  stage: build
+  image: docker
+  only:
+    refs:
+      - master
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -f docker/php-fpm/Dockerfile.production -t $CI_REGISTRY/admkrsk/php-fpm:release-$CI_COMMIT_SHA .
+    - docker push $CI_REGISTRY/admkrsk/php-fpm:release-$CI_COMMIT_SHA
+    - docker build -f docker/nginx/Dockerfile.production -t $CI_REGISTRY/admkrsk/nginx:release-$CI_COMMIT_SHA .
+    - docker push $CI_REGISTRY/admkrsk/nginx:release-$CI_COMMIT_SHA
+
+deploy_staging:
+  stage: deploy_staging
+  image: docker
+  only:
+    refs:
+      - master
+  when: manual
+  variables:
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_HOST: tcp://$SWARM_HOST:2376/
+    DOCKER_CERT_PATH: "/certs"
+  script:
+    - mkdir -p $DOCKER_CERT_PATH
+    - echo "$TLSCACERT" > $DOCKER_CERT_PATH/ca.pem
+    - echo "$TLSCERT" > $DOCKER_CERT_PATH/cert.pem
+    - echo "$TLSKEY" > $DOCKER_CERT_PATH/key.pem
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker stack deploy -c docker/docker-compose.staging.yml admkrsk --with-registry-auth
+    - rm -rf $DOCKER_CERT_PATH
+  environment:
+    name: ci_cd
+    url: http://$ENVIRONMENT_HOST

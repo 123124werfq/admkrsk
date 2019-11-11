@@ -1,0 +1,44 @@
+version: '3.4'
+
+services:
+
+  nginx:
+    build:
+      context: ./nginx/
+      dockerfile: Dockerfile
+    image: registry.nonoobs.ru/admkrsk/nginx
+
+  php:
+    build:
+      context: ./php-fpm/
+      dockerfile: Dockerfile
+    image: registry.nonoobs.ru/admkrsk/php-fpm
+    env_file: ./../.env
+
+  postgres:
+    build:
+      context: ./postgres/
+      dockerfile: Dockerfile
+    image: registry.nonoobs.ru/admkrsk/postgres
+    env_file: ./../.env
+
+  mongo:
+    build:
+      context: ./mongo/
+      dockerfile: Dockerfile
+    image: registry.nonoobs.ru/admkrsk/mongo
+    env_file: ./../.env
+
+  redis:
+    build:
+      context: ./redis/
+      dockerfile: Dockerfile
+    image: registry.nonoobs.ru/admkrsk/redis
+    env_file: ./../.env
+
+  minio:
+    build:
+      context: ./minio/
+      dockerfile: Dockerfile
+    image: registry.nonoobs.ru/admkrsk/minio
+    env_file: ./../.env

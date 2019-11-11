@@ -1,0 +1,217 @@
+<?php
+
+namespace common\models;
+
+use common\behaviors\UserAccessControlBehavior;
+use common\modules\log\behaviors\LogBehavior;
+use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+
+/**
+ * This is the model class for table "cnt_page".
+ *
+ * @property int $id_page
+ * @property int $id_media
+ * @property string $title
+ * @property string $alias
+ * @property string $content
+ * @property string $seo_title
+ * @property string $seo_description
+ * @property string $seo_keywords
+ * @property int $active
+ * @property int $created_at
+ * @property int $created_by
+ * @property int $updated_at
+ * @property int $updated_by
+ * @property int $deleted_at
+ * @property int $deleted_by
+ * @property string $breadcrumbsLabel
+ * @property string $pageTitle
+ * @property array $access_user_ids
+ */
+class Page extends \yii\db\ActiveRecord
+{
+    public $existUrl;
+    public $access_user_ids;
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function tableName()
+    {
+        return 'cnt_page';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [['id_media', 'active', 'id_parent'], 'default', 'value' => null],
+            [['id_media', 'active', 'id_parent', 'noguest'], 'integer'],
+            ['id_parent', 'filter', 'filter' => function($value) {
+                return (int) $value;
+            }],
+            [['title', 'alias'], 'required'],
+            [['content','path'], 'string'],
+            [['alias'], 'unique'],
+            [['title', 'alias', 'seo_title', 'seo_description', 'seo_keywords'], 'string', 'max' => 255],
+
+            ['access_user_ids', 'each', 'rule' => ['integer']],
+            ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id_page' => '#',
+            'id_media' => 'Id Media',
+            'title' => 'Название',
+            'id_parent' => 'Родительские раздел',
+            'alias' => 'URL',
+            'content' => 'Содержание',
+            'seo_title' => 'Seo Заголовок',
+            'seo_description' => 'Seo Описание',
+            'seo_keywords' => 'Ключевые слова',
+            'noguest' => 'Доступно только авторизованным',
+            'active' => 'Активный',
+            'created_at' => 'Создано',
+            'created_by' => 'Создал',
+            'updated_at' => 'Обновлено',
+            'updated_by' => 'Обновил',
+            'deleted_at' => 'Удалено',
+            'deleted_by' => 'Удалил',
+            'access_user_ids' => 'Доступ',
+        ];
+    }
+
+    public function getUrl($absolute=false)
+    {
+        if (!empty($this->existUrl))
+            return $this->existUrl;
+
+        if ($this->isNewRecord)
+            return '';
+
+        $path = explode('/', $this->path);
+
+        if (!empty($path))
+        {
+            foreach ($path as $key => $slug)
+                $path[$key] = (int)$slug;
+
+            $pages = Page::find()->where(['id_page'=>$path])->select(['alias','id_page'])->indexBy('id_page')->all();
+
+            foreach ($path as $key => $slug)
+            {
+                if (!empty($pages[$slug]))
+                    $path[$key] = $pages[$slug]->alias;
+            }
+
+            $this->existUrl = (($absolute)?Yii::$app->params['frontendUrl']:'').'/'.implode('/', $path);
+
+            return $this->existUrl;
+        }
+        else
+        {
+            if ($this->alias=='/' && $absolute)
+                $this->alias = '';
+
+            return (($absolute)?Yii::$app->params['frontendUrl']:'').'/'.$this->alias;
+        }
+    }
+
+    public function createPath()
+    {
+        $oldpath = $this->path;
+
+        if (empty($this->id_parent))
+            $this->path = $this->id_page;
+        else
+            $this->path = $this->parent->path.'/'.$this->id_page;
+
+        $this->updateAttributes(['path']);
+
+        $sql = "UPDATE cnt_page SET path = REPLACE(path,'$oldpath','$this->path') WHERE path LIKE '$oldpath/%'";
+        //Yii::$app->db->createCommand()->update('cnt_page','path = REPLACE(path,$oldpath)');
+        Yii::$app->db->createCommand($sql)->execute();
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        if (isset($changedAttributes['id_parent']) || $insert)
+            $this->createPath();
+
+        /*if (empty($this->path))
+        {
+            $this->path = $this->id_page;
+            $this->updateAttributes(['path']);
+        }*/
+
+        if ($this->access_user_ids) {
+
+        }
+
+        parent::afterSave($insert, $changedAttributes);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'ts' => TimestampBehavior::class,
+            'ba' => BlameableBehavior::class,
+            'log' => LogBehavior::class,
+            'ac' => [
+                'class' => UserAccessControlBehavior::class,
+                'permission' => 'backend.page',
+            ],
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getBreadcrumbsLabel()
+    {
+        return 'Разделы';
+    }
+
+    /**
+     * @return string
+     */
+    public function getPageTitle()
+    {
+        return $this->title;
+    }
+
+    public function getBlocks()
+    {
+        return $this->hasMany(Block::class, ['id_page' => 'id_page'])->orderBy('ord ASC');
+    }
+
+    public function getParent()
+    {
+        return $this->hasOne(Page::class, ['id_page' => 'id_parent']);
+    }
+
+    public function getMenu()
+    {
+        return $this->hasOne(Menu::class, ['id_page' => 'id_page']);
+    }
+
+    public function getChilds()
+    {
+        return $this->hasMany(Page::class, ['id_parent' => 'id_page'])->orderBy('ord ASC');
+    }
+}

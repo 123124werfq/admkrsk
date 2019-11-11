@@ -1,0 +1,7 @@
+FROM registry.nonoobs.ru/admkrsk/php-fpm
+
+COPY ./ /src
+
+RUN php init --env=Production --overwrite=All
+
+RUN touch /src/.env

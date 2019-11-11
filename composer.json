@@ -1,0 +1,64 @@
+{
+    "name": "yiisoft/yii2-app-advanced",
+    "description": "Yii 2 Advanced Project Template",
+    "keywords": ["yii2", "framework", "advanced", "project template"],
+    "homepage": "http://www.yiiframework.com/",
+    "type": "project",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/yiisoft/yii2/issues?state=open",
+        "forum": "http://www.yiiframework.com/forum/",
+        "wiki": "http://www.yiiframework.com/wiki/",
+        "irc": "irc://irc.freenode.net/yii",
+        "source": "https://github.com/yiisoft/yii2"
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.2.0",
+        "ext-json": "*",
+        "ext-simplexml": "*",
+        "ext-curl": "*",
+        "yiisoft/yii2": "~2.0.14",
+        "yiisoft/yii2-bootstrap": "~2.0.0",
+        "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
+        "yiisoft/yii2-mongodb": "~2.1.0",
+        "yiisoft/yii2-redis": "~2.0.0",
+        "vlucas/phpdotenv": "^3.4",
+        "edvlerblog/yii2-adldap-module": "^6.0.0",
+        "heggi/yii2-esia": "*",
+        "fr05t1k/esia" : "^2.0",
+        "creocoder/yii2-flysystem": "^0.9.3",
+        "league/flysystem-aws-s3-v3": "^1.0",
+        "kartik-v/yii2-widget-datetimepicker": "^1.4",
+        "yiisoft/yii2-jui": "^2.0",
+        "moonlandsoft/yii2-phpexcel": "*",
+        "yii2tech/spreadsheet": "^1.0",
+        "yiisoft/yii2-imagine": "^2.2",
+        "kartik-v/yii2-widget-select2": "^2.1",
+        "yiisoft/yii2-queue": "^2.3",
+        "omnilight/yii2-scheduling": "*",
+        "2amigos/yii2-taggable-behavior": "~1.0"
+    },
+    "require-dev": {
+        "yiisoft/yii2-debug": "~2.1.0",
+        "yiisoft/yii2-gii": "~2.1.0",
+        "yiisoft/yii2-faker": "~2.0.0",
+        "codeception/base": "^2.4.0",
+        "phpunit/phpunit": "~6.5.5",
+        "codeception/verify": "~1.0.0",
+        "symfony/browser-kit": ">=2.7 <=4.2.4",
+        "elisdn/yii2-gii-fixture-generator": "^1.1"
+    },
+    "config": {
+        "process-timeout": 1800,
+        "fxp-asset": {
+            "enabled": false
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
+}

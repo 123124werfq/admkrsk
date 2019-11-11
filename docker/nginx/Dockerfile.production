@@ -1,0 +1,12 @@
+FROM registry.nonoobs.ru/admkrsk/php-fpm as build
+
+COPY ./ /src
+
+RUN php init --env=Production --overwrite=All
+
+FROM registry.nonoobs.ru/admkrsk/nginx
+
+COPY ./docker/nginx/conf.d/production.conf /etc/nginx/conf.d/default.conf
+
+COPY --from=build /src/backend/web /src/backend/web
+COPY --from=build /src/frontend/web /src/frontend/web

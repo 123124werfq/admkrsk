@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="70" viewBox="0 0 64 70">
+    <g id="Elements-/-Icons-/-M-/-gosuslugi-/-dorm" transform="translate(16 19)" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" x="0" y="0" width="32" height="32"/>
+        <g id="Group" transform="translate(4.000000, 4.000000)">
+            <path d="M23,1 L1,1 L1,20 C1,21.6568542 2.34314575,23 4,23 L20,23 C21.6568542,23 23,21.6568542 23,20 L23,1 Z" id="Rectangle-2" stroke="#3B4256" stroke-width="2" transform="translate(12.000000, 12.000000) scale(1, -1) translate(-12.000000, -12.000000) "/>
+            <rect id="Rectangle-25" fill="#3B4256" fill-rule="nonzero" x="1" y="17" width="23" height="2"/>
+            <rect id="Rectangle-25" fill="#3B4256" fill-rule="nonzero" x="1" y="9" width="23" height="2"/>
+            <path d="M3,6 L10,6 C11.1045695,6 12,6.8954305 12,8 L3,8 L3,6 Z" id="Rectangle-26" fill="#3B4256" fill-rule="nonzero"/>
+            <path d="M3,14 L10,14 C11.1045695,14 12,14.8954305 12,16 L3,16 L3,14 Z" id="Rectangle-26" fill="#3B4256" fill-rule="nonzero"/>
+        </g>
+    </g>
+</svg>

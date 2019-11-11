@@ -1,0 +1,156 @@
+version: '3.4'
+
+services:
+
+  nginx:
+    image: registry.nonoobs.ru/admkrsk/nginx:release-${CI_COMMIT_SHA}
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "8000:80"
+      - "8001:81"
+    volumes:
+      - backend-assets:/src/backend/web/assets
+      - frontend-assets:/src/frontend/web/assets
+
+  php:
+    image: registry.nonoobs.ru/admkrsk/php-fpm:release-${CI_COMMIT_SHA}
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      POSTGRES_USER: $STAGING_POSTGRES_USER
+      POSTGRES_DB: $STAGING_POSTGRES_DB
+      POSTGRES_LOG_DB: $STAGING_POSTGRES_LOG_DB
+      POSTGRES_TEST_DB: $STAGING_POSTGRES_TEST_DB
+      POSTGRES_PASSWORD: $STAGING_POSTGRES_PASSWORD
+      POSTGRES_HOST: $STAGING_POSTGRES_HOST
+      POSTGRES_PORT: $STAGING_POSTGRES_PORT
+      MONGO_USER: $STAGING_MONGO_USER
+      MONGO_DB: $STAGING_MONGO_DB
+      MONGO_PASSWORD: $STAGING_MONGO_PASSWORD
+      MONGO_HOST: $STAGING_MONGO_HOST
+      MONGO_PORT: $STAGING_MONGO_PORT
+      REDIS_HOST: $STAGING_REDIS_HOST
+      REDIS_PORT: $STAGING_REDIS_PORT
+      REDIS_DB: $STAGING_REDIS_DB
+      MINIO_ACCESS_KEY: $STAGING_MINIO_ACCESS_KEY
+      MINIO_SECRET_KEY: $STAGING_MINIO_SECRET_KEY
+      MINIO_BUCKET_PUBLIC: $STAGING_MINIO_BUCKET_PUBLIC
+      MINIO_BUCKET_PRIVATE: $STAGING_MINIO_BUCKET_PRIVATE
+      MINIO_ENDPOINT: $STAGING_MINIO_ENDPOINT
+      YII_DEBUG: $STAGING_YII_DEBUG
+      YII_ENV: $STAGING_YII_ENV
+    volumes:
+      - backend-assets:/src/backend/web/assets
+      - frontend-assets:/src/frontend/web/assets
+
+  postgres:
+    image: registry.nonoobs.ru/admkrsk/postgres
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+    environment:
+      POSTGRES_USER: $STAGING_POSTGRES_USER
+      POSTGRES_DB: $STAGING_POSTGRES_DB
+      POSTGRES_LOG_DB: $STAGING_POSTGRES_LOG_DB
+      POSTGRES_TEST_DB: $STAGING_POSTGRES_TEST_DB
+      POSTGRES_PASSWORD: $STAGING_POSTGRES_PASSWORD
+      POSTGRES_HOST: $STAGING_POSTGRES_HOST
+      POSTGRES_PORT: $STAGING_POSTGRES_PORT
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  mongo:
+    image: registry.nonoobs.ru/admkrsk/mongo
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: $STAGING_MONGO_INITDB_ROOT_USERNAME
+      MONGO_INITDB_ROOT_PASSWORD: $STAGING_MONGO_INITDB_ROOT_PASSWORD
+      MONGO_USER: $STAGING_MONGO_USER
+      MONGO_DB: $STAGING_MONGO_DB
+      MONGO_PASSWORD: $STAGING_MONGO_PASSWORD
+      MONGO_HOST: $STAGING_MONGO_HOST
+      MONGO_PORT: $STAGING_MONGO_PORT
+    volumes:
+      - mongodata:/data/db
+
+  redis:
+    image: registry.nonoobs.ru/admkrsk/redis
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - redisdata:/data
+
+  minio:
+    image: registry.nonoobs.ru/admkrsk/minio
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+    environment:
+      MINIO_ACCESS_KEY: $STAGING_MINIO_ACCESS_KEY
+      MINIO_SECRET_KEY: $STAGING_MINIO_SECRET_KEY
+      MINIO_BROWSER: $STAGING_MINIO_BROWSER
+    ports:
+      - "9000:9000"
+    volumes:
+      - miniodata:/data
+    command: server /data
+
+  migrate:
+    image: registry.nonoobs.ru/admkrsk/php-fpm:release-${CI_COMMIT_SHA}
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: none
+    environment:
+      POSTGRES_USER: $STAGING_POSTGRES_USER
+      POSTGRES_DB: $STAGING_POSTGRES_DB
+      POSTGRES_LOG_DB: $STAGING_POSTGRES_LOG_DB
+      POSTGRES_TEST_DB: $STAGING_POSTGRES_TEST_DB
+      POSTGRES_PASSWORD: $STAGING_POSTGRES_PASSWORD
+      POSTGRES_HOST: $STAGING_POSTGRES_HOST
+      POSTGRES_PORT: $STAGING_POSTGRES_PORT
+      MONGO_USER: $STAGING_MONGO_USER
+      MONGO_DB: $STAGING_MONGO_DB
+      MONGO_PASSWORD: $STAGING_MONGO_PASSWORD
+      MONGO_HOST: $STAGING_MONGO_HOST
+      MONGO_PORT: $STAGING_MONGO_PORT
+      REDIS_HOST: $STAGING_REDIS_HOST
+      REDIS_PORT: $STAGING_REDIS_PORT
+      REDIS_DB: $STAGING_REDIS_DB
+      YII_DEBUG: $STAGING_YII_DEBUG
+      YII_ENV: $STAGING_YII_ENV
+    volumes:
+      - backend-assets:/src/backend/web/assets
+      - frontend-assets:/src/frontend/web/assets
+    command: ["php", "yii", "deploy", "--interactive=0"]
+
+volumes:
+  backend-assets:
+    driver: local
+  frontend-assets:
+    driver: local
+  pgdata:
+    driver: local
+  mongodata:
+    driver: local
+  redisdata:
+    driver: local
+  miniodata:
+    driver: local
+
+networks:
+  default:
+    external:
+      name: admkrsk

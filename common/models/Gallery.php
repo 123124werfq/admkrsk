@@ -1,0 +1,95 @@
+<?php
+
+namespace common\models;
+
+use common\behaviors\UserAccessControlBehavior;
+use Yii;
+
+/**
+ * This is the model class for table "db_gallery".
+ *
+ * @property int $id_gallery
+ * @property int $id_page
+ * @property string $name
+ * @property int $created_at
+ * @property int $created_by
+ * @property int $updated_at
+ * @property int $updated_by
+ * @property int $deleted_at
+ * @property int $deleted_by
+ * @property array $access_user_ids
+ */
+class Gallery extends \yii\db\ActiveRecord
+{
+    public $access_user_ids;
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function tableName()
+    {
+        return 'db_gallery';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [['id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
+            [['id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['name'], 'required'],
+            [['name'], 'string', 'max' => 255],
+
+            ['access_user_ids', 'each', 'rule' => ['integer']],
+            ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            'ac' => [
+                'class' => UserAccessControlBehavior::class,
+                'permission' => 'backend.gallery',
+            ],
+            'multiupload' => [
+                'class' => \common\components\multifile\MultiUploadBehavior::class,
+                'relations'=>
+                [
+                    'medias'=>[
+                        'model'=>'Media',
+                        'jtable'=>'dbl_gallery_media',
+                        //'fk_cover' => 'id_media',
+                    ],
+                ],
+                //'cover'=>'media'
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id_gallery' => 'ID',
+            'id_page' => 'Раздел',
+            'name' => 'Название',
+            'created_at' => 'Добавлено',
+            'created_by' => 'Автор',
+            'updated_at' => 'Updated At',
+            'updated_by' => 'Updated By',
+            'deleted_at' => 'Deleted At',
+            'deleted_by' => 'Deleted By',
+            'access_user_ids' => 'Доступ',
+        ];
+    }
+
+    public function getMedias()
+    {
+        return $this->hasMany(Media::class, ['id_media' => 'id_media'])->viaTable('dbl_gallery_media', ['id_gallery' => 'id_gallery']);
+    }
+}

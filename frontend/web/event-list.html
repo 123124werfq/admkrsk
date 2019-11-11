@@ -1,0 +1,839 @@
+<!doctype html>
+<html class="no-js" lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Текстовая страница</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta content="telephone=no" name="format-detection">
+    <!-- This make sence for mobile browsers. It means, that content has been optimized for mobile browsers -->
+    <meta name="HandheldFriendly" content="true">
+    <link href="css/style.css" rel="stylesheet" type="text/css" title="main">
+    <link href="css/accessability.css" rel="stylesheet" type="text/css" disabled title="accessability">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="favicon-152x152.png" sizes="152x152">
+    <link rel="icon" href="favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="icon" href="favicon.ico">
+    <meta name="theme-color" content="#3b4256">
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <script>
+        (function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement)
+    </script>
+    <!--[if lt IE 9 ]><script src="js/html5shiv-3.7.2.min.js" type="text/javascript"></script><meta content="no" http-equiv="imagetoolbar"><![endif]-->
+</head>
+
+<body>
+    <!-- панель слабовидящих -->
+    <div class="faceTuneBlock">
+        <div class="blockWrapper">
+            <div class="linkBlock">
+                <div class="blockWrapper">
+                    <a href="?accessability=off" class="link link-accessability">Обычная версия сайта</a>
+                </div>
+            </div>
+            <div class="settingsBlock" data-type="common">
+                <div class="blockWrapper">
+                    <div class="groupBlock" data-type="font">
+                        <strong class="blockTitle">Шрифт:</strong>
+                        <div class="variantListBlock">
+                            <ul class="variantList">
+                                <li class="item item-active"><a href="?accessability=on&amp;size=2" data-key="acc-font" data-value="sans-serif">без засечек</a></li>
+                                <li class="item"><a href="?accessability=on&amp;font=sans" data-key="acc-font" data-value="serif">с засечками</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="groupBlock" data-type="spacing">
+                        <strong class="blockTitle">Интервал:</strong>
+                        <div class="variantListBlock">
+                            <ul class="variantList">
+                                <li class="item item-active"><a href="?accessability=on&amp;spacing=1" data-key="acc-spacing" data-value="1">Обычный</a></li>
+                                <li class="item"><a href="?accessability=on&amp;spacing=2" data-key="acc-spacing" data-value="2">Средний</a></li>
+                                <li class="item"><a href="?accessability=on&amp;spacing=3" data-key="acc-spacing" data-value="3">Большой</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="settingsBlock" data-type="detailed">
+                <div class="blockWrapper">
+                    <div class="groupBlock" data-type="size">
+                        <strong class="blockTitle">Размер шрифта:</strong>
+                        <div class="variantListBlock">
+                            <ul class="variantList">
+                                <li class="item item-active"><a href="?accessability=on&amp;size=1" data-key="acc-size" data-value="1" title="Обычный">1</a></li>
+                                <li class="item"><a href="?accessability=on&amp;size=2" data-key="acc-size" data-value="2" title="Больше">2</a></li>
+                                <li class="item"><a href="?accessability=on&amp;size=3" data-key="acc-size" data-value="3" title="Ещё больше">3</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="groupBlock" data-type="color">
+                        <strong class="blockTitle">Цвет:</strong>
+                        <div class="variantListBlock">
+                            <ul class="variantList">
+                                <li class="item"><a href="?accessability=on&amp;color=1" data-key="acc-color" data-value="1">A</a></li>
+                                <li class="item"><a href="?accessability=on&amp;color=2" data-key="acc-color" data-value="2">A</a></li>
+                                <li class="item"><a href="?accessability=on&amp;color=3" data-key="acc-color" data-value="3">A</a></li>
+                                <li class="item item-active"><a href="?accessability=on&amp;color=4" data-key="acc-color" data-value="4">A</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="groupBlock" data-type="image">
+                        <strong class="blockTitle">Изображения:</strong>
+                        <div class="variantListBlock">
+                            <ul class="variantList">
+                                <li class="item item-active"><a href="?accessability=on&amp;color=1" data-key="acc-imagetype" data-value="0" title="Цветные">Цветные</a></li>
+                                <li class="item"><a href="?accessability=on&amp;color=2" data-key="acc-imagetype" data-value="1" title="Монохромные">Монохромные</a></li>
+                                <li class="item"><a href="?accessability=on&amp;color=2" data-key="acc-imagetype" data-value="-1" title="Без изображений">Нет</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /панель слабовидящих -->
+
+    <div class="page-shade"></div>
+    <section class="gosbar">
+        <div class="container">
+            <div class="gosbar__wrapper">
+                <a href="#" class="gosbar_btn popup-block-link">
+                    <span class="gosbar-icon">
+                        <svg class="gocbar-svgicon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="#list_icon_svg"/><defs><path id="list_icon_svg" fill-rule="evenodd" d="M0 4h4V0H0v4zm6 12h4v-4H6v4zm-2 0H0v-4h4v4zm-4-6h4V6H0v4zm10 0H6V6h4v4zm2-10v4h4V0h-4zm-2 4H6V0h4v4zm2 6h4V6h-4v4zm4 6h-4v-4h4v4z"/></defs></svg>
+                    </span>
+                    <span class="gosbar_btn-text">Другие сайты государства</span>
+                </a>
+
+                <div class="gosbar__right-block">
+                    <a href="#" class="gosbar_btn">
+                        <span class="material-icons gosbar-icon">search</span>
+                        <span class="gosbar_btn-text">Поиск по сайту</span>
+                    </a>
+                    <a href="#" class="gosbar_btn"><span class="material-icons gosbar-icon">g_translate</span><span class="gosbar_btn-text">English</span></a>
+                    <a href="#" class="gosbar_btn link-accessability">
+                        <span class="material-icons gosbar-icon">visibility</span>
+                        <span class="gosbar_btn-text">Версия для слабовидящих</span>
+                    </a>
+
+                    <div class="dropdown dropdown-flex">
+                        <span class="gosbar_btn dropdown-toggle">
+                            <span class="material-icons gosbar-icon">account_circle</span>
+                            <span class="gosbar_btn-text">Личный кабинет</span>
+                            <span class="material-icons gosbar-icon gosbar-icon__right">arrow_drop_down</span>
+                        </span>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-menu_item" href="#">Мои обращения</a>
+                            <a class="dropdown-menu_item" href="#">Написать обращение</a>
+                            <a class="dropdown-menu_item" href="#">Выйти</a>
+                        </div>
+                    </div>
+                    <!-- Если есть уведомления добавить класс gosbar-icon__active -->
+                    <a href="#" class="gosbar_btn"><span class="material-icons gosbar-icon gosbar-icon__active">notifications</span>745</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <header class="header">
+        <div class="container">
+            <div class="header-wrapper">
+                <a href="/" class="header_logo">
+                    <img class="header_logo-img" src="img/logo.svg" alt="Администрация города Красноярск">
+                    <span class="header_logo-title-holder">
+                        <span class="header_logo-title">Красноярск</span>
+                        <span class="header_logo-subtitle">Администрация города</span>
+                    </span>
+                </a>
+                <h1 class="accessability-title">Администрация города Красноярск</h1>
+                <div class="header_menu">
+                    <ul class="header-menu_list">
+                        <!-- активному пункту добавлять класс active -->
+                        <li class="header-menu_item">
+                            <a href="#" class="header-menu_link">Виртуальная приемная</a>
+                            <ul class="header-submenu">
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Общая информация</a></li>
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Устав</a></li>
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Символика</a></li>
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Экономика</a></li>
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Промышленность</a></li>
+                            </ul>
+                        </li>
+                        <li class="header-menu_item active">
+                            <a href="#" class="header-menu_link">Пресс-центр</a>
+                            <ul class="header-submenu">
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Общая информация</a></li>
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Устав</a></li>
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Символика</a></li>
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Экономика</a></li>
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Промышленность</a></li>
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Символика</a></li>
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Экономика</a></li>
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Промышленность</a></li>
+                            </ul>
+                        </li>
+                        <li class="header-menu_item">
+                            <a href="#" class="header-menu_link">Администрация</a>
+                            <ul class="header-submenu">
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Общая информация</a></li>
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Устав</a></li>
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Символика</a></li>
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Экономика</a></li>
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Промышленность</a></li>
+                            </ul>
+                        </li>
+                        <li class="header-menu_item">
+                            <a href="#" class="header-menu_link">Кадровая политика</a>
+                        </li>
+                        <li class="header-menu_item">
+                            <a href="#" class="header-menu_link">О городе</a>
+                            <ul class="header-submenu">
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Общая информация</a></li>
+                                <li class="header-submenu_item"><a href="#" class="header-submenu_link">Устав</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <button class="header-menu_link header-menu_search search-toggle">
+                        <span class="material-icons">search</span>
+                        <span class="header-menu_btn-text">Поиск по сайту</span>
+                    </button>
+                    <button class="header-menu_link sitemap-toggle">
+                        <span class="material-icons"><span class="sitemap-toggle_dots">more_horiz</span><span class="sitemap-toggle_menu">menu</span></span>
+                        <span class="material-icons hidden">clear</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="sitemap">
+            <div class="container">
+                <ul class="sitemap_menu">
+                    <!-- элементам с подменю добавлять класс sitemap_menu-item__submenu -->
+                    <li class="sitemap_menu-item sitemap_menu-item__submenu">
+                        <a href="http://google.com" class="sitemap_header"><span class="sitemap_header-text">Виртуальная приемная</span></a>
+                        <ul class="sitemap_submenu">
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Общая информация</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Устав</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Символика</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Экономика</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Промышленность</a></li>
+                        </ul>
+                    </li>
+                    <li class="sitemap_menu-item sitemap_menu-item__submenu">
+                        <a href="#" class="sitemap_header"><span class="sitemap_header-text">Пресс-центр</span></a>
+                        <ul class="sitemap_submenu">
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Общая информация</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Устав</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Символика</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Экономика</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Промышленность</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Общая информация</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Устав</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Символика</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Экономика</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Промышленность</a></li>
+                        </ul>
+                    </li>
+                    <li class="sitemap_menu-item sitemap_menu-item__submenu">
+                        <a href="#" class="sitemap_header"><span class="sitemap_header-text">Администрация</span></a>
+                        <ul class="sitemap_submenu">
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Общая информация</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Устав</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Символика</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Экономика</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Промышленность</a></li>
+                        </ul>
+                    </li>
+                    <li class="sitemap_menu-item sitemap_menu-item__submenu">
+                        <a href="#" class="sitemap_header"><span class="sitemap_header-text">Кадровая политика</span></a>
+                        <ul class="sitemap_submenu">
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Общая информация</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Устав</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Символика</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Экономика</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Промышленность</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Экономика</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Промышленность</a></li>
+                        </ul>
+                    </li>
+                    <li class="sitemap_menu-item sitemap_menu-item__submenu">
+                        <a href="#" class="sitemap_header"><span class="sitemap_header-text">О городе</span></a>
+                        <ul class="sitemap_submenu">
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Общая информация</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Устав</a></li>
+                        </ul>
+                    </li>
+                    <li class="sitemap_menu-item">
+                        <a href="#" class="sitemap_header"><span class="sitemap_header-text">Деятельность</span></a>
+                    </li>
+                    <li class="sitemap_menu-item sitemap_menu-item__submenu">
+                        <a href="#" class="sitemap_header"><span class="sitemap_header-text">Кадровая политика</span></a>
+                        <ul class="sitemap_submenu">
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Общая информация</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Устав</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Символика</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Экономика</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Промышленность</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Экономика</a></li>
+                            <li class="sitemap_submenu-item"><a href="#" class="sitemap_submenu-link">Промышленность</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="page">
+        <div class="main">
+            <div class="container">
+                <ol class="breadcrumbs">
+                    <li class="breadcrumbs_item"><a href="/">Главная</a></li>
+                    <li class="breadcrumbs_item"><span>Пресс-центр</span></li>
+                </ol>
+                <div class="row">
+                    <div class="col-2-third order-xs-1">
+                        <h1>Список событий</h1>
+
+                        <div class="events-list">
+                            <div class="events-item events-item__wide">
+                                <div class="events_img-holder">
+                                    <img class="events_img img-responsive" src="https://placekitten.com/1200/600" alt="Название мероприятия">
+                                    <div class="events_content">
+                                        <ul class="events_info hidden-xs hidden-accessability">
+                                            <li class="events_info-item events_info-item__place"><a href="#">Событие</a></li>
+                                            <li class="events_info-item">20 декабря 2019 — 31 января 2018</li>
+                                        </ul>
+                                        <h3 class="events_title"><a href="#">Всемирная универсиада 2019</a></h3>
+                                        <p class="events_text">
+                                            Всемирные студенческие спортивные игры, вот уже более 50 лет является вторым по значимости комплексным международным мероприятием на мировой спортивной арене.
+                                        </p>
+                                        <ul class="events_info visible-xs">
+                                            <li class="events_info-item events_info-item__place"><a href="#">Событие</a></li>
+                                            <li class="events_info-item">20 декабря 2019 — 31 января 2018</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="events-item">
+                                <a href="#" class="events_img-holder">
+                                    <img class="events_img img-responsive" src="https://placekitten.com/768/384" alt="Название мероприятия">
+                                </a>
+                                <h4 class="events_title"><a href="#">Новый год! Обращение главы города. Программа.</a></h4>
+                                <ul class="events_info">
+                                    <li class="events_info-item events_info-item__place"><a href="#">Событие</a></li>
+                                    <li class="events_info-item">31 декабря 2017, 8:00</li>
+                                </ul>
+                            </div>
+                            <div class="events-item">
+                                <a href="#" class="events_img-holder">
+                                    <img class="events_img img-responsive" src="https://placekitten.com/768/384" alt="Название мероприятия">
+                                </a>
+                                <h4 class="events_title"><a href="#">Открытый фестиваль-конкурс снежно-ледовых скульптур «Волшебный лёд Сибири»</a></h4>
+                                <ul class="events_info">
+                                    <li class="events_info-item events_info-item__place"><a href="#">Событие</a></li>
+                                    <li class="events_info-item">31 декабря 2017, 8:00<br>о. Татышев</li>
+                                </ul>
+                            </div>
+                            <div class="events-item">
+                                <a href="#" class="events_img-holder">
+                                    <img class="events_img img-responsive" src="https://placekitten.com/768/384" alt="Название мероприятия">
+                                </a>
+                                <h4 class="events_title"><a href="#">Ремонт дворов и общественных пространств</a></h4>
+                                <ul class="events_info">
+                                    <li class="events_info-item events_info-item__place"><a href="#">Событие</a></li>
+                                    <li class="events_info-item">31 декабря 2017, 8:00</li>
+                                </ul>
+                            </div>
+                            <div class="events-item">
+                                <a href="#" class="events_img-holder">
+                                    <img class="events_img img-responsive" src="https://placekitten.com/768/384" alt="Название мероприятия">
+                                </a>
+                                <h4 class="events_title"><a href="#">Новый год! Обращение главы города. Программа.</a></h4>
+                                <ul class="events_info">
+                                    <li class="events_info-item events_info-item__place"><a href="#">Событие</a></li>
+                                    <li class="events_info-item">31 декабря 2017, 8:00</li>
+                                </ul>
+                            </div>
+                            <div class="events-item">
+                                <a href="#" class="events_img-holder">
+                                    <img class="events_img img-responsive" src="https://placekitten.com/768/384" alt="Название мероприятия">
+                                </a>
+                                <h4 class="events_title"><a href="#">Открытый фестиваль-конкурс снежно-ледовых скульптур «Волшебный лёд Сибири»</a></h4>
+                                <ul class="events_info">
+                                    <li class="events_info-item events_info-item__place"><a href="#">Событие</a></li>
+                                    <li class="events_info-item">31 декабря 2017, 8:00<br>о. Татышев</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <a href="#" class="load-more">
+                            <span class="load-more_label">Показать ещё</span>
+                            <span class="load-more_loader">
+                                <span class="load-more_dot-1"></span>
+                                <span class="load-more_dot-2"></span>
+                                <span class="load-more_dot-3"></span>
+                            </span>
+                        </a>
+                    </div>
+                    <div class="col-third order-xs-0">
+                        <div class="sidemenu">
+                            <ul>
+                                <li class=""><a href="#">Городские проекты и события - Архив</a>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="float-row clearfix">
+                    <div class="footer-main">
+                        <a href="/" class="footer-logo"><img src="img/footer-logo.svg" alt="Администрация города Красноярск"></a>
+                        <div class="footer-title">
+                            <h3 class="footer-title_header">Красноярск</h3>
+                            <p class="footer-title_text">Администрация города</p>
+                        </div>
+                        <a data-fancybox data-src="#sample-popup" class="btn btn__transparent">Обратная связь</a>
+                    </div>
+                    <ul class="footer-menu">
+                        <li class="footer-menu_item">
+                            <a class="footer-menu_link" href="#">Районы города</a>
+                            <ul class="footer-submenu">
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Железнодорожный район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Кировский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Ленинский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Октябрьский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Свердловский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Советский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Центральный район</a></li>
+                            </ul>
+                        </li>
+                        <li class="footer-menu_item">
+                            <a class="footer-menu_link" href="#">Виртуальная приемная</a>
+                            <ul class="footer-submenu">
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Направить обращение</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Работа с обращениями граждан</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Узнать статус обращения</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Графики</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Статистика обращений</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Нормативно-правовые документы</a></li>
+                            </ul>
+                        </li>
+                        <li class="footer-menu_item">
+                            <a class="footer-menu_link" href="#">Направления деятельности</a>
+                            <ul class="footer-submenu">
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Железнодорожный район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Кировский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Ленинский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Октябрьский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Свердловский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Советский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Центральный район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Железнодорожный район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Кировский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Ленинский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Октябрьский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Свердловский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Советский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Центральный район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Ленинский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Октябрьский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Свердловский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Советский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Центральный район</a></li>
+                            </ul>
+                        </li>
+                        <li class="footer-menu_item">
+                            <a class="footer-menu_link" href="#">Кадровая политика</a>
+                            <ul class="footer-submenu">
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Железнодорожный район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Кировский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Ленинский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Октябрьский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Свердловский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Советский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Центральный район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Свердловский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Советский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Центральный район</a></li>
+                            </ul>
+                        </li>
+                        <li class="footer-menu_item">
+                            <a class="footer-menu_link" href="#">Принять участие</a>
+                            <ul class="footer-submenu">
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Железнодорожный район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Кировский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Ленинский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Октябрьский район</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Свердловский район</a></li>
+                            </ul>
+                        </li>
+                        <li class="footer-menu_item">
+                            <a class="footer-menu_link" href="#">Пресс-центр</a>
+                            <ul class="footer-submenu">
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Мероприятия</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Новости</a></li>
+                            </ul>
+                        </li>
+                        <li class="footer-menu_item">
+                            <a class="footer-menu_link" href="#">Муниципальные услуги</a>
+                            <ul class="footer-submenu">
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Каталог услуг</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">ЕСИА</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Операции с услугой</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Оставить отзыв о качестве</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Полезная информация</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Полезные ссылки</a></li>
+                            </ul>
+                        </li>
+                        <li class="footer-menu_item">
+                            <a class="footer-menu_link" href="#">Пресс-центр</a>
+                            <ul class="footer-submenu">
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Служба 005</a></li>
+                                <li class="footer-submenu_item"><a class="footer-submenu_link" href="#">Информация о проверках</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <hr class="footer-hr">
+
+                    <div class="footer-contacts">
+                        <div class="footer-phone">
+                            <p class="footer-contacts_label">Телефон/факс:</p>
+                            <p class="footer-contacts_text"><a href="tel:+73912119876">+7 (391) 211-98-76</a></p>
+                        </div>
+                        <div class="footer-address">
+                            <p class="footer-contacts_label">Телефон/факс:</p>
+                            <p class="footer-contacts_text">660049, г. Красноярск, ул. Карла Маркса, 93</p>
+                        </div>
+                        <div class="footer-socials">
+                            <div class="footer-socials_holder">
+                                <a href="#" class="footer-socials_item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="12" viewBox="0 0 20 12">
+                                        <g fill="none" fill-rule="evenodd">
+                                            <path fill-rule="nonzero" d="M0-4h20v20H0z"/>
+                                            <path class="footer-socials_icon" fill="#B3BBC3" d="M19.541.813c.14-.469 0-.813-.662-.813h-2.188c-.556 0-.812.297-.952.625 0 0-1.112 2.74-2.688 4.52-.51.515-.742.68-1.02.68-.14 0-.34-.165-.34-.633V.812c0-.562-.162-.812-.626-.812H7.627c-.348 0-.557.26-.557.508 0 .533.788.656.87 2.155v3.255c0 .714-.128.843-.406.843-.742 0-2.546-2.752-3.617-5.902C3.707.247 3.497 0 2.938 0H.75C.125 0 0 .297 0 .625c0 .586.742 3.49 3.454 7.33C5.262 10.578 7.809 12 10.127 12c1.391 0 1.563-.316 1.563-.86V9.158c0-.632.132-.758.572-.758.325 0 .881.164 2.18 1.429C15.924 11.328 16.17 12 17.003 12h2.188c.625 0 .938-.316.757-.939-.197-.621-.905-1.522-1.845-2.59-.51-.61-1.275-1.265-1.507-1.593-.324-.421-.232-.609 0-.984 0 0 2.666-3.793 2.944-5.081"/>
+                                        </g>
+                                    </svg>
+                                </a>
+                                <a href="#" class="footer-socials_item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                                        <path class="footer-socials_icon" fill="#B3BBC3" fill-rule="evenodd" d="M9.997.04c2.715 0 3.055.011 4.122.06 1.064.048 1.79.217 2.426.463a4.901 4.901 0 0 1 1.77 1.151 4.89 4.89 0 0 1 1.154 1.767c.247.635.416 1.36.465 2.422.048 1.064.06 1.404.06 4.114s-.012 3.049-.06 4.113c-.049 1.062-.218 1.787-.465 2.422a4.89 4.89 0 0 1-1.153 1.767 4.901 4.901 0 0 1-1.77 1.15c-.637.248-1.363.416-2.427.465-1.067.048-1.407.06-4.122.06s-3.056-.012-4.122-.06c-1.064-.049-1.79-.217-2.426-.464a4.901 4.901 0 0 1-1.771-1.15 4.89 4.89 0 0 1-1.153-1.768c-.247-.635-.416-1.36-.465-2.422C.011 13.066 0 12.726 0 10.017c0-2.71.011-3.05.06-4.114.049-1.062.218-1.787.465-2.422a4.89 4.89 0 0 1 1.153-1.767 4.901 4.901 0 0 1 1.77-1.15C4.085.316 4.812.147 5.876.1 6.941.05 7.282.04 9.997.04zm0 4.853a5.128 5.128 0 0 0-5.134 5.124 5.128 5.128 0 0 0 5.134 5.123 5.128 5.128 0 0 0 5.133-5.123 5.128 5.128 0 0 0-5.133-5.124zm6.536-.202c0-.661-.537-1.197-1.2-1.197a1.198 1.198 0 1 0 1.2 1.197zm-6.536 8.651a3.329 3.329 0 0 1-3.332-3.325A3.329 3.329 0 0 1 9.997 6.69a3.329 3.329 0 0 1 3.332 3.326 3.329 3.329 0 0 1-3.332 3.325z"/>
+                                    </svg>
+                                </a>
+                                <a href="#" class="footer-socials_item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="22" viewBox="0 0 12 22">
+                                        <path class="footer-socials_icon" fill="#B3BBC3" fill-rule="nonzero" d="M6.837 1.435l.31-.452c.131-.026.131-.026.15-.026h.03-.014L7.248.951a4.34 4.34 0 0 0-2.184.442C3.61 2.118 2.747 3.632 2.77 6.051V9.074l.461-.478H1.383C.623 8.596 0 9.244 0 10.022v.904c0 .784.608 1.432 1.368 1.458l1.845.064-.446-.478.003 8.601c0 .793.62 1.429 1.393 1.429h1.829c.765 0 1.393-.646 1.393-1.43v-8.613l-.462.478h2.77a.46.46 0 0 0 .412-.265L11.49 9.3c.153-.317-.07-.691-.413-.691H6.923l.462.478V5.995l-.002-.044a1.876 1.876 0 0 1 .085-.63c.11-.337.298-.504.659-.504h1.55c.761 0 1.382-.64 1.385-1.427l.005-1.002c.003-.793-.61-1.431-1.38-1.431H7.298a.47.47 0 0 0-.461.478z"/>
+                                    </svg>
+                                </a>
+                                <a href="#" class="footer-socials_item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="22" viewBox="0 0 13 22">
+                                        <g fill="#B3BBC3" fill-rule="evenodd">
+                                            <path class="footer-socials_icon" d="M6.491 3.32c1.32 0 2.395 1.053 2.395 2.346 0 1.293-1.074 2.345-2.395 2.345-1.32 0-2.395-1.052-2.395-2.345 0-1.293 1.076-2.346 2.395-2.346m0 8.01c3.19 0 5.784-2.54 5.784-5.664C12.275 2.541 9.682 0 6.491 0 3.301 0 .707 2.541.707 5.666c0 3.124 2.594 5.664 5.784 5.664M8.831 15.952a10.96 10.96 0 0 0 3.359-1.362 1.64 1.64 0 0 0 .531-2.29 1.714 1.714 0 0 0-2.336-.521 7.474 7.474 0 0 1-7.788 0 1.713 1.713 0 0 0-2.336.522 1.64 1.64 0 0 0 .53 2.289c1.046.642 2.182 1.1 3.36 1.362L.916 19.12a1.636 1.636 0 0 0 0 2.347c.331.324.765.486 1.198.486.434 0 .868-.162 1.2-.486l3.175-3.113 3.18 3.113a1.719 1.719 0 0 0 2.395 0c.662-.648.662-1.7 0-2.347l-3.234-3.168z"/>
+                                        </g>
+                                    </svg>
+                                </a>
+                                <a href="#" class="footer-socials_item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="17" viewBox="0 0 22 17">
+                                        <path class="footer-socials_icon" fill="#B3BBC3" fill-rule="nonzero" d="M3.053.744a116.373 116.373 0 0 1 15.895 0c1.267.085 2.2 1.161 2.35 2.66.326 3.27.324 6.664 0 10.197-.137 1.483-1.074 2.554-2.357 2.655-4.565.361-9.81.364-15.894 0-1.264-.076-2.202-1.16-2.345-2.657a53.416 53.416 0 0 1 0-10.197C.846 1.908 1.782.832 3.053.744zm6.114 11.061a.45.45 0 0 0 .236-.067l4.583-2.833a.475.475 0 0 0 .223-.405.474.474 0 0 0-.223-.405L9.403 5.26a.448.448 0 0 0-.462-.005.475.475 0 0 0-.233.41v5.667c0 .17.09.327.233.41a.44.44 0 0 0 .226.062z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="footer-hr">
+
+                    <div class="footer-end">
+                        <p class="copyright">&copy; 2001-2018 Администрация г. Красноярска</p>
+                        <a class="devby" href="http://alente.ru" target="_blank">разработка сайта <img src="img/icons/alente.svg" alt="alente"> <strong>alente</strong></a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <div class="hidden">
+            <div id="sample-popup" class="popup">
+                <h2>Направить обращение</h2>
+                <form method="post" enctype="multipart/form-data">
+                    <h4 class="form-title">Общая информация</h4>
+                    <label class="form-label">Обращение направляется в</label>
+                    <div class="custom-select">
+                        <select>
+                            <option value="1">Администрацию города Красноярска</option>
+                            <option value="2">Счетную палату</option>
+                            <option value="3">Законодательное собрание Красноярского края</option>
+                        </select>
+                    </div>
+
+                    <label class="form-label">Вид</label>
+                    <div class="row">
+                        <div class="col-half">
+                            <div class="custom-select">
+                                <select>
+                                    <option value="1">обращение</option>
+                                    <option value="2">запрос информации о деятельности администрации города Красноярска</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-half">
+                            <div class="custom-select">
+                                <select>
+                                    <option value="1">заявление</option>
+                                    <option value="2">предложение</option>
+                                    <option value="3">жалоба</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Отправитель*</label>
+                        <div class="custom-select">
+                            <select required>
+                                <option value="1">гражданин (физическое лицо)</option>
+                                <option value="2">организация (юридическое лицо)</option>
+                                <option value="3">общественное объединение</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="secondname" class="form-label">Фамилия</label>
+                        <input type="text" id="secondname" class="form-control">
+                    </div>
+                    <div class="row">
+                        <div class="col-half">
+                            <div class="form-group">
+                                <label for="firstname" class="form-label">Имя</label>
+                                <input type="text" id="firstname" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-half">
+                            <div class="form-group">
+                                <label for="thirdname" class="form-label">Отчество</label>
+                                <input type="text" id="thirdname" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Категория заявителя</label>
+                        <div class="custom-select">
+                            <select>
+                                <option value="1">не указана</option>
+                                <option value="2">не имеет льгот</option>
+                                <option value="3">герой СССР</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Тематика</label>
+                        <div class="custom-select">
+                            <select>
+                                <option value="1">не указана</option>
+                                <option value="2">Транспорт</option>
+                                <option value="3">Культура</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="title" class="form-label">Краткое содержание обращения либо запроса</label>
+                        <input type="text" id="title" class="form-control" maxlength="100">
+                        <p class="text-help">не более 100 знаков, заключает в себя ответ на вопрос «о чем?»</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="message" class="form-label">Текст обращения либо запроса*</label>
+                        <textarea id="message" class="form-control"></textarea>
+                    </div>
+
+                    <h4 class="form-title">Почтовый адрес</h4>
+                    <div class="form-group">
+                        <label class="form-label">Страна</label>
+                        <div class="custom-select">
+                            <select>
+                                <option value="1">Россия</option>
+                                <option value="2">США</option>
+                                <option value="3">Китай</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-half">
+                            <div class="form-group">
+                                <label class="form-label">Регион</label>
+                                <div class="custom-select">
+                                    <select>
+                                        <option value="1">Красноярский край</option>
+                                        <option value="2">Иркутская обаласть</option>
+                                        <option value="3">Еврейский автономный округ</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-half">
+                            <div class="form-group">
+                                <label class="form-label">Район</label>
+                                <div class="custom-select">
+                                    <select>
+                                        <option value="1">Центральный</option>
+                                        <option value="2">Советский</option>
+                                        <option value="3">Октябрьский</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-half">
+                            <div class="form-group">
+                                <label class="form-label">Город</label>
+                                <div class="custom-select">
+                                    <select>
+                                        <option value="1">Красноярск</option>
+                                        <option value="2">Назарово</option>
+                                        <option value="3">Ачинск</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-half">
+                            <div class="form-group">
+                                <label class="form-label">Населенный пункт</label>
+                                <div class="custom-select">
+                                    <select>
+                                        <option value="1">Красноярск</option>
+                                        <option value="2">Назарово</option>
+                                        <option value="3">Ачинск</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Район города</label>
+                        <div class="custom-select">
+                            <select>
+                                <option value="1">Центральный</option>
+                                <option value="2">Советский</option>
+                                <option value="3">Октябрьский</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Улица</label>
+                        <div class="custom-select">
+                            <select>
+                                <option value="1">Дубровиского</option>
+                                <option value="2">Взлетная</option>
+                                <option value="3">Октябрьская</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-third">
+                            <div class="form-group">
+                                <label for="house" class="form-label">Номер дома</label>
+                                <input id="house" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-third">
+                            <div class="form-group">
+                                <label for="build" class="form-label">Корпус/строение</label>
+                                <input type="text" id="build" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-third">
+                            <div class="form-group">
+                                <label for="flat" class="form-label">Квартира/офис</label>
+                                <input type="text" id="flat" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="form-title mt-2">Контактная информация</h4>
+                    <div class="form-group">
+                        <label for="tel" class="form-label">Контактный телефон</label>
+                        <input type="tel" id="tel" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label">Адрес электронной почты</label>
+                        <input type="email" id="email" class="form-control">
+                    </div>
+
+                    <label class="form-label form-label__second">Каким способом вы желаете получить ответ*</label>
+                    <div class="radio-group">
+                        <label class="radio">
+                            <input type="radio" name="radio" value="0" class="radio_control">
+                            <span class="radio_label">в электронной форме на адрес электронной почты (e-mail)</span>
+                        </label>
+                    </div>
+                    <div class="radio-group">
+                        <label class="radio">
+                            <input type="radio" name="radio" value="1" checked class="radio_control">
+                            <span class="radio_label">обычной почтой на бумажном носителе</span>
+                        </label>
+                    </div>
+
+                    <label class="form-label form-label__second">Отправить файл (документы, фотографии, видео)</label>
+                    <div class="fileupload">
+                        <div class="fileupload_dropzone">
+                            <div class="fileupload_btn">
+                                <span class="fileupload_btn-text">Выберите файлы</span>
+                                <input type="file" class="fileupload_control" multiple>
+                            </div>
+                            <div class="fileupload_content">
+                                <p class="fileupload_label">Перетащите сюда файлы для загрузки</p>
+                                <p class="text-help mt-0 mb-0">Максимальный размер файлов — 10 Мб</p>
+                            </div>
+                        </div>
+
+                        <div class="fileupload_list hidden"></div>
+                    </div>
+                    <p class="text-help">Материалы, превышающие 10 Мb, принимаются в отделе по работе с обращениями граждан на электронном носителе.</p>
+
+                    <label class="form-label form-label__second">Согласие на обработку персональных данных*</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox checkbox__ib">
+                            <input type="checkbox" class="checkbox_control">
+                            <span class="checkbox_label">Я согласен(а) на обработку персональных данных, в соответствии<br> с <a target="_blank" href="#">ФЗ «О персональных данных»</a> от 27.07.2006 № 152-ФЗ</span>
+                        </label>
+                    </div>
+
+                    <label class="form-label form-label__second">Защита от спама*</label>
+                    <div class="form-capcha">
+                        <div class="form-capcha_img">
+                            <img id="ctl00_m_g_34fca82f_83a0_4a34_9ab8_056956bec872_ff221_ctl00_ctl00_Captcha" title="введите символы на картинке (для прослушивания - нажимите на изображение)" onclick="admkrsk_captcha_audio.play(); return false;" src="data:image/gif;base64,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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=">
+                        </div>
+                        <button type="button" class="form-capcha_play"><i class="material-icons">volume_up</i></button>
+                        <div class="form-group form-capcha_field">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <p class="text-help mb-3">пожалуйста, введите символы на картинке (для прослушивания — нажимите на изображение)</p>
+
+                    <div class="form-end">
+                        <div class="form-end_right">
+                            <a href="#" class="btn btn__secondary">Отправить</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://yastatic.net/es5-shims/0.0.2/es5-shims.min.js"></script>
+    <script src="http://yastatic.net/share2/share.js"></script>
+    <script src="js/polyfill.js"></script>
+    <script src="js/plyr.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/slick.min.js"></script>
+    <script src="js/jquery.countdown.min.js"></script>
+    <script src="js/chart.min.js"></script>
+    <script src="js/chartjs-plugin-datalabels.min.js"></script>
+    <script src="js/jquery.fancybox.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/tipso.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

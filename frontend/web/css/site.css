@@ -1,0 +1,14 @@
+.ui-autocomplete {background: #fff; max-width: 800px;}
+.content table {width: 100%;}
+
+.col {width: 100%; padding: 0px 15px;}
+form .row {flex-wrap: nowrap!important;}
+
+.checkboxlist {margin-bottom: 40px;}
+.checkboxlist .form-label {margin-bottom: 20px;}
+
+.fileupload {margin-bottom: 40px;}
+
+.text-row {padding: 0px 15px; width: 100%;}
+
+.header-search{border-radius: 5px; border: none; padding: 5px;}

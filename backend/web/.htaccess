@@ -1,0 +1,22 @@
+php_value upload_max_filesize 32M
+php_value post_max_size 32M
+
+php_value error_reporting 30711
+
+AddType text/x-component .htc
+
+AddDefaultCharset utf-8
+
+RewriteEngine on
+
+RewriteBase /
+
+#RewriteCond %{HTTP_HOST} ^www.*
+#RewriteRule (.*) http://$1 [R=301,L]
+
+# if a directory or a file exists, use it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_FILENAME} !-d
+
+# otherwise forward it to index.php
+RewriteRule . index.php
