@@ -63,17 +63,16 @@
                             <div class="form-group">
                                 <label class="form-label">Время</label>
                                 <div class="custom-select">
-                                        <div class="hidden wrap_service wrap_service_<?=$i?>">
-                                            <select name="service_<?=$i?>" data-num="<?=($i++)?>">
-                                                <option value='-1'>[не выбрано]</option>
-                                            </select>
-                                        </div>
+                                    <select name="time">
+                                        <option value='-1'>[не выбрано]</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-end">
                                 <div class="form-end_right">
                                     <input type="submit" class="btn btn__secondary" value="Записаться">
                                 </div>
+                                <br>
                             </div>
                         </form>
                     </div>
