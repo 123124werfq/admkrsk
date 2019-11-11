@@ -20,7 +20,7 @@ class BookController extends \yii\web\Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'service',  'available', 'dates', 'intervals'],
+                        'actions' => ['index', 'service',  'available', 'dates', 'intervals', 'proceed'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -115,6 +115,11 @@ class BookController extends \yii\web\Controller
         $b0 = new Book;
         $cn = $b0->connect(0);
         $res = $b0->dateAvailable(12);
+
+    }
+
+    public function actionProceed()
+    {
 
     }
 
