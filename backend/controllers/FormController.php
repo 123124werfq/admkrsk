@@ -126,6 +126,18 @@ class FormController extends Controller
         ]);
     }
 
+    public function actionGetForm()
+    {
+        $records = Form::find()->all();
+
+        $output = [];
+        foreach ($records as $key => $data)
+            $output[] = ['text'=>$data->name,'value'=>(string)$data->id_form];
+
+        return json_encode($output);
+    }
+
+
     public function actionOrder()
     {
         $ords = Yii::$app->request->post('ords');
