@@ -60,6 +60,21 @@
                                 <label for="bookdate" class="form-label">Дата</label>
                                 <input name="bookdate" class="form-control" type="text" id="datepicker">
                             </div>
+                            <div class="form-group">
+                                <label class="form-label">Время</label>
+                                <div class="custom-select">
+                                        <div class="hidden wrap_service wrap_service_<?=$i?>">
+                                            <select name="service_<?=$i?>" data-num="<?=($i++)?>">
+                                                <option value='-1'>[не выбрано]</option>
+                                            </select>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="form-end">
+                                <div class="form-end_right">
+                                    <input type="submit" class="btn btn__secondary" value="Записаться">
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
