@@ -64,6 +64,7 @@ class SearchSitemap extends \yii\db\ActiveRecord
         ];
     }
 
+
     static public function fulltext($query, $bydate = false)
     {
         $query = strip_tags(addslashes($query));
@@ -84,7 +85,7 @@ class SearchSitemap extends \yii\db\ActiveRecord
                         ORDER BY content_date DESC, ts_rank(to_tsvector("content"), plainto_tsquery(\''.$query.'\')) DESC) t1
                     WHERE rank>0.01';
 
-        var_dump($sql);die();
+        //var_dump($sql);die();
 
         $result = Yii::$app->db->createCommand($sql)->queryAll();
 

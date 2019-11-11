@@ -72,8 +72,9 @@ class SearchController extends Controller
             $dateContent = $xpath->query('//span[contains(@class,"publish-date")]');
             $dt = strtotime(strip_tags($doc->saveHTML($dateContent->item(0))));
 
-            $header = $xpath->query('//h1');
-            $h1 = strtotime(strip_tags($doc->saveHTML($header->item(0))));
+            $header = $xpath->query('//div[contains(@class,"searchable")]/h1');
+            $h1 = strip_tags($doc->saveHTML($header->item(0)));
+
 
 
             if(!empty($cnt))
