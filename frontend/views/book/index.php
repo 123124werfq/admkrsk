@@ -72,8 +72,8 @@
                                 <div class="form-end_right">
                                     <input type="submit" class="btn btn__secondary" value="Записаться">
                                 </div>
-                                <br>
                             </div>
+                            <div class="form-end"></div>
                         </form>
                     </div>
                 </div>
