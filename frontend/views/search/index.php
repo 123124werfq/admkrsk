@@ -72,7 +72,7 @@
         <?php
             foreach ($result as $row)
             {
-                echo "<p><h3><a href='{$row['url']}'>{$row['header']}</a></h3><small>".date("d.m.Y", $row['content_date'])."</small><br>{$row['headline']}</p>";
+                echo "<p><strong><a href='{$row['url']}'>{$row['header']}</a></strong><small>".date("d.m.Y", $row['content_date'])."</small><br>...{$row['headline']}...</p>";
             }
 
         ?>
