@@ -15,6 +15,7 @@
                     <div class="content">
                         <h1>Предварительная запись</h1>
                         <form action="/book/proceed" method="POST" class="damask-form">
+                            <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>"/>
                             <div class="form-group">
                                 <label for="secondname" class="form-label">Фамилия Имя Отчество</label>
                                 <input name="username" value="<?=$esiauser?($esiauser->first_name . ' ' . $esiauser->middle_name. ' ' . $esiauser->last_name):''?>" class="form-control" <?=($esiauser&& ($esiauser->first_name || $esiauser->middle_name || $esiauser->last_name))?'readonly':''?>>
