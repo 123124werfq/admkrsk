@@ -76,6 +76,7 @@ class SearchController extends Controller
             $h1 = strtotime(strip_tags($doc->saveHTML($header->item(0))));
 
 
+
             if(!empty($cnt))
             {
                 $searchitem = new SearchSitemap();
