@@ -63,7 +63,7 @@ class SearchSitemap extends \yii\db\ActiveRecord
             'deleted_by' => 'Deleted By',
         ];
     }
-    
+
 
     static public function fulltext($query, $bydate = false)
     {
