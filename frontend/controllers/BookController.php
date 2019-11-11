@@ -20,13 +20,20 @@ class BookController extends \yii\web\Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'service',  'available', 'dates', 'intervals'],
+                        'actions' => ['index', 'service',  'available', 'dates', 'intervals', 'proceed'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
                 ],
             ]
         ];
+    }
+
+    public function beforeAction($action)
+    {
+        $this->enableCsrfValidation = false;
+
+        return parent::beforeAction($action);
     }
 
     public function actionIndex()
@@ -116,6 +123,11 @@ class BookController extends \yii\web\Controller
         $cn = $b0->connect(0);
         $res = $b0->dateAvailable(12);
 
+    }
+
+    public function actionProceed()
+    {
+        return $this->render('proceed');
     }
 
 }

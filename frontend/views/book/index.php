@@ -15,6 +15,7 @@
                     <div class="content">
                         <h1>Предварительная запись</h1>
                         <form action="/book/proceed" method="POST" class="damask-form">
+                            <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>"/>
                             <div class="form-group">
                                 <label for="secondname" class="form-label">Фамилия Имя Отчество</label>
                                 <input name="username" value="<?=$esiauser?($esiauser->first_name . ' ' . $esiauser->middle_name. ' ' . $esiauser->last_name):''?>" class="form-control" <?=($esiauser&& ($esiauser->first_name || $esiauser->middle_name || $esiauser->last_name))?'readonly':''?>>
@@ -60,6 +61,20 @@
                                 <label for="bookdate" class="form-label">Дата</label>
                                 <input name="bookdate" class="form-control" type="text" id="datepicker">
                             </div>
+                            <div class="form-group">
+                                <label class="form-label">Время</label>
+                                <div class="custom-select">
+                                    <select name="time">
+                                        <option value='-1'>[не выбрано]</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-end">
+                                <div class="form-end_right">
+                                    <input type="submit" class="btn btn__secondary" value="Записаться">
+                                </div>
+                            </div>
+                            <div class="form-end"></div>
                         </form>
                     </div>
                 </div>

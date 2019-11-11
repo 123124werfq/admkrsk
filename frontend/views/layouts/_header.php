@@ -113,8 +113,8 @@ if(!Yii::$app->user->isGuest){
                         <?php if (!Yii::$app->user->isGuest): ?>
                             <a class="dropdown-menu_item" href="/personal">Личный&nbsp;кабинет</a>
                             <a class="dropdown-menu_item" href="/service">Мои&nbsp;запросы&nbsp;услуг</a>
-                            <a class="dropdown-menu_item" href="/reception">Мои&nbsp;обращения</a>
-                            <a class="dropdown-menu_item" href="/reception/new">Написать&nbsp;обращение</a>
+                            <a class="dropdown-menu_item" href="/reception/list">Мои&nbsp;обращения</a>
+                            <a class="dropdown-menu_item" href="/reception/request">Написать&nbsp;обращение</a>
                             <?= Html::a('Выйти', ['site/logout'], ['class' => 'dropdown-menu_item', 'data' => ['method' => 'post']]) ?>
                         <?php else: ?>
                             <a class="dropdown-menu_item" href="<?= Url::to(['site/login']) ?>">Войти</a>
