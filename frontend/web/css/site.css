@@ -10,3 +10,5 @@ form .row {flex-wrap: nowrap!important;}
 .fileupload {margin-bottom: 40px;}
 
 .text-row {padding: 0px 15px; width: 100%;}
+
+.header-search{padding: 10px; border: none; border-radius: 5px;}
