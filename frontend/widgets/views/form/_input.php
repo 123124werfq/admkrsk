@@ -10,9 +10,17 @@
 		$options['required'] = true;
 
 	$options['id'] = "input".$input->id_input;
+
+	$groupClass = '';
+
+	if ($input->type->type==CollectionColumn::TYPE_CHECKBOXLIST)
+		$groupClass .= ' checkboxlist';
+
+	if ($input->type->type==CollectionColumn::TYPE_SELECT)
+		$groupClass .= ' custom-select';
 ?>
 <div class="col">
-	<div class="form-group <?=$input->type->type==CollectionColumn::TYPE_CHECKBOXLIST?'checkboxlist':''?>">
+	<div class="form-group <?=$groupClass?>">
 		<?php if (!empty($input->label)){?>
 		<label class="form-label"><?=$input->label?><?=!empty($options['required'])?'*':''?></label>
 		<?php }?>
