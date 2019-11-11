@@ -17,7 +17,7 @@
                 <a href="#" class="btn btn__secondary">Посмотреть программу</a>
                 <div class="main-countdown-holder">
                     <h4><?=(!empty($blockVars['countdown_title']))?$blockVars['countdown_title']->value:''?></h4>
-                    <div class="main-countdown" data-date="<?=(!empty($blockVars['countdown']))?date('Y/m/d H:i',$blockVars['countdown']->value):''?>"></div>
+                    <div class="main-countdown" data-date="<?=(!empty($blockVars['countdown']))?date('Y/m/d H:i',strtotime($blockVars['countdown']->value)):''?>"></div>
                 </div>
             </div>
         </div>

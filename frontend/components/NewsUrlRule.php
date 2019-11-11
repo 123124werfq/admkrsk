@@ -65,7 +65,6 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
             }
         }
 
-
         if ($route = array_search($pathInfo, $urls))
             return [$route,['page'=>$pages[$route]]];
 

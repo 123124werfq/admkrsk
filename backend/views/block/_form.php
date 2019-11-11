@@ -31,6 +31,9 @@ use kartik\select2\Select2;
 	            case $var::TYPE_STRING:
 	                echo Html::activeTextInput($var,"[$ckey]value",['class'=>'form-control','id'=>'Value_'.$ckey,'placeholder'=>$var->name]);
 	                break;
+	            case $var::TYPE_DATE:
+	                echo Html::activeTextInput($var,"[$ckey]value",['class'=>'form-control','type'=>'date', 'id'=>'Value_'.$ckey,'placeholder'=>$var->name]);
+	                break;
 	            case $var::TYPE_TEXT:
 	                echo Html::activeTextArea($var,"[$ckey]value",['class'=>'form-control','id'=>'Value_'.$ckey,'placeholder'=>$var->name]);
 	                break;

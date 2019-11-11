@@ -86,7 +86,7 @@ class Block extends \yii\db\ActiveRecord
             'label'=>'Шапка события',
             'vars'=>[
                 'title'=>[
-                    'name'=>'Заголвок',
+                    'name'=>'Заголовок',
                     'type'=>BlockVar::TYPE_STRING,
                 ],
                 'cover'=>[
