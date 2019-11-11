@@ -127,7 +127,7 @@ class BookController extends \yii\web\Controller
 
     public function actionProceed()
     {
-
+        return $this->render('proceed');
     }
 
 }
