@@ -4,7 +4,7 @@
         <?=frontend\widgets\Breadcrumbs::widget(['page'=>$page])?>
         <div>
             <h1><?=$page->title?></h1>
-            <div class="header-controls">
+            <!--div class="header-controls">
                 <form>
                     <div class="btn-group">
                         <div class="btn-group_item">
@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 </form>
-            </div>
+            </div-->
 
 			<div class="smart-menu-tabs slide-hover tab-controls tab-controls__responsive">
                 <div class="tab-controls-holder">
