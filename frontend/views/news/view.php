@@ -107,10 +107,12 @@
                         <img class="events_img img-responsive" src="<?=$data->makeThumb(['w'=>768,'h'=>384])?>" alt="<?=Html::encode($data->name)?>">
                     </a>
                     <?php }?>
-                    <h4 class="events_title"><a href="#">Ремонт дворов и общественных пространств</a></h4>
+                    <h4 class="events_title"><a href="<?=$data->getUrl()?>"><?=Html::encode($data->title)?></a></h4>
                     <ul class="events_info">
-                        <li class="events_info-item events_info-item__place"><a href="#">Событие</a></li>
-                        <li class="events_info-item">31 декабря 2017, 8:00</li>
+                        <?php if (!empty($data->id_rub)){?>
+                        <li class="press_info-item press_info-item__place"><a href="?id_rub=<?=$data->id_rub?>"><?=$data->rub->getLineValue()?></a></li>
+                        <?php }?>
+                        <li class="press_info-item"><?=strftime('%d %B %Y, %H:%M', $data->date_publish)?></li>
                     </ul>
                 </div>
             <?php }?>

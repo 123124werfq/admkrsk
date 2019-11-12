@@ -23,7 +23,9 @@ use kartik\select2\Select2;
     	$vars = $model->getVars();
 
     	foreach ($vars as $ckey => $var) {
-    		echo '<div class=form-group>';
+    		echo '<div class=form-group>
+    		<label class="control-label">'.$var->name.'</label>';
+
     		switch ($var->type) {
     			case $var::TYPE_HIDDEN:
 	                echo Html::activeHiddenInput($var,"[$ckey]value",['class'=>'form-control','id'=>'Value_'.$ckey]);
@@ -49,6 +51,15 @@ use kartik\select2\Select2;
 				case $var::TYPE_QUESTION:
 	                echo Html::activeDropDownList($var,"[$ckey]value",ArrayHelper::map(\common\models\Question::find()->all(), 'id_poll_question', 'question'),['class'=>'form-control','id'=>'Value_'.$ckey, 'prompt'=>$var->name]);
 	                break;
+	            case $var::TYPE_USER:
+	            	echo $form->field($var, "[$ckey]value")->widget(Select2::class, [
+	                    'data' => ArrayHelper::map(\common\models\User::find()->all(), 'id', 'username'),
+	                    'pluginOptions' => [
+	                        'allowClear' => true,
+	                        'placeholder' => 'Выберите пользователя',
+	                    ],
+                	]);
+                	break;
 	            case $var::TYPE_PAGE:
 	            	echo $form->field($var, "[$ckey]value")->widget(Select2::class, [
 	                    'data' => ArrayHelper::map(\common\models\Page::find()->all(), 'id_page', 'title'),
@@ -57,12 +68,10 @@ use kartik\select2\Select2;
 	                        'placeholder' => 'Выберите раздел',
 	                    ],
                 	]);
-
 	                //echo Html::activeDropDownList($var,"[$ckey]value",ArrayHelper::map(\common\models\Page::find()->all(), 'id_page', 'title'),['class'=>'form-control','id'=>'Value_'.$ckey, 'prompt'=>$var->name]);
-
 	                break;
 	            case $var::TYPE_RICHTEXT:
-	                echo Html::activeTextArea($var,"[$ckey]value",['class'=>'form-control','id'=>'Value_'.$ckey,'placeholder'=>$var->name,'redactor'=>true]);
+	                echo Html::activeTextArea($var,"[$ckey]value",['class'=>'form-control redactor','id'=>'Value_'.$ckey,'placeholder'=>$var->name]);
 	                break;
 	            case $var::TYPE_MEDIA:
 	            	echo Html::activeHiddenInput($var,"[$ckey]value");

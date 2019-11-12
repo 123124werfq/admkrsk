@@ -82,6 +82,23 @@ class Block extends \yii\db\ActiveRecord
                 ],
             ]
         ],
+        'event_blockquote'=> [
+            'label'=>'Цитата',
+            'vars'=>[
+                'title'=>[
+                    'name'=>'Заголовок',
+                    'type'=>BlockVar::TYPE_STRING,
+                ],
+                'content'=>[
+                    'name'=>'Описание',
+                    'type'=>BlockVar::TYPE_RICHTEXT,
+                ],
+                'user'=>[
+                    'name'=>'Автор',
+                    'type'=>BlockVar::TYPE_USER,
+                ],
+            ]
+        ],
         'event_main'=> [
             'label'=>'Шапка события',
             'vars'=>[
