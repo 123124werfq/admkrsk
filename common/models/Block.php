@@ -160,7 +160,7 @@ class Block extends \yii\db\ActiveRecord
                 ],
             ]
         ],
-        /*'partners'=> [
+        'partners'=> [
             'label'=>'Партнеры',
             'widget'=>'frontend\widgets\MenuWidget',
             'vars'=>[
@@ -171,10 +171,10 @@ class Block extends \yii\db\ActiveRecord
                 'template'=>[
                     'name'=>'Шаблон',
                     'type'=>BlockVar::TYPE_HIDDEN,
-                    'value'=>'grid'
+                    'value'=>'partners'
                 ],
             ]
-        ],*/
+        ],
         'grid'=> [
             'label'=>'Сетка ссылок',
             'widget'=>'frontend\widgets\MenuWidget',
