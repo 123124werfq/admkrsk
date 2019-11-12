@@ -26,7 +26,9 @@
 					if (!empty($user)){
 				?>
 				<div class="person-card person-card__mini">
-					<img class="person-card_img" src="https://placekitten.com/160/160" alt="Имя сотрудника">
+					<?php if (!empty($user->id_media)){?>
+                        <img class="person-card_img" src="<?=$user->makeThumb(['w'=>160,'h'=>160])?>" alt="<?=$user->fullname?>">
+                    <?php }?>
 					<div class="person-card_content">
 						<h4 class="person-card_title"><?=$user->fullname?></h4>
 						<p class="person-card_subtitle">
