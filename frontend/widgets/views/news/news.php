@@ -5,7 +5,7 @@
     <div class="container">
         <div class="custom-header">
             <div class="custom-header-left">
-                <h2 class="chevron-title"><a href="#">Пресс-центр<span class="material-icons">chevron_right</span></a></h2>
+                <h2 class="chevron-title"><a href="#"><?=(!empty($blockVars['title']))?$blockVars['title']->value:'Пресс-центр'?><span class="material-icons">chevron_right</span></a></h2>
             </div>
             <div class="custom-header-right">
                 <div class="smart-menu-tabs smart-menu-tabs__right slide-hover tab-controls tab-controls__invert tab-controls__responsive">

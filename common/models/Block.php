@@ -27,6 +27,10 @@ class Block extends \yii\db\ActiveRecord
             'label'=>'Новостной блок',
             'widget'=>'frontend\widgets\NewsWidget',
             'vars'=>[
+                'title'=>[
+                    'name'=>'Заголовок',
+                    'type'=>BlockVar::TYPE_STRING,
+                ],
                 'menu'=>[
                     'name'=>'Меню в табах',
                     'type'=>BlockVar::TYPE_MENU,
