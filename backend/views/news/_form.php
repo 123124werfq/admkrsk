@@ -27,13 +27,20 @@ $rubs = (!empty($rubs))?$rubs->getArray():[];
             <div class="ibox-content">
                 <?php $form = ActiveForm::begin(); ?>
 
-                <?=$form->field($model, 'id_page')->widget(Select2::class, [
-                    'data' => ArrayHelper::map(Page::find()->all(), 'id_page', 'title'),
+                <?= $form->field($model, 'id_page')->widget(Select2::class, [
+                    'data' => $model->id_page ? [$model->id_page=>$model->page->title]:[],
                     'pluginOptions' => [
+                        'multiple' => false,
                         'allowClear' => true,
-                        'placeholder' => 'Выберите родительский раздел',
+                        'minimumInputLength' => 2,
+                        'placeholder' => 'Начните ввод',
+                        'ajax' => [
+                            'url' => '/page/list',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {q:params.term}; }')
+                        ],
                     ],
-                ])?>
+                ]) ?>
 
                 <?=$form->field($model, 'id_rub')->widget(Select2::class, [
                     'data' => $rubs,
