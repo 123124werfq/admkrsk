@@ -94,7 +94,8 @@ class ServiceController extends Controller
         
         $model->client_type = $client_type;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             return $this->redirect(['index', 'id' => $model->id_service]);
         }
 

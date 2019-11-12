@@ -144,12 +144,15 @@ class Service extends \yii\db\ActiveRecord
     {
         if (isset($_POST['Service']['id_situations']))
         {
-            Yii::$app->db->createCommand()->delete('servicel_situation')->execute();
+            Yii::$app->db->createCommand()->delete('servicel_situation',['id_service'=>$this->id_service])->execute();
 
-            $situations = ServiceSituation::find()->select('id_situation')->where(['id_situation'=>$this->id_situations])->all();
-
-            foreach ($situations as $key => $data)
-                $this->link('situations',$data);
+            if (!empty($this->id_situations))
+            {
+                $situations = ServiceSituation::find()->select('id_situation')->where(['id_situation'=>$this->id_situations])->all();
+                
+                foreach ($situations as $key => $data)
+                    $this->link('situations',$data);
+            }
         }
 
         parent::afterSave($insert, $changedAttributes);
