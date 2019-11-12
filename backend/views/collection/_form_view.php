@@ -35,8 +35,9 @@ if (empty($filtes))
 <?php $form = ActiveForm::begin(); ?>
 
 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-
+<br/>
 <h3>Условия</h3>
+<br/>
 <div class="row">
     <div class="col-md-2">
         <label class="control-label">Колонка</label>
@@ -71,7 +72,9 @@ if (empty($filtes))
 </div>
 <a onclick="return addInput('view-filters')" href="#" class="btn btn-default">Добавить еще</a>
 
+<br/><br/>
 <h3>Поля</h3>
+<br/>
 <div class="row">
     <div class="col-md-2">
         <label class="control-label">Колонка</label>
@@ -93,7 +96,7 @@ if (empty($filtes))
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <?=Html::textInput("ViewColumns[$key][value]",$data->alias,['class'=>'form-control','id'=>'value_'.$key,'placeholder'=>'Введите шаблон']);?>
+                    <?=Html::textInput("ViewColumns[$key][value]",$data['value'],['class'=>'form-control','id'=>'value_'.$key,'placeholder'=>'Введите шаблон']);?>
                 </div>
             </div>
             <div class="col-md-1 col-close">
