@@ -1,6 +1,7 @@
 <?php
 
 namespace frontend\controllers;
+
 use Yii;
 use common\models\News;
 use common\models\CollectionRecord;
@@ -77,8 +78,7 @@ class NewsController extends \yii\web\Controller
         else
             $similar_news = News::find()->where(['id_page'=>$model->id_page])->andWhere('id_news <> '.$id)->limit(3)->all();
 
-        $model->views++;
-        $model->updateAttributes(['views']);
+        $model->createAction();
 
         return $this->render('view',[
         	'model'=>$model,

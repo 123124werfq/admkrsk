@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\traits\ActionTrait;
 use Yii;
 use yii\helpers\Url;
 
@@ -40,6 +41,8 @@ use yii\helpers\Url;
  */
 class Service extends \yii\db\ActiveRecord
 {
+    use ActionTrait;
+
     public $id_situations = [];
 
     const TYPE_PEOPLE = 2;

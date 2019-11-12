@@ -18,7 +18,7 @@ class AddressSearch extends Address
     {
         return [
             [['id'], 'integer'],
-            [['houseguid', 'address'], 'safe'],
+            [['address'], 'safe'],
         ];
     }
 
@@ -61,8 +61,7 @@ class AddressSearch extends Address
             'id' => $this->id,
         ]);
 
-        $query->andFilterWhere(['ilike', 'houseguid', $this->houseguid])
-            ->andFilterWhere(['ilike', 'address', $this->address]);
+        $query->andFilterWhere(['ilike', 'address', $this->address]);
 
         return $dataProvider;
     }

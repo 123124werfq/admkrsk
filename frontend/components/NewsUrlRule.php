@@ -2,6 +2,7 @@
 
 namespace frontend\components;
 
+use common\models\Action;
 use yii\web\UrlRuleInterface;
 use yii\base\BaseObject;
 

@@ -3,10 +3,12 @@
 namespace common\models;
 use common\behaviors\UserAccessControlBehavior;
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\ActionTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use dosamigos\taggable\Taggable;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "db_news".
@@ -33,6 +35,8 @@ use dosamigos\taggable\Taggable;
  */
 class News extends \yii\db\ActiveRecord
 {
+    use ActionTrait;
+
     public $access_user_ids, $tagNames = [];
 
     /**
@@ -103,9 +107,9 @@ class News extends \yii\db\ActiveRecord
                 'class' => UserAccessControlBehavior::class,
                 'permission' => 'backend.news',
             ],
-            'taggable'=>['class' => Taggable::className()],
+            'taggable'=>['class' => Taggable::class],
             'multiupload' => [
-                'class' => \common\components\multifile\MultiUploadBehavior::className(),
+                'class' => \common\components\multifile\MultiUploadBehavior::class,
                 'relations'=>
                 [
                     'media'=>[
@@ -130,41 +134,63 @@ class News extends \yii\db\ActiveRecord
         return parent::beforeValidate();
     }
 
+    /**
+     * @return ActiveQuery
+     * @throws \yii\base\InvalidConfigException
+     */
     public function getTags()
     {
-        return $this->hasMany(Tag::className(), ['id' => 'id_tag'])->viaTable('dbl_news_tag', ['id_news' => 'id_news']);
+        return $this->hasMany(Tag::class, ['id' => 'id_tag'])->viaTable('dbl_news_tag', ['id_news' => 'id_news']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getAuthor()
     {
         return $this->hasOne(User::class, ['id' => 'id_user']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getRub()
     {
         return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_rub']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getCategory()
     {
         return $this->hasOne(CollectionRecord::class, ['id_category' => 'id_category']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getPage()
     {
         return $this->hasOne(Page::class, ['id_page' => 'id_page']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
+    public function getMedia()
+    {
+        return $this->hasOne(Media::class, ['id_media' => 'id_media']);
+    }
+
+    /**
+     * @return string
+     */
     public function getUrl()
     {
         if (!empty($this->page))
             return $this->page->getUrl().'?id='.$this->id_news;
 
         return '/news?id='.$this->id_news;
-    }
-
-    public function getMedia()
-    {
-        return $this->hasOne(Media::className(), ['id_media' => 'id_media']);
     }
 }

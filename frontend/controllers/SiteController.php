@@ -11,12 +11,10 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
 use common\models\Page;
-use common\models\News;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
-
 use common\models\User;
 use common\models\EsiaUser;
 use yii\web\NotFoundHttpException;
@@ -147,6 +145,11 @@ class SiteController extends Controller
         }
     }
 
+    /**
+     * @param null $page
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionPage($page=null)
     {
         if (empty($page))
@@ -161,16 +164,15 @@ class SiteController extends Controller
             if (empty($alias))
                 $alias = '/';
 
-            $page = Page::find()->where(['alias'=>$alias])->one();
+            $page = Page::findOne(['alias'=>$alias]);
         }
 
         if (empty($page))
-            throw new \yii\web\NotFoundHttpException();
+            throw new NotFoundHttpException();
 
         $blocks = $page->blocks;
 
-        $page->views++;
-        $page->updateAttributes(['views']);
+        $page->createAction();
 
         return $this->render((empty($blocks))?'page':'blocks',[
             'page'=>$page
@@ -519,6 +521,9 @@ class SiteController extends Controller
         }
     }
 
+    /**
+     * @throws NotFoundHttpException
+     */
     public function actionFakelogin()
     {
         if (YII_ENV_DEV) {

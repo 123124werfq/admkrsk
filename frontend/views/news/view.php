@@ -1,5 +1,7 @@
 <?php
-	use yii\helpers\Html;
+/* @var common\models\News $model */
+
+use yii\helpers\Html;
 ?>
 <div class="main">
     <div class="container">
@@ -80,8 +82,8 @@
                 </ul>
                 <?php }?>
             	<p class="text-help">
-                    Дата публикации: <span class="publish-date"><?=date('d.m.Y',$model->date_publish)?></span><br>
-                    Просмотров за всего: <?=$model->views?>
+                    Дата публикации (изменения): <?=date('d.m.Y',$model->date_publish)?> (<?=date('d.m.Y',$model->updated_at)?>)<br>
+                    Просмотров за год (всего): <?=$model->viewsYear?> (<?=$model->views?>)
                 </p>
                 <div class="subscribe">
                     <div class="subscribe_left">

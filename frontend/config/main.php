@@ -1,4 +1,8 @@
 <?php
+
+use common\models\Action;
+use yii\web\UserEvent;
+
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -33,6 +37,16 @@ return [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+            'on afterLogin' => function($event) {
+                /* @var \common\models\User $user */
+                $user = $event->identity;
+                $user->createAction(Action::ACTION_LOGIN);
+            },
+            'on beforeLogout' => function($event) {
+                /* @var \common\models\User $user */
+                $user = $event->identity;
+                $user->createAction(Action::ACTION_LOGOUT);
+            },
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
