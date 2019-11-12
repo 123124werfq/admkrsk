@@ -205,7 +205,9 @@ class Collection extends \yii\db\ActiveRecord
         $data = $this->getData();
 
         $output = [];
-        foreach ($data as $key => $row) {
+        
+        foreach ($data as $key => $row)
+        {
             $output[$key] = implode(' ', $row);
         }
 
@@ -237,6 +239,8 @@ class Collection extends \yii\db\ActiveRecord
                 }
             }
         }
+
+        $query->keyAsAlias = $keyAsAlias;
 
         return $query->select($id_columns)->getArray();
     }

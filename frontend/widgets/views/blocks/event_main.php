@@ -14,7 +14,9 @@
                 <p class="main-slider_text">
                     <?=(!empty($blockVars['content']))?$blockVars['content']->value:''?>
                 </p>
-                <a href="#" class="btn btn__secondary">Посмотреть программу</a>
+                <?php if (!empty($blockVars['programm'])){?>
+                <a href="/event/program?id=<?=$blockVars['programm']->value?>&id_page=<?=$page->id_page?>" class="btn btn__secondary">Посмотреть программу</a>
+                <?php }?>
                 <div class="main-countdown-holder">
                     <h4><?=(!empty($blockVars['countdown_title']))?$blockVars['countdown_title']->value:''?></h4>
                     <div class="main-countdown" data-date="<?=(!empty($blockVars['countdown']))?date('Y/m/d H:i',strtotime($blockVars['countdown']->value)):''?>"></div>

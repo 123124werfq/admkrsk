@@ -15,6 +15,7 @@ class Block extends \yii\base\Widget
 
         return $this->render('blocks/'.$this->block->type,[
         	'blockVars'=>$blockVars,
+        	'page'=>$this->page
         ]);
     }
 }

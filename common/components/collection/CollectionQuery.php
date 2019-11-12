@@ -84,7 +84,6 @@ class CollectionQuery extends \yii\mongodb\Query
         $output = [];
         $emptyRow = array_keys($this->columns);
 
-
         foreach ($this->all() as $key => $record)
         {
             $output[$record['id_record']] = $emptyRow;
@@ -94,8 +93,8 @@ class CollectionQuery extends \yii\mongodb\Query
                 if (!isset($this->columns[$vkey]))
                     continue;
 
-                if ($this->keyAsAlias && !empty($this->columns[$key]->alias))
-                    $alias = $this->columns[$key]->alias;
+                if ($this->keyAsAlias && !empty($this->columns[$vkey]->alias))
+                    $alias = $this->columns[$vkey]->alias;
                 else
                     $alias = $vkey;
 

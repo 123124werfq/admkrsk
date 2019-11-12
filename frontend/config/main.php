@@ -62,6 +62,7 @@ return [
                 'site/flush' => 'site/flush',
                 'service/search'=>'service/search',
                 '/press/events' => 'event/index',
+                'event/program' => 'event/program',
                 'login' => 'site/login',
                 'signup' => 'site/signup',
                 'press/poll-list-active' => 'poll/index',

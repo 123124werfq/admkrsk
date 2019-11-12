@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
-
+use common\models\Collection;
 use kartik\select2\Select2;
 /* @var $this yii\web\View */
 /* @var $model common\models\Block */
@@ -40,6 +40,9 @@ use kartik\select2\Select2;
 	            case $var::TYPE_CHECKBOX:
 	                echo Html::activeCheckBox($var,"[$ckey]value",['id'=>'Value_'.$ckey,'label'=>$var->name]);
 	                break;
+	            case $var::TYPE_COLLECTION:
+                    echo Html::activeDropDownList($var,"[$ckey]value",ArrayHelper::map(Collection::find()->all(), 'id_collection', 'name'),['class'=>'form-control','Value_'.$ckey]);
+                    break;
 	            case $var::TYPE_MENU:
 	                echo Html::activeDropDownList($var,"[$ckey]value",ArrayHelper::map(\common\models\Menu::find()->all(), 'id_menu', 'name'),['class'=>'form-control','id'=>'Value_'.$ckey,'prompt'=>$var->name]);
 	                break;

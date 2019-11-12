@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 use common\models\Project;
 use common\models\Page;
+use common\models\Collection;
 use yii\web\NotFoundHttpException;
 use yii\data\Pagination;
 use Yii;
@@ -28,5 +29,22 @@ class EventController extends \yii\web\Controller
             'page'=>$page,
             'projects'=>$projects,
         ]);
+    }
+
+    public function actionProgram($id,$id_page)
+    {
+        $collection = Collection::findOne($id);
+        $collection = $collection->getData([],true);
+
+        $program = [];
+        foreach ($collection as $key => $data)
+        {
+            $date = (is_string($data['date']))?strtotime($data['date']):$data['date'];
+            $program[$date][$key] = $data;
+        }
+
+        $page = Page::findOne($id_page);
+
+        return $this->render('program',['page'=>$page,'program'=>$program]);
     }
 }

@@ -109,7 +109,10 @@ class Block extends \yii\db\ActiveRecord
                     'name'=>'Дата начала',
                     'type'=>BlockVar::TYPE_DATE,
                 ],
-
+                'programm'=>[
+                    'name'=>'Программа мероприятия',
+                    'type'=>BlockVar::TYPE_COLLECTION,
+                ],
             ]
         ],
         'service_search'=> [

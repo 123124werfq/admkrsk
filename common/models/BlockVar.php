@@ -29,6 +29,7 @@ class BlockVar extends \yii\db\ActiveRecord
     const TYPE_SERVICE = 10;
     const TYPE_CHECKBOX = 11;
     const TYPE_DATE = 12;
+    const TYPE_COLLECTION = 13;
 
     /**
      * {@inheritdoc}
