@@ -25,14 +25,11 @@
                 foreach ($links as $key => $link)
                     foreach ($link->childs as $key => $child) {?>
                         <div class="goslinks-col" data-filter-type="<?=$link->id_link?>">
-                            <a href="<?=$child->getUrl()?>" class="goslinks-item" target="_blank">
-                                <img class="goslinks_img" src="<?=$child->makeThumb(['w'=>48,'h'=>48])?>" alt="<?=Html::encode($child->label)?>">
-                                <h4 class="goslinks_title"><?=Html::encode($child->label)?></h4>
+                            <a href="<?=$child->getUrl()?>" class="sponsor" target="_blank">
+                                <img class="sponsor_img" src="<?=$child->makeThumb(['w'=>370,'h'=>160])?>" alt="<?=Html::encode($child->label)?>">
                             </a>
                         </div>
-            <?php
-                    }
-            ?>
+            <?php } ?>
         </div>
         <button class="load-more-block btn btn__block show-hidden" data-show-target="#hidden-goslinks">Показать еще</button>
     </div>
