@@ -11,6 +11,7 @@ $this->title = $model->pageTitle;
 $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
+$this->params['button-block'][] = '<a href="'.$model->getUrl(true).'" class = "btn btn-default">Посмотреть</a>';
 $this->params['button-block'][] = Html::a('История', ['history', 'id' => $model->id_page], ['class' => 'btn btn-default']);
 $this->params['button-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_page], ['class' => 'btn btn-primary']);
 $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id_page], [
