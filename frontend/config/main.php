@@ -69,6 +69,12 @@ return [
             'showScriptName' => false,
             'rules' => [
                 'search/address'=>'search/address',
+                'address/region'=>'address/region',
+                'address/subregion'=>'address/subregion',
+                'address/city'=>'address/city',
+                'address/district'=>'address/district',
+                'address/street'=>'address/street',
+                'address/house'=>'address/house',
                 [
                     'class' => 'frontend\components\PravoUrlRule',
                 ],

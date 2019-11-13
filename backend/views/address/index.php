@@ -3,7 +3,7 @@
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel backend\models\search\AddressSearch */
+/* @var $searchModel backend\models\search\HouseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = $searchModel->breadcrumbsLabel;
@@ -19,8 +19,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
                 'columns' => [
-                    'houseguid',
-                    'address',
+                    'postalcode',
+                    'region.name',
+                    'subregion.name',
+                    'city.name',
+                    'district.name',
+                    'street.name',
+                    'name',
+                    'fullname',
                 ],
             ]); ?>
 

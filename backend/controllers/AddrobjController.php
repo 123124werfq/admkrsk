@@ -3,8 +3,8 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\AddrObj;
-use backend\models\search\AddrObjSearch;
+use common\models\FiasAddrObj;
+use backend\models\search\FiasAddrObjSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -19,7 +19,7 @@ class AddrobjController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new AddrObjSearch();
+        $searchModel = new FiasAddrObjSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,12 +45,12 @@ class AddrobjController extends Controller
      * Finds the Address model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return AddrObj the loaded model
+     * @return FiasAddrObj the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = AddrObj::findOne($id)) !== null) {
+        if (($model = FiasAddrObj::findOne($id)) !== null) {
             return $model;
         }
 
