@@ -38,7 +38,7 @@ html {overflow: inherit!important; padding-right: 0px!important;}
 .form-row {border: 1px dashed #aaa; min-height: 50px; padding: 10px; display: flex; margin-bottom: 10px;}
 .form-row .btn-group {position: absolute; right: -50px;}
 .form-row .form-element .btn-group {
-    right: 7px;
+    right: 12px;
     top: 8px;
 }
 
@@ -143,10 +143,17 @@ ul.menu-container ul .create-menu {display: none;}
 
 .modal-body .btn {display: none;}
 
-.form-element {padding: 5px;}
+.form-element {padding: 5px; min-height: 40px;}
 .form-element {position: relative;}
 
-.form-row .col {width: 100%;}
+.form-row .col {
+  width: 100%;
+  padding-left: 5px;
+  border-left: 4px solid #EEE;
+  padding-right: 8px;
+  cursor: pointer;
+}
+/*.form-row .col:after {position: absolute; top: 0px; right: 0px; left: 0px; z-index: 1;}*/
 
 
 #block_choiser .modal-dialog {width: 850px;}
