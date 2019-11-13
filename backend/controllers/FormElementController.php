@@ -157,4 +157,13 @@ class FormElementController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    public function actionOrder()
+    {
+        $ords = Yii::$app->request->post('ords');
+        $parents = Yii::$app->request->post('parents');
+
+        foreach ($ords as $key => $id)
+            Yii::$app->db->createCommand()->update('form_element',['ord'=>$key,'id_row'=>$parents[$key]],['id_element'=>$id])->execute();
+    }
 }

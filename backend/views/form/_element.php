@@ -1,4 +1,4 @@
-<div class="form-element">
+<div data-id="<?=$element->id_element?>" class="form-element col">
 	<?=$element->content?>
 	<div class="btn-group">
 	    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
