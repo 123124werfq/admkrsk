@@ -214,8 +214,8 @@ use yii\widgets\ActiveForm;
         <hr class="hr__md">
 
         <p class="text-help">
-            Дата публикации (изменения): 06.07.2018 (06.07.2018)<br>
-            Просмотров за год (всего): 77 (77)
+            Дата публикации (изменения): <?=date('d.m.Y',$model->created_at)?> (<?=date('d.m.Y',$model->updated_at)?>)<br>
+            Просмотров за год (всего): <?=$model->viewsYear?> (<?=$model->views?>)
         </p>
 
         <div class="row">

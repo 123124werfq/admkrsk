@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\ActionTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -45,6 +46,8 @@ use yii\helpers\ArrayHelper;
  */
 class Opendata extends \yii\db\ActiveRecord
 {
+    use ActionTrait;
+
     const VERSION = 'http://data.gov.ru/metodicheskie-rekomendacii-po-publikacii-otkrytyh-dannyh-versiya-30';
     const OPENDATA_LIST_PATH = 'opendata/list.csv';
 

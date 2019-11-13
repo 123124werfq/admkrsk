@@ -1,6 +1,7 @@
 <?php
 
 namespace frontend\controllers;
+use common\models\Action;
 use common\models\Project;
 use common\models\Page;
 use common\models\Collection;
@@ -20,10 +21,12 @@ class EventController extends \yii\web\Controller
         $projects = $projects->all();
 
         if (empty($page))
-            $page = Page::find()->where(['alias'=>'events'])->one();
+            $page = Page::findOne(['alias'=>'events']);
 
         if (empty($page))
             throw new NotFoundHttpException('');
+
+        $page->createAction();
 
         return $this->render('index',[
             'page'=>$page,

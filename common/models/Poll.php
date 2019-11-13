@@ -5,6 +5,7 @@ namespace common\models;
 use common\behaviors\DatetimeBehavior;
 use common\behaviors\UserAccessControlBehavior;
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\ActionTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -40,6 +41,8 @@ use yii\behaviors\TimestampBehavior;
  */
 class Poll extends \yii\db\ActiveRecord
 {
+    use ActionTrait;
+
     const STATUS_INACTIVE = 1;
     const STATUS_ACTIVE = 2;
 

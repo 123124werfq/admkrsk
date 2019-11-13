@@ -1,6 +1,7 @@
 <?php
 
 namespace frontend\controllers;
+
 use common\models\Service;
 use common\models\Form;
 use common\models\ServiceRubric;
@@ -45,6 +46,8 @@ class ServiceController extends \yii\web\Controller
     public function actionView($id,$page=null)
     {
     	$model = $this->findModel($id);
+
+        $model->createAction();
 
         return $this->render('view',[
         	'service'=>$model,
