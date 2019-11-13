@@ -169,9 +169,6 @@ class SiteController extends Controller
 
         $blocks = $page->blocks;
 
-        $page->views++;
-        $page->updateAttributes(['views']);
-
         return $this->render((empty($blocks))?'page':'blocks',[
             'page'=>$page
         ]);
