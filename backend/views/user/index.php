@@ -6,10 +6,10 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\UserSearch */
+/* @var $searchModel backend\models\search\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Пользователи';
+$this->title = $searchModel->labelPlural;
 $this->params['breadcrumbs'][] = $this->title;
 //$this->params['button-block'][] = Html::a('о', ['create'], ['class' => 'btn btn-success']);
 

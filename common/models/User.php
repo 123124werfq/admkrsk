@@ -2,6 +2,7 @@
 namespace common\models;
 
 use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -34,11 +35,15 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+    use MetaTrait;
     use ActionTrait;
 
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
+
+    public $label = 'Пользователь';
+    public $labelPlural = 'Пользователи';
 
     // CdtDblGfh - ESIA pass
     // 240501 - ESIA id
@@ -444,10 +449,13 @@ class User extends ActiveRecord implements IdentityInterface
         return false;
     }
 
-
+    /**
+     * @param string $oid
+     * @return User|null
+     */
     static public function findByOid($oid)
     {
-        $user = User::find()->where(['email' => $oid.'@esia.ru'])->one();
+        $user = User::findOne(['email' => $oid.'@esia.ru']);
         return $user;
     }
 }
