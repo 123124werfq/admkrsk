@@ -111,7 +111,7 @@ class Collection extends \yii\db\ActiveRecord
         return 'Списки';
     }
 
-    public function insertRecord($data)
+    /*public function insertRecord($data)
     {
         $model = new CollectionRecord;
         $model->id_collection = $this->id_collection;
@@ -133,11 +133,10 @@ class Collection extends \yii\db\ActiveRecord
 
             return $model;
         }
-
         return false;
-    }
+    }*/
 
-    public function updateRecord($id_record,$data)
+    /*public function updateRecord($id_record,$data)
     {
         $model = CollectionRecord::find($id_record);
         return $model->updateRecord();
@@ -169,7 +168,7 @@ class Collection extends \yii\db\ActiveRecord
         }
 
         return false;
-    }
+    }*/
 
     /**
      * @return string
@@ -205,7 +204,7 @@ class Collection extends \yii\db\ActiveRecord
         $data = $this->getData();
 
         $output = [];
-        
+
         foreach ($data as $key => $row)
         {
             $output[$key] = implode(' ', $row);
