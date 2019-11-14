@@ -5,6 +5,7 @@ namespace common\models;
 use common\behaviors\UserAccessControlBehavior;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -35,8 +36,11 @@ use yii\db\ActiveQuery;
  */
 class Page extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
     use ActionTrait;
 
+    public $label = 'Страница';
+    public $labelPlural = 'Страницы';
     public $existUrl;
     public $access_user_ids;
 

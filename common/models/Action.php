@@ -2,12 +2,16 @@
 
 namespace common\models;
 
+use common\traits\MetaTrait;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Connection;
+use yii\helpers\Html;
+use yii\helpers\Inflector;
+use yii\helpers\StringHelper;
 
 /**
  * This is the model class for table "action".
@@ -21,9 +25,19 @@ use yii\db\Connection;
  */
 class Action extends ActiveRecord
 {
+    use MetaTrait;
+
     const ACTION_VIEW = 'view';
+    const ACTION_CREATE = 'create';
+    const ACTION_UPDATE = 'update';
+    const ACTION_DELETE = 'delete';
     const ACTION_LOGIN = 'login';
+    const ACTION_LOGIN_AD = 'login-ad';
+    const ACTION_LOGIN_ESIA = 'login-esia';
     const ACTION_LOGOUT = 'logout';
+
+    public $label = 'Действие пользователя';
+    public $labelPlural = 'Действия пользователей';
 
     /**
      * {@inheritdoc}
@@ -63,9 +77,9 @@ class Action extends ActiveRecord
             'id' => 'ID',
             'model' => 'Model',
             'model_id' => 'Model ID',
-            'action' => 'Action',
-            'created_by' => 'Created By',
-            'created_at' => 'Created At',
+            'action' => 'Действие',
+            'created_by' => 'Пользователь',
+            'created_at' => 'Дата',
         ];
     }
 
@@ -110,5 +124,41 @@ class Action extends ActiveRecord
         }
 
         return false;
+    }
+
+    public function getSummary()
+    {
+        $summary = '';
+
+        $model = ($this->model && $this->model_id) ? $this->model::findOne($this->model_id) : null;
+
+        switch ($this->action) {
+            case self::ACTION_VIEW:
+                $summary = 'Просмотр ' . Html::a($model->label . ' #' . $this->model_id, ['/' . Inflector::camel2id(StringHelper::basename($this->model)) . '/view', 'id' => $this->model_id], ['target' => '_blank']);
+                break;
+            case self::ACTION_CREATE:
+                $summary = 'Создание';
+                break;
+            case self::ACTION_UPDATE:
+                $summary = 'Редактирование';
+                break;
+            case self::ACTION_DELETE:
+                $summary = 'Удаление ';
+                break;
+            case self::ACTION_LOGIN:
+                $summary = 'Авторизация';
+                break;
+            case self::ACTION_LOGIN_AD:
+                $summary = 'Авторизация через Active Directory';
+                break;
+            case self::ACTION_LOGIN_ESIA:
+                $summary = 'Авторизация через ЕСИА';
+                break;
+            case self::ACTION_LOGOUT:
+                $summary = 'Выход';
+                break;
+        }
+
+        return $summary;
     }
 }

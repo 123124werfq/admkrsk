@@ -7,28 +7,29 @@ use yii\grid\GridView;
 /* @var $searchModel backend\models\search\ActionSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Действия пользователя';
+$this->title = $searchModel->labelPlural;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="action-index">
+    <div class="ibox">
+        <div class="ibox-content">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+            <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Create Action', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+            <?= GridView::widget([
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'columns' => [
+                    [
+                        'attribute' => 'summary',
+                        'label' => 'Действие',
+                        'format' => 'raw',
+                    ],
+                    //'ip:ip',
+                    'created_at:datetime',
+                ],
+            ]); ?>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            'model',
-            'model_id',
-            'action',
-            'created_at:datetime',
-        ],
-    ]); ?>
-
+        </div>
+    </div>
 </div>
