@@ -59,7 +59,7 @@ class Service extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_rub','client_type'],'required'],
+            [['id_rub','client_type','name'],'required'],
             [['id_rub', 'client_type', 'old', 'online', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','refuse'], 'default', 'value' => null],
             [['id_rub', 'old', 'online', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_form'], 'integer'],
             [['keywords', 'addresses', 'result', 'client_category', 'duration', 'documents', 'price', 'appeal', 'legal_grounds', 'regulations', 'refuse','regulations_link', 'duration_order', 'availability', 'procedure_information', 'max_duration_queue'], 'string'],
