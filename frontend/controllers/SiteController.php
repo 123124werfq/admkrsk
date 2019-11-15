@@ -100,6 +100,7 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
+
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             Yii::$app->user->identity->createAction(Action::ACTION_LOGIN);
             return $this->goBack();

@@ -7,25 +7,21 @@ use yii\widgets\DetailView;
 /* @var $model common\models\Service */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Services', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Услуги', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
+$this->params['button-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_service], ['class' => 'btn btn-primary']);
+$this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id_service], ['class' => 'btn btn-danger',
+    'data' => [
+        'confirm' => 'Вы уверены что хотите удалить эту услугу?',
+        'method' => 'post',
+    ],
+]);
 ?>
-<div class="service-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id_service], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id_service], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
+<div class="row">
+    <div class="col-sm-7">
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -52,13 +48,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'max_duration_queue:ntext',
             'old',
             'online',
-            'created_at',
-            'created_by',
-            'updated_at',
-            'updated_by',
-            'deleted_at',
-            'deleted_by',
         ],
     ]) ?>
-
+    </div>
+    <div class="col-sm-5">
+        </div>
 </div>

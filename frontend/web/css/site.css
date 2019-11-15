@@ -12,3 +12,15 @@ form .row {flex-wrap: nowrap!important;}
 .text-row {padding: 0px 15px; width: 100%;}
 
 .header-search{padding: 10px; border: none; border-radius: 5px;}
+
+a[href$=".pdf"]:before {background:url('/img/files/pdf.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
+a[href$=".doc"]:before {background:url('/img/files/doc.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
+a[href$=".xsl"]:before {background:url('/img/files/xsl.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
+a[href$=".docx"]:before {background:url('/img/files/doc.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
+a[href$=".xslx"]:before {background:url('/img/files/xsl.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
+a[href$=".xml"]:before {background:url('/img/files/xml.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
+a[href$=".csv"]:before {background:url('/img/files/csv.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
+a[href$=".mp3"]:before {background:url('/img/files/mp3.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
+a[href$=".zip"]:before {background:url('/img/files/zip.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
+a[href$=".wav"]:before {background:url('/img/files/wav.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
+a[href$=".txt"]:before {background:url('/img/files/txt.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
