@@ -3,23 +3,23 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\Address;
-use backend\models\search\AddressSearch;
+use common\models\House;
+use backend\models\search\HouseSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 /**
- * AddressController implements the CRUD actions for Address model.
+ * AddressController implements the CRUD actions for House model.
  */
 class AddressController extends Controller
 {
     /**
-     * Lists all Address models.
+     * Lists all House models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new AddressSearch();
+        $searchModel = new HouseSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -42,15 +42,15 @@ class AddressController extends Controller
     }
 
     /**
-     * Finds the Address model based on its primary key value.
+     * Finds the House model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Address the loaded model
+     * @return House the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Address::findOne($id)) !== null) {
+        if (($model = House::findOne($id)) !== null) {
             return $model;
         }
 

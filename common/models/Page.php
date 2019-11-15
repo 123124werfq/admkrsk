@@ -4,9 +4,11 @@ namespace common\models;
 
 use common\behaviors\UserAccessControlBehavior;
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\ActionTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "cnt_page".
@@ -29,12 +31,14 @@ use yii\behaviors\TimestampBehavior;
  * @property string $breadcrumbsLabel
  * @property string $pageTitle
  * @property array $access_user_ids
+ * @property Block[] $blocks
  */
 class Page extends \yii\db\ActiveRecord
 {
+    use ActionTrait;
+
     public $existUrl;
     public $access_user_ids;
-
 
     /**
      * {@inheritdoc}
@@ -195,21 +199,33 @@ class Page extends \yii\db\ActiveRecord
         return $this->title;
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getBlocks()
     {
         return $this->hasMany(Block::class, ['id_page' => 'id_page'])->orderBy('ord ASC');
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getParent()
     {
         return $this->hasOne(Page::class, ['id_page' => 'id_parent']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getMenu()
     {
         return $this->hasOne(Menu::class, ['id_page' => 'id_page']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getChilds()
     {
         return $this->hasMany(Page::class, ['id_parent' => 'id_page'])->orderBy('ord ASC');

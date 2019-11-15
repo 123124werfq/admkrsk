@@ -11,16 +11,14 @@ use common\models\House;
  */
 class HouseSearch extends House
 {
-    public $housename;
-
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['buildnum', 'enddate', 'housenum', 'ifnsfl', 'ifnsul', 'okato', 'oktmo', 'postalcode', 'startdate', 'strucnum', 'terrifnsfl', 'terrifnsul', 'updatedate', 'cadnum', 'aoguid', 'houseguid', 'houseid', 'normdoc', 'housename'], 'safe'],
-            [['eststatus', 'statstatus', 'strstatus', 'counter', 'divtype'], 'integer'],
+            [['id_house'], 'integer'],
+            [['name', 'fullname'], 'safe'],
         ];
     }
 
@@ -48,13 +46,6 @@ class HouseSearch extends House
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort' => [
-                'defaultOrder' => [
-                    'housenum' => SORT_ASC,
-                    'buildnum' => SORT_ASC,
-                    'strucnum' => SORT_ASC,
-                ],
-            ],
         ]);
 
         $this->load($params);
@@ -67,40 +58,11 @@ class HouseSearch extends House
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'enddate' => $this->enddate,
-            'startdate' => $this->startdate,
-            'updatedate' => $this->updatedate,
-            'eststatus' => $this->eststatus,
-            'statstatus' => $this->statstatus,
-            'strstatus' => $this->strstatus,
-            'counter' => $this->counter,
-            'divtype' => $this->divtype,
-            'aoguid' => $this->aoguid,
-            'houseguid' => $this->houseguid,
+            'id_house' => $this->id_house,
         ]);
 
-        $query->andFilterWhere(['ilike', 'buildnum', $this->buildnum])
-            ->andFilterWhere(['ilike', 'housenum', $this->housenum])
-            ->andFilterWhere(['ilike', 'ifnsfl', $this->ifnsfl])
-            ->andFilterWhere(['ilike', 'ifnsul', $this->ifnsul])
-            ->andFilterWhere(['ilike', 'okato', $this->okato])
-            ->andFilterWhere(['ilike', 'oktmo', $this->oktmo])
-            ->andFilterWhere(['ilike', 'postalcode', $this->postalcode])
-            ->andFilterWhere(['ilike', 'strucnum', $this->strucnum])
-            ->andFilterWhere(['ilike', 'terrifnsfl', $this->terrifnsfl])
-            ->andFilterWhere(['ilike', 'terrifnsul', $this->terrifnsul])
-            ->andFilterWhere(['ilike', 'cadnum', $this->cadnum])
-            ->andFilterWhere(['ilike', 'houseid', $this->houseid])
-            ->andFilterWhere(['ilike', 'normdoc', $this->normdoc]);
-
-        if ($this->housename) {
-            $query->andFilterWhere([
-                'or',
-                ['ilike', 'housenum', $this->housename],
-                ['ilike', 'buildnum', $this->housename],
-                ['ilike', 'strucnum', $this->housename],
-            ]);
-        }
+        $query->andFilterWhere(['ilike', 'name', $this->name])
+            ->andFilterWhere(['ilike', 'fullname', str_replace([' ',',','.'], '%', '%' . $this->fullname . '%'), false]);
 
         return $dataProvider;
     }

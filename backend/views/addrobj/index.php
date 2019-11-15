@@ -3,7 +3,7 @@
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel backend\models\search\AddrObjSearch */
+/* @var $searchModel backend\models\search\FiasAddrObjSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = $searchModel->breadcrumbsLabel;

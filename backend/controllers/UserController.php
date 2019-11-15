@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\search\ActionSearch;
 use Yii;
 use common\models\User;
 use backend\models\search\UserSearch;
@@ -69,6 +70,15 @@ class UserController extends Controller
                         'allow' => true,
                         'actions' => ['delete'],
                         'roles' => ['backend.user.delete'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => User::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['action'],
+                        'roles' => ['backend.user.update'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => User::class,
@@ -206,6 +216,8 @@ class UserController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -228,5 +240,24 @@ class UserController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * Lists all Action models
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionAction($id)
+    {
+        $model = $this->findModel($id);
+
+        $searchModel = new ActionSearch(['created_by' => $model->id]);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('action', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 }

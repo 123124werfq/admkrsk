@@ -1,4 +1,10 @@
 <?php
+/* @var common\models\Page $page */
+
+/**
+ * @param string $tag
+ * @return array
+ */
 function parseAttributesFromTag($tag){
     $pattern = '/(\w+)=[\'"]([^\'"]*)/';
 
@@ -53,8 +59,8 @@ function parseAttributesFromTag($tag){
         <div class="row">
             <div class="col-2-third">
                 <p class="text-help">
-                    Дата публикации: <span class="publish-date"><?=date('d.m.Y',$page->created_at)?></span><br>
-                    Просмотров за всего: <?=$page->views?>
+                    Дата публикации (изменения): <?=date('d.m.Y',$page->created_at)?> (<?=date('d.m.Y',$page->updated_at)?>)<br>
+                    Просмотров за год (всего): <?=$page->viewsYear?> (<?=$page->views?>)
                 </p>
                 <div class="subscribe">
                     <div class="subscribe_left">

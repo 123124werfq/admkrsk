@@ -20,6 +20,8 @@ class PollController extends \yii\web\Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
+        $page->createAction();
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -35,6 +37,8 @@ class PollController extends \yii\web\Controller
         if (($page = Page::findOne(['alias' => 'poll-archive'])) === null) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+
+        $page->createAction();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -60,6 +64,8 @@ class PollController extends \yii\web\Controller
     	if ($form->load(Yii::$app->request->post()) && $form->save()) {
     	    $this->redirect(['view', 'id' => $model->id_poll]);
         }
+
+        $model->createAction();
 
         return $this->render('view',[
         	'model'=>$model,

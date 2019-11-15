@@ -593,17 +593,17 @@ hr.hr__large.hr__mt {
 
 /* TYPOGRAFY */
 h1 {
-    font-size: 4.8rem;
-    line-height: 5.6rem;
+    font-size: 3.8rem;
+    line-height: 4.6rem;
     letter-spacing: -0.6px;
     font-weight: 500;
     font-family: 'Roboto' !important;
     margin-top: 0;
-    margin-bottom: 48px;
+    margin-bottom: 24px;
 }
 h2, .h2 {
-    font-size: 3.2rem;
-    line-height: 4rem;
+    font-size: 2.8rem;
+    line-height: 3.2rem;
     font-weight: bold;
     letter-spacing: -0.4px;
     margin-bottom: 22px;
@@ -621,7 +621,7 @@ h4 {
     font-size: 1.8rem;
     font-weight: bold;
     line-height: 2.6rem;
-    margin: 24px 0;
+    margin: 8px 0;
     font-family: 'Roboto' !important;
 }
 h5 {
@@ -6958,7 +6958,7 @@ div.surveyBar, .ms-surveyHBar {
 }
 /* /PRINT */
 
-/* SPONSOR */
+/* SPONSOR */
 .sponsor {
     height: 160px;
     display: flex;
@@ -6989,9 +6989,9 @@ div.surveyBar, .ms-surveyHBar {
 .sponsors {
     margin-bottom: 60px;
 }
-/* /SPONSOR */
+/* /SPONSOR */
 
-/* PROGRAM */
+/* PROGRAM */
 .area {
     color: #848E99;
     position: relative;
@@ -7015,7 +7015,7 @@ div.surveyBar, .ms-surveyHBar {
     margin-bottom: 32px;
 }
 .program {
-    padding-top: 80px;
+    padding-top: 32px;
 }
 .program:first-child {
     border-top: 1px solid #DDE1E6;
@@ -7024,8 +7024,8 @@ div.surveyBar, .ms-surveyHBar {
     margin-top: 0;
 }
 .program-event {
-    margin-top: 32px;
-    padding-bottom: 22px;
+    margin-top: 8px;
+    padding-bottom: 8px;
     border-bottom: 1px solid #DDE1E6;
 }
 .program_event-title {
@@ -7117,7 +7117,7 @@ div.surveyBar, .ms-surveyHBar {
         margin-bottom: 15px;
     }
 }
-/* /PROGRAM */
+/* /PROGRAM */
 
 .main-slider_item__single:before {
     display: none;
@@ -7134,7 +7134,7 @@ div.surveyBar, .ms-surveyHBar {
     width: 24% !important;
 }
 
-/* INTRO */
+/* INTRO */
 .intro {
     padding-top: 80px;
 }
@@ -7178,9 +7178,9 @@ div.surveyBar, .ms-surveyHBar {
         padding: 15px;
     }
 }
-/* /INTRO */
+/* /INTRO */
 
-/* VIDEO SECTION */
+/* VIDEO SECTION */
 .video-section {
     position: relative;
 }
@@ -7248,9 +7248,9 @@ div.surveyBar, .ms-surveyHBar {
                 transform: scale(0.4);
     }
 }
-/* /VIDEO SECTION */
+/* /VIDEO SECTION */
 
-/* COLLAPSE */
+/* COLLAPSE */
 .collapse-control {
     cursor: pointer;
     padding-right: 26px;
@@ -7291,9 +7291,9 @@ div.surveyBar, .ms-surveyHBar {
 .collapse-content h5 a:hover {
     color: #E4292F !important;
 }
-/* /COLLAPSE */
+/* /COLLAPSE */
 
-/* REESTR */
+/* REESTR */
 .reestr {
     margin-bottom: 72px;
 }
@@ -7303,9 +7303,9 @@ div.surveyBar, .ms-surveyHBar {
 .reestr h4 {
     margin: 16px 0;
 }
-/* /REESTR */
+/* /REESTR */
 
-/* PRESENT */
+/* PRESENT */
 .present {
     padding: 68px 0;
     background: center no-repeat #F4F7FB;
@@ -7355,9 +7355,9 @@ div.surveyBar, .ms-surveyHBar {
 .present-situations .slick-dots button:hover:before {
     background: #3B4256;
 }
-/* /PRESENT */
+/* /PRESENT */
 
-/* SEARCH */
+/* SEARCH */
 .search {
 
 }
@@ -7418,19 +7418,4 @@ div.surveyBar, .ms-surveyHBar {
         width: 100%;
     }
 }
-/* /SEARCH */
-
-
-/* FILE ICONS */
-
-a[href$=".pdf"]:before {background:url('/img/files/pdf.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
-a[href$=".doc"]:before {background:url('/img/files/doc.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
-a[href$=".xsl"]:before {background:url('/img/files/xsl.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
-a[href$=".docx"]:before {background:url('/img/files/doc.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
-a[href$=".xslx"]:before {background:url('/img/files/xsl.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
-a[href$=".xml"]:before {background:url('/img/files/xml.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
-a[href$=".csv"]:before {background:url('/img/files/csv.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
-a[href$=".mp3"]:before {background:url('/img/files/mp3.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
-a[href$=".zip"]:before {background:url('/img/files/zip.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
-a[href$=".wav"]:before {background:url('/img/files/wav.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
-a[href$=".txt"]:before {background:url('/img/files/txt.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
+/* /SEARCH */

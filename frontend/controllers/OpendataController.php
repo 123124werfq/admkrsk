@@ -38,6 +38,8 @@ class OpendataController extends \yii\web\Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
+        $model->createAction();
+
         return $this->render('view',[
             'model'=>$model,
             'page' => $page,
