@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\traits\MetaTrait;
 use Yii;
 use yii\db\ActiveRecord;
 
@@ -47,8 +48,6 @@ use yii\db\ActiveRecord;
  * @property int $operstatus
  * @property string $parentguid
  * @property string $previd
- * @property string $breadcrumbsLabel
- * @property string $pageTitle
  * @property string $addressName
  * @property string $fullName
  *
@@ -59,6 +58,12 @@ use yii\db\ActiveRecord;
  */
 class FiasAddrObj extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+
+    const VERBOSE_NAME = 'Адрес';
+    const VERBOSE_NAME_PLURAL = 'Адреса';
+    const TITLE_ATTRIBUTE = 'addressName';
+
     /**
      * {@inheritdoc}
      */
@@ -165,22 +170,6 @@ class FiasAddrObj extends \yii\db\ActiveRecord
     public function getHouses()
     {
         return $this->hasMany(FiasHouse::class, ['aoguid' => 'aoguid']);
-    }
-
-    /**
-     * @return string
-     */
-    public function getBreadcrumbsLabel()
-    {
-        return 'Адреса';
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->addressName;
     }
 
     /**

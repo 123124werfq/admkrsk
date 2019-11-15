@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\behaviors\UserAccessControlBehavior;
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\MetaTrait;
 use Yii;
 
 /**
@@ -17,6 +18,12 @@ use Yii;
  */
 class Vars extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+
+    const VERBOSE_NAME = 'Переменная';
+    const VERBOSE_NAME_PLURAL = 'Переменные';
+    const TITLE_ATTRIBUTE = 'name';
+
     public $access_user_ids;
 
     /**

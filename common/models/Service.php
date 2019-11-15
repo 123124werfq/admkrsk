@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 use yii\helpers\Url;
 
@@ -41,7 +42,12 @@ use yii\helpers\Url;
  */
 class Service extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
     use ActionTrait;
+
+    const VERBOSE_NAME = 'Муниципальная услуга';
+    const VERBOSE_NAME_PLURAL = 'Муниципальные услуги';
+    const TITLE_ATTRIBUTE = 'name';
 
     public $id_situations = [];
 

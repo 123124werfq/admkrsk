@@ -38,12 +38,13 @@ class User extends ActiveRecord implements IdentityInterface
     use MetaTrait;
     use ActionTrait;
 
+    const VERBOSE_NAME = 'Пользователь';
+    const VERBOSE_NAME_PLURAL = 'Пользователи';
+    const TITLE_ATTRIBUTE = 'username';
+
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
-
-    public $label = 'Пользователь';
-    public $labelPlural = 'Пользователи';
 
     // CdtDblGfh - ESIA pass
     // 240501 - ESIA id
@@ -116,22 +117,6 @@ class User extends ActiveRecord implements IdentityInterface
             'updated_at' => 'Обновлено',
             'roles' => 'Роли',
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getBreadcrumbsLabel()
-    {
-        return 'Пользователи';
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->username;
     }
 
     /**

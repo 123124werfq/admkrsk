@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\traits\MetaTrait;
 use Yii;
 
 /**
@@ -9,12 +10,16 @@ use Yii;
  *
  * @property int $id_address
  * @property string $fullname
- * @property string $breadcrumbsLabel
- * @property string $pageTitle
  *
  */
 class Address extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+
+    const VERBOSE_NAME = 'Адрес';
+    const VERBOSE_NAME_PLURAL = 'Адреса';
+    const TITLE_ATTRIBUTE = 'fullname';
+
     /**
      * {@inheritdoc}
      */

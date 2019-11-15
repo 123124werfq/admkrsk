@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\Action;
 use common\modules\log\models\Log;
 use Yii;
 
@@ -352,6 +353,7 @@ class CollectionController extends Controller
         $model = new Collection();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_collection]);
         }
 
@@ -468,6 +470,8 @@ class CollectionController extends Controller
                     }
                 }
             }
+
+            $model->createAction(Action::ACTION_UPDATE);
 
             return $this->redirect(['view', 'id' => $model->id_collection]);
         }
@@ -628,7 +632,11 @@ class CollectionController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if ($model->delete()) {
+            $model->createAction(Action::ACTION_DELETE);
+        }
 
         return $this->redirect(['index']);
     }

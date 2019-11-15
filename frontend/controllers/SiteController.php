@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use common\models\Action;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
@@ -101,6 +102,7 @@ class SiteController extends Controller
         $model = new LoginForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            Yii::$app->user->identity->createAction(Action::ACTION_LOGIN);
             return $this->goBack();
         } else {
             $model->password = '';
@@ -319,7 +321,10 @@ class SiteController extends Controller
             if($esiauser)
                 $esiauser->actualize($client);
 
-            return Yii::$app->user->login($user);
+            $login = Yii::$app->user->login($user);
+            Yii::$app->user->identity->createAction(Action::ACTION_LOGIN_ESIA);
+
+            return $login;
         }
 
         $personInfo = $client->getPersonInfo($oid);
@@ -345,6 +350,7 @@ class SiteController extends Controller
         }
 
         Yii::$app->user->login($user);
+        Yii::$app->user->identity->createAction(Action::ACTION_SIGNUP_ESIA);
 
         return $this->redirect('/');
     }

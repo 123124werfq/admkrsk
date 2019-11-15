@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel backend\models\search\AlertSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Всплывающие сообщения';
+$this->title = $searchModel->breadcrumbsLabel;
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['button-block'][] = Html::a('Добавить', ['create'], ['class' => 'btn btn-success']);
 ?>

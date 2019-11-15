@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -33,8 +34,6 @@ use yii\helpers\ArrayHelper;
  * @property string $signature
  * @property string $path
  * @property string $filename
- * @property string $breadcrumbsLabel
- * @property string $pageTitle
  *
  * @property Collection $collection
  * @property Page $page
@@ -46,7 +45,12 @@ use yii\helpers\ArrayHelper;
  */
 class Opendata extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
     use ActionTrait;
+
+    const VERBOSE_NAME = 'Открытые данные';
+    const VERBOSE_NAME_PLURAL = 'Открытые данные';
+    const TITLE_ATTRIBUTE = 'title';
 
     const VERSION = 'http://data.gov.ru/metodicheskie-rekomendacii-po-publikacii-otkrytyh-dannyh-versiya-30';
     const OPENDATA_LIST_PATH = 'opendata/list.csv';
@@ -188,22 +192,6 @@ class Opendata extends \yii\db\ActiveRecord
         return $this->hasOne(OpendataData::class, ['id_opendata_structure' => 'id_opendata_structure'])
             ->via('structures')
             ->orderBy(['created_at' => SORT_DESC]);
-    }
-
-    /**
-     * @return string
-     */
-    public function getBreadcrumbsLabel()
-    {
-        return 'Открытые данные';
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->title;
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace common\models;
 
+use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 
 /**
@@ -19,7 +21,14 @@ use Yii;
  */
 class Form extends \yii\db\ActiveRecord
 {
-    public $make_collection=false;
+    use MetaTrait;
+    use ActionTrait;
+
+    const VERBOSE_NAME = 'Форма';
+    const VERBOSE_NAME_PLURAL = 'Формы';
+    const TITLE_ATTRIBUTE = 'name';
+
+    public $make_collection = false;
 
     /**
      * {@inheritdoc}

@@ -3,6 +3,8 @@
 namespace common\models;
 
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -18,13 +20,18 @@ use yii\behaviors\TimestampBehavior;
  * @property int $updated_by
  * @property int $deleted_at
  * @property int $deleted_by
- * @property string $breadcrumbsLabel
- * @property string $pageTitle
  *
  * @property Faq[] $faqs
  */
 class FaqCategory extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+    use ActionTrait;
+
+    const VERBOSE_NAME = 'Категория';
+    const VERBOSE_NAME_PLURAL = 'Категории';
+    const TITLE_ATTRIBUTE = 'title';
+
     /**
      * {@inheritdoc}
      */
@@ -79,21 +86,5 @@ class FaqCategory extends \yii\db\ActiveRecord
     public function getFaqs()
     {
         return $this->hasMany(Faq::class, ['id_faq_category' => 'id_faq_category']);
-    }
-
-    /**
-     * @return string
-     */
-    public function getBreadcrumbsLabel()
-    {
-        return 'Категории';
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->title;
     }
 }

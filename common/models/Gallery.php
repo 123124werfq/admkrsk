@@ -3,6 +3,8 @@
 namespace common\models;
 
 use common\behaviors\UserAccessControlBehavior;
+use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 
 /**
@@ -21,6 +23,13 @@ use Yii;
  */
 class Gallery extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+    use ActionTrait;
+
+    const VERBOSE_NAME = 'Галерея';
+    const VERBOSE_NAME_PLURAL = 'Галереи';
+    const TITLE_ATTRIBUTE = 'name';
+
     public $access_user_ids;
 
     /**

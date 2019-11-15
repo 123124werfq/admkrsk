@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use backend\models\search\ActionSearch;
+use common\models\Action;
 use Yii;
 use common\models\User;
 use backend\models\search\UserSearch;
@@ -182,6 +183,7 @@ class UserController extends Controller
         $model = new User();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -202,6 +204,7 @@ class UserController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -220,8 +223,12 @@ class UserController extends Controller
      * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
+        {
+            $model = $this->findModel($id);
+
+            if ($model->delete()) {
+                $model->createAction(Action::ACTION_DELETE);
+            }
 
         return $this->redirect(['index']);
     }
@@ -256,6 +263,7 @@ class UserController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('action', [
+            'model' => $model,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);

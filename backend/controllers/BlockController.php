@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\Action;
 use Yii;
 use common\models\Block;
 use common\models\BlockVar;
@@ -69,6 +70,7 @@ class BlockController extends Controller
         $model = new Block();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_block]);
         }
 
@@ -120,6 +122,8 @@ class BlockController extends Controller
                     print_r($varModel->errors);
             }
 
+            $model->createAction(Action::ACTION_UPDATE);
+
             return $this->redirect(['page/layout', 'id' => $model->id_page]);
         }
 
@@ -134,12 +138,17 @@ class BlockController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
         $id_page = $model->id_page;
-        $model->delete();
+
+        if ($model->delete()) {
+            $model->createAction(Action::ACTION_DELETE);
+        }
 
         return $this->redirect(['/page/layout','id'=>$id_page]);
     }

@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\traits\ActionTrait;
 use Yii;
 
 /**
@@ -22,6 +23,8 @@ use Yii;
  */
 class Block extends \yii\db\ActiveRecord
 {
+    use ActionTrait;
+
     public $blocks = [
         'news'=> [
             'label'=>'Новостной блок',

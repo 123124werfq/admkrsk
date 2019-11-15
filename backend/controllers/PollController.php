@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\Action;
 use common\models\Question;
 use common\models\Vote;
 use common\modules\log\models\Log;
@@ -319,6 +320,7 @@ class PollController extends Controller
         $model = new Poll();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_poll]);
         }
 
@@ -340,6 +342,7 @@ class PollController extends Controller
         $model = new Question(['id_poll' => $poll->id_poll]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_poll]);
         }
 
@@ -361,6 +364,7 @@ class PollController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id_poll]);
         }
 
@@ -381,6 +385,7 @@ class PollController extends Controller
         $model = $this->findModelQuestion($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id_poll]);
         }
 
@@ -400,7 +405,11 @@ class PollController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if ($model->delete()) {
+            $model->createAction(Action::ACTION_DELETE);
+        }
 
         return $this->redirect(['index']);
     }
@@ -417,7 +426,10 @@ class PollController extends Controller
     public function actionDeleteQuestion($id)
     {
         $model = $this->findModelQuestion($id);
-        $model->delete();
+
+        if ($model->delete()) {
+            $model->createAction(Action::ACTION_DELETE);
+        }
 
         return $this->redirect(['view', 'id' => $model->id_poll]);
     }
