@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\traits\MetaTrait;
 use Yii;
 
 /**
@@ -30,8 +31,6 @@ use Yii;
  * @property string $houseguid
  * @property string $houseid
  * @property string $normdoc
- * @property string $breadcrumbsLabel
- * @property string $pageTitle
  * @property string $house
  * @property string $build
  * @property string $struc
@@ -42,6 +41,12 @@ use Yii;
  */
 class FiasHouse extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+
+    const VERBOSE_NAME = 'Дом';
+    const VERBOSE_NAME_PLURAL = 'Дома';
+    const TITLE_ATTRIBUTE = 'houseName';
+
     /**
      * {@inheritdoc}
      */
@@ -110,22 +115,6 @@ class FiasHouse extends \yii\db\ActiveRecord
     public function getAddrObj()
     {
         return $this->hasOne(FiasAddrObj::class, ['aoguid' => 'aoguid']);
-    }
-
-    /**
-     * @return string
-     */
-    public function getBreadcrumbsLabel()
-    {
-        return 'Дома';
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->houseName;
     }
 
     /**

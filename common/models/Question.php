@@ -5,6 +5,7 @@ namespace common\models;
 use common\behaviors\OrderBehavior;
 use common\components\yiinput\RelationBehavior;
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -29,8 +30,6 @@ use yii\helpers\ArrayHelper;
  * @property int $updated_by
  * @property int $deleted_at
  * @property int $deleted_by
- * @property string $breadcrumbsLabel
- * @property string $pageTitle
  * @property string $typeName
  * @property string $chartTypeName
  * @property string $dataValues
@@ -51,6 +50,12 @@ use yii\helpers\ArrayHelper;
  */
 class Question extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+
+    const VERBOSE_NAME = 'Вопрос';
+    const VERBOSE_NAME_PLURAL = 'Вопросы';
+    const TITLE_ATTRIBUTE = 'question';
+
     const TYPE_ONLY = 1;
     const TYPE_MULTIPLE = 2;
     const TYPE_FREE_FORM = 3;
@@ -182,22 +187,6 @@ class Question extends \yii\db\ActiveRecord
     public function getDeletedBy()
     {
         return $this->hasOne(User::class, ['id' => 'deleted_by']);
-    }
-
-    /**
-     * @return string
-     */
-    public function getBreadcrumbsLabel()
-    {
-        return 'Опросы';
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->question;
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace common\models;
 
+use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 use common\modules\log\behaviors\LogBehavior;
 use yii\behaviors\BlameableBehavior;
@@ -24,6 +26,13 @@ use yii\helpers\Url;
  */
 class ServiceSituation extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+    use ActionTrait;
+
+    const VERBOSE_NAME = 'Жизненная ситуация';
+    const VERBOSE_NAME_PLURAL = 'Жизненные ситуации';
+    const TITLE_ATTRIBUTE = 'name';
+
     /**
      * {@inheritdoc}
      */

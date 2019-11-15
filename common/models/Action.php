@@ -27,17 +27,19 @@ class Action extends ActiveRecord
 {
     use MetaTrait;
 
+    const VERBOSE_NAME = 'Действие пользователя';
+    const VERBOSE_NAME_PLURAL = 'Действия пользователей';
+
     const ACTION_VIEW = 'view';
     const ACTION_CREATE = 'create';
     const ACTION_UPDATE = 'update';
     const ACTION_DELETE = 'delete';
+    const ACTION_SIGNUP = 'signup';
+    const ACTION_SIGNUP_ESIA = 'signup-esia';
     const ACTION_LOGIN = 'login';
     const ACTION_LOGIN_AD = 'login-ad';
     const ACTION_LOGIN_ESIA = 'login-esia';
     const ACTION_LOGOUT = 'logout';
-
-    public $label = 'Действие пользователя';
-    public $labelPlural = 'Действия пользователей';
 
     /**
      * {@inheritdoc}
@@ -110,9 +112,9 @@ class Action extends ActiveRecord
         if ($model) {
             $act = new Action();
 
-            if (in_array($action, [Action::ACTION_LOGIN, Action::ACTION_LOGOUT])) {
+            if (Yii::$app->user->identity && in_array($action, [Action::ACTION_LOGIN, Action::ACTION_LOGOUT])) {
                 $act->model = User::class;
-                $act->model_id = Yii::$app->user->id;
+                $act->model_id = Yii::$app->user->identity->id;
             } else {
                 $act->model = get_class($model);
                 $act->model_id = $model->primaryKey;
@@ -134,16 +136,22 @@ class Action extends ActiveRecord
 
         switch ($this->action) {
             case self::ACTION_VIEW:
-                $summary = 'Просмотр ' . Html::a($model->label . ' #' . $this->model_id, ['/' . Inflector::camel2id(StringHelper::basename($this->model)) . '/view', 'id' => $this->model_id], ['target' => '_blank']);
+                $summary = 'Просмотр ' . Html::a($model->pageTitle, ['/' . Inflector::camel2id(StringHelper::basename($this->model)) . '/view', 'id' => $this->model_id], ['target' => '_blank']);
                 break;
             case self::ACTION_CREATE:
-                $summary = 'Создание';
+                $summary = 'Создание ' . Html::a($model->pageTitle, ['/' . Inflector::camel2id(StringHelper::basename($this->model)) . '/view', 'id' => $this->model_id], ['target' => '_blank']);
                 break;
             case self::ACTION_UPDATE:
-                $summary = 'Редактирование';
+                $summary = 'Редактирование ' . Html::a($model->pageTitle, ['/' . Inflector::camel2id(StringHelper::basename($this->model)) . '/view', 'id' => $this->model_id], ['target' => '_blank']);
                 break;
             case self::ACTION_DELETE:
-                $summary = 'Удаление ';
+                $summary = 'Удаление ' . ($model->pageTitle);
+                break;
+            case self::ACTION_SIGNUP:
+                $summary = 'Регистрация';
+                break;
+            case self::ACTION_SIGNUP_ESIA:
+                $summary = 'Регистрация через ЕСИА';
                 break;
             case self::ACTION_LOGIN:
                 $summary = 'Авторизация';

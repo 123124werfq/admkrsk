@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model common\models\Alert */
 
 $this->title = 'Добавить сообщение';
-$this->params['breadcrumbs'][] = ['label' => 'Сообщения', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

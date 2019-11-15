@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\Action;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\Vars;
@@ -132,6 +133,7 @@ class VarsController extends Controller
      * Displays a single Vars model.
      * @param string $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionView($id)
     {
@@ -150,6 +152,7 @@ class VarsController extends Controller
         $model = new Vars();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_var]);
         } else {
             return $this->render('create', [
@@ -163,12 +166,14 @@ class VarsController extends Controller
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_UPDATE);
 
             Yii::$app->cache->delete("var_".$model->alias);
 
@@ -185,10 +190,17 @@ class VarsController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if ($model->delete()) {
+            $model->createAction(Action::ACTION_DELETE);
+        }
 
         return $this->redirect(['index']);
     }

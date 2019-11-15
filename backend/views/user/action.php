@@ -4,10 +4,13 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
+/* @var $model common\models\User */
 /* @var $searchModel backend\models\search\ActionSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = $searchModel->labelPlural;
+$this->title = $searchModel->breadcrumbsLabel;
+$this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->pageTitle, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="action-index">
@@ -18,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
-                'filterModel' => $searchModel,
+                //'filterModel' => $searchModel,
                 'columns' => [
                     [
                         'attribute' => 'summary',
@@ -26,7 +29,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         'format' => 'raw',
                     ],
                     //'ip:ip',
-                    'created_at:datetime',
+                    [
+                        'attribute' => 'created_at',
+                        'format' => 'datetime',
+                        'enableSorting' => false,
+                    ],
                 ],
             ]); ?>
 

@@ -2,6 +2,8 @@
 
 namespace common\models;
 
+use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 
 /**
@@ -24,7 +26,15 @@ use Yii;
  */
 class FormInputType extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+    use ActionTrait;
+
+    const VERBOSE_NAME = 'Тип поля';
+    const VERBOSE_NAME_PLURAL = 'Типы полей';
+    const TITLE_ATTRIBUTE = 'name';
+
     public $class, $placeholder, $style, $allow;
+
     /**
      * {@inheritdoc}
      */

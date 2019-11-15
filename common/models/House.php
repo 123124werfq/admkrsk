@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\traits\MetaTrait;
 use Yii;
 
 /**
@@ -22,6 +23,12 @@ use Yii;
  */
 class House extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+
+    const VERBOSE_NAME = 'Адрес';
+    const VERBOSE_NAME_PLURAL = 'Адреса';
+    const TITLE_ATTRIBUTE = 'fullname';
+
     /**
      * {@inheritdoc}
      */
@@ -47,7 +54,7 @@ class House extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_house' => 'Id House',
+            'id_house' => '#',
             'houseguid' => 'Houseguid',
             'postalcode' => 'Почтовый индекс',
             'name' => 'Дом',
@@ -101,21 +108,5 @@ class House extends \yii\db\ActiveRecord
     public function getStreet()
     {
         return $this->hasOne(Street::class, ['id_street' => 'id_street']);
-    }
-
-    /**
-     * @return string
-     */
-    public function getBreadcrumbsLabel()
-    {
-        return 'Адреса';
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->fullname;
     }
 }

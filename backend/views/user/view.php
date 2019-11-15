@@ -12,6 +12,7 @@ $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => 
 $this->params['breadcrumbs'][] = $this->title;
 
 //$this->params['button-block'][] = Html::a('История', ['history', 'id' => $model->id], ['class' => 'btn btn-default']);
+$this->params['button-block'][] = Html::a('Действия', ['action', 'id' => $model->id], ['class' => 'btn btn-default']);
 $this->params['button-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']);
 $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id], [
     'class' => 'btn btn-danger',

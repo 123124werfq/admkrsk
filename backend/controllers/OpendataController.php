@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\Action;
 use Yii;
 use common\models\Opendata;
 use backend\models\search\OpendataSearch;
@@ -131,6 +132,7 @@ class OpendataController extends Controller
         $model = new Opendata();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_opendata]);
         }
 
@@ -151,6 +153,7 @@ class OpendataController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id_opendata]);
         }
 
@@ -165,10 +168,16 @@ class OpendataController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if ($model->delete()) {
+            $model->createAction(Action::ACTION_DELETE);
+        }
 
         return $this->redirect(['index']);
     }

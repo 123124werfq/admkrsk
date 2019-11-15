@@ -37,16 +37,6 @@ return [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
-            'on afterLogin' => function($event) {
-                /* @var \common\models\User $user */
-                $user = $event->identity;
-                $user->createAction(Action::ACTION_LOGIN);
-            },
-            'on beforeLogout' => function($event) {
-                /* @var \common\models\User $user */
-                $user = $event->identity;
-                $user->createAction(Action::ACTION_LOGOUT);
-            },
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend

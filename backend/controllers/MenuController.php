@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\Action;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\Menu;
@@ -156,8 +157,8 @@ class MenuController extends Controller
     {
         $model = new Menu();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save())
-        {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_CREATE);
             if ($model->type<>Menu::TYPE_LIST)
                 return $this->redirect(['menu-link/index', 'id' => $model->id_menu]);
             else
@@ -200,6 +201,7 @@ class MenuController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_UPDATE);
 
             if (!empty($model->id_page))
                 return $this->redirect(['page/view', 'id' => $model->id_page]);
@@ -221,10 +223,16 @@ class MenuController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if ($model->delete()) {
+            $model->createAction(Action::ACTION_DELETE);
+        }
 
         return $this->redirect(['index']);
     }

@@ -29,8 +29,6 @@ use yii\db\ActiveQuery;
  * @property int $updated_by
  * @property int $deleted_at
  * @property int $deleted_by
- * @property string $breadcrumbsLabel
- * @property string $pageTitle
  * @property array $access_user_ids
  * @property Block[] $blocks
  */
@@ -39,10 +37,13 @@ class Page extends \yii\db\ActiveRecord
     use MetaTrait;
     use ActionTrait;
 
-    public $label = 'Страница';
-    public $labelPlural = 'Страницы';
-    public $existUrl;
+    const VERBOSE_NAME = 'Страница';
+    const VERBOSE_NAME_PLURAL = 'Страницы';
+    const TITLE_ATTRIBUTE = 'title';
+
     public $access_user_ids;
+
+    public $existUrl;
 
     /**
      * {@inheritdoc}
@@ -185,22 +186,6 @@ class Page extends \yii\db\ActiveRecord
                 'permission' => 'backend.page',
             ],
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getBreadcrumbsLabel()
-    {
-        return 'Разделы';
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->title;
     }
 
     /**

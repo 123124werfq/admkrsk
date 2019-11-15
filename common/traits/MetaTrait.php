@@ -8,21 +8,19 @@ use yii\helpers\StringHelper;
 /**
  * @property string $verboseName
  * @property string $verboseNamePlural
- * @property string $label
- * @property string $labelPlural
+ * @property string $titleAttribute
+ * @property string $breadcrumbsLabel
+ * @property string $pageTitle
  */
 trait MetaTrait
 {
-    public $verboseName;
-    public $verboseNamePlural;
-
-    public function getLabel()
+    public function getBreadcrumbsLabel()
     {
-        return $this->verboseName ?: Inflector::humanize(StringHelper::basename(self::class));
+        return defined('self::VERBOSE_NAME_PLURAL') ? self::VERBOSE_NAME_PLURAL : Inflector::pluralize(StringHelper::basename(self::class));
     }
 
-    public function getLabelPlural()
+    public function getPageTitle()
     {
-        return $this->verboseNamePlural ?: Inflector::pluralize(StringHelper::basename(self::class));
+        return defined('self::TITLE_ATTRIBUTE') ? $this->{self::TITLE_ATTRIBUTE} : (defined('self::VERBOSE_NAME') ? self::VERBOSE_NAME : StringHelper::basename(self::class)) . ' #' . $this->primaryKey;
     }
 }

@@ -3,6 +3,8 @@
 namespace common\models;
 
 use common\behaviors\UserAccessControlBehavior;
+use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 
 use common\components\yiinput\RelationBehavior;
@@ -26,6 +28,13 @@ use yii\behaviors\TimestampBehavior;
  */
 class Menu extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+    use ActionTrait;
+
+    const VERBOSE_NAME = 'Меню';
+    const VERBOSE_NAME_PLURAL = 'Меню';
+    const TITLE_ATTRIBUTE = 'name';
+
     const TYPE_LIST = 0;
     const TYPE_TABS = 1;
     const TYPE_LEVELS = 2;

@@ -5,6 +5,8 @@ namespace common\models;
 use common\behaviors\UserAccessControlBehavior;
 use common\components\yiinput\RelationBehavior;
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -24,14 +26,19 @@ use yii\helpers\ArrayHelper;
  * @property int $updated_by
  * @property int $deleted_at
  * @property int $deleted_by
- * @property string $breadcrumbsLabel
- * @property string $pageTitle
  * @property array $access_user_ids
  *
  * @property CollectionColumn[] $columns
  */
 class Collection extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+    use ActionTrait;
+
+    const VERBOSE_NAME = 'Список';
+    const VERBOSE_NAME_PLURAL = 'Списки';
+    const TITLE_ATTRIBUTE = 'name';
+
     public $access_user_ids;
 
     /**
@@ -103,14 +110,6 @@ class Collection extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function getBreadcrumbsLabel()
-    {
-        return 'Списки';
-    }
-
     public function insertRecord($data)
     {
         $model = new CollectionRecord;
@@ -169,14 +168,6 @@ class Collection extends \yii\db\ActiveRecord
         }
 
         return false;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->name;
     }
 
     public function getParent()

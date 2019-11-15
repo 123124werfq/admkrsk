@@ -20,8 +20,9 @@ class Vars extends \yii\db\ActiveRecord
 {
     use MetaTrait;
 
-    public $label = 'Переменная';
-    public $labelPlural = 'Переменные';
+    const VERBOSE_NAME = 'Переменная';
+    const VERBOSE_NAME_PLURAL = 'Переменные';
+    const TITLE_ATTRIBUTE = 'name';
 
     public $access_user_ids;
 
