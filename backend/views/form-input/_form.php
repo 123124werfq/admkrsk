@@ -6,6 +6,8 @@ use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 
 use common\models\FormInputType;
+use common\models\FormInput;
+
 use common\models\Collection;
 use common\models\CollectionColumn;
 
@@ -43,6 +45,18 @@ foreach ($types as $key => $type) {
     <?=$form->field($model, 'label')->textInput(['maxlength' => 255]) ?>
 
     <?=$form->field($model, 'hint')->textInput(['maxlength' => 255]) ?>
+
+    <hr>
+    <div class="row">
+        <div class="col-sm-6">
+            <?=$form->field($model, 'visibleInput')->dropDownLIst(
+                ArrayHelper::map(FormInput::find()->where(['id_form'=>$model->id_form])->andWhere('id_input <> '.(int)$model->id_input)->all(), 'id_input', 'name'),['prompt'=>'Выберите поле зависимости']
+            ) ?>
+        </div>
+        <div id="visibleInputValues" class="col-sm-6">
+            <?=$this->render('_input',['model'=>$model,'form'=>$form])?>
+        </div>
+    </div>
 
     <div data-visible-field="forminput-id_type" data-values="<?=implode(',', $select_ids)?>">
         <?=$form->field($model, 'id_collection')->widget(Select2::class, [

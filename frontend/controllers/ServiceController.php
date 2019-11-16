@@ -62,8 +62,6 @@ class ServiceController extends \yii\web\Controller
         if (empty($service->id_form))
             throw new NotFoundHttpException('Такой страницы не существует');
 
-        $model = new Form;
-
         if (!empty($_POST))//$model->load(Yii::$app->request->post()) && $model->validate()
         {
             print_r($_POST);

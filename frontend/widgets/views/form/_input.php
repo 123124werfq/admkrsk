@@ -18,28 +18,38 @@
 
 	if ($input->type->type==CollectionColumn::TYPE_SELECT)
 		$groupClass .= ' custom-select';
+
+	$visibleField = '';
+
+	if (!empty($input->visibleInput))
+		$visibleField = 'data-visible-field="input'.$input->visibleInput.'"';
+
+	$visibleInputValues = '';
+
+	if (!empty($input->visibleInputValues))
+		$visibleInputValues = 'data-values="input'.implode(',', $input->visibleInputValues).'"';
 ?>
+
 <div class="col">
-	<div class="form-group <?=$groupClass?>">
+	<div class="form-group <?=$groupClass?>" <?=$visibleField?> <?=$visibleInputValues?>>
 		<?php if (!empty($input->label)){?>
 		<label class="form-label"><?=$input->label?><?=!empty($options['required'])?'*':''?></label>
 		<?php }?>
 		<?php switch ($input->type->type) {
 			case CollectionColumn::TYPE_SELECT:
-				echo Html::dropDownList("input$input->id_input",'',$input->getArrayValues(),$options);
+				echo $form->field($model, "input$input->id_input")->dropDownList($input->getArrayValues(),$options);
 				break;
-			case CollectionColumn::TYPE_INPUT:
-				echo Html::textInput("input$input->id_input",'',$options);
-				break;
+
 			case CollectionColumn::TYPE_DATE:
 				$otions['type'] = 'date';
-				echo Html::textInput("input$input->id_input",'',$options);
+			case CollectionColumn::TYPE_INPUT:
+				echo $form->field($model, "input$input->id_input")->textInput($options);
 				break;
 			case CollectionColumn::TYPE_TEXTAREA:
-				echo Html::textArea("input$input->id_input",'',$options);
+				echo $form->field($model, "input$input->id_input")->textArea($options);
 				break;
 			case CollectionColumn::TYPE_ADDRESS:
-				echo Html::textInput("input$input->id_input",'',$options);
+				echo $form->field($model, "input$input->id_input")->textInput($options);
 $script = <<< JS
 	$("#{$options['id']}").autocomplete({
         'minLength':'2',

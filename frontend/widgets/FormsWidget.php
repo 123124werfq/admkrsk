@@ -3,6 +3,7 @@ namespace frontend\widgets;
 
 use Yii;
 use common\models\Form;
+use common\models\FormDynamic;
 
 class FormsWidget extends \yii\base\Widget
 {
@@ -22,8 +23,11 @@ class FormsWidget extends \yii\base\Widget
         if (empty($this->form))
         	return false;
 
+        $model = new FormDynamic($this->form);
+
         return $this->render('form/'.$this->template,[
         	'form'=>$this->form,
+            'model'=>$model,
         ]);
     }
 }

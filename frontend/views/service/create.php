@@ -4,8 +4,8 @@
         <div class="row">
             <div class="col-2-third order-xs-1">
                 <h1 class="h2"><?=$service->name?></h1>
-                
-                <?=frontend\widgets\FormWidget::widget(['form'=>$service->form])?>
+
+                <?=frontend\widgets\FormsWidget::widget(['form'=>$service->form])?>
 
                 <div class="subscribe">
                     <div class="subscribe_left">

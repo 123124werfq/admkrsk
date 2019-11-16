@@ -2,19 +2,21 @@
 	use yii\widgets\ActiveForm;
 ?>
 <div class="boxed form-inside">
-	<?php $ActiveForm = ActiveForm::begin([
+	<?php $activeForm = ActiveForm::begin([
+		'fieldConfig' => [
+	        'template' => '{input}{error}',
+	    ],
 		'options'=>[
 			'enctype'=>'multipart/form-data'
 		]
 	]); ?>
 	<?php foreach ($form->rows as $key => $row)
 	{
-
 		echo '<div class="row">';
 		foreach ($row->elements as $key => $element)
 		{
 			if (!empty($element->id_input))
-				echo $this->render('_input',['input'=>$element->input]);
+				echo $this->render('_input',['input'=>$element->input,'model'=>$model,'form'=>$activeForm]);
 			elseif (!empty($element->content))
 				echo '<div class="text-row">'.$element->content.'</div>';
 		}

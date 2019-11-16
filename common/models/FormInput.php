@@ -45,7 +45,8 @@ class FormInput extends \yii\db\ActiveRecord
             [['id_form', 'id_type', 'id_collection', 'visibleInput', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','required'], 'integer'],
             [['name', 'id_type'], 'required'],
             [['values', 'options','hint','label'], 'string'],
-            [['name', 'fieldname', 'visibleInputValue'], 'string', 'max' => 255],
+            [['visibleInputValue'],'safe'],
+            [['name', 'fieldname'], 'string', 'max' => 255],
         ];
     }
 
@@ -64,8 +65,8 @@ class FormInput extends \yii\db\ActiveRecord
             'name' => 'Название',
             'hint' => 'Пояснение',
             'fieldname' => 'Название переменной',
-            'visibleInput' => 'Visible Input',
-            'visibleInputValue' => 'Visible Input Value',
+            'visibleInput' => 'Зависимость видимости',
+            'visibleInputValue' => 'Значение',
             'values' => 'Значения',
             'size' => 'Размер',
             'options' => 'Опции',
@@ -76,6 +77,16 @@ class FormInput extends \yii\db\ActiveRecord
             'deleted_at' => 'Deleted At',
             'deleted_by' => 'Deleted By',
         ];
+    }
+
+    public function beforeValidate()
+    {
+        if (is_array($this->visibleInputValue))
+        {
+            $this->visibleInputValue = [$this->visibleInputValue];
+        }
+
+        return parent::beforeValidate();
     }
 
     public function getArrayValues($model=null)

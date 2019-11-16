@@ -1,4 +1,30 @@
 $(document).ready(function() {
+
+    $("div[data-visible-field]").each(function(){
+
+        var source = $("#"+$(this).data('visible-field'));
+        var block = $(this);
+
+        function check()
+        {
+            var values = block.data('values').split(',');
+
+            if (values.indexOf(source.val())<0)
+              block.hide();
+            else
+              block.show();
+        }
+
+        if (source.length>0)
+        {
+          source.change(function(){
+            check();
+          });
+
+          check();
+        }
+    });
+
     $("#service_search_input").autocomplete({
         'minLength':'2',
         'showAnim':'fold',
@@ -17,7 +43,6 @@ $(document).ready(function() {
         },
         'source':'/service/search'
     });
-
 
     if($('.damask-form').length)
     {

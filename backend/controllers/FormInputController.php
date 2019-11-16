@@ -6,6 +6,7 @@ use Yii;
 use common\models\FormInput;
 use common\models\FormElement;
 use common\models\FormRow;
+use common\models\CollectionColumn;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -59,6 +60,17 @@ class FormInputController extends Controller
         ]);
     }
 
+    public function actionGetValueInput($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->type->type==CollectionColumn::TYPE_SELECT)
+        {
+            $values = $model->getArrayValues;
+
+            return $this->renderAjax('_input',['values'=>$values]);
+        }
+    }
     /**
      * Creates a new FormInput model.
      * If creation is successful, the browser will be redirected to the 'view' page.
