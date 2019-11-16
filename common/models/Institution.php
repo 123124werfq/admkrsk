@@ -3,8 +3,8 @@
 namespace common\models;
 
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\MetaTrait;
 use DateTime;
-use function GuzzleHttp\Psr7\str;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -68,8 +68,6 @@ use yii\behaviors\TimestampBehavior;
  * @property int $updated_by
  * @property int $deleted_at
  * @property int $deleted_by
- * @property string $breadcrumbsLabel
- * @property string $pageTitle
  * @property string $statusName
  * @property string $typeName
  * @property string $address
@@ -79,6 +77,12 @@ use yii\behaviors\TimestampBehavior;
  */
 class Institution extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+
+    const VERBOSE_NAME = 'Организация';
+    const VERBOSE_NAME_PLURAL = 'Организации';
+    const TITLE_ATTRIBUTE = 'shortname';
+
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 2;
     const STATUS_DELETED = 3;
@@ -211,22 +215,6 @@ class Institution extends \yii\db\ActiveRecord
     public function getDocuments()
     {
         return $this->hasMany(Document::class, ['id_institution' => 'id_institution']);
-    }
-
-    /**
-     * @return string
-     */
-    public function getBreadcrumbsLabel()
-    {
-        return 'Организации';
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->shortname;
     }
 
     /**

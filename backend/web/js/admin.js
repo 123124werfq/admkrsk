@@ -392,10 +392,35 @@ jQuery(document).ready(function()
                   data: 'id='+id+'&pos='+pos+'&table='+table+'&where='+where+'&pk='+pk,
                   success: function(data)
                   {
-                  }
+                  }f
               });*/
       }
     }).disableSelection();
+
+    $(".form-row").sortable({
+      stop: function(event, ui){
+          var ords = [];
+          var parents = [];
+          var $block = $(this);
+
+          ui.item.parent().children().each(function(i){
+              ords.push(ui.item.data('id'));
+              parents.push(ui.item.parent().data('id'));
+          });
+
+          $.ajax({
+              url: '/form-element/order',
+              type: 'post',
+              data: {ords: ords, parents: parents, _csrf: csrf_value},
+              success: function(data)
+              {
+                toastr.success('Порядок изменен', '');
+              }
+          });
+      },
+      connectWith: ".form-row",
+    }).disableSelection();
+
 
     $(".ordered tbody, ul.ordered").sortable({
       stop: function(event, ui){

@@ -2,27 +2,30 @@
 
 namespace common\models;
 
+use common\traits\MetaTrait;
 use Yii;
 
 /**
- * This is the model class for table "db_address".
+ * This is the model class for table "map_address".
  *
- * @property int $id
- * @property string $houseguid
- * @property string $address
- * @property string $breadcrumbsLabel
- * @property string $pageTitle
+ * @property int $id_address
+ * @property string $fullname
  *
- * @property House $house
  */
 class Address extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+
+    const VERBOSE_NAME = 'Адрес';
+    const VERBOSE_NAME_PLURAL = 'Адреса';
+    const TITLE_ATTRIBUTE = 'fullname';
+
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'db_address';
+        return 'map_address';
     }
 
     /**
@@ -31,9 +34,7 @@ class Address extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['houseguid'], 'string'],
-            [['address'], 'string', 'max' => 255],
-            [['houseguid'], 'exist', 'skipOnError' => true, 'targetClass' => House::class, 'targetAttribute' => ['houseguid' => 'houseguid']],
+            [['fullname'], 'string', 'max' => 255],
         ];
     }
 
@@ -44,8 +45,7 @@ class Address extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'houseguid' => 'ФИАС GUID',
-            'address' => 'Адрес',
+            'fullname' => 'Адрес',
         ];
     }
 
@@ -54,22 +54,6 @@ class Address extends \yii\db\ActiveRecord
      */
     public function getHouse()
     {
-        return $this->hasOne(House::class, ['houseguid' => 'houseguid']);
-    }
-
-    /**
-     * @return string
-     */
-    public function getBreadcrumbsLabel()
-    {
-        return 'Адреса';
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->addressName;
+        return $this->hasOne(House::class, ['id_house' => 'id_house']);
     }
 }

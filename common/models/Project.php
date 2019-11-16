@@ -2,6 +2,8 @@
 
 namespace common\models;
 
+use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 
 /**
@@ -24,6 +26,13 @@ use Yii;
  */
 class Project extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+    use ActionTrait;
+
+    const VERBOSE_NAME = 'Проекты и события';
+    const VERBOSE_NAME_PLURAL = 'Проекты и события';
+    const TITLE_ATTRIBUTE = 'name';
+
     /**
      * {@inheritdoc}
      */

@@ -7,13 +7,10 @@ use yii\widgets\DetailView;
 /* @var $model common\models\Alert */
 
 $this->title = $model->id_alert;
-$this->params['breadcrumbs'][] = ['label' => 'Alerts', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
 ?>
 <div class="alert-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id_alert], ['class' => 'btn btn-primary']) ?>

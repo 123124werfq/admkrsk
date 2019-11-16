@@ -6,6 +6,7 @@ use common\behaviors\DatetimeBehavior;
 use common\behaviors\UserAccessControlBehavior;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -28,8 +29,6 @@ use yii\behaviors\TimestampBehavior;
  * @property int $updated_by
  * @property int $deleted_at
  * @property int $deleted_by
- * @property string $breadcrumbsLabel
- * @property string $pageTitle
  * @property string $statusName
  * @property array $access_user_ids
  *
@@ -41,7 +40,12 @@ use yii\behaviors\TimestampBehavior;
  */
 class Poll extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
     use ActionTrait;
+
+    const VERBOSE_NAME = 'Опрос';
+    const VERBOSE_NAME_PLURAL = 'Опросы';
+    const TITLE_ATTRIBUTE = 'title';
 
     const STATUS_INACTIVE = 1;
     const STATUS_ACTIVE = 2;
@@ -162,22 +166,6 @@ class Poll extends \yii\db\ActiveRecord
     public function getDeletedBy()
     {
         return $this->hasOne(User::class, ['id' => 'deleted_by']);
-    }
-
-    /**
-     * @return string
-     */
-    public function getBreadcrumbsLabel()
-    {
-        return 'Опросы';
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->title;
     }
 
     /**

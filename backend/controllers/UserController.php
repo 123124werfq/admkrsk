@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use backend\models\search\ActionSearch;
+use common\models\Action;
 use Yii;
 use common\models\User;
 use backend\models\search\UserSearch;
@@ -69,6 +71,15 @@ class UserController extends Controller
                         'allow' => true,
                         'actions' => ['delete'],
                         'roles' => ['backend.user.delete'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => User::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['action'],
+                        'roles' => ['backend.user.update'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => User::class,
@@ -172,6 +183,7 @@ class UserController extends Controller
         $model = new User();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -192,6 +204,7 @@ class UserController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -206,10 +219,16 @@ class UserController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
+        {
+            $model = $this->findModel($id);
+
+            if ($model->delete()) {
+                $model->createAction(Action::ACTION_DELETE);
+            }
 
         return $this->redirect(['index']);
     }
@@ -228,5 +247,25 @@ class UserController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * Lists all Action models
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionAction($id)
+    {
+        $model = $this->findModel($id);
+
+        $searchModel = new ActionSearch(['created_by' => $model->id]);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('action', [
+            'model' => $model,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 }

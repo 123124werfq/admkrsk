@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\traits\MetaTrait;
 use Yii;
 use yii\db\ActiveRecord;
 
@@ -47,18 +48,22 @@ use yii\db\ActiveRecord;
  * @property int $operstatus
  * @property string $parentguid
  * @property string $previd
- * @property string $breadcrumbsLabel
- * @property string $pageTitle
  * @property string $addressName
  * @property string $fullName
  *
- * @property AddrObj $parent
- * @property AddrObj[] $parents
- * @property AddrObj[] $addresses
- * @property House[] $houses
+ * @property FiasAddrObj $parent
+ * @property FiasAddrObj[] $parents
+ * @property FiasAddrObj[] $addresses
+ * @property FiasHouse[] $houses
  */
-class AddrObj extends \yii\db\ActiveRecord
+class FiasAddrObj extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+
+    const VERBOSE_NAME = 'Адрес';
+    const VERBOSE_NAME_PLURAL = 'Адреса';
+    const TITLE_ATTRIBUTE = 'addressName';
+
     /**
      * {@inheritdoc}
      */
@@ -91,7 +96,7 @@ class AddrObj extends \yii\db\ActiveRecord
             [['shortname'], 'string', 'max' => 10],
             [['cadnum'], 'string', 'max' => 100],
             [['aoguid'], 'unique'],
-            [['parentguid'], 'exist', 'skipOnError' => true, 'targetClass' => AddrObj::class, 'targetAttribute' => ['parentguid' => 'aoguid']],
+            [['parentguid'], 'exist', 'skipOnError' => true, 'targetClass' => FiasAddrObj::class, 'targetAttribute' => ['parentguid' => 'aoguid']],
         ];
     }
 
@@ -148,7 +153,7 @@ class AddrObj extends \yii\db\ActiveRecord
      */
     public function getParent()
     {
-        return $this->hasOne(AddrObj::class, ['aoguid' => 'parentguid']);
+        return $this->hasOne(FiasAddrObj::class, ['aoguid' => 'parentguid']);
     }
 
     /**
@@ -156,7 +161,7 @@ class AddrObj extends \yii\db\ActiveRecord
      */
     public function getAddresses()
     {
-        return $this->hasMany(AddrObj::class, ['parentguid' => 'aoguid']);
+        return $this->hasMany(FiasAddrObj::class, ['parentguid' => 'aoguid']);
     }
 
     /**
@@ -164,23 +169,7 @@ class AddrObj extends \yii\db\ActiveRecord
      */
     public function getHouses()
     {
-        return $this->hasMany(House::class, ['aoguid' => 'aoguid']);
-    }
-
-    /**
-     * @return string
-     */
-    public function getBreadcrumbsLabel()
-    {
-        return 'Адреса';
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->addressName;
+        return $this->hasMany(FiasHouse::class, ['aoguid' => 'aoguid']);
     }
 
     /**
@@ -220,9 +209,10 @@ class AddrObj extends \yii\db\ActiveRecord
     }
 
     /**
+     * @param string $district
      * @return string
      */
-    public function getFullName()
+    public function getFullName($district)
     {
         $parents = $this->parents;
 
@@ -231,6 +221,10 @@ class AddrObj extends \yii\db\ActiveRecord
         if ($parents) {
             foreach ($parents as $parent) {
                 $fullName = ($fullName ? $fullName . ', ' : '') . $parent->addressName;
+
+                if ($district && $parent->aolevel == 4) {
+                    $fullName .= ', ' . $district;
+                }
             }
         }
 

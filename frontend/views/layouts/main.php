@@ -33,7 +33,6 @@ $accessabilityMode =  (isset($_COOKIE['accessabilityMode']) && $_COOKIE['accessa
     <meta name="HandheldFriendly" content="true">
     <link href="<?= $bundle->baseUrl . '/css/accessability.css' ?>" rel="stylesheet accessability" type="text/css" <?=$accessabilityMode?'':'disabled'?> title="accessability">
 
-    <link href="<?= $bundle->baseUrl . '/css/styles.css' ?>" rel="stylesheet" type="text/css" <?=$accessabilityMode?'disabled':''?>>
     <link href="<?= $bundle->baseUrl . '/css/style.css' ?>" rel="stylesheet" type="text/css" <?=$accessabilityMode?'disabled':''?>>
 
     <script>

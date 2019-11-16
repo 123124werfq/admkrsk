@@ -2,6 +2,8 @@
 
 namespace common\models;
 
+use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 
 /**
@@ -20,6 +22,12 @@ use Yii;
  */
 class ControllerPage extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+    use ActionTrait;
+
+    const VERBOSE_NAME = 'Зарезервированный путь';
+    const VERBOSE_NAME_PLURAL = 'Зарезервированные пути';
+
     /**
      * {@inheritdoc}
      */

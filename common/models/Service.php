@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 use yii\helpers\Url;
 
@@ -41,7 +42,12 @@ use yii\helpers\Url;
  */
 class Service extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
     use ActionTrait;
+
+    const VERBOSE_NAME = 'Муниципальная услуга';
+    const VERBOSE_NAME_PLURAL = 'Муниципальные услуги';
+    const TITLE_ATTRIBUTE = 'name';
 
     public $id_situations = [];
 
@@ -62,7 +68,7 @@ class Service extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_rub','client_type'],'required'],
+            [['id_rub','client_type','name'],'required'],
             [['id_rub', 'client_type', 'old', 'online', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','refuse'], 'default', 'value' => null],
             [['id_rub', 'old', 'online', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_form'], 'integer'],
             [['keywords', 'addresses', 'result', 'client_category', 'duration', 'documents', 'price', 'appeal', 'legal_grounds', 'regulations', 'refuse','regulations_link', 'duration_order', 'availability', 'procedure_information', 'max_duration_queue'], 'string'],

@@ -4,6 +4,7 @@ namespace common\models;
 use common\behaviors\UserAccessControlBehavior;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -35,7 +36,12 @@ use yii\db\ActiveQuery;
  */
 class News extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
     use ActionTrait;
+
+    const VERBOSE_NAME = 'Новость';
+    const VERBOSE_NAME_PLURAL = 'Новости';
+    const TITLE_ATTRIBUTE = 'title';
 
     public $access_user_ids, $tagNames = [];
 

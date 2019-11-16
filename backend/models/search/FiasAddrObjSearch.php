@@ -4,12 +4,12 @@ namespace backend\models\search;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\AddrObj;
+use common\models\FiasAddrObj;
 
 /**
  * AddressSearch represents the model behind the search form of `common\models\Address`.
  */
-class AddrObjSearch extends AddrObj
+class FiasAddrObjSearch extends FiasAddrObj
 {
     public $addressname;
 
@@ -43,7 +43,7 @@ class AddrObjSearch extends AddrObj
      */
     public function search($params)
     {
-        $query = AddrObj::find();
+        $query = FiasAddrObj::find();
 
         // add conditions that should always apply here
 

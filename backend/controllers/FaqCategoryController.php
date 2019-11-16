@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\Action;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\FaqCategory;
@@ -212,6 +213,7 @@ class FaqCategoryController extends Controller
         $model = new FaqCategory();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_faq_category]);
         }
 
@@ -232,6 +234,7 @@ class FaqCategoryController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id_faq_category]);
         }
 
@@ -246,10 +249,16 @@ class FaqCategoryController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if ($model->delete()) {
+            $model->createAction(Action::ACTION_DELETE);
+        }
 
         return $this->redirect(['index']);
     }

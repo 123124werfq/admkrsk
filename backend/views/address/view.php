@@ -3,7 +3,7 @@
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Address */
+/* @var $model common\models\House */
 
 $this->title = $model->pageTitle;
 $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
@@ -16,8 +16,14 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= DetailView::widget([
                 'model' => $model,
                 'attributes' => [
-                    'houseguid',
-                    'address',
+                    'id_house',
+                    'postalcode',
+                    'region.name',
+                    'city.name',
+                    'district.name',
+                    'street.name',
+                    'name',
+                    'fullname',
                 ],
             ]) ?>
 

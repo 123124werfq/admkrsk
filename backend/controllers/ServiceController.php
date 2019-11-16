@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\Action;
 use Yii;
 use common\models\Service;
 use backend\models\search\ServiceSearch;
@@ -67,6 +68,7 @@ class ServiceController extends Controller
         $model = new Service();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['index', 'id' => $model->id_service]);
         }
 
@@ -94,8 +96,8 @@ class ServiceController extends Controller
         
         $model->client_type = $client_type;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save())
-        {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['index', 'id' => $model->id_service]);
         }
 
@@ -110,10 +112,16 @@ class ServiceController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if ($model->delete()) {
+            $model->createAction(Action::ACTION_DELETE);
+        }
 
         return $this->redirect(['index']);
     }

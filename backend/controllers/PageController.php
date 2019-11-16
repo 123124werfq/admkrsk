@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\Action;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\Page;
@@ -275,8 +276,8 @@ class PageController extends Controller
         $model = new Page();
         $model->id_parent = $id_parent;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save())
-        {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_page]);
         }
 
@@ -297,6 +298,7 @@ class PageController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id_page]);
         }
 
@@ -311,10 +313,16 @@ class PageController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if ($model->delete()) {
+            $model->createAction(Action::ACTION_DELETE);
+        }
 
         return $this->redirect(['index']);
     }

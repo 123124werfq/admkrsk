@@ -3,8 +3,8 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\House;
-use backend\models\search\HouseSearch;
+use common\models\FiasHouse;
+use backend\models\search\FiasHouseSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -19,7 +19,7 @@ class HouseController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new HouseSearch();
+        $searchModel = new FiasHouseSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,12 +45,12 @@ class HouseController extends Controller
      * Finds the House model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return House the loaded model
+     * @return FiasHouse the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = House::findOne($id)) !== null) {
+        if (($model = FiasHouse::findOne($id)) !== null) {
             return $model;
         }
 

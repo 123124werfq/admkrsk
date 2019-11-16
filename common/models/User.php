@@ -2,6 +2,7 @@
 namespace common\models;
 
 use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -34,7 +35,12 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+    use MetaTrait;
     use ActionTrait;
+
+    const VERBOSE_NAME = 'Пользователь';
+    const VERBOSE_NAME_PLURAL = 'Пользователи';
+    const TITLE_ATTRIBUTE = 'username';
 
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
@@ -111,22 +117,6 @@ class User extends ActiveRecord implements IdentityInterface
             'updated_at' => 'Обновлено',
             'roles' => 'Роли',
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getBreadcrumbsLabel()
-    {
-        return 'Пользователи';
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->username;
     }
 
     /**
@@ -444,10 +434,13 @@ class User extends ActiveRecord implements IdentityInterface
         return false;
     }
 
-
+    /**
+     * @param string $oid
+     * @return User|null
+     */
     static public function findByOid($oid)
     {
-        $user = User::find()->where(['email' => $oid.'@esia.ru'])->one();
+        $user = User::findOne(['email' => $oid.'@esia.ru']);
         return $user;
     }
 }

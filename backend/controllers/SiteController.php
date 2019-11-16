@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use common\models\Action;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -106,8 +107,10 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            Yii::$app->user->identity->createAction(Action::ACTION_LOGIN);
             return $this->goBack();
         } else if($model->load(Yii::$app->request->post()) && AdUser::adlogin($model->username, $model->password)) {
+            Yii::$app->user->identity->createAction(Action::ACTION_LOGIN_AD);
             return $this->goBack();
         } else {
             $model->password = '';

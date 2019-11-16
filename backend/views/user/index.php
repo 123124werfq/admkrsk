@@ -6,10 +6,10 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\UserSearch */
+/* @var $searchModel backend\models\search\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Пользователи';
+$this->title = $searchModel->breadcrumbsLabel;
 $this->params['breadcrumbs'][] = $this->title;
 //$this->params['button-block'][] = Html::a('о', ['create'], ['class' => 'btn btn-success']);
 
@@ -72,7 +72,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 [
                     'class' => 'yii\grid\ActionColumn',
-                    'contentOptions'=>['class'=>'button-column']
+                    'contentOptions'=>['class'=>'button-column'],
+                    'template' => '{view} {action} {update} {delete}',
+                    'buttons' => [
+                        'action' => function ($url, $model, $key) {
+                            return Html::a('<span class="fa fa-history"></span>', $url, ['title' => 'Действия']);
+                        },
+                    ],
                 ],
             ],
             'tableOptions'=>[

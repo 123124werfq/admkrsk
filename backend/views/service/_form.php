@@ -46,9 +46,9 @@ if (!empty($id_situations))
 
         <?= $form->field($model, 'reestr_number')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'fullname')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'name')->textInput(['maxlength' => 500]) ?>
 
-        <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'fullname')->textArea() ?>
 
         <?= $form->field($model, 'keywords')->textarea(['rows' => 6]) ?>
 
