@@ -22,7 +22,7 @@ class NewsWidget extends \yii\base\Widget
             if (empty($page))
                 return false;
 
-            $news = News::find()->where(['main'=>1,'state'=>1,'id_page'=>$page->id_page])
+            $news = News::find()->where(['state'=>1,'id_page'=>$page->id_page])
                         ->orderBy('date_publish DESC')->limit(4)->all();
 
             if (empty($news))
