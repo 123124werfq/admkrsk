@@ -48,6 +48,26 @@ class Block extends \yii\db\ActiveRecord
                     'name'=>'Заголовок',
                     'type'=>BlockVar::TYPE_STRING,
                 ],
+                'button_text'=>[
+                    'name'=>'Подпись кнопки',
+                    'type'=>BlockVar::TYPE_STRING,
+                ],
+                'button_color'=>[
+                    'name'=>'Цвет кнопки',
+                    'type'=>BlockVar::TYPE_SELECT,
+                    'values'=>[
+                        ''=>'Белая',
+                        'btn__primary'=>'Золотой'
+                    ]
+                ],
+                'background'=>[
+                    'name'=>'Фон',
+                    'type'=>BlockVar::TYPE_SELECT,
+                    'values'=>[
+                        ''=>'Серый',
+                        'press_invert'=>'Белый'
+                    ]
+                ],
                 'id_page'=>[
                     'name'=>'Раздел новостей',
                     'type'=>BlockVar::TYPE_PAGE,

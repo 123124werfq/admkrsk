@@ -2,7 +2,7 @@
     use yii\helpers\Html;
     $wide = array_shift($news);
 ?>
-<div class="press">
+<div class="press <?=(!empty($blockVars['background']))?$blockVars['background']->value:''?>">
     <div class="container">
         <div class="custom-header">
             <div class="custom-header-left">
@@ -39,7 +39,7 @@
                         echo $this->render('_news',['data'=>$data,'page'=>$page]);
                     }?>
                 </div>
-                <a class="press-more btn btn__block" href="<?=$page->getUrl()?>">Читать далее</a>
+                <a class="press-more <?=(!empty($blockVars['button_color']))?$blockVars['button_color']->value:''?> btn btn__block" href="<?=$page->getUrl()?>"><?=(!empty($blockVars['button_text']))?$blockVars['button_text']->value:'Все новости'?></a>
             </div>
         </div>
     </div>

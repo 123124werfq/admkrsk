@@ -28,7 +28,7 @@ class Form extends \yii\db\ActiveRecord
     const VERBOSE_NAME_PLURAL = 'Формы';
     const TITLE_ATTRIBUTE = 'name';
 
-    public $make_collection = false;
+    public $make_collection = 0;
 
     /**
      * {@inheritdoc}
@@ -70,9 +70,55 @@ class Form extends \yii\db\ActiveRecord
         ];
     }
 
+    public function createFromByCollection()
+    {
+        foreach ($this->collection->columns as $key => $column)
+        {
+            $row = new FormRow;
+            $row->id_form = $this->id_form;
+            $row->ord = $key;
+
+            if ($row->save())
+            {
+                $where = ['type'=>$column->type];
+
+                if ($column->type == CollectionColumn::TYPE_COLLECTION)
+                    $where['id_collection'] = $column->variables;
+
+                $type = FormInputType::find()->where($where)->andWhere('esia IS NULL AND service_attribute IS NULL')->one();
+
+                if (empty($type))
+                {
+                    $type = new FormInputType;
+                    foreach ($where as $tkey => $value)
+                        $type->$tkey = $value;
+
+                    $type->name =  $column::getTypeLabel($column->type);
+                    $type->save();
+                }
+
+                $input = new FormInput;
+                $input->id_type = $type->id_type;
+                $input->label = $input->name = $column->name;
+
+                if ($column->type != CollectionColumn::TYPE_COLLECTION)
+                    $input->values = $columns->variables;
+
+                if ($input->save())
+                {
+                    $element = new FormElement;
+                    $element->id_row = $row->id_row;
+                    $element->id_input = $input->id_input;
+                    $element->ord = 0;
+                    $element->save();
+                }
+            }
+        }
+    }
+
     public function getCollection()
     {
-        return $this->hasMany(Collection::class, ['id_collection' => 'id_collection']);
+        return $this->hasOne(Collection::class, ['id_collection' => 'id_collection']);
     }
 
     public function getRows()

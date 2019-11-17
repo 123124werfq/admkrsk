@@ -10,6 +10,7 @@ use Yii;
 use common\models\Collection;
 use common\models\CollectionRecord;
 use common\models\CollectionColumn;
+use common\models\Form;
 use backend\models\search\CollectionSearch;
 use backend\models\CollectionImportForm;
 use yii\helpers\ArrayHelper;
@@ -294,7 +295,7 @@ class CollectionController extends Controller
                 $dataProviderColumns[$col->id_column]['format'] = ['date', 'php:d.m.Y H:i'];
         }
 
-        
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
@@ -352,8 +353,20 @@ class CollectionController extends Controller
     {
         $model = new Collection();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
+            $form = new Form;
+            $form->id_collection = $model->id_collection;
+            $form->name = 'Форма к колекции '.$model->id_collection;
+
+            if ($form->save())
+            {
+                $form->createFromByCollection();
+            }
+            else print_r($form->errors);
+
             $model->createAction(Action::ACTION_CREATE);
+
             return $this->redirect(['view', 'id' => $model->id_collection]);
         }
 

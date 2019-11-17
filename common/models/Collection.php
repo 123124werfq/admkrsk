@@ -73,6 +73,7 @@ class Collection extends \yii\db\ActiveRecord
             'id_collection' => '#',
             'name' => 'Название',
             'alias' => 'Алиас',
+            'id_form' => 'Форма редактирования',
             'id_parent_collection' => 'Это справочник',
             'is_dictionary' => 'Это справочник',
             'created_at' => 'Создано',

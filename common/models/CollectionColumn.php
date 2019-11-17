@@ -35,6 +35,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
     const TYPE_RADIO = 15;
     const TYPE_ADDRESS = 16;
     const TYPE_JSON = 17;
+    const TYPE_DISTRICT = 18;
 
     public static function getTypeOptions($type)
     {

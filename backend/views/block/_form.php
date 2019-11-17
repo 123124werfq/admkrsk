@@ -15,7 +15,7 @@ use kartik\select2\Select2;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'code')->textarea(['rows' => 6,'class'=>'redactor']) ?>
+    <?=$form->field($model, 'code')->textarea(['rows' => 6,'class'=>'redactor']);?>
 
     <?php
     if (!empty($model->blocks[$model->type]['vars']))
@@ -45,6 +45,9 @@ use kartik\select2\Select2;
 	            case $var::TYPE_COLLECTION:
                     echo Html::activeDropDownList($var,"[$ckey]value",ArrayHelper::map(Collection::find()->all(), 'id_collection', 'name'),['class'=>'form-control','Value_'.$ckey]);
                     break;
+                case $var::TYPE_SELECT:
+	                echo Html::activeDropDownList($var,"[$ckey]value",$model->blocks[$model->type]['vars'][$var->alias]['values'],['class'=>'form-control','id'=>'Value_'.$ckey]);
+	                break;
 	            case $var::TYPE_MENU:
 	                echo Html::activeDropDownList($var,"[$ckey]value",ArrayHelper::map(\common\models\Menu::find()->all(), 'id_menu', 'name'),['class'=>'form-control','id'=>'Value_'.$ckey,'prompt'=>$var->name]);
 	                break;
