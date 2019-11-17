@@ -19,8 +19,11 @@ class FormDynamic extends DynamicModel
         $inputs = FormInput::find()->where(['id_form' => $form->id_form])->all();
 
         foreach ($inputs as $input)
-            $attributes['input'.$input->id_input] = (isset($data[$input->id_input]))?$data[$input->id_input]:'1';
+            $attributes['input'.$input->id_input] = (isset($data[$input->id_input]))?$data[$input->id_input]:'';
 
         parent::__construct($attributes, $config);
+
+        foreach ($inputs as $input)
+        	$this->addRule(['input'.$input->id_input], 'safe');
     }
 }
