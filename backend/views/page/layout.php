@@ -10,6 +10,8 @@ $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => 
 $this->params['breadcrumbs'][] = ['label' => $model->pageTitle, 'url' => ['view', 'id' => $model->id_page]];
 $this->params['breadcrumbs'][] = 'Шаблон';
 
+$this->render('_head',['model'=>$model]);
+
 ?>
 
 <div class="row">

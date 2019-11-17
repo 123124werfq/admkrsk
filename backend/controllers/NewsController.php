@@ -122,19 +122,17 @@ class NewsController extends Controller
      * Lists all News models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($id_page)
     {
         $searchModel = new NewsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        $id_page = (int)Yii::$app->request->get('id_page');
-        if($id_page)
-            $news_pages = Page::findOne($id_page);
+        $page = Page::findOne($id_page);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'title' => $news_pages->title??'Новости',
+            'page' => $page,
         ]);
     }
 

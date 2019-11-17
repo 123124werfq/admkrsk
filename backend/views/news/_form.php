@@ -26,7 +26,6 @@ $rubs = (!empty($rubs))?$rubs->getArray():[];
         <div class="ibox">
             <div class="ibox-content">
                 <?php $form = ActiveForm::begin(); ?>
-
                 <?= $form->field($model, 'id_page')->widget(Select2::class, [
                     'data' => $model->id_page ? [$model->id_page=>$model->page->title]:[],
                     'pluginOptions' => [
@@ -41,7 +40,6 @@ $rubs = (!empty($rubs))?$rubs->getArray():[];
                         ],
                     ],
                 ]) ?>
-
                 <?=$form->field($model, 'id_rub')->widget(Select2::class, [
                     'data' => $rubs,
                     'pluginOptions' => [
@@ -51,9 +49,7 @@ $rubs = (!empty($rubs))?$rubs->getArray():[];
                 ])?>
 
                 <?= $form->field($model, 'title')->textInput(['maxlength' => 255]) ?>
-
                 <?= $form->field($model, 'description')->textarea(['maxlength' => 255]) ?>
-
                 <?= $form->field($model, 'content')->textarea(['rows' => 6,'class'=>'redactor']) ?>
 
                 <div class="row">
@@ -113,6 +109,8 @@ $rubs = (!empty($rubs))?$rubs->getArray():[];
 
                 <?= $form->field($model, 'main')->checkBox() ?>
 
+                <hr>
+                
                 <?php if (Yii::$app->user->can('admin.news')): ?>
                     <?= $form->field($model, 'access_user_ids')->widget(UserAccessControl::class) ?>
                 <?php endif; ?>
