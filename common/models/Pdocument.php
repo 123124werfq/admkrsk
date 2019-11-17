@@ -33,6 +33,9 @@ use SimpleXMLElement;
  */
 class Pdocument extends \yii\db\ActiveRecord
 {
+    public $views;
+    public $viewsYear;
+
     /**
      * {@inheritdoc}
      */
@@ -70,11 +73,11 @@ class Pdocument extends \yii\db\ActiveRecord
             'originator_name' => 'Originator Name',
             'case_number' => 'Case Number',
             'service_code' => 'Service Code',
-            'type' => 'Type',
-            'regnum' => 'Regnum',
+            'type' => 'Вид документа',
+            'regnum' => 'Регистрационный номер',
             'regdep' => 'Regdep',
-            'regdate' => 'Regdate',
-            'subject' => 'Subject',
+            'regdate' => 'Дата регистрации',
+            'subject' => 'Полное название',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
@@ -88,7 +91,7 @@ class Pdocument extends \yii\db\ActiveRecord
     public function getLinks()
     {
         return $this->hasMany(PdocumentLink::class, ['id_message' => 'id_message'])
-            ->orderBy('created_at');
+            ->orderBy('regdate DESC');
     }
 
     public function getFiles()
@@ -122,42 +125,41 @@ class Pdocument extends \yii\db\ActiveRecord
 //        print_r($docarr['intInput_Document']['revMessageData']['revAppData']); die();
 
         if(!$allowdupes)
+            $doc = Pdocument::find()->where(['case_number' => $docarr['intInput_Document']['revMessage']['revCaseNumber'] ])->one();
+
+
+        if(!$doc)
         {
-            $dd = Pdocument::find()->where(['case_number' => $docarr['intInput_Document']['revMessage']['revCaseNumber'] ])->count();
-            if($dd>0)
+            $doc = new Pdocument();
+
+            $publishSPA = (self::with($docarr['intInput_Document']['revMessageData']['revAppData']['PublishPA']));
+            $doc->id_message = $publishSPA['ID'];
+            $doc->type = $publishSPA['Type'];
+            $doc->regnum = $publishSPA['regNum'];
+            $doc->regdep = $publishSPA['regDep'];
+            $doc->regdate = $publishSPA['regDate'];
+            $doc->subject = $publishSPA['Subject'];
+
+            $revMessage = (self::with($docarr['intInput_Document']['revMessage']));
+            $doc->sender_code = $revMessage['revSender']['revCode'];
+            $doc->sender_name = $revMessage['revSender']['revName'];
+            $doc->recipient_code = $revMessage['revRecipient']['revCode'];
+            $doc->recipient_name = $revMessage['revRecipient']['revName'];
+            $doc->originator_code = $revMessage['revOriginator']['revCode'];
+            $doc->originator_name = $revMessage['revOriginator']['revName'];
+            $doc->case_number = $revMessage['revCaseNumber'];
+            $doc->service_code = $revMessage['revServiceCode'];
+
+            if (!$doc->save())
                 return false;
         }
-
-
-        $doc = new Pdocument();
-
-        $publishSPA = (self::with($docarr['intInput_Document']['revMessageData']['revAppData']['PublishPA']));
-        $doc->id_message = $publishSPA['ID'];
-        $doc->type = $publishSPA['Type'];
-        $doc->regnum = $publishSPA['regNum'];
-        $doc->regdep = $publishSPA['regDep'];
-        $doc->regdate = $publishSPA['regDate'];
-        $doc->subject = $publishSPA['Subject'];
-
-        $revMessage = (self::with($docarr['intInput_Document']['revMessage']));
-        $doc->sender_code = $revMessage['revSender']['revCode'];
-        $doc->sender_name = $revMessage['revSender']['revName'];
-        $doc->recipient_code = $revMessage['revRecipient']['revCode'];
-        $doc->recipient_name = $revMessage['revRecipient']['revName'];
-        $doc->originator_code = $revMessage['revOriginator']['revCode'];
-        $doc->originator_name = $revMessage['revOriginator']['revName'];
-        $doc->case_number = $revMessage['revCaseNumber'];
-        $doc->service_code = $revMessage['revServiceCode'];
-
-        if(!$doc->save())
-            return false;
 
         foreach($publishSPA['linkedPA'] as $link)
         {
             if(!$allowdupes)
             {
                 $dl = PdocumentLink::find()->where(['id_link' => $link['ID'] ])->count();
-                if($dd>0)
+                if($dl>0)
                     continue;
             }
 
@@ -170,7 +172,7 @@ class Pdocument extends \yii\db\ActiveRecord
             $lnk->regdate = $link['regDate'];
             $lnk->subject = $link['Subject'];
             $lnk->linkname = $link['linkName'];
-            $link->save();
+            $lnk->save();
         }
 
 

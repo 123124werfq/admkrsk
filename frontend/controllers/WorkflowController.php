@@ -22,32 +22,54 @@ class WorkflowController extends \yii\web\Controller
         $model = new WorkflowForm();
 
         if (Yii::$app->request->isPost) {
+            $model->load(Yii::$app->request->post());
             $model->file = UploadedFile::getInstances($model, 'file');
 
+
 //            if ($model->file && $model->validate()) {
-              if ($model->file) {
-                foreach ($model->file as $file) {
-                    $filename = 'assets/uploads/' . $file->baseName . '.' . $file->extension;
+                if($model->rawtext)
+                {
+                    $doc = new Pdocument;
+                    $doc->parseAndSave($model->rawtext);
+                }
+                elseif ($model->file) {
+                    foreach ($model->file as $file) {
+                        $filename = 'assets/uploads/' . $file->baseName . '.' . $file->extension;
 
-                    if(file_exists($filename))
-                        unlink($filename);
+                        if(file_exists($filename))
+                            unlink($filename);
 
-                    $file->saveAs('assets/uploads/' . $file->baseName . '.' . $file->extension);
+                        $file->saveAs('assets/uploads/' . $file->baseName . '.' . $file->extension);
 
-                    $content = file_get_contents($filename);
+                        $content = file_get_contents($filename);
 
-                    //echo $file->type;
-                    //die();
+                        //echo $file->type;
+                        //die();
 
-                    switch($file->type){
-                        case 'text/xml':
-                            $doc = new Pdocument;
-                            $doc->parseAndSave($content);
+                        switch($file->type){
+                            case 'text/xml':
+                                $doc = new Pdocument;
+                                $doc->parseAndSave($content);
+                                break;
+                            case 'message/rfc822';
+                                $res = imap_fetchbody();
+                                break;
+                            default:
+                                $doc = new Pdocument;
+                                $entityBody = file_get_contents('php://input');
+                                $doc->parseAndSave($entityBody);
+                        }
+
+
                     }
+                }
+                else
+                {
+
 
 
                 }
-            }
+
         }
     }
 

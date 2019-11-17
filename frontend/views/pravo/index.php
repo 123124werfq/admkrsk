@@ -1,3 +1,8 @@
+<?php
+use yii\grid\GridView;
+
+?>
+
 <div class="row">
     <div class="col-2-third">
         <ul class="breadcrumbs">
@@ -50,6 +55,60 @@
                         </script>
                     </div><div class="ms-clear"></div></div>
             </div><div class="ms-PartSpacingVertical"></div>
+        </div>
+
+        <div class="content">
+            <?php
+                    echo GridView::widget([
+                        'dataProvider' => $dataProvider,
+                        'columns' => [
+                            'type',
+                            [
+                                'class' => 'yii\grid\DataColumn',
+                                'format' => 'html',
+                                'value' => function ($data) {
+                                    $content = "<p><a href='/pravo/detail?regnum={$data->regnum}'>{$data->subject}</a></p>";
+
+                                    $changes = [];
+
+                                    foreach ($data->links as $link)
+                                    {
+                                        if(!in_array($link->linkname, array_keys($changes)))
+                                            $changes[$link->linkname] = [];
+
+                                        $changes[$link->linkname][] = $link;
+                                    }
+
+                                    if(count($changes))
+                                    {
+                                        foreach ($changes as $lk => $linktype)
+                                        {
+                                            $content.="<b>{$lk}...</b><br><ul>";
+
+                                            foreach ($linktype as $link)
+                                                $content .= "<li><a href='/pravo/detail?regnum={$link->regnum}'>{$link->subject}</a></li>";
+
+                                            $content.="</ul>";
+                                        }
+                                    }
+
+                                    return $content;
+                                },
+                            ],
+                            'regnum',
+                            [
+                                'class' => 'yii\grid\DataColumn',
+                                'format' => 'html',
+                                'value' => function ($data) {
+                                    $parts = explode('-', $data->regdate);
+
+                                    return $parts[2].".".$parts[1].".".$parts[0];
+                                }
+                            ]
+                        ]
+                    ]);
+
+            ?>
         </div>
     </div>
 </div>

@@ -32,6 +32,7 @@ $bundle = AppAsset::register($this);
         <!-- This make sence for mobile browsers. It means, that content has been optimized for mobile browsers -->
         <meta name="HandheldFriendly" content="true">
         <link href="<?= $bundle->baseUrl . '/css/accessability.css' ?>" rel="stylesheet" type="text/css" disabled title="accessability">
+        <link href="<?= $bundle->baseUrl . '/css/style.css' ?>" rel="stylesheet" type="text/css">
 
         <script>
             (function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement)
