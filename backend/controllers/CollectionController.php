@@ -83,7 +83,7 @@ class CollectionController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['create','record', 'create-view'],
+                        'actions' => ['create','record', 'create-view','copy'],
                         'roles' => ['backend.collection.create'],
                         'roleParams' => [
                             'class' => Collection::class,
@@ -215,6 +215,7 @@ class CollectionController extends Controller
         $newCollection = new Collection;
         $newCollection->attributes = $model->attributes;
         $newCollection->id_form = null;
+        $newCollection->name = 'Копия '.$model->name;
 
         if ($newCollection->save())
         {
@@ -246,7 +247,9 @@ class CollectionController extends Controller
                 $newRecord->save();
             }
 
+            $this->redirect(["collection/view",'id'=>$newCollection->id_collection]);
         }
+        else print_r($newCollection->errors);
     }
 
     /**

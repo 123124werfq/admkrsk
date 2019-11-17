@@ -72,8 +72,6 @@ $this->beginPage();
                     ]) ?>
                 </div>
                 <div class="col-lg-6 text-right button-block">
-                    <?= isset($this->params['button-block']) ? implode(' ', $this->params['button-block']) : '' ?>
-
                     <?php if (isset($this->params['action-block'])){?>
                     <div class="dropdown">
                       <button class="btn btn-default dropdown-toggle" type="button" id="actionDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -87,6 +85,7 @@ $this->beginPage();
                       </ul>
                     </div>
                     <?php }?>
+                    <?= isset($this->params['button-block']) ? implode(' ', $this->params['button-block']) : '' ?>
                 </div>
             </div>
         <?php } ?>

@@ -135,6 +135,8 @@ ul.menu-container ul .create-menu {display: none;}
 
 .button-block {padding-top: 30px;}
 
+.page-heading .dropdown {display: inline-block;}
+
 .navbar .nav > li.dropdown.menu-merge  a {padding-top: 15.5px;}
 .nav-list-topbar {margin: 0px -15px 20px; background: #fdfdfd; padding:0px 15px;}
 .nav-list-topbar.nav > li:hover {border-bottom: 3px solid #ddd;}

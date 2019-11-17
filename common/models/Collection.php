@@ -57,7 +57,7 @@ class Collection extends \yii\db\ActiveRecord
         return [
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
-            [['id_parent_collection','is_dictionary'], 'integer'],
+            [['id_parent_collection'], 'integer'],
             [['filter', 'options'], 'safe'],
             /*['access_user_ids', 'each', 'rule', 'is_dictionary' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],*/
