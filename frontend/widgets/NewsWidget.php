@@ -22,19 +22,26 @@ class NewsWidget extends \yii\base\Widget
             if (empty($page))
                 return false;
 
-            $news = News::find()->where(['main'=>1,'active'=>1,'id_page'=>$page->id_page])
+            $news = News::find()->where(['main'=>1,'state'=>1,'id_page'=>$page->id_page])
                         ->orderBy('date_publish DESC')->limit(4)->all();
 
+            if (empty($news))
+                return false;
+
             return $this->render('news/news_single',[
+                'blockVars'=>$blockVars,
                 'news'=>$news,
                 'page'=>$page,
             ]);
         }
 
         if (empty($blockVars['menu']))
-            return '';
+            return false;
 
         $menu = Menu::findOne($blockVars['menu']->value);
+
+        if (empty($menu))
+            return false;
 
         $tabs = [];
 
@@ -43,7 +50,7 @@ class NewsWidget extends \yii\base\Widget
             if (!empty($link->id_page))
             {
                 $tabs[$link->id_link]['news'] = News::find()
-                                                    ->where(['main'=>1,'active'=>1'id_page'=>$link->id_page])
+                                                    ->where(['main'=>1,'state'=>1,'id_page'=>$link->id_page])
                                                     ->orderBy('date_publish DESC');
 
                 // если это анонсы
@@ -52,7 +59,7 @@ class NewsWidget extends \yii\base\Widget
                 else
                 {
                     $tabs[$link->id_link]['widenews'] = News::find()
-                                                            ->where(['main'=>1,'active'=>1,'id_page'=>$link->id_page])
+                                                            ->where(['main'=>1,'state'=>1,'id_page'=>$link->id_page])
                                                             ->andWhere('id_media IS NOT NULL AND id_media <> 0')
                                                             ->orderBy('date_publish DESC')
                                                             ->one();
