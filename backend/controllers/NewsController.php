@@ -193,9 +193,11 @@ class NewsController extends Controller
     {
         $model = $this->findModel($id);
         $model->tagNames = [];
-        foreach ($model->tags as $key => $tag) {
+        foreach ($model->tags as $key => $tag)
             $model->tagNames[$tag->name] = $tag->name;
-        }
+
+        $model->pages = $model->getPages()->indexBy('id_page')->all();
+        $model->pages = array_keys($model->pages);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_UPDATE);

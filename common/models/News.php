@@ -44,6 +44,7 @@ class News extends \yii\db\ActiveRecord
     const TITLE_ATTRIBUTE = 'title';
 
     public $access_user_ids, $tagNames = [];
+    public $pages;
 
     /**
      * {@inheritdoc}
@@ -63,7 +64,7 @@ class News extends \yii\db\ActiveRecord
             [['id_page', 'id_category', 'id_rub', 'id_media', 'state', 'main', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_user'], 'integer'],
             [['title', 'content'], 'required'],
             [['content'], 'string'],
-            [['date_publish', 'date_unpublish','tagNames'], 'safe'],
+            [['date_publish', 'date_unpublish','tagNames','pages'], 'safe'],
             [['title', 'description'], 'string', 'max' => 255],
             ['access_user_ids', 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
@@ -88,6 +89,7 @@ class News extends \yii\db\ActiveRecord
             'date_publish' => 'Дата публикации',
             'date_unpublish' => 'Снять с публикации',
             'state' => 'Статус',
+            'pages' => 'Опубликовать в',
             'tagNames'=>'Теги',
             'main' => 'На главную',
             'created_at' => 'Created At',
@@ -98,6 +100,34 @@ class News extends \yii\db\ActiveRecord
             'deleted_by' => 'Deleted By',
             'access_user_ids' => 'Доступ',
         ];
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        if (!empty($_POST['News']))
+        {
+            $links = Yii::$app->db->createCommand("SELECT * FROM dbl_news_page WHERE id_news = ".$this->id_news)->queryAll();
+            
+            $exist = [];
+            foreach ($links as $key => $link)
+                $exist[$link['id_page']] = $link['id_page'];
+
+            if (!empty($this->pages))
+            {
+                foreach ($this->pages as $key => $id_page)
+                {
+                    $page = Page::findOne($id_page);
+                    $this->link('pages',$page,['created_at'=>time(),'created_by'=>Yii::$app->user->id]);
+
+                    unset($exist[$id_page]);
+                }
+            }
+            
+            if (!empty($exist))
+                Yii::$app->db->delete('dbl_news_page',['id_news'=>$this->id_news,'id_page'=>$exist])->execute();
+        }
+
+        parent::afterSave($insert, $changedAttributes);
     }
 
     /**
@@ -179,6 +209,11 @@ class News extends \yii\db\ActiveRecord
     public function getPage()
     {
         return $this->hasOne(Page::class, ['id_page' => 'id_page']);
+    }
+
+     public function getPages()
+    {
+        return $this->hasOne(Page::class, ['id_page' => 'id_page'])->viaTable('dbl_news_page', ['id_news' => 'id_news']);
     }
 
     /**

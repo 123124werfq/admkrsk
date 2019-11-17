@@ -17,12 +17,12 @@ use kartik\select2\Select2;
                 <?php $form = ActiveForm::begin(); ?>
 
                 <?=$form->field($model, 'id_page')->widget(Select2::class, [
-                        'data' => ArrayHelper::map(\common\models\Page::find()->all(), 'id_page', 'title'),
-                        'pluginOptions' => [
-                            'allowClear' => true,
-                            'placeholder' => 'Выберите раздел',
-                        ],
-                    ])?>
+                    'data' => ArrayHelper::map(\common\models\Page::find()->all(), 'id_page', 'title'),
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                        'placeholder' => 'Выберите раздел',
+                    ],
+                ])?>
 
                 <?= $form->field($model, 'content')->textInput(['class' => 'redactor']) ?>
 

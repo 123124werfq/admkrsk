@@ -170,9 +170,12 @@ class PageController extends Controller
             $query->andWhere(['ilike', 'title', $q]);
         }
 
+        if (!empty($_GET['news']))
+            $query->andWhere('id_page IN (SELECT id_page FROM db_news)');
+
         $results = [];
         foreach ($query->limit(10)->all() as $page) {
-            /* @var Page $page */
+
             $results[] = [
                 'id' => $page->id_page,
                 'text' => $page->title,

@@ -21,7 +21,7 @@ class NewsController extends \yii\web\Controller
 
         if (!empty($page))
         {
-            $news->where(['id_page'=>$page->id_page]);
+            $news->where(['id_page'=>$page->id_page])->orWhere("id_news IN (SELECT id_news FROM dbl_news_page WHERE id_page = $page->id_page)");
             $rubrics->andWhere(['id_page'=>$page->id_page]);
         }
 
@@ -29,14 +29,15 @@ class NewsController extends \yii\web\Controller
 
         $rubrics = $rubrics->groupBy('id_rub')->column();
 
+        // фильтр рубрики
         if (!empty($id_rub))
             $news->andWhere(['id_rub'=>$id_rub]);
 
+        // фильтры тега
         if (!empty(Yii::$app->request->get('tag')))
-        {
             $news->joinWith('tags as tags')->where(['tags.name'=>Yii::$app->request->get('tag')]);
-        }
 
+        // получаем рубрики из коллекции
         if (!empty($rubrics))
             $rubrics = CollectionRecord::find()->where(['id_record'=>$rubrics])->all();
 
