@@ -5,7 +5,7 @@
 	<?php
 		if ($model->type->type==CollectionColumn::TYPE_SELECT)
 	    {
-	        $values = $model->getArrayValues;
+	        $values = $model->getArrayValues();
 
 	        if (!empty($values))
 	        {

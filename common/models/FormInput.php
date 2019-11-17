@@ -44,8 +44,8 @@ class FormInput extends \yii\db\ActiveRecord
             [['id_form', 'id_type', 'id_collection', 'visibleInput', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','label'], 'default', 'value' => null],
             [['id_form', 'id_type', 'id_collection', 'visibleInput', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','required'], 'integer'],
             [['name', 'id_type'], 'required'],
-            [['values', 'options','hint','label'], 'string'],
-            [['visibleInputValue'],'safe'],
+            [['values', 'hint','label'], 'string'],
+            [['visibleInputValue','options'],'safe'],
             [['name', 'fieldname'], 'string', 'max' => 255],
         ];
     }
@@ -110,4 +110,10 @@ class FormInput extends \yii\db\ActiveRecord
     {
         return $this->hasOne(FormInputType::class, ['id_type' => 'id_type']);
     }
+
+    public function getVisibleInputModel()
+    {
+        return $this->hasOne(FormInput::class, ['id_input' => 'visibleInput']);
+    }
+    
 }

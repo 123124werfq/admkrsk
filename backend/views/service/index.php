@@ -25,6 +25,7 @@ $this->params['button-block'][] = Html::a('Добавить', ['create'], ['clas
             'reestr_number:text:Номер',
             'name',
             'rubric.name:text:Рубрики',
+            'targets.count:text:Целей',
             //'keywords:ntext',
             //'addresses:ntext',
             //'result:ntext',

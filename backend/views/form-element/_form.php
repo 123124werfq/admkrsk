@@ -8,12 +8,15 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<?php $form = ActiveForm::begin(); ?>
+<?php $form = ActiveForm::begin([
+	'id'=>'ElementForm'
+]); ?>
 
 <?= $form->field($model, 'content')->textarea(['rows' => 6,'class'=>'form-control redactor']) ?>
-
 <div class="form-group">
     <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
 </div>
-
 <?php ActiveForm::end(); ?>
+<script type="text/javascript">
+	tinymce.init(tinymceConfig);
+</script>

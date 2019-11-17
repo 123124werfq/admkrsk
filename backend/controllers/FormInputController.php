@@ -82,18 +82,21 @@ class FormInputController extends Controller
         $model = new FormInput();
         $model->id_form = $row->id_form;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save())
+        if ($model->load(Yii::$app->request->post()) && !Yii::$app->request->isAjax)
         {
-            $element = new FormElement;
-            $element->id_input = $model->id_input;
-            $element->id_row = $id_row;
-            $element->ord = Yii::$app->db->createCommand("SELECT count(*) FROM form_element WHERE id_row = $id_row")->queryScalar();
-            $element->save();
+            if ($model->save())
+            {
+                $element = new FormElement;
+                $element->id_input = $model->id_input;
+                $element->id_row = $id_row;
+                $element->ord = Yii::$app->db->createCommand("SELECT count(*) FROM form_element WHERE id_row = $id_row")->queryScalar();
+                $element->save();
 
-            if (!Yii::$app->request->isAjax)
-                return $this->redirect(['form/view', 'id' => $model->id_form]);
-            else
-                return $this->renderPartial('/form/_input',['element'=>$element]);
+                if (!Yii::$app->request->isAjax)
+                    return $this->redirect(['form/view', 'id' => $model->id_form]);
+                else
+                    return $this->renderPartial('/form/_input',['element'=>$element]);
+            }
         }
 
         if (Yii::$app->request->isAjax)

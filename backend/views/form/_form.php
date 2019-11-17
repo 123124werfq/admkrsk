@@ -10,9 +10,8 @@ use yii\widgets\ActiveForm;
 
 <div class="ibox">
     <div class="ibox-content">
-
+    	
     <?php $form = ActiveForm::begin(); ?>
-
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 

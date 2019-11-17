@@ -2,20 +2,17 @@
 
 namespace backend\controllers;
 
-use common\models\Action;
 use Yii;
-use common\models\Service;
 use common\models\ServiceTarget;
 use yii\data\ActiveDataProvider;
-use backend\models\search\ServiceSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ServiceController implements the CRUD actions for Service model.
+ * ServiceTargetController implements the CRUD actions for ServiceTarget model.
  */
-class ServiceController extends Controller
+class ServiceTargetController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -33,50 +30,45 @@ class ServiceController extends Controller
     }
 
     /**
-     * Lists all Service models.
+     * Lists all ServiceTarget models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($id)
     {
-        $searchModel = new ServiceSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = new ActiveDataProvider([
+            'query' => ServiceTarget::find()->where(['id_service'=>$id]),
+        ]);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single Service model.
+     * Displays a single ServiceTarget model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-       $dataProvider = new ActiveDataProvider([
-            'query' => ServiceTarget::find()->where(['id_service'=>$id]),
-        ]);
-
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'dataProvider'=>$dataProvider,
         ]);
     }
 
     /**
-     * Creates a new Service model.
+     * Creates a new ServiceTarget model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($id)
     {
-        $model = new Service();
+        $model = new ServiceTarget();
+        $model->id_service = $id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_CREATE);
-            return $this->redirect(['index', 'id' => $model->id_service]);
+            return $this->redirect(['service/view', 'id' => $model->id_service]);
         }
 
         return $this->render('create', [
@@ -85,7 +77,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Updates an existing Service model.
+     * Updates an existing ServiceTarget model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -95,17 +87,8 @@ class ServiceController extends Controller
     {
         $model = $this->findModel($id);
 
-        $client_type = [];
-        if ($model->client_type&2)
-            $client_type[] = 2;
-        if ($model->client_type&4)
-            $client_type[] = 4;
-        
-        $model->client_type = $client_type;
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_UPDATE);
-            return $this->redirect(['index', 'id' => $model->id_service]);
+            return $this->redirect(['service/view', 'id' => $model->id_service]);
         }
 
         return $this->render('update', [
@@ -114,39 +97,32 @@ class ServiceController extends Controller
     }
 
     /**
-     * Deletes an existing Service model.
+     * Deletes an existing ServiceTarget model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
-        $model = $this->findModel($id);
-
-        if ($model->delete()) {
-            $model->createAction(Action::ACTION_DELETE);
-        }
+        $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the Service model based on its primary key value.
+     * Finds the ServiceTarget model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Service the loaded model
+     * @return ServiceTarget the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Service::findOne($id)) !== null) {
+        if (($model = ServiceTarget::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-
 }

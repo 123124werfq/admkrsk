@@ -14,18 +14,18 @@ class M191114074420Newstofeed extends Migration
      */
     public function safeUp()
     {
-        $this->alterColumn('form_input', 'visibleInputValue', $this->text().'[]');
-    }
-
-    public function beforeValidate()
-    {
-        if (!empty($this->date_begin) && !is_numeric($this->date_begin))
-            $this->date_begin = strtotime($this->date_begin);
-
-        if (!empty($this->date_end) && !is_numeric($this->date_end))
-            $this->date_end = strtotime($this->date_end);
-
-        return parent::beforeValidate();
+        $this->createTable('dbl_news_page', [
+            'id_page' => $this->integer(),
+            'id_news' => $this->integer(),
+            'created_at' => $this->integer(),
+            'created_by' => $this->integer(),
+            'accepted_at' => $this->integer(),
+            'accepted_by' => $this->integer(),
+            'updated_at' => $this->integer(),
+            'updated_by' => $this->integer(),
+            'deleted_at' => $this->integer(),
+            'deleted_by' => $this->integer(),
+        ]);
     }
 
     /**

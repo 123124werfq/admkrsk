@@ -534,7 +534,7 @@ class SiteController extends Controller
     public function actionFakelogin()
     {
         if (YII_ENV_DEV) {
-            $user = User::findOne(4);
+            $user = User::findOne(1);
 
             Yii::$app->user->login($user, 3600*24*7);
 
