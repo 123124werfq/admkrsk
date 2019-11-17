@@ -151,7 +151,8 @@ class Smev extends Model
         $respContent = new ResponseContentType($respInput, $respStatus);
         $resp = new ResponseMessageType('CreateOrdersResponse', $respMeta, $respContent);
 
-        $message = new ClientMessage(240501, $rq, $resp);
+//        $message = new ClientMessage(240501, $rq, $resp);
+        $message = new ClientMessage(240501, $rq, null);
 
         $cl->Send($message);
 
