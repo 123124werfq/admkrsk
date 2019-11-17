@@ -190,6 +190,10 @@ function reordModels($block,$data)
 
 jQuery(document).ready(function()
 {
+    $('body').delegate("#forminput-visibleinput",'change',function(){
+
+    });
+
     $("#FormElement .btn-primary").click(function(){
       $(".modal-body form").submit();
     });

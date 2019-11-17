@@ -30,7 +30,8 @@ class OpendataController extends \yii\web\Controller
     {
         $model = Opendata::findOne(['identifier' => $id]);
 
-        if (empty($model)) {
+        if (empty($model))
+        {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
