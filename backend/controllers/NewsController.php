@@ -125,6 +125,7 @@ class NewsController extends Controller
     public function actionIndex($id_page)
     {
         $searchModel = new NewsSearch();
+        $searchModel->id_page = $id_page;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         $page = Page::findOne($id_page);
@@ -172,7 +173,7 @@ class NewsController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_CREATE);
-            return $this->redirect(['index', 'id' => $model->id_news]);
+            return $this->redirect(['index', 'id_page' => $model->id_page]);
         }
 
         return $this->render('create', [
@@ -198,7 +199,7 @@ class NewsController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_UPDATE);
-            return $this->redirect(['index', 'id' => $model->id_news]);
+            return $this->redirect(['index', 'id_page' => $model->id_page]);
         }
 
         return $this->render('update', [

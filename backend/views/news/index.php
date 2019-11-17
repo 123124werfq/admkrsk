@@ -9,17 +9,27 @@ use yii\grid\GridView;
 
 $this->title = $page->title;
 $this->params['breadcrumbs'][] = $this->title;
+
+$this->render('/page/_head',['model'=>$page]);
+
 if (Yii::$app->user->can('admin.news')) {
     $this->params['button-block'][] = Html::a('Добавить новость', ['create','id_page'=>Yii::$app->request->get('id_page',0)], ['class' => 'btn btn-success']);
 }
 ?>
 
+<div class="ibox">
+    <div class="ibox-content">
+        <?=$this->render('_search', ['model' => $searchModel]); ?>
+    </div>
+</div>
+
 <div class="row">
     <div class="tabs-container">
         <ul class="nav nav-tabs" role="tablist">
-            <li><a class="nav-link" data-toggle="tab" href="#tab-1">Дочерние разделы</a></li>
             <li>
-                <?=Html::a('Шаблон', ['layout', 'id' => $page->id_page], ['class' => 'nav-link'])?>
+                <?=Html::a('Дочерние разделы', ['page/view', 'id' => $page->id_page], ['class' => 'nav-link'])?>
+            <li>
+                <?=Html::a('Шаблон', ['page/layout', 'id' => $page->id_page], ['class' => 'nav-link'])?>
             </li>
             <li class="active">
                 <?=Html::a('Новости', ['news/index', 'id_page' => $page->id_page], ['class' => 'nav-link'])?>
@@ -28,9 +38,9 @@ if (Yii::$app->user->can('admin.news')) {
         <div class="tab-content">
             <div role="tabpanel" id="tab-1" class="tab-pane active">
                 <div class="panel-body">
+
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
-                        //'filterModel' => $searchModel,
                         'columns' => [
                             'id_news',
                             'title',

@@ -13,10 +13,8 @@ use yii\web\JsExpression;
 /* @var $form yii\widgets\ActiveForm */
 
 
-$categories = Collection::find()->where(['alias'=>"news_cetogory"])->one();
 $rubs = Collection::find()->where(['alias'=>"news_rubs"])->one();
 
-$categories = (!empty($categories))?$categories->getArray():[];
 $rubs = (!empty($rubs))?$rubs->getArray():[];
 
 ?>

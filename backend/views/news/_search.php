@@ -2,58 +2,39 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use common\models\Collection;
 /* @var $this yii\web\View */
 /* @var $model backend\models\search\NewsSearch */
 /* @var $form yii\widgets\ActiveForm */
+
+$rubs = Collection::find()->where(['alias'=>"news_rubs"])->one();
+$rubs = (!empty($rubs))?$rubs->getArray():[];
+
 ?>
 
-<div class="news-search">
+<div class="news-search search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
+        'fieldConfig'=>[
+            'template' => '{input}',
+        ]
     ]); ?>
 
-    <?= $form->field($model, 'id_news') ?>
+    <?= Html::hiddenInput('id_page',$model->id_page)?>
 
-    <?= $form->field($model, 'id_page') ?>
-
-    <?= $form->field($model, 'id_category') ?>
-
-    <?= $form->field($model, 'id_rub') ?>
-
-    <?= $form->field($model, 'id_media') ?>
-
-    <?php // echo $form->field($model, 'title') ?>
-
-    <?php // echo $form->field($model, 'description') ?>
-
-    <?php // echo $form->field($model, 'content') ?>
-
-    <?php // echo $form->field($model, 'date_publish') ?>
-
-    <?php // echo $form->field($model, 'date_unpublish') ?>
-
-    <?php // echo $form->field($model, 'state') ?>
-
-    <?php // echo $form->field($model, 'main') ?>
-
-    <?php // echo $form->field($model, 'created_at') ?>
-
-    <?php // echo $form->field($model, 'created_by') ?>
-
-    <?php // echo $form->field($model, 'updated_at') ?>
-
-    <?php // echo $form->field($model, 'updated_by') ?>
-
-    <?php // echo $form->field($model, 'deleted_at') ?>
-
-    <?php // echo $form->field($model, 'deleted_by') ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-outline-secondary']) ?>
+    <div class="row">
+        <div class="col-sm-3">
+            <?= $form->field($model, 'title')->textInput(['placeholder'=>'Заголовок']) ?>
+        </div>
+        <div class="col-sm-3">
+            <?= $form->field($model, 'id_rub')->dropDownList($rubs,['prompt'=>'Выбрите рубрику']) ?>
+        </div>
+        <div class="col-sm-2">
+            <?= Html::submitButton('Найти', ['class' => 'btn btn-primary']) ?>
+            <?= Html::a('Сбросить',['index'], ['class' => 'btn btn-default']) ?>
+        </div>
     </div>
 
     <?php ActiveForm::end(); ?>
