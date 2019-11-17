@@ -190,7 +190,9 @@ class CollectionController extends Controller
                 ['id_collection' => $q],
                 ['ilike', 'name', $q],
             ]);
-        } else {
+        }
+        else
+        {
             $query->andWhere(['ilike', 'name', $q]);
         }
 
@@ -204,6 +206,47 @@ class CollectionController extends Controller
         }
 
         return ['results' => $results];
+    }
+
+    public function actionCopy($id)
+    {
+        $model = $this->findModel($id);
+
+        $newCollection = new Collection;
+        $newCollection->attributes = $model->attributes;
+        $newCollection->id_form = null;
+
+        if ($newCollection->save())
+        {
+            $compare = [];
+
+            foreach ($model->columns as $key => $column)
+            {
+                $newCol = new CollectionColumn;
+                $newCol->attributes = $column->attributes;
+                $newCol->id_collection = $newCollection->id_collection;
+
+                if ($newCol->save())
+                    $compare[$column->id_column] = $newCol->id_column;
+            }
+
+            $records = $model->getData();
+
+            foreach ($records as $rkey => $row)
+            {
+                $insert = [];
+
+                foreach ($row as $oldcol => $value)
+                    if (isset($compare[$oldcol]))
+                        $insert[$compare[$oldcol]] = $value;
+
+                $newRecord = new CollectionRecord;
+                $newRecord->id_collection = $newCollection->id_collection;
+                $newRecord->data = $insert;
+                $newRecord->save();
+            }
+
+        }
     }
 
     /**

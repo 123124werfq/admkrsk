@@ -3,7 +3,7 @@
         <?=frontend\widgets\Breadcrumbs::widget(['page'=>$page])?>
         <div>
             <h1>Программа праздника</h1>
-            <!--div class="header-controls">
+            <div class="header-controls">
                 <form>
                     <div class="btn-group">
                         <div class="btn-group_item">
@@ -52,14 +52,12 @@
                         </div>
                     </div>
                 </form>
-            </div-->
-
+            </div>
             <!-- <hr class="hr"> -->
-
             <div class="program-list">
                 <?php foreach ($program as $date => $day) {?>
                 <div class="program">
-                    <h2 class="program_date"><?=strftime('%e %B (%A)',$date) ?></h2>
+                    <h2 class="program_date"><?=strftime('%e %B (%A)',(int)$date) ?></h2>
                     <!--h3 class="program_event-title">«Город для детей»</h3-->
                     <?php foreach ($day as $key => $event) {?>
                     <div class="program-event">

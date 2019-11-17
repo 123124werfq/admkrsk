@@ -30,11 +30,11 @@ $this->beginPage();
     <?=Html::csrfMetaTags() ?>
 </head>
 <body class="<?= Yii::$app->request->cookies->getValue('mininavbar', false) ? 'mini-navbar' : '' ?>" data-spy="scroll" data-target="#navbar">
-<?php 
+<?php
     if ($flash = Yii::$app->session->getFlash('success'))
     {
         $script = "toastr.success('$flash', '');";
-        $this->registerJs($script, yii\web\View::POS_END); 
+        $this->registerJs($script, yii\web\View::POS_END);
     }
 ?>
 <?php $this->beginBody(); ?>
@@ -73,6 +73,20 @@ $this->beginPage();
                 </div>
                 <div class="col-lg-6 text-right button-block">
                     <?= isset($this->params['button-block']) ? implode(' ', $this->params['button-block']) : '' ?>
+
+                    <?php if (isset($this->params['action-block'])){?>
+                    <div class="dropdown">
+                      <button class="btn btn-default dropdown-toggle" type="button" id="actionDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Действия
+                        <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="actionDropDown">
+                        <?php foreach ($this->params['action-block'] as $key => $link) {
+                            echo "<li>$link</li>";
+                        }?>
+                      </ul>
+                    </div>
+                    <?php }?>
                 </div>
             </div>
         <?php } ?>

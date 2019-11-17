@@ -11,18 +11,21 @@ $this->title = $model->pageTitle;
 $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->primaryKey;
 
-$this->params['button-block'][] = Html::a('Создать представление', ['create-view', 'id' => $model->id_collection], ['class' => 'btn btn-default']);
-$this->params['button-block'][] = Html::a('История', ['history', 'id' => $model->id_collection], ['class' => 'btn btn-default']);
-
 $this->params['button-block'][] = Html::a('Добавить', ['record', 'id' => $model->id_collection], ['class' => 'btn btn-success create-collection','data-toggle'=>"modal",'data-target'=>"#CollectionRecord"]);
-$this->params['button-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_collection], ['class' => 'btn btn-primary']);
-$this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id_collection], [
-    'class' => 'btn btn-danger',
+
+$this->params['action-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_collection]);
+$this->params['action-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id_collection],
     'data' => [
         'confirm' => 'Вы уверены, что хотите удалить этот элемент?',
         'method' => 'post',
     ],
 ]);
+$this->params['action-block'][] = Html::a('История', ['history', 'id' => $model->id_collection]);
+
+$this->params['action-block'][] = Html::a('Создать представление', ['create-view', 'id' => $model->id_collection]);
+
+$this->params['action-block'][] = Html::a('Создать копию', ['copy', 'id' => $model->id_collection]);
+
 ?>
 <div class="collection-view">
     <div class="ibox">
