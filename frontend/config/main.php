@@ -59,6 +59,7 @@ return [
             'showScriptName' => false,
             'rules' => [
                 'search/address'=>'search/address',
+                'site/test'=>'site/test',
                 'address/region'=>'address/region',
                 'address/subregion'=>'address/subregion',
                 'address/city'=>'address/city',

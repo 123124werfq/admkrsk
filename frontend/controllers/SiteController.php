@@ -355,6 +355,11 @@ class SiteController extends Controller
         return $this->redirect('/');
     }
 
+    public function actionTest()
+    {
+        \common\components\worddoc\WordDoc::makeDoc([1,2,3],'11.docx');
+    }
+
     public function actionTestad1()
     {
         $un = 'web_user';
