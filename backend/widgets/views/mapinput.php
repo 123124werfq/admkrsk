@@ -1,4 +1,3 @@
-<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&" type="text/javascript"></script>
 <script>
     ymaps.ready(init);
 
@@ -61,7 +60,7 @@
 <div class="input-group bootstrap-touchspin">
     <span class="input-group-addon bootstrap-touchspin-prefix" style="display: none;"></span>
     <input class="touchspin2 form-control" type="text" value="" name="<?=$fname?>[<?=$cid?>]" style="display: block;">
-    <span class="input-group-addon bootstrap-touchspin-postfix" id="toggle_wim<?=$cid?>">НА КАРТЕ</span>
+    <span class="input-group-addon bootstrap-touchspin-postfix" id="toggle_wim<?=$cid?>"><i class="fa fa-map-marker"></i></span>
 </div>
 <div class="widget-input-map hidden" id="wim<?=$cid?>">
 

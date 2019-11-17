@@ -37,8 +37,8 @@ class AddressController extends \yii\web\Controller
         $results = [];
         foreach ($query->all() as $region) {
             $results[] = [
-                'id_region' => $region['id_region'],
-                'name' => $region['name'],
+                'id' => $region['id_region'],
+                'text' => $region['name'],
             ];
         }
 
@@ -53,9 +53,10 @@ class AddressController extends \yii\web\Controller
     public function actionSubregion($id_region, $search = '')
     {
         $query = Subregion::find()
+            ->select([Subregion::tableName().'.id_subregion',Subregion::tableName().'.name'])
             ->joinWith('houses', false)
             ->filterWhere([House::tableName() . '.id_region' => $id_region])
-            ->groupBy(Subregion::tableName() . '.id_subregion')
+            ->groupBy(Subregion::tableName() . '.id_subregion, '.Subregion::tableName().'.name')
             ->orderBy([Subregion::tableName() . '.name' => SORT_ASC])
             ->asArray();
 
@@ -122,9 +123,10 @@ class AddressController extends \yii\web\Controller
     public function actionDistrict($id_city, $search = '')
     {
         $query = District::find()
+            ->select([District::tableName().'.id_district',District::tableName().'.name'])
             ->joinWith('houses', false)
             ->filterWhere([House::tableName() . '.id_city' => $id_city])
-            ->groupBy(District::tableName() . '.id_district')
+            ->groupBy(District::tableName() . '.id_district,'.District::tableName() . '.name')
             ->orderBy([District::tableName() . '.name' => SORT_ASC])
             ->asArray();
 

@@ -1,6 +1,7 @@
 <?php
     use yii\helpers\Html;
     use common\models\Collection;
+    use common\models\District;
     use common\models\CollectionRecord;
     use yii\helpers\ArrayHelper;
     use backend\widgets\MapInputWidget;
@@ -33,6 +34,9 @@ foreach ($collection->getColumns()->indexBy('id_column')->all() as $ckey => $col
                     break;
                 case $column::TYPE_SELECT:
                     echo Html::dropDownList("CollectionRecord[$ckey]",(isset($data[$ckey]))?$data[$ckey]:'',explode(',', $column->variables),['class'=>'form-control','id'=>'Value_'.$ckey,'prompt'=>$column->name]);
+                    break;
+                case $column::TYPE_DISTRICT:
+                    echo Html::dropDownList("CollectionRecord[$ckey]",(isset($data[$ckey]))?$data[$ckey]:'',ArrayHelper::map(District::find()->all(), 'id_district', 'name'),['class'=>'form-control','id'=>'Value_'.$ckey,'prompt'=>$column->name]);
                     break;
                 case $column::TYPE_RICHTEXT:
                     echo Html::textArea("CollectionRecord[$ckey]",(isset($data[$ckey]))?$data[$ckey]:'',['class'=>'form-control','id'=>'Value_'.$ckey,'placeholder'=>$column->name,'redactor'=>true]);

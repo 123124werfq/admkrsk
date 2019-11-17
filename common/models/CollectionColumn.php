@@ -35,7 +35,12 @@ class CollectionColumn extends \yii\db\ActiveRecord
     const TYPE_RADIO = 15;
     const TYPE_ADDRESS = 16;
     const TYPE_JSON = 17;
-    const TYPE_DISTRICT = 18;
+    const TYPE_DISTRICT = 23;
+    const TYPE_REGION = 19;
+    const TYPE_CITY = 20;
+    const TYPE_STREET = 21;
+    const TYPE_HOUSE = 22;
+    const TYPE_SUBREGION = 24;
 
     public static function getTypeOptions($type)
     {
@@ -145,8 +150,13 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_IMAGE => "Изображение",
             self::TYPE_ADDRESS => "Адрес",
             self::TYPE_JSON => "JSON",
+            self::TYPE_REGION => 'Регион',
+            self::TYPE_SUBREGION => 'Область',
+            self::TYPE_CITY => 'Город',
+            self::TYPE_DISTRICT => 'Район города',
+            self::TYPE_STREET => 'Улица',
+            self::TYPE_HOUSE => 'Дом',
         ];
-
 
         if (empty($type))
             return $labels;

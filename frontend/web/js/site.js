@@ -1,5 +1,17 @@
 $(document).ready(function() {
 
+    $("#program-filter select").change(function(){
+        console.log(123);
+        $.ajax({
+            type: "GET",
+            dataType: "html",
+            url: "",
+            data: $("#program-filter").serialize()
+        }).done(function(data) {
+            $(".program-list").html(data);
+        });
+    });
+
     $("div[data-visible-field]").each(function(){
 
         var source = $("#"+$(this).data('visible-field'));

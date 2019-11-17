@@ -34,28 +34,12 @@ $this->params['action-block'][] = Html::a('Создать копию', ['copy', 
             <div class="table-responsive">
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
-                    //'filterModel' => $searchModel,
                     'columns'=>$columns,
                     'tableOptions'=>[
                         'emptyCell '=>'',
                         'class'=>'table table-striped valign-middle table-hover'
                     ]
                 ]); ?>
-                <!--table class="table table-hover">
-                    <?php /*
-                        $records = $model->getData();
-                        echo "<thead><tr><th></th>";
-                        foreach ($model->columns as $ckey => $column) {
-                            echo "<th>".$column->name."</th>";
-                        }
-                        $columns = $model->getColumns()->indexBy('id_column')->all();
-                        echo '</tr></thead>
-                        <tbody id="collection-rows">';
-                        foreach ($records as $id_record => $row) {
-                            echo $this->render("_record",['model'=>$model,'row'=>$row,'columns'=>$columns,'id_record'=>$id_record]);
-                        }*/?>
-                    </tbody>
-                </table-->
             </div>
         </div>
     </div>

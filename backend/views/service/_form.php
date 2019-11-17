@@ -92,7 +92,7 @@ if (!empty($id_situations))
 
         <?= $form->field($model, 'old')->checkBox() ?>
 
-        <?= $form->field($model, 'online')->dropDownList([0=>'Оффлайн',1=>'Онлайн']) ?>
+        <?= $form->field($model, 'online')->dropDownList([0=>'Оффлайн',1=>'В электронном виде']) ?>
 
         <hr>
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

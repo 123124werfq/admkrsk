@@ -191,7 +191,7 @@ class MultiUploadBehavior extends Behavior
 					if (!empty($post['file_path']))
 						$mediaModel->getImageAttributes($post['file_path'],$post); // загружаем всю информацию c файла в объект
 					elseif (!$mediaModel->isNewRecord)
-						$mediaModel->getImageAttributes($mediaModel->getImagePath(),$post); // надо переделать
+						$mediaModel->getImageAttributes($mediaModel->getFilePath(),$post); // надо переделать
 
 					$this->records[$relation_name][] = $mediaModel;
 				}

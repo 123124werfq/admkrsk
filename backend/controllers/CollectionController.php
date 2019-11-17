@@ -321,7 +321,7 @@ class CollectionController extends Controller
                         return $url;
                     }
                     if ($action === 'delete') {
-                        $url ='delete-record?id_record='.$model['id_record'];
+                        $url ='delete-record?id='.$model['id_record'];
                         return $url;
                     }
                 }

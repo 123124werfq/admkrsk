@@ -34,7 +34,7 @@ class CollectionQuery extends \yii\mongodb\Query
         return $query;
     }
 
-    public function select($id_columns)
+    public function select($id_columns=null)
     {
         $columns = $this->collection->getColumns()->select(['alias','id_column']);
 
@@ -75,6 +75,27 @@ class CollectionQuery extends \yii\mongodb\Query
         }
 
         $this->andWhere(['id_record'=>$id_record]);
+
+        return $this;
+    }
+
+    public function whereByAlias($condition=[])
+    {
+        $conditionByIdColumns = [];
+
+        foreach ($condition as $field => $where) {
+            foreach ($this->columns as $key => $column)
+            {
+                if ($column->alias == $field)
+                {
+                    $conditionByIdColumns[$column->id_column] = $where;
+                    break;
+                }
+            }    
+        }
+
+        if (!empty($conditionByIdColumns))
+            $this->andWhere($conditionByIdColumns);
 
         return $this;
     }

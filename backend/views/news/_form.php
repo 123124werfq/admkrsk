@@ -14,7 +14,6 @@ use yii\web\JsExpression;
 
 
 $rubs = Collection::find()->where(['alias'=>"news_rubs"])->one();
-
 $rubs = (!empty($rubs))?$rubs->getArray():[];
 
 ?>

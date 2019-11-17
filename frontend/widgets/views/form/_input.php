@@ -1,6 +1,8 @@
 <?php
 	use yii\helpers\Html;
 	use common\models\CollectionColumn;
+	use kartik\select2\Select2;
+	use yii\web\JsExpression;
 
 	$options = json_decode($input->options,true);
 
@@ -115,6 +117,100 @@ JS;
 					</div>';
 				}
 				break;
+
+			case CollectionColumn::TYPE_DISTRICT:
+				echo $form->field($model, "input$input->id_input")->widget(Select2::class, [
+                    'data' => [],
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        //'allowClear' => true,
+                        'minimumInputLength' => 0,
+                        'placeholder' => 'Район',
+                        'ajax' => [
+                            'url' => '/address/district',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {q:params.term,id_city:$("#city-input").val()};}')
+                        ],
+                    ],
+                ]);
+				break;
+			case CollectionColumn::TYPE_REGION:
+				echo $form->field($model, "input$input->id_input")->widget(Select2::class, [
+                    'data' => [],
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        //'allowClear' => true,
+                        'minimumInputLength' => 0,
+                        'placeholder' => 'Регион',
+                        'ajax' => [
+                            'url' => '/address/region',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {q:params.term};}')
+                        ],
+                    ],
+                    'options'=>[
+                    	'id'=>'input-region'
+                    ]
+                ]);
+				break;
+			case CollectionColumn::TYPE_SUBREGION:
+				echo $form->field($model, "input$input->id_input")->widget(Select2::class, [
+                    'data' => [],
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        //'allowClear' => true,
+                        'minimumInputLength' => 0,
+                        'placeholder' => 'Область',
+                        'ajax' => [
+                            'url' => '/address/subregion',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {q:params.term,id_region:$("#input-region").val()};}')
+                        ],
+                    ],
+                    'options'=>[
+                    	'id'=>'input-subregion'
+                    ]
+                ]);
+				break;
+			case CollectionColumn::TYPE_CITY:
+				echo $form->field($model, "input$input->id_input")->widget(Select2::class, [
+                    'data' => [],
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        //'allowClear' => true,
+                        'minimumInputLength' => 0,
+                        'placeholder' => 'Город',
+                        'ajax' => [
+                            'url' => '/address/city',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {q:params.term};}')
+                        ],
+                    ],
+                    'options'=>[
+                    	'id'=>'input-city'
+                    ]
+                ]);
+				break;
+			case CollectionColumn::TYPE_STREET:
+				echo $form->field($model, "input$input->id_input")->widget(Select2::class, [
+                    'data' => [],
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        //'allowClear' => true,
+                        'minimumInputLength' => 0,
+                        'placeholder' => 'Улица',
+                        'ajax' => [
+                            'url' => '/address/street',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {q:params.term,id_city:$("#city-input").val()};}')
+                        ],
+                    ],
+                ]);
+				break;
+			case CollectionColumn::TYPE_HOUSE:
+				echo $form->field($model, "input$input->id_input")->dropDownList($input->getArrayValues(),$options);
+				break;
+
 			default:
 				break;
 		}

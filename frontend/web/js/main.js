@@ -1010,6 +1010,9 @@
 
     // SELECT
     $('.custom-select select').selectmenu({
+        change: function( event, ui ) {
+            $(this).change();
+        }
     });
 
     $('.sort-select select').selectmenu({
