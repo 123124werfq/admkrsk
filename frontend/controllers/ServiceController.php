@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use common\models\Service;
 use common\models\Form;
 use common\models\ServiceRubric;
+use common\models\FormDynamic;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\filters\AccessControl;
@@ -62,10 +63,14 @@ class ServiceController extends \yii\web\Controller
         if (empty($service->id_form))
             throw new NotFoundHttpException('Такой страницы не существует');
 
-        if (!empty($_POST))//$model->load(Yii::$app->request->post()) && $model->validate()
+        $model = new FormDynamic($service->form);
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
             print_r($_POST);
             print_r($_FILES);
+            print_r($model->attributes);
+            die();
 
             return $this->redirect('/service-recieved');
         }

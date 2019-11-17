@@ -40,6 +40,20 @@ class Block extends \yii\db\ActiveRecord
                 ],
             ]
         ],
+        'news_single'=> [
+            'label'=>'Новостной блок, без меню',
+            'widget'=>'frontend\widgets\NewsWidget',
+            'vars'=>[
+                'title'=>[
+                    'name'=>'Заголовок',
+                    'type'=>BlockVar::TYPE_STRING,
+                ],
+                'id_page'=>[
+                    'name'=>'Раздел новостей',
+                    'type'=>BlockVar::TYPE_PAGE,
+                ],
+            ]
+        ],
         'photoflip'=> [
             'label'=>'Гид по городу',
             'vars'=>[
