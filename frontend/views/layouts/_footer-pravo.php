@@ -3,7 +3,7 @@
         <div class="float-row clearfix">
             <div class="footer-main">
                 <a href="/" class="footer-logo">
-                    <img src="/_layouts/15/ADMKRSKNEW/img/footer-logo.svg" alt="Администрация города Красноярск">
+                    <img src="/img/footer-logo.svg" alt="Администрация города Красноярск">
                 </a>
                 <div class="footer-title">
                     <h3 class="footer-title_header">Красноярск</h3>
