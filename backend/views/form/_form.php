@@ -17,8 +17,6 @@ use yii\widgets\ActiveForm;
 
     <?=''// $form->field($model, 'id_collection')->textInput() ?>
 
-    <?= $form->field($model, 'make_collection')->checkBox() ?>
-
     <hr>
     <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
 

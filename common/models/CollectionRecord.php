@@ -124,7 +124,20 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                     if ($updateData!==null)
                     {
-                        Yii::$app->db->createCommand()->update('db_collection_value',['value'=>$updateData],['id_record'=>$this->id_record,'id_column'=>$column->id_column])->execute();
+                        $count = Yii::$app->db->createCommand("SELECT count(*) FROM db_collection_value WHERE id_record=$this->id_record AND 
+                            id_column=$column->id_column")->queryScalar();
+
+                        if ($count>0)
+                            Yii::$app->db->createCommand()->update('db_collection_value',['value'=>$updateData],[
+                                'id_record'=>$this->id_record,
+                                'id_column'=>$column->id_column
+                            ])->execute();
+                        else 
+                            Yii::$app->db->createCommand()->insert('db_collection_value',[
+                                'id_record'=>$this->id_record,
+                                'id_column'=>$column->id_column,
+                                'value'=>$updateData
+                            ])->execute();
                     }
                 }
 

@@ -7,6 +7,18 @@ return [
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
+        'db' => [
+            'schemaMap' => [
+                'pgsql' => [
+                    'class' => \yii\db\pgsql\Schema::class,
+                    'columnSchemaClass' => [
+                        'class' => \yii\db\pgsql\ColumnSchema::class,
+                        'disableArraySupport' => false,
+                        'deserializeArrayColumnToArrayExpression' => false,
+                    ],
+                ],
+            ],
+        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
             //'class' => 'yii\redis\Cache',

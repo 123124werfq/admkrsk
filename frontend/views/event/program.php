@@ -27,10 +27,10 @@
                             </div>
                         </div>
                         <?php }?>
-                        <?php if (!empty($category)){?>
+                        <?php if (!empty($categories)){?>
                         <div class="btn-group_item">
                             <div class="custom-select custom-select__placeholder custom-select__inline ui-front">
-                                <?=Html::dropDownList('category','',$category,['prompt'=>'Категория мероприятия'])?>
+                                <?=Html::dropDownList('category','',$categories,['prompt'=>'Категория мероприятия'])?>
                             </div>
                         </div>
                         <?php }?>

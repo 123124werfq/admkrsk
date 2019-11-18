@@ -38,6 +38,10 @@ class EventController extends \yii\web\Controller
     public function actionProgram($id,$id_page)
     {
         $collection = Collection::findOne($id);
+
+        if (empty($collection))
+            throw new NotFoundHttpException('');
+
         $collection = $collection->getDataQuery()->select();
         $collection->keyAsAlias = true;
 
@@ -80,7 +84,6 @@ class EventController extends \yii\web\Controller
             
             $program[$date][$key] = $data;
         }
-
 
         if (Yii::$app->request->isAjax)
         {
