@@ -40,7 +40,7 @@ class ServiceTarget extends \yii\db\ActiveRecord
             [['id_service', 'id_form', 'old', 'modified_at', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
             [['id_service', 'id_form', 'old', 'modified_at', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['name'], 'string', 'max' => 500],
-            [['reestr_number'], 'string', 'max' => 255],
+            [['reestr_number','target','target_code','service_code','obj_name'], 'string', 'max' => 255],
         ];
     }
 
@@ -54,8 +54,12 @@ class ServiceTarget extends \yii\db\ActiveRecord
             'id_service' => 'Услуга',
             'id_form' => 'Форма',
             'name' => 'Название',
-            'reestr_number' => 'Номер',
+            'reestr_number' => 'Реестровый номер',
             'old' => 'Устарела',
+            'target'=> 'Устарела',
+            'target_code'=> 'Код цели',
+            'service_code'=> 'Код сервиса',
+            'obj_name' => 'Наименование объекта',
             'modified_at' => 'Modified At',
             'created_at' => 'Created At',
             'created_by' => 'Created By',

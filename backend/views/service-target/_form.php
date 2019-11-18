@@ -27,6 +27,14 @@ use common\models\Form;
 
     <?= $form->field($model, 'reestr_number')->textInput(['maxlength' => 255]) ?>
 
+    <?= $form->field($model, 'target')->textInput(['maxlength' => 255]) ?>
+
+    <?= $form->field($model, 'target_code')->textInput(['maxlength' => 255]) ?>
+
+    <?= $form->field($model, 'service_code')->textInput(['maxlength' => 255]) ?>
+
+    <?= $form->field($model, 'obj_name')->textInput(['maxlength' => 255]) ?>
+
     <?= $form->field($model, 'old')->checkBox() ?>
 
     <div class="form-group">

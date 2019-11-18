@@ -33,9 +33,21 @@ $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $
                         'name',
                         'reestr_number',
                         'id_form',
-                         [
-                             'class' => 'yii\grid\ActionColumn',
-                            'contentOptions'=>['class'=>'button-column']
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'contentOptions'=>['class'=>'button-column'],
+                            'template' => '{update} {delete}',
+                            'buttons' => [
+                                'update' => function ($url, $model, $key) {
+                                    return Html::a('', ['/service-target/update', 'id' => $model->id_target],['class' => 'glyphicon glyphicon-pencil']);
+                                },
+                                 'delete' => function ($url, $model, $key) {
+                                      return Html::a('', ['/service-target/delete', 'id' => $model->id_target],['class' => 'glyphicon glyphicon-trash','data' => [
+        'confirm' => 'Вы уверены что хотите удалить форму?',
+        'method' => 'post',
+    ],]);
+                                }
+                            ], 
                         ],
                     ],
                     'tableOptions'=>[
