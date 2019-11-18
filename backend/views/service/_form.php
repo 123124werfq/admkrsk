@@ -70,6 +70,8 @@ if (!empty($id_situations))
 
         <?= $form->field($model, 'duration')->textarea(['rows' => 6]) ?>
 
+        <?= $form->field($model, 'refuse')->textarea(['rows' => 6,'class'=>'form-controll redactor']) ?>
+
         <?= $form->field($model, 'documents')->textarea(['rows' => 6,'class'=>'form-controll redactor']) ?>
 
         <?= $form->field($model, 'price')->textarea(['rows' => 6,'class'=>'form-controll redactor']) ?>
