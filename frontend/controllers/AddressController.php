@@ -53,10 +53,9 @@ class AddressController extends \yii\web\Controller
     public function actionSubregion($id_region, $search = '')
     {
         $query = Subregion::find()
-            ->select([Subregion::tableName().'.id_subregion',Subregion::tableName().'.name'])
             ->joinWith('houses', false)
             ->filterWhere([House::tableName() . '.id_region' => $id_region])
-            ->groupBy(Subregion::tableName() . '.id_subregion, '.Subregion::tableName().'.name')
+            ->groupBy(Subregion::tableName() . '.id_subregion')
             ->orderBy([Subregion::tableName() . '.name' => SORT_ASC])
             ->asArray();
 
@@ -67,8 +66,8 @@ class AddressController extends \yii\web\Controller
         $results = [];
         foreach ($query->all() as $subregion) {
             $results[] = [
-                'id_subregion' => $subregion['id_subregion'],
-                'name' => $subregion['name'],
+                'id' => $subregion['id_subregion'],
+                'text' => $subregion['name'],
             ];
         }
 
@@ -107,8 +106,8 @@ class AddressController extends \yii\web\Controller
         $results = [];
         foreach ($query->all() as $city) {
             $results[] = [
-                'id_city' => $city['id_city'],
-                'name' => $city['name'],
+                'id' => $city['id_city'],
+                'text' => $city['name'],
             ];
         }
 
@@ -123,10 +122,9 @@ class AddressController extends \yii\web\Controller
     public function actionDistrict($id_city, $search = '')
     {
         $query = District::find()
-            ->select([District::tableName().'.id_district',District::tableName().'.name'])
             ->joinWith('houses', false)
             ->filterWhere([House::tableName() . '.id_city' => $id_city])
-            ->groupBy(District::tableName() . '.id_district,'.District::tableName() . '.name')
+            ->groupBy(District::tableName() . '.id_district')
             ->orderBy([District::tableName() . '.name' => SORT_ASC])
             ->asArray();
 
@@ -137,8 +135,8 @@ class AddressController extends \yii\web\Controller
         $results = [];
         foreach ($query->all() as $district) {
             $results[] = [
-                'id_district' => $district['id_district'],
-                'name' => $district['name'],
+                'id' => $district['id_district'],
+                'text' => $district['name'],
             ];
         }
 
@@ -166,8 +164,8 @@ class AddressController extends \yii\web\Controller
         $results = [];
         foreach ($query->all() as $street) {
             $results[] = [
-                'id_street' => $street['id_street'],
-                'name' => $street['name'],
+                'id' => $street['id_street'],
+                'text' => $street['name'],
             ];
         }
 
@@ -194,8 +192,8 @@ class AddressController extends \yii\web\Controller
         $results = [];
         foreach ($query->all() as $house) {
             $results[] = [
-                'id_house' => $house['id_house'],
-                'name' => $house['name'],
+                'id' => $house['id_house'],
+                'text' => $house['name'],
             ];
         }
 
