@@ -3,7 +3,7 @@
     <div class="container">
         <?=frontend\widgets\Breadcrumbs::widget(['page'=>$page])?>
         <div>
-            <h1>Программа праздника</h1>
+            <h1><?=$collection->name?></h1>
             <div class="header-controls">
                 <form id="program-filter" action="" method="get">
                     <div class="btn-group">

@@ -37,12 +37,12 @@ class EventController extends \yii\web\Controller
 
     public function actionProgram($id,$id_page)
     {
-        $collection = Collection::findOne($id);
+        $model = Collection::findOne($id);
 
-        if (empty($collection))
+        if (empty($model))
             throw new NotFoundHttpException('');
 
-        $collection = $collection->getDataQuery()->select();
+        $collection = $model->getDataQuery()->select();
         $collection->keyAsAlias = true;
 
         if (!empty($_GET['district']))
@@ -100,6 +100,7 @@ class EventController extends \yii\web\Controller
             'districts'=>$districts,
             'places'=>$places,
             'categories'=>$categories,
+            'collection'=>$model,
         ]);
     }
 }
