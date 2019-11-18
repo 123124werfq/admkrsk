@@ -81,10 +81,8 @@ class FormInput extends \yii\db\ActiveRecord
 
     public function beforeValidate()
     {
-        if (is_array($this->visibleInputValue))
-        {
+        if (!empty($this->visibleInputValue) && !is_array($this->visibleInputValue))
             $this->visibleInputValue = [$this->visibleInputValue];
-        }
 
         return parent::beforeValidate();
     }
@@ -101,7 +99,13 @@ class FormInput extends \yii\db\ActiveRecord
         $values = [];
 
         if (!empty($this->values))
-            $values = explode(';', $this->values);
+        {
+            $vars = explode(';', $this->values);
+
+            foreach ($vars as $key => $value) {
+                $values[$value] = $value;
+            }
+        }
 
         return $values;
     }

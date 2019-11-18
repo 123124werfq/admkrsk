@@ -73,7 +73,8 @@ class Service extends \yii\db\ActiveRecord
             [['id_rub', 'old', 'online', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_form'], 'integer'],
             [['keywords', 'addresses', 'result', 'client_category', 'duration', 'documents', 'price', 'appeal', 'legal_grounds', 'regulations', 'refuse','regulations_link', 'duration_order', 'availability', 'procedure_information', 'max_duration_queue'], 'string'],
             [['id_situations', 'client_type'],'safe'],
-            [['reestr_number', 'fullname', 'name'], 'string', 'max' => 255],
+            [['reestr_number'], 'string', 'max' => 255],
+            [['fullname', 'name'], 'string'],
         ];
     }
 

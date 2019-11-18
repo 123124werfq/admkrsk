@@ -54,7 +54,7 @@ foreach ($types as $key => $type) {
             ) ?>
         </div>
         <div id="visibleInputValues" class="col-sm-6">
-            <?=(!empty($model->visibleInput))?$this->render('_input',['model'=>$model->visibleInputModel,'form'=>$form]):''?>
+            <?=(!empty($model->visibleInput))?$this->render('_input',['visibleInput'=>$model->visibleInputModel,'model'=>$model,'form'=>$form]):''?>
         </div>
     </div>
 

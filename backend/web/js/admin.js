@@ -7,7 +7,7 @@ function setVisisble()
 
         function check()
         {
-            var values = block.data('values').split(',');
+            var values = String(block.data('values')).split(',');
 
             if (values.indexOf(source.val())<0)
               block.hide();
