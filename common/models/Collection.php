@@ -243,7 +243,8 @@ class Collection extends \yii\db\ActiveRecord
         else
             $id_collection = $this->id_collection;
 
-        $query = \common\components\collection\CollectionQuery::getQuery($id_collection);
+        $query = \common\components\collection\CollectionQuery::getQuery($id_collection)->select();
+
 
         if (!empty($this->options))
         {

@@ -46,6 +46,7 @@ class CollectionQuery extends \yii\mongodb\Query
 
         $columns = array_keys($columns);
         $columns[] = 'id_record';
+        $columns[] = '_id';
 
         parent::select($columns);
 

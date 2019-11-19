@@ -110,7 +110,7 @@ class FormInput extends \yii\db\ActiveRecord
         return $values;
     }
 
-    public function getType()
+    public function getTypeOptions()
     {
         return $this->hasOne(FormInputType::class, ['id_type' => 'id_type']);
     }

@@ -37,7 +37,7 @@ $this->params['action-block'][] = Html::a('Создать копию', ['copy', 
                     'columns'=>$columns,
                     'tableOptions'=>[
                         'emptyCell '=>'',
-                        'class'=>'table table-striped valign-middle table-hover'
+                        'class'=>'table table-striped valign-middle table-hover ids-style'
                     ]
                 ]); ?>
             </div>
