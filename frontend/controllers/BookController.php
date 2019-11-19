@@ -132,7 +132,31 @@ class BookController extends \yii\web\Controller
 
     public function actionProceed()
     {
-        //if(isset($_POST[]))
+        if(!isset($_POST['type']))
+            return false;
+
+        $type = (int)$_POST['type'];
+        $op_id = (int)$_POST["service_$type"];
+        $date = $_POST['bookdate'];
+        $time = (int)$_POST['time'];
+
+        $dateparts = explode(".",$date);
+        $date = $dateparts[2]."-".$dateparts[1]."-".$dateparts[0];
+
+        switch ($type){
+            case 19:
+            case 20:
+                $conn = 0; break;
+            default:
+                $conn = 1;
+        }
+
+        $b = new Book();
+        $b->connect($conn);
+        $reserve = $b->reserveTime($op_id, $date, $time);
+
+        var_dump($reserve);die();
+
         return $this->render('proceed');
     }
 
