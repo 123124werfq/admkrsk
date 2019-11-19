@@ -52,7 +52,7 @@ foreach ($types as $key => $type) {
             <?=$form->field($model, 'visibleInput')->dropDownLIst(
                 ArrayHelper::map(FormInput::find()->joinWith('type as type')
                     ->where(['id_form'=>$model->id_form,'type.type'=>CollectionColumn::TYPE_SELECT])
-                    ->andWhere('id_input <> '.(int)$model->id_input)->all(), 'id_input', 'form_input.name'),
+                    ->andWhere('id_input <> '.(int)$model->id_input)->all(), 'id_input', 'name'),
                 ['prompt'=>'Выберите поле зависимости']
             ) ?>
         </div>
