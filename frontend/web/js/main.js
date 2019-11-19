@@ -1084,7 +1084,9 @@
             format: 'DD.MM.YYYY',
             autoClose: true,
         }).on('datepicker-change', function(event,obj) {
+
             /* Выполняется когда выбран диапазон, можно запустить аякс здесь */
+            
             if ($dateInput.val() != '') {
                 $dateInput.addClass('datepicker__filled');
             } else {

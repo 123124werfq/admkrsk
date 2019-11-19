@@ -9,7 +9,7 @@
                     <div class="btn-group">
                         <div class="btn-group_item">
                             <div class="datepicker-holder">
-                                <input type="text" class="form-control form-control_datepicker mb-sm-all-0 datepicker-ajax" placeholder="Период мероприятий">
+                                <input type="text" name="date" class="form-control form-control_datepicker mb-sm-all-0 datepicker-ajax" placeholder="Период мероприятий">
                                 <button class="form-control-reset material-icons" type="button">clear</button>
                             </div>
                         </div>

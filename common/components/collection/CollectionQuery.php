@@ -79,23 +79,36 @@ class CollectionQuery extends \yii\mongodb\Query
         return $this;
     }
 
-    public function whereByAlias($condition=[])
+    protected function GetIDColumnByAlias($alias)
     {
-        $conditionByIdColumns = [];
-
-        foreach ($condition as $field => $where) {
-            foreach ($this->columns as $key => $column)
-            {
-                if ($column->alias == $field)
-                {
-                    $conditionByIdColumns[$column->id_column] = $where;
-                    break;
-                }
-            }    
+        foreach ($this->columns as $key => $column)
+        {
+            if ($column->alias == $alias)
+                return $column->id_column;
         }
 
-        if (!empty($conditionByIdColumns))
-            $this->andWhere($conditionByIdColumns);
+        return 0;
+    }
+
+    public function whereByAlias($condition=[])
+    {
+        if (count($condition)==2)
+        {
+            $alias = key($condition);
+            $id_column = $this->GetIDColumnByAlias($alias);
+
+            if (!empty($id_column))
+                $this->andWhere([$id_column=>$condition[$alias]]);
+        }
+        else
+        if (count($condition)==3)
+        {
+            $alias = $condition[1];
+            $id_column = $this->GetIDColumnByAlias($alias);
+
+            if (!empty($id_column))
+                $this->andWhere([$condition[0],$id_column,$condition[2]]);
+        }
 
         return $this;
     }

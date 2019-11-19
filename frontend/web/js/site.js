@@ -1,7 +1,17 @@
 $(document).ready(function() {
 
-    $("#program-filter select").change(function(){
-        console.log(123);
+    $("#program-filter input").on('datepicker-change', function(event,obj) {
+        $.ajax({
+            type: "GET",
+            dataType: "html",
+            url: "",
+            data: $("#program-filter").serialize()
+        }).done(function(data) {
+            $(".program-list").html(data);
+        });    
+    });
+
+    $("#program-filter select, #program-filter input").change(function(){
         $.ajax({
             type: "GET",
             dataType: "html",

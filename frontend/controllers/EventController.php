@@ -45,6 +45,23 @@ class EventController extends \yii\web\Controller
         $collection = $model->getDataQuery()->select();
         $collection->keyAsAlias = true;
 
+        if (!empty($_GET['date']))
+        {
+            $dates = explode('-', $_GET['date']);
+
+            if (count($dates)==2)
+            {
+                $date_begin = strtotime(trim($dates[0]));
+                $date_begin = mktime(0,0,0,date('m',$date_begin),date('d',$date_begin),date('Y',$date_begin));
+
+                $date_end = strtotime(trim($dates[1]));
+                $date_end = mktime(24,60,60,date('m',$date_end),date('d',$date_end),date('Y',$date_end));
+
+                $collection->whereByAlias(['>','date',$date_begin]);
+                //$collection->whereByAlias(['<','date',$date_end]);
+            }
+        }
+
         if (!empty($_GET['district']))
         {
             $collection->whereByAlias(['district'=>$_GET['district']]);
