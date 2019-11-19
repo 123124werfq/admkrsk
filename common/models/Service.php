@@ -133,7 +133,7 @@ class Service extends \yii\db\ActiveRecord
         if (parent::beforeSave($insert))
         {
             $result = 0;
-            
+
             if (is_array($this->client_type))
             {
                 foreach ($this->client_type as $key => $value) {
@@ -159,7 +159,7 @@ class Service extends \yii\db\ActiveRecord
             if (!empty($this->id_situations))
             {
                 $situations = ServiceSituation::find()->select('id_situation')->where(['id_situation'=>$this->id_situations])->all();
-                
+
                 foreach ($situations as $key => $data)
                     $this->link('situations',$data);
             }

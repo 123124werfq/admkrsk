@@ -4,10 +4,10 @@
         <?=frontend\widgets\Breadcrumbs::widget(['page'=>$page])?>
         <div>
             <h1><?=$page->title?></h1>
-            <!--div class="header-controls">
+            <div class="header-controls">
                 <form>
                     <div class="btn-group">
-                        <div class="btn-group_item">
+                        <!--div class="btn-group_item">
                             <div class="custom-select custom-select__placeholder custom-select__inline ui-front">
                                 <select>
                                     <option selected="selected">Орган, оказывающий услугу</option>
@@ -17,32 +17,30 @@
                                     <option value="3">Орган 3</option>
                                 </select>
                             </div>
-                        </div>
+                        </div-->
                         <div class="btn-group_item">
                             <div class="custom-select custom-select__placeholder custom-select__inline ui-front">
-                                <select>
+                                <select name="client_type">
                                     <option selected="selected">Категория получателей</option>
                                     <option value="0">Любая категория</option>
-                                    <option value="1">Категория 1</option>
-                                    <option value="2">Категория 2</option>
-                                    <option value="3">Категория 3</option>
+                                    <?php foreach (\common\models\Service::getAttributeValues('client_type') as $value => $label) {
+                                        echo '<option value="'.$value.'">'.$label.'</option>';
+                                    }?>
                                 </select>
                             </div>
                         </div>
                         <div class="btn-group_item">
                             <div class="custom-select custom-select__placeholder custom-select__inline ui-front">
-                                <select>
+                                <select name="online">
                                     <option selected="selected">Форма предоставления</option>
                                     <option value="0">Любая форма</option>
-                                    <option value="1">Форма 1</option>
-                                    <option value="2">Форма 2</option>
-                                    <option value="3">Форма 3</option>
+                                    <option value="1">в электронном виде</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                 </form>
-            </div-->
+            </div>
 
 			<div class="smart-menu-tabs slide-hover tab-controls tab-controls__responsive">
                 <div class="tab-controls-holder">
@@ -101,7 +99,7 @@
                                                 </table>
                                             </div>
                                         </div>
-    							     <?php }?>	
+    							     <?php }?>
                                  <?php }?>
 							</div>
                             <?php }?>
