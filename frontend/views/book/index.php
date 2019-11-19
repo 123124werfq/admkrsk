@@ -29,9 +29,10 @@
                                 <div class="custom-select">
                                     <select name="type">
                                         <?php
-                                        $i = 0;
-                                        foreach (array_keys($commontree) as $block)
-                                            echo "<option value='".($i++)."'>$block</option>";
+                                        foreach (array_keys($commontree) as $block) {
+                                            $bparts = explode(":", $block);
+                                            echo "<option value='" . $bparts[0] . "'>$bparts[1]</option>";
+                                        }
                                         ?>
                                     </select>
                                 </div>
@@ -40,13 +41,15 @@
                                 <label class="form-label">Что</label>
                                 <div class="custom-select">
                                     <?php
-                                    $i = 0;
+                                    $first = true;
                                     foreach ($commontree as $nblock=>$block) {
+                                        $bparts = explode(":", $nblock);
                                         ?>
-                                        <div class="hidden wrap_service wrap_service_<?=$i?>">
-                                            <select name="service_<?=$i?>" data-num="<?=($i++)?>">
+                                        <div class="<?=$first?'':'hidden'?> wrap_service wrap_service_<?=$bparts[0]?>">
+                                            <select name="service_<?=$bparts[0]?>" data-num="<?=$bparts[0]?>">
                                                 <option value='-1'>[не выбрано]</option>
                                                 <?php
+                                                $first = false;
                                                 foreach ($block as $skey => $service)
                                                     echo "<option value='".$skey."'>$service</option>";
                                                 ?>
