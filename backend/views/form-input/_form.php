@@ -50,7 +50,10 @@ foreach ($types as $key => $type) {
     <div class="row">
         <div class="col-sm-6">
             <?=$form->field($model, 'visibleInput')->dropDownLIst(
-                ArrayHelper::map(FormInput::find()->where(['id_form'=>$model->id_form])->andWhere('id_input <> '.(int)$model->id_input)->all(), 'id_input', 'name'),['prompt'=>'Выберите поле зависимости']
+                ArrayHelper::map(FormInput::find()->joinWith('type as type')
+                    ->where(['id_form'=>$model->id_form,'type.type'=>CollectionColumn::TYPE_SELECT])
+                    ->andWhere('id_input <> '.(int)$model->id_input)->all(), 'id_input', 'form_input.name'),
+                ['prompt'=>'Выберите поле зависимости']
             ) ?>
         </div>
         <div id="visibleInputValues" class="col-sm-6">
