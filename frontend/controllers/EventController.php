@@ -62,9 +62,9 @@ class EventController extends \yii\web\Controller
 
         $allDistricts = District::find()->select(['name','id_district'])->indexBy('id_district')->all();
 
-        $districts = [];
-        $places = [];
-        $categories = [];
+        $districts = [0=>'Все районы'];
+        $places = [0=>'Все места'];
+        $categories = [0=>'Любая категория'];
 
         foreach ($collection as $key => $data)
         {   
