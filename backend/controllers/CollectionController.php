@@ -463,7 +463,7 @@ class CollectionController extends Controller
             foreach ($_POST['ViewColumns'] as $key => $data)
             {
                 $options['columns'][] = [
-                    'id_column' => $dataf['id_column'],
+                    'id_column' => $data['id_column'],
                     'value' => (!empty($data['value']))?$data['value']:''
                 ];
             }
