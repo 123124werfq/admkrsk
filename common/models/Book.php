@@ -82,7 +82,7 @@ class Book extends \yii\db\ActiveRecord
 
         $this->service = new \SoapClient($this->endpoint[$num]);
         $this->offices = $this->service->getOffices();
-
+        $this->officeId = $this->offices[0]->ID;
         return $this->offices;
     }
 
@@ -138,6 +138,12 @@ class Book extends \yii\db\ActiveRecord
         $intervals = $this->service->getIntervals($of[0]->ID, [$operation_id], $ds[2]."-".$ds[1]."-".$ds[0] , 1);
 
         return $intervals;
+    }
+
+    public function reserveTime($operation_id, $date, $time)
+    {
+        $res = $this->service->resserveTime($this->officeId, (int)$operation_id, $date, $time, 1);
+        return $res;
     }
 
 }
