@@ -132,7 +132,7 @@ class BookController extends \yii\web\Controller
 
     public function actionProceed()
     {
-        if(isset($_POST[]))
+        //if(isset($_POST[]))
         return $this->render('proceed');
     }
 
