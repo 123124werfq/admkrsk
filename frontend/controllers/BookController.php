@@ -113,7 +113,13 @@ class BookController extends \yii\web\Controller
             $res = $b1->freeIntervals($serv, $date);
         }
 
-        var_dump($res);
+        $output = [];
+
+        if(isset($res->combinations))
+            foreach($res->combinations as $comb)
+                $output[] = $comb->operations[0]->start;
+
+        return json_encode($output);
     }
 
 
@@ -122,7 +128,6 @@ class BookController extends \yii\web\Controller
         $b0 = new Book;
         $cn = $b0->connect(0);
         $res = $b0->dateAvailable(12);
-
     }
 
     public function actionProceed()
