@@ -32,13 +32,20 @@ foreach ($types as $key => $type) {
 
     <?= $form->field($model, 'required')->checkBox()?>
 
-    <?=$form->field($model, 'id_type')->widget(Select2::class, [
-        'data' => ArrayHelper::map(FormInputType::find()->all(), 'id_type', 'name'),
-        'pluginOptions' => [
-            'allowClear' => true,
-            'placeholder' => 'Выберите тип поля',
-        ],
-    ])?>
+    <div class="row">
+        <div class="col-sm-6">
+            <?= $form->field($model, 'type')->dropDownList(CollectionColumn::getTypeLabel()) ?>
+        </div>
+        <div class="col-sm-6">
+            <?=$form->field($model, 'id_type')->widget(Select2::class, [
+                'data' => ArrayHelper::map(FormInputType::find()->all(), 'id_type', 'name'),
+                'pluginOptions' => [
+                    'allowClear' => true,
+                    'placeholder' => 'Выберите пресет',
+                ],
+            ])?>
+        </div>
+    </div>
 
     <?=$form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
 
@@ -50,8 +57,8 @@ foreach ($types as $key => $type) {
     <div class="row">
         <div class="col-sm-6">
             <?=$form->field($model, 'visibleInput')->dropDownLIst(
-                ArrayHelper::map(FormInput::find()->joinWith('type as type')
-                    ->where(['id_form'=>$model->id_form,'type.type'=>CollectionColumn::TYPE_SELECT])
+                ArrayHelper::map(FormInput::find()
+                    ->where(['id_form'=>$model->id_form, 'type'=>CollectionColumn::TYPE_SELECT])
                     ->andWhere('id_input <> '.(int)$model->id_input)->all(), 'id_input', 'name'),
                 ['prompt'=>'Выберите поле зависимости']
             ) ?>
@@ -75,8 +82,7 @@ foreach ($types as $key => $type) {
 
     <div id="input-options">
         <?php
-            if (!empty($model->id_type))
-                echo $this->render('_options',['type'=>$model->type]);
+            echo $this->render('_options',['model'=>$model]);
         ?>
     </div>
 

@@ -7,7 +7,6 @@ use common\models\FormInput;
 use Yii;
 use \yii\base\DynamicModel ;
 
-
 class FormDynamic extends DynamicModel
 {
     //private $_properties;
@@ -19,7 +18,19 @@ class FormDynamic extends DynamicModel
         $inputs = FormInput::find()->where(['id_form' => $form->id_form])->all();
 
         foreach ($inputs as $input)
+        {
+            // заполняем данные их ЕСИА
+            if (!Yii::$app->user->isGuest && !empty($input->id_type) && !empty($input->typeOptions->esia))
+            {
+                $esia = Yii::$app->user->identity->esiainfo;
+                $attr = $input->typeOptions->esia;
+
+                if (!empty($esia->$attr))
+                    $data[$input->id_input] = $esia->$attr;
+            }   
+
             $attributes['input'.$input->id_input] = (isset($data[$input->id_input]))?$data[$input->id_input]:'';
+        }
 
         parent::__construct($attributes, $config);
 

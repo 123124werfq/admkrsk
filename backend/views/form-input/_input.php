@@ -5,7 +5,7 @@
 ?>
 <div class="form-group">
 	<?php
-		if ($visibleInput->type->type==CollectionColumn::TYPE_SELECT)
+		if ($visibleInput->type==CollectionColumn::TYPE_SELECT)
 	    {
 	        $values = $visibleInput->getArrayValues();
 

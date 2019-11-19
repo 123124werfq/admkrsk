@@ -15,10 +15,10 @@
 
 	$groupClass = '';
 
-	if ($input->type->type==CollectionColumn::TYPE_CHECKBOXLIST)
+	if ($input->type==CollectionColumn::TYPE_CHECKBOXLIST)
 		$groupClass .= ' checkboxlist';
 
-	if ($input->type->type==CollectionColumn::TYPE_SELECT)
+	if ($input->type==CollectionColumn::TYPE_SELECT)
 		$groupClass .= ' custom-select';
 
 	$visibleField = '';

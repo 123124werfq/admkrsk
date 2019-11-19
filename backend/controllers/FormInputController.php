@@ -82,8 +82,22 @@ class FormInputController extends Controller
         $model = new FormInput();
         $model->id_form = $row->id_form;
 
+        if (Yii::$app->request->isAjax)
+        {
+            Yii::$app->assetManager->bundles = [
+                'yii\bootstrap\BootstrapAsset' => false,
+                'yii\web\JqueryAsset'=>false,
+                'yii\web\YiiAsset'=>false,
+            ];
+        }
+
         if ($model->load(Yii::$app->request->post()) && !Yii::$app->request->isAjax)
         {
+            if (Yii::$app->request->isAjax)
+            {
+                return $this->renderAjax('_form',['model' => $model]);
+            }
+
             if ($model->save())
             {
                 $element = new FormElement;
@@ -101,12 +115,6 @@ class FormInputController extends Controller
 
         if (Yii::$app->request->isAjax)
         {
-            Yii::$app->assetManager->bundles = [
-                'yii\bootstrap\BootstrapAsset' => false,
-                'yii\web\JqueryAsset'=>false,
-                'yii\web\YiiAsset'=>false,
-            ];
-
             return $this->renderAjax('_form',['model' => $model]);
         }
 

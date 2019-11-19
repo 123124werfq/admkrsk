@@ -190,8 +190,20 @@ function reordModels($block,$data)
 
 jQuery(document).ready(function()
 {
-    $('body').delegate("#forminput-visibleinput",'change',function(){
+    $('body').delegate("#forminput-visibleinput,#forminput-type",'change',function(){
+        var $form = $("#formInput-form");
 
+        $.ajax({
+            url: $form.attr('action'),
+            type: 'post',
+            data: $form.serialize(),
+            success: function(data)
+            {
+              $("#FormElement .modal-body").html(data);
+              setVisisble();
+            }
+        });
+        
     });
 
     $("#FormElement .btn-primary").click(function(){

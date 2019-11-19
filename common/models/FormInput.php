@@ -42,8 +42,8 @@ class FormInput extends \yii\db\ActiveRecord
     {
         return [
             [['id_form', 'id_type', 'id_collection', 'visibleInput', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','label'], 'default', 'value' => null],
-            [['id_form', 'id_type', 'id_collection', 'visibleInput', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','required'], 'integer'],
-            [['name', 'id_type'], 'required'],
+            [['id_form', 'id_type', 'id_collection', 'visibleInput', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','required','type'], 'integer'],
+            [['name', 'type'], 'required'],
             [['values', 'hint','label'], 'string'],
             [['visibleInputValue','options'],'safe'],
             [['name', 'fieldname'], 'string', 'max' => 255],
@@ -58,7 +58,8 @@ class FormInput extends \yii\db\ActiveRecord
         return [
             'id_input' => 'Id Input',
             'id_form' => 'Форма',
-            'id_type' => 'Тип поля',
+            'type' => 'Тип поля',
+            'id_type' => 'Пресет поля',
             'required' => 'Обязательно',
             'id_collection' => 'Коллекция',
             'label' => 'Подпись',

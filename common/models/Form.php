@@ -99,6 +99,7 @@ class Form extends \yii\db\ActiveRecord
 
                 $input = new FormInput;
                 $input->id_type = $type->id_type;
+                $input->id_column = $column->id_column;
                 $input->label = $input->name = $column->name;
 
                 if ($column->type != CollectionColumn::TYPE_COLLECTION)
