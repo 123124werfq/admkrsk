@@ -290,7 +290,7 @@ class Collection extends \yii\db\ActiveRecord
             $query->select();
 
         if (!empty($this->id_parent_collection))
-            $options = $this->options;
+            $options = json_decode($this->options,true);
 
         if (!empty($options['filters']))
         {
@@ -303,8 +303,6 @@ class Collection extends \yii\db\ActiveRecord
                     $query->andWhere($where);
             }
         }
-
-
 
         return $query;
     }
