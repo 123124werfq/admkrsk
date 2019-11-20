@@ -267,7 +267,12 @@ class Collection extends \yii\db\ActiveRecord
 
     public function getDataQueryByOptions($options)
     {
-        $query = \common\components\collection\CollectionQuery::getQuery($this->id_collection);
+        if (!empty($this->id_parent_collection))
+            $id_collection = $this->id_parent_collection;
+        else
+            $id_collection = $this->id_collection;
+        
+        $query = \common\components\collection\CollectionQuery::getQuery($id_collection);
 
         if (!is_array($options))
             $options = json_decode($this->options,true);
