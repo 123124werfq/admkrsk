@@ -271,7 +271,7 @@ class Collection extends \yii\db\ActiveRecord
             $id_collection = $this->id_parent_collection;
         else
             $id_collection = $this->id_collection;
-        
+
         $query = \common\components\collection\CollectionQuery::getQuery($id_collection);
 
         if (!is_array($options))
@@ -288,6 +288,9 @@ class Collection extends \yii\db\ActiveRecord
         }
         else 
             $query->select();
+
+        if (empty($this->id_parent_collection))
+            $options = $this->options;
 
         if (!empty($options['filters']))
         {
