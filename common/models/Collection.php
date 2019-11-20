@@ -289,7 +289,7 @@ class Collection extends \yii\db\ActiveRecord
         else 
             $query->select();
 
-        if (empty($this->id_parent_collection))
+        if (!empty($this->id_parent_collection))
             $options = $this->options;
 
         if (!empty($options['filters']))
