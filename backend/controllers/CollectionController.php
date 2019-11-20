@@ -58,7 +58,7 @@ class CollectionController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index'],
+                        'actions' => ['index','redactor'],
                         'roles' => ['backend.collection.index'],
                         'roleParams' => [
                             'class' => Collection::class,
@@ -438,6 +438,35 @@ class CollectionController extends Controller
         ]);
     }
 
+    public function actionRedactor()
+    {
+        $this->layout = 'clear';
+
+        $model = new Collection();
+        $model->name = 'temp';
+        //$model->id_parent_collection = Yii::$app->request->post('id_collection');
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            if (!empty($_POST['json']))
+            {
+                $json = $this->saveView($model,true);
+                $json['id_collection'] = $model->id_parent_collection;
+
+                return json_encode($json);
+            }
+        }
+
+
+        if (Yii::$app->request->isAjax)
+            return $this->renderAjax('redactor',[
+                'model' => $model,
+            ]);
+
+        return $this->render('redactor',[
+            'model' => $model,
+        ]);
+    }
     /**
      * Creates a new Collection model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -500,7 +529,7 @@ class CollectionController extends Controller
         ]);
     }
 
-    protected function saveView($model)
+    protected function saveView($model,$return=false)
     {
         $options = [];
 
@@ -517,7 +546,7 @@ class CollectionController extends Controller
             }
         }
 
-        if (!empty($_POST['ViewColumns']))
+        if (!empty($_POST['ViewFilters']))
         {
             $options['filters'] = [];
 
@@ -530,6 +559,9 @@ class CollectionController extends Controller
                     ];
                 }
         }
+
+        if ($return)
+            return $options;
 
         $model->options = json_encode($options);
         $model->updateAttributes(['options']);

@@ -5,7 +5,7 @@
         <div>
             <h1><?=$page->title?></h1>
             <div class="header-controls">
-                <form>
+                <form id="reestr-filters" action="" method="get">
                     <div class="btn-group">
                         <!--div class="btn-group_item">
                             <div class="custom-select custom-select__placeholder custom-select__inline ui-front">
@@ -62,42 +62,12 @@
                                     <?php foreach ($child->childs as $cskey => $subchild) {?>
         								<h4 class="fw-500 collapse-control"><?=$subchild->name?></h4>
         								<div class="collapse-content content">
-                                            <div class="table-responsive">
-            									<table class="label-table">
-            										<tr>
-            											<th>Реестровый номер услуги</th>
-            											<th>Наименование услуги</th>
-            										</tr>
-                                                    <?php foreach ($subchild->services as $key => $service) {?>
-                                                        <tr>
-                                                            <td><?=$service->reestr_number?></td>
-                                                            <td>
-                                                                <h5><a href="<?=$service->getUrl()?>"><?=$service->fullname?></a></h5>
-                                                            </td>
-                                                        </tr>
-                                                    <?php }?>
-            									</table>
-                                            </div>
+                                            <?=$this->render('_table',['services'=>$subchild->services])?>
         								</div>
                                     <?php }?>
                                     <?php if (empty($child->childs)){?>
                                         <div class="collapse-content content">
-                                            <div class="table-responsive">
-                                                <table class="label-table">
-                                                    <tr>
-                                                        <th>Реестровый номер услуги</th>
-                                                        <th>Наименование услуги</th>
-                                                    </tr>
-                                                    <?php foreach ($child->services as $key => $service) {?>
-                                                        <tr>
-                                                            <td><?=$service->reestr_number?></td>
-                                                            <td>
-                                                                <h5><a href="<?=$service->getUrl()?>"><?=$service->fullname?></a></h5>
-                                                            </td>
-                                                        </tr>
-                                                    <?php }?>
-                                                </table>
-                                            </div>
+                                            <?=$this->render('_table',['services'=>$subchild->services])?>
                                         </div>
     							     <?php }?>
                                  <?php }?>

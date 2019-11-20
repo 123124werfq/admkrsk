@@ -190,6 +190,21 @@ function reordModels($block,$data)
 
 jQuery(document).ready(function()
 {
+    $("#collection-redactor #collection-id_parent_collection").change(function(){
+        $form = $("#collection-redactor");
+
+        $.ajax({
+            url: $form.attr('action'),
+            type: 'post',
+            data: $form.serialize(),
+            success: function(data)
+            {
+              $("body").html(data);
+              setVisisble();
+            }
+        });
+    });
+
     $('body').delegate("#forminput-visibleinput,#forminput-type",'change',function(){
         var $form = $("#formInput-form");
 
@@ -203,7 +218,6 @@ jQuery(document).ready(function()
               setVisisble();
             }
         });
-        
     });
 
     $("#FormElement .btn-primary").click(function(){
@@ -366,7 +380,7 @@ jQuery(document).ready(function()
       }
     }).disableSelection();
 
-    $(".multiyiinput, .multiinput").delegate('.close','click',function(){
+    $("body").delegate('.multiyiinput .close,.multiinput .close','click',function(){
       $(this).parent().parent().remove();
       return false;
     });

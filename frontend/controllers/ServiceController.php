@@ -31,11 +31,31 @@ class ServiceController extends \yii\web\Controller
 
     public function actionIndex($page=null)
     {
-        return $this->render('/site/page',['page'=>$page]);
+        return $this->render('/site/blocks',['page'=>$page]);
     }
 
     public function actionReestr($page=null)
     {
+        $clientType = (int)Yii::$app->request->get('client_type');
+
+        $online = (int)Yii::$app->request->get('online');
+
+        if (!empty($clientType) || !empty($online))
+        {
+            $services = Service::find();
+
+            if (!empty($clientType))
+                $services->andWhere('client_type&',$clientType.'='.$clientType);
+
+            if (!empty($online))
+                $services->andWhere(['online'=>1]);
+
+            $services = $services->all();
+
+            return $this->renderPartial('_table',['services'=>$services]);
+        }
+
+
         $rubrics = ServiceRubric::find()->with('childs')->where('id_parent IS NULL')->all();
 
         return $this->render('reestr',[

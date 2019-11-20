@@ -1,19 +1,69 @@
-tinymce.PluginManager.add("collections", function (editor, url) {
-    //editor.ui.registry.addIcon('bubbles', '<svg width="24" height="24"><use xlink:href="custom-icons.svg#bubbles4"></use></svg>');
-    /*
-    Use to store the instance of the Dialog
-     */
+(function () {
+    var iframe = (function () {
+        'use strict';
+
+        tinymce.PluginManager.add("collections", function (editor, url) {
+
+            var _api = false;
+
+            var _urlDialogConfig = {
+                title: 'Вставка списка',
+                url: '/collection/redactor',
+                buttons: [
+                    {
+                        type: 'cancel',
+                        name: 'cancel',
+                        text: 'Close Dialog'
+                    }
+                ],
+                onAction: function (instance, trigger) {
+
+                    console.log($("#collection-redactor").serialize());
+
+                    editor.windowManager.alert('onAction is running.<br><br>You can code your own onAction handler within the plugin.');
+
+                    // close the dialog
+                    instance.close();
+                },
+
+
+                width: 1000,
+                height: 600
+            };
+
+            editor.addCommand('iframeCommand', function (ui, value) {
+
+                console.log(value);
+                if (value.id_collection == '')
+                    editor.windowManager.alert('Вы не выбрали список');
+                else
+                {
+                    /*var $collection = $("<collection>");
+                    $collection.data('filters',JSON.stringify(value.filters));
+                    $collection.data('columns',JSON.stringify(value.columns));
+                    $collection.attr('id',value.id_collection);
+                    $collection.text('Список #'+value.id_collection);
+                    */
+                    editor.insertContent('<collection data-columns=\''+JSON.stringify(value)+'\' data-id="'+value.id_collection+'">Список #'+value.id_collection+'.</collection>');
+                }
+
+                $(".tox-button--secondary").click();
+            });
+
+            // Define the Toolbar button
+            editor.ui.registry.addButton('collections', {
+                text: "Списки",
+                onAction: () => {
+                    _api = editor.windowManager.openUrl(_urlDialogConfig)
+                }
+            });
+        });
+    }());
+})();
+
+/*tinymce.PluginManager.add("collections", function (editor, url) {
     var _dialog = false;
-    /*
-    An array of options to appear in the "Type" select box.
-     */
     var _typeOptions = [];
-    /**
-     * Get the Dialog Configuration Object
-     *
-     * @returns {{buttons: *[], onSubmit: onSubmit, title: string, body: {}}}
-     * @private
-     */
     function _getDialogConfig()
     {
         return {
@@ -28,6 +78,13 @@ tinymce.PluginManager.add("collections", function (editor, url) {
                     flex: true
                 },
                 {
+                    type: 'checkboxlist',
+                    name: 'columns',
+                    label: 'Колонки',
+                    items: _typeOptions,
+                    flex: true
+                },
+                {
                     type: 'input',
                     name: 'limit',
                     label: 'Записей на страницу',
@@ -38,7 +95,6 @@ tinymce.PluginManager.add("collections", function (editor, url) {
             onSubmit: function (api) {
                 // insert markup
                 editor.insertContent('<collection data-id="'+api.getData().type+'" data-limit="'+api.getData().limit+'">Список #'+api.getData().type+'.</collection>');
-
                 // close the dialog
                 api.close();
             },
@@ -57,29 +113,12 @@ tinymce.PluginManager.add("collections", function (editor, url) {
             ]
         };
     }
-
-    /**
-     * Plugin behaviour for when the Toolbar or Menu item is selected
-     *
-     * @private
-     */
     function _onAction()
     {
-        // Open a Dialog, and update the dialog instance var
         _dialog = editor.windowManager.open(_getDialogConfig());
-
-        // block the Dialog, and commence the data update
-        // Message is used for accessibility
         _dialog.block('Loading...');
 
-        // Do a server call to get the items for the select box
-        // We'll pretend using a setTimeout call
         setTimeout(function () {
-
-            // We're assuming this is what runs after the server call is performed
-            // We'd probably need to loop through a response from the server, and update
-            // the _typeOptions array with new values. We're just going to hard code
-            // those for now.
             _typeOptions = [
             ];
 
@@ -98,7 +137,6 @@ tinymce.PluginManager.add("collections", function (editor, url) {
             });
         }, 100);
     }
-
     // Define the Toolbar button
     editor.ui.registry.addButton('collections', {
         text: "Списки",
@@ -112,18 +150,7 @@ tinymce.PluginManager.add("collections", function (editor, url) {
         context: 'insert',
         onAction: _onAction
     });
-
-    // Return details to be displayed in TinyMCE's "Help" plugin, if you use it
-    // This is optional.
-    return {
-        getMetadata: function () {
-            return {
-                name: "Hello World example",
-                url: "https://www.martyfriedel.com/blog/tinymce-5-creating-a-plugin-with-a-dialog-and-custom-icons"
-            };
-        }
-    };
-});
+});*/
 
 tinymce.PluginManager.add("form", function (editor, url) {
     var _dialog = false;
