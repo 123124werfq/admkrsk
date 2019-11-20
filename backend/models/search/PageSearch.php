@@ -56,6 +56,11 @@ class PageSearch extends Page
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+                'defaultOrder' => [
+                    'id_page' => SORT_DESC
+                ]
+            ]
         ]);
 
         $this->load($params);

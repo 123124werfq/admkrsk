@@ -20,28 +20,23 @@ class CollectionWidget extends \yii\base\Widget
                 $this->id_collection = (int)$this->attributes['id'];
 
             if (!empty($this->attributes['columns']))
-                $this->id_collection = $this->attributes['columns'];
+            {
+                $this->columns = json_decode(str_replace("&quot;", '"', $this->attributes['columns']),true);
+            }
         }
 
     	$model = Collection::find()->where(['id_collection'=>$this->id_collection])->one();
 
-        if (empty($model))
+        if (empty($model) || empty($this->columns))
             return '';
 
-        if (empty($this->columns))
-            $columns = $model->getColumns()->indexBy('id_column')->all();
-        else
-            $columns = $model->getColumns()->where(['id_column'=>$this->this->columns])->indexBy('id_column')->all(0);
-
-        if (empty($model))
-    		return false;
-
-        $allrows = $model->getData(array_keys($columns));
+        $query = $model->getDataQueryByOptions($this->columns)->limit(30);
+        $columns = $query->columns;
 
         return $this->render('collection',[
         	'model'=>$model,
             'columns'=>$columns,
-            'allrows'=>$allrows,
+            'allrows'=>$query->getArray(),
         ]);
     }
 }

@@ -35,12 +35,14 @@ function parseAttributesFromTag($tag){
                         preg_match_all ("/<(collection|gallery|forms)\s(.+?)>(.+?)<\/(collection|gallery|forms)>/is", $page->content, $matches);
 
                         if (!empty($matches[0]))
-                            foreach ($matches[0] as $key => $match) {
+                            foreach ($matches[0] as $key => $match) 
+                            {
                                 $attributes = parseAttributesFromTag($match);
 
                                 if (!empty($attributes['id']))
                                 {
                                     $class = 'frontend\widgets\\'.ucwords($matches[1][$key]).'Widget';
+
                                     $page->content = str_replace($match, $class::widget(['attributes'=>$attributes]), $page->content);
                                 }
                             }

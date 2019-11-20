@@ -245,7 +245,6 @@ class Collection extends \yii\db\ActiveRecord
 
         $query = \common\components\collection\CollectionQuery::getQuery($id_collection)->select();
 
-
         if (!empty($this->options))
         {
             $options = json_decode($this->options,true);
@@ -262,6 +261,42 @@ class Collection extends \yii\db\ActiveRecord
                 }
             }
         }
+
+        return $query;
+    }
+
+    public function getDataQueryByOptions($options)
+    {
+        $query = \common\components\collection\CollectionQuery::getQuery($this->id_collection);
+
+        if (!is_array($options))
+            $options = json_decode($this->options,true);
+
+        $id_cols = [];
+        
+        if (!empty($options['columns']))
+        {
+            foreach ($options['columns'] as $key => $col)
+                $id_cols[] = $col['id_column'];
+
+            $query->select($id_cols);
+        }
+        else 
+            $query->select();
+
+        if (!empty($options['filters']))
+        {
+            foreach ($options['filters'] as $key => $filter)
+            {
+                $where = [$filter['operator'],$filter['id_column'],$filter['value']];
+                if ($key==0)
+                    $query->where($where);
+                else
+                    $query->andWhere($where);
+            }
+        }
+
+
 
         return $query;
     }

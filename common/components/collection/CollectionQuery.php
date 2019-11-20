@@ -34,9 +34,9 @@ class CollectionQuery extends \yii\mongodb\Query
         return $query;
     }
 
-    public function select($id_columns=null)
+    public function select($id_columns=[])
     {
-        $columns = $this->collection->getColumns()->select(['alias','id_column']);
+        $columns = $this->collection->getColumns()->select(['alias','id_column','name']);
 
         if (!empty($id_columns))
             $columns->where(['id_column'=>$id_columns]);
@@ -117,7 +117,11 @@ class CollectionQuery extends \yii\mongodb\Query
     public function getArray()
     {
         $output = [];
-        $emptyRow = array_keys($this->columns);
+        $emptyRow = [];
+
+        foreach ($this->columns as $key => $col) {
+            $emptyRow[$col->id_column] = '';
+        }
 
         foreach ($this->all() as $key => $record)
         {
