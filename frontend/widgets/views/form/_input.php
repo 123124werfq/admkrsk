@@ -30,6 +30,8 @@
 
 	if (!empty($input->visibleInputValue))
 		$visibleInputValue = 'data-values="'.implode(',', $input->visibleInputValue).'"';
+
+
 ?>
 
 <div class="col">
@@ -37,7 +39,7 @@
 		<?php if (!empty($input->label)){?>
 		<label class="form-label"><?=$input->label?><?=!empty($options['required'])?'*':''?></label>
 		<?php }?>
-		<?php switch ($input->type->type) {
+		<?php switch ($input->type) {
 			case CollectionColumn::TYPE_SELECT:
 				echo $form->field($model, "input$input->id_input")->dropDownList($input->getArrayValues(),$options);
 				break;

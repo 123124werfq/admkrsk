@@ -61,6 +61,7 @@ return [
                 'search/address'=>'search/address',
                 'site/test'=>'site/test',
                 'address/region'=>'address/region',
+                'form/view/<id>'=>'form/view',
                 'address/subregion'=>'address/subregion',
                 'address/city'=>'address/city',
                 'address/district'=>'address/district',

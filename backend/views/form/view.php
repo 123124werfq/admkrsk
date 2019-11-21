@@ -11,7 +11,8 @@ $this->params['breadcrumbs'][] = ['label' => 'Формы', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 
- $this->params['button-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_form], ['class' => 'btn btn-primary']);
+$this->params['button-block'][] = '<a class="btn btn-default" href="'.Yii::$app->params['frontendUrl'].'/form/view?id='.$model->id_form.'">Предпросмотр</a>';
+$this->params['button-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_form], ['class' => 'btn btn-primary']);
 $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id_form], [
     'class' => 'btn btn-danger',
     'data' => [
