@@ -61,7 +61,7 @@ class Form extends \yii\db\ActiveRecord
             'id_collection' => 'Коллекция',
             'name' => 'Название',
             'make_collection'=>'Создать коллекцию',
-            'created_at' => 'Created At',
+            'created_at' => 'Создана',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
             'updated_by' => 'Updated By',
@@ -103,7 +103,7 @@ class Form extends \yii\db\ActiveRecord
                 $input->label = $input->name = $column->name;
 
                 if ($column->type != CollectionColumn::TYPE_COLLECTION)
-                    $input->values = $columns->variables;
+                    $input->values = $column->variables;
 
                 if ($input->save())
                 {

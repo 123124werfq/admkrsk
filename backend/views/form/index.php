@@ -13,15 +13,16 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->params['button-block'][] = Html::a('Добавить', ['create'], ['class' => 'btn btn-success']);
 ?>
 <div class="form-index">
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
         'columns' => [
             'id_form',
-            'collection.name',
             'name',
+            'collection.name',
+            'created_at:date',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'contentOptions'=>['class'=>'button-column']

@@ -8,22 +8,28 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="form-search">
+<div class="ibox">
+    <div class="ibox-content">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
+        'fieldConfig'=>[
+            'template' => '{input}',
+        ]
     ]); ?>
 
-    <?= $form->field($model, 'id_form') ?>
+    <?= ''//$form->field($model, 'id_collection') ?>
 
-    <?= $form->field($model, 'id_collection') ?>
-
-    <?= $form->field($model, 'name') ?>
-
-    <?= $form->field($model, 'created_at') ?>
-
-    <?= $form->field($model, 'created_by') ?>
+    <div class="row">
+        <div class="col-sm-3">
+            <?= $form->field($model, 'name')->textInput(['placeholder'=>"Название"]) ?>
+        </div>
+        <div class="col-sm-3">
+            <?= Html::submitButton('Поиск', ['class' => 'btn btn-primary']) ?>
+            <?= Html::resetButton('Сброс', ['class' => 'btn btn-outline-secondary']) ?>
+        </div>
+    </div>
 
     <?php // echo $form->field($model, 'updated_at') ?>
 
@@ -33,11 +39,8 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'deleted_by') ?>
 
-    <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-outline-secondary']) ?>
-    </div>
+    
 
     <?php ActiveForm::end(); ?>
-
+    </div>
 </div>
