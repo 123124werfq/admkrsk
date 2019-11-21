@@ -254,10 +254,7 @@ class Collection extends \yii\db\ActiveRecord
                 foreach ($options['filters'] as $key => $filter)
                 {
                     $where = [$filter['operator'],$filter['id_column'],$filter['value']];
-                    if ($key==0)
-                        $query->where($where);
-                    else
-                        $query->andWhere($where);
+                    $query->andWhere($where);
                 }
             }
         }
@@ -278,7 +275,7 @@ class Collection extends \yii\db\ActiveRecord
             $options = json_decode($this->options,true);
 
         $id_cols = [];
-        
+
         if (!empty($options['columns']))
         {
             foreach ($options['columns'] as $key => $col)
@@ -286,7 +283,7 @@ class Collection extends \yii\db\ActiveRecord
 
             $query->select($id_cols);
         }
-        else 
+        else
             $query->select();
 
         if (!empty($this->id_parent_collection))
@@ -296,11 +293,8 @@ class Collection extends \yii\db\ActiveRecord
         {
             foreach ($options['filters'] as $key => $filter)
             {
-                $where = [$filter['operator'],$filter['id_column'],$filter['value']];
-                if ($key==0)
-                    $query->where($where);
-                else
-                    $query->andWhere($where);
+                $where = [$filter['operator'],$filter['id_column'],(is_numeric($filter['value']))?(float)$filter['value']:$filter['value']];
+                $query->andWhere($where);
             }
         }
 
