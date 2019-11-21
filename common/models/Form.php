@@ -80,7 +80,7 @@ class Form extends \yii\db\ActiveRecord
 
             if ($row->save())
             {
-                $where = ['type'=>$column->type];
+                /*$where = ['type'=>$column->type];
 
                 if ($column->type == CollectionColumn::TYPE_COLLECTION)
                     $where['id_collection'] = $column->variables;
@@ -95,10 +95,11 @@ class Form extends \yii\db\ActiveRecord
 
                     $type->name =  $column::getTypeLabel($column->type);
                     $type->save();
-                }
+                }*/
 
                 $input = new FormInput;
-                $input->id_type = $type->id_type;
+                $input->type = $column->type;
+                $input->id_form = $this->id_form;
                 $input->id_column = $column->id_column;
                 $input->label = $input->name = $column->name;
 

@@ -485,8 +485,11 @@ class CollectionController extends Controller
             if ($form->save())
             {
                 $form->createFromByCollection();
+                $model->id_form = $form->id_form;
+                $model->updateAttributes(['id_form']);
             }
-            else print_r($form->errors);
+            else
+                print_r($form->errors);
 
             $model->createAction(Action::ACTION_CREATE);
 

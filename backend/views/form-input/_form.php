@@ -13,11 +13,10 @@ use common\models\CollectionColumn;
 
 $types = FormInputType::find()->all();
 
-$select_ids = [];
-foreach ($types as $key => $type) {
-    if ($type->type == CollectionColumn::TYPE_SELECT || $type->type == CollectionColumn::TYPE_RADIO)
-        $select_ids[] = $type->id_type;
-}
+$select_ids = [CollectionColumn::TYPE_SELECT,CollectionColumn::TYPE_RADIO];
+$visibleInputs = ArrayHelper::map(FormInput::find()
+                    ->where(['id_form'=>$model->id_form, 'type'=>CollectionColumn::TYPE_SELECT])
+                    ->andWhere('id_input <> '.(int)$model->id_input)->all(), 'id_input', 'name');
 /* @var $this yii\web\View */
 /* @var $model common\models\FormInput */
 /* @var $form yii\widgets\ActiveForm */
@@ -53,13 +52,12 @@ foreach ($types as $key => $type) {
 
     <?=$form->field($model, 'hint')->textInput(['maxlength' => 255]) ?>
 
+    <?php if (!empty($visibleInputs)){?>
     <hr>
     <div class="row">
         <div class="col-sm-6">
             <?=$form->field($model, 'visibleInput')->dropDownLIst(
-                ArrayHelper::map(FormInput::find()
-                    ->where(['id_form'=>$model->id_form, 'type'=>CollectionColumn::TYPE_SELECT])
-                    ->andWhere('id_input <> '.(int)$model->id_input)->all(), 'id_input', 'name'),
+                $visibleInputs,
                 ['prompt'=>'Выберите поле зависимости']
             ) ?>
         </div>
@@ -67,8 +65,9 @@ foreach ($types as $key => $type) {
             <?=(!empty($model->visibleInput))?$this->render('_input',['visibleInput'=>$model->visibleInputModel,'model'=>$model,'form'=>$form]):''?>
         </div>
     </div>
+    <?php }?>
 
-    <div data-visible-field="forminput-id_type" data-values="<?=implode(',', $select_ids)?>">
+    <div data-visible-field="forminput-type" data-values="<?=implode(',', $select_ids)?>">
         <?=$form->field($model, 'id_collection')->widget(Select2::class, [
             'data' => ArrayHelper::map(Collection::find()->all(), 'id_collection', 'name'),
             'pluginOptions' => [
