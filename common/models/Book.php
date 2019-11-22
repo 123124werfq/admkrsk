@@ -178,7 +178,6 @@ class Book extends \yii\db\ActiveRecord
             $phone = str_replace(")", "", $phone);
             $phone = str_replace(" ", "", $phone);
 
-
             $client = new CSOAPClient(
                 $esiauser->first_name . ' ' . $esiauser->middle_name. ' ' . $esiauser->last_name,
                 "",
@@ -187,21 +186,13 @@ class Book extends \yii\db\ActiveRecord
                 $date,
                 $time,
                 "");
-            /*
-            $client->Name = $esiauser->first_name . ' ' . $esiauser->middle_name. ' ' . $esiauser->last_name;
-            $client->Email = "";
-            $client->Operation_id = $operation_id;
-            $client->AInfo = json_encode(['phone' => $phone]);
-            //$client->Date = str_replace("-", ".", $date);
-            //$client->Date = $date;
-            $client->Date = "2019-11-29";
-            $client->Time = $time;
-            $client->Station = "";
-            */
 
             $ares = $this->service->activateTime($of[0]->ID, $client, $res->reserveCode);
 
-            return($ares);
+            if(!empty($ares->ActivateCode))
+                $active = $this->service->Activate($ares->ActivateCode);
+
+            return($active);
         }
 
         //$res = $this->service->reserveTime($this->officeId, (int)$operation_id, $date, $time, 1, "ru");
