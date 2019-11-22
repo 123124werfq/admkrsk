@@ -199,8 +199,8 @@ class Book extends \yii\db\ActiveRecord
             $client->Email = "";
             $client->Operation_id = "";
             $client->AInfo = json_encode(['phone' => $phone]);
-            $client->Date = str_replace("-", ".", $date);
-            //$client->Date = $date;
+            //$client->Date = str_replace("-", ".", $date);
+            $client->Date = $date;
             //$client->Date = "2019-11-29";
             $client->Time = $time;
             $client->Station = "";
