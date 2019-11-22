@@ -165,6 +165,8 @@ class Book extends \yii\db\ActiveRecord
 
         $res = $this->service->reserveTime($this->officeId, [$alias], $date, 1, "ru"); // 1341
 
+        var_dump($res);
+
         if(isset($res->reserveCode))
         {
             $user = User::findOne(Yii::$app->user->id);
