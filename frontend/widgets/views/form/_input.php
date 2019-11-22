@@ -4,7 +4,7 @@
 	use kartik\select2\Select2;
 	use yii\web\JsExpression;
 
-	$options = json_decode($input->options,true);
+	$options = $input->options;
 
 	$options['class'] = 'form-control';
 
@@ -30,8 +30,6 @@
 
 	if (!empty($input->visibleInputValue))
 		$visibleInputValue = 'data-values="'.implode(',', $input->visibleInputValue).'"';
-
-
 ?>
 
 <div class="col">
@@ -43,9 +41,18 @@
 			case CollectionColumn::TYPE_SELECT:
 				echo $form->field($model, "input$input->id_input")->dropDownList($input->getArrayValues(),$options);
 				break;
-
 			case CollectionColumn::TYPE_DATE:
-				$otions['type'] = 'date';
+				$options['type'] = 'date';
+				echo $form->field($model, "input$input->id_input")->textInput($options);
+				break;
+			case CollectionColumn::TYPE_DATETIME:
+				$options['type'] = 'datetime';
+				echo $form->field($model, "input$input->id_input")->textInput($options);
+				break;
+			case CollectionColumn::TYPE_INTEGER:
+				$options['type'] = 'number';
+				echo $form->field($model, "input$input->id_input")->textInput($options);
+				break;
 			case CollectionColumn::TYPE_INPUT:
 				echo $form->field($model, "input$input->id_input")->textInput($options);
 				break;
@@ -77,7 +84,7 @@ JS;
 				break;
 			case CollectionColumn::TYPE_FILE:
 				echo'
-				<div class="fileupload">
+				<div data-input="'.$input->id_input.'" class="fileupload">
 	                <div class="fileupload_dropzone">
 	                    <div class="fileupload_btn">
 	                        <span class="fileupload_btn-text">Выберите файлы</span>
@@ -88,7 +95,7 @@ JS;
 	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — 10 Мб</p>
 	                    </div>
 	                </div>
-	                <div class="fileupload_list hidden"></div>
+	                <div class="fileupload_list"></div>
 	            </div>';
 				break;
 			case CollectionColumn::TYPE_RADIO:

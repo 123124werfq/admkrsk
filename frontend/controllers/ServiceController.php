@@ -55,7 +55,6 @@ class ServiceController extends \yii\web\Controller
             return $this->renderPartial('_table',['services'=>$services]);
         }
 
-
         $rubrics = ServiceRubric::find()->with('childs')->where('id_parent IS NULL')->all();
 
         return $this->render('reestr',[
@@ -87,9 +86,11 @@ class ServiceController extends \yii\web\Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
-            print_r($_POST);
-            print_r($_FILES);
-            print_r($model->attributes);
+            $prepare = $model->prepareData();
+            print_r($prepare);
+
+            /*print_r($_FILES);
+            print_r($model->attributes);*/
             die();
 
             return $this->redirect('/service-recieved');

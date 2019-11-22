@@ -1086,7 +1086,7 @@
         }).on('datepicker-change', function(event,obj) {
 
             /* Выполняется когда выбран диапазон, можно запустить аякс здесь */
-            
+
             if ($dateInput.val() != '') {
                 $dateInput.addClass('datepicker__filled');
             } else {
@@ -1249,13 +1249,13 @@
     }
 
     // Setup the dnd listeners.
-    var dropZone = $('.fileupload_dropzone');
+    //var dropZone = $('.fileupload_dropzone');
     var fileCount = 0;
 
     var activeDropzoneID = '';
 
 
-    if (dropZone.length)
+    /*if (dropZone.length)
     {
         dropZone.on('dragover', handleDragOver, false);
         dropZone.on('dragenter', function() {
@@ -1283,6 +1283,6 @@
 			uploadFiles.remove(fileName);
 			$file.remove();
         });
-    }
+    }*/
     // /FILE UPLOAD
 });

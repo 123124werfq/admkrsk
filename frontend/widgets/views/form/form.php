@@ -1,5 +1,8 @@
 <?php
 	use yii\widgets\ActiveForm;
+	$this->registerJsFile('/js/dropzone/dropzone.js',['depends'=>[\yii\web\JqueryAsset::className()],'position'=>\yii\web\View::POS_END]);
+	/*$this->registerJsFile('/js/fileuploader/dropzone_multiupload.js',['depends'=>[\yii\web\JqueryAsset::className()],'position'=>\yii\web\View::POS_END]);*/
+	$this->registerCssFile('/js/dropzone/dropzone.min.css');
 ?>
 <div class="boxed form-inside">
 	<?php $activeForm = ActiveForm::begin([

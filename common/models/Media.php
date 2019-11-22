@@ -92,19 +92,24 @@ class Media extends \yii\db\ActiveRecord
         if (empty($ext))
             $ext = substr($file, strrpos($file, '.')+1);
 
-        $this->width = $size[0];
-        if ($size[1]>2147483647)
-            $size[1] = 2147483647*2-$size[1];
-        $this->height = abs($size[1]);
-        $this->mime = $size['mime'];
+        if (!empty($size))
+        {
+            $this->width = $size[0];
+
+            if ($size[1]>2147483647)
+                $size[1] = 2147483647*2-$size[1];
+
+            $this->height = abs($size[1]);
+            $this->mime = $size['mime'];
+        }
+
         $this->extension = $ext;
         $this->size = filesize($file);
         $this->ord = (isset($post['ord']))?(int)$post['ord']:'';
         $this->cover = (isset($post['cover']))?(int)$post['cover']:'';
-        //$this->value = (isset($post['value']))?$post['value']:'';
         $this->crop = (isset($post['crop']))?$post['crop']:'';
         $this->type = (isset($post['value']))?2:1;
-        //$this->preview = (isset($post['preview']))?$post['preview']:'';
+
         $this->file_path = $file;
     }
 

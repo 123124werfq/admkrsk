@@ -19,7 +19,7 @@ class FormDynamic extends DynamicModel
         $attributes = [];
 
         $this->form = $form;
-        $this->inputs = FormInput::find()->where(['id_form' => $form->id_form])->all();
+        $this->inputs = FormInput::find()->where(['id_form' => $form->id_form])->indexBy('id_input')->all();
 
         foreach ($this->inputs as $input)
         {
@@ -31,7 +31,7 @@ class FormDynamic extends DynamicModel
 
                 if (!empty($esia->$attr))
                     $data[$input->id_input] = $esia->$attr;
-            }   
+            }
 
             $attributes['input'.$input->id_input] = (isset($data[$input->id_input]))?$data[$input->id_input]:'';
         }
@@ -39,14 +39,65 @@ class FormDynamic extends DynamicModel
         parent::__construct($attributes, $config);
 
         foreach ($this->inputs as $input)
-        	$this->addRule(['input'.$input->id_input], 'safe');
+        {
+            switch ($input->type) {
+                case CollectionColumn::TYPE_INTEGER:
+                    $this->addRule(['input'.$input->id_input], 'number');
+                    break;
+                case CollectionColumn::TYPE_INPUT:
+                    $this->addRule(['input'.$input->id_input], 'string');
+                    break;
+                default:
+                    $this->addRule(['input'.$input->id_input], 'safe');
+                    break;
+            }
+        }
     }
 
-    public function prepareData($post)
+    public function prepareData($post=null)
     {
-        foreach ($this->attributes as $key => $value)
+        $data = [];
+
+        foreach ($this->inputs as $key => $input)
         {
-            # code...
+            $attribute = 'input'.$input->id_input;
+
+            if (!empty($this->$attribute))
+            {
+                switch ($input->type) {
+                    case CollectionColumn::TYPE_INTEGER:
+                        $data[$input->id_input] = (float)$this->$attribute;
+                        break;
+                    case CollectionColumn::TYPE_INPUT:
+                        $data[$input->id_input] = (string)$this->$attribute;
+                        break;
+                    case CollectionColumn::TYPE_DATE:
+                    case CollectionColumn::TYPE_DATETIME:
+                        $data[$input->id_input] = strtotime($this->$attribute);
+                        break;
+                    case CollectionColumn::TYPE_FILE:
+
+                        $data[$input->id_input] = [];
+
+                        if (!empty($this->$attribute) && is_array($this->$attribute))
+                        {
+                            foreach ($this->$attribute as $key => $file)
+                            {
+                                $media = new Media;
+                                $media->getImageAttributes($file['file_path']);
+
+                                $data[$input->id_input][] = $media;
+                            }
+                        }
+
+                        break;
+                    default:
+                        $this->addRule(['input'.$input->id_input], 'safe');
+                        break;
+                }
+            }
         }
+
+        return $data;
     }
 }
