@@ -3,22 +3,9 @@
 namespace common\models;
 
 use Yii;
+use common\components\suosoap\CSOAPClient;
+use common\components\suosoap\CSOAPOperationStart;
 
-
-class CSOAPOperationStart{
-    public $start;
-    public $id;
-}
-
-class CSOAPClient {
-    public $Name;
-    public $Email;
-    public $Operation_id;
-    public $Station;
-    public $AInfo;
-    public $Date;
-    public $Time;
-}
 
 
 /**
@@ -173,9 +160,9 @@ class Book extends \yii\db\ActiveRecord
 
     public function reserveTime($operation_id, $date, $time)
     {
-        $alias = new CSOAPOperationStart;
-        $alias->start = $time;
-        $alias->id = $this->getAliasFromOperation($operation_id);
+        $alias = new CSOAPOperationStart($time, $operation_id);
+        //$alias->start = $time;
+        //$alias->id = $this->getAliasFromOperation($operation_id);
 
         $of = $this->service->getOfficesForOperation($operation_id);
         if(!isset($of[0]))
@@ -194,7 +181,15 @@ class Book extends \yii\db\ActiveRecord
             $phone = str_replace(" ", "", $phone);
 
 
-            $client = new CSOAPClient;
+            $client = new CSOAPClient(
+                $esiauser->first_name . ' ' . $esiauser->middle_name. ' ' . $esiauser->last_name,
+                "",
+                "",
+                json_encode(['phone' => $phone]),
+                $date,
+                $time,
+                "");
+            /*
             $client->Name = $esiauser->first_name . ' ' . $esiauser->middle_name. ' ' . $esiauser->last_name;
             $client->Email = "";
             $client->Operation_id = $operation_id;
@@ -204,6 +199,7 @@ class Book extends \yii\db\ActiveRecord
             $client->Date = "2019-11-29";
             $client->Time = $time;
             $client->Station = "";
+            */
 
             $ares = $this->service->activateTime($of[0]->ID, $client, 1);
 
