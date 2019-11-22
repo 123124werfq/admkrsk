@@ -206,7 +206,7 @@ class Book extends \yii\db\ActiveRecord
             $client->AInfo = json_encode(['phone' => $phone]);
             //$client->Date = str_replace("-", ".", $date);
             //$client->Date = $date;
-            $client->Date = "2019-11-28T17:00:00.000Z";
+            $client->Date = "2019-11-29";
             $client->time = $time;
 
             $ares = $this->service->activateTime($of[0]->ID, $client, 1);
