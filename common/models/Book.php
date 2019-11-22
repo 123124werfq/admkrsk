@@ -194,7 +194,7 @@ class Book extends \yii\db\ActiveRecord
             //$client->Date = str_replace("-", ".", $date);
             $client->Date = $date;
             $client->time = $time;
-var_dump($client)l die();
+var_dump($client); die();
             $ares = $this->service->activateTime($of[0]->ID, $client, 1);
 
             return($ares);
