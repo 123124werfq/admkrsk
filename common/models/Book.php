@@ -163,7 +163,11 @@ class Book extends \yii\db\ActiveRecord
         $alias->start = $time;
         $alias->id = $operation_id;
 
-        $res = $this->service->reserveTime($this->officeId, [$alias], $date, 1, "ru"); // 1341
+        $of = $this->service->getOfficesForOperation($operation_id);
+        if(!isset($of[0]))
+            return false;
+
+        $res = $this->service->reserveTime($of[0]->ID, [$alias], $date, 1, "ru"); // 1341
 
         var_dump($res);
 
@@ -187,7 +191,7 @@ class Book extends \yii\db\ActiveRecord
             $client->Date = $date;
             $client->time = $time;
 
-            $ares = $this->service->activateTime($this->officeId, $client, 1);
+            $ares = $this->service->activateTime($of[0]->ID, $client, 1);
 
             return($ares);
         }
