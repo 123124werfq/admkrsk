@@ -181,9 +181,11 @@ class Book extends \yii\db\ActiveRecord
             //$client->Email = $user->email;
             //$client->Operation_id = $operation_id;
             $client->AInfo = json_encode(['phone' => $phone]);
-            $client->Date = str_replace("-", ".", $date);
-            //$client->Date = $date;
+            //$client->Date = str_replace("-", ".", $date);
+            $client->Date = $date;
             $client->time = $time;
+
+            var_dump($client); die();
 
             $ares = $this->service->activateTime($this->officeId, $client, 1);
 
