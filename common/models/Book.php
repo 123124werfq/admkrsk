@@ -209,6 +209,10 @@ class Book extends \yii\db\ActiveRecord
             $client->Date = "2019-11-29";
             $client->time = $time;
 
+
+            var_dump($of[0]->ID);
+            var_dump($client);
+            die();
             $ares = $this->service->activateTime($of[0]->ID, $client, 1);
 
             return($ares);
