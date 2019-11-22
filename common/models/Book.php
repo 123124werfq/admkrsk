@@ -183,6 +183,10 @@ class Book extends \yii\db\ActiveRecord
 
         $res = $this->service->reserveTime($of[0]->ID, [$alias], $date, 1, "ru"); // 1341
 
+        var_dump($res);
+        var_dump($alias);
+        var_dump($of[0]->ID);
+        die();
 
         if(isset($res->reserveCode) && !empty($res->reserveCode))
         {
