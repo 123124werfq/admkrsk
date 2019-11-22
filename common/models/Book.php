@@ -178,8 +178,7 @@ class Book extends \yii\db\ActiveRecord
 
             $client = new CSOAPClient;
             $client->Name = $esiauser->first_name . ' ' . $esiauser->middle_name. ' ' . $esiauser->last_name;
-            $client->Email = $user->email;
-            $client->Operation_id = "";
+            //$client->Email = $user->email;
             //$client->Operation_id = $operation_id;
             $client->AInfo = json_encode(['phone' => $phone]);
             //$client->Date = str_replace("-", ".", $date);
