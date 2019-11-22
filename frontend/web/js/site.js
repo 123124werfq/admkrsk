@@ -153,7 +153,7 @@ $(document).ready(function() {
                     {
                         $('[name=time]').find('option').remove();
                         for (let i=0; i<data.length; i++)
-                            $('[name=time]').append("<option value='"+data[i]+"'>"+ String(data[i]/60).padStart(2, '0') +":"+ String(data[i]%60).padStart(2, '0') +"</option>");
+                            $('[name=time]').append("<option value='"+data[i]+"'>"+ String(parseInt(data[i]/60)).padStart(2, '0') +":"+ String(parseInt(data[i]%60)).padStart(2, '0') +"</option>");
                         $('[name=time]').selectmenu('refresh');
                     }
                 });
