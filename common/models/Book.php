@@ -152,8 +152,8 @@ class Book extends \yii\db\ActiveRecord
 
         $ds = explode('.', $dateText);
 
-        $intervals = $this->service->getFreeintervals($of[0]->ID, [$operation_id], $ds[2]."-".$ds[1]."-".$ds[0] , 1);
-
+        $intervals = $this->service->getIntervals($of[0]->ID, [$operation_id], $ds[2]."-".$ds[1]."-".$ds[0] , 1);
+var_dump($intervals);
         return $intervals;
     }
 
