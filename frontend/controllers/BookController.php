@@ -74,15 +74,19 @@ class BookController extends \yii\web\Controller
     public function actionAvailable()
     {
         $serv = (int)$_POST['service'];
-        $b0 = new Book;
-        $cn = $b0->connect(0);
-        $res = $b0->dateAvailable($serv);
+        $type = (int)$_POST['type'];
 
-        if(!is_array($res) || empty($res)){
-            $b1 = new Book;
-            $cn = $b1->connect(1);
-            $res = $b1->dateAvailable($serv);
+        switch ($type){
+            case 19:
+            case 20:
+                $conn = 0; break;
+            default:
+                $conn = 1;
         }
+
+        $b0 = new Book;
+        $cn = $b0->connect($conn);
+        $res = $b0->dateAvailable($serv);
 
         $output = [];
 

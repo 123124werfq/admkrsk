@@ -91,7 +91,7 @@ $(document).ready(function() {
                     type: "POST",
                     dataType: "json",
                     url: "/book/available",
-                    data: {service: currentService}
+                    data: {service: currentService, type: currentGroup}
                 }).done(function( data ) {
                     //location.reload();
                     avialableDays = data;
@@ -142,11 +142,12 @@ $(document).ready(function() {
                 return [ false , "day-inactive", ""];
             },
             onSelect: function (dateText, inst) {
+                let currentGroup = $('select[name="type"]').val();
                 $.ajax({
                     type: "POST",
                     dataType: "json",
                     url: "/book/intervals",
-                    data: {datetext: dateText, service: serviceNum}
+                    data: {datetext: dateText, service: serviceNum,  type: currentGroup}
                 }).done(function( data ) {
                     if(data.length)
                     {
