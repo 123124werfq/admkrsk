@@ -192,7 +192,7 @@ class Book extends \yii\db\ActiveRecord
             if(!empty($ares->ActivateCode))
             {
                 $this->id_user = Yii::$app->user->id;
-                $this->office = $this->$of[0]->ID;
+                $this->office = $of[0]->ID;
                 $this->operation = $operation_id;
                 $this->pin = $ares->ActivateCode;
                 $this->date = $date;
