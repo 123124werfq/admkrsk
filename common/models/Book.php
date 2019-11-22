@@ -161,8 +161,6 @@ class Book extends \yii\db\ActiveRecord
     public function reserveTime($operation_id, $date, $time)
     {
         $alias = new CSOAPOperationStart($time, $operation_id);
-        //$alias->start = $time;
-        //$alias->id = $this->getAliasFromOperation($operation_id);
 
         $of = $this->service->getOfficesForOperation($operation_id);
         if(!isset($of[0]))
@@ -179,11 +177,12 @@ class Book extends \yii\db\ActiveRecord
             $phone = str_replace("(", "", $phone);
             $phone = str_replace(")", "", $phone);
             $phone = str_replace(" ", "", $phone);
-            
+
+
             $client = new CSOAPClient(
                 $esiauser->first_name . ' ' . $esiauser->middle_name. ' ' . $esiauser->last_name,
                 "",
-                10,
+                "",
                 json_encode(['phone' => $phone]),
                 $date,
                 $time,
@@ -200,7 +199,7 @@ class Book extends \yii\db\ActiveRecord
             $client->Station = "";
             */
 
-            $ares = $this->service->activateTime($of[0]->ID, $client, 1);
+            $ares = $this->service->activateTime($of[0]->ID, $client, $res->reserveCode);
 
             return($ares);
         }
