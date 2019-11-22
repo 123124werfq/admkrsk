@@ -190,7 +190,24 @@ class Book extends \yii\db\ActiveRecord
             $ares = $this->service->activateTime($of[0]->ID, $client, $res->reserveCode);
 
             if(!empty($ares->ActivateCode))
-                $active = $this->service->Activate($ares->ActivateCode);
+            {
+                $this->id_user = Yii::$app->user->id;
+                $this->office = $this->$of[0]->ID;
+                $this->operation = $operation_id;
+                $this->pin = $ares->ActivateCode;
+                $this->date = $date;
+                $this->time = $time;
+                $this->state = 0;
+                if($this->save())
+                {
+                    $active = $this->service->Activate($ares->ActivateCode);
+                    if($active == 0)
+                    {
+                        $this->state = 1;
+                        $this->updateAttributes(['state']);
+                    }
+                }
+            }
 
             return($active);
         }
