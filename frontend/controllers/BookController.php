@@ -153,7 +153,7 @@ class BookController extends \yii\web\Controller
 
         $b = new Book();
         $b->connect($conn);
-        $reserve = $b->reserveTime($op_id, $date, $time);
+        $reserve = $b->setPreorder($op_id, $date, $time);
 
         var_dump($reserve);die();
 

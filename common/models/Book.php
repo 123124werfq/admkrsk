@@ -193,6 +193,30 @@ class Book extends \yii\db\ActiveRecord
         return $res;
     }
 
+    public function setPreorder($operation_id, $date, $time)
+    {
+        $user = User::findOne(Yii::$app->user->id);
+        $esiauser = $user->getEsiainfo()->one();
+
+        $phone = str_replace("+7", "8", $esiauser->mobile);
+        $phone = str_replace("(", "", $phone);
+        $phone = str_replace(")", "", $phone);
+
+        $client = new CSOAPClient;
+        $client->Name = $esiauser->first_name . ' ' . $esiauser->middle_name. ' ' . $esiauser->last_name;
+        $client->Email = $user->email;
+        $client->Operation_id = $operation_id;
+        $client->AInfo = json_encode(['phone' => $phone, 'comment' => 'test']);
+        //$client->Date = str_replace("-", ".", $date);
+        $client->Date = $date;
+        $client->time = $time;
+
+        $ares = $this->service->setPreorder($this->officeId, $client, 1);
+
+        return $ares;
+
+    }
+
 }
 
 
