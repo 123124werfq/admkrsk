@@ -91,7 +91,7 @@ $(document).ready(function() {
                     type: "POST",
                     dataType: "json",
                     url: "/book/available",
-                    data: {service: currentService}
+                    data: {service: currentService, type: currentGroup}
                 }).done(function( data ) {
                     //location.reload();
                     avialableDays = data;
@@ -142,17 +142,18 @@ $(document).ready(function() {
                 return [ false , "day-inactive", ""];
             },
             onSelect: function (dateText, inst) {
+                let currentGroup = $('select[name="type"]').val();
                 $.ajax({
                     type: "POST",
                     dataType: "json",
                     url: "/book/intervals",
-                    data: {datetext: dateText, service: serviceNum}
+                    data: {datetext: dateText, service: serviceNum,  type: currentGroup}
                 }).done(function( data ) {
                     if(data.length)
                     {
                         $('[name=time]').find('option').remove();
                         for (let i=0; i<data.length; i++)
-                            $('[name=time]').append("<option value='"+data[i]+"'>"+ String(data[i]/60).padStart(2, '0') +":"+ String(data[i]%60).padStart(2, '0') +"</option>");
+                            $('[name=time]').append("<option value='"+data[i]+"'>"+ String(parseInt(data[i]/60)).padStart(2, '0') +":"+ String(parseInt(data[i]%60)).padStart(2, '0') +"</option>");
                         $('[name=time]').selectmenu('refresh');
                     }
                 });

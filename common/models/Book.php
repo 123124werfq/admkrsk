@@ -92,6 +92,20 @@ class Book extends \yii\db\ActiveRecord
         ];
     }
 
+    private function getAliasFromOperation($id)
+    {
+        switch ($id){
+            case 1:
+                $res = 3; break;
+            case 2:
+                $res = 2; break;
+            default:
+                $res = $id-2;
+        }
+
+        return $res;
+    }
+
 
     public function connect($num){
         if(!isset($this->endpoint[$num]))
@@ -135,7 +149,7 @@ class Book extends \yii\db\ActiveRecord
         if(!isset($of[0]))
             return false;
 
-        $aliases = [$operation_id];
+        $aliases = [$this->getAliasFromOperation($operation_id)];
 
         $dates = $this->service->GetFreeDates($of[0]->ID, $aliases, 1);
         //var_dump($dates); die();
@@ -152,7 +166,7 @@ class Book extends \yii\db\ActiveRecord
 
         $ds = explode('.', $dateText);
 
-        $intervals = $this->service->getIntervals($of[0]->ID, [$operation_id], $ds[2]."-".$ds[1]."-".$ds[0] , 1);
+        $intervals = $this->service->getIntervals($of[0]->ID, [$this->getAliasFromOperation($operation_id)], $ds[2]."-".$ds[1]."-".$ds[0] , 1);
 
         return $intervals;
     }
@@ -161,11 +175,16 @@ class Book extends \yii\db\ActiveRecord
     {
         $alias = new CSOAPOperationStart;
         $alias->start = $time;
-        $alias->id = $operation_id;
+        $alias->id = $this->getAliasFromOperation($operation_id);
 
-        $res = $this->service->reserveTime($this->officeId, [$alias], $date, 1, "ru"); // 1341
+        $of = $this->service->getOfficesForOperation($operation_id);
+        if(!isset($of[0]))
+            return false;
 
-        if(isset($res->reserveCode))
+        $res = $this->service->reserveTime($of[0]->ID, [$alias], $date, 1, "ru"); // 1341
+
+
+        if(isset($res->reserveCode) && !empty($res->reserveCode))
         {
             $user = User::findOne(Yii::$app->user->id);
             $esiauser = $user->getEsiainfo()->one();
@@ -185,11 +204,9 @@ class Book extends \yii\db\ActiveRecord
             $client->Date = $date;
             $client->time = $time;
 
-            var_dump($client); die();
+            $ares = $this->service->activateTime($of[0]->ID, $client, 1);
 
-            $ares = $this->service->activateTime($this->officeId, $client, 1);
-
-            var_dump($ares);
+            return($ares);
         }
 
         //$res = $this->service->reserveTime($this->officeId, (int)$operation_id, $date, $time, 1, "ru");
