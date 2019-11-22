@@ -208,9 +208,14 @@ class Book extends \yii\db\ActiveRecord
                         $this->updateAttributes(['state']);
                     }
                 }
+                else
+                {
+                    var_dump($this->errors);
+                    die();
+                }
             }
 
-            return($active);
+            return($ares);
         }
 
         //$res = $this->service->reserveTime($this->officeId, (int)$operation_id, $date, $time, 1, "ru");
