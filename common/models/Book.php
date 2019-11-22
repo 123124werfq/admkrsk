@@ -167,7 +167,7 @@ class Book extends \yii\db\ActiveRecord
 
         var_dump($res);
 
-        if(isset($res->reserveCode))
+        if(isset($res->reserveCode) && !empty($reserveCode))
         {
             $user = User::findOne(Yii::$app->user->id);
             $esiauser = $user->getEsiainfo()->one();
@@ -187,11 +187,9 @@ class Book extends \yii\db\ActiveRecord
             $client->Date = $date;
             $client->time = $time;
 
-            var_dump($client); die();
-
             $ares = $this->service->activateTime($this->officeId, $client, 1);
 
-            var_dump($ares);
+            return($ares);
         }
 
         //$res = $this->service->reserveTime($this->officeId, (int)$operation_id, $date, $time, 1, "ru");
