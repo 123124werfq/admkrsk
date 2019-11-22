@@ -64,7 +64,7 @@ class BookController extends \yii\web\Controller
             }
 
         $user = User::findOne(Yii::$app->user->id);
-
+        var_dump($commonTree); die();
         return $this->render('index', [
             'esiauser' => $user->getEsiainfo()->one(),
             'commontree' => $commonTree
