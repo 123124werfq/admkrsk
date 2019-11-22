@@ -167,6 +167,10 @@ class Book extends \yii\db\ActiveRecord
         if(!isset($of[0]))
             return false;
 
+
+        echo $of[0]->ID;
+        var_dump($alias);
+
         $res = $this->service->reserveTime($of[0]->ID, [$alias], $date, 1, "ru"); // 1341
 
         var_dump($res);
@@ -190,7 +194,7 @@ class Book extends \yii\db\ActiveRecord
             //$client->Date = str_replace("-", ".", $date);
             $client->Date = $date;
             $client->time = $time;
-
+var_dump($client)l die();
             $ares = $this->service->activateTime($of[0]->ID, $client, 1);
 
             return($ares);
