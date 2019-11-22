@@ -183,11 +183,6 @@ class Book extends \yii\db\ActiveRecord
 
         $res = $this->service->reserveTime($of[0]->ID, [$alias], $date, 1, "ru"); // 1341
 
-        var_dump($res);
-        var_dump($alias);
-        var_dump($of[0]->ID);
-        //die();
-
         if(isset($res->reserveCode) && !empty($res->reserveCode))
         {
             $user = User::findOne(Yii::$app->user->id);
@@ -201,18 +196,15 @@ class Book extends \yii\db\ActiveRecord
 
             $client = new CSOAPClient;
             $client->Name = $esiauser->first_name . ' ' . $esiauser->middle_name. ' ' . $esiauser->last_name;
-            //$client->Email = $user->email;
-            //$client->Operation_id = $operation_id;
+            $client->Email = "";
+            $client->Operation_id = "";
             $client->AInfo = json_encode(['phone' => $phone]);
-            //$client->Date = str_replace("-", ".", $date);
+            $client->Date = str_replace("-", ".", $date);
             //$client->Date = $date;
-            $client->Date = "2019-11-29";
-            $client->time = $time;
+            //$client->Date = "2019-11-29";
+            $client->Time = $time;
+            $client->Station = "";
 
-
-            var_dump($of[0]->ID);
-            var_dump($client);
-            die();
             $ares = $this->service->activateTime($of[0]->ID, $client, 1);
 
             return($ares);
