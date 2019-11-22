@@ -170,11 +170,16 @@ class Book extends \yii\db\ActiveRecord
             $user = User::findOne(Yii::$app->user->id);
             $esiauser = $user->getEsiainfo()->one();
 
+            $phone = str_replace("+7", "8", $esiauser->mobile);
+            $phone = str_replace("(", "", $phone);
+            $phone = str_replace(")", "", $phone);
+
+
             $client = new CSOAPClient;
             $client->Name = $esiauser->first_name . ' ' . $esiauser->middle_name. ' ' . $esiauser->last_name;
             $client->Email = $user->email;
             $client->Operation_id = $operation_id;
-            $client->AInfo = json_encode(['phone' => '89135349869', 'comment' => 'test']);
+            $client->AInfo = json_encode(['phone' => $phone, 'comment' => 'test']);
             //$client->Date = str_replace("-", ".", $date);
             $client->Date = $date;
             $client->time = $time;
