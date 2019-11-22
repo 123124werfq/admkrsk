@@ -94,7 +94,6 @@ class Book extends \yii\db\ActiveRecord
 
     private function getAliasFromOperation($id)
     {
-        $res = 0
         switch ($id){
             case 1:
                 $res = 3; break;
