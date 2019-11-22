@@ -179,12 +179,11 @@ class Book extends \yii\db\ActiveRecord
             $phone = str_replace("(", "", $phone);
             $phone = str_replace(")", "", $phone);
             $phone = str_replace(" ", "", $phone);
-
-
+            
             $client = new CSOAPClient(
                 $esiauser->first_name . ' ' . $esiauser->middle_name. ' ' . $esiauser->last_name,
                 "",
-                "",
+                10,
                 json_encode(['phone' => $phone]),
                 $date,
                 $time,
