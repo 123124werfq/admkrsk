@@ -4,6 +4,12 @@ namespace common\models;
 
 use Yii;
 
+
+class CSOAPOperationStart{
+    public $start;
+    public $id;
+}
+
 /**
  * This is the model class for table "db_book".
  *
@@ -142,8 +148,16 @@ class Book extends \yii\db\ActiveRecord
 
     public function reserveTime($operation_id, $date, $time)
     {
-        $res = $this->service->reserveTime($this->officeId, (int)$operation_id, $date, $time, 1, 'ru');
+        $alias = new CSOAPOperationStart;
+        $alias->start = $time;
+        $alias->id = $operation_id;
+
+        $res = $this->service->reserveTime($this->officeId, [$alias], $date, 1, "ru");
+
+        //$res = $this->service->reserveTime($this->officeId, (int)$operation_id, $date, $time, 1, "ru");
         return $res;
     }
 
 }
+
+
