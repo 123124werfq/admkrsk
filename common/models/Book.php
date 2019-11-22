@@ -142,7 +142,7 @@ class Book extends \yii\db\ActiveRecord
 
     public function reserveTime($operation_id, $date, $time)
     {
-        $res = $this->service->resserveTime($this->officeId, (int)$operation_id, $date, $time, 1);
+        $res = $this->service->reserveTime($this->officeId, (int)$operation_id, $date, $time, 1);
         return $res;
     }
 
