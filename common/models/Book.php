@@ -196,7 +196,7 @@ class Book extends \yii\db\ActiveRecord
                 $this->operation = (string)$operation_id;
                 $this->pin = $ares->ActivateCode;
                 $this->date = $date;
-                $this->time = $time;
+                $this->time = (string)$time;
                 $this->state = "0";
                 if($this->save())
                 {
