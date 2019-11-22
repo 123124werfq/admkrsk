@@ -146,14 +146,14 @@ class Book extends \yii\db\ActiveRecord
     public function freeIntervals($operation_id, $dateText)
     {
         $of = $this->service->getOfficesForOperation($operation_id);
-
+        var_dump($of);
         if(!isset($of[0]))
             return false;
 
         $ds = explode('.', $dateText);
 
         $intervals = $this->service->getIntervals($of[0]->ID, [$operation_id], $ds[2]."-".$ds[1]."-".$ds[0] , 1);
-
+        var_dump($intervals); die();
         return $intervals;
     }
 
