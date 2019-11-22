@@ -8,7 +8,7 @@ $(document).ready(function() {
             data: $("#program-filter").serialize()
         }).done(function(data) {
             $(".program-list").html(data);
-        });    
+        });
     });
 
     $("#program-filter select, #program-filter input").change(function(){
@@ -179,4 +179,48 @@ $(document).ready(function() {
             $('#top-search').submit();
     });
 
+
+    $(".fileupload").each(function(){
+        var id_input = $(this).data('input');
+        var new_index = 0;
+
+        var uploader = $(this).find('.fileupload_dropzone').dropzone({
+            addRemoveLinks: true,
+            url: "/media/upload",
+            dictRemoveFile: '×',
+            dictCancelUpload: '×',
+            resizeWidth: 1920,
+            previewsContainer: ".fileupload_list",
+            previewTemplate: '<div class="fileupload_item">\
+                                <div class="fileupload_preview">\
+                                    <div class="fileupload_preview-type">\
+                                        <img data-dz-thumbnail />\
+                                    </div>\
+                                </div>\
+                                <div class="fileupload_item-content">\
+                                    <p class="fileupload_item-name" data-dz-name></p>\
+                                    <div class="fileupload_item-status"><span class="fileupload_item-size" data-dz-size></span>\
+                                        <div class="fileupload_item-progress">\
+                                            <div class="fileupload_progress-bar" data-dz-uploadprogress></div>\
+                                        </div><div class="fileupload_item-progress-value">100%</div>\
+                                    </div>\
+                                </div>\
+                            </div>',
+            init: function(){
+                this.on("success", function(file, response){
+
+                    response = JSON.parse(response);
+                    $(file.previewElement).append(
+                        '<input type="hidden" name="FormDynamic[input'+id_input+']['+new_index+'][file_path]" value="'+response.file+'"/>'
+                    );
+
+                    console.log($(file.previewElement).find('.fileupload_preview-type img').attr('src'));
+                    if ($(file.previewElement).find('.fileupload_preview-type img').attr('src')==undefined)
+                        $(file.previewElement).find('.fileupload_preview-type').text(response.file.split('.').pop());
+
+                    new_index++;
+                });
+            }
+        });
+    });
 })

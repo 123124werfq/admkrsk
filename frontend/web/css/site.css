@@ -36,6 +36,42 @@ margin-bottom: 36px;
     background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zd…lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNCIvPiAgICAgICAgPC9nPiAgICA8L2c+PC9zdmc+);
 }
 
+.fileupload_list .dz-remove {
+    cursor: pointer;
+    position: absolute;
+    display: block;
+    right: 20px;
+    top: 50%;
+    margin-top: -5px;
+    color: #C7CCD1;
+    /* font-family: 'Material Icons' !important; */
+    font-weight: bold;
+    font-style: normal;
+    font-size: 23px;
+    margin-top: -11px;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
+    border-bottom: 0px!important;
+}
+
+.fileupload_item-progress {width:76%!important}
+.fileupload_preview-type img {width: 100%;}
+
+.fileupload_list .dz-remove:hover {
+    color: #e4292f;
+}
+
 a[href$=".pdf"]:before {background:url('/img/files/pdf.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
 a[href$=".doc"]:before {background:url('/img/files/doc.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
 a[href$=".xsl"]:before {background:url('/img/files/xsl.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}

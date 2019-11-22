@@ -58,27 +58,11 @@ class CollectionRecord extends \yii\db\ActiveRecord
         ];
     }
 
-    /*public function updateRecord($data)
-    {
-        if (!empty($data))
-        {
-            $update = [];
-            foreach ($this->collection->columns as $key => $column)
-            {
-                if (isset($data[$column->alias]))
-                    Yii::$app->db->createCommand()->update('db_collection_value',['value'=>$data[$column->alias]],['id_record'=>$this->id_record,'id_column'=>$column->id_column])->execute();
-            }
-
-            return $this;
-        }
-    }*/
-
     public function getLineValue()
     {
         $data = $this->getData();
         return implode(' ', $data);
     }
-
 
     public function afterSave($insert, $changedAttributes)
     {
@@ -124,7 +108,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                     if ($updateData!==null)
                     {
-                        $count = Yii::$app->db->createCommand("SELECT count(*) FROM db_collection_value WHERE id_record=$this->id_record AND 
+                        $count = Yii::$app->db->createCommand("SELECT count(*) FROM db_collection_value WHERE id_record=$this->id_record AND
                             id_column=$column->id_column")->queryScalar();
 
                         if ($count>0)
@@ -132,7 +116,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                                 'id_record'=>$this->id_record,
                                 'id_column'=>$column->id_column
                             ])->execute();
-                        else 
+                        else
                             Yii::$app->db->createCommand()->insert('db_collection_value',[
                                 'id_record'=>$this->id_record,
                                 'id_column'=>$column->id_column,
