@@ -200,7 +200,8 @@ class Book extends \yii\db\ActiveRecord
                 $this->state = 0;
                 if($this->save())
                 {
-                    $active = $this->service->Activate($ares->ActivateCode);
+                    //$active = $this->service->Activate($ares->ActivateCode);
+                    $active = 0;
                     if($active == 0)
                     {
                         $this->state = 1;
