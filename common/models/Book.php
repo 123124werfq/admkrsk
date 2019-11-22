@@ -186,7 +186,7 @@ class Book extends \yii\db\ActiveRecord
         var_dump($res);
         var_dump($alias);
         var_dump($of[0]->ID);
-        die();
+        //die();
 
         if(isset($res->reserveCode) && !empty($res->reserveCode))
         {
@@ -205,7 +205,8 @@ class Book extends \yii\db\ActiveRecord
             //$client->Operation_id = $operation_id;
             $client->AInfo = json_encode(['phone' => $phone]);
             //$client->Date = str_replace("-", ".", $date);
-            $client->Date = $date;
+            //$client->Date = $date;
+            $client->Date = "2019-11-28T17:00:00.000Z";
             $client->time = $time;
 
             $ares = $this->service->activateTime($of[0]->ID, $client, 1);
