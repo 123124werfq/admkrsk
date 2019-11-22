@@ -10,6 +10,17 @@ class CSOAPOperationStart{
     public $id;
 }
 
+class CSOAPClient {
+    public $Name;
+    public $Email;
+    public $Operation_id;
+    public $Station;
+    public $AInfo;
+    public $Date;
+    public $Time;
+}
+
+
 /**
  * This is the model class for table "db_book".
  *
@@ -152,7 +163,25 @@ class Book extends \yii\db\ActiveRecord
         $alias->start = $time;
         $alias->id = $operation_id;
 
-        $res = $this->service->reserveTime($this->officeId, [$alias], $date, 1, "ru");
+        $res = $this->service->reserveTime($this->officeId, [$alias], $date, 1, "ru"); // 1341
+
+        if(isset($res->reserveCode))
+        {
+            $user = User::findOne(Yii::$app->user->id);
+            $esiauser = $user->getEsiainfo()->one();
+
+            $client = new CSOAPClient;
+            $client->Name = $esiauser->first_name . ' ' . $esiauser->middle_name. ' ' . $esiauser->last_name;
+            $client->Email = $user->email;
+            $client->Operation_id = $operation_id;
+            $client->AInfo = json_encode(['phone' => $esiauser->mobile, 'comment' => 'test']);
+            $client->Date = str_replace("-", ".", $date);
+            $client->time = $time;
+
+            $ares = $this->service->activateTime($this->officeId, $client, 1);
+
+            var_dump($ares);
+        }
 
         //$res = $this->service->reserveTime($this->officeId, (int)$operation_id, $date, $time, 1, "ru");
         return $res;
