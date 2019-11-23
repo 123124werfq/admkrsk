@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-2-third">
                     <?php
-                        //echo frontend\widgets\Breadcrumbs::widget(['page'=>$page])
+                        echo frontend\widgets\Breadcrumbs::widget(['page'=>$page])
                     ?>
                 </div>
             </div>
@@ -83,7 +83,7 @@
                 </div>
                 <div class="col-third order-xs-0">
                     <?php
-                        //echo frontend\widgets\RightMenuWidget::widget(['page'=>$page])
+                        echo frontend\widgets\RightMenuWidget::widget(['page'=>$page])
                     ?>
                 </div>
             </div>

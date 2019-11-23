@@ -194,22 +194,26 @@ class Book extends \yii\db\ActiveRecord
                 $this->id_user = Yii::$app->user->id;
                 $this->office = (string)$of[0]->ID;
                 $this->operation = (string)$operation_id;
-                $this->pin = $ares->ActivateCode;
+                $this->pin = $ares->RegCode;
                 $this->date = $date;
                 $this->time = (string)$time;
                 $this->state = "0";
                 if($this->save())
                 {
-                    //$active = $this->service->Activate($ares->ActivateCode);
-                    $active = 0;
+                    $active = $this->service->Activate($ares->ActivateCode);
+                    //$active = 0;
                     if($active == 0)
                     {
                         $this->state = 1;
                         $this->updateAttributes(['state']);
+                        return $ares->ActivateCode;
                     }
+
+                    return false;
                 }
                 else
                 {
+                    return false;
                     var_dump($this->errors);
                     die();
                 }
@@ -220,6 +224,23 @@ class Book extends \yii\db\ActiveRecord
 
         //$res = $this->service->reserveTime($this->officeId, (int)$operation_id, $date, $time, 1, "ru");
         return $res;
+    }
+
+    public function deleteTime($pin)
+    {
+        $user = User::findOne(Yii::$app->user->id);
+
+        if(!$user)
+            return false;
+
+        $book = Book::find()->where(['id_user' => Yii::$app->user->id])->andWhere(['pin' => $pin])->andWhere(['state' => '1'])->one();
+
+        if(!$book)
+            return false;
+
+        $res = $this->service->Delete($book->office, $book->date, $pin);
+
+        return $this->redirect('/personal/book');
     }
 
 }
