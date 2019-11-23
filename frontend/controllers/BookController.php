@@ -41,7 +41,7 @@ class BookController extends \yii\web\Controller
     {
         $id_user = Yii::$app->user->id;
 
-        $books = Book::find()->where(['id_user' => $id_user])->andWhere("(extract(epoch from to_timestamp(date, 'YYYY-MM-DD'))+ CAST(coalesce(time, '0') AS integer)*60) > extract(epoch from now())");
+        $books = Book::find()->where(['id_user' => $id_user])->andWhere(['state' => '1'])->andWhere("(extract(epoch from to_timestamp(date, 'YYYY-MM-DD'))+ CAST(coalesce(time, '0') AS integer)*60) > extract(epoch from now())");
         $dataProvider = new ActiveDataProvider([
             'query' => $books
         ]);
