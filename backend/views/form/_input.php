@@ -1,5 +1,21 @@
-<div data-id="<?=$element->id_element?>" class="form-element col">
-	<div class="input form-control"><?=$element->input->name?></div>
+<?php
+	$styles = [];
+
+	if (!empty($element->options))
+	{
+		foreach ($element->options as $style => $value)
+		{
+			$styles[$style] = $style.':'.$value;
+
+			if ($style=='width')
+				$styles[$style] .= '%';
+			else
+				$styles[$style] .= 'px';
+		}
+	}
+?>
+<div data-id="<?=$element->id_element?>" class="form-element col" <?=(!empty($styles))?'style="'.implode(';',$styles).'"':''?>>
+	<div class="input form-control" <?=(!empty($styles['font-size']))?'style="'.$styles['font-size'].'"':''?>><?=$element->input->name?></div>
 	<div class="btn-group">
 	    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 	        ...

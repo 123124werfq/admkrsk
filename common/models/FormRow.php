@@ -38,6 +38,7 @@ class FormRow extends \yii\db\ActiveRecord
             [['id_form', 'created_at', 'ord', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['ord','id_form'], 'required'],
             [['content'], 'string'],
+            [['options'], 'safe'],
         ];
     }
 
@@ -50,6 +51,7 @@ class FormRow extends \yii\db\ActiveRecord
             'id_row' => 'ID',
             'id_form' => 'Форма',
             'ord' => 'Ord',
+            'options' => 'Настройки',
             'content' => 'Содержимое',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
@@ -73,5 +75,31 @@ class FormRow extends \yii\db\ActiveRecord
     public function getForm()
     {
         return $this->hasOne(Form::class, ['id_form' => 'id_form']);
+    }
+
+    public function getOptionsData()
+    {
+        $options = [
+            'width'=>[
+                'name'=>'Положение элементов',
+                'type'=>'text-align',
+                'value'=>'left',
+                'values'=>[
+                    'left'=>'Влево',
+                    'right'=>'Вправо',
+                    'center'=>'По центру',
+                ]
+            ],
+        ];
+
+        $data = $this->options;
+
+        foreach ($options as $key => $value)
+        {
+            if (!empty($data[$key]))
+                $options[$key]['value'] = $data[$key];
+        }
+
+        return $options;
     }
 }
