@@ -59,6 +59,7 @@ class Collection extends \yii\db\ActiveRecord
             [['name', 'alias'], 'string', 'max' => 255],
             [['id_parent_collection'], 'integer'],
             [['filter', 'options'], 'safe'],
+            [['template','template_element'], 'string'],
             /*['access_user_ids', 'each', 'rule', 'is_dictionary' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],*/
         ];
@@ -76,6 +77,8 @@ class Collection extends \yii\db\ActiveRecord
             'id_form' => 'Форма редактирования',
             'id_parent_collection' => 'Это справочник',
             'is_dictionary' => 'Это справочник',
+            'template' => 'Шаблон для страницы',
+            'template_element' => 'Шаблон для элемента',
             'created_at' => 'Создано',
             'created_by' => 'Создал',
             'updated_at' => 'Обновлено',

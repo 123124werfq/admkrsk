@@ -14,9 +14,7 @@ use common\models\Collection;
 
 <?php $form = ActiveForm::begin(); ?>
 
-<?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-
-<?= $form->field($model, 'is_dictionary')->checkBox(['maxlength' => true]) ?>
+<?= $form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
 
 <div class="row">
     <div class="col-md-2">
@@ -75,6 +73,11 @@ use common\models\Collection;
 
 <?php if (Yii::$app->user->can('admin.collection')): ?>
     <hr>
+
+    <?= $form->field($model, 'template')->textInput(['class' => 'form-control'])?>
+
+    <?= $form->field($model, 'template_element')->textInput(['class' => 'form-control'])?>
+
     <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'access_user_ids')->widget(UserAccessControl::class) ?>

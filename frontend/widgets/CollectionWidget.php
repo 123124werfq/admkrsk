@@ -12,6 +12,8 @@ class CollectionWidget extends \yii\base\Widget
     public $columns = [];
     public $limit = 20;
 
+    public $display = 'table';
+
     public function run()
     {
         if (!empty($this->attributes))
@@ -33,7 +35,7 @@ class CollectionWidget extends \yii\base\Widget
         $query = $model->getDataQueryByOptions($this->columns)->limit(30);
         $columns = $query->columns;
 
-        return $this->render('collection',[
+        return $this->render($this->display,[
         	'model'=>$model,
             'columns'=>$columns,
             'allrows'=>$query->getArray(),
