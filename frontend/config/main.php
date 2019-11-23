@@ -67,6 +67,8 @@ return [
                 'address/district'=>'address/district',
                 'address/street'=>'address/street',
                 'address/house'=>'address/house',
+                'book/available' => 'book/available',
+                'book/intervals' => 'book/intervals',
                 [
                     'class' => 'frontend\components\PravoUrlRule',
                 ],
