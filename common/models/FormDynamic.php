@@ -54,7 +54,7 @@ class FormDynamic extends DynamicModel
         }
     }
 
-    public function prepareData($post=null)
+    public function prepareData($columnAsIndex=fale, $post=null)
     {
         $data = [];
 
@@ -64,20 +64,22 @@ class FormDynamic extends DynamicModel
 
             if (!empty($this->$attribute))
             {
+                $index = ($columnAsIndex)?$input->id_column:$input->id_input;
+
                 switch ($input->type) {
                     case CollectionColumn::TYPE_INTEGER:
-                        $data[$input->id_input] = (float)$this->$attribute;
+                        $data[$index] = (float)$this->$attribute;
                         break;
                     case CollectionColumn::TYPE_INPUT:
-                        $data[$input->id_input] = (string)$this->$attribute;
+                        $data[$index] = (string)$this->$attribute;
                         break;
                     case CollectionColumn::TYPE_DATE:
                     case CollectionColumn::TYPE_DATETIME:
-                        $data[$input->id_input] = strtotime($this->$attribute);
+                        $data[$index] = strtotime($this->$attribute);
                         break;
                     case CollectionColumn::TYPE_FILE:
 
-                        $data[$input->id_input] = [];
+                        $data[$index] = [];
 
                         if (!empty($this->$attribute) && is_array($this->$attribute))
                         {
@@ -86,13 +88,19 @@ class FormDynamic extends DynamicModel
                                 $media = new Media;
                                 $media->getImageAttributes($file['file_path']);
 
-                                $data[$input->id_input][] = $media;
+                                if ($media->save())
+                                    $media->saveFile();
+
+                                $data[$index][] = $media->id_media;
                             }
                         }
 
+                        $data[$index] = json_encode($data[$index]);
+
                         break;
                     default:
-                        $this->addRule(['input'.$input->id_input], 'safe');
+
+                        $data[$index] = $this->$attribute;
                         break;
                 }
             }

@@ -153,6 +153,18 @@ class Page extends \yii\db\ActiveRecord
         Yii::$app->db->createCommand($sql)->execute();
     }
 
+    public static function getUrlByID($id)
+    {
+        $page = Page::findOne($id);
+
+        if (!empty($page))
+        {
+            return $page->getUrl();
+        }
+
+        return false;
+    }
+
     public function afterSave($insert, $changedAttributes)
     {
         if (isset($changedAttributes['id_parent']) || $insert)

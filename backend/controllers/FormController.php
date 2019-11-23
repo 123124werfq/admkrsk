@@ -6,6 +6,7 @@ use common\models\Action;
 use Yii;
 use common\models\Form;
 use common\models\FormRow;
+use common\models\Collection;
 
 use backend\models\search\FormSearch;
 use yii\web\Controller;
@@ -84,8 +85,20 @@ class FormController extends Controller
     {
         $model = new Form();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
+            $collection = new Collection;
+            $collection->name = $model->name;
+            $collection->id_form = $model->id_form;
+
+            if ($collection->save())
+            {
+                $model->id_collection = $collection->id_collection;
+                $model->updateAttributes(['id_collection']);
+            }
+
             $model->createAction(Action::ACTION_CREATE);
+
             return $this->redirect(['view', 'id' => $model->id_form]);
         }
 

@@ -78,9 +78,11 @@ class FormInputController extends Controller
      */
     public function actionCreate($id_row)
     {
-        $row = FormRow::findOne($id_row);
         $model = new FormInput();
-        $model->id_form = $row->id_form;
+
+        $row = FormRow::findOne($id_row);
+        $form = $row->form;
+        $model->id_form = $form->id_form;
 
         if (Yii::$app->request->isAjax)
         {
@@ -94,17 +96,30 @@ class FormInputController extends Controller
         if ($model->load(Yii::$app->request->post()) && !Yii::$app->request->isAjax)
         {
             if (Yii::$app->request->isAjax)
-            {
                 return $this->renderAjax('_form',['model' => $model]);
-            }
 
             if ($model->save())
             {
+                // создается элемент формы
                 $element = new FormElement;
                 $element->id_input = $model->id_input;
                 $element->id_row = $id_row;
                 $element->ord = Yii::$app->db->createCommand("SELECT count(*) FROM form_element WHERE id_row = $id_row")->queryScalar();
                 $element->save();
+
+                // создаем колонку для коллекции
+                $column = new CollectionColumn;
+                $column->name = $model->name;
+                $column->id_collection = $form->id_collection;
+                $column->type = $model->type;
+
+                if ($column->save())
+                {
+                    $model->id_column = $column->id_column;
+                    $model->updateAttributes(['id_column']);
+                }
+                else
+                    print_r($column->errors);
 
                 if (!Yii::$app->request->isAjax)
                     return $this->redirect(['form/view', 'id' => $model->id_form]);

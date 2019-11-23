@@ -44,10 +44,11 @@ class Form extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_collection', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
-            [['id_collection', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','make_collection'], 'integer'],
+            [['id_collection','id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
+            [['id_collection', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','make_collection','id_page'], 'integer'],
             [['name'], 'required'],
-            [['name'], 'string', 'max' => 255],
+            [['message_success'], 'string'],
+            [['name','url'], 'string', 'max' => 255],
         ];
     }
 
@@ -61,6 +62,9 @@ class Form extends \yii\db\ActiveRecord
             'id_collection' => 'Коллекция',
             'name' => 'Название',
             'make_collection'=>'Создать коллекцию',
+            'message_success'=>'Сообщение при успешном отправлении',
+            'id_page'=>'Переход на раздел при успешном отправлении',
+            'url'=>'Переход на ссылку при успешном отправлении',
             'created_at' => 'Создана',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',

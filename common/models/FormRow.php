@@ -69,4 +69,9 @@ class FormRow extends \yii\db\ActiveRecord
     {
         return $this->hasMany(FormElement::class, ['id_row' => 'id_row'])->orderBy('ord ASC');
     }
+
+    public function getForm()
+    {
+        return $this->hasOne(Form::class, ['id_form' => 'id_form']);
+    }
 }

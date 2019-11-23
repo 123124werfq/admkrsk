@@ -111,64 +111,18 @@ class Collection extends \yii\db\ActiveRecord
         ];
     }
 
-    /*public function insertRecord($data)
+    public function insertRecord($data)
     {
         $model = new CollectionRecord;
         $model->id_collection = $this->id_collection;
+        $model->data = $data;
 
-        if (!empty($data) && $model->save())
-        {
-            $insert = [];
-            foreach ($this->columns as $key => $column)
-            {
-                if (isset($data[$column->alias]))
-                    $insert[] = [
-                        'id_column'=>$column->id_column,
-                        'id_record'=>$model->id_record,
-                        'value'=>$data[$column->alias]
-                    ];
-            }
-
-            Yii::$app->db->createCommand()->batchInsert('db_collection_value',['id_column','id_record','value'], $insert)->execute();
-
-            return $model;
-        }
-        return false;
-    }*/
-
-    /*public function updateRecord($id_record,$data)
-    {
-        $model = CollectionRecord::find($id_record);
-        return $model->updateRecord();
-
-        $model->id_collection = $this->id_collection;
-
-        if (!empty($data) && $model->save())
-        {
-            $insert = [];
-            foreach ($this->columns as $key => $column)
-            {
-                if (isset($data[$column->alias]))
-                    $insert[] = [
-                        'id_column'=>$column->id_column,
-                        'id_record'=>$model->id_record,
-                        'value'=>$data[$column->alias]
-                    ];
-            }
-
-            if (!empty($insert))
-            {
-                Yii::$app->db->createCommand()->batchInsert('db_collection_value',['id_column','id_record','value'], $insert)->execute();
-
-                return $model;
-            }
-
-            return false;
-
-        }
+        if ($model->save())
+            return $model->id_record;
 
         return false;
-    }*/
+    }
+
 
     public function getParent()
     {
