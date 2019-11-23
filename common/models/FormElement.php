@@ -38,6 +38,7 @@ class FormElement extends \yii\db\ActiveRecord
             [['id_form', 'id_row', 'type', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
             [['id_form', 'type', 'id_row', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['content'], 'string'],
+            [['options'], 'safe'],
         ];
     }
 
@@ -74,5 +75,34 @@ class FormElement extends \yii\db\ActiveRecord
     public function getForm()
     {
         return $this->hasOne(FormForm::class, ['id_form' => 'id_input']);
+    }
+
+    public function getOptionsData()
+    {
+        $options = [
+            'width'=>[
+                'name'=>'Ширина',
+                'type'=>'number',
+                'value'=>'100',
+                'min'=>1,
+                'max'=>100
+            ],
+            'font-size'=>[
+                'name'=>'Размер шрифта',
+                'type'=>'number',
+                'min'=>1,
+                'value'=>16,
+            ],
+        ];
+
+        $data = $this->options;
+
+        foreach ($options as $key => $value)
+        {
+            if (!empty($data[$key]))
+                $options[$key]['value'] = $data[$key];
+        }
+
+        return $options;
     }
 }

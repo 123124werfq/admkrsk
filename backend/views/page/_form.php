@@ -16,13 +16,20 @@ use common\models\Page;
 
 <?php $form = ActiveForm::begin(); ?>
 
- <?=$form->field($model, 'id_parent')->widget(Select2::class, [
-    'data' => ArrayHelper::map(Page::find()->where('id_page <> '.(int)$model->id_page)->all(), 'id_page', 'title'),
+<?= $form->field($model, 'id_parent')->widget(Select2::class, [
+    'data' => $model->id_parent ? [$model->id_parent=>$model->parent->title]:[],
     'pluginOptions' => [
+        'multiple' => false,
         'allowClear' => true,
-        'placeholder' => 'Выберите родительский раздел',
+        'minimumInputLength' => 2,
+        'placeholder' => 'Начните ввод',
+        'ajax' => [
+            'url' => '/page/list',
+            'dataType' => 'json',
+            'data' => new JsExpression('function(params) { return {q:params.term}; }')
+        ],
     ],
-])?>
+]) ?>
 
 <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 

@@ -119,7 +119,7 @@ $rubs = (!empty($rubs))?$rubs->getArray():[];
                 ])?>
 
                 <hr>
-                
+
                 <?php if (Yii::$app->user->can('admin.news')): ?>
                     <?= $form->field($model, 'access_user_ids')->widget(UserAccessControl::class) ?>
                 <?php endif; ?>

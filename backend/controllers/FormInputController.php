@@ -83,6 +83,7 @@ class FormInputController extends Controller
         $row = FormRow::findOne($id_row);
         $form = $row->form;
         $model->id_form = $form->id_form;
+        $model->populateRelation('element', new FormElement);
 
         if (Yii::$app->request->isAjax)
         {
@@ -102,6 +103,7 @@ class FormInputController extends Controller
             {
                 // создается элемент формы
                 $element = new FormElement;
+                $element->load(Yii::$app->request->post());
                 $element->id_input = $model->id_input;
                 $element->id_row = $id_row;
                 $element->ord = Yii::$app->db->createCommand("SELECT count(*) FROM form_element WHERE id_row = $id_row")->queryScalar();
@@ -149,7 +151,11 @@ class FormInputController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $element = $model->element;
+        $element->load(Yii::$app->request->post());
+
+        if ($model->load(Yii::$app->request->post()) && $model->save() && $element->save())
+        {
             if (!Yii::$app->request->isAjax)
                 return $this->redirect(['form/view', 'id' => $model->id_form]);
         }

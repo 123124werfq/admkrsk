@@ -1,5 +1,5 @@
 <div data-id="<?=$element->id_element?>" class="form-element col">
-	<input type="text" class="form-control" name="" placeholder="<?=$element->input->name?>" readonly/>
+	<div class="input form-control"><?=$element->input->name?></div>
 	<div class="btn-group">
 	    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 	        ...

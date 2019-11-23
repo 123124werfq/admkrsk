@@ -14,12 +14,10 @@ use common\models\CollectionColumn;
 $types = FormInputType::find()->all();
 
 $select_ids = [CollectionColumn::TYPE_SELECT,CollectionColumn::TYPE_RADIO];
+
 $visibleInputs = ArrayHelper::map(FormInput::find()
                     ->where(['id_form'=>$model->id_form, 'type'=>CollectionColumn::TYPE_SELECT])
                     ->andWhere('id_input <> '.(int)$model->id_input)->all(), 'id_input', 'name');
-/* @var $this yii\web\View */
-/* @var $model common\models\FormInput */
-/* @var $form yii\widgets\ActiveForm */
 ?>
 
 <div class="form-input-form">
@@ -28,6 +26,12 @@ $visibleInputs = ArrayHelper::map(FormInput::find()
             'id' => 'formInput-form'
         ]
     ]); ?>
+
+    <?php
+        echo $this->render('_element_options',['element'=>$model->element]);
+    ?>
+
+    <hr>
 
     <?= $form->field($model, 'required')->checkBox()?>
 

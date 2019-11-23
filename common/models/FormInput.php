@@ -111,6 +111,11 @@ class FormInput extends \yii\db\ActiveRecord
         return $values;
     }
 
+    public function getElement()
+    {
+        return $this->hasOne(FormElement::class, ['id_input' => 'id_input']);
+    }
+
     public function getTypeOptions()
     {
         return $this->hasOne(FormInputType::class, ['id_type' => 'id_type']);
@@ -120,5 +125,5 @@ class FormInput extends \yii\db\ActiveRecord
     {
         return $this->hasOne(FormInput::class, ['id_input' => 'visibleInput']);
     }
-    
+
 }
