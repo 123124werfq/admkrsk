@@ -3,22 +3,9 @@
 namespace common\models;
 
 use Yii;
+use common\components\suosoap\CSOAPClient;
+use common\components\suosoap\CSOAPOperationStart;
 
-
-class CSOAPOperationStart{
-    public $start;
-    public $id;
-}
-
-class CSOAPClient {
-    public $Name;
-    public $Email;
-    public $Operation_id;
-    public $Station;
-    public $AInfo;
-    public $Date;
-    public $Time;
-}
 
 
 /**
@@ -173,16 +160,13 @@ class Book extends \yii\db\ActiveRecord
 
     public function reserveTime($operation_id, $date, $time)
     {
-        $alias = new CSOAPOperationStart;
-        $alias->start = $time;
-        $alias->id = $this->getAliasFromOperation($operation_id);
+        $alias = new CSOAPOperationStart($time, $operation_id);
 
         $of = $this->service->getOfficesForOperation($operation_id);
         if(!isset($of[0]))
             return false;
 
         $res = $this->service->reserveTime($of[0]->ID, [$alias], $date, 1, "ru"); // 1341
-
 
         if(isset($res->reserveCode) && !empty($res->reserveCode))
         {
@@ -194,17 +178,42 @@ class Book extends \yii\db\ActiveRecord
             $phone = str_replace(")", "", $phone);
             $phone = str_replace(" ", "", $phone);
 
+            $client = new CSOAPClient(
+                $esiauser->first_name . ' ' . $esiauser->middle_name. ' ' . $esiauser->last_name,
+                "",
+                "",
+                json_encode(['phone' => $phone]),
+                $date,
+                $time,
+                "");
 
-            $client = new CSOAPClient;
-            $client->Name = $esiauser->first_name . ' ' . $esiauser->middle_name. ' ' . $esiauser->last_name;
-            //$client->Email = $user->email;
-            //$client->Operation_id = $operation_id;
-            $client->AInfo = json_encode(['phone' => $phone]);
-            //$client->Date = str_replace("-", ".", $date);
-            $client->Date = $date;
-            $client->time = $time;
+            $ares = $this->service->activateTime($of[0]->ID, $client, $res->reserveCode);
 
-            $ares = $this->service->activateTime($of[0]->ID, $client, 1);
+            if(!empty($ares->ActivateCode))
+            {
+                $this->id_user = Yii::$app->user->id;
+                $this->office = (string)$of[0]->ID;
+                $this->operation = (string)$operation_id;
+                $this->pin = $ares->ActivateCode;
+                $this->date = $date;
+                $this->time = (string)$time;
+                $this->state = "0";
+                if($this->save())
+                {
+                    //$active = $this->service->Activate($ares->ActivateCode);
+                    $active = 0;
+                    if($active == 0)
+                    {
+                        $this->state = 1;
+                        $this->updateAttributes(['state']);
+                    }
+                }
+                else
+                {
+                    var_dump($this->errors);
+                    die();
+                }
+            }
 
             return($ares);
         }
