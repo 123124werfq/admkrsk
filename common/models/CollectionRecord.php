@@ -47,7 +47,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
     {
         return [
             'id_record' => 'Id Record',
-            'id_collection' => 'Id Collection',
+            'id_collection' => 'Список',
             'ord' => 'Ord',
             'created_at' => 'Created At',
             'created_by' => 'Created By',

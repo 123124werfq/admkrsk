@@ -7,10 +7,13 @@ use common\models\FormDynamic;
 
 class FormsWidget extends \yii\base\Widget
 {
-    public $attributes;
-	public $id_form;
-	public $form;
-	public $template = 'form';
+    public $attributes; // атрибуты приходят из текстового редактора
+
+	public $id_form = null; // id моделя формы
+	public $form = null; // модель формы
+	public $template = 'form'; // шаблон
+    public $inputs = []; // инпуты которые нужно передать в POST
+    public $action = null; // куда направляеть форму, если пусто то пойдут в унивартсальный контролер
 
     public function run()
     {
@@ -28,6 +31,8 @@ class FormsWidget extends \yii\base\Widget
         return $this->render('form/'.$this->template,[
         	'form'=>$this->form,
             'model'=>$model,
+            'inputs'=>$this->inputs,
+            'action'=>$this->action,
         ]);
     }
 }
