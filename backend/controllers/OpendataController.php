@@ -2,7 +2,9 @@
 
 namespace backend\controllers;
 
+use backend\models\forms\OpendataUploadForm;
 use common\models\Action;
+use common\models\OpendataData;
 use Yii;
 use common\models\Opendata;
 use backend\models\search\OpendataSearch;
@@ -10,6 +12,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * OpendataController implements the CRUD actions for Opendata model.
@@ -61,10 +64,31 @@ class OpendataController extends Controller
                     ],
                     [
                         'allow' => true,
+                        'actions' => ['upload'],
+                        'roles' => ['backend.opendata.update'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => Opendata::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
                         'actions' => ['delete'],
                         'roles' => ['backend.opendata.delete'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
+                            'class' => Opendata::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['delete-data'],
+                        'roles' => ['backend.opendata.delete'],
+                        'roleParams' => [
+                            'entity_id' => function() {
+                                $data = OpendataData::findOne(Yii::$app->request->get('id'));
+                                return $data->structure->opendata->id_opendata ?? null;
+                            },
                             'class' => Opendata::class,
                         ],
                     ],
@@ -183,6 +207,56 @@ class OpendataController extends Controller
     }
 
     /**
+     * Upload files.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException
+     */
+    public function actionUpload($id)
+    {
+        $model = $this->findModel($id);
+
+        $uploadForm = new OpendataUploadForm([
+            'id_opendata' => $model->id_opendata,
+        ]);
+
+        if (Yii::$app->request->isPost) {
+            $uploadForm->structure = UploadedFile::getInstance($uploadForm, 'structure');
+            $uploadForm->data = UploadedFile::getInstance($uploadForm, 'data');
+
+            if ($uploadForm->upload()) {
+                return $this->redirect(['view', 'id' => $model->id_opendata]);
+            }
+        }
+
+        return $this->render('upload', [
+            'model' => $model,
+            'uploadForm' => $uploadForm,
+        ]);
+    }
+
+    /**
+     * Deletes an existing Opendata model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionDeleteData($id)
+    {
+        $data = $this->findDataModel($id);
+
+        Yii::$app->db->transaction(function ($db) use ($data) {
+            $data->delete();
+            $data->structure->delete();
+        });
+
+        return $this->redirect(['view', 'id' => $data->structure->opendata->id_opendata]);
+    }
+
+    /**
      * Finds the Opendata model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
@@ -192,6 +266,22 @@ class OpendataController extends Controller
     protected function findModel($id)
     {
         if (($model = Opendata::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * Finds the OpendataData model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return OpendataData the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findDataModel($id)
+    {
+        if (($model = OpendataData::findOne($id)) !== null) {
             return $model;
         }
 

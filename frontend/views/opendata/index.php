@@ -8,8 +8,8 @@
 use common\models\Opendata;
 use yii\helpers\Html;
 
-$list = Yii::$app->publicStorage->getMetadata(Opendata::OPENDATA_LIST_PATH);
-$listUrl = Yii::$app->publicStorage->getPublicUrl(Opendata::OPENDATA_LIST_PATH);
+$list = Opendata::getListMetadata();
+$listUrl = Opendata::getListUrl();
 ?>
 <div class="main">
     <div class="container">
@@ -31,8 +31,8 @@ $listUrl = Yii::$app->publicStorage->getPublicUrl(Opendata::OPENDATA_LIST_PATH);
             <div class="col-2-third">
                 <div class="file-list">
                     <div class="file-item">
-                        <div class="file-td file-td__name">Экспорт реестра (CSV)</div>
-                        <div class="file-td file-td__type">CSV, <?= Yii::$app->formatter->asShortSize($list['size'], 0) ?></div>
+                        <div class="file-td file-td__name">Экспорт реестра (<?= mb_strtoupper($list['extension']) ?>)</div>
+                        <div class="file-td file-td__type"><?= mb_strtoupper($list['extension']) ?>, <?= Yii::$app->formatter->asShortSize($list['size'], 0) ?></div>
                         <div class="file-td file-td__control">
                             <a href="<?= $listUrl ?>" class="btn btn__secondary btn__block-sm">Скачать <i class="material-icons btn-icon btn-icon__right btn-icon__sm">get_app</i></a>
                         </div>
