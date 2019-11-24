@@ -58,6 +58,8 @@ class FormDynamic extends DynamicModel
     {
         $data = [];
 
+        print_r($this->attributes);
+
         foreach ($this->inputs as $key => $input)
         {
             $attribute = 'input'.$input->id_input;
@@ -72,6 +74,9 @@ class FormDynamic extends DynamicModel
                         break;
                     case CollectionColumn::TYPE_INPUT:
                         $data[$index] = (string)$this->$attribute;
+                        break;
+                    case CollectionColumn::TYPE_JSON:
+                        $data[$index] = json_encode($this->$attribute);
                         break;
                     case CollectionColumn::TYPE_DATE:
                     case CollectionColumn::TYPE_DATETIME:
@@ -105,6 +110,8 @@ class FormDynamic extends DynamicModel
                 }
             }
         }
+
+        print_r($data);
 
         return $data;
     }

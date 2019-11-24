@@ -265,17 +265,20 @@ jQuery(document).ready(function()
                   $(win.document.body).find('table')
                           .addClass('compact')
                           .css('font-size', 'inherit');
-          }
+             }
             }
         ]
     });
 
+    $("#CollectionRecord button.btn-primary").click(function(){
+        $("#CollectionRecord form input[type=submit]").click();
+        return false;
+    });
 
     csrf = $('meta[name=csrf-param]').prop('content');
     csrf_value = $('meta[name=csrf-token]').prop('content');
 
     $(".table-responsive").delegate('.update-record a','click',function(){
-
 
       var $link = $(this);
 

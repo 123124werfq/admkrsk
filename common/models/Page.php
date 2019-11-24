@@ -176,10 +176,6 @@ class Page extends \yii\db\ActiveRecord
             $this->updateAttributes(['path']);
         }*/
 
-        if ($this->access_user_ids) {
-
-        }
-
         parent::afterSave($insert, $changedAttributes);
     }
 

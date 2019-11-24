@@ -304,104 +304,7 @@ class CollectionController extends Controller
      */
     public function actionView($id)
     {
-        $model = $this->findModel($id);
 
-        $query = $model->getDataQuery();
-        $columns = $model->getColumns()->all();
-
-        $dataProviderColumns = [
-            ['attribute'=>'id_record','label'=>'#'],
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '<span class="btn btn-default update-record">{update}</span> <span class="btn btn-default">{delete}</span>',
-                'contentOptions'=>['class'=>'button-column'],
-                'urlCreator' => function ($action, $model, $key, $index) use ($id)
-                {
-                    if ($action === 'update') {
-                        $url ='record?id_record='.$model['id_record'].'&id='.$id;
-                        return $url;
-                    }
-                    if ($action === 'delete') {
-                        $url ='delete-record?id='.$model['id_record'];
-                        return $url;
-                    }
-                }
-            ],
-        ];
-
-        $sortAttributes = ['id_record'];
-        foreach ($columns as $key => $col) {
-
-            $dataProviderColumns[$col->id_column] = [
-                'label'=>$col->name,
-                'attribute'=>$col->id_column,
-                'format' => 'text',
-            ];
-
-            if ($col->type==CollectionColumn::TYPE_INTEGER)
-                $dataProviderColumns[$col->id_column]['format'] = 'integer';
-
-            if ($col->type==CollectionColumn::TYPE_DATE)
-                $dataProviderColumns[$col->id_column]['format'] = ['date', 'php:d.m.Y'];
-
-            if ($col->type==CollectionColumn::TYPE_DATETIME)
-                $dataProviderColumns[$col->id_column]['format'] = ['date', 'php:d.m.Y H:i'];
-
-            $sortAttributes[] = [
-                $col->id_column => [
-                    'asc' => [$col->id_column => SORT_ASC],
-                    'desc' => [$col->id_column => SORT_DESC],
-                    'default' => SORT_ASC
-                ],
-            ];
-        }
-
-        /*$dataProvider->setSort([
-            'attributes' => [
-                'product_name' => [
-                    'asc' => ['product_name' => SORT_ASC],
-                    'desc' => ['product_name' => SORT_DESC],
-                    'default' => SORT_ASC
-                ],
-                'date' => [
-                    'asc' => ['date' => SORT_ASC],
-                    'desc' => ['date' => SORT_DESC],
-                    'default' => SORT_ASC,
-                ],
-            ],
-            'defaultOrder' => [
-                'date' => SORT_ASC
-            ]
-        ]);*/
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-            'sort' => [
-                'attributes'=>$sortAttributes,
-                'defaultOrder' => [
-                    'id_record' => SORT_DESC
-                ]
-            ]
-        ]);
-
-//print_r($sortAttributes);
-        /*$dataProvider->setSort([
-            'attributes' => $sortAttributes
-        ]);*/
-
-         /*$dataProvider->sort->attributes['cat.name'] = [
-            'asc' => ['cat.name' => SORT_ASC],
-            'desc' => ['cat.name' => SORT_DESC],
-        ];*/
-
-        return $this->render('view', [
-            'model' => $model,
-            'columns' => $dataProviderColumns,
-            'dataProvider' => $dataProvider,
-        ]);
     }
 
     public function actionRecord($id,$id_record=null)
@@ -457,7 +360,6 @@ class CollectionController extends Controller
             }
         }
 
-
         if (Yii::$app->request->isAjax)
             return $this->renderAjax('redactor',[
                 'model' => $model,
@@ -467,6 +369,8 @@ class CollectionController extends Controller
             'model' => $model,
         ]);
     }
+
+
     /**
      * Creates a new Collection model.
      * If creation is successful, the browser will be redirected to the 'view' page.

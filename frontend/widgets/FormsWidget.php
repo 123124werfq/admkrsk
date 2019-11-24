@@ -14,6 +14,7 @@ class FormsWidget extends \yii\base\Widget
 	public $template = 'form'; // шаблон
     public $inputs = []; // инпуты которые нужно передать в POST
     public $action = null; // куда направляеть форму, если пусто то пойдут в унивартсальный контролер
+    public $data = null; // данные
 
     public function run()
     {
@@ -26,7 +27,7 @@ class FormsWidget extends \yii\base\Widget
         if (empty($this->form))
         	return false;
 
-        $model = new FormDynamic($this->form);
+        $model = new FormDynamic($this->form,$data);
 
         return $this->render('form/'.$this->template,[
         	'form'=>$this->form,

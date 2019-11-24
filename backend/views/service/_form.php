@@ -29,7 +29,7 @@ if (!empty($id_situations))
                 'placeholder' => 'Форма приема заявления',
             ],
         ])?>
-        
+
         <?=$form->field($model, 'id_rub')->widget(Select2::class, [
             'data' => ArrayHelper::map(ServiceRubric::find()->joinWith('childs as childs')->all(), 'id_rub', 'name'),
             'pluginOptions' => [

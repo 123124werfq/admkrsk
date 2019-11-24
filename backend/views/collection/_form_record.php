@@ -8,7 +8,9 @@
 ?>
 <?=Html::hiddenInput("CollectionRecord[id_record]",$model->id_record);?>
 
-<?php 
+<?=\frontend\widgets\FormsWidget::run(['form'=>$collection->form])?>
+<?php
+/*
 foreach ($collection->getColumns()->indexBy('id_column')->all() as $ckey => $column) {?>
     <div class="row form-group">
         <div class="col-sm-2 text-right">
@@ -41,9 +43,6 @@ foreach ($collection->getColumns()->indexBy('id_column')->all() as $ckey => $col
                 case $column::TYPE_RICHTEXT:
                     echo Html::textArea("CollectionRecord[$ckey]",(isset($data[$ckey]))?$data[$ckey]:'',['class'=>'form-control','id'=>'Value_'.$ckey,'placeholder'=>$column->name,'redactor'=>true]);
                     break;
-                /*case $column::TYPE_MULTISELECT:
-                    echo Html::dropDownList("CollectionRecord[$ckey]",(isset($data[$ckey]))?$data[$ckey]:'',$column->variables,['class'=>'form-control','id'=>'Value_'.$ckey,'prompt'=>$column->name,'multyple'=>true]);
-                    break;*/
                 case $column::TYPE_MAP:
                     //echo Html::textInput("CollectionRecord[$ckey]",(isset($data[$ckey]))?$data[$ckey]:'',['class'=>'form-control','id'=>'Value_'.$ckey,'placeholder'=>$column->name]);
                     echo MapInputWidget::widget(['name' => 'CollectionRecord', 'index' => $ckey]);
@@ -63,5 +62,5 @@ foreach ($collection->getColumns()->indexBy('id_column')->all() as $ckey => $col
         ?>
         </div>
     </div>
-    <?php }?>
+    <?php }*/?>
 </div>

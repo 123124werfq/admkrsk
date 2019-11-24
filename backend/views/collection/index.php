@@ -36,8 +36,7 @@ if (Yii::$app->user->can('admin.collection')) {
                         return $model->getItems()->count();
                     }
                 ],
-                'is_dictionary',
-                //'created_by',
+                'created_at:date',
                 //'updated_at',
                 //'updated_by',
                 //'deleted_at',
@@ -45,7 +44,12 @@ if (Yii::$app->user->can('admin.collection')) {
 
                 [
                     'class' => 'yii\grid\ActionColumn',
-                    'contentOptions'=>['class'=>'button-column']
+                    'contentOptions'=>['class'=>'button-column'],
+                    'buttons' => [
+                        'view' => function ($url, $model, $key) {
+                            return Html::a('', ['/collection-record/index', 'id' => $model->id_collection],['class' => 'glyphicon glyphicon-eye-open']);
+                        },
+                    ],
                 ],
             ],
             'tableOptions'=>[

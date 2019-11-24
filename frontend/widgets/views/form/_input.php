@@ -5,6 +5,14 @@
 	use yii\web\JsExpression;
 
 	$options = $input->options;
+	$clear = [];
+
+	if (!empty($options))
+		foreach ($options as $key => $value)
+			if (!empty($value))
+				$clear[$key] = $value;
+
+	$options = $clear;
 
 	$options['class'] = 'form-control';
 
@@ -219,7 +227,41 @@ JS;
 			case CollectionColumn::TYPE_HOUSE:
 				echo $form->field($model, "input$input->id_input")->dropDownList($input->getArrayValues(),$options);
 				break;
+			case CollectionColumn::TYPE_JSON:
+				$columns = $input->getArrayValues();
 
+?>
+				<table class="form-table">
+					<thead>
+						<tr>
+						<?php foreach ($columns as $key => $column) {
+							echo '<th>'.$column.'</th>';
+						}?>
+						<th></th>
+						</tr>
+					</thead>
+					<tbody id="inputs<?=$input->id_input?>">
+						<tr>
+							<?php
+								$i = 0;
+								foreach ($columns as $key => $column) {
+									echo '<td><input id="input'.$input->id_input.'_col'.$i.'" type="text" name="FormDynamic[input'.$input->id_input.'][0]['.$i.']" class="form-control"/></td>';
+									$i++;
+								}
+							?>
+							<td width="10" class="td-close">
+								<a class="close" onclick="return removeRow(this)" href="javascript:">close</a>
+							</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<td colspan="<?=count($columns)+1?>">
+							<a onclick="addInput('inputs<?=$input->id_input?>')" class="btn btn__gray" href="javascript:">Добавить</a>
+						</td>
+					</tfoot>
+				</table>
+<?php
+				break;
 			default:
 				break;
 		}

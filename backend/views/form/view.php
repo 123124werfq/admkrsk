@@ -59,7 +59,6 @@ $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $
     	</div>
     </div>
 </div>
-
 <div id="FormElement" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -69,6 +68,6 @@ $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $
         <button type="submit" class="btn btn-primary">Сохранить</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
       </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div>
+  </div>
+</div>

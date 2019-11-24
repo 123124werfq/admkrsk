@@ -1,3 +1,49 @@
+function removeRow(obj)
+{
+  var parent = $(obj).parent().parent();
+
+  if (parent.siblings().length>0)
+      parent.remove();
+  else
+      parent.find("input,textarea").val('');
+
+  return false;
+}
+
+
+function addInput(block)
+{
+    // находим сколько строк
+    var count = $("#"+block+">div,#"+block+">tr").length;
+    count++;
+
+    // клонируем первую строку
+    var input_row = $("#"+block+">div:eq(0),#"+block+">tr:eq(0)").clone();
+    input_row.find('.tox-tinymce').remove();
+
+    // добавляем в конец блока и меням ID у input
+    input_row.appendTo("#"+block);
+
+    input_row.find("input, select, textarea").each(function(i)
+    {
+        var clone_input = $(this);
+        //id = parseInt(id.replace(/\D+/g,""),10);
+        var input_id    = clone_input.attr("id");
+        var input_name  = clone_input.attr("name");
+
+        if (input_id!=undefined)
+        {
+            input_id = input_id.substr(0,input_id.indexOf('0'));
+            input_name = input_name.substr(0,input_name.indexOf('0'))+count+input_name.substr(input_name.indexOf('0')+1);
+
+            clone_input.attr('id',input_id+count).attr('name',input_name).val('');
+        }
+    });
+
+    return false;
+}
+
+
 $(document).ready(function() {
 
     $("#program-filter input").on('datepicker-change', function(event,obj) {
