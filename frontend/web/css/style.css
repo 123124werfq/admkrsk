@@ -350,7 +350,7 @@ hr.hr__large.hr__mt {
     }
 }
 .header-controls {
-    margin-bottom: 36px;
+    margin-bottom: 16px;
 }
 .btn-group {
     display: flex;
@@ -2339,7 +2339,7 @@ textarea {
     transition: width .2s linear,margin-left .2s linear;
 }
 .header-submenu {
-    display: none !important; /* DELETE FOR ENABLEВ */
+    display: none !important; /* DELETE FOR ENABLEР’ */
     list-style: none;
     padding: 8px 0;
     margin: 0;
@@ -2484,10 +2484,10 @@ textarea {
         padding-top: 190px;
     }
 }*/
-/* /PAGE ALERTВ */
+/* /PAGE ALERTР’ */
 
 
-/* SITEMAPВ */
+/* SITEMAPР’ */
 .sitemap {
     position: absolute;
     width: 100%;
@@ -2936,7 +2936,7 @@ a.sitemap_header:hover {
         margin: 0 5px;
     }
 }
-/* /SMART MENUВ */
+/* /SMART MENUР’ */
 
 
 /* SEARCH */
@@ -3565,10 +3565,10 @@ a.sitemap_header:hover {
 .press.press_invert {
     background: #FFF;
 }
-/* /PRESSВ */
+/* /PRESSР’ */
 
 
-/* NEWSВ */
+/* NEWSР’ */
 .news {
     padding-top: 54px;
 }
@@ -4048,10 +4048,10 @@ a.sitemap_header:hover {
         background: #DDE1E6;
     }
 }
-/* /EVENTSВ */
+/* /EVENTSР’ */
 
 
-/* GIDВ */
+/* GIDР’ */
 .gid {
     background: #3B4256;
     position: relative;
@@ -4959,10 +4959,10 @@ a.sitemap_header:hover {
 .situations_content.active .situations_title a{
   color: #E4292F !important;
 }
-/* /BACKEND FIXES В */
+/* /BACKEND FIXES Р’ */
 
 
-/* BREADCRUMBSВ */
+/* BREADCRUMBSР’ */
 .breadcrumbs {
     font-size: 1.6rem;
     font-weight: 500;
@@ -5562,8 +5562,8 @@ a.sitemap_header:hover {
     max-width: 160px;
 }
 .press-item {
-    margin-bottom: 32px;
-    padding-bottom: 32px;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
     border-bottom: 1px solid #dde1e6;
     display: flex;
     -webkit-justify-content: space-between;
@@ -5634,7 +5634,7 @@ a.sitemap_header:hover {
 .press_title {
     margin-top: 0;
     line-height: 2.6rem;
-    margin-bottom: 24px;
+    margin-bottom: 8px;
 }
 .press-item__wide .press_title {
     height: auto;
@@ -6489,7 +6489,7 @@ a.sitemap_header:hover {
 .ms-cui-menu {
     position: fixed !important;
 }
-/* /RIBON PANELВ */
+/* /RIBON PANELР’ */
 
 
 /* Map */
