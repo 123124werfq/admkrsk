@@ -25,7 +25,12 @@ $this->params['button-block'][] = Html::a('Добавить', ['create'], ['clas
             'reestr_number:text:Номер',
             'name',
             'rubric.name:text:Рубрики',
-            'targets.count:text:Целей',
+            [
+                'label'=>"Целей",
+                'value' => function($model){
+                    return $model->getTargets()->count();
+                },
+            ],
             //'keywords:ntext',
             //'addresses:ntext',
             //'result:ntext',
@@ -42,15 +47,14 @@ $this->params['button-block'][] = Html::a('Добавить', ['create'], ['clas
             //'availability:ntext',
             //'procedure_information:ntext',
             //'max_duration_queue:ntext',
-            'old',
-            'online',
-            //'created_at',
-            //'created_by',
-            //'updated_at',
-            //'updated_by',
-            //'deleted_at',
-            //'deleted_by',
-
+            'old:boolean:Устарела',
+            [
+                'attribute'=>'online',
+                'label'=>"Форма",
+                'value' => function($model){
+                    return ($model->online)?'В электронном виде':'Оффлайн';
+                },
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'contentOptions'=>['class'=>'button-column']
