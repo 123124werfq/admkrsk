@@ -21,7 +21,6 @@ use yii\helpers\ArrayHelper;
  * @property string $title
  * @property string $description
  * @property string $owner
- * @property string $url
  * @property string $keywords
  * @property array $columns
  * @property int $period
@@ -34,6 +33,8 @@ use yii\helpers\ArrayHelper;
  * @property string $signature
  * @property string $path
  * @property string $filename
+ * @property string $url
+ * @property array $metadata
  *
  * @property Collection $collection
  * @property Page $page
@@ -69,7 +70,7 @@ class Opendata extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_collection', 'id_user', 'identifier', 'title', 'owner', 'columns', 'period'], 'required'],
+            [['identifier', 'title', 'owner', 'period'], 'required'],
             [['id_collection', 'id_user', 'id_page', 'period'], 'default', 'value' => null],
             [['id_collection', 'id_user', 'id_page', 'period'], 'integer'],
             [['description'], 'string'],
@@ -219,6 +220,62 @@ class Opendata extends \yii\db\ActiveRecord
     }
 
     /**
+     * @return string|null
+     */
+    public function getUrl()
+    {
+        $url = null;
+
+        if (Yii::$app->publicStorage->has($this->path)) {
+            $url = Yii::$app->publicStorage->getPublicUrl($this->path);
+        }
+
+        return $url;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getMetadata()
+    {
+        $url = null;
+
+        if (Yii::$app->publicStorage->has($this->path)) {
+            $url = Yii::$app->publicStorage->getMetadata($this->path);
+        }
+
+        return $url;
+    }
+
+    /**
+     * @return string|null
+     */
+    public static function getListUrl()
+    {
+        $url = null;
+
+        if (Yii::$app->publicStorage->has(self::OPENDATA_LIST_PATH)) {
+            $url = Yii::$app->publicStorage->getPublicUrl(self::OPENDATA_LIST_PATH);
+        }
+
+        return $url;
+    }
+
+    /**
+     * @return string|null
+     */
+    public static function getListMetadata()
+    {
+        $url = null;
+
+        if (Yii::$app->publicStorage->has(self::OPENDATA_LIST_PATH)) {
+            $url = Yii::$app->publicStorage->getMetadata(self::OPENDATA_LIST_PATH);
+        }
+
+        return $url;
+    }
+
+    /**
      * @return string
      */
     public function getStandardversion()
@@ -236,6 +293,7 @@ class Opendata extends \yii\db\ActiveRecord
 
     /**
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getCreated()
     {
@@ -244,6 +302,7 @@ class Opendata extends \yii\db\ActiveRecord
 
     /**
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getModified()
     {
@@ -268,6 +327,7 @@ class Opendata extends \yii\db\ActiveRecord
 
     /**
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getValid()
     {
@@ -336,11 +396,11 @@ class Opendata extends \yii\db\ActiveRecord
         }
 
         foreach ($this->data as $datum) {
-            fputcsv($tmpfile, [$datum->filename, Yii::$app->publicStorage->getPublicUrl($datum->path)]);
+            fputcsv($tmpfile, [$datum->filename, $datum->url]);
         }
 
         foreach ($this->structures as $structure) {
-            fputcsv($tmpfile, [$structure->filename, Yii::$app->publicStorage->getPublicUrl($structure->path)]);
+            fputcsv($tmpfile, [$structure->filename, $structure->url]);
         }
 
         Yii::$app->publicStorage->putStream($this->path, $tmpfile);
@@ -357,47 +417,49 @@ class Opendata extends \yii\db\ActiveRecord
      */
     public function exportStructure()
     {
-        $columns = CollectionColumn::findAll($this->columns);
+        if ($this->id_collection && $this->columns) {
+            $columns = CollectionColumn::findAll($this->columns);
 
-        if ($columns) {
-            if (($opendataStructure = OpendataStructure::findOne(['signature' => $this->signature])) === null) {
-                $opendataStructure = new OpendataStructure([
-                    'id_opendata' => $this->id_opendata,
-                    'signature' => $this->signature,
-                ]);
+            if ($columns) {
+                if (($opendataStructure = OpendataStructure::findOne(['signature' => $this->signature])) === null) {
+                    $opendataStructure = new OpendataStructure([
+                        'id_opendata' => $this->id_opendata,
+                        'signature' => $this->signature,
+                    ]);
 
-                if (!$opendataStructure->save()) {
-                    return null;
-                }
+                    if (!$opendataStructure->save()) {
+                        return null;
+                    }
 
-                $data[] = [
-                    'field name',
-                    'english description',
-                    'russian description',
-                    'format',
-                ];
-
-                foreach ($columns as $column) {
                     $data[] = [
-                        $column->id_column,
-                        $column->name,
-                        $column->name,
-                        'string',
+                        'field name',
+                        'english description',
+                        'russian description',
+                        'format',
                     ];
+
+                    foreach ($columns as $column) {
+                        $data[] = [
+                            $column->id_column,
+                            $column->name,
+                            $column->name,
+                            'string',
+                        ];
+                    }
+
+                    $tmpfile = tmpfile();
+
+                    foreach ($data as $datum) {
+                        fputcsv($tmpfile, $datum);
+                    }
+
+                    Yii::$app->publicStorage->putStream($opendataStructure->path, $tmpfile);
+
+                    fclose($tmpfile);
                 }
 
-                $tmpfile = tmpfile();
-
-                foreach ($data as $datum) {
-                    fputcsv($tmpfile, $datum);
-                }
-
-                Yii::$app->publicStorage->putStream($opendataStructure->path, $tmpfile);
-
-                fclose($tmpfile);
+                return $opendataStructure;
             }
-
-            return $opendataStructure;
         }
 
         return null;
@@ -408,31 +470,33 @@ class Opendata extends \yii\db\ActiveRecord
      */
     public function exportData()
     {
-        if (($opendataStructure = $this->exportStructure()) !== null) {
-            $opendataData = new OpendataData(['id_opendata_structure' => $opendataStructure->id_opendata_structure]);
-            if (!$opendataData->save()) {
-                return null;
+        if ($this->id_collection && $this->columns) {
+            if (($opendataStructure = $this->exportStructure()) !== null) {
+                $opendataData = new OpendataData(['id_opendata_structure' => $opendataStructure->id_opendata_structure]);
+                if (!$opendataData->save()) {
+                    return null;
+                }
+
+                $columns = ArrayHelper::getColumn(CollectionColumn::findAll($this->columns), 'id_column');
+
+                $data = $this->collection->getData($columns);
+
+                $tmpfile = tmpfile();
+
+                fputcsv($tmpfile, $columns);
+
+                foreach ($data as $datum) {
+                    fputcsv($tmpfile, $datum);
+                }
+
+                Yii::$app->publicStorage->putStream($opendataData->path, $tmpfile);
+
+                fclose($tmpfile);
+
+                $this->exportMeta();
+
+                return $opendataData;
             }
-
-            $columns = ArrayHelper::getColumn(CollectionColumn::findAll($this->columns), 'id_column');
-
-            $data = $this->collection->getData($columns);
-
-            $tmpfile = tmpfile();
-
-            fputcsv($tmpfile, $columns);
-
-            foreach ($data as $datum) {
-                fputcsv($tmpfile, $datum);
-            }
-
-            Yii::$app->publicStorage->putStream($opendataData->path, $tmpfile);
-
-            fclose($tmpfile);
-
-            $this->exportMeta();
-
-            return $opendataData;
         }
 
         return null;
@@ -453,8 +517,8 @@ class Opendata extends \yii\db\ActiveRecord
             fputcsv($tmpfile, [
                 $opendata->identifier,
                 $opendata->title,
-                Yii::$app->publicStorage->getPublicUrl($opendata->path),
-                'csv',
+                $opendata->url,
+                $opendata->metadata['extension'] ?? null,
             ]);
         }
 

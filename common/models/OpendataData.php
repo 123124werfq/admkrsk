@@ -12,6 +12,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property int $id_opendata_data
  * @property int $id_opendata_structure
+ * @property boolean $is_manual
  * @property int $created_at
  * @property int $created_by
  * @property int $updated_at
@@ -21,6 +22,8 @@ use yii\behaviors\TimestampBehavior;
  * @property string $path
  * @property string $filename
  * @property string $datetime
+ * @property string $url
+ * @property array $metadata
  *
  * @property OpendataStructure $structure
  */
@@ -43,6 +46,7 @@ class OpendataData extends \yii\db\ActiveRecord
             [['id_opendata_structure', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
             [['id_opendata_structure', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['id_opendata_structure'], 'exist', 'skipOnError' => true, 'targetClass' => OpendataStructure::class, 'targetAttribute' => ['id_opendata_structure' => 'id_opendata_structure']],
+            [['is_manual'], 'boolean']
         ];
     }
 
@@ -54,6 +58,7 @@ class OpendataData extends \yii\db\ActiveRecord
         return [
             'id_opendata_data' => 'Id Opendata Data',
             'id_opendata_structure' => 'Id Opendata Structure',
+            'is_manual' => 'Is Manual',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
@@ -72,6 +77,18 @@ class OpendataData extends \yii\db\ActiveRecord
             'ts' => TimestampBehavior::class,
             //'ba' => BlameableBehavior::class,
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function afterDelete()
+    {
+        if (Yii::$app->publicStorage->has($this->path)) {
+            Yii::$app->publicStorage->delete($this->path);
+        }
+
+        parent::afterDelete();
     }
 
     /**
@@ -100,9 +117,39 @@ class OpendataData extends \yii\db\ActiveRecord
 
     /**
      * @return string
+     * @throws \yii\base\InvalidConfigException
+     * @throws \Exception
      */
     public function getDatetime()
     {
         return (new DateTime(Yii::$app->formatter->asDatetime($this->created_at)))->format('Ymd\THi');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUrl()
+    {
+        $url = null;
+
+        if (Yii::$app->publicStorage->has($this->path)) {
+            $url = Yii::$app->publicStorage->getPublicUrl($this->path);
+        }
+
+        return $url;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getMetadata()
+    {
+        $url = null;
+
+        if (Yii::$app->publicStorage->has($this->path)) {
+            $url = Yii::$app->publicStorage->getMetadata($this->path);
+        }
+
+        return $url;
     }
 }
