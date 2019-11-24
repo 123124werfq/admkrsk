@@ -16,7 +16,7 @@ use common\models\Collection;
 
 <?= $form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
 
-<div class="row">
+<!--div class="row">
     <div class="col-md-2">
         <label class="control-label">Название</label>
     </div>
@@ -28,10 +28,9 @@ use common\models\Collection;
     </div>
 </div>
 <div id="collection-columns" class="multiyiinput sortable">
-    <?php
-        $records = $model->getRecords('columns');
-    ?>
-    <?php foreach ($records as $key => $data) {?>
+    <?php /*
+    $records = $model->getRecords('columns');
+    foreach ($records as $key => $data) {?>
         <div class="row">
             <div class="col-md-2">
                 <?=Html::hiddenInput("CollectionColumn[columns][$key][ord]",$data->ord);?>
@@ -67,16 +66,16 @@ use common\models\Collection;
                 </div>
             </div>
         </div>
-    <?php }?>
+    <?php }*/?>
 </div>
-<a onclick="return addInput('collection-columns')" href="#" class="btn btn-default">Добавить еще</a>
+<a onclick="return addInput('collection-columns')" href="#" class="btn btn-default">Добавить еще</a-->
 
 <?php if (Yii::$app->user->can('admin.collection')): ?>
     <hr>
 
-    <?= $form->field($model, 'template')->textInput(['class' => 'form-control'])?>
+    <?= $form->field($model, 'template')->textInput(['class' => 'form-control redactor'])?>
 
-    <?= $form->field($model, 'template_element')->textInput(['class' => 'form-control'])?>
+    <?= $form->field($model, 'template_element')->textInput(['class' => 'form-control redactor'])?>
 
     <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
 

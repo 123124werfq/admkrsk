@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use common\models\CollectionColumn;
 /* @var $this yii\web\View */
 /* @var $model common\models\CollectionColumn */
 /* @var $form yii\widgets\ActiveForm */
@@ -12,17 +12,10 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'id_collection')->textInput() ?>
-
-    <?= $form->field($model, 'id_dictionary')->textInput() ?>
-
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'type')->textInput() ?>
-
-    <?= $form->field($model, 'show_column_admin')->textInput() ?>
-
-    <?= $form->field($model, 'ord')->textInput() ?>
+    <?= $form->field($model, 'type')->dropDownList(CollectionColumn::getTypeLabel(),['class'=>'form-control column-type'])
+    ?>
 
     <?= $form->field($model, 'variables')->textarea(['rows' => 6]) ?>
 

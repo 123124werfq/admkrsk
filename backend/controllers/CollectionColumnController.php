@@ -33,10 +33,10 @@ class CollectionColumnController extends Controller
      * Lists all CollectionColumn models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($id)
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => CollectionColumn::find(),
+            'query' => CollectionColumn::find()->where(['id_collection'=>$id]),
         ]);
 
         return $this->render('index', [
@@ -62,9 +62,10 @@ class CollectionColumnController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($id)
     {
         $model = new CollectionColumn();
+        $model->id_collection = $id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_column]);
@@ -86,7 +87,30 @@ class CollectionColumnController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
+            $newColumns = $model->getColumns()->indexBy('id_column')->all();
+
+            if (isset($newColumns[$column->id_column]) && $column->type != $newColumns[$column->id_column]->type)
+            {
+                if ($newColumns[$column->id_column]->type == CollectionColumn::TYPE_DATE || $newColumns[$column->id_column]->type == CollectionColumn::TYPE_DATETIME)
+                {
+                    $values = Yii::$app->db->createCommand("SELECT * FROM db_collection_value WHERE id_column = $column->id_column")->queryAll();
+
+                    $collection = Yii::$app->mongodb->getCollection('collection'.$model->id_collection);
+
+                    foreach ($values as $key => $value)
+                    {
+                        if (!is_numeric($value['value']))
+                        {
+                            Yii::$app->db->createCommand()->update('db_collection_value',['value'=>strtotime($value['value'])],['id_column'=>$column->id_column,'id_record'=>$value['id_record']])->execute();
+
+                            $collection->update(['id_record'=>$value['id_record']],[$value['id_column']=>strtotime($value['value'])]);
+                        }
+                    }
+                }
+            }
+
             return $this->redirect(['view', 'id' => $model->id_column]);
         }
 

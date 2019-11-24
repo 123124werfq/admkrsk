@@ -92,7 +92,7 @@ class Collection extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
+    /*public function behaviors()
     {
         return [
             'ts' => TimestampBehavior::class,
@@ -112,7 +112,7 @@ class Collection extends \yii\db\ActiveRecord
                 ]
             ]
         ];
-    }
+    }*/
 
     public function insertRecord($data)
     {
