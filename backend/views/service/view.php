@@ -43,9 +43,9 @@ $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $
                                 },
                                  'delete' => function ($url, $model, $key) {
                                       return Html::a('', ['/service-target/delete', 'id' => $model->id_target],['class' => 'glyphicon glyphicon-trash','data' => [
-        'confirm' => 'Вы уверены что хотите удалить форму?',
-        'method' => 'post',
-    ],]);
+                                    'confirm' => 'Вы уверены что хотите удалить цель?',
+                                    'method' => 'post',
+                                ],]);
                                 }
                             ], 
                         ],

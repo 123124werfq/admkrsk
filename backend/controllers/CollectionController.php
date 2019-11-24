@@ -584,35 +584,8 @@ class CollectionController extends Controller
         if (!empty($model->id_parent_collection))
             return $this->actionUpdateView($model);
 
-        $columns = $model->columns;
-
         if ($model->load(Yii::$app->request->post()) && $model->save())
         {
-            $newColumns = $model->getColumns()->indexBy('id_column')->all();
-
-            foreach ($columns as $key => $column)
-            {
-                if (isset($newColumns[$column->id_column]) && $column->type != $newColumns[$column->id_column]->type)
-                {
-                    if ($newColumns[$column->id_column]->type == CollectionColumn::TYPE_DATE || $newColumns[$column->id_column]->type == CollectionColumn::TYPE_DATETIME)
-                    {
-                        $values = Yii::$app->db->createCommand("SELECT * FROM db_collection_value WHERE id_column = $column->id_column")->queryAll();
-
-                        $collection = Yii::$app->mongodb->getCollection('collection'.$model->id_collection);
-
-                        foreach ($values as $key => $value)
-                        {
-                            if (!is_numeric($value['value']))
-                            {
-                                Yii::$app->db->createCommand()->update('db_collection_value',['value'=>strtotime($value['value'])],['id_column'=>$column->id_column,'id_record'=>$value['id_record']])->execute();
-
-                                $collection->update(['id_record'=>$value['id_record']],[$value['id_column']=>strtotime($value['value'])]);
-                            }
-                        }
-                    }
-                }
-            }
-
             $model->createAction(Action::ACTION_UPDATE);
 
             return $this->redirect(['view', 'id' => $model->id_collection]);

@@ -224,7 +224,7 @@ jQuery(document).ready(function()
       $(".modal-body form").submit();
     });
 
-    $("#form-template").delegate(".create-form-input, .update-input, .create-element",'click',function(){
+    $("#form-template").delegate(".create-form-input, .update-input, .create-element, .update-row",'click',function(){
       var $link = $(this);
 
       $('#FormElement').modal({

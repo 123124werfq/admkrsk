@@ -193,9 +193,8 @@ class CollectionColumn extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_column' => 'Id Column',
-            'id_collection' => 'Id Collection',
-            'id_dictionary' => 'Id Dictionary',
+            'id_column' => '#',
+            'id_collection' => 'Список',
             'name' => 'Название',
             'type' => 'Тип',
             'alias' => 'Алиас',

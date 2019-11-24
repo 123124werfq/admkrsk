@@ -107,7 +107,7 @@ class News extends \yii\db\ActiveRecord
         if (!empty($_POST['News']))
         {
             $links = Yii::$app->db->createCommand("SELECT * FROM dbl_news_page WHERE id_news = ".$this->id_news)->queryAll();
-            
+
             $exist = [];
             foreach ($links as $key => $link)
                 $exist[$link['id_page']] = $link['id_page'];
@@ -122,7 +122,7 @@ class News extends \yii\db\ActiveRecord
                     unset($exist[$id_page]);
                 }
             }
-            
+
             if (!empty($exist))
                 Yii::$app->db->delete('dbl_news_page',['id_news'=>$this->id_news,'id_page'=>$exist])->execute();
         }

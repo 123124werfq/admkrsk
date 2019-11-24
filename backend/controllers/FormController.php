@@ -122,6 +122,35 @@ class FormController extends Controller
         return $this->redirect(['view', 'id' => $model->id_form]);
     }
 
+    public function actionUpdateRow($id_row)
+    {
+        $model = FormRow::findOne($id_row);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
+            if (!Yii::$app->request->isAjax)
+                return $this->redirect(['form/view', 'id' => $model->id_form]);
+
+            return $this->renderAjax('_form_row',['model' => $model]);
+        }
+
+        if (Yii::$app->request->isAjax)
+        {
+            Yii::$app->assetManager->bundles = [
+                'yii\bootstrap\BootstrapAsset' => false,
+                'yii\web\JqueryAsset'=>false,
+                'yii\web\YiiAsset'=>false,
+            ];
+
+            return $this->renderAjax('_form_row',['model' => $model]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+
+    }
+
     /**
      * Updates an existing Form model.
      * If update is successful, the browser will be redirected to the 'view' page.
