@@ -18,13 +18,13 @@
 			foreach ($submenu as $key => $data) {
 ?>
 			<li <?=$data->id_page==$page->id_page?'class="selected active"':''?>><a href="<?=($siblings)?$data->alias:'/'.Yii::$app->request->getPathInfo().'/'.$data->alias?>"><?=$data->title?></a></li>
-<?php 
+<?php
 			}
 		}
 ?>
 <?php
 		if (!empty($page->menu))
-			foreach ($page->menu->links as $key => $link) 
+			foreach ($page->menu->links as $key => $link)
 			{
 ?>
 			<li><a href="<?=$link->getUrl()?>"><?=$link->label?></a></li>
