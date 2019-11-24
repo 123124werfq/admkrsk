@@ -126,6 +126,10 @@ class Collection extends \yii\db\ActiveRecord
         return false;
     }
 
+    public function getForm()
+    {
+        return $this->hasOne(Form::class, ['id_form' => 'id_form']);
+    }
 
     public function getParent()
     {

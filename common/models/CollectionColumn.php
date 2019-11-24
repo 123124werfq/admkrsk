@@ -164,6 +164,31 @@ class CollectionColumn extends \yii\db\ActiveRecord
         return $labels[$type];
     }
 
+    public function afterSave($insert, $changedAttributes)
+    {
+        if (!$insert && !empty($changedAttributes['type']))
+        {
+            if ($changedAttributes['type'] == CollectionColumn::TYPE_DATE || $changedAttributes['type'] == CollectionColumn::TYPE_DATETIME)
+            {
+                $values = Yii::$app->db->createCommand("SELECT * FROM db_collection_value WHERE id_column = $column->id_column")->queryAll();
+
+                $collection = Yii::$app->mongodb->getCollection('collection'.$model->id_collection);
+
+                foreach ($values as $key => $value)
+                {
+                    if (!is_numeric($value['value']))
+                    {
+                        Yii::$app->db->createCommand()->update('db_collection_value',['value'=>strtotime($value['value'])],['id_column'=>$column->id_column,'id_record'=>$value['id_record']])->execute();
+
+                        $collection->update(['id_record'=>$value['id_record']],[$value['id_column']=>strtotime($value['value'])]);
+                    }
+                }
+            }
+        }
+
+        parent::afterSave($insert, $changedAttributes);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -178,7 +203,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_collection', 'name'], 'required'],
+            [['id_collection', 'name', 'type'], 'required'],
             [['id_collection', 'id_dictionary', 'type', 'show_column_admin', 'ord'], 'default', 'value' => null],
             [['id_collection', 'id_dictionary', 'type', 'show_column_admin', 'ord'], 'integer'],
             [['name','alias'], 'string', 'max' => 255],

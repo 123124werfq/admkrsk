@@ -82,13 +82,18 @@ class MenuLink extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getUrl()
+    public function getUrl($absolute=false)
     {
         if (!empty($this->url))
+        {
+            if ($absolute && strpos($this->url, '//')===false)
+                return Yii::$app->params['frontendUrl'].$this->url;
+
             return $this->url;
+        }
 
         if (!empty($this->id_page))
-            return $this->page->getUrl();
+            return $this->page->getUrl($absolute);
     }
 
     public function getMenu()

@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->render('_head',['model'=>$model]);
 ?>
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-lg-9">
         <div class="tabs-container">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="active"><a class="nav-link" data-toggle="tab" href="#tab-1">Дочерние разделы</a></li>
@@ -29,75 +29,68 @@ $this->render('_head',['model'=>$model]);
                 <div role="tabpanel" id="tab-1" class="tab-pane active">
                     <div class="panel-body">
                         <h2>
-                            <?=Html::a('Добавить', ['create', 'id_parent' => $model->id_page], ['class' => 'btn btn-default pull-right'])?>
+                            <span class="pull-right">
+                            <?=Html::a('Добавить ссылку', ['menu/update', 'id_page' => $model->id_page], ['class' => 'btn btn-default'])?>
+                            <?=Html::a('Добавить подраздел', ['create', 'id_parent' => $model->id_page], ['class' => 'btn btn-default'])?>
+                            </span>
                             Дочерние разделы
                         </h2>
-                        <?= GridView::widget([
-                            'dataProvider' => $dataProviderChilds,
-                            'columns' => [
-                                'id_page',
-                                [
-                                    'attribute' => 'title',
-                                    'contentOptions'=>['width'=>'40%']
-                                ],
-                                [
-                                    'attribute' => 'alias',
-                                    'format' => 'html',
-                                    'value' => function ($model) {
-                                        return '<a target="_blank" href="'.$model->getUrl(true).'">'.$model->getUrl().'</a>';
-                                    },
-                                    'contentOptions'=>['width'=>'40%']
-                                ],
-                                [
-                                    'class' => 'yii\grid\ActionColumn',
-                                    'contentOptions'=>['class'=>'button-column']
-                                ],
-                            ],
-                            'tableOptions'=>[
-                                'emptyCell '=>'',
-                                'class'=>'table table-striped ids-style valign-middle table-hover ordered'
-                            ]
-                        ]); ?>
                         <br/>
+                        <table class="table table-hover table-striped table-valign-middle">
+                            <thead>
+                                <tr>
+                                    <th width="10">
+                                    </th>
+                                    <th>
+                                        Заголовок
+                                    </th>
+                                    <th>
+                                        Ссылка
+                                    </th>
+                                    <th width="100">
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($rightmenu as $key => $data){
+                                    $url = $data->getUrl(true);
+                                    ?>
+                                    <tr>
+                                        <td>
+                                            <?=(isset($data->id_link))?'<span class="glyphicon glyphicon-link"></span>':''?>
+                                        </td>
+                                        <td>
+                                            <?=(!empty($data->title))?$data->title:$data->label?>
+                                        </td>
+                                        <td>
+                                            <a target="_blank" href="<?=$url?>"><?=$url?></a>
+                                        </td>
+                                        <td>
+                                            <?php if (isset($data->id_link))
+                                            {
+                                                echo Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['menu-link/update', 'id' => $data->id_link],[
+                                                    'class'=>'btn btn-default'
+                                                ]).' ';
 
-                        <h2>
-                            <?=Html::a('Редактировать', ['menu/update', 'id_page' => $model->id_page], ['class' => 'btn btn-default pull-right'])?>
-                            Дополнительные ссылки в правом меню
-                        </h2>
-                        <?= GridView::widget([
-                            'dataProvider' => $dataProviderMenu,
-                            //'filterModel' => $searchModel,
-                            'columns' => [
-                                'id_link:text:#',
-                                [
-                                    'attribute'=>'label',
-                                    'contentOptions'=>['width'=>'40%']
-                                ],
-                                [
-                                    'attribute' => 'url',
-                                    'format' => 'html',
-                                    'value' => function ($model) {
-                                        $url = (!empty($model->id_page))?$model->page->getUrl(true):$model->url;
-
-                                        return '<a target="_blank" href="'.$url.'">'.$url.'</a>';
-                                    },
-                                    'contentOptions'=>['width'=>'57%']
-                                ],
-                                /*[
-                                    'class' => 'yii\grid\ActionColumn',
-                                    'contentOptions'=>['class'=>'button-column']
-                                ],*/
-                            ],
-                            'tableOptions'=>[
-                                'emptyCell '=>'',
-                                'class'=>'table table-striped ids-style valign-middle table-hover ordered'
-                            ]
-                        ]); ?>>
+                                                echo Html::a('<span class="glyphicon glyphicon-trash"></span>', ['menu-link/delete', 'id' => $data->id_link],[
+                                                    'data' => [
+                                                        'confirm' => 'Вы уверены, что хотите удалить этот элемент?',
+                                                        'method' => 'post',
+                                                    ],
+                                                    'class'=>'btn btn-default'
+                                                ]);
+                                            }?>
+                                        </td>
+                                    </tr>
+                                <?php }?>
+                            </tbody>
+                        </table>
+                        <br/>
                     </div>
                 </div>
                 <div role="tabpanel" id="tab-2" class="tab-pane">
                     <div class="panel-body">
-                        
+
                     </div>
                 </div>
             </div>

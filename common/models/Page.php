@@ -176,10 +176,6 @@ class Page extends \yii\db\ActiveRecord
             $this->updateAttributes(['path']);
         }*/
 
-        if ($this->access_user_ids) {
-
-        }
-
         parent::afterSave($insert, $changedAttributes);
     }
 
@@ -230,5 +226,35 @@ class Page extends \yii\db\ActiveRecord
     public function getChilds()
     {
         return $this->hasMany(Page::class, ['id_parent' => 'id_page'])->orderBy('ord ASC');
+    }
+
+    public function getSubMenu()
+    {
+        $childs = $this->getChilds()->orderBy('ord ASC')->all();
+        $links = [];
+
+        if (!empty($this->menu))
+            $links  = $this->menu->links;
+
+
+        foreach ($childs as $key => $child)
+            $rightmenu[] = $child;
+
+        foreach ($links as $key => $link)
+            $rightmenu[] = $link;
+
+        if (empty($rightmenu))
+            return [];
+
+        usort($rightmenu, function ($a, $b)
+        {
+            if ($a->ord == $b->ord)
+            {
+                return 0;
+            }
+            return ($a->ord < $b->ord)?-1:1;
+        });
+
+        return $rightmenu;
     }
 }

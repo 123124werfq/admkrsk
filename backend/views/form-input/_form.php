@@ -13,11 +13,13 @@ use common\models\CollectionColumn;
 
 $types = FormInputType::find()->all();
 
-$select_ids = [CollectionColumn::TYPE_SELECT,CollectionColumn::TYPE_RADIO];
-
-$visibleInputs = ArrayHelper::map(FormInput::find()
-                    ->where(['id_form'=>$model->id_form, 'type'=>CollectionColumn::TYPE_SELECT])
-                    ->andWhere('id_input <> '.(int)$model->id_input)->all(), 'id_input', 'name');
+$visibleInputs = [];
+if (!empty($model->id_form))
+{
+    $visibleInputs = ArrayHelper::map(FormInput::find()
+                        ->where(['id_form'=>$model->id_form, 'type'=>CollectionColumn::TYPE_SELECT])
+                        ->andWhere('id_input <> '.(int)$model->id_input)->all(), 'id_input', 'name');
+}
 ?>
 
 <div class="form-input-form">
@@ -32,7 +34,6 @@ $visibleInputs = ArrayHelper::map(FormInput::find()
     ?>
 
     <hr>
-
     <?= $form->field($model, 'required')->checkBox()?>
 
     <div class="row">
@@ -56,7 +57,8 @@ $visibleInputs = ArrayHelper::map(FormInput::find()
 
     <?=$form->field($model, 'hint')->textInput(['maxlength' => 255]) ?>
 
-    <?php if (!empty($visibleInputs)){?>
+    <?php if (!empty($visibleInputs))
+    {?>
     <hr>
     <div class="row">
         <div class="col-sm-6">
@@ -71,6 +73,7 @@ $visibleInputs = ArrayHelper::map(FormInput::find()
     </div>
     <?php }?>
 
+    <?php if ($model->type == CollectionColumn::TYPE_SELECT || $model->type == CollectionColumn::TYPE_RADIO){?>
     <div data-visible-field="forminput-type" data-values="<?=implode(',', $select_ids)?>">
         <?=$form->field($model, 'id_collection')->widget(Select2::class, [
             'data' => ArrayHelper::map(Collection::find()->all(), 'id_collection', 'name'),
@@ -79,9 +82,14 @@ $visibleInputs = ArrayHelper::map(FormInput::find()
                 'placeholder' => 'Выберите коллекцию',
             ],
         ])?>
-
-        <?=$form->field($model, 'values')->textarea(['rows' => 6])?>
     </div>
+    <?php }?>
+
+    <?php if ($model->type == CollectionColumn::TYPE_SELECT ||
+              $model->type == CollectionColumn::TYPE_RADIO ||
+              $model->type == CollectionColumn::TYPE_JSON){?>
+        <?=$form->field($model, 'values')->textarea(['rows' => 6])?>
+    <?php }?>
 
     <div id="input-options">
         <?php

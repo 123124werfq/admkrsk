@@ -254,18 +254,11 @@ class PageController extends Controller
                 Yii::$app->db->createCommand()->update('cnt_page',['ord'=>$key],['id_page'=>$id])->execute();
         }
 
-        $dataProviderChilds = new ActiveDataProvider([
-            'query' => $model->getChilds()->orderBy('ord ASC'),
-        ]);
-
-        $dataProviderMenu = new ActiveDataProvider([
-            'query' => (!empty($model->menu))?$model->menu->getLinks():\common\models\MenuLink::find()->where('id_link IS NULL'),
-        ]);
+        $rightmenu = $model->getSubMenu();
 
         return $this->render('view', [
             'model' => $model,
-            'dataProviderChilds'=>$dataProviderChilds,
-            'dataProviderMenu'=>$dataProviderMenu,
+            'rightmenu' => $rightmenu,
         ]);
     }
 

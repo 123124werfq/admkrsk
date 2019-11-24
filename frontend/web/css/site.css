@@ -36,7 +36,22 @@ margin-bottom: 36px;
     background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zd…lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNCIvPiAgICAgICAgPC9nPiAgICA8L2c+PC9zdmc+);
 }
 
-.fileupload_list .dz-remove {
+.close {
+    color: #C7CCD1!important;
+    font-family: 'Material Icons' !important;
+    font-size: 20px;
+    border-bottom: 0px!important;
+}
+
+.content  table.form-table tbody tr:last-child td {border-bottom: 0px;}
+
+.td-close {vertical-align: middle!important;}
+.form-table .btn {width: 100%; border-bottom: 0px!important; margin: 0px 6px;}
+.form-table {margin-left: -8px; margin-right: -8px;}
+.form-table th {background: #fff!important;}
+.page .form-table .form-control {margin-bottom: 0px;}
+
+.fileupload_list .dz-remove, {
     cursor: pointer;
     position: absolute;
     display: block;
@@ -44,7 +59,7 @@ margin-bottom: 36px;
     top: 50%;
     margin-top: -5px;
     color: #C7CCD1;
-    /* font-family: 'Material Icons' !important; */
+
     font-weight: bold;
     font-style: normal;
     font-size: 23px;
