@@ -22,6 +22,8 @@ else
     <div class="ibox-content">
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'state')->dropDownList([0=>'Не активен',1=>'Активен']) ?>
+
     <?= $form->field($model, 'label')->textInput(['maxlength' => true])?>
 
     <div class="row">
@@ -50,23 +52,23 @@ else
         </div>
     </div>
 
-    <?= $form->field($model, 'content')->textarea(['class' => 'redactor form-control']) ?>
+    <?php if (empty($model->menu->id_page)){?>
+        <?= $form->field($model, 'content')->textarea(['class' => 'redactor form-control']) ?>
 
-    <?php if ($model->menu->type==$model->menu::TYPE_TABS){?>
-    <?= $form->field($model, 'template')->dropDownList($model->templates,['prompt'=>'Выберите шаблон']) ?>
+        <?php if ($model->menu->type==$model->menu::TYPE_TABS){?>
+        <?= $form->field($model, 'template')->dropDownList($model->templates,['prompt'=>'Выберите шаблон']) ?>
+        <?php }?>
+    
+        <?= common\components\multifile\MultiFileWidget::widget([
+            'model'=>$model,
+            'single'=>true,
+            'relation'=>'media',
+            //'records'=>[$value_model->media],
+            'extensions'=>['jpg','jpeg','gif','png'],
+            'grouptype'=>1,
+            'showPreview'=>true
+        ]);?>
     <?php }?>
-
-    <?= $form->field($model, 'state')->dropDownList([0=>'Не активен',1=>'Активен']) ?>
-
-    <?= common\components\multifile\MultiFileWidget::widget([
-        'model'=>$model,
-        'single'=>true,
-        'relation'=>'media',
-        //'records'=>[$value_model->media],
-        'extensions'=>['jpg','jpeg','gif','png'],
-        'grouptype'=>1,
-        'showPreview'=>true
-    ]);?>
 
     <hr>
     <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

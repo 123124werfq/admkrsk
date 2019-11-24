@@ -27,15 +27,16 @@ $this->params['button-block'][] = Html::a('Дерево', ['tree'], ['class' => 
                 //'filterModel' => $searchModel,
                 'columns' => [
                     'id_page',
-                    'title',
                     [
-                        'attribute' => 'alias',
+                        'attribute' => 'title',
                         'format' => 'html',
                         'value' => function ($model) {
-                            return '<a target="_blank" href="'.$model->getUrl(true).'">'.$model->getUrl().'</a>';
+                            return $model->title.'<br><a target="_blank" href="'.$model->getUrl(true).'">'.$model->getUrl().'</a>';
                         },
                     ],
-                    'parent.title:text:Родитель',
+                    //'parent.title:text:Родитель',
+                    'created_at:date',
+                    'updated_at:date',
                     [
                         'class' => 'yii\grid\ActionColumn',
                         'contentOptions'=>['class'=>'button-column']

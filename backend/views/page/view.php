@@ -30,7 +30,7 @@ $this->render('_head',['model'=>$model]);
                     <div class="panel-body">
                         <h2>
                             <span class="pull-right">
-                            <?=Html::a('Добавить ссылку', ['menu/update', 'id_page' => $model->id_page], ['class' => 'btn btn-default'])?>
+                            <?=Html::a('Добавить ссылку', ['menu-link/create', 'id_page' => $model->id_page], ['class' => 'btn btn-default'])?>
                             <?=Html::a('Добавить подраздел', ['create', 'id_parent' => $model->id_page], ['class' => 'btn btn-default'])?>
                             </span>
                             Дочерние разделы
@@ -79,7 +79,22 @@ $this->render('_head',['model'=>$model]);
                                                     ],
                                                     'class'=>'btn btn-default'
                                                 ]);
-                                            }?>
+                                            }
+                                            else 
+                                            {
+                                                echo Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update', 'id' => $data->id_page],[
+                                                    'class'=>'btn btn-default'
+                                                ]).' ';
+
+                                                echo Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete', 'id' => $data->id_page],[
+                                                    'data' => [
+                                                        'confirm' => 'Вы уверены, что хотите удалить этот элемент?',
+                                                        'method' => 'post',
+                                                    ],
+                                                    'class'=>'btn btn-default'
+                                                ]);
+                                            } 
+                                            ?>
                                         </td>
                                     </tr>
                                 <?php }?>

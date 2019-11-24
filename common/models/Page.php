@@ -60,7 +60,7 @@ class Page extends \yii\db\ActiveRecord
     {
         return [
             [['id_media', 'active', 'id_parent'], 'default', 'value' => null],
-            [['id_media', 'active', 'id_parent', 'noguest'], 'integer'],
+            [['id_media', 'active', 'id_parent', 'noguest','hidemenu'], 'integer'],
             ['id_parent', 'filter', 'filter' => function($value) {
                 return (int) $value;
             }],
@@ -85,6 +85,7 @@ class Page extends \yii\db\ActiveRecord
             'title' => 'Название',
             'id_parent' => 'Родительские раздел',
             'alias' => 'URL',
+            'hidemenu'=> 'Скрыть в меню',
             'content' => 'Содержание',
             'seo_title' => 'Seo Заголовок',
             'seo_description' => 'Seo Описание',

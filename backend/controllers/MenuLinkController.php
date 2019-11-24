@@ -5,6 +5,8 @@ namespace backend\controllers;
 use Yii;
 use common\models\Menu;
 use common\models\MenuLink;
+use common\models\Page;
+
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -75,15 +77,49 @@ class MenuLinkController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($id_menu,$id=null)
+    public function actionCreate($id_menu=null,$id=null,$id_page=null)
     {
+        if (empty($id_menu) && !empty($id_page))
+        {
+            $page = Page::findOne($id_page);
+
+            if (empty($page))
+                throw new NotFoundHttpException('The requested page does not exist.');
+
+            if (empty($page->menu))
+            {
+                $menu = new Menu();
+                $menu->name = 'Меню раздела '.$page->id_page;
+                $menu->alias = 'Menu_'.$page->id_page.'_'.time();
+                $menu->type = Menu::TYPE_LIST;
+                $menu->id_page = $id_page;
+                $menu->save();
+            }
+            else 
+                $menu = $page->menu;
+        }
+        else 
+            $menu = Menu::findOne($id_menu);
+
+        if (empty($menu))
+            throw new NotFoundHttpException('The requested page does not exist.');
+
         $model = new MenuLink();
-        $model->id_menu = $id_menu;
+        $model->id_menu = $menu->id_menu;
         $model->id_parent = $id;
+
+        // ставим сортировку
+        if (!empty($page))
+            $model->ord = count($page->getSubMenu());
+
         $model->state = 1;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index', 'id' => $model->id_menu]);
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
+            if (!empty($id_page))
+                return $this->redirect(['page/view', 'id' => $id_page]);
+            else 
+                return $this->redirect(['index', 'id' => $model->id_menu]);
         }
 
         return $this->render('create', [
@@ -98,7 +134,7 @@ class MenuLinkController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate($id,$id_page=null)
     {
         $model = $this->findModel($id);
 
