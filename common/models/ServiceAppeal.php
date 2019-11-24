@@ -1,5 +1,7 @@
 <?php
 
+// Модель для сбора информации о подданых заявках на получение муниципальных услуг
+
 namespace common\models;
 
 use Yii;
@@ -37,8 +39,8 @@ class ServiceAppeal extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_user', 'id_service', 'date', 'archive', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
-            [['id_user', 'id_service', 'date', 'archive', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['id_user', 'id_service', 'id_record', 'id_collection', 'date', 'archive', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
+            [['id_user', 'id_service', 'id_record', 'id_collection', 'date', 'archive', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['state'], 'required'],
             [['data'], 'string'],
             [['state'], 'string', 'max' => 255],
