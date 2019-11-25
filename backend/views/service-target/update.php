@@ -5,14 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\ServiceTarget */
 
-$this->title = 'Update Service Target: ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Service Targets', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id_target]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Редактировать цель: ' . $model->name;
+$this->params['breadcrumbs'][] = ['label' => $model->service->name, 'url' => ['service/view', 'id' => $model->id_service]];
 ?>
 <div class="service-target-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
         'model' => $model,

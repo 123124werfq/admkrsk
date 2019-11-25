@@ -22,7 +22,7 @@ $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $
 ?>
 
 <div class="row">
-    <div class="col-lg-5">
+    <div class="col-lg-12">
         <div class="ibox">
             <div class="ibox-content">
                 <h2>Цели</h2>
@@ -33,6 +33,7 @@ $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $
                         'name',
                         'reestr_number',
                         'id_form',
+                        'state:boolean',
                         [
                             'class' => 'yii\grid\ActionColumn',
                             'contentOptions'=>['class'=>'button-column'],
@@ -58,7 +59,7 @@ $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $
             </div>
         </div>
     </div>
-    <div class="col-lg-7">
+    <div class="col-lg-12">
         <div class="ibox">
             <div class="ibox-content">
                 <?= DetailView::widget([

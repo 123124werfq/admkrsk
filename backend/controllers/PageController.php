@@ -254,18 +254,20 @@ class PageController extends Controller
                 Yii::$app->db->createCommand()->update('cnt_page',['ord'=>$key],['id_page'=>$id])->execute();
         }
 
-        $dataProviderChilds = new ActiveDataProvider([
-            'query' => $model->getChilds()->orderBy('ord ASC'),
-        ]);
+        $submenu = [];
 
-        $dataProviderMenu = new ActiveDataProvider([
-            'query' => (!empty($model->menu))?$model->menu->getLinks():\common\models\MenuLink::find()->where('id_link IS NULL'),
+        if (empty($model->menu))
+            $submenu = $model->getChilds();
+        else
+            $submenu = $model->menu->getLinks();
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $submenu,
         ]);
 
         return $this->render('view', [
             'model' => $model,
-            'dataProviderChilds'=>$dataProviderChilds,
-            'dataProviderMenu'=>$dataProviderMenu,
+            'submenu' => $dataProvider,
         ]);
     }
 
@@ -279,9 +281,13 @@ class PageController extends Controller
         $model = new Page();
         $model->id_parent = $id_parent;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if (!empty($model->id_parent) && !empty($model->parent))
+            $model->ord = count($model->parent->getSubMenu());
+
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             $model->createAction(Action::ACTION_CREATE);
-            return $this->redirect(['view', 'id' => $model->id_page]);
+            return $this->redirect(['view', 'id' => ($id_parent)?$id_parent:$model->id_page]);
         }
 
         return $this->render('create', [

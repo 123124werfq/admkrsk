@@ -25,17 +25,24 @@ use common\models\Form;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
 
+    <?= $form->field($model, 'place')->textInput(['maxlength' => 255]) ?>
+
     <?= $form->field($model, 'reestr_number')->textInput(['maxlength' => 255]) ?>
 
-    <?= $form->field($model, 'target')->textInput(['maxlength' => 255]) ?>
-
-    <?= $form->field($model, 'target_code')->textInput(['maxlength' => 255]) ?>
+    <div class="row">
+        <div class="col-sm-6">
+            <?= $form->field($model, 'target')->textInput(['maxlength' => 255]) ?>
+        </div>
+        <div class="col-sm-6">
+            <?= $form->field($model, 'target_code')->textInput(['maxlength' => 255]) ?>
+        </div>
+    </div>
 
     <?= $form->field($model, 'service_code')->textInput(['maxlength' => 255]) ?>
 
     <?= $form->field($model, 'obj_name')->textInput(['maxlength' => 255]) ?>
 
-    <?= $form->field($model, 'old')->checkBox() ?>
+    <?= $form->field($model, 'state')->checkBox() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

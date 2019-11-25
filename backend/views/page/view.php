@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->render('_head',['model'=>$model]);
 ?>
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-lg-9">
         <div class="tabs-container">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="active"><a class="nav-link" data-toggle="tab" href="#tab-1">Дочерние разделы</a></li>
@@ -29,75 +29,68 @@ $this->render('_head',['model'=>$model]);
                 <div role="tabpanel" id="tab-1" class="tab-pane active">
                     <div class="panel-body">
                         <h2>
-                            <?=Html::a('Добавить', ['create', 'id_parent' => $model->id_page], ['class' => 'btn btn-default pull-right'])?>
-                            Дочерние разделы
+                            <span class="pull-right">
+                            <?=Html::a('Добавить ссылку', ['menu-link/create', 'id_page' => $model->id_page], ['class' => 'btn btn-default'])?>
+                            <?=Html::a('Добавить подраздел', ['create', 'id_parent' => $model->id_page], ['class' => 'btn btn-default'])?>
+                            </span>
+                            Меню раздела
                         </h2>
-                        <?= GridView::widget([
-                            'dataProvider' => $dataProviderChilds,
-                            'columns' => [
-                                'id_page',
-                                [
-                                    'attribute' => 'title',
-                                    'contentOptions'=>['width'=>'40%']
-                                ],
-                                [
-                                    'attribute' => 'alias',
-                                    'format' => 'html',
-                                    'value' => function ($model) {
-                                        return '<a target="_blank" href="'.$model->getUrl(true).'">'.$model->getUrl().'</a>';
-                                    },
-                                    'contentOptions'=>['width'=>'40%']
-                                ],
-                                [
-                                    'class' => 'yii\grid\ActionColumn',
-                                    'contentOptions'=>['class'=>'button-column']
-                                ],
-                            ],
-                            'tableOptions'=>[
-                                'emptyCell '=>'',
-                                'class'=>'table table-striped ids-style valign-middle table-hover ordered'
-                            ]
-                        ]); ?>
-                        <br/>
 
-                        <h2>
-                            <?=Html::a('Редактировать', ['menu/update', 'id_page' => $model->id_page], ['class' => 'btn btn-default pull-right'])?>
-                            Дополнительные ссылки в правом меню
-                        </h2>
-                        <?= GridView::widget([
-                            'dataProvider' => $dataProviderMenu,
-                            //'filterModel' => $searchModel,
-                            'columns' => [
-                                'id_link:text:#',
-                                [
-                                    'attribute'=>'label',
-                                    'contentOptions'=>['width'=>'40%']
-                                ],
-                                [
-                                    'attribute' => 'url',
-                                    'format' => 'html',
-                                    'value' => function ($model) {
-                                        $url = (!empty($model->id_page))?$model->page->getUrl(true):$model->url;
-
-                                        return '<a target="_blank" href="'.$url.'">'.$url.'</a>';
-                                    },
-                                    'contentOptions'=>['width'=>'57%']
-                                ],
-                                /*[
-                                    'class' => 'yii\grid\ActionColumn',
-                                    'contentOptions'=>['class'=>'button-column']
-                                ],*/
-                            ],
-                            'tableOptions'=>[
-                                'emptyCell '=>'',
-                                'class'=>'table table-striped ids-style valign-middle table-hover ordered'
-                            ]
-                        ]); ?>>
+                        <?php
+                            if (empty($model->menu))
+                            {
+                                echo GridView::widget([
+                                    'dataProvider' => $submenu,
+                                    'columns' => [
+                                        'id_page',
+                                        'title',
+                                        [
+                                            'class' => 'yii\grid\ActionColumn',
+                                            'contentOptions'=>['class'=>'button-column'],
+                                            'template' => '{hide} {view} {update} {delete}',
+                                            'buttons' => [
+                                                'hide' => function ($url, $model, $key) {
+                                                    return Html::a('', ['/page/hide', 'id' => $model->id_page],['class' => 'glyphicon glyphicon-fa-circle']);
+                                                },
+                                            ],
+                                        ],
+                                    ],
+                                    'tableOptions'=>[
+                                        'emptyCell' => '',
+                                        'class' => 'table table-striped ids-style valign-middle table-hover'
+                                    ]
+                                ]);
+                            }
+                            else
+                            {
+                                echo GridView::widget([
+                                    'dataProvider' => $submenu,
+                                    'columns' => [
+                                        'id_link',
+                                        'label',
+                                        [
+                                            'class' => 'yii\grid\ActionColumn',
+                                            'contentOptions'=>['class'=>'button-column'],
+                                            'template' => '{hide} {view} {update} {delete}',
+                                            'buttons' => [
+                                                'hide' => function ($url, $model, $key) {
+                                                    return Html::a('', ['/menu-link/hide', 'id' => $model->id_link],['class' => 'glyphicon glyphicon-fa-circle']);
+                                                },
+                                            ],
+                                        ],
+                                    ],
+                                    'tableOptions'=>[
+                                        'emptyCell' => '',
+                                        'class' => 'table table-striped ids-style valign-middle table-hover'
+                                    ]
+                                ]);
+                            }
+                        ?>
                     </div>
                 </div>
                 <div role="tabpanel" id="tab-2" class="tab-pane">
                     <div class="panel-body">
-                        
+
                     </div>
                 </div>
             </div>

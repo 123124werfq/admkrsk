@@ -53,6 +53,8 @@ use common\models\Page;
 
 <?= $form->field($model, 'active')->checkBox() ?>
 
+<?= $form->field($model, 'hidemenu')->checkBox() ?>
+
 <hr>
 
 <?= $form->field($model, 'noguest')->checkBox() ?>

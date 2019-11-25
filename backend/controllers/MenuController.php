@@ -181,7 +181,7 @@ class MenuController extends Controller
     {
         if (!empty($id))
             $model = $this->findModel($id);
-        else if (!empty($id_page))
+        elseif (!empty($id_page))
         {
             $page = Page::findOne($id_page);
 

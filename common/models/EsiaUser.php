@@ -154,10 +154,22 @@ class EsiaUser extends \yii\db\ActiveRecord
 
                 switch ($address['type']){
                     case 'PLV':
-                        $this->living_addr = $address['zipCode'] . ', ' .  $address['addressStr'] . ', ' . $address['house'] . ', ' . $address['flat'];
+                        $addr_components = [];
+                        if(isset($address['zipCode'])) $addr_components[] = $address['zipCode'];
+                        if(isset($address['addressStr'])) $addr_components[] = $address['addressStr'];
+                        if(isset($address['house'])) $addr_components[] = $address['house'];
+                        if(isset($address['flat'])) $addr_components[] = $address['flat'];
+
+                        $this->living_addr = implode(', ', $addr_components);
                         $this->living_addr_fias = $address['fiasCode'];
                         break;
                     case 'PRG':
+                        $addr_components = [];
+                        if(isset($address['zipCode'])) $addr_components[] = $address['zipCode'];
+                        if(isset($address['addressStr'])) $addr_components[] = $address['addressStr'];
+                        if(isset($address['house'])) $addr_components[] = $address['house'];
+                        if(isset($address['flat'])) $addr_components[] = $address['flat'];
+
                         $this->register_addr = $address['zipCode'] . ', ' .  $address['addressStr'] . ', ' . $address['house'] . ', ' . $address['flat'];
                         $this->register_addr_fias = $address['fiasCode'];
                         break;

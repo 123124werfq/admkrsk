@@ -76,7 +76,7 @@ class ServiceController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_CREATE);
-            return $this->redirect(['index', 'id' => $model->id_service]);
+            return $this->redirect(['service/view', 'id' => $model->id_service]);
         }
 
         return $this->render('create', [
@@ -105,7 +105,7 @@ class ServiceController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_UPDATE);
-            return $this->redirect(['index', 'id' => $model->id_service]);
+            return $this->redirect(['service/view', 'id' => $model->id_service]);
         }
 
         return $this->render('update', [
