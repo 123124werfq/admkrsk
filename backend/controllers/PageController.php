@@ -287,6 +287,12 @@ class PageController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save())
         {
             $model->createAction(Action::ACTION_CREATE);
+
+            if (!empty($model->id_parent) && !empty($model->parent->menu))
+            {
+                $model->parent->menu->addLink($model);
+            }
+
             return $this->redirect(['view', 'id' => ($id_parent)?$id_parent:$model->id_page]);
         }
 
