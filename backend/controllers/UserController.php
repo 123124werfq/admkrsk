@@ -139,7 +139,7 @@ class UserController extends Controller
             /* @var User $user */
             $results[] = [
                 'id' => $user->id,
-                'text' => $user->adinfo->name . ' (' . $user->email . ')',
+                'text' => $user->adinfo->name??$user->username . ' (' . $user->email . ')',
             ];
         }
 
