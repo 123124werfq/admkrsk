@@ -236,6 +236,14 @@ class PageController extends Controller
         ]);
     }
 
+    public function actionOrder()
+    {
+        $ords = Yii::$app->request->post('ords');
+
+        foreach ($ords as $key => $id)
+            Yii::$app->db->createCommand()->update('cnt_page',['ord'=>$key],['id_page'=>$id])->execute();
+    }
+
     /**
      * Displays a single Page model.
      * @param integer $id
@@ -246,20 +254,12 @@ class PageController extends Controller
     {
         $model = $this->findModel($id);
 
-        $ords = Yii::$app->request->post('ords');
-
-        if (!empty($ords))
-        {
-            foreach ($ords as $key => $id)
-                Yii::$app->db->createCommand()->update('cnt_page',['ord'=>$key],['id_page'=>$id])->execute();
-        }
-
         $submenu = [];
 
         if (empty($model->menu))
-            $submenu = $model->getChilds();
+            $submenu = $model->getChilds()->orderBy('ord');
         else
-            $submenu = $model->menu->getLinks();
+            $submenu = $model->menu->getLinks()->orderBy('ord');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $submenu,

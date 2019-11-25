@@ -60,7 +60,8 @@ $this->render('_head',['model'=>$model]);
                                     ],
                                     'tableOptions'=>[
                                         'emptyCell' => '',
-                                        'class' => 'table table-striped ids-style valign-middle table-hover'
+                                        'class' => 'table table-striped ids-style valign-middle table-hover ordered',
+                                        'data-order-url'=>'/page/order'
                                     ]
                                 ]);
                             }
@@ -93,7 +94,8 @@ $this->render('_head',['model'=>$model]);
                                     ],
                                     'tableOptions'=>[
                                         'emptyCell' => '',
-                                        'class' => 'table table-striped ids-style valign-middle table-hover'
+                                        'class' => 'table table-striped ids-style valign-middle table-hover ordered',
+                                        'data-order-url'=>'/menu/order'
                                     ]
                                 ]);
                             }
