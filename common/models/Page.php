@@ -138,6 +138,11 @@ class Page extends \yii\db\ActiveRecord
         }
     }
 
+    public function getFullUrl()
+    {
+        return $this->getUrl(true);
+    }
+
     public function createPath()
     {
         $oldpath = $this->path;
@@ -229,7 +234,7 @@ class Page extends \yii\db\ActiveRecord
         return $this->hasMany(Page::class, ['id_parent' => 'id_page'])->orderBy('ord ASC');
     }
 
-    public function getSubMenu()
+    /*public function getSubMenu()
     {
         $childs = $this->getChilds()->orderBy('ord ASC')->all();
         $links = [];
@@ -257,5 +262,5 @@ class Page extends \yii\db\ActiveRecord
         });
 
         return $rightmenu;
-    }
+    }*/
 }

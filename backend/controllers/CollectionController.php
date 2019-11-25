@@ -300,7 +300,7 @@ class CollectionController extends Controller
      */
     public function actionView($id)
     {
-
+        return $this->redirect(['collection-record/index','id'=>$id]);
     }
 
     public function actionRecord($id,$id_record=null)
