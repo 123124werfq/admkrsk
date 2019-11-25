@@ -149,7 +149,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_COLLECTION => "Список",
             self::TYPE_IMAGE => "Изображение",
             self::TYPE_ADDRESS => "Адрес",
-            self::TYPE_JSON => "JSON",
+            self::TYPE_JSON => "Таблицы",
             self::TYPE_REGION => 'Регион',
             self::TYPE_SUBREGION => 'Область',
             self::TYPE_CITY => 'Город',

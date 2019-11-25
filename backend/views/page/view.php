@@ -33,74 +33,19 @@ $this->render('_head',['model'=>$model]);
                             <?=Html::a('Добавить ссылку', ['menu-link/create', 'id_page' => $model->id_page], ['class' => 'btn btn-default'])?>
                             <?=Html::a('Добавить подраздел', ['create', 'id_parent' => $model->id_page], ['class' => 'btn btn-default'])?>
                             </span>
-                            Дочерние разделы
+                            Меню раздела
                         </h2>
-                        <br/>
-                        <table class="table table-hover table-striped table-valign-middle">
-                            <thead>
-                                <tr>
-                                    <th width="10">
-                                    </th>
-                                    <th>
-                                        Заголовок
-                                    </th>
-                                    <th>
-                                        Ссылка
-                                    </th>
-                                    <th width="100">
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="sortablepage">
-                                <?php foreach ($rightmenu as $key => $data){
-                                    $url = $data->getUrl(true);
-                                    ?>
-                                    <tr data-id="<?=(isset($data->id_link))?$data->id_link:$data->id_page?>" data-model="<?=(isset($data->id_link))?'menu':'page'?>">
-                                        <td>
-                                            <?=(isset($data->id_link))?'<span class="glyphicon glyphicon-link"></span>':''?>
-                                        </td>
-                                        <td>
-                                            <?=(!empty($data->title))?$data->title:$data->label?>
-                                        </td>
-                                        <td>
-                                            <a target="_blank" href="<?=$url?>"><?=$url?></a>
-                                        </td>
-                                        <td>
-                                            <?php if (isset($data->id_link))
-                                            {
-                                                echo Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['menu-link/update', 'id' => $data->id_link],[
-                                                    'class'=>'btn btn-default'
-                                                ]).' ';
 
-                                                echo Html::a('<span class="glyphicon glyphicon-trash"></span>', ['menu-link/delete', 'id' => $data->id_link],[
-                                                    'data' => [
-                                                        'confirm' => 'Вы уверены, что хотите удалить этот элемент?',
-                                                        'method' => 'post',
-                                                    ],
-                                                    'class'=>'btn btn-default'
-                                                ]);
-                                            }
-                                            else 
-                                            {
-                                                echo Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update', 'id' => $data->id_page],[
-                                                    'class'=>'btn btn-default'
-                                                ]).' ';
+                        <?php
+                            if (empty($model->menu))
+                            {
 
-                                                echo Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete', 'id' => $data->id_page],[
-                                                    'data' => [
-                                                        'confirm' => 'Вы уверены, что хотите удалить этот элемент?',
-                                                        'method' => 'post',
-                                                    ],
-                                                    'class'=>'btn btn-default'
-                                                ]);
-                                            } 
-                                            ?>
-                                        </td>
-                                    </tr>
-                                <?php }?>
-                            </tbody>
-                        </table>
-                        <br/>
+                            }
+                            else
+                            {
+
+                            }
+                        ?>
                     </div>
                 </div>
                 <div role="tabpanel" id="tab-2" class="tab-pane">

@@ -254,7 +254,11 @@ class PageController extends Controller
                 Yii::$app->db->createCommand()->update('cnt_page',['ord'=>$key],['id_page'=>$id])->execute();
         }
 
-        $rightmenu = $model->getSubMenu();
+        $submenu = [];
+        if (!empty($page->menu))
+            $submenu = $page->getChilds();
+        else
+            $submenu = $page->menu->getLinks();
 
         return $this->render('view', [
             'model' => $model,
