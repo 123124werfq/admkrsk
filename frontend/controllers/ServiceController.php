@@ -78,16 +78,21 @@ class ServiceController extends \yii\web\Controller
 
     public function actionCreate($id=null,$id_target=null,$page=null)
     {
+        $inputs = [];
+
         if (!empty($id))
         {
             $service = $this->findModel($id);
             $form = $service->form;
+            $inputs['id_service'] = $id;
         }
         else
         {
             $target = $this->findTarget($id_target);
             $service = $target->service;
             $form = $target->form;
+            $inputs['id_service'] = $service->id_service;
+            $inputs['id_target'] = $target->id_target;
         }
 
         if (empty($form))
@@ -111,6 +116,7 @@ class ServiceController extends \yii\web\Controller
             'form'=>$model,
             'service'=>$service,
             'page'=>$page,
+            'inputs'=>$inputs,
         ]);
     }
 
