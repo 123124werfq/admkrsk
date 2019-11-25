@@ -48,7 +48,7 @@
         state = typeof(state) == 'undefined' ? !!$('link[rel="stylesheet accessability"]').get(0).disabled : state;
 
         $('link[rel="stylesheet"]:not(link[rel="stylesheet accessability"])').eq(0).get(0).disabled = (state ? true : false);
-        $('link[rel="stylesheet"]:not(link[rel="stylesheet accessability"])').eq(1).get(0).disabled = (state ? true : false);
+        //$('link[rel="stylesheet"]:not(link[rel="stylesheet accessability"])').eq(1).get(0).disabled = (state ? true : false);
         //$('link[rel="stylesheet main"]').eq(1).get(0).disabled = (state ? true : false);
         $('link[rel="stylesheet accessability"]').get(0).disabled = (state ? false : true);
         if (state) {
