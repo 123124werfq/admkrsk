@@ -188,7 +188,7 @@ class Book extends \yii\db\ActiveRecord
                 "");
 
             $ares = $this->service->activateTime($of[0]->ID, $client, $res->reserveCode);
-
+var_dump($ares); die();
             if(!empty($ares->ActivateCode))
             {
                 $this->id_user = Yii::$app->user->id;
