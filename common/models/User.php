@@ -126,7 +126,24 @@ class User extends ActiveRecord implements IdentityInterface
     {
         parent::afterSave($insert, $changedAttributes);
 
-        $this->setAssignments($this->roles);
+        $this->setAssignments();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserUserGroups()
+    {
+        return $this->hasMany(UserUserGroup::class, ['id' => 'id_user']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserGroup()
+    {
+        return $this->hasMany(UserGroup::class, ['id_user_group' => 'id_user_group'])
+            ->via('userUserGroups');
     }
 
     /**

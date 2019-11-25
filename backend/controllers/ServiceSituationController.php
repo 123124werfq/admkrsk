@@ -3,9 +3,11 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\modules\log\models\Log;
 use Yii;
 use common\models\ServiceSituation;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -21,8 +23,93 @@ class ServiceSituationController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => ['backend.serviceSituation.index'],
+                        'roleParams' => [
+                            'class' => ServiceSituation::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['view'],
+                        'roles' => ['backend.serviceSituation.view'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => ServiceSituation::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create'],
+                        'roles' => ['backend.serviceSituation.create'],
+                        'roleParams' => [
+                            'class' => ServiceSituation::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['update'],
+                        'roles' => ['backend.serviceSituation.update'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => ServiceSituation::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['delete'],
+                        'roles' => ['backend.serviceSituation.delete'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => ServiceSituation::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['history'],
+                        'roles' => ['backend.serviceSituation.log.index'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => ServiceSituation::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['log'],
+                        'roles' => ['backend.serviceSituation.log.view'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
+                                    return $log->model_id;
+                                }
+                                return null;
+                            },
+                            'class' => ServiceSituation::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['restore'],
+                        'roles' => ['backend.serviceSituation.log.restore'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
+                                    return $log->model_id;
+                                }
+                                return null;
+                            },
+                            'class' => ServiceSituation::class,
+                        ],
+                    ],
+                ],
+            ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],

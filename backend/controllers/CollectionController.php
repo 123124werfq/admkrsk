@@ -5,8 +5,6 @@ namespace backend\controllers;
 use common\models\Action;
 use common\modules\log\models\Log;
 use Yii;
-
-
 use common\models\Collection;
 use common\models\CollectionRecord;
 use common\models\CollectionColumn;
@@ -17,8 +15,6 @@ use yii\helpers\ArrayHelper;
 use yii\validators\NumberValidator;
 use yii\web\Response;
 use yii\web\UploadedFile;
-
-use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;

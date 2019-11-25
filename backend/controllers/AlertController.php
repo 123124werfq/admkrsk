@@ -3,9 +3,11 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\modules\log\models\Log;
 use Yii;
 use common\models\Alert;
 use backend\models\search\AlertSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -21,8 +23,93 @@ class AlertController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => ['backend.alert.index'],
+                        'roleParams' => [
+                            'class' => Alert::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['view'],
+                        'roles' => ['backend.alert.view'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => Alert::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create'],
+                        'roles' => ['backend.alert.create'],
+                        'roleParams' => [
+                            'class' => Alert::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['update'],
+                        'roles' => ['backend.alert.update'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => Alert::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['delete'],
+                        'roles' => ['backend.alert.delete'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => Alert::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['history'],
+                        'roles' => ['backend.alert.log.index'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => Alert::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['log'],
+                        'roles' => ['backend.alert.log.view'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
+                                    return $log->model_id;
+                                }
+                                return null;
+                            },
+                            'class' => Alert::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['restore'],
+                        'roles' => ['backend.alert.log.restore'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
+                                    return $log->model_id;
+                                }
+                                return null;
+                            },
+                            'class' => Alert::class,
+                        ],
+                    ],
+                ],
+            ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
