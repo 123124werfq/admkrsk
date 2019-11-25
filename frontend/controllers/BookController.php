@@ -196,6 +196,9 @@ class BookController extends \yii\web\Controller
         $cn = $b0->connect(0);
         $res = $b0->deleteTime($pin);
 
+        if($res)
+            $this->redirect('/personal/book');
+
     }
 
 }

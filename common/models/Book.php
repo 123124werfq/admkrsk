@@ -240,7 +240,7 @@ class Book extends \yii\db\ActiveRecord
 
         $res = $this->service->Delete($book->office, $book->date, $pin);
 
-        return $this->redirect('/personal/book');
+        return true;
     }
 
 }
