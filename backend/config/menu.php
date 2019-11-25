@@ -9,7 +9,7 @@ return [
     'user'=>[
         'title'=>'Пользователи',
         'icon'=>'fa fa-user',
-        'roles' => ['backend.user'],
+        'roles' => ['backend.user', 'backend.userGroup', 'backend.userRole'],
         'submenu'=>[
             'user'=>[
                 'title'=>'Пользователи',
@@ -17,7 +17,11 @@ return [
             ],
             'user-group'=>[
                 'title'=>'Группы',
-                'roles' => ['backend.user'],
+                'roles' => ['backend.userGroup'],
+            ],
+            'user-role'=>[
+                'title'=>'Роли',
+                'roles' => ['backend.userRole'],
             ],
         ],
     ],

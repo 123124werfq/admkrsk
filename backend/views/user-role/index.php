@@ -1,23 +1,17 @@
 <?php
 
-use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel backend\models\search\UserGroupSearch */
+/* @var $searchModel backend\models\search\UserRoleSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = $searchModel->breadcrumbsLabel;
 $this->params['breadcrumbs'][] = $this->title;
-if (Yii::$app->user->can('admin.user')) {
-    $this->params['button-block'][] = Html::a('Добавить группу', ['create'], ['class' => 'btn btn-success']);
-}
 ?>
-<div class="user-group-index">
+<div class="user-role-index">
     <div class="ibox">
         <div class="ibox-content">
-
-            <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
@@ -25,17 +19,17 @@ if (Yii::$app->user->can('admin.user')) {
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
 
-                    //'id_user_group',
-                    'name',
+                    //'name',
+                    //'type',
+                    'description:ntext:Название',
+                    //'rule_name',
+                    //'data',
                     //'created_at',
-                    //'created_by',
                     //'updated_at',
-                    //'updated_by',
-                    //'deleted_at',
-                    //'deleted_by',
 
                     [
                         'class' => 'yii\grid\ActionColumn',
+                        'template' => '{view}',
                         'contentOptions'=>['class'=>'button-column'],
                     ],
                 ],
