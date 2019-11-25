@@ -66,7 +66,7 @@ class PageController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['update'],
+                        'actions' => ['update','hide','order'],
                         'roles' => ['backend.page.update'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
@@ -236,6 +236,14 @@ class PageController extends Controller
         ]);
     }
 
+    public function actionOrder()
+    {
+        $ords = Yii::$app->request->post('ords');
+
+        foreach ($ords as $key => $id)
+            Yii::$app->db->createCommand()->update('cnt_page',['ord'=>$key],['id_page'=>$id])->execute();
+    }
+
     /**
      * Displays a single Page model.
      * @param integer $id
@@ -246,20 +254,12 @@ class PageController extends Controller
     {
         $model = $this->findModel($id);
 
-        $ords = Yii::$app->request->post('ords');
-
-        if (!empty($ords))
-        {
-            foreach ($ords as $key => $id)
-                Yii::$app->db->createCommand()->update('cnt_page',['ord'=>$key],['id_page'=>$id])->execute();
-        }
-
         $submenu = [];
 
         if (empty($model->menu))
-            $submenu = $model->getChilds();
+            $submenu = $model->getChilds()->orderBy('ord');
         else
-            $submenu = $model->menu->getLinks();
+            $submenu = $model->menu->getLinks()->orderBy('ord');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $submenu,
@@ -287,6 +287,12 @@ class PageController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save())
         {
             $model->createAction(Action::ACTION_CREATE);
+
+            if (!empty($model->id_parent) && !empty($model->parent->menu))
+            {
+                $model->parent->menu->addLink($model);
+            }
+
             return $this->redirect(['view', 'id' => ($id_parent)?$id_parent:$model->id_page]);
         }
 
@@ -314,6 +320,16 @@ class PageController extends Controller
         return $this->render('update', [
             'model' => $model,
         ]);
+    }
+
+    public function actionHide($id)
+    {
+        $model = $this->findModel($id);
+
+        $model->hidemenu = ($model->hidemenu)?0:1;
+        $model->updateAttributes(['hidemenu']);
+
+        return $this->redirect(['view', 'id' => $model->id_parent]);
     }
 
     /**

@@ -1,3 +1,5 @@
+let cdtimer = 3600, intervalcd;
+
 function removeRow(obj)
 {
   var parent = $(obj).parent().parent();
@@ -269,4 +271,24 @@ $(document).ready(function() {
             }
         });
     });
+
+    if(location.href.indexOf('administration/service')>0)
+    {
+        $('.form-inside').before("<div class=countdown></div>");
+        intervalcd = setInterval(function() {
+            cdtimer--;
+
+            if(cdtimer<0)
+            {
+                clearInterval(intervalcd);
+                alert('Сессия истекла. Необходимо повторно осуществить логин с помощью ЕСИА');
+                $("[href='/site/logout']").click();
+            }
+            else
+                $('.countdown').text((""+parseInt(cdtimer/60)).padStart(2, "0")+":"+(""+parseInt(cdtimer%60)).padStart(2, "0"))
+
+        }, 1000);
+    }
+
+
 })

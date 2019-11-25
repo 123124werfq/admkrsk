@@ -62,7 +62,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="bookdate" class="form-label">Дата</label>
-                                <input name="bookdate" class="form-control" type="text" id="datepicker" autocomplete="false">
+                                <input name="bookdate" class="form-control" type="text" id="datepicker" autocomplete="off">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Время</label>

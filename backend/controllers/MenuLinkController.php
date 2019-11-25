@@ -72,6 +72,18 @@ class MenuLinkController extends Controller
         ]);
     }
 
+    public function actionHide($id)
+    {
+        $model = $this->findModel($id);
+        $model->state = $model->state?0:1;
+        $model->updateAttributes(['state']);
+
+        if (!empty($model->menu->id_page))
+            return $this->redirect(['page/view', 'id' => $model->menu->id_page]);
+        else
+            return $this->redirect(['index', 'id' => $model->id_menu]);
+    }
+
     /**
      * Creates a new MenuLink model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -94,11 +106,17 @@ class MenuLinkController extends Controller
                 $menu->type = Menu::TYPE_LIST;
                 $menu->id_page = $id_page;
                 $menu->save();
+
+                foreach ($page->childs as $key => $child)
+                {
+                    $menu->addLink($child,$child->ord);
+                }
+
             }
-            else 
+            else
                 $menu = $page->menu;
         }
-        else 
+        else
             $menu = Menu::findOne($id_menu);
 
         if (empty($menu))
@@ -108,17 +126,13 @@ class MenuLinkController extends Controller
         $model->id_menu = $menu->id_menu;
         $model->id_parent = $id;
 
-        // ставим сортировку
-        if (!empty($page))
-            $model->ord = count($page->getSubMenu());
-
         $model->state = 1;
 
         if ($model->load(Yii::$app->request->post()) && $model->save())
         {
             if (!empty($id_page))
                 return $this->redirect(['page/view', 'id' => $id_page]);
-            else 
+            else
                 return $this->redirect(['index', 'id' => $model->id_menu]);
         }
 

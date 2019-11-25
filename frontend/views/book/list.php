@@ -56,7 +56,7 @@
                                 'label' => '',
                                 'format' => 'raw',
                                 'value' => function ($model) {
-                                    return "<a href=/book/reject?code={$model->pin}>Отменить</a>";
+                                    return "<a href=/personal/book/reject?code={$model->pin}>Отменить</a>";
                                 }
                             ]
                         ],

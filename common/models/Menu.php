@@ -113,6 +113,17 @@ class Menu extends \yii\db\ActiveRecord
         ];
     }
 
+    public function addLink($page,$ord=null)
+    {
+        $link = new MenuLink;
+        $link->id_menu = $this->id_menu;
+        $link->id_page = $page->id_page;
+        $link->state = $page->hidemenu;
+        $link->label = $page->title;
+        $link->ord = ($ord)?$ord:$this->getLinks()->count();
+        $link->save();
+    }
+
     public function getLinks()
     {
         return $this->hasMany(MenuLink::class, ['id_menu' => 'id_menu'])->orderBy('ord ASC');

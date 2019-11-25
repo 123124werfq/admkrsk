@@ -21,7 +21,7 @@ class BookController extends \yii\web\Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'service',  'available', 'dates', 'intervals', 'proceed', 'book'],
+                        'actions' => ['index', 'service',  'available', 'dates', 'intervals', 'proceed', 'book', 'reject'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -195,6 +195,9 @@ class BookController extends \yii\web\Controller
         $b0 = new Book;
         $cn = $b0->connect(0);
         $res = $b0->deleteTime($pin);
+
+        if($res)
+            $this->redirect('/personal/book');
 
     }
 
