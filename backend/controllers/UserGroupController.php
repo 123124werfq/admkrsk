@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use backend\models\forms\UserGroupForm;
+use backend\models\forms\UserGroupRevokeForm;
 use common\models\Action;
 use Yii;
 use common\models\UserGroup;
@@ -53,8 +55,14 @@ class UserGroupController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $userGroupForm = new UserGroupForm(['id_user_group' => $model->id_user_group]);
+        $assign = false;
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'userGroupForm' => $userGroupForm,
+            'assign' => $assign,
         ]);
     }
 
@@ -116,6 +124,50 @@ class UserGroupController extends Controller
         }
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionAssign($id)
+    {
+        $model = $this->findModel($id);
+        $userGroupForm = new UserGroupForm(['id_user_group' => $model->id_user_group]);
+        $assign = false;
+
+        if ($userGroupForm->load(Yii::$app->request->post())) {
+            $assign = $userGroupForm->assign();
+        }
+
+        return $this->render('view', [
+            'model' => $model,
+            'userGroupForm' => $userGroupForm,
+            'assign' => $assign,
+        ]);
+    }
+
+    /**
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionRevoke($id)
+    {
+        $model = $this->findModel($id);
+        $userGroupForm = new UserGroupForm(['id_user_group' => $model->id_user_group]);
+        $revoke = false;
+
+        if ($userGroupForm->load(Yii::$app->request->post())) {
+            $revoke = $userGroupForm->revoke();
+        }
+
+        return $this->render('view', [
+            'model' => $model,
+            'userGroupForm' => $userGroupForm,
+            'revoke' => $revoke,
+        ]);
     }
 
     /**

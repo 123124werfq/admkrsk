@@ -27,10 +27,11 @@ class AuthEntity extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'entity_id', 'class'], 'required'],
-            [['user_id', 'entity_id'], 'integer'],
+            [['user_id', 'id_user_group'], 'default', 'value' => null],
+            [['user_id', 'entity_id', 'id_user_group'], 'integer'],
+            [['entity_id', 'class'], 'required'],
             [['class'], 'string', 'max' => 255],
-            [['user_id', 'entity_id', 'class'], 'unique', 'targetAttribute' => ['user_id', 'entity_id', 'class']],
+            [['user_id', 'id_user_group', 'entity_id', 'class'], 'unique', 'targetAttribute' => ['user_id', 'id_user_group', 'entity_id', 'class']],
         ];
     }
 
@@ -40,7 +41,9 @@ class AuthEntity extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+            'id' => '#',
             'user_id' => 'Пользователь',
+            'id_user_group' => 'Группа пользователей',
             'entity_id' => 'ID объекта',
             'class' => 'Класс',
         ];
