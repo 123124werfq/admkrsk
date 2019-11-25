@@ -121,7 +121,7 @@ class Collection extends \yii\db\ActiveRecord
         $model->data = $data;
 
         if ($model->save())
-            return $model->id_record;
+            return $model;
 
         return false;
     }

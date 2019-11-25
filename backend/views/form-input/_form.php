@@ -42,10 +42,10 @@ if (!empty($model->id_form))
         </div>
         <div class="col-sm-6">
             <?=$form->field($model, 'id_type')->widget(Select2::class, [
-                'data' => ArrayHelper::map(FormInputType::find()->all(), 'id_type', 'name'),
+                'data' => ArrayHelper::map(FormInputType::find()->where(['type'=>$model->type])->all(), 'id_type', 'name'),
                 'pluginOptions' => [
                     'allowClear' => true,
-                    'placeholder' => 'Выберите пресет',
+                    'placeholder' => 'Настройки поля',
                 ],
             ])?>
         </div>

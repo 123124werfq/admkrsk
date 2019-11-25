@@ -393,7 +393,7 @@ class CollectionController extends Controller
 
             $model->createAction(Action::ACTION_CREATE);
 
-            return $this->redirect(['view', 'id' => $model->id_collection]);
+            return $this->redirect(['update', 'id' => $model->id_collection]);
         }
 
         return $this->render('create', [

@@ -159,4 +159,12 @@ class CollectionRecord extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Collection::class, ['id_collection' => 'id_collection']);
     }
+
+     public function afterDelete()
+     {
+        $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
+        $collection->remove(['id_record'=>$this->id_record]);
+
+        parent::afterDelete();
+     }
 }

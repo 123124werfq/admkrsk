@@ -58,8 +58,6 @@ class FormDynamic extends DynamicModel
     {
         $data = [];
 
-        print_r($this->attributes);
-
         foreach ($this->inputs as $key => $input)
         {
             $attribute = 'input'.$input->id_input;
@@ -83,6 +81,7 @@ class FormDynamic extends DynamicModel
                         $data[$index] = strtotime($this->$attribute);
                         break;
                     case CollectionColumn::TYPE_FILE:
+                    case CollectionColumn::TYPE_IMAGE:
 
                         $data[$index] = [];
 
@@ -110,8 +109,6 @@ class FormDynamic extends DynamicModel
                 }
             }
         }
-
-        print_r($data);
 
         return $data;
     }

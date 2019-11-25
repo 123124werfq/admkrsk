@@ -103,6 +103,7 @@ class Media extends \yii\db\ActiveRecord
             $this->mime = $size['mime'];
         }
 
+        $this->name = $file;
         $this->extension = $ext;
         $this->size = filesize($file);
         $this->ord = (isset($post['ord']))?(int)$post['ord']:'';
