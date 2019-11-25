@@ -72,6 +72,18 @@ class MenuLinkController extends Controller
         ]);
     }
 
+    public function actionHide($id)
+    {
+        $model = $this->findModel($id);
+        $model->state = $model->state?0:1;
+        $model->updateAttributes(['state']);
+
+        if (!empty($model->menu->id_page))
+            return $this->redirect(['page/view', 'id' => $model->menu->id_page]);
+        else
+            return $this->redirect(['index', 'id' => $model->id_menu]);
+    }
+
     /**
      * Creates a new MenuLink model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -95,10 +107,10 @@ class MenuLinkController extends Controller
                 $menu->id_page = $id_page;
                 $menu->save();
             }
-            else 
+            else
                 $menu = $page->menu;
         }
-        else 
+        else
             $menu = Menu::findOne($id_menu);
 
         if (empty($menu))
@@ -118,7 +130,7 @@ class MenuLinkController extends Controller
         {
             if (!empty($id_page))
                 return $this->redirect(['page/view', 'id' => $id_page]);
-            else 
+            else
                 return $this->redirect(['index', 'id' => $model->id_menu]);
         }
 

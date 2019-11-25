@@ -316,6 +316,16 @@ class PageController extends Controller
         ]);
     }
 
+    public function actionHide($id)
+    {
+        $model = $this->findModel($id);
+
+        $model->hidemenu = !$model->hidemenu;
+        $model->updateAttributes(['hidemenu']);
+
+        return $this->redirect(['view', 'id' => $model->id_page]);
+    }
+
     /**
      * Deletes an existing Page model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
