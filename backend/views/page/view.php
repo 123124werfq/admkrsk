@@ -39,11 +39,51 @@ $this->render('_head',['model'=>$model]);
                         <?php
                             if (empty($model->menu))
                             {
-
+                                echo GridView::widget([
+                                    'dataProvider' => $submenu,
+                                    'columns' => [
+                                        'id_page',
+                                        'title',
+                                        [
+                                            'class' => 'yii\grid\ActionColumn',
+                                            'contentOptions'=>['class'=>'button-column'],
+                                            'template' => '{hide} {view} {update} {delete}',
+                                            'buttons' => [
+                                                'hide' => function ($url, $model, $key) {
+                                                    return Html::a('', ['/page/hide', 'id' => $model->id_page],['class' => 'glyphicon glyphicon-fa-circle']);
+                                                },
+                                            ],
+                                        ],
+                                    ],
+                                    'tableOptions'=>[
+                                        'emptyCell' => '',
+                                        'class' => 'table table-striped ids-style valign-middle table-hover'
+                                    ]
+                                ]);
                             }
                             else
                             {
-
+                                echo GridView::widget([
+                                    'dataProvider' => $submenu,
+                                    'columns' => [
+                                        'id_link',
+                                        'label',
+                                        [
+                                            'class' => 'yii\grid\ActionColumn',
+                                            'contentOptions'=>['class'=>'button-column'],
+                                            'template' => '{hide} {view} {update} {delete}',
+                                            'buttons' => [
+                                                'hide' => function ($url, $model, $key) {
+                                                    return Html::a('', ['/menu-link/hide', 'id' => $model->id_link],['class' => 'glyphicon glyphicon-fa-circle']);
+                                                },
+                                            ],
+                                        ],
+                                    ],
+                                    'tableOptions'=>[
+                                        'emptyCell' => '',
+                                        'class' => 'table table-striped ids-style valign-middle table-hover'
+                                    ]
+                                ]);
                             }
                         ?>
                     </div>

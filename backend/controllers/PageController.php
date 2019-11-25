@@ -255,14 +255,19 @@ class PageController extends Controller
         }
 
         $submenu = [];
-        if (!empty($page->menu))
-            $submenu = $page->getChilds();
+
+        if (empty($model->menu))
+            $submenu = $model->getChilds();
         else
-            $submenu = $page->menu->getLinks();
+            $submenu = $model->menu->getLinks();
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $submenu,
+        ]);
 
         return $this->render('view', [
             'model' => $model,
-            'rightmenu' => $rightmenu,
+            'submenu' => $dataProvider,
         ]);
     }
 
