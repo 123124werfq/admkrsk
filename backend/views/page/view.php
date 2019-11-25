@@ -53,7 +53,7 @@ $this->render('_head',['model'=>$model]);
                                             'template' => '{hide} {view} {update} {delete}',
                                             'buttons' => [
                                                 'hide' => function ($url, $model, $key) {
-                                                    return Html::a('', ['/page/hide', 'id' => $model->id_page],['class' => 'glyphicon glyphicon-fa-circle']);
+                                                    return Html::a('', ['/page/hide', 'id' => $model->id_page],['class' => (!$model->hidemenu)?'fa fa-toggle-on':'fa fa-toggle-off']);
                                                 },
                                             ],
                                         ],

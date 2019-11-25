@@ -66,7 +66,7 @@ class PageController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['update'],
+                        'actions' => ['update','hide','order'],
                         'roles' => ['backend.page.update'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
@@ -326,10 +326,10 @@ class PageController extends Controller
     {
         $model = $this->findModel($id);
 
-        $model->hidemenu = !$model->hidemenu;
+        $model->hidemenu = ($model->hidemenu)?0:1;
         $model->updateAttributes(['hidemenu']);
 
-        return $this->redirect(['view', 'id' => $model->id_page]);
+        return $this->redirect(['view', 'id' => $model->id_parent]);
     }
 
     /**

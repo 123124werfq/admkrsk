@@ -106,6 +106,12 @@ class MenuLinkController extends Controller
                 $menu->type = Menu::TYPE_LIST;
                 $menu->id_page = $id_page;
                 $menu->save();
+
+                foreach ($page->childs as $key => $child)
+                {
+                    $menu->addLink($child,$child->ord);
+                }
+
             }
             else
                 $menu = $page->menu;
@@ -119,10 +125,6 @@ class MenuLinkController extends Controller
         $model = new MenuLink();
         $model->id_menu = $menu->id_menu;
         $model->id_parent = $id;
-
-        // ставим сортировку
-        if (!empty($page))
-            $model->ord = count($page->getSubMenu());
 
         $model->state = 1;
 
