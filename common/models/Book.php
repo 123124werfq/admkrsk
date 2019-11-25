@@ -240,6 +240,10 @@ class Book extends \yii\db\ActiveRecord
 
         $res = $this->service->Delete($book->office, $book->date, $pin);
 
+        // if($res)
+        $book->state = 3;
+        $book->updateAttributes(['state']);
+
         return true;
     }
 
