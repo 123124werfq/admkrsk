@@ -6,6 +6,7 @@ use backend\models\forms\UserRoleForm;
 use Yii;
 use common\models\UserRole;
 use backend\models\search\UserRoleSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -21,6 +22,46 @@ class UserRoleController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => ['backend.userRole.index'],
+                        'roleParams' => [
+                            'class' => UserRole::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['view'],
+                        'roles' => ['backend.userRole.view'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => UserRole::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['assign'],
+                        'roles' => ['backend.userRole.assign'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => UserRole::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['revoke'],
+                        'roles' => ['backend.userRole.revoke'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => UserRole::class,
+                        ],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [

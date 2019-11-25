@@ -5,9 +5,12 @@ namespace backend\controllers;
 use backend\models\forms\UserGroupForm;
 use backend\models\forms\UserGroupRevokeForm;
 use common\models\Action;
+use common\models\User;
+use common\modules\log\models\Log;
 use Yii;
 use common\models\UserGroup;
 use backend\models\search\UserGroupSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -23,6 +26,109 @@ class UserGroupController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => ['backend.userGroup.index'],
+                        'roleParams' => [
+                            'class' => UserGroup::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['view'],
+                        'roles' => ['backend.userGroup.view'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => UserGroup::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create'],
+                        'roles' => ['backend.userGroup.create'],
+                        'roleParams' => [
+                            'class' => UserGroup::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['update'],
+                        'roles' => ['backend.userGroup.update'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => UserGroup::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['delete'],
+                        'roles' => ['backend.userGroup.delete'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => UserGroup::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['assign'],
+                        'roles' => ['backend.userGroup.assign'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => UserGroup::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['revoke'],
+                        'roles' => ['backend.userGroup.revoke'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => UserGroup::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['history'],
+                        'roles' => ['backend.userGroup.log.index'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => UserGroup::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['log'],
+                        'roles' => ['backend.userGroup.log.view'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
+                                    return $log->model_id;
+                                }
+                                return null;
+                            },
+                            'class' => UserGroup::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['restore'],
+                        'roles' => ['backend.userGroup.log.restore'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
+                                    return $log->model_id;
+                                }
+                                return null;
+                            },
+                            'class' => UserGroup::class,
+                        ],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [

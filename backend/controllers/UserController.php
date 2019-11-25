@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\models\search\ActionSearch;
 use common\models\Action;
+use common\modules\log\models\Log;
 use Yii;
 use common\models\User;
 use backend\models\search\UserSearch;
@@ -89,16 +90,38 @@ class UserController extends Controller
                         'allow' => true,
                         'actions' => ['history'],
                         'roles' => ['backend.user.log.index'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => User::class,
+                        ],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['log'],
                         'roles' => ['backend.user.log.view'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
+                                    return $log->model_id;
+                                }
+                                return null;
+                            },
+                            'class' => User::class,
+                        ],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['restore'],
                         'roles' => ['backend.user.log.restore'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
+                                    return $log->model_id;
+                                }
+                                return null;
+                            },
+                            'class' => User::class,
+                        ],
                     ],
                 ],
             ],
