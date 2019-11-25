@@ -239,12 +239,11 @@ class Book extends \yii\db\ActiveRecord
             return false;
 
         $res = $this->service->Delete($book->office, $book->date, $pin);
-
-        var_dump($res); die();
-
-        // if($res)
-        $book->state = 3;
-        $book->updateAttributes(['state']);
+        
+        if($res) {
+            $book->state = 3;
+            $book->updateAttributes(['state']);
+        }
 
         return true;
     }
