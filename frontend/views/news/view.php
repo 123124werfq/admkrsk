@@ -9,8 +9,8 @@ use yii\helpers\Html;
         <div class="row">
             <div class="col-2-third">
                 <h1 class="searchable"><?=Html::encode($model->title)?></h1>
-                <?php if (!empty($model->tags)){?>
                 <ul class="press_info">
+                    <?php if (!empty($model->tags)){?>
                     <li class="press_info-item">
                     	<ul class="tags">
                             <?php foreach ($model->tags as $key => $tag) {
@@ -18,9 +18,9 @@ use yii\helpers\Html;
                             }?>
                     	</ul>
                     </li>
+                    <?php }?>
                     <li class="press_info-item"><?=strftime('%d %B %Y, %H:%M', $model->date_publish)?></li>
                 </ul>
-                <?php }?>
             </div>
             <div class="col-third">
                 <?=frontend\widgets\RightMenuWidget::widget(['page'=>$page])?>
