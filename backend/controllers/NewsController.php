@@ -122,13 +122,52 @@ class NewsController extends Controller
      * Lists all News models.
      * @return mixed
      */
-    public function actionIndex($id_page)
+    public function actionIndex($id_page,$export=0)
     {
         $searchModel = new NewsSearch();
         $searchModel->id_page = $id_page;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         $page = Page::findOne($id_page);
+
+        if ($export)
+        {
+            header('Content-Type: text/xlsx; charset=utf-8');
+            header('Content-Disposition: attachment; filename=Выгрузка новостей '.$page->title.'.xlsx');
+
+            \moonland\phpexcel\Excel::widget([
+                'models' => $dataProvider->query->all(),
+                'mode' => 'export',
+                'columns' => [
+                    [
+                        'attribute'=>'title',
+                        'width'=>100,
+                    ],
+                    [
+                        'attribute'=>'fullurl',
+                        'width'=>80,
+                    ],
+                    'date_publish:date',
+                    'date_unpublish:date',
+                    'created_at:date',
+                    'updated_at:date',
+                    'views',
+                    'viewsYear',
+                'views'], 
+                'headers' => [
+                    'title' => 'Название',
+                    'fullurl' => 'Ссылка',
+                    'date_unpublish'=> 'Снять с публикации',
+                    'date_publish'=> 'Опубликовать',
+                    'created_at'=> 'Создано',
+                    'updated_at'=> 'Отредактировано',
+                    'views'=>'Просмотры всего',
+                    'viewsYear'=>'Просмотры за год',
+                ], 
+            ]);
+
+            Yii::$app->end();
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,

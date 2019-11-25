@@ -15,6 +15,8 @@ $this->render('/page/_head',['model'=>$page]);
 if (Yii::$app->user->can('admin.news')) {
     $this->params['button-block'][] = Html::a('Добавить новость', ['create','id_page'=>Yii::$app->request->get('id_page',0)], ['class' => 'btn btn-success']);
 }
+
+$this->params['button-block'][] = Html::a('Экпорт XLS', ['','export'=>1,'id_page' => $page->id_page], ['class' => 'btn btn-default']);
 ?>
 
 <div class="ibox">
@@ -46,7 +48,8 @@ if (Yii::$app->user->can('admin.news')) {
                             'title',
                             'rub.lineValue:text:Рубрика',
                             'date_publish:date:Опубликовано',
-                            'date_unpublish:date:Снять',
+                            'date_unpublish:date:Снять с публикации',
+                            'updated_at:date:Отредактировано',
                             [
                                 'class' => 'yii\grid\ActionColumn',
                                 'contentOptions'=>['class'=>'button-column']

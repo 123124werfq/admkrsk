@@ -249,7 +249,9 @@ class PageController extends Controller
                     ],
                     'created_at:date',
                     'updated_at:date',
-                'views'], 
+                    'views',
+                    'viewsYear',
+                ], 
                 'headers' => [
                     'title' => 'Название',
                     'fullurl' => 'Ссылка',
