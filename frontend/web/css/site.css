@@ -98,3 +98,9 @@ a[href$=".mp3"]:before {background:url('/img/files/mp3.svg'); width:26px; height
 a[href$=".zip"]:before {background:url('/img/files/zip.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
 a[href$=".wav"]:before {background:url('/img/files/wav.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
 a[href$=".txt"]:before {background:url('/img/files/txt.svg'); width:26px; height:26px; display:inline-block; content:' '; background-size: contain; top: 8px; position: relative; margin-right: 5px;}
+
+.countdown{
+    position: absolute;
+    font-size: 2em;
+    font-weight: bold;
+}

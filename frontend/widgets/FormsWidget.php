@@ -27,7 +27,7 @@ class FormsWidget extends \yii\base\Widget
         if (empty($this->form))
         	return false;
 
-        $model = new FormDynamic($this->form,$data);
+        $model = new FormDynamic($this->form,$this->data);
 
         return $this->render('form/'.$this->template,[
         	'form'=>$this->form,
