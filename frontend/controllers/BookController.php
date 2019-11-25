@@ -21,7 +21,7 @@ class BookController extends \yii\web\Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'service',  'available', 'dates', 'intervals', 'proceed', 'book'],
+                        'actions' => ['index', 'service',  'available', 'dates', 'intervals', 'proceed', 'book', 'reject'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
