@@ -22,6 +22,8 @@ use yii\behaviors\TimestampBehavior;
  * @property string $path
  * @property string $filename
  * @property string $datetime
+ * @property string $url
+ * @property array $metadata
  *
  * @property OpendataData $data
  * @property Opendata $opendata
@@ -80,6 +82,18 @@ class OpendataStructure extends \yii\db\ActiveRecord
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function afterDelete()
+    {
+        if (Yii::$app->publicStorage->has($this->path)) {
+            Yii::$app->publicStorage->delete($this->path);
+        }
+
+        parent::afterDelete();
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getData()
@@ -113,9 +127,39 @@ class OpendataStructure extends \yii\db\ActiveRecord
 
     /**
      * @return string
+     * @throws \yii\base\InvalidConfigException
+     * @throws \Exception
      */
     public function getDatetime()
     {
         return (new DateTime(Yii::$app->formatter->asDatetime($this->created_at)))->format('Ymd\THi');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUrl()
+    {
+        $url = null;
+
+        if (Yii::$app->publicStorage->has($this->path)) {
+            $url = Yii::$app->publicStorage->getPublicUrl($this->path);
+        }
+
+        return $url;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getMetadata()
+    {
+        $url = null;
+
+        if (Yii::$app->publicStorage->has($this->path)) {
+            $url = Yii::$app->publicStorage->getMetadata($this->path);
+        }
+
+        return $url;
     }
 }

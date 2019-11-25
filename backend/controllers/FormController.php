@@ -3,12 +3,14 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\modules\log\models\Log;
 use Yii;
 use common\models\Form;
 use common\models\FormRow;
 use common\models\Collection;
 
 use backend\models\search\FormSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -24,8 +26,102 @@ class FormController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => ['backend.form.index'],
+                        'roleParams' => [
+                            'class' => Form::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['view'],
+                        'roles' => ['backend.form.view'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => Form::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create'],
+                        'roles' => ['backend.form.create'],
+                        'roleParams' => [
+                            'class' => Form::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create-row'],
+                        'roles' => ['backend.form.createRow'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id_form'),
+                            'class' => Form::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['update'],
+                        'roles' => ['backend.form.update'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => Form::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['delete'],
+                        'roles' => ['backend.form.delete'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => Form::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['history'],
+                        'roles' => ['backend.form.log.index'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => Form::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['log'],
+                        'roles' => ['backend.form.log.view'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
+                                    return $log->model_id;
+                                }
+                                return null;
+                            },
+                            'class' => Form::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['restore'],
+                        'roles' => ['backend.form.log.restore'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
+                                    return $log->model_id;
+                                }
+                                return null;
+                            },
+                            'class' => Form::class,
+                        ],
+                    ],
+                ],
+            ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],

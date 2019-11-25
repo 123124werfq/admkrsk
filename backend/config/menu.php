@@ -1,29 +1,25 @@
 <?php
 
 return [
-    /*''=>[
-        'title'=>'Адреса',
-        'icon'=>'fa fa-map-marker'
-    ],*/
     'address'=>[
         'title'=>'Адреса',
         'icon'=>'fa fa-map-marker',
-        'roles' => ['backend'],
-//        'submenu'=>[
-//            'address'=>[
-//                'title'=>'Адреса',
-//                'roles' => ['backend'],
-//            ],
-//            'house'=>[
-//                'title'=>'Дома',
-//                'roles' => ['backend'],
-//            ],
-//        ],
+        'roles' => ['backend.address'],
     ],
     'user'=>[
         'title'=>'Пользователи',
         'icon'=>'fa fa-user',
         'roles' => ['backend.user'],
+        'submenu'=>[
+            'user'=>[
+                'title'=>'Пользователи',
+                'roles' => ['backend.user'],
+            ],
+            'user-group'=>[
+                'title'=>'Группы',
+                'roles' => ['backend.user'],
+            ],
+        ],
     ],
     'collection'=>[
         'title'=>'Списки',
@@ -33,7 +29,7 @@ return [
     'form'=>[
         'title'=>'Формы',
         'icon'=>'fa fa-inbox',
-        'roles' => ['backend.form'],
+        'roles' => ['backend.form', 'backend.formInputType'],
         'submenu'=>[
             'form'=>[
                 'title'=>'Формы',
@@ -41,7 +37,7 @@ return [
             ],
             'form-input-type'=>[
                 'title'=>'Типы полей',
-                'roles' => ['backend.form'],
+                'roles' => ['backend.formInputType'],
             ],
         ],
     ],
@@ -67,21 +63,25 @@ return [
     ],
     'project'=>[
         'title'=>'Проекты и события',
-        'roles' => ['backend.menu'],
         'icon'=>'fa fa-bullhorn',
+        'roles' => ['backend.project'],
     ],
     'service'=>[
         'title'=>'Муниципальные услуги',
         'icon'=>'fa fa-flash',
+        'roles' => ['backend.service', 'backend.serviceSituation', 'backend.serviceRubric'],
         'submenu'=>[
             'service'=>[
                 'title'=>'Услуги',
+                'roles' => ['backend.service'],
             ],
             'service-situation'=>[
                 'title'=>'Жизненные ситуации',
+                'roles' => ['backend.serviceSituation'],
             ],
             'service-rubric'=>[
                 'title'=>'Рубрикатор',
+                'roles' => ['backend.serviceRubric'],
             ],
         ],
     ],
@@ -92,7 +92,7 @@ return [
     'faq'=>[
         'title'=>'Вопросы и ответы',
         'icon'=>'fa fa-question-circle',
-        'roles' => ['backend.faq', 'backend.faq.category', 'backend.faq.section'],
+        'roles' => ['backend.faq', 'backend.faqCategory'],
         'submenu'=>[
             'faq'=>[
                 'title'=>'Вопросы и ответы',
@@ -100,14 +100,14 @@ return [
             ],
             'faq-category'=>[
                 'title'=>'Категории',
-                'roles' => ['backend.faq.category'],
+                'roles' => ['backend.faqCategory'],
             ],
         ],
     ],
     'setting'=>[
         'title'=>'Система',
         'icon'=>'fa fa-gears',
-        'roles' => ['backend.menu', 'backend.vars'],
+        'roles' => ['backend.menu', 'backend.alert', 'backend.vars', 'backend.controllerPage', 'backend.opendata'],
         'submenu'=>[
             'menu'=>[
                 'title'=>'Меню',
@@ -115,6 +115,7 @@ return [
             ],
             'alert'=>[
                 'title'=>'Всплывающие сообщения',
+                'roles' => ['backend.alert'],
             ],
             'vars'=>[
                 'title'=>'Переменные',
@@ -122,6 +123,7 @@ return [
             ],
             'controller-page'=>[
                 'title'=>'Резервированные пути',
+                'roles' => ['backend.controllerPage'],
             ],
             'opendata'=>[
                 'title'=>'Открытые данные',

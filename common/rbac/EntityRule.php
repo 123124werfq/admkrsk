@@ -21,7 +21,7 @@ class EntityRule extends Rule
     {
         $itemPath = explode('.', $item->name);
 
-        if (Yii::$app->authManager->checkAccess($user, 'admin.' . $itemPath[1])) {
+        if (Yii::$app->authManager->checkAccess($user, 'backend.' . $itemPath[1])) {
             return true;
         }
 

@@ -5,12 +5,11 @@
 /* @var $page \common\models\Page */
 
 use yii\helpers\Html;
-use yii\helpers\Url;
 
-$meta = Yii::$app->publicStorage->getMetadata($model->lastData->path);
-$metaUrl = Yii::$app->publicStorage->getPublicUrl($model->lastData->path);
-$lastDataUrl = Yii::$app->publicStorage->getPublicUrl($model->lastData->path);
-$lastDataStructureUrl = Yii::$app->publicStorage->getPublicUrl($model->lastData->structure->path);
+$meta = $model->lastData->metadata;
+$metaUrl = $model->lastData->url;
+$lastDataUrl = $model->lastData->url;
+$lastDataStructureUrl = $model->lastData->structure->url;
 ?>
 <div class="main">
     <div class="container">
@@ -22,11 +21,13 @@ $lastDataStructureUrl = Yii::$app->publicStorage->getPublicUrl($model->lastData-
                 <div class="file-list">
                     <div class="file-item">
                         <div class="file-td file-td__date"><?= Yii::$app->formatter->asDate($model->created_at) ?></div>
-                        <div class="file-td file-td__name">Экспорт паспорта</div>
-                        <div class="file-td file-td__type">CSV, <?= Yii::$app->formatter->asShortSize($meta['size'], 0) ?></div>
-                        <div class="file-td file-td__control">
-                            <a href="<?= $metaUrl ?>" class="btn btn__secondary btn__block-sm">Скачать <i class="material-icons btn-icon btn-icon__right btn-icon__sm">get_app</i></a>
-                        </div>
+                        <?php if ($metaUrl): ?>
+                            <div class="file-td file-td__name">Экспорт паспорта</div>
+                            <div class="file-td file-td__type"><?= mb_strtoupper($meta['extension']) ?>, <?= Yii::$app->formatter->asShortSize($meta['size'], 0) ?></div>
+                            <div class="file-td file-td__control">
+                                <a href="<?= $metaUrl ?>" class="btn btn__secondary btn__block-sm">Скачать <i class="material-icons btn-icon btn-icon__right btn-icon__sm">get_app</i></a>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -75,7 +76,7 @@ $lastDataStructureUrl = Yii::$app->publicStorage->getPublicUrl($model->lastData-
                             </tr>
                             <tr>
                                 <td>Формат данных</td>
-                                <td>CSV</td>
+                                <td><?= mb_strtoupper($meta['extension']) ?></td>
                             </tr>
                             <tr>
                                 <td>Описание структуры набора открытых данных</td>
@@ -106,7 +107,7 @@ $lastDataStructureUrl = Yii::$app->publicStorage->getPublicUrl($model->lastData-
                                 <td>
                                     <?php foreach ($model->getData()->limit(5)->orderBy(['created_at' => SORT_DESC])->all() as $data): ?>
                                         <?php
-                                            $dataUrl = Yii::$app->publicStorage->getPublicUrl($data->path);
+                                            $dataUrl = $data->url;
                                             echo Html::a($dataUrl, $dataUrl);
                                         ?>
                                         <br>
@@ -118,7 +119,7 @@ $lastDataStructureUrl = Yii::$app->publicStorage->getPublicUrl($model->lastData-
                                 <td>
                                     <?php foreach ($model->getStructures()->limit(5)->orderBy(['created_at' => SORT_DESC])->all() as $structure): ?>
                                         <?php
-                                            $structureUrl = Yii::$app->publicStorage->getPublicUrl($structure->path);
+                                            $structureUrl = $structure->url;
                                             echo Html::a($structureUrl, $structureUrl);
                                         ?>
                                         <br>

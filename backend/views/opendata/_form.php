@@ -57,7 +57,7 @@ $this->registerJs("$('#opendata-id_collection').change(function () {
 ]) ?>
 
 <?= $form->field($model, 'id_user')->widget(Select2::class, [
-    'data' => $model->user ? ArrayHelper::map([$model->user], 'id', 'username') : [],
+    'data' => $model->id_user ? ArrayHelper::map([$model->user], 'id', 'username') : [],
     'pluginOptions' => [
         'allowClear' => true,
         'minimumInputLength' => 1,
@@ -71,7 +71,7 @@ $this->registerJs("$('#opendata-id_collection').change(function () {
 ]) ?>
 
 <?= $form->field($model, 'id_collection')->widget(Select2::class, [
-    'data' => $model->collection ? ArrayHelper::map([$model->collection], 'id_collection', 'name') : [],
+    'data' => $model->id_collection ? ArrayHelper::map([$model->collection], 'id_collection', 'name') : [],
     'pluginOptions' => [
         'allowClear' => true,
         'minimumInputLength' => 1,
@@ -84,7 +84,7 @@ $this->registerJs("$('#opendata-id_collection').change(function () {
     ],
 ]) ?>
 
-<?= $form->field($model, 'columns')->dropDownList($model->collection ? ArrayHelper::map($model->collection->columns, 'id_column', 'name') : [], ['multiple' => true]) ?>
+<?= $form->field($model, 'columns')->dropDownList($model->id_collection ? ArrayHelper::map($model->collection->columns, 'id_column', 'name') : [], ['multiple' => true]) ?>
 
 <?= $form->field($model, 'period')->textInput() ?>
 
