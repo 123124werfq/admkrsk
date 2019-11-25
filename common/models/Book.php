@@ -194,7 +194,7 @@ class Book extends \yii\db\ActiveRecord
                 $this->id_user = Yii::$app->user->id;
                 $this->office = (string)$of[0]->ID;
                 $this->operation = (string)$operation_id;
-                $this->pin = $ares->RegCode;
+                $this->pin = (string)$ares->RegCode;
                 $this->date = $date;
                 $this->time = (string)$time;
                 $this->state = "0";
@@ -213,7 +213,7 @@ class Book extends \yii\db\ActiveRecord
                 }
                 else
                 {
-                    //return false;
+                    return false;
                     var_dump($this->errors);
                     die();
                 }
