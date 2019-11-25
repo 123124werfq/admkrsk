@@ -51,11 +51,11 @@ $this->render('_head',['model'=>$model]);
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="sortablepage">
                                 <?php foreach ($rightmenu as $key => $data){
                                     $url = $data->getUrl(true);
                                     ?>
-                                    <tr>
+                                    <tr data-id="<?=(isset($data->id_link))?$data->id_link:$data->id_page?>" data-model="<?=(isset($data->id_link))?'menu':'page'?>">
                                         <td>
                                             <?=(isset($data->id_link))?'<span class="glyphicon glyphicon-link"></span>':''?>
                                         </td>
