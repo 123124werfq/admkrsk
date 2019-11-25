@@ -120,16 +120,17 @@ class UserController extends Controller
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $query = User::find();
+        $query = User::find()->joinWith('adinfo');
 
         if ((new NumberValidator(['integerOnly' => true]))->validate($q)) {
             $query->andWhere(['id' => $q]);
         } else {
             $query->andWhere([
                 'or',
-                ['ilike', 'username', $q],
-                ['ilike', 'email', $q],
-                ['ilike', 'fullname', $q],
+                ['ilike', 'user.username', $q],
+                ['ilike', 'user.email', $q],
+                ['ilike', 'user.fullname', $q],
+                ['ilike', 'auth_ad_user.name', $q],
             ]);
         }
 
@@ -138,7 +139,7 @@ class UserController extends Controller
             /* @var User $user */
             $results[] = [
                 'id' => $user->id,
-                'text' => $user->username . ' (' . $user->email . ')',
+                'text' => $user->adinfo->name . ' (' . $user->email . ')',
             ];
         }
 

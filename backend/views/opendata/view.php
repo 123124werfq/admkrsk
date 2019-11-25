@@ -2,6 +2,7 @@
 
 use common\models\CollectionColumn;
 use common\models\OpendataData;
+use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -65,7 +66,7 @@ $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $
             <h3>Наборы открытых данных</h3>
         </div>
         <div class="col-lg-3 text-right">
-            <?= Html::a('Загрузить файл', ['upload', 'id' => $model->id_opendata], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a('Загрузить файл', ['upload', 'id' => $model->primaryKey], ['class' => 'btn btn-primary']) ?>
         </div>
     </div>
 
@@ -75,7 +76,7 @@ $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $
             <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
             <?= GridView::widget([
-                'dataProvider' => new \yii\data\ActiveDataProvider([
+                'dataProvider' => new ActiveDataProvider([
                     'query' => $model->getData(),
                     'sort' => ['defaultOrder' => ['created_at' => SORT_DESC]],
                 ]),

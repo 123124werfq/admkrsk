@@ -31,12 +31,12 @@ class FaqCategoryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['list'],
-                        'roles' => ['backend.faq.category.list'],
+                        'roles' => ['backend.faqCategory.list'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.faq.category.index'],
+                        'roles' => ['backend.faqCategory.index'],
                         'roleParams' => [
                             'class' => FaqCategory::class,
                         ],
@@ -44,7 +44,7 @@ class FaqCategoryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.faq.category.view'],
+                        'roles' => ['backend.faqCategory.view'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => FaqCategory::class,
@@ -53,7 +53,7 @@ class FaqCategoryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.faq.category.create'],
+                        'roles' => ['backend.faqCategory.create'],
                         'roleParams' => [
                             'class' => FaqCategory::class,
                         ],
@@ -61,7 +61,7 @@ class FaqCategoryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.faq.category.update'],
+                        'roles' => ['backend.faqCategory.update'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => FaqCategory::class,
@@ -70,7 +70,7 @@ class FaqCategoryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete'],
-                        'roles' => ['backend.faq.category.delete'],
+                        'roles' => ['backend.faqCategory.delete'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => FaqCategory::class,
@@ -79,7 +79,7 @@ class FaqCategoryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.faq.category.log.index'],
+                        'roles' => ['backend.faqCategory.log.index'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => FaqCategory::class,
@@ -88,7 +88,7 @@ class FaqCategoryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.faq.category.log.view'],
+                        'roles' => ['backend.faqCategory.log.view'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -102,7 +102,7 @@ class FaqCategoryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.faq.category.log.restore'],
+                        'roles' => ['backend.faqCategory.log.restore'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
