@@ -29,7 +29,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
     //const TYPE_MULTISELECT = 6;
     const TYPE_MAP = 7;
     const TYPE_FILE = 8;
-    const TYPE_FILES = 18;
+    //const TYPE_FILES = 18;
     const TYPE_IMAGE = 9;
     const TYPE_COLLECTION = 13;
     const TYPE_RADIO = 15;
