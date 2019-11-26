@@ -5,7 +5,7 @@ use backend\widgets\UserGroupAccessControl;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
-
+use kartik\select2\Select2;
 use common\models\CollectionColumn;
 use common\models\Collection;
 /* @var $this yii\web\View */
@@ -79,6 +79,21 @@ use common\models\Collection;
     <?= $form->field($model, 'template_element')->textInput(['class' => 'form-control redactor'])?>
 
     <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
+
+    <?php if (!$model->isNewRecord){?>
+    <?=$form->field($model, 'label')->widget(Select2::class, [
+        'data' => ArrayHelper::map(CollectionColumn::find()->where([
+            'id_collection'=>$model->id_collection,
+            'type'=>[CollectionColumn::TYPE_INPUT,CollectionColumn::TYPE_INTEGER]
+        ])->all(),'id_column','name'),
+        'pluginOptions' => [
+            'allowClear' => true,
+            'multiple' => true,
+            'placeholder' => 'Выберите колонки',
+        ],
+        'options'=>['multiple' => true,]
+    ])->hint('Выберите колонки из которых будет составляться представление для отображения в списках')?>
+    <?php }?>
 
     <hr>
 

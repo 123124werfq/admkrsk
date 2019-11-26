@@ -28,6 +28,9 @@ margin-bottom: 36px;
     margin-right: 8px;
 }
 
+.footer-socials_item {opacity: 0.6;}
+.footer-socials_item:hover {opacity: 1;}
+
 .select2-selection__arrow b {display: none!important;}
 .select2-selection__arrow {
 	width: 24px;

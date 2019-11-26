@@ -153,6 +153,7 @@ class AlertController extends Controller
     public function actionCreate()
     {
         $model = new Alert();
+        $model->date_begin = time();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_CREATE);

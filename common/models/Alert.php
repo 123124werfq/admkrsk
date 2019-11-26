@@ -51,7 +51,7 @@ class Alert extends \yii\db\ActiveRecord
     {
         return [
             [['id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
-            [['id_page', 'date_begin', 'date_end', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','state'], 'integer'],
+            [['id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','state'], 'integer'],
             [['content','date_begin', 'date_end'], 'safe'],
 
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],

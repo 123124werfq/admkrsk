@@ -59,9 +59,8 @@ class Collection extends \yii\db\ActiveRecord
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
             [['id_parent_collection'], 'integer'],
-            [['filter', 'options'], 'safe'],
+            [['filter', 'options','label'], 'safe'],
             [['template','template_element'], 'string'],
-
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
             ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
@@ -77,6 +76,7 @@ class Collection extends \yii\db\ActiveRecord
             'id_collection' => '#',
             'name' => 'Название',
             'alias' => 'Алиас',
+            'label' => 'Настройка отображения в списках',
             'id_form' => 'Форма редактирования',
             'id_parent_collection' => 'Это справочник',
             'is_dictionary' => 'Это справочник',
@@ -154,9 +154,19 @@ class Collection extends \yii\db\ActiveRecord
             return $this->hasMany(CollectionColumn::class, ['id_collection' => 'id_parent_collection'])->orderBy('ord ASC');
     }
 
+    public static function getArrayByAlias($alias)
+    {
+        $collection = Collection::find()->where(['alias'=>$alias])->one();
+        
+        if (!empty($collection))
+            return $collection->getArray();
+
+        return [];
+    }
+
     public function getArray()
     {
-        $data = $this->getData();
+        $data = $this->getData((!empty($this->label))?$this->label:[]);
 
         $output = [];
 

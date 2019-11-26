@@ -20,6 +20,9 @@ use Yii;
 class CollectionRecord extends \yii\db\ActiveRecord
 {
     public $data;
+
+    public $loadData = [];
+
     /**
      * {@inheritdoc}
      */
@@ -132,15 +135,16 @@ class CollectionRecord extends \yii\db\ActiveRecord
         }
     }
 
-    public function getData($id_columns=[])
+    public function getData($keyAsAlias=false,$id_columns=[])
     {
         if ($this->isNewRecord)
             return [];
 
         $rows = (new \yii\db\Query());
 
-        $rows = $rows->select(['dcv.id_column', 'value','id_record'])
+        $rows = $rows->select(['dcv.id_column', 'value','id_record','dcc.alias as alias'])
                 ->from('db_collection_value as dcv')
+                ->join('INNER JOIN', 'db_collection_column as dcc', 'dcc.id_column = dcv.id_column')
                 ->where(['id_record'=>$this->id_record]);
 
         if (!empty($columns))
@@ -148,11 +152,28 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
         $output = [];
 
-        foreach ($rows->all() as $key => $data) {
-            $output[$data['id_column']] = $data['value'];
-        }
+        foreach ($rows->all() as $key => $data)
+            $output[$keyAsAlias?$data['alias']:$data['id_column']] = $data['value'];
+
+        $this->loadData = $output;
 
         return $output;
+    }
+
+    public function getMedia($id,$firstElement)
+    {
+        if (!empty($this->loadData[$id]))
+        {
+            $ids = json_decode($this->loadData[$id],true);
+
+            $medias = Media::find()->where(['id_media'=>$ids])->all();
+
+            if (!empty($medias))
+                return ($firstElement)?array_shift($medias):$medias;
+
+        }
+
+        return null;
     }
 
     public function getCollection()

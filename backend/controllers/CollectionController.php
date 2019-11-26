@@ -388,12 +388,10 @@ class CollectionController extends Controller
                 $model->id_form = $form->id_form;
                 $model->updateAttributes(['id_form']);
             }
-            else
-                print_r($form->errors);
 
             $model->createAction(Action::ACTION_CREATE);
 
-            return $this->redirect(['update', 'id' => $model->id_collection]);
+            return $this->redirect(['form/view', 'id' => $model->id_form]);
         }
 
         return $this->render('create', [
