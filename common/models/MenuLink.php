@@ -92,7 +92,7 @@ class MenuLink extends \yii\db\ActiveRecord
             return $this->url;
         }
 
-        if (!empty($this->id_page))
+        if (!empty($this->id_page) && !empty($this->page))
             return $this->page->getUrl($absolute);
     }
 
