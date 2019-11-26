@@ -3,6 +3,7 @@
 
 .col {width: 100%; padding: 0px 15px;}
 form .row {flex-wrap: nowrap!important;}
+.text-help {margin-top: -30px;}
 
 .checkboxlist {margin-bottom: 40px;}
 .checkboxlist .form-label {margin-bottom: 20px;}
