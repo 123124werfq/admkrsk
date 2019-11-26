@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\AuthEntity;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\ServiceSituation;
@@ -123,10 +124,14 @@ class ServiceSituationController extends Controller
      */
     public function actionIndex()
     {
-        $records = ServiceSituation::find()->where('id_parent IS NULL')->all();
+        $recordsQuery = ServiceSituation::find()->where('id_parent IS NULL');
+
+        if (!Yii::$app->user->can('admin.serviceSituation')) {
+            $recordsQuery->andWhere(['id_situation' => AuthEntity::getEntityIds(ServiceSituation::class)]);
+        }
 
         return $this->render('index', [
-            'records'=>$records,
+            'records'=>$recordsQuery->all(),
         ]);
     }
 

@@ -44,16 +44,13 @@ class UserSearch extends User
      */
     public function search($params)
     {
-        $query = User::find()->leftJoin('auth_ad_user', 'auth_ad_user.id_ad_user = "user".id_ad_user')->leftJoin('auth_esia_user', 'auth_esia_user.id_esia_user = "user".id_esia_user');
+        $query = User::find()
+            ->leftJoin('auth_ad_user', 'auth_ad_user.id_ad_user = "user".id_ad_user')
+            ->leftJoin('auth_esia_user', 'auth_esia_user.id_esia_user = "user".id_esia_user');
 
         // add conditions that should always apply here
-        if (!Yii::$app->user->can('admin.poll')) {
-            $query->andWhere([
-                'id_page' => AuthEntity::find()->select('entity_id')->andWhere([
-                    'class' => User::class,
-                    'user_id' => Yii::$app->user->id,
-                ]),
-            ]);
+        if (!Yii::$app->user->can('admin.user')) {
+            $query->andWhere(['id' => AuthEntity::getEntityIds(User::class)]);
         }
 
         $dataProvider = new ActiveDataProvider([

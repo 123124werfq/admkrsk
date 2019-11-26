@@ -256,13 +256,10 @@ $(document).ready(function() {
                             </div>',
             init: function(){
                 this.on("success", function(file, response){
-
                     response = JSON.parse(response);
                     $(file.previewElement).append(
                         '<input type="hidden" name="FormDynamic[input'+id_input+']['+new_index+'][file_path]" value="'+response.file+'"/>'
                     );
-
-                    console.log($(file.previewElement).find('.fileupload_preview-type img').attr('src'));
                     if ($(file.previewElement).find('.fileupload_preview-type img').attr('src')==undefined)
                         $(file.previewElement).find('.fileupload_preview-type').text(response.file.split('.').pop());
 

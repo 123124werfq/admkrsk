@@ -2,6 +2,8 @@
 
 namespace backend\models\search;
 
+use common\models\AuthEntity;
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\FaqCategory;
@@ -43,6 +45,9 @@ class FaqCategorySearch extends FaqCategory
         $query = FaqCategory::find();
 
         // add conditions that should always apply here
+        if (!Yii::$app->user->can('admin.faqCategory')) {
+            $query->andWhere(['id_faq_category' => AuthEntity::getEntityIds(FaqCategory::class)]);
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

@@ -2,9 +2,13 @@
 
 namespace common\models;
 
+use common\behaviors\AccessControlBehavior;
+use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 use yii\helpers\Url;
 
 /**
@@ -54,6 +58,9 @@ class Service extends \yii\db\ActiveRecord
     const TYPE_PEOPLE = 2;
     const TYPE_FIRM = 4;
 
+    public $access_user_ids;
+    public $access_user_group_ids;
+
     /**
      * {@inheritdoc}
      */
@@ -76,6 +83,10 @@ class Service extends \yii\db\ActiveRecord
             [['id_situations', 'client_type'],'safe'],
             [['reestr_number'], 'string', 'max' => 255],
             [['fullname', 'name'], 'string'],
+
+            [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
+            ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
+            ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
         ];
     }
 
@@ -117,6 +128,22 @@ class Service extends \yii\db\ActiveRecord
             'updated_by' => 'Updated By',
             'deleted_at' => 'Deleted At',
             'deleted_by' => 'Deleted By',
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'ts' => TimestampBehavior::class,
+            'ba' => BlameableBehavior::class,
+            'log' => LogBehavior::class,
+            'ac' => [
+                'class' => AccessControlBehavior::class,
+                'permission' => 'backend.service',
+            ],
         ];
     }
 

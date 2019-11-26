@@ -106,6 +106,22 @@ JS;
 	                <div class="fileupload_list"></div>
 	            </div>';
 				break;
+			case CollectionColumn::TYPE_IMAGE:
+				echo'
+				<div data-input="'.$input->id_input.'" class="fileupload">
+	                <div class="fileupload_dropzone ">
+	                    <div class="fileupload_btn">
+	                        <span class="fileupload_btn-text">Выберите файлы</span>
+	                        '.Html::fileInput("input$input->id_input",'',['class'=>'fileupload_control']).'
+	                    </div>
+	                    <div class="fileupload_content">
+	                        <p class="fileupload_label">Перетащите сюда файлы для загрузки</p>
+	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — 10 Мб</p>
+	                    </div>
+	                </div>
+	                <div class="fileupload_list"></div>
+	            </div>';
+				break;
 			case CollectionColumn::TYPE_RADIO:
 				foreach ($input->getArrayValues() as $key => $value) {
 					echo '<div class="radio-group">

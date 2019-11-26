@@ -5,10 +5,14 @@ namespace backend\widgets;
 use common\models\AuthEntity;
 use common\models\User;
 use kartik\select2\Select2;
+use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 
+/**
+ * @property ActiveRecord $model
+ */
 class UserAccessControl extends Select2
 {
     public function init()
@@ -28,12 +32,12 @@ class UserAccessControl extends Select2
         ];
 
         $data = ArrayHelper::map(User::find()->where([
-            'id' => AuthEntity::find()->select('user_id')->where([
+            'id' => AuthEntity::find()->select('id_user')->where([
                 'class' => get_class($this->model),
                 'entity_id' => $this->model->primaryKey,
             ]),
-        ])->all(), 'id', function ($model) {
-            return $model->username . ' (' . $model->email . ')';
+        ])->all(), 'id', function (User $model) {
+            return $model->getUsername() . ' (' . $model->email . ')';
         });
 
         $this->model->{$this->attribute} = array_keys($data);

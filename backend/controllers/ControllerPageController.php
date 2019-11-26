@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\AuthEntity;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\ControllerPage;
@@ -123,8 +124,14 @@ class ControllerPageController extends Controller
      */
     public function actionIndex()
     {
+        $query = ControllerPage::find();
+
+        if (!Yii::$app->user->can('admin.controllerPage')) {
+            $query->andWhere(['id' => AuthEntity::getEntityIds(ControllerPage::class)]);
+        }
+
         $dataProvider = new ActiveDataProvider([
-            'query' => ControllerPage::find(),
+            'query' => $query,
         ]);
 
         return $this->render('index', [

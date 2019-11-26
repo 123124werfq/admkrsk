@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use common\behaviors\UserAccessControlBehavior;
+use common\behaviors\AccessControlBehavior;
 use common\components\yiinput\RelationBehavior;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
@@ -40,6 +40,7 @@ class Collection extends \yii\db\ActiveRecord
     const TITLE_ATTRIBUTE = 'name';
 
     public $access_user_ids;
+    public $access_user_group_ids;
 
     /**
      * {@inheritdoc}
@@ -60,8 +61,10 @@ class Collection extends \yii\db\ActiveRecord
             [['id_parent_collection'], 'integer'],
             [['filter', 'options'], 'safe'],
             [['template','template_element'], 'string'],
-            /*['access_user_ids', 'each', 'rule', 'is_dictionary' => ['integer']],
-            ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],*/
+
+            [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
+            ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
+            ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
         ];
     }
 
@@ -85,34 +88,33 @@ class Collection extends \yii\db\ActiveRecord
             'updated_by' => 'Обновил',
             'deleted_at' => 'Удалено',
             'deleted_by' => 'Удалил',
-            'access_user_ids' => 'Доступ',
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    /*public function behaviors()
+    public function behaviors()
     {
         return [
             'ts' => TimestampBehavior::class,
             'ba' => BlameableBehavior::class,
             'log' => LogBehavior::class,
             'ac' => [
-                'class' => UserAccessControlBehavior::class,
+                'class' => AccessControlBehavior::class,
                 'permission' => 'backend.collection',
             ],
-            'yiinput' => [
-                'class' => RelationBehavior::class,
-                'relations'=> [
-                    'columns'=>[
-                        'modelname'=> 'CollectionColumn',
-                        'added'=>true,
-                    ],
-                ]
-            ]
+//            'yiinput' => [
+//                'class' => RelationBehavior::class,
+//                'relations'=> [
+//                    'columns'=>[
+//                        'modelname'=> 'CollectionColumn',
+//                        'added'=>true,
+//                    ],
+//                ]
+//            ]
         ];
-    }*/
+    }
 
     public function insertRecord($data)
     {
@@ -121,7 +123,7 @@ class Collection extends \yii\db\ActiveRecord
         $model->data = $data;
 
         if ($model->save())
-            return $model->id_record;
+            return $model;
 
         return false;
     }

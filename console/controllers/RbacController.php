@@ -109,7 +109,6 @@ class RbacController extends Controller
 
             $backendCollectionList = $auth->createPermission('backend.collection.list');
             $backendCollectionList->description = 'Поиск коллекций';
-            $backendCollectionList->ruleName = $entityRule->name;
             $auth->add($backendCollectionList);
 
             $backendCollectionImport = $auth->createPermission('backend.collection.import');
@@ -283,7 +282,6 @@ class RbacController extends Controller
 
             $backendFaqCategoryList = $auth->createPermission('backend.faqCategory.list');
             $backendFaqCategoryList->description = 'Поиск категорий';
-            $backendFaqCategoryList->ruleName = $entityRule->name;
             $auth->add($backendFaqCategoryList);
 
             $backendFaqCategoryIndex = $auth->createPermission('backend.faqCategory.index');
@@ -1021,7 +1019,6 @@ class RbacController extends Controller
 
             $backendUserList = $auth->createPermission('backend.user.list');
             $backendUserList->description = 'Поиск пользователей';
-            $backendUserList->ruleName = $entityRule->name;
             $auth->add($backendUserList);
 
             $backendUserIndex = $auth->createPermission('backend.user.index');
@@ -1065,7 +1062,7 @@ class RbacController extends Controller
             $auth->add($backendUserLogRestore);
 
             $backendManageUser = $auth->createPermission('backend.user');
-            $backendManageUser->description = 'Управление разделами';
+            $backendManageUser->description = 'Управление пользователями';
             $auth->add($backendManageUser);
             $auth->addChild($backendManageUser, $backendUserList);
             $auth->addChild($backendManageUser, $backendUserIndex);
@@ -1076,6 +1073,107 @@ class RbacController extends Controller
             $auth->addChild($backendManageUser, $backendUserLogIndex);
             $auth->addChild($backendManageUser, $backendUserLogView);
             $auth->addChild($backendManageUser, $backendUserLogRestore);
+
+
+
+            $backendUserGroupList = $auth->createPermission('backend.userGroup.list');
+            $backendUserGroupList->description = 'Поиск групп пользователей';
+            $auth->add($backendUserGroupList);
+
+            $backendUserGroupIndex = $auth->createPermission('backend.userGroup.index');
+            $backendUserGroupIndex->description = 'Список групп пользователей';
+            $backendUserGroupIndex->ruleName = $entityRule->name;
+            $auth->add($backendUserGroupIndex);
+
+            $backendUserGroupView = $auth->createPermission('backend.userGroup.view');
+            $backendUserGroupView->description = 'Просмотр группы пользователей';
+            $backendUserGroupView->ruleName = $entityRule->name;
+            $auth->add($backendUserGroupView);
+
+            $backendUserGroupCreate = $auth->createPermission('backend.userGroup.create');
+            $backendUserGroupCreate->description = 'Создание группы пользователей';
+            $backendUserGroupCreate->ruleName = $entityRule->name;
+            $auth->add($backendUserGroupCreate);
+
+            $backendUserGroupUpdate = $auth->createPermission('backend.userGroup.update');
+            $backendUserGroupUpdate->description = 'Редактирование группы пользователей';
+            $backendUserGroupUpdate->ruleName = $entityRule->name;
+            $auth->add($backendUserGroupUpdate);
+
+            $backendUserGroupDelete = $auth->createPermission('backend.userGroup.delete');
+            $backendUserGroupDelete->description = 'Удаление группы пользователей';
+            $backendUserGroupDelete->ruleName = $entityRule->name;
+            $auth->add($backendUserGroupDelete);
+
+            $backendUserGroupAssign = $auth->createPermission('backend.userGroup.assign');
+            $backendUserGroupAssign->description = 'Добавить пользователя в группу';
+            $backendUserGroupAssign->ruleName = $entityRule->name;
+            $auth->add($backendUserGroupAssign);
+
+            $backendUserGroupRevoke = $auth->createPermission('backend.userGroup.revoke');
+            $backendUserGroupRevoke->description = 'Удалить пользователя из группы';
+            $backendUserGroupRevoke->ruleName = $entityRule->name;
+            $auth->add($backendUserGroupRevoke);
+
+            $backendUserGroupLogIndex = $auth->createPermission('backend.userGroup.log.index');
+            $backendUserGroupLogIndex->description = 'Список пользователей';
+            $backendUserGroupLogIndex->ruleName = $entityRule->name;
+            $auth->add($backendUserGroupLogIndex);
+
+            $backendUserGroupLogView = $auth->createPermission('backend.userGroup.log.view');
+            $backendUserGroupLogView->description = 'Просмотр изменений';
+            $backendUserGroupLogView->ruleName = $entityRule->name;
+            $auth->add($backendUserGroupLogView);
+
+            $backendUserGroupLogRestore = $auth->createPermission('backend.userGroup.log.restore');
+            $backendUserGroupLogRestore->description = 'Восстановление изменений';
+            $backendUserGroupLogRestore->ruleName = $entityRule->name;
+            $auth->add($backendUserGroupLogRestore);
+
+            $backendManageUserGroup = $auth->createPermission('backend.userGroup');
+            $backendManageUserGroup->description = 'Управление группами пользователей';
+            $auth->add($backendManageUserGroup);
+            $auth->addChild($backendManageUserGroup, $backendUserGroupList);
+            $auth->addChild($backendManageUserGroup, $backendUserGroupIndex);
+            $auth->addChild($backendManageUserGroup, $backendUserGroupView);
+            $auth->addChild($backendManageUserGroup, $backendUserGroupCreate);
+            $auth->addChild($backendManageUserGroup, $backendUserGroupUpdate);
+            $auth->addChild($backendManageUserGroup, $backendUserGroupDelete);
+            $auth->addChild($backendManageUserGroup, $backendUserGroupAssign);
+            $auth->addChild($backendManageUserGroup, $backendUserGroupRevoke);
+            $auth->addChild($backendManageUserGroup, $backendUserGroupLogIndex);
+            $auth->addChild($backendManageUserGroup, $backendUserGroupLogView);
+            $auth->addChild($backendManageUserGroup, $backendUserGroupLogRestore);
+
+
+
+            $backendUserRoleIndex = $auth->createPermission('backend.userRole.index');
+            $backendUserRoleIndex->description = 'Список ролей пользователей';
+            $backendUserRoleIndex->ruleName = $entityRule->name;
+            $auth->add($backendUserRoleIndex);
+
+            $backendUserRoleView = $auth->createPermission('backend.userRole.view');
+            $backendUserRoleView->description = 'Просмотр роли пользователей';
+            $backendUserRoleView->ruleName = $entityRule->name;
+            $auth->add($backendUserRoleView);
+
+            $backendUserRoleAssign = $auth->createPermission('backend.userRole.assign');
+            $backendUserRoleAssign->description = 'Добавить пользователю роль';
+            $backendUserRoleAssign->ruleName = $entityRule->name;
+            $auth->add($backendUserRoleAssign);
+
+            $backendUserRoleRevoke = $auth->createPermission('backend.userRole.revoke');
+            $backendUserRoleRevoke->description = 'Удалить роль у пользователя';
+            $backendUserRoleRevoke->ruleName = $entityRule->name;
+            $auth->add($backendUserRoleRevoke);
+
+            $backendManageUserRole = $auth->createPermission('backend.userRole');
+            $backendManageUserRole->description = 'Управление ролями пользователей';
+            $auth->add($backendManageUserRole);
+            $auth->addChild($backendManageUserRole, $backendUserRoleIndex);
+            $auth->addChild($backendManageUserRole, $backendUserRoleView);
+            $auth->addChild($backendManageUserRole, $backendUserRoleAssign);
+            $auth->addChild($backendManageUserRole, $backendUserRoleRevoke);
 
 
 
@@ -1182,7 +1280,14 @@ class RbacController extends Controller
             $auth->add($backendFaq);
             $auth->addChild($backendFaq, $backendManage);
             $auth->addChild($backendFaq, $backendManageFaq);
-            $auth->addChild($backendFaq, $backendManageFaqCategory);
+
+
+
+            $backendFaqCategory = $auth->createRole('admin.faqCategory');
+            $backendFaqCategory->description = 'Редактор категорий вопросов';
+            $auth->add($backendFaqCategory);
+            $auth->addChild($backendFaqCategory, $backendManage);
+            $auth->addChild($backendFaqCategory, $backendManageFaqCategory);
 
 
 
@@ -1191,7 +1296,14 @@ class RbacController extends Controller
             $auth->add($backendForm);
             $auth->addChild($backendForm, $backendManage);
             $auth->addChild($backendForm, $backendManageForm);
-            $auth->addChild($backendForm, $backendManageFormInputType);
+
+
+
+            $backendFormInputType = $auth->createRole('admin.formInputType');
+            $backendFormInputType->description = 'Редактор типов форм';
+            $auth->add($backendFormInputType);
+            $auth->addChild($backendFormInputType, $backendManage);
+            $auth->addChild($backendFormInputType, $backendManageFormInputType);
 
 
 
@@ -1256,8 +1368,22 @@ class RbacController extends Controller
             $auth->add($backendService);
             $auth->addChild($backendService, $backendManage);
             $auth->addChild($backendService, $backendManageService);
-            $auth->addChild($backendService, $backendManageServiceSituation);
-            $auth->addChild($backendService, $backendManageServiceRubric);
+
+
+
+            $backendServiceSituation = $auth->createRole('admin.serviceSituation');
+            $backendServiceSituation->description = 'Редактор жизненных ситуаций';
+            $auth->add($backendServiceSituation);
+            $auth->addChild($backendServiceSituation, $backendManage);
+            $auth->addChild($backendServiceSituation, $backendManageServiceSituation);
+
+
+
+            $backendServiceRubric = $auth->createRole('admin.serviceRubric');
+            $backendServiceRubric->description = 'Редактор рубрик услуг';
+            $auth->add($backendServiceRubric);
+            $auth->addChild($backendServiceRubric, $backendManage);
+            $auth->addChild($backendServiceRubric, $backendManageServiceRubric);
 
 
 
@@ -1266,6 +1392,22 @@ class RbacController extends Controller
             $auth->add($backendUser);
             $auth->addChild($backendUser, $backendManage);
             $auth->addChild($backendUser, $backendManageUser);
+
+
+
+            $backendUserGroup = $auth->createRole('admin.userGroup');
+            $backendUserGroup->description = 'Редактор групп пользователей';
+            $auth->add($backendUserGroup);
+            $auth->addChild($backendUserGroup, $backendManage);
+            $auth->addChild($backendUserGroup, $backendManageUserGroup);
+
+
+
+            $backendUserRole = $auth->createRole('admin.userRole');
+            $backendUserRole->description = 'Редактор ролей пользователей';
+            $auth->add($backendUserRole);
+            $auth->addChild($backendUserRole, $backendManage);
+            $auth->addChild($backendUserRole, $backendManageUserRole);
 
 
 
@@ -1285,7 +1427,9 @@ class RbacController extends Controller
             $auth->addChild($admin, $backendCollection);
             $auth->addChild($admin, $backendControllerPage);
             $auth->addChild($admin, $backendFaq);
+            $auth->addChild($admin, $backendFaqCategory);
             $auth->addChild($admin, $backendForm);
+            $auth->addChild($admin, $backendFormInputType);
             $auth->addChild($admin, $backendGallery);
             $auth->addChild($admin, $backendMenu);
             $auth->addChild($admin, $backendNews);
@@ -1294,7 +1438,11 @@ class RbacController extends Controller
             $auth->addChild($admin, $backendPoll);
             $auth->addChild($admin, $backendProject);
             $auth->addChild($admin, $backendService);
+            $auth->addChild($admin, $backendServiceSituation);
+            $auth->addChild($admin, $backendServiceRubric);
             $auth->addChild($admin, $backendUser);
+            $auth->addChild($admin, $backendUserGroup);
+            $auth->addChild($admin, $backendUserRole);
             $auth->addChild($admin, $backendVars);
 
 
@@ -1383,6 +1531,7 @@ class RbacController extends Controller
 
         if ($user->save()) {
             $auth->assign($auth->getRole($role), $user->id);
+            $auth->invalidateCache();
 
             Console::output('Прозователь успешно создан.');
         } else {
@@ -1447,6 +1596,7 @@ class RbacController extends Controller
         }, 'error' => 'Неверная роль.']);
 
         $auth->assign($auth->getRole($role), $user->id);
+        $auth->invalidateCache();
 
         Console::output('Роль успешно добавлена.');
     }

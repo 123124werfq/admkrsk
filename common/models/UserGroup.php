@@ -21,7 +21,8 @@ use yii\behaviors\TimestampBehavior;
  * @property int $deleted_at
  * @property int $deleted_by
  *
- * @property UserUserGroup[] $dblUserUserGroups
+ * @property UserUserGroup[] $userUserGroups
+ * @property User[] $users
  */
 class UserGroup extends \yii\db\ActiveRecord
 {

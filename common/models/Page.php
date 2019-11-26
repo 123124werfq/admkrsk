@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use common\behaviors\UserAccessControlBehavior;
+use common\behaviors\AccessControlBehavior;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
@@ -42,6 +42,7 @@ class Page extends \yii\db\ActiveRecord
     const TITLE_ATTRIBUTE = 'title';
 
     public $access_user_ids;
+    public $access_user_group_ids;
 
     public $existUrl;
 
@@ -69,8 +70,9 @@ class Page extends \yii\db\ActiveRecord
             [['alias'], 'unique'],
             [['title', 'alias', 'seo_title', 'seo_description', 'seo_keywords'], 'string', 'max' => 255],
 
-            ['access_user_ids', 'each', 'rule' => ['integer']],
+            [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
+            ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
         ];
     }
 
@@ -98,7 +100,6 @@ class Page extends \yii\db\ActiveRecord
             'updated_by' => 'Обновил',
             'deleted_at' => 'Удалено',
             'deleted_by' => 'Удалил',
-            'access_user_ids' => 'Доступ',
         ];
     }
 
@@ -136,6 +137,11 @@ class Page extends \yii\db\ActiveRecord
 
             return (($absolute)?Yii::$app->params['frontendUrl']:'').'/'.$this->alias;
         }
+    }
+
+    public function getFullUrl()
+    {
+        return $this->getUrl(true);
     }
 
     public function createPath()
@@ -191,7 +197,7 @@ class Page extends \yii\db\ActiveRecord
             'ba' => BlameableBehavior::class,
             'log' => LogBehavior::class,
             'ac' => [
-                'class' => UserAccessControlBehavior::class,
+                'class' => AccessControlBehavior::class,
                 'permission' => 'backend.page',
             ],
         ];
@@ -229,7 +235,7 @@ class Page extends \yii\db\ActiveRecord
         return $this->hasMany(Page::class, ['id_parent' => 'id_page'])->orderBy('ord ASC');
     }
 
-    public function getSubMenu()
+    /*public function getSubMenu()
     {
         $childs = $this->getChilds()->orderBy('ord ASC')->all();
         $links = [];
@@ -257,5 +263,5 @@ class Page extends \yii\db\ActiveRecord
         });
 
         return $rightmenu;
-    }
+    }*/
 }

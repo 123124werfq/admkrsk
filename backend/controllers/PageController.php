@@ -225,10 +225,45 @@ class PageController extends Controller
      * Lists all Page models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($export=false)
     {
         $searchModel = new PageSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        if ($export)
+        {
+            header('Content-Type: text/xlsx; charset=utf-8');
+            header('Content-Disposition: attachment; filename=Выгрузка разделы.xlsx');
+
+            \moonland\phpexcel\Excel::widget([
+                'models' => $dataProvider->query->all(),
+                'mode' => 'export',
+                'columns' => [
+                    [
+                        'attribute'=>'title',
+                        'width'=>100,
+                    ],
+                    [
+                        'attribute'=>'fullurl',
+                        'width'=>80,
+                    ],
+                    'created_at:date',
+                    'updated_at:date',
+                    'views',
+                    'viewsYear',
+                ], 
+                'headers' => [
+                    'title' => 'Название',
+                    'fullurl' => 'Ссылка',
+                    'created_at'=> 'Создано',
+                    'updated_at'=> 'Отредактировано',
+                    'views'=>'Просмотры всего',
+                    'viewsYear'=>'Просмотры за год',
+                ], 
+            ]);
+
+            Yii::$app->end();
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -263,6 +298,9 @@ class PageController extends Controller
 
         $dataProvider = new ActiveDataProvider([
             'query' => $submenu,
+            'pagination' => [
+                'pageSize' => 10000,
+            ],
         ]);
 
         return $this->render('view', [

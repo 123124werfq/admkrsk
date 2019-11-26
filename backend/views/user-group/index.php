@@ -21,7 +21,7 @@ if (Yii::$app->user->can('admin.user')) {
 
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
-                'filterModel' => $searchModel,
+                //'filterModel' => $searchModel,
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
 
@@ -34,7 +34,14 @@ if (Yii::$app->user->can('admin.user')) {
                     //'deleted_at',
                     //'deleted_by',
 
-                    ['class' => 'yii\grid\ActionColumn'],
+                    [
+                        'class' => 'yii\grid\ActionColumn',
+                        'contentOptions'=>['class'=>'button-column'],
+                    ],
+                ],
+                'tableOptions' => [
+                    'emptyCell' => '',
+                    'class' => 'table table-striped ids-style valign-middle table-hover'
                 ],
             ]); ?>
 

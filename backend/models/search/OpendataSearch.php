@@ -2,6 +2,8 @@
 
 namespace backend\models\search;
 
+use common\models\AuthEntity;
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Opendata;
@@ -43,6 +45,9 @@ class OpendataSearch extends Opendata
         $query = Opendata::find();
 
         // add conditions that should always apply here
+        if (!Yii::$app->user->can('admin.opendata')) {
+            $query->andWhere(['id_opendata' => AuthEntity::getEntityIds(Opendata::class)]);
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

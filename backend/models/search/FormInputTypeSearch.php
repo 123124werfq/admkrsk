@@ -2,6 +2,8 @@
 
 namespace backend\models\search;
 
+use common\models\AuthEntity;
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\FormInputType;
@@ -43,6 +45,9 @@ class FormInputTypeSearch extends FormInputType
         $query = FormInputType::find();
 
         // add conditions that should always apply here
+        if (!Yii::$app->user->can('admin.formInputType')) {
+            $query->andWhere(['id_type' => AuthEntity::getEntityIds(FormInputType::class)]);
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

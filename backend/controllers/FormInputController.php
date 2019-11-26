@@ -112,6 +112,7 @@ class FormInputController extends Controller
                 // создаем колонку для коллекции
                 $column = new CollectionColumn;
                 $column->name = $model->name;
+                $column->alias = $model->fieldname;
                 $column->id_collection = $form->id_collection;
                 $column->type = $model->type;
 

@@ -7,6 +7,8 @@ use common\models\CollectionRecord;
 use common\models\CollectionColumn;
 use common\models\Collection;
 use common\models\FormDynamic;
+use common\models\Media;
+
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -78,6 +80,24 @@ class CollectionRecordController extends Controller
 
             if ($col->type==CollectionColumn::TYPE_DATE)
                 $dataProviderColumns[$col->id_column]['format'] = ['date', 'php:d.m.Y'];
+
+            if ($col->type==CollectionColumn::TYPE_IMAGE)
+            {
+                $dataProviderColumns[$col->id_column]['format'] = 'raw';
+                $dataProviderColumns[$col->id_column]['value'] = function($model) use ($col) {
+
+                    $ids = json_decode($model[$col->id_column],true);
+
+                    $medias = Media::find()->where(['id_media'=>$ids])->all();
+
+                    $output = [];
+                    foreach ($medias as $key => $media) {
+                        $output[] = '<img src="'.$media->showThumb(['w'=>100,'h'=>100]).'"/>';
+                    }
+
+                    return implode('', $output);
+                };
+            }
 
             if ($col->type==CollectionColumn::TYPE_DATETIME)
                 $dataProviderColumns[$col->id_column]['format'] = ['date', 'php:d.m.Y H:i'];
@@ -165,9 +185,12 @@ class CollectionRecordController extends Controller
 
         $form = new FormDynamic($collection->form);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save())
+        if ($form->load(Yii::$app->request->post()) && $form->validate())
         {
-            return $this->redirect(['index', 'id' => $model->id_collection]);
+            $prepare = $form->prepareData(true);
+
+            if ($model = $collection->insertRecord($prepare))
+                return $this->redirect(['index', 'id' => $model->id_collection]);
         }
 
         if (Yii::$app->request->isAjax)
@@ -207,9 +230,11 @@ class CollectionRecordController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $id_collection = $model->id_collection;
+        $model->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['index','id'=>$id_collection]);
     }
 
     /**

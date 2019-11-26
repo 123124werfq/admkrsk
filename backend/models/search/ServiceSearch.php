@@ -2,6 +2,8 @@
 
 namespace backend\models\search;
 
+use common\models\AuthEntity;
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Service;
@@ -43,6 +45,9 @@ class ServiceSearch extends Service
         $query = Service::find();
 
         // add conditions that should always apply here
+        if (!Yii::$app->user->can('admin.service')) {
+            $query->andWhere(['id_service' => AuthEntity::getEntityIds(Service::class)]);
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
