@@ -31,6 +31,11 @@ class FormController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
+                        'actions' => ['get-form'],
+                        'roles' => ['@'],                        
+                    ],
+                    [
+                        'allow' => true,
                         'actions' => ['index'],
                         'roles' => ['backend.form.index'],
                         'roleParams' => [
