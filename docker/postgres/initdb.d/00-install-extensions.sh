@@ -10,6 +10,7 @@ for DB in template1; do
 
 	"${psql[@]}" --username $POSTGRES_USER -d $DB <<-EOSQL
 		CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+		CREATE EXTENSION pg_trgm;
 EOSQL
 
 done
