@@ -3,7 +3,7 @@
 namespace common\models;
 
 use common\behaviors\DatetimeBehavior;
-use common\behaviors\UserAccessControlBehavior;
+use common\behaviors\AccessControlBehavior;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
@@ -51,6 +51,7 @@ class Poll extends \yii\db\ActiveRecord
     const STATUS_ACTIVE = 2;
 
     public $access_user_ids;
+    public $access_user_group_ids;
 
     /**
      * {@inheritdoc}
@@ -75,8 +76,9 @@ class Poll extends \yii\db\ActiveRecord
             [['title'], 'string', 'max' => 255],
             [['status'], 'in', 'range' => [self::STATUS_INACTIVE, self::STATUS_ACTIVE]],
 
-            ['access_user_ids', 'each', 'rule' => ['integer']],
+            [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
+            ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
         ];
     }
 
@@ -101,7 +103,6 @@ class Poll extends \yii\db\ActiveRecord
             'updated_by' => 'Обновил',
             'deleted_at' => 'Удалено',
             'deleted_by' => 'Удалил',
-            'access_user_ids' => 'Доступ',
         ];
     }
 
@@ -120,7 +121,7 @@ class Poll extends \yii\db\ActiveRecord
             'ba' => BlameableBehavior::class,
             'log' => LogBehavior::class,
             'ac' => [
-                'class' => UserAccessControlBehavior::class,
+                'class' => AccessControlBehavior::class,
                 'permission' => 'backend.poll',
             ],
         ];

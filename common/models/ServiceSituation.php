@@ -2,11 +2,13 @@
 
 namespace common\models;
 
+use common\behaviors\AccessControlBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
 use common\modules\log\behaviors\LogBehavior;
 use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 use yii\helpers\Url;
 
 /**
@@ -33,6 +35,9 @@ class ServiceSituation extends \yii\db\ActiveRecord
     const VERBOSE_NAME_PLURAL = 'Жизненные ситуации';
     const TITLE_ATTRIBUTE = 'name';
 
+    public $access_user_ids;
+    public $access_user_group_ids;
+
     /**
      * {@inheritdoc}
      */
@@ -51,6 +56,10 @@ class ServiceSituation extends \yii\db\ActiveRecord
             [['id_media', 'id_parent', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
             [['id_media', 'id_parent', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['name'], 'string', 'max' => 255],
+
+            [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
+            ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
+            ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
         ];
     }
 
@@ -77,19 +86,24 @@ class ServiceSituation extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-          'ba' => BlameableBehavior::class,
-          'log' => LogBehavior::class,
-          'multiupload' => [
-              'class' => \common\components\multifile\MultiUploadBehavior::className(),
-              'relations'=>
-                [
-                  'media'=>[
-                      'model'=>'Media',
-                      'fk_cover' => 'id_media',
-                      'cover' => 'media',
+            'ts' => TimestampBehavior::class,
+            'ba' => BlameableBehavior::class,
+            'log' => LogBehavior::class,
+            'ac' => [
+                'class' => AccessControlBehavior::class,
+                'permission' => 'backend.serviceSituation',
+            ],
+            'multiupload' => [
+                'class' => \common\components\multifile\MultiUploadBehavior::className(),
+                'relations'=>
+                    [
+                        'media'=>[
+                            'model'=>'Media',
+                            'fk_cover' => 'id_media',
+                            'cover' => 'media',
+                        ],
                     ],
-                ],
-              'cover'=>'media'
+                'cover'=>'media'
             ],
         ];
     }

@@ -2,6 +2,8 @@
 
 namespace backend\models\search;
 
+use common\models\AuthEntity;
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Form;
@@ -43,6 +45,9 @@ class FormSearch extends Form
         $query = Form::find();
 
         // add conditions that should always apply here
+        if (!Yii::$app->user->can('admin.form')) {
+            $query->andWhere(['id_form' => AuthEntity::getEntityIds(Form::class)]);
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

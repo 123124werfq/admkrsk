@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\AuthEntity;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\ServiceRubric;
@@ -123,10 +124,14 @@ class ServiceRubricController extends Controller
      */
     public function actionIndex()
     {
-        $records = ServiceRubric::find()->where('id_parent IS NULL')->all();
+        $recordsQuery = ServiceRubric::find()->where('id_parent IS NULL');
+
+        if (!Yii::$app->user->can('admin.opendata')) {
+            $recordsQuery->andWhere(['id_rub' => AuthEntity::getEntityIds(ServiceRubric::class)]);
+        }
 
         return $this->render('index', [
-            'records'=>$records,
+            'records'=>$recordsQuery->all(),
         ]);
     }
 

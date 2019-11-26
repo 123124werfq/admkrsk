@@ -1,5 +1,7 @@
 <?php
 
+use backend\widgets\UserAccessControl;
+use backend\widgets\UserGroupAccessControl;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -87,6 +89,18 @@ $this->registerJs("$('#opendata-id_collection').change(function () {
 <?= $form->field($model, 'columns')->dropDownList($model->id_collection ? ArrayHelper::map($model->collection->columns, 'id_column', 'name') : [], ['multiple' => true]) ?>
 
 <?= $form->field($model, 'period')->textInput() ?>
+
+<?php if (Yii::$app->user->can('admin.opendata')): ?>
+
+    <hr>
+
+    <h3>Доступ</h3>
+
+    <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>
+
+    <?= $form->field($model, 'access_user_group_ids')->label('Группы пользоватей')->widget(UserGroupAccessControl::class) ?>
+
+<?php endif; ?>
 
 <hr>
 

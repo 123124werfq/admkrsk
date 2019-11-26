@@ -1,5 +1,7 @@
 <?php
 
+use backend\widgets\UserAccessControl;
+use backend\widgets\UserGroupAccessControl;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
@@ -95,6 +97,18 @@ if (!empty($id_situations))
         <?= $form->field($model, 'old')->checkBox() ?>
 
         <?= $form->field($model, 'online')->dropDownList([0=>'Оффлайн',1=>'В электронном виде']) ?>
+
+        <?php if (Yii::$app->user->can('admin.service')): ?>
+
+            <hr>
+
+            <h3>Доступ</h3>
+
+            <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>
+
+            <?= $form->field($model, 'access_user_group_ids')->label('Группы пользоватей')->widget(UserGroupAccessControl::class) ?>
+
+        <?php endif; ?>
 
         <hr>
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

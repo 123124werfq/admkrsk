@@ -11,9 +11,11 @@ use Yii;
 use common\models\UserGroup;
 use backend\models\search\UserGroupSearch;
 use yii\filters\AccessControl;
+use yii\validators\NumberValidator;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * UserGroupController implements the CRUD actions for UserGroup model.
@@ -29,6 +31,11 @@ class UserGroupController extends Controller
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['list'],
+                        'roles' => ['backend.userGroup.list'],
+                    ],
                     [
                         'allow' => true,
                         'actions' => ['index'],
@@ -136,6 +143,36 @@ class UserGroupController extends Controller
                 ],
             ],
         ];
+    }
+
+    /**
+     * Search User models.
+     * @param string $q
+     * @return mixed
+     */
+    public function actionList($q)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $query = UserGroup::find();
+
+        $q = trim($q);
+        if ((new NumberValidator(['integerOnly' => true]))->validate($q)) {
+            $query->andWhere(['id_user_group' => $q]);
+        } else {
+            $query->andWhere(['ilike', 'name', $q]);
+        }
+
+        $results = [];
+        foreach ($query->limit(10)->all() as $userGroup) {
+            /* @var UserGroup $userGroup */
+            $results[] = [
+                'id' => $userGroup->id_user_group,
+                'text' => $userGroup->name,
+            ];
+        }
+
+        return ['results' => $results];
     }
 
     /**

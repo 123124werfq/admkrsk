@@ -2,6 +2,8 @@
 
 namespace backend\models\search;
 
+use common\models\AuthEntity;
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Alert;
@@ -43,6 +45,9 @@ class AlertSearch extends Alert
         $query = Alert::find();
 
         // add conditions that should always apply here
+        if (!Yii::$app->user->can('admin.alert')) {
+            $query->andWhere(['id_alert' => AuthEntity::getEntityIds(Alert::class)]);
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

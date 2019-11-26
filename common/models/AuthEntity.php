@@ -7,9 +7,13 @@ use Yii;
 /**
  * This is the model class for table "{{%auth_entity}}".
  *
- * @property int $user_id
+ * @property int $id_user
+ * @property int $id_user_group
  * @property int $entity_id
  * @property string $class
+ *
+ * @property User $user
+ * @property UserGroup $userGroup
  */
 class AuthEntity extends \yii\db\ActiveRecord
 {
@@ -27,11 +31,11 @@ class AuthEntity extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'id_user_group'], 'default', 'value' => null],
-            [['user_id', 'entity_id', 'id_user_group'], 'integer'],
+            [['id_user', 'id_user_group'], 'default', 'value' => null],
+            [['id_user', 'entity_id', 'id_user_group'], 'integer'],
             [['entity_id', 'class'], 'required'],
             [['class'], 'string', 'max' => 255],
-            [['user_id', 'id_user_group', 'entity_id', 'class'], 'unique', 'targetAttribute' => ['user_id', 'id_user_group', 'entity_id', 'class']],
+            [['id_user', 'id_user_group', 'entity_id', 'class'], 'unique', 'targetAttribute' => ['id_user', 'id_user_group', 'entity_id', 'class']],
         ];
     }
 
@@ -42,10 +46,45 @@ class AuthEntity extends \yii\db\ActiveRecord
     {
         return [
             'id' => '#',
-            'user_id' => 'Пользователь',
+            'id_user' => 'Пользователь',
             'id_user_group' => 'Группа пользователей',
             'entity_id' => 'ID объекта',
             'class' => 'Класс',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'id_user']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserGroup()
+    {
+        return $this->hasOne(UserGroup::class, ['id_user_group' => 'id_user_group']);
+    }
+
+    /**
+     * @param string $className
+     * @return array
+     */
+    public static function getEntityIds($className)
+    {
+        return self::find()->select('entity_id')->andWhere([
+            'or',
+            [
+                'class' => $className,
+                'id_user' => Yii::$app->user->id,
+            ],
+            [
+                'class' => $className,
+                'id_user_group' => Yii::$app->user->identity->groupIds,
+            ]
+        ])->column();
     }
 }

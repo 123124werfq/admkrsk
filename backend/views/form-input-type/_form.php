@@ -1,5 +1,7 @@
 <?php
 
+use backend\widgets\UserAccessControl;
+use backend\widgets\UserGroupAccessControl;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use common\models\CollectionColumn;
@@ -62,6 +64,18 @@ unset($esia['deleted_by']);
                 <?= $form->field($model, 'service_attribute')->dropDownList($service,['prompt'=>'Выберите поле из услуги','visible' => 'forminputtype-type','visible-value'=>3])->hint('Данные в форме будут сформированы исходя из возможных данных')?>
             </div>
         </div>
+
+        <?php if (Yii::$app->user->can('admin.formInputType')): ?>
+
+            <hr>
+
+            <h3>Доступ</h3>
+
+            <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>
+
+            <?= $form->field($model, 'access_user_group_ids')->label('Группы пользоватей')->widget(UserGroupAccessControl::class) ?>
+
+        <?php endif; ?>
 
         <hr>
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
