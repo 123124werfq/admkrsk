@@ -111,7 +111,7 @@ class ServiceSituation extends \yii\db\ActiveRecord
 
     public function getServices()
     {
-        return $this->hasMany(Service::className(), ['id_situation' => 'id_situation']);
+        return $this->hasMany(Service::className(), ['id_service' => 'id_service'])->viaTable('servicel_situation',['id_situation'=>'id_situation']);;
     }
 
     public function getMedia()

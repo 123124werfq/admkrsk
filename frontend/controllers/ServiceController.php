@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use common\models\Service;
 use common\models\Form;
 use common\models\ServiceRubric;
+use common\models\ServiceSituation;
 use common\models\ServiceTarget;
 use common\models\FormDynamic;
 use Yii;
@@ -35,15 +36,14 @@ class ServiceController extends \yii\web\Controller
         return $this->render('/site/blocks',['page'=>$page]);
     }
 
-    public function actionReestr($page=null)
+    public function actionReestr($page=null,$id_situation=null)
     {
         $clientType = (int)Yii::$app->request->get('client_type');
-
         $online = (int)Yii::$app->request->get('online');
 
         if (!empty($clientType) || !empty($online))
         {
-            $services = Service::find();
+            $services = Service::find()->where(['old'=>0]);
 
             if (!empty($clientType))
                 $services->andWhere('client_type&',$clientType.'='.$clientType);
@@ -54,6 +54,20 @@ class ServiceController extends \yii\web\Controller
             $services = $services->all();
 
             return $this->renderPartial('_table',['services'=>$services]);
+        }
+        if (!empty($id_situation))
+        {
+            $situation = ServiceSituation::findOne($id_situation);
+
+            if (empty($situation))
+                throw new NotFoundHttpException('Такой страницы не существует');
+
+            return $this->render('situation',[
+                'page'=>$page,
+                'services'=>$situation->getServices()->where(['old'=>0])->all(),
+                'situation'=> $situation,
+                'rubrics'=>$rubrics,
+            ]);
         }
 
         $rubrics = ServiceRubric::find()->with('childs')->where('id_parent IS NULL')->all();
