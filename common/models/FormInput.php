@@ -46,7 +46,7 @@ class FormInput extends \yii\db\ActiveRecord
             [['name', 'type'], 'required'],
             [['values', 'hint','label'], 'string'],
             [['visibleInputValue','options'],'safe'],
-            [['name', 'fieldname'], 'string', 'max' => 255],
+            [['name', 'fieldname','alias'], 'string', 'max' => 255],
         ];
     }
 
@@ -65,7 +65,7 @@ class FormInput extends \yii\db\ActiveRecord
             'label' => 'Подпись',
             'name' => 'Название',
             'hint' => 'Пояснение',
-            'fieldname' => 'Название переменной',
+            'fieldname' => 'Псевдоним переменной',
             'visibleInput' => 'Зависимость видимости',
             'visibleInputValue' => 'Значение',
             'values' => 'Значения',

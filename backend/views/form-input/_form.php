@@ -57,6 +57,8 @@ if (!empty($model->id_form))
 
     <?=$form->field($model, 'hint')->textInput(['maxlength' => 255]) ?>
 
+    <?=$form->field($model, 'fieldname')->textInput(['maxlength' => 255]) ?>
+
     <?php if (!empty($visibleInputs))
     {?>
     <hr>

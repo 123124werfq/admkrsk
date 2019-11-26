@@ -10,7 +10,7 @@ $this->params['breadcrumbs'][] = ['label' => $model->pageTitle, 'url' => ['view'
 $this->params['breadcrumbs'][] = 'Редактирование';
 ?>
 <div class="collection-update">
-    <ul class="nav nav-tabs" role="tablist">
+    <!--ul class="nav nav-tabs" role="tablist">
         <li class="active"><a class="nav-link" data-toggle="tab" href="#tab-1">Дочерние разделы</a></li>
         <li>
             <?=Html::a('Шаблон', ['layout', 'id' => $model->id_collection], ['class' => 'nav-link'])?>
@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
         <li>
             <?=Html::a('Новости', ['news/index', 'id_collection' => $model->id_collection], ['class' => 'nav-link'])?>
         </li>
-    </ul>
+    </ul-->
     <div class="ibox">
         <div class="ibox-content">
             <?= $this->render('_form', [
