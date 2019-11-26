@@ -41,39 +41,28 @@ class ServiceController extends \yii\web\Controller
         $clientType = (int)Yii::$app->request->get('client_type');
         $online = (int)Yii::$app->request->get('online');
 
+        $services = Service::find()->where(['old'=>0]);
+
         if (!empty($clientType) || !empty($online))
         {
-            $services = Service::find()->where(['old'=>0]);
-
             if (!empty($clientType))
                 $services->andWhere('client_type&',$clientType.'='.$clientType);
 
             if (!empty($online))
                 $services->andWhere(['online'=>1]);
-
-            $services = $services->all();
-
-            return $this->renderPartial('_table',['services'=>$services]);
-        }
-        if (!empty($id_situation))
-        {
-            $situation = ServiceSituation::findOne($id_situation);
-
-            if (empty($situation))
-                throw new NotFoundHttpException('Такой страницы не существует');
-
-            return $this->render('situation',[
-                'page'=>$page,
-                'services'=>$situation->getServices()->where(['old'=>0])->all(),
-                'situation'=> $situation,
-                'rubrics'=>$rubrics,
-            ]);
         }
 
-        $rubrics = ServiceRubric::find()->with('childs')->where('id_parent IS NULL')->all();
+        $servicesRubs = [];
+        foreach ($services->all() as $key => $data)
+            $servicesRubs[(int)$data->id_rub][$data->id_service] = $data;
+
+        $rubrics = ServiceRubric::find()
+                        ->with('childs')
+                        ->where('id_parent IS NULL')->all();
 
         return $this->render('reestr',[
             'page'=>$page,
+            'servicesRubs'=>$servicesRubs,
             'rubrics'=>$rubrics,
         ]);
     }

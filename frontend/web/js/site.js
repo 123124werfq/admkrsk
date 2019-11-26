@@ -48,6 +48,10 @@ function addInput(block)
 
 $(document).ready(function() {
 
+    $("reestr-filters select").change(function(){
+
+    });
+
     $("#program-filter input").on('datepicker-change', function(event,obj) {
         $.ajax({
             type: "GET",

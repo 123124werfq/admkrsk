@@ -27,6 +27,7 @@ use Yii;
  */
 class FormInput extends \yii\db\ActiveRecord
 {
+    public $alias;
     /**
      * {@inheritdoc}
      */
