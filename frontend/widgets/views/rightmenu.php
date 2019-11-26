@@ -2,12 +2,15 @@
 	$submenu = false;
 	$siblings = false;
 
-	if (!empty($page->childs))
-		$submenu = $page->childs;
-	else if (!empty($page->parent->childs))
+	if (empty($page->menu))
 	{
-		$siblings = true;
-		$submenu = $page->parent->childs;
+		if (!empty($page->childs))
+			$submenu = $page->getChilds()->where(['hidemenu'=>0])->all();
+		else if (!empty($page->parent->childs))
+		{
+			$siblings = true;
+			$submenu = $page->parent->getChilds()->where(['hidemenu'=>0])->all();
+		}
 	}
 ?>
 
@@ -24,7 +27,7 @@
 ?>
 <?php
 		if (!empty($page->menu))
-			foreach ($page->menu->links as $key => $link)
+			foreach ($page->menu->getLinks()->where(['state'=>1])->all() as $key => $link)
 			{
 ?>
 			<li><a href="<?=$link->getUrl()?>"><?=$link->label?></a></li>
