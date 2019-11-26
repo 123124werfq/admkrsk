@@ -2,9 +2,13 @@
 
 namespace common\models;
 
+use common\behaviors\AccessControlBehavior;
+use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "db_project".
@@ -33,6 +37,9 @@ class Project extends \yii\db\ActiveRecord
     const VERBOSE_NAME_PLURAL = 'Проекты и события';
     const TITLE_ATTRIBUTE = 'name';
 
+    public $access_user_ids;
+    public $access_user_group_ids;
+
     /**
      * {@inheritdoc}
      */
@@ -52,6 +59,10 @@ class Project extends \yii\db\ActiveRecord
             [['id_media', 'id_page', 'type', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['url','name'], 'string', 'max' => 255],
             [['date_begin', 'date_end'],'safe'],
+
+            [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
+            ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
+            ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
         ];
     }
 
@@ -84,13 +95,13 @@ class Project extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            /*'ts' => TimestampBehavior::class,
+            'ts' => TimestampBehavior::class,
             'ba' => BlameableBehavior::class,
             'log' => LogBehavior::class,
             'ac' => [
-                'class' => UserAccessControlBehavior::class,
-                'permission' => 'backend.news',
-            ],*/
+                'class' => AccessControlBehavior::class,
+                'permission' => 'backend.project',
+            ],
             'multiupload' => [
                 'class' => \common\components\multifile\MultiUploadBehavior::className(),
                 'relations'=>

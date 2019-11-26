@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use common\behaviors\UserAccessControlBehavior;
+use common\behaviors\AccessControlBehavior;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\MetaTrait;
 use Yii;
@@ -25,6 +25,7 @@ class Vars extends \yii\db\ActiveRecord
     const TITLE_ATTRIBUTE = 'name';
 
     public $access_user_ids;
+    public $access_user_group_ids;
 
     /**
      * @inheritdoc
@@ -45,8 +46,9 @@ class Vars extends \yii\db\ActiveRecord
             [['name', 'alias'], 'string', 'max' => 255],
             [['alias'], 'unique'],
 
-            ['access_user_ids', 'each', 'rule' => ['integer']],
+            [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
+            ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
         ];
     }
 
@@ -58,7 +60,7 @@ class Vars extends \yii\db\ActiveRecord
         return [
             'log' => LogBehavior::class,
             'ac' => [
-                'class' => UserAccessControlBehavior::class,
+                'class' => AccessControlBehavior::class,
                 'permission' => 'backend.vars',
             ],
         ];
@@ -74,7 +76,6 @@ class Vars extends \yii\db\ActiveRecord
             'name' => 'Название',
             'alias' => 'Алиас',
             'content' => 'Содержание',
-            'access_user_ids' => 'Доступ',
         ];
     }
 

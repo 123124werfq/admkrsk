@@ -47,12 +47,7 @@ class PollSearch extends Poll
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.poll')) {
-            $query->andWhere([
-                'id_page' => AuthEntity::find()->select('entity_id')->andWhere([
-                    'class' => Poll::class,
-                    'user_id' => Yii::$app->user->id,
-                ]),
-            ]);
+            $query->andWhere(['id_poll' => AuthEntity::getEntityIds(Poll::class)]);
         }
 
         $dataProvider = new ActiveDataProvider([

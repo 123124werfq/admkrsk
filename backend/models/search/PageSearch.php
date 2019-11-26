@@ -46,12 +46,7 @@ class PageSearch extends Page
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.page')) {
-            $query->andWhere([
-                'id_page' => AuthEntity::find()->select('entity_id')->andWhere([
-                    'class' => Page::class,
-                    'user_id' => Yii::$app->user->id,
-                ]),
-            ]);
+            $query->andWhere(['id_page' => AuthEntity::getEntityIds(Page::class)]);
         }
 
         $dataProvider = new ActiveDataProvider([

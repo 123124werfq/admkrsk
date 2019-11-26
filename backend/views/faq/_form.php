@@ -1,5 +1,7 @@
 <?php
 
+use backend\widgets\UserAccessControl;
+use backend\widgets\UserGroupAccessControl;
 use common\models\Faq;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
@@ -37,6 +39,18 @@ $model->id_faq_categories = ArrayHelper::getColumn($model->categories, 'id_faq_c
 <?= $form->field($model, 'question')->textarea(['rows' => 6, 'class' => 'redactor']) ?>
 
 <?= $form->field($model, 'answer')->textarea(['rows' => 6, 'class' => 'redactor']) ?>
+
+<?php if (Yii::$app->user->can('admin.faq')): ?>
+
+    <hr>
+
+    <h3>Доступ</h3>
+
+    <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>
+
+    <?= $form->field($model, 'access_user_group_ids')->label('Группы пользоватей')->widget(UserGroupAccessControl::class) ?>
+
+<?php endif; ?>
 
 <hr>
 

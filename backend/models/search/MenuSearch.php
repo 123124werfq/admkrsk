@@ -46,12 +46,7 @@ class MenuSearch extends Menu
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.menu')) {
-            $query->andWhere([
-                'id_page' => AuthEntity::find()->select('entity_id')->andWhere([
-                    'class' => Menu::class,
-                    'user_id' => Yii::$app->user->id,
-                ]),
-            ]);
+            $query->andWhere(['id_menu' => AuthEntity::getEntityIds(Menu::class)]);
         }
 
         $dataProvider = new ActiveDataProvider([

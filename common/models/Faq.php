@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\behaviors\AccessControlBehavior;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
@@ -43,6 +44,9 @@ class Faq extends \yii\db\ActiveRecord
 
     public $id_faq_categories;
 
+    public $access_user_ids;
+    public $access_user_group_ids;
+
     /**
      * {@inheritdoc}
      */
@@ -61,6 +65,10 @@ class Faq extends \yii\db\ActiveRecord
             [['status'], 'integer'],
             [['question', 'answer'], 'string'],
             [['id_faq_categories'], 'each', 'rule' => ['exist', 'skipOnError' => true, 'targetClass' => FaqCategory::class, 'targetAttribute' => 'id_faq_category']],
+
+            [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
+            ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
+            ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
         ];
     }
 
@@ -93,6 +101,10 @@ class Faq extends \yii\db\ActiveRecord
             'ts' => TimestampBehavior::class,
             'ba' => BlameableBehavior::class,
             'log' => LogBehavior::class,
+            'ac' => [
+                'class' => AccessControlBehavior::class,
+                'permission' => 'backend.faq',
+            ],
         ];
     }
 

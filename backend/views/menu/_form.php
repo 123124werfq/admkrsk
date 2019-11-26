@@ -1,6 +1,7 @@
 <?php
 
 use backend\widgets\UserAccessControl;
+use backend\widgets\UserGroupAccessControl;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
@@ -25,7 +26,15 @@ use yii\helpers\ArrayHelper;
             }?>
 
             <?php if (Yii::$app->user->can('admin.menu') && empty($model->id_page)): ?>
-                <?= $form->field($model, 'access_user_ids')->widget(UserAccessControl::class) ?>
+
+                <hr>
+
+                <h3>Доступ</h3>
+
+                <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>
+
+                <?= $form->field($model, 'access_user_group_ids')->label('Группы пользоватей')->widget(UserGroupAccessControl::class) ?>
+
             <?php endif; ?>
             <hr/>
             <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\behaviors\AccessControlBehavior;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
@@ -32,6 +33,9 @@ class FaqCategory extends \yii\db\ActiveRecord
     const VERBOSE_NAME_PLURAL = 'Категории';
     const TITLE_ATTRIBUTE = 'title';
 
+    public $access_user_ids;
+    public $access_user_group_ids;
+
     /**
      * {@inheritdoc}
      */
@@ -48,6 +52,10 @@ class FaqCategory extends \yii\db\ActiveRecord
         return [
             [['title'], 'required'],
             [['title'], 'string', 'max' => 255],
+
+            [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
+            ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
+            ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
         ];
     }
 
@@ -77,6 +85,10 @@ class FaqCategory extends \yii\db\ActiveRecord
             'ts' => TimestampBehavior::class,
             'ba' => BlameableBehavior::class,
             'log' => LogBehavior::class,
+            'ac' => [
+                'class' => AccessControlBehavior::class,
+                'permission' => 'backend.faqCategory',
+            ],
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\behaviors\AccessControlBehavior;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
@@ -56,6 +57,9 @@ class Opendata extends \yii\db\ActiveRecord
     const VERSION = 'http://data.gov.ru/metodicheskie-rekomendacii-po-publikacii-otkrytyh-dannyh-versiya-30';
     const OPENDATA_LIST_PATH = 'opendata/list.csv';
 
+    public $access_user_ids;
+    public $access_user_group_ids;
+
     /**
      * {@inheritdoc}
      */
@@ -79,6 +83,10 @@ class Opendata extends \yii\db\ActiveRecord
             [['id_collection'], 'exist', 'skipOnError' => true, 'targetClass' => Collection::class, 'targetAttribute' => ['id_collection' => 'id_collection']],
             [['id_page'], 'exist', 'skipOnError' => true, 'targetClass' => Page::class, 'targetAttribute' => ['id_page' => 'id_page']],
             [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['id_user' => 'id']],
+
+            [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
+            ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
+            ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
         ];
     }
 
@@ -117,6 +125,10 @@ class Opendata extends \yii\db\ActiveRecord
             'ts' => TimestampBehavior::class,
             'ba' => BlameableBehavior::class,
             'log' => LogBehavior::class,
+            'ac' => [
+                'class' => AccessControlBehavior::class,
+                'permission' => 'backend.opendata',
+            ],
         ];
     }
 

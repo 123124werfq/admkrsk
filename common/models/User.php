@@ -32,6 +32,8 @@ use yii\web\IdentityInterface;
  * @property EsiaUser $esiainfo
  * @property AdUser $adinfo
  * @property Media $media
+ * @property UserUserGroup[] $userUserGroups
+ * @property UserGroup[] $userGroups
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -134,16 +136,21 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getUserUserGroups()
     {
-        return $this->hasMany(UserUserGroup::class, ['id' => 'id_user']);
+        return $this->hasMany(UserUserGroup::class, ['id_user' => 'id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUserGroup()
+    public function getUserGroups()
     {
         return $this->hasMany(UserGroup::class, ['id_user_group' => 'id_user_group'])
             ->via('userUserGroups');
+    }
+
+    public function getGroupIds()
+    {
+        return ArrayHelper::getColumn($this->userGroups, 'id_user_group');
     }
 
     /**

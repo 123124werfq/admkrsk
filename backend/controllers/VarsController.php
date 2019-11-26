@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\AuthEntity;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\Vars;
@@ -120,8 +121,14 @@ class VarsController extends Controller
      */
     public function actionIndex()
     {
+        $query = Vars::find();
+
+        if (!Yii::$app->user->can('admin.vars')) {
+            $query->andWhere(['id_var' => AuthEntity::getEntityIds(Vars::class)]);
+        }
+
         $dataProvider = new ActiveDataProvider([
-            'query' => Vars::find(),
+            'query' => $query,
         ]);
 
         return $this->render('index', [

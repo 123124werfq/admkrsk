@@ -1,7 +1,7 @@
 <?php
 
 namespace common\models;
-use common\behaviors\UserAccessControlBehavior;
+use common\behaviors\AccessControlBehavior;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
@@ -43,7 +43,10 @@ class News extends \yii\db\ActiveRecord
     const VERBOSE_NAME_PLURAL = 'Новости';
     const TITLE_ATTRIBUTE = 'title';
 
-    public $access_user_ids, $tagNames = [];
+    public $access_user_ids;
+    public $access_user_group_ids;
+
+    public $tagNames = [];
     public $pages;
 
     /**
@@ -66,8 +69,10 @@ class News extends \yii\db\ActiveRecord
             [['content'], 'string'],
             [['date_publish', 'date_unpublish','tagNames','pages'], 'safe'],
             [['title', 'description'], 'string', 'max' => 255],
-            ['access_user_ids', 'each', 'rule' => ['integer']],
+
+            [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
+            ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
         ];
     }
 
@@ -98,7 +103,6 @@ class News extends \yii\db\ActiveRecord
             'updated_by' => 'Updated By',
             'deleted_at' => 'Deleted At',
             'deleted_by' => 'Deleted By',
-            'access_user_ids' => 'Доступ',
         ];
     }
 
@@ -140,7 +144,7 @@ class News extends \yii\db\ActiveRecord
             'ba' => BlameableBehavior::class,
             'log' => LogBehavior::class,
             'ac' => [
-                'class' => UserAccessControlBehavior::class,
+                'class' => AccessControlBehavior::class,
                 'permission' => 'backend.news',
             ],
             'taggable'=>['class' => Taggable::class],

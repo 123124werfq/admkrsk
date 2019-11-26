@@ -3,6 +3,8 @@
 namespace common\rbac;
 
 use common\models\AuthEntity;
+use common\models\User;
+use common\models\UserGroup;
 use Yii;
 use yii\rbac\Item;
 use yii\rbac\Rule;
@@ -21,16 +23,33 @@ class EntityRule extends Rule
     {
         $itemPath = explode('.', $item->name);
 
-        if (Yii::$app->authManager->checkAccess($user, 'backend.' . $itemPath[1])) {
+        if (Yii::$app->authManager->checkAccess($user, 'admin.' . $itemPath[1])) {
             return true;
         }
 
         if (isset($params['entity_id']) || isset($params['class'])) {
-            return AuthEntity::find()->andFilterWhere([
-                'user_id' => $user,
+            $userAccessQuery = AuthEntity::find()->andFilterWhere([
+                'id_user' => $user,
                 'entity_id' => isset($params['entity_id']) ? (is_callable($params['entity_id']) ? call_user_func($params['entity_id']) : $params['entity_id']) : null,
                 'class' => $params['class'] ?? null,
-            ])->exists();
+            ]);
+
+            if ($userAccessQuery->exists()) {
+                return true;
+            }
+
+            $userGroupAccessQuery = AuthEntity::find()->andFilterWhere([
+                'id_user_group' => UserGroup::find()
+                    ->select(UserGroup::tableName() . '.id_user_group')
+                    ->joinWith('users')
+                    ->where([User::tableName() . '.id' => $user]),
+                'entity_id' => isset($params['entity_id']) ? (is_callable($params['entity_id']) ? call_user_func($params['entity_id']) : $params['entity_id']) : null,
+                'class' => $params['class'] ?? null,
+            ]);
+
+            if ($userGroupAccessQuery->exists()) {
+                return true;
+            }
         }
 
         return false;
