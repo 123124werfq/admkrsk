@@ -273,7 +273,7 @@ $(document).ready(function() {
         });
     });
 
-    if(location.href.indexOf('administration/service')>0)
+    if((location.href.indexOf('administration/service')>0) && ($('.form-inside').length))
     {
         $('.form-inside').before("<div class=countdown></div>");
         intervalcd = setInterval(function() {
