@@ -20,19 +20,22 @@
 				</div>
 			</div>
 			<div class="col-third person-col order-xs-0">
-				<?php if (!empty($blockVars['user'])){
-					$user = \common\models\User::findOne($blockVars['user']->value);
+				<?php if (!empty($blockVars['autor'])){
+					$record = \common\models\CollectionRecord::findOne($blockVars['autor']->value);
 
-					if (!empty($user)){
+					if (!empty($record))
+					{
+						$data = $record->getData(true);
+						$photo = $record->getMedia('photo',true);
 				?>
 				<div class="person-card person-card__mini">
-					<?php if (!empty($user->id_media)){?>
-                        <img class="person-card_img" src="<?=$user->makeThumb(['w'=>160,'h'=>160])?>" alt="<?=$user->fullname?>">
+					<?php if (!empty($photo)){?>
+                        <img class="person-card_img" src="<?=$photo->showThumb(['w'=>160,'h'=>160])?>" alt="<?=$data['name']??''?>">
                     <?php }?>
 					<div class="person-card_content">
-						<h4 class="person-card_title"><?=$user->fullname?></h4>
+						<h4 class="person-card_title"><?=$data['name']??''?></h4>
 						<p class="person-card_subtitle">
-							<?=$user->description?>
+							<?=nl2br($data['description']??'')?>
 						</p>
 					</div>
 				</div>

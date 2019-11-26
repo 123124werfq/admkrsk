@@ -134,9 +134,10 @@ class Block extends \yii\db\ActiveRecord
                     'name'=>'Описание',
                     'type'=>BlockVar::TYPE_RICHTEXT,
                 ],
-                'user'=>[
+                'autor'=>[
                     'name'=>'Автор',
-                    'type'=>BlockVar::TYPE_USER,
+                    'type'=>BlockVar::TYPE_COLLECTION_RECORD,
+                    'alias'=>'press_people'
                 ],
             ]
         ],
