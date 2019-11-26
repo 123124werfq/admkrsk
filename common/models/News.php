@@ -231,11 +231,16 @@ class News extends \yii\db\ActiveRecord
     /**
      * @return string
      */
-    public function getUrl()
+    public function getUrl($absolute=false)
     {
         if (!empty($this->page))
-            return $this->page->getUrl().'?id='.$this->id_news;
+            return $this->page->getUrl($absolute).'?id='.$this->id_news;
 
         return '/news?id='.$this->id_news;
+    }
+
+    public function getFullUrl()
+    {
+        return $this->getUrl(true);
     }
 }

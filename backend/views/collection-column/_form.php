@@ -17,8 +17,6 @@ use common\models\CollectionColumn;
     <?= $form->field($model, 'type')->dropDownList(CollectionColumn::getTypeLabel(),['class'=>'form-control column-type'])
     ?>
 
-    <?= $form->field($model, 'variables')->textarea(['rows' => 6]) ?>
-
     <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">

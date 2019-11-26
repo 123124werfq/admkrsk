@@ -13,6 +13,7 @@ if (Yii::$app->user->can('admin.page')) {
     $this->params['button-block'][] = Html::a('Добавить раздел', ['create'], ['class' => 'btn btn-success']);
 }
 $this->params['button-block'][] = Html::a('Дерево', ['tree'], ['class' => 'btn btn-default']);
+$this->params['button-block'][] = Html::a('Экпорт XLS', ['','export'=>1], ['class' => 'btn btn-default']);
 ?>
 <div class="page-index">
     <div class="ibox">
@@ -37,6 +38,8 @@ $this->params['button-block'][] = Html::a('Дерево', ['tree'], ['class' => 
                     //'parent.title:text:Родитель',
                     'created_at:date',
                     'updated_at:date',
+                    'viewsYear:integer:За год',
+                    'views:integer:Всего',
                     [
                         'class' => 'yii\grid\ActionColumn',
                         'contentOptions'=>['class'=>'button-column']
