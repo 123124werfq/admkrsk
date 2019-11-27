@@ -67,7 +67,8 @@ class CollectionRecordController extends Controller
         ];
 
         $sortAttributes = ['id_record'];
-        foreach ($columns as $key => $col) {
+        foreach ($columns as $key => $col)
+        {
 
             $dataProviderColumns[$col->id_column] = [
                 'label'=>$col->name,
@@ -85,6 +86,9 @@ class CollectionRecordController extends Controller
             {
                 $dataProviderColumns[$col->id_column]['format'] = 'raw';
                 $dataProviderColumns[$col->id_column]['value'] = function($model) use ($col) {
+
+                    if (empty($model[$col->id_column]))
+                        return '';
 
                     $ids = json_decode($model[$col->id_column],true);
 
