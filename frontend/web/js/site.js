@@ -77,13 +77,24 @@ $(document).ready(function() {
     $("div[data-visible-field]").each(function(){
 
         var source = $("#"+$(this).data('visible-field'));
+
         var block = $(this);
 
         function check()
         {
             var values = block.data('values').split(',');
 
-            if (values.indexOf(source.val())<0)
+            if (source.is(':checkbox'))
+            {
+                if (source.is(':checked'))
+                    var val = source.val();
+                else 
+                    var val = null
+            }
+            else 
+                var val = source.val();
+
+            if (values.indexOf(val)<0)
               block.hide();
             else
               block.show();
@@ -214,7 +225,6 @@ $(document).ready(function() {
 
         $('select[name="service_0"]').on('loaded.bs.select', function () {
             var Selectpicker = $('#number').data('selectpicker');
-            console.log(Selectpicker)
         });
 
     }
@@ -243,10 +253,6 @@ $(document).ready(function() {
 
          if (!acceptedFiles)
             acceptedFiles = null;
-
-        console.log(maxFiles);
-
-        console.log(acceptedFiles);
 
         $(this).addClass('input'+id_input);
 

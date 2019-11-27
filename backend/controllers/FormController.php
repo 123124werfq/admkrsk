@@ -270,7 +270,7 @@ class FormController extends Controller
         ]);
     }
 
-    public function deleteRow($id_row)
+    public function actionDeleteRow($id_row)
     {
         $model = FormRow::findOne($id_row);
         $id_form = $model->id_form;

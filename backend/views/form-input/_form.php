@@ -74,7 +74,6 @@ if (!empty($model->id_form))
         </div>
     </div>
     <?php }?>
-
     <?php if ($model->type == CollectionColumn::TYPE_SELECT || $model->type == CollectionColumn::TYPE_RADIO){?>
         <?=$form->field($model, 'id_collection')->widget(Select2::class, [
             'data' => ArrayHelper::map(Collection::find()->all(), 'id_collection', 'name'),
@@ -87,6 +86,7 @@ if (!empty($model->id_form))
 
     <?php if ($model->type == CollectionColumn::TYPE_SELECT ||
               $model->type == CollectionColumn::TYPE_RADIO ||
+              $model->type == CollectionColumn::TYPE_CHECKBOX ||
               $model->type == CollectionColumn::TYPE_JSON){?>
         <?=$form->field($model, 'values')->textarea(['rows' => 6])?>
     <?php }?>

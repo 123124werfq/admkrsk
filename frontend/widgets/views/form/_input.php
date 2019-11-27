@@ -160,7 +160,7 @@ JS;
 			case CollectionColumn::TYPE_CHECKBOX:
 				echo '<div class="checkbox-group">
 					<label class="checkbox checkbox__ib">
-						<input type="checkbox" name="input'.$input->id_input.'" value="1" class="checkbox_control">
+						<input id="input'.$input->id_input.'" type="checkbox" name="input'.$input->id_input.'" value="'.(!empty($input->values)?Html::encode($input->values):1).'" class="checkbox_control">
 						<span class="checkbox_label">'.$input->name.'</span>
 					</label>
 				</div>';
