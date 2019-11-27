@@ -99,8 +99,17 @@ JS;
 				$this->registerJs($script, yii\web\View::POS_END);
 				break;
 			case CollectionColumn::TYPE_FILE:
+
+				$dataOptions = [];
+				
+				if (!empty($options['acceptedFiles']))
+					$dataOptions[] = 'data-acceptedfiles="'.$options['acceptedFiles'].'"';
+
+				if (!empty($options['maxFiles']))
+					$dataOptions[] = 'data-maxfiles="'.$options['maxFiles'].'"';
+
 				echo'
-				<div data-input="'.$input->id_input.'" class="fileupload">
+				<div data-input="'.$input->id_input.'" class="fileupload" '.implode(' ', $dataOptions).' >
 	                <div class="fileupload_dropzone">
 	                    <div class="fileupload_btn">
 	                        <span class="fileupload_btn-text">Выберите файлы</span>
@@ -108,15 +117,23 @@ JS;
 	                    </div>
 	                    <div class="fileupload_content">
 	                        <p class="fileupload_label">Перетащите сюда файлы для загрузки</p>
-	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — 10 Мб</p>
+	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — '.($options['filesize']?$options['filesize']:'10').' Мб</p>
 	                    </div>
 	                </div>
 	                <div class="fileupload_list"></div>
 	            </div>';
 				break;
 			case CollectionColumn::TYPE_IMAGE:
+				$dataOptions = [];
+				
+				if (!empty($options['acceptedFiles']))
+					$dataOptions[] = 'data-acceptedFiles="'.$options['acceptedFiles'];
+
+				if (!empty($options['maxFiles']))
+					$dataOptions[] = 'data-maxFiles="'.$options['maxFiles'];
+
 				echo'
-				<div data-input="'.$input->id_input.'" class="fileupload">
+				<div data-input="'.$input->id_input.'" class="fileupload" '.implode(' ', $dataOptions).' >
 	                <div class="fileupload_dropzone ">
 	                    <div class="fileupload_btn">
 	                        <span class="fileupload_btn-text">Выберите файлы</span>
@@ -124,7 +141,7 @@ JS;
 	                    </div>
 	                    <div class="fileupload_content">
 	                        <p class="fileupload_label">Перетащите сюда файлы для загрузки</p>
-	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — 10 Мб</p>
+	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — '.($options['filesize']?$options['filesize']:'10').' Мб</p>
 	                    </div>
 	                </div>
 	                <div class="fileupload_list"></div>

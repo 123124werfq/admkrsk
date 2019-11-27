@@ -235,6 +235,18 @@ $(document).ready(function() {
     $(".fileupload").each(function(){
         var id_input = $(this).data('input');
         var new_index = 0;
+        var maxFiles = $(this).data('maxfiles');
+        var acceptedFiles = $(this).data('acceptedfiles');
+
+        if (!maxFiles)
+            maxFiles = null;
+
+         if (!acceptedFiles)
+            acceptedFiles = null;
+
+        console.log(maxFiles);
+
+        console.log(acceptedFiles);
 
         $(this).addClass('input'+id_input);
 
@@ -243,6 +255,8 @@ $(document).ready(function() {
             url: "/media/upload",
             dictRemoveFile: '×',
             dictCancelUpload: '×',
+            maxFiles:maxFiles,
+            acceptedFiles:acceptedFiles,
             resizeWidth: 1920,
             clickable: ".input"+id_input+" .fileupload_control",
             previewsContainer: ".input"+id_input+" .fileupload_list",

@@ -97,7 +97,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 ],
             ],
             self::TYPE_FILE => [
-                'accept'=>[
+                'acceptedFiles'=>[
                     'name'=>'Допустимые расширения файлов',
                     'type'=>'input',
                 ],
@@ -105,13 +105,25 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'name'=>'Максимальный размер файла в мегабайтах',
                     'type'=>'input',
                 ],
+                'maxFiles'=>[
+                    'name'=>'Количество файлов',
+                    'type'=>'input',
+                ],
             ],
             
             self::TYPE_IMAGE => [
-                'accept'=>[
+                'acceptedFiles'=>[
                     'name'=>'Допустимые расширения файлов',
                     'type'=>'input',
-                ]
+                ],
+                'filesize'=>[
+                    'name'=>'Максимальный размер файла в мегабайтах',
+                    'type'=>'input',
+                ],
+                'maxFiles'=>[
+                    'name'=>'Количество файлов',
+                    'type'=>'input',
+                ],
             ],
         ];
 

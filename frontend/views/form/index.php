@@ -22,20 +22,9 @@ function parseAttributesFromTag($tag){
 ?>
 <div class="main">
     <div class="container">
-        <div class="row">
-
+        <div class="content">
+            <h1>Предпросмотр формы</h1>
+            <?=frontend\widgets\FormsWidget::widget(['id_form'=>$model->id_form])?>
         </div>
-        <div class="row">
-            <div class="col-2-third order-xs-1">
-            	<div class="content">
-                    <h1>Предпросмотр формы</h1>
-                    <?=frontend\widgets\FormsWidget::widget(['id_form'=>$model->id_form])?>
-            	</div>
-            </div>
-            <div class="col-third order-xs-0">
-            </div>
-        </div>
-
-        <hr class="hr hr__md"/>
     </div>
 </div>
