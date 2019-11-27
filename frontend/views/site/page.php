@@ -49,6 +49,21 @@ function parseAttributesFromTag($tag){
 
                         echo $page->content;
                     ?>
+
+                    <?php if (!empty($page->medias)){?>
+                    <div class="file-list">
+                        <?php foreach ($page->medias as $key => $media) {?>
+                            <div class="file-item">
+                                <div class="file-td file-td__date"><?=$media->created_at?></div>
+                                <div class="file-td file-td__name"><?=$media->name?></div>
+                                <div class="file-td file-td__type"><?=$media->extension?>, <?=round($media->size/1024,2)?>кБ</div>
+                                <div class="file-td file-td__control">
+                                    <a href="<?=$media->getUrl()?>" class="btn btn__secondary btn__block-sm" download>Скачать <i class="material-icons btn-icon btn-icon__right btn-icon__sm">get_app</i></a>
+                                </div>
+                            </div>
+                        <?php }?>
+                    </div>
+                    <?php }?>
             	</div>
             </div>
             <div class="col-third order-xs-0">

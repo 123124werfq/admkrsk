@@ -2,6 +2,9 @@
 
 namespace common\models;
 
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+
 use Yii;
 use yii\imagine\Image;
 
@@ -74,6 +77,14 @@ class Media extends \yii\db\ActiveRecord
             'updated_by' => 'Updated By',
             'deleted_at' => 'Deleted At',
             'deleted_by' => 'Deleted By',
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            'ts' => TimestampBehavior::class,
+            'ba' => BlameableBehavior::class,
         ];
     }
 

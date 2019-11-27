@@ -47,6 +47,11 @@ margin-bottom: 36px;
     border-bottom: 0px!important;
 }
 
+.file-td.file-td__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .content  table.form-table tbody tr:last-child td {border-bottom: 0px;}
 
 .td-close {vertical-align: middle!important;}

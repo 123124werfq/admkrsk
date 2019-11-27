@@ -52,13 +52,21 @@ use common\models\Page;
 
 <?= $form->field($model, 'seo_keywords')->textInput(['maxlength' => true]) ?>
 
-<?= $form->field($model, 'active')->checkBox() ?>
+<div class="row">
+    <div class="col-sm-4"><?= $form->field($model, 'active')->checkBox() ?></div>
+    <div class="col-sm-4"><?= $form->field($model, 'hidemenu')->checkBox() ?></div>
+    <div class="col-sm-4"><?= $form->field($model, 'noguest')->checkBox() ?></div>
+</div>
 
-<?= $form->field($model, 'hidemenu')->checkBox() ?>
+<h3>Файлы внизу страницы</h3>
 
-<hr>
-
-<?= $form->field($model, 'noguest')->checkBox() ?>
+<?=\common\components\multifile\MultiFileWidget::widget([
+    'model'=>$model,
+    'single'=>false,
+    'relation'=>'medias',
+    'grouptype'=>1,
+    'showPreview'=>true
+]);?>
 
 <?php if (Yii::$app->user->can('admin.page')): ?>
 
