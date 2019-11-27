@@ -87,6 +87,10 @@ return [
                 'title'=>'Рубрикатор',
                 'roles' => ['backend.serviceRubric'],
             ],
+            'service-target'=>[
+                'title'=>'Цели',
+                'roles' => ['backend.service'],
+            ],
         ],
     ],
 //    'institution'=>[

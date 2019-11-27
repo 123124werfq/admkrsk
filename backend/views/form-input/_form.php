@@ -88,7 +88,7 @@ if (!empty($model->id_form))
               $model->type == CollectionColumn::TYPE_RADIO ||
               $model->type == CollectionColumn::TYPE_CHECKBOX ||
               $model->type == CollectionColumn::TYPE_JSON){?>
-        <?=$form->field($model, 'values')->textarea(['rows' => 6])?>
+        <?=$form->field($model, 'values')->textarea(['rows' => 6])->hint('Вводить через ;')?>
     <?php }?>
 
     <div id="input-options">

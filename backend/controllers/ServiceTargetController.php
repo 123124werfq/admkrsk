@@ -33,10 +33,15 @@ class ServiceTargetController extends Controller
      * Lists all ServiceTarget models.
      * @return mixed
      */
-    public function actionIndex($id)
+    public function actionIndex($id=null)
     {
+        $query = ServiceTarget::find();
+
+        if (!empty($id))
+            $query->where(['id_service'=>$id]);
+
         $dataProvider = new ActiveDataProvider([
-            'query' => ServiceTarget::find()->where(['id_service'=>$id]),
+            'query' => $query,
         ]);
 
         return $this->render('index', [
