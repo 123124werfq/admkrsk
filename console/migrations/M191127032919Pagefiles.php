@@ -14,7 +14,12 @@ class M191127032919Pagefiles extends Migration
      */
     public function safeUp()
     {
+         $this->createTable('dbl_page_media', [
+            'id_media' => $this->integer(),
+            'id_page' => $this->integer(),
+        ]);
 
+         $this->addPrimaryKey('dbl_page_media_pk', 'dbl_page_media', ['id_media', 'id_page']);
     }
 
     /**
