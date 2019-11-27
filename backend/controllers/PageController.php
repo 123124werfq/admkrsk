@@ -319,9 +319,6 @@ class PageController extends Controller
         $model = new Page();
         $model->id_parent = $id_parent;
 
-        if (!empty($model->id_parent) && !empty($model->parent))
-            $model->ord = count($model->parent->getSubMenu());
-
         if ($model->load(Yii::$app->request->post()) && $model->save())
         {
             $model->createAction(Action::ACTION_CREATE);

@@ -18,9 +18,10 @@
 <?php
 $records = json_encode($records);
 
-if (!empty($extensions)) {
+if (!empty($extensions))
 	$allowedExtensions = 'acceptedFiles: "'.implode(',',$extensions).'",';
-}
+else 
+	$allowedExtensions = '';
 
 $script = <<< JS
 	Dropzone.autoDiscover = false;

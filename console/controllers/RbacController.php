@@ -359,10 +359,23 @@ class RbacController extends Controller
             $backendFormCreateRow->ruleName = $entityRule->name;
             $auth->add($backendFormCreateRow);
 
+            $backendFormUpdateRow = $auth->createPermission('backend.form.updateRow');
+            $backendFormUpdateRow->description = 'Редактирование поля формы';
+            $backendFormUpdateRow->ruleName = $entityRule->name;
+            $auth->add($backendFormUpdateRow);
+
             $backendFormUpdate = $auth->createPermission('backend.form.update');
             $backendFormUpdate->description = 'Редактирование формы';
             $backendFormUpdate->ruleName = $entityRule->name;
             $auth->add($backendFormUpdate);
+
+            $backendFormGetForm = $auth->createPermission('backend.form.getForm');
+            $backendFormGetForm->description = 'Список форм';
+            $auth->add($backendFormGetForm);
+
+            $backendFormOrder = $auth->createPermission('backend.form.order');
+            $backendFormOrder->description = 'Сортировка полей формы';
+            $auth->add($backendFormOrder);
 
             $backendFormDelete = $auth->createPermission('backend.form.delete');
             $backendFormDelete->description = 'Удаление формы';
@@ -391,7 +404,10 @@ class RbacController extends Controller
             $auth->addChild($backendManageForm, $backendFormView);
             $auth->addChild($backendManageForm, $backendFormCreate);
             $auth->addChild($backendManageForm, $backendFormCreateRow);
+            $auth->addChild($backendManageForm, $backendFormUpdateRow);
             $auth->addChild($backendManageForm, $backendFormUpdate);
+            $auth->addChild($backendManageForm, $backendFormGetForm);
+            $auth->addChild($backendManageForm, $backendFormOrder);
             $auth->addChild($backendManageForm, $backendFormDelete);
             $auth->addChild($backendManageForm, $backendFormLogIndex);
             $auth->addChild($backendManageForm, $backendFormLogView);

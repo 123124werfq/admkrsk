@@ -45,6 +45,9 @@ use kartik\select2\Select2;
 	            case $var::TYPE_COLLECTION:
                     echo Html::activeDropDownList($var,"[$ckey]value",ArrayHelper::map(Collection::find()->all(), 'id_collection', 'name'),['class'=>'form-control','Value_'.$ckey]);
                     break;
+                case $var::TYPE_COLLECTION_RECORD:
+                    echo Html::activeDropDownList($var,"[$ckey]value",Collection::getArrayByAlias("press_people"),['class'=>'form-control','Value_'.$ckey]);
+                    break;
                 case $var::TYPE_SELECT:
 	                echo Html::activeDropDownList($var,"[$ckey]value",$model->blocks[$model->type]['vars'][$var->alias]['values'],['class'=>'form-control','id'=>'Value_'.$ckey]);
 	                break;

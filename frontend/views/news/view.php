@@ -52,28 +52,7 @@ use yii\helpers\Html;
 		<hr class="hr hr__md">
 		<div class="row">
 			<div class="col-2-third">
-                <?php if (!empty($model->id_user)){?>
-				<h3>Дополнительная информация для СМИ:</h3>
-				<div class="person-card">
-                    <?php if (!empty($model->author->id_media)){?>
-					<img class="person-card_img" src="<?=$model->author->makeThumb(['w'=>160,'h'=>160])?>" alt="<?=$model->author->fullname?>">
-                    <?php }?>
-					<div class="person-card_content">
-						<h4 class="person-card_title"><?=$model->author->fullname?></h4>
-						<p class="person-card_subtitle">
-							<?=nl2br($model->author->description)?>
-						</p>
-						<div class="person-card_contact">
-                            <?php if (!empty($model->author->phone)){?>
-							<a class="person-card_contact-item person-card_contact-item__phone" href="tel:<?=$model->author->phone?>"><?=$model->author->phone?></a>
-                            <?php }?>
-                            <?php if (!empty($model->author->email)){?>
-							<a class="person-card_contact-item person-card_contact-item__email" href="mailto:info@domain.ru"><?=$model->author->email?></a>
-                            <?php }?>
-						</div>
-					</div>
-				</div>
-                <?php }?>
+                <?=$this->render('_contact',['model'=>$model])?>
                 <?php if (!empty($model->tags)){?>
                 <ul class="tags mb-3">
                     <?php foreach ($model->tags as $key => $tag) {

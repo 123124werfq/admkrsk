@@ -96,7 +96,7 @@ JS;
 	                <div class="fileupload_dropzone">
 	                    <div class="fileupload_btn">
 	                        <span class="fileupload_btn-text">Выберите файлы</span>
-	                        '.Html::fileInput("input$input->id_input",'',['class'=>'fileupload_control']).'
+	                        <div class="fileupload_control"></div>
 	                    </div>
 	                    <div class="fileupload_content">
 	                        <p class="fileupload_label">Перетащите сюда файлы для загрузки</p>
@@ -112,7 +112,7 @@ JS;
 	                <div class="fileupload_dropzone ">
 	                    <div class="fileupload_btn">
 	                        <span class="fileupload_btn-text">Выберите файлы</span>
-	                        '.Html::fileInput("input$input->id_input",'',['class'=>'fileupload_control']).'
+	                        <div class="fileupload_control"></div>
 	                    </div>
 	                    <div class="fileupload_content">
 	                        <p class="fileupload_label">Перетащите сюда файлы для загрузки</p>

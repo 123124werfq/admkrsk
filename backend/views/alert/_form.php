@@ -6,6 +6,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
+use yii\web\JsExpression;
 /* @var $this yii\web\View */
 /* @var $model common\models\Alert */
 /* @var $form yii\widgets\ActiveForm */
@@ -18,13 +19,20 @@ use kartik\select2\Select2;
 
                 <?php $form = ActiveForm::begin(); ?>
 
-                <?=$form->field($model, 'id_page')->widget(Select2::class, [
-                    'data' => ArrayHelper::map(\common\models\Page::find()->all(), 'id_page', 'title'),
+                <?= $form->field($model, 'id_page')->widget(Select2::class, [
+                    'data' => $model->id_page ? [$model->id_page=>$model->page->title]:[],
                     'pluginOptions' => [
+                        'multiple' => false,
                         'allowClear' => true,
-                        'placeholder' => 'Выберите раздел',
+                        'minimumInputLength' => 2,
+                        'placeholder' => 'Начните ввод',
+                        'ajax' => [
+                            'url' => '/page/list',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {q:params.term}; }')
+                        ],
                     ],
-                ])?>
+                ]) ?>
 
                 <?= $form->field($model, 'content')->textInput(['class' => 'redactor']) ?>
 

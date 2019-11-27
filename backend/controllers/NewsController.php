@@ -182,8 +182,8 @@ class NewsController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
+    public function actionView($id
+)    {
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -204,15 +204,24 @@ class NewsController extends Controller
 
         $id_page = Yii::$app->request->get('id_page');
 
-        if($id_page)
+        if ($id_page)
         {
             $model->id_page = $id_page;
             $news_pages = Page::findOne($id_page);
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_CREATE);
-            return $this->redirect(['index', 'id_page' => $model->id_page]);
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            // убираем подсветку 
+            if ($model->highlight)
+                Yii::$app->db->createCommand()->update('db_news',['highlight'=>0],['highlight'=>1,'id_page'=>$model->id_page])->execute();
+
+            if ($model->save())
+            {
+                $model->createAction(Action::ACTION_CREATE);
+
+                return $this->redirect(['index', 'id_page' => $model->id_page]);
+            }
         }
 
         return $this->render('create', [
@@ -238,9 +247,17 @@ class NewsController extends Controller
         $model->pages = $model->getPages()->indexBy('id_page')->all();
         $model->pages = array_keys($model->pages);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_UPDATE);
-            return $this->redirect(['index', 'id_page' => $model->id_page]);
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            // убираем подсветку 
+            if ($model->highlight)
+                Yii::$app->db->createCommand()->update('db_news',['highlight'=>0],['highlight'=>1,'id_page'=>$model->id_page])->execute();
+
+            if ($model->save())
+            {
+                $model->createAction(Action::ACTION_UPDATE);
+                return $this->redirect(['index', 'id_page' => $model->id_page]);
+            }
         }
 
         return $this->render('update', [

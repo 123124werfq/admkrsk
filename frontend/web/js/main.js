@@ -1160,7 +1160,7 @@
         };
     }
 
-    function readerLoadStart(files, i) {
+    /*function readerLoadStart(files, i) {
         var f = files[i];
         var fileExtension = f.name.split('.').pop();
 
@@ -1240,7 +1240,7 @@
         }
 
         setupReader(files, 0);
-    }
+    }*/
 
     function handleDragOver(evt) {
         evt.stopPropagation();

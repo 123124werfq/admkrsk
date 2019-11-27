@@ -200,7 +200,22 @@ class Page extends \yii\db\ActiveRecord
                 'class' => AccessControlBehavior::class,
                 'permission' => 'backend.page',
             ],
+            'multiupload' => [
+                'class' => \common\components\multifile\MultiUploadBehavior::class,
+                'relations'=>
+                [
+                    'medias'=>[
+                        'model'=>'Media',
+                        'jtable'=>'dbl_page_media',
+                    ],
+                ],
+            ],
         ];
+    }
+
+    public function getMedias()
+    {
+        return $this->hasMany(Media::class, ['id_media' => 'id_media'])->viaTable('dbl_page_media', ['id_page' => 'id_page']);
     }
 
     /**

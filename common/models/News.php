@@ -63,8 +63,8 @@ class News extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_page', 'id_category', 'id_rub', 'id_media', 'date_publish', 'date_unpublish', 'state', 'main', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_user'], 'default', 'value' => null],
-            [['id_page', 'id_category', 'id_rub', 'id_media', 'state', 'main', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_user'], 'integer'],
+            [['id_page', 'id_category', 'id_rub', 'id_media', 'date_publish', 'date_unpublish', 'state', 'main', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_user','id_record_contact'], 'default', 'value' => null],
+            [['id_page', 'id_category', 'id_rub', 'id_media', 'state', 'main', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_user','id_record_contact', 'highlight'], 'integer'],
             [['title', 'content'], 'required'],
             [['content'], 'string'],
             [['date_publish', 'date_unpublish','tagNames','pages'], 'safe'],
@@ -86,10 +86,11 @@ class News extends \yii\db\ActiveRecord
             'id_page' => 'Раздел',
             'id_category' => 'Категория',
             'id_rub' => 'Рубрика',
-            'id_user' => 'Автор',
+            'id_record_contact' => 'Контакт для прессы',
             'id_media' => 'Обложка',
             'title' => 'Заголовок',
             'description' => 'Описание',
+            'highlight' => 'Выделить',
             'content' => 'Содержание',
             'date_publish' => 'Дата публикации',
             'date_unpublish' => 'Снять с публикации',
@@ -190,6 +191,14 @@ class News extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::class, ['id' => 'id_user']);
     }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getContact()
+    {
+        return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_record_contact']);
+    }    
 
     /**
      * @return ActiveQuery

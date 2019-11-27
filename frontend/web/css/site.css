@@ -3,6 +3,7 @@
 
 .col {width: 100%; padding: 0px 15px;}
 form .row {flex-wrap: nowrap!important;}
+.text-help {margin-top: -25px;}
 
 .checkboxlist {margin-bottom: 40px;}
 .checkboxlist .form-label {margin-bottom: 20px;}
@@ -11,7 +12,7 @@ form .row {flex-wrap: nowrap!important;}
 
 .text-row {padding: 0px 15px; width: 100%;}
 
-.header-search{padding: 10px; border: none; border-radius: 5px;}
+.header-search{padding: 10px; border: none; border-radius: 5px; width: 100%;}
 
 .select2-container--krajee .select2-selection {background: #F4F7FB!important; border: 0px!important; box-shadow: none!important;
 margin-bottom: 36px;
@@ -28,6 +29,9 @@ margin-bottom: 36px;
     margin-right: 8px;
 }
 
+.footer-socials_item {opacity: 0.6;}
+.footer-socials_item:hover {opacity: 1;}
+
 .select2-selection__arrow b {display: none!important;}
 .select2-selection__arrow {
 	width: 24px;
@@ -41,6 +45,11 @@ margin-bottom: 36px;
     font-family: 'Material Icons' !important;
     font-size: 20px;
     border-bottom: 0px!important;
+}
+
+.file-td.file-td__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .content  table.form-table tbody tr:last-child td {border-bottom: 0px;}

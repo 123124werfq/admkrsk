@@ -46,7 +46,13 @@ $this->render('_head',['model'=>$model]);
                                     'dataProvider' => $submenu,
                                     'columns' => [
                                         'id_page',
-                                        'title',
+                                        [
+                                            'attribute' => 'title',
+                                            'format' => 'html',
+                                            'value' => function ($model) {
+                                                return $model->title.'<br><a target="_blank" href="'.$model->getUrl(true).'">'.$model->getUrl().'</a>';
+                                            },
+                                        ],
                                         [
                                             'class' => 'yii\grid\ActionColumn',
                                             'contentOptions'=>['class'=>'button-column'],
@@ -71,7 +77,13 @@ $this->render('_head',['model'=>$model]);
                                     'dataProvider' => $submenu,
                                     'columns' => [
                                         'id_link',
-                                        'label',
+                                        [
+                                            'attribute' => 'title',
+                                            'format' => 'html',
+                                            'value' => function ($model) {
+                                                return $model->label.'<br><a target="_blank" href="'.$model->getUrl(true).'">'.$model->getUrl(true).'</a>';
+                                            },
+                                        ],
                                         [
                                             'class' => 'yii\grid\ActionColumn',
                                             'contentOptions'=>['class'=>'button-column'],

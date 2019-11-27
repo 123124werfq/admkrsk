@@ -14,8 +14,8 @@ use yii\web\JsExpression;
 /* @var $form yii\widgets\ActiveForm */
 
 
-$rubs = Collection::find()->where(['alias'=>"news_rubs"])->one();
-$rubs = (!empty($rubs))?$rubs->getArray():[];
+$rubs = Collection::getArrayByAlias("news_rubs");
+$contacts = Collection::getArrayByAlias("press_people");
 
 ?>
 
@@ -24,6 +24,21 @@ $rubs = (!empty($rubs))?$rubs->getArray():[];
         <div class="ibox">
             <div class="ibox-content">
                 <?php $form = ActiveForm::begin(); ?>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <?= $form->field($model, 'state')->checkBox() ?>
+                    </div>
+                    <div class="col-sm-4">
+                        <?= $form->field($model, 'main')->checkBox() ?>
+                    </div>
+                    <div class="col-sm-4">
+                        <?= $form->field($model, 'highlight')->checkBox() ?>
+                    </div>
+                </div>
+
+                <hr>
+
                 <?= $form->field($model, 'id_page')->widget(Select2::class, [
                     'data' => $model->id_page ? [$model->id_page=>$model->page->title]:[],
                     'pluginOptions' => [
@@ -43,6 +58,13 @@ $rubs = (!empty($rubs))?$rubs->getArray():[];
                     'pluginOptions' => [
                         'allowClear' => true,
                         'placeholder' => 'Выберите рубрику',
+                    ],
+                ])?>
+                <?=$form->field($model, 'id_record_contact')->widget(Select2::class, [
+                    'data' => $contacts,
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                        'placeholder' => 'Выберите контакт',
                     ],
                 ])?>
 
@@ -88,24 +110,6 @@ $rubs = (!empty($rubs))?$rubs->getArray():[];
                     'showPreview'=>true
                 ]);?>
 
-                <?= $form->field($model, 'state')->dropDownList([0=>'Не активно',1=>'Активно']) ?>
-
-                <?= $form->field($model, 'id_user')->widget(Select2::class, [
-                    'data' => $model->id_user ? [$model->id_user=>$model->author->fullname]:[],
-                    'pluginOptions' => [
-                        'multiple' => false,
-                        'allowClear' => true,
-                        'minimumInputLength' => 2,
-                        'placeholder' => 'Начните ввод',
-                        'ajax' => [
-                            'url' => '/user/list',
-                            'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {q:params.term}; }')
-                        ],
-                    ],
-                ]) ?>
-
-                <?= $form->field($model, 'main')->checkBox() ?>
 
                 <?=$form->field($model, 'pages')->widget(Select2::class, [
                     'data' => ArrayHelper::map(\common\models\Page::find()->where('id_page IN (SELECT id_page FROM db_news)')->all(), 'id_page', 'title'),

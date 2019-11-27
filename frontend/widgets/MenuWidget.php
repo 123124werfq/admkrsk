@@ -38,7 +38,8 @@ class MenuWidget extends \yii\base\Widget
 	        	'menu'=>$menu,
 	        ]);
 
-    	switch ($menu->type) {
+    	switch ($menu->type)
+        {
     		case Menu::TYPE_LIST:
     			$template = 'menu_list';
     			break;

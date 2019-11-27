@@ -236,13 +236,16 @@ $(document).ready(function() {
         var id_input = $(this).data('input');
         var new_index = 0;
 
+        $(this).addClass('input'+id_input);
+
         var uploader = $(this).find('.fileupload_dropzone').dropzone({
             addRemoveLinks: true,
             url: "/media/upload",
             dictRemoveFile: '×',
             dictCancelUpload: '×',
             resizeWidth: 1920,
-            previewsContainer: ".fileupload_list",
+            clickable: ".input"+id_input+" .fileupload_control",
+            previewsContainer: ".input"+id_input+" .fileupload_list",
             previewTemplate: '<div class="fileupload_item">\
                                 <div class="fileupload_preview">\
                                     <div class="fileupload_preview-type">\

@@ -22,6 +22,8 @@ img {max-width: 100%;}
 
 .select2-container--krajee .select2-selection--multiple .select2-selection__rendered {min-height: 40px;}
 
+.tox {z-index: 9999;}
+
 .multiyiinput .form-inline {margin-bottom: 10px;}
 .multiyiinput .item {background:#fff;}
 .multiyiinput.sortable .item td:first-child{position: relative;}

@@ -51,6 +51,7 @@ var tinymceConfig = {
     paste_data_images: true,
     file_picker_types: 'file image',
     sticky_offset: 0,
+    convert_urls: 0,
     /*file_picker_callback: function(callback, value, meta) {
         // Provide file and text for the link dialog
         if (meta.filetype == 'file') {

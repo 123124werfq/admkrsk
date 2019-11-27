@@ -5,3 +5,6 @@ gallery, collection, forms {
 	display: block;
 	background: #eee;
 }
+
+
+img {max-width: 100%}

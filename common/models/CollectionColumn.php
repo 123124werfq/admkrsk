@@ -29,7 +29,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
     //const TYPE_MULTISELECT = 6;
     const TYPE_MAP = 7;
     const TYPE_FILE = 8;
-    const TYPE_FILES = 18;
+    //const TYPE_FILES = 18;
     const TYPE_IMAGE = 9;
     const TYPE_COLLECTION = 13;
     const TYPE_RADIO = 15;
@@ -102,20 +102,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'type'=>'input',
                 ],
             ],
-            self::TYPE_FILES => [
-                'accept'=>[
-                    'name'=>'Допустимые расширения файлов',
-                    'type'=>'input',
-                ],
-                'count'=>[
-                    'name'=>'Максимальное количество файлов',
-                    'type'=>'input',
-                ],
-                'filesize'=>[
-                    'name'=>'Максимальный размер файла в мегабайтах',
-                    'type'=>'input',
-                ],
-            ],
+            
             self::TYPE_IMAGE => [
                 'accept'=>[
                     'name'=>'Допустимые расширения файлов',
@@ -145,7 +132,6 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_RADIO => "Радио кнопки",
             self::TYPE_MAP => "Координаты",
             self::TYPE_FILE => "Файл",
-            self::TYPE_FILES => "Файлы",
             self::TYPE_COLLECTION => "Список",
             self::TYPE_IMAGE => "Изображение",
             self::TYPE_ADDRESS => "Адрес",

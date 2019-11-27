@@ -31,6 +31,11 @@ class FormController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
+                        'actions' => ['get-form'],
+                        'roles' => ['@'],                        
+                    ],
+                    [
+                        'allow' => true,
                         'actions' => ['index'],
                         'roles' => ['backend.form.index'],
                         'roleParams' => [
@@ -65,12 +70,31 @@ class FormController extends Controller
                     ],
                     [
                         'allow' => true,
+                        'actions' => ['update-row'],
+                        'roles' => ['backend.form.updateRow'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id_form'),
+                            'class' => Form::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
                         'actions' => ['update'],
                         'roles' => ['backend.form.update'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Form::class,
                         ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['get-form'],
+                        'roles' => ['backend.form.getForm'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['order'],
+                        'roles' => ['backend.form.order'],
                     ],
                     [
                         'allow' => true,
