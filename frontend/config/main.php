@@ -57,6 +57,9 @@ return [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            'normalizer' => [
+                'class' => 'yii\web\UrlNormalizer',
+            ],
             'rules' => [
                 'search/address'=>'search/address',
                 'site/test'=>'site/test',
