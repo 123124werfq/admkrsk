@@ -51,27 +51,33 @@ class NewsWidget extends \yii\base\Widget
             {
                 $tabs[$link->id_link]['news'] = News::find()
                                                     ->where(['main'=>1,'state'=>1,'id_page'=>$link->id_page])
-                                                    ->orderBy('date_publish DESC');
+                                                    ->andWhere('date_unpublish > '.time().' OR date_unpublish IS NULL');
+                                                    
+
+                $tabs[$link->id_link]['widenews'] = News::find()
+                        ->where([
+                            'main'=>1,
+                            'state'=>1,
+                            'id_page'=>$link->id_page,
+                            'highlight'=>1,
+                        ])->one();
 
                 // если это анонсы
                 if (!empty($link->template))
-                    $tabs[$link->id_link]['news']->limit(7);
+                {
+                    $tabs[$link->id_link]['news']->limit(6);
+                }
                 else
                 {
-                    $tabs[$link->id_link]['widenews'] = News::find()
-                                                            ->where(['main'=>1,'state'=>1,'id_page'=>$link->id_page])
-                                                            ->andWhere('id_media IS NOT NULL AND id_media <> 0')
-                                                            ->orderBy('date_publish DESC')
-                                                            ->one();
-
                     if (!empty($tabs[$link->id_link]['widenews']))
                         $tabs[$link->id_link]['news']->andWhere('id_news <> '.$tabs[$link->id_link]['widenews']->id_news)->limit(6);
                     else
                         $tabs[$link->id_link]['news']->limit(9);
+
+                    $tabs[$link->id_link]['news']->andWhere('date_publish < '.time());
                 }
 
-
-                $tabs[$link->id_link]['news'] = $tabs[$link->id_link]['news']->all();
+                $tabs[$link->id_link]['news'] = $tabs[$link->id_link]['news']->orderBy('date_publish DESC')->all();
             }
             else
                 $tabs[$link->id_link]['content'] = $link->content;
