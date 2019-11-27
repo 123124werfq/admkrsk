@@ -24,6 +24,21 @@ $contacts = Collection::getArrayByAlias("press_people");
         <div class="ibox">
             <div class="ibox-content">
                 <?php $form = ActiveForm::begin(); ?>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <?= $form->field($model, 'state')->checkBox() ?>
+                    </div>
+                    <div class="col-sm-4">
+                        <?= $form->field($model, 'main')->checkBox() ?>
+                    </div>
+                    <div class="col-sm-4">
+                        <?= $form->field($model, 'highlight')->checkBox() ?>
+                    </div>
+                </div>
+
+                <hr>
+
                 <?= $form->field($model, 'id_page')->widget(Select2::class, [
                     'data' => $model->id_page ? [$model->id_page=>$model->page->title]:[],
                     'pluginOptions' => [
@@ -95,9 +110,6 @@ $contacts = Collection::getArrayByAlias("press_people");
                     'showPreview'=>true
                 ]);?>
 
-                <?= $form->field($model, 'state')->dropDownList([0=>'Не активно',1=>'Активно']) ?>
-
-                <?= $form->field($model, 'main')->checkBox() ?>
 
                 <?=$form->field($model, 'pages')->widget(Select2::class, [
                     'data' => ArrayHelper::map(\common\models\Page::find()->where('id_page IN (SELECT id_page FROM db_news)')->all(), 'id_page', 'title'),

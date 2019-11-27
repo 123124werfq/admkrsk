@@ -23,7 +23,7 @@ class NewsWidget extends \yii\base\Widget
                 return false;
 
             $news = News::find()->where(['state'=>1,'id_page'=>$page->id_page])
-                        ->orderBy('date_publish DESC')->limit(4)->all();
+                        ->orderBy('date_publish DESC')->limit(7)->all();
 
             if (empty($news))
                 return false;
@@ -55,7 +55,7 @@ class NewsWidget extends \yii\base\Widget
 
                 // если это анонсы
                 if (!empty($link->template))
-                    $tabs[$link->id_link]['news']->limit(4);
+                    $tabs[$link->id_link]['news']->limit(7);
                 else
                 {
                     $tabs[$link->id_link]['widenews'] = News::find()
@@ -65,7 +65,7 @@ class NewsWidget extends \yii\base\Widget
                                                             ->one();
 
                     if (!empty($tabs[$link->id_link]['widenews']))
-                        $tabs[$link->id_link]['news']->andWhere('id_news <> '.$tabs[$link->id_link]['widenews']->id_news)->limit(3);
+                        $tabs[$link->id_link]['news']->andWhere('id_news <> '.$tabs[$link->id_link]['widenews']->id_news)->limit(6);
                     else
                         $tabs[$link->id_link]['news']->limit(9);
                 }

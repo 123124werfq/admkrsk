@@ -76,7 +76,6 @@ if (!empty($model->id_form))
     <?php }?>
 
     <?php if ($model->type == CollectionColumn::TYPE_SELECT || $model->type == CollectionColumn::TYPE_RADIO){?>
-    <div data-visible-field="forminput-type" data-values="<?=implode(',', $select_ids)?>">
         <?=$form->field($model, 'id_collection')->widget(Select2::class, [
             'data' => ArrayHelper::map(Collection::find()->all(), 'id_collection', 'name'),
             'pluginOptions' => [
@@ -84,7 +83,6 @@ if (!empty($model->id_form))
                 'placeholder' => 'Выберите коллекцию',
             ],
         ])?>
-    </div>
     <?php }?>
 
     <?php if ($model->type == CollectionColumn::TYPE_SELECT ||
