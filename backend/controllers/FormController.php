@@ -79,7 +79,7 @@ class FormController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['update'],
+                        'actions' => ['update','order'],
                         'roles' => ['backend.form.update'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),

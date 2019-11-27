@@ -126,6 +126,7 @@ class AddressController extends \yii\web\Controller
             ->filterWhere([House::tableName() . '.id_city' => $id_city])
             ->groupBy(District::tableName() . '.id_district')
             ->orderBy([District::tableName() . '.name' => SORT_ASC])
+            ->limit(20)
             ->asArray();
 
         if ($search) {
@@ -155,6 +156,7 @@ class AddressController extends \yii\web\Controller
             ->filterWhere([House::tableName() . '.id_city' => $id_city])
             ->groupBy(Street::tableName() . '.id_street')
             ->orderBy([Street::tableName() . '.name' => SORT_ASC])
+            ->limit(20)
             ->asArray();
 
         if ($search) {
@@ -179,10 +181,14 @@ class AddressController extends \yii\web\Controller
      */
     public function actionHouse($id_street, $search = '')
     {
+        if (empty($id_street))
+            return ['results' => []];;
+
         $query = House::find()
             ->filterWhere(['id_street' => $id_street])
             ->groupBy('id_house')
             ->orderBy(['name' => SORT_ASC])
+            ->limit(20)
             ->asArray();
 
         if ($search) {
@@ -194,8 +200,16 @@ class AddressController extends \yii\web\Controller
             $results[] = [
                 'id' => $house['id_house'],
                 'text' => $house['name'],
+                'postalcode'=> $house['postalcode'],
             ];
         }
+
+        if (empty($results))
+            $results = [
+                'id' => null,
+                'text' => $search,
+                'postalcode'=> ''
+            ];
 
         return ['results' => $results];
     }

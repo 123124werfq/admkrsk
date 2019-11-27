@@ -67,6 +67,10 @@ class CollectionColumn extends \yii\db\ActiveRecord
                         'date'=>"Дата",
                     ],
                 ],
+                'id'=>[
+                    'name'=>'ID',
+                    'type'=>'input',
+                ],
             ],
             self::TYPE_INTEGER => [
                 'min'=>[

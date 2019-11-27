@@ -19,7 +19,8 @@
 	if (!empty($input->required))
 		$options['required'] = true;
 
-	$options['id'] = "input".$input->id_input;
+	if(empty($options['id']))
+		$options['id'] = "input".$input->id_input;
 
 	$groupClass = '';
 
@@ -69,7 +70,6 @@
 				echo $form->field($model, $attribute)->textInput($options);
 				break;
 			case CollectionColumn::TYPE_INPUT:
-				
 				echo $form->field($model, $attribute)->textInput($options);
 				break;
 			case CollectionColumn::TYPE_TEXTAREA:
@@ -170,9 +170,12 @@ JS;
                         'ajax' => [
                             'url' => '/address/district',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {q:params.term,id_city:$("#city-input").val()};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:$("#input-city").val()};}')
                         ],
                     ],
+                    'options'=>[
+                    	'id'=>'input-district'
+                    ]
                 ]);
 				break;
 			case CollectionColumn::TYPE_REGION:
@@ -186,7 +189,7 @@ JS;
                         'ajax' => [
                             'url' => '/address/region',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {q:params.term};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term};}')
                         ],
                     ],
                     'options'=>[
@@ -205,7 +208,7 @@ JS;
                         'ajax' => [
                             'url' => '/address/subregion',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {q:params.term,id_region:$("#input-region").val()};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_region:$("#input-region").val()};}')
                         ],
                     ],
                     'options'=>[
@@ -224,7 +227,7 @@ JS;
                         'ajax' => [
                             'url' => '/address/city',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {q:params.term};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_region:$("#input-region").val(),id_subregion:$("#input-subregion").val()};}')
                         ],
                     ],
                     'options'=>[
@@ -243,13 +246,35 @@ JS;
                         'ajax' => [
                             'url' => '/address/street',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {q:params.term,id_city:$("#city-input").val()};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:$("#input-city").val(),id_district:$("#input-district").val()};}')
                         ],
                     ],
+                    'options'=>[
+                    	'id'=>'input-street'
+                    ]
                 ]);
 				break;
 			case CollectionColumn::TYPE_HOUSE:
-				echo $form->field($model, $attribute)->dropDownList($input->getArrayValues(),$options);
+				echo $form->field($model, $attribute)->widget(Select2::class, [
+                    'data' => [],
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        //'allowClear' => true,
+                        'minimumInputLength' => 0,
+                        'placeholder' => 'Дом',
+                        'ajax' => [
+                            'url' => '/address/house',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_street:$("#input-street").val()};}')
+                        ],
+                    ],
+                    'pluginEvents'=>[
+                    	"select2:select" => "function(e) { 
+                    		if ($('#postalcode').length>0)
+                    			$('#postalcode').val(e.params.data.postalcode);
+                    	}",
+                    ]
+                ]);
 				break;
 			case CollectionColumn::TYPE_JSON:
 				$columns = $input->getArrayValues();

@@ -438,7 +438,7 @@ jQuery(document).ready(function()
           var $block = $(this);
 
           ui.item.parent().children().each(function(i){
-              ords.push(ui.item.data('id'));
+              ords.push($(this).data('id'));
               parents.push(ui.item.parent().data('id'));
           });
 
