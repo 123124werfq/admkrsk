@@ -90,6 +90,8 @@ class Media extends \yii\db\ActiveRecord
 
     public function getImageAttributes($file,$post=array())
     {
+        $filename = $file;
+
         if (!strpos($file, 'runtime/')>0)
             $file = Yii::getAlias('@webroot').$file;
 
@@ -114,7 +116,7 @@ class Media extends \yii\db\ActiveRecord
             $this->mime = $size['mime'];
         }
 
-        $this->name = $file;
+        $this->name = $filename;
         $this->extension = $ext;
         $this->size = filesize($file);
         $this->ord = (isset($post['ord']))?(int)$post['ord']:'';

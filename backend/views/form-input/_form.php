@@ -17,7 +17,7 @@ $visibleInputs = [];
 if (!empty($model->id_form))
 {
     $visibleInputs = ArrayHelper::map(FormInput::find()
-                        ->where(['id_form'=>$model->id_form, 'type'=>CollectionColumn::TYPE_SELECT])
+                        ->where(['id_form'=>$model->id_form, 'type'=>[CollectionColumn::TYPE_SELECT,CollectionColumn::TYPE_CHECKBOX]])
                         ->andWhere('id_input <> '.(int)$model->id_input)->all(), 'id_input', 'name');
 }
 ?>

@@ -82,6 +82,27 @@ class CollectionRecordController extends Controller
             if ($col->type==CollectionColumn::TYPE_DATE)
                 $dataProviderColumns[$col->id_column]['format'] = ['date', 'php:d.m.Y'];
 
+            if ($col->type==CollectionColumn::TYPE_FILE)
+            {
+                $dataProviderColumns[$col->id_column]['format'] = 'raw';
+                $dataProviderColumns[$col->id_column]['value'] = function($model) use ($col) {
+
+                    if (empty($model[$col->id_column]))
+                        return '';
+
+                    $ids = json_decode($model[$col->id_column],true);
+
+                    $medias = Media::find()->where(['id_media'=>$ids])->all();
+
+                    $output = [];
+                    foreach ($medias as $key => $media) {
+                        $output[] = '<a href="'.$media->getUrl().'" download>'.$media->name.'</a>';
+                    }
+
+                    return implode('', $output);
+                };
+            }
+
             if ($col->type==CollectionColumn::TYPE_IMAGE)
             {
                 $dataProviderColumns[$col->id_column]['format'] = 'raw';
