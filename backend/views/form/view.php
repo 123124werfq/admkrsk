@@ -47,6 +47,7 @@ $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $
                               <li><a href="/form-input/create?id_row=<?=$row->id_row?>" class="create-form-input">Добавить поле</a></li>
                               <li><a href="/form-element/create?id_row=<?=$row->id_row?>" class="create-element">Добавить текст</a></li>
                               <li><a href="/form/update-row?id_row=<?=$row->id_row?>" class="update-row">Редактировать стили</a></li>
+                              <li><a href="/form/delete-row?id_row=<?=$row->id_row?>" class="update-row">Удалить строку</a></li>
                               <!--li><a href="assign-form?id_row=<?=$row->id_row?>" class="create-form-text">Добавить подформу</a></li-->
                             </ul>
                         </div>

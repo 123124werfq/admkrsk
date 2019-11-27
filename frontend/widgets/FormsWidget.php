@@ -3,6 +3,7 @@ namespace frontend\widgets;
 
 use Yii;
 use common\models\Form;
+use common\models\CollectionRecord;
 use common\models\FormDynamic;
 
 class FormsWidget extends \yii\base\Widget
@@ -15,6 +16,7 @@ class FormsWidget extends \yii\base\Widget
     public $inputs = []; // инпуты которые нужно передать в POST
     public $action = null; // куда направляеть форму, если пусто то пойдут в унивартсальный контролер
     public $data = null; // данные
+    public $collectionRecord = null; // данные
 
     public function run()
     {
@@ -28,6 +30,9 @@ class FormsWidget extends \yii\base\Widget
         	return false;
 
         $model = new FormDynamic($this->form,$this->data);
+
+        if (!empty($this->collectionRecord) && empty($this->data))
+            $model->loadDataFromRecord($this->collectionRecord->getData());
 
         return $this->render('form/'.$this->template,[
         	'form'=>$this->form,

@@ -70,7 +70,7 @@ class FormController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['update-row'],
+                        'actions' => ['update-row','delete-row'],
                         'roles' => ['backend.form.updateRow'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id_form'),
@@ -268,7 +268,16 @@ class FormController extends Controller
         return $this->render('update', [
             'model' => $model,
         ]);
+    }
 
+    public function deleteRow($id_row)
+    {
+        $model = FormRow::findOne($id_row);
+        $id_form = $model->id_form;
+        
+        $model->delete();
+
+        return $this->redirect(['form/view', 'id' => $id_form]);
     }
 
     /**

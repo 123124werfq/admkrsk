@@ -4,7 +4,8 @@ use backend\widgets\UserAccessControl;
 use backend\widgets\UserGroupAccessControl;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use kartik\select2\Select2;
+use yii\web\JsExpression;
 /* @var $this yii\web\View */
 /* @var $model common\models\Form */
 /* @var $form yii\widgets\ActiveForm */
@@ -17,19 +18,40 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?=''// $form->field($model, 'id_collection')->textInput() ?>
+    <div class="row">
+        <div class="col-sm-6">
+            <?= $form->field($model, 'id_page')->widget(Select2::class, [
+                'data' => $model->id_page ? [$model->id_page=>$model->page->title]:[],
+                'pluginOptions' => [
+                    'multiple' => false,
+                    'allowClear' => true,
+                    'minimumInputLength' => 2,
+                    'placeholder' => 'Начните ввод',
+                    'ajax' => [
+                        'url' => '/page/list',
+                        'dataType' => 'json',
+                        'data' => new JsExpression('function(params) { return {q:params.term}; }')
+                    ],
+                ],
+            ]) ?>
+        </div>
+        <div class="col-sm-6">
+            <?= $form->field($model, 'url')->textInput(['maxlength' => true]) ?>
+        </div>
+    </div>
+    <?= $form->field($model, 'message_success')->textArea(['maxlength' => true,'class'=>'redactor']) ?>
 
-        <?php if (Yii::$app->user->can('admin.form')): ?>
+    <?php if (Yii::$app->user->can('admin.form')): ?>
 
-            <hr>
+        <hr>
 
-            <h3>Доступ</h3>
+        <h3>Доступ</h3>
 
-            <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>
+        <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>
 
-            <?= $form->field($model, 'access_user_group_ids')->label('Группы пользоватей')->widget(UserGroupAccessControl::class) ?>
+        <?= $form->field($model, 'access_user_group_ids')->label('Группы пользоватей')->widget(UserGroupAccessControl::class) ?>
 
-        <?php endif; ?>
+    <?php endif; ?>
 
     <hr>
     <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

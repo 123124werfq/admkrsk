@@ -38,6 +38,8 @@
 
 	if (!empty($input->visibleInputValue))
 		$visibleInputValue = 'data-values="'.implode(',', $input->visibleInputValue).'"';
+
+	$attribute = "input$input->id_input";
 ?>
 
 <div class="col">
@@ -47,28 +49,34 @@
 		<?php }?>
 		<?php switch ($input->type) {
 			case CollectionColumn::TYPE_SELECT:
-				echo $form->field($model, "input$input->id_input")->dropDownList($input->getArrayValues(),$options);
+				echo $form->field($model, $attribute)->dropDownList($input->getArrayValues(),$options);
 				break;
 			case CollectionColumn::TYPE_DATE:
 				$options['type'] = 'date';
-				echo $form->field($model, "input$input->id_input")->textInput($options);
+				if (is_numeric($model->$attribute))  
+					$model->$attribute = date('Y-m-d', $model->$attribute);
+
+				echo $form->field($model, $attribute)->textInput($options);
 				break;
 			case CollectionColumn::TYPE_DATETIME:
+				if (is_numeric($model->$attribute))  
+					$model->$attribute = date('Y-m-d\TH:i:s', $model->$attribute);
 				$options['type'] = 'datetime';
-				echo $form->field($model, "input$input->id_input")->textInput($options);
+				echo $form->field($model, $attribute)->textInput($options);
 				break;
 			case CollectionColumn::TYPE_INTEGER:
 				$options['type'] = 'number';
-				echo $form->field($model, "input$input->id_input")->textInput($options);
+				echo $form->field($model, $attribute)->textInput($options);
 				break;
 			case CollectionColumn::TYPE_INPUT:
-				echo $form->field($model, "input$input->id_input")->textInput($options);
+				
+				echo $form->field($model, $attribute)->textInput($options);
 				break;
 			case CollectionColumn::TYPE_TEXTAREA:
-				echo $form->field($model, "input$input->id_input")->textArea($options);
+				echo $form->field($model, $attribute)->textArea($options);
 				break;
 			case CollectionColumn::TYPE_ADDRESS:
-				echo $form->field($model, "input$input->id_input")->textInput($options);
+				echo $form->field($model, $attribute)->textInput($options);
 $script = <<< JS
 	$("#{$options['id']}").autocomplete({
         'minLength':'2',
@@ -152,7 +160,7 @@ JS;
 				break;
 
 			case CollectionColumn::TYPE_DISTRICT:
-				echo $form->field($model, "input$input->id_input")->widget(Select2::class, [
+				echo $form->field($model, $attribute)->widget(Select2::class, [
                     'data' => [],
                     'pluginOptions' => [
                         'multiple' => false,
@@ -168,7 +176,7 @@ JS;
                 ]);
 				break;
 			case CollectionColumn::TYPE_REGION:
-				echo $form->field($model, "input$input->id_input")->widget(Select2::class, [
+				echo $form->field($model, $attribute)->widget(Select2::class, [
                     'data' => [],
                     'pluginOptions' => [
                         'multiple' => false,
@@ -187,7 +195,7 @@ JS;
                 ]);
 				break;
 			case CollectionColumn::TYPE_SUBREGION:
-				echo $form->field($model, "input$input->id_input")->widget(Select2::class, [
+				echo $form->field($model, $attribute)->widget(Select2::class, [
                     'data' => [],
                     'pluginOptions' => [
                         'multiple' => false,
@@ -206,7 +214,7 @@ JS;
                 ]);
 				break;
 			case CollectionColumn::TYPE_CITY:
-				echo $form->field($model, "input$input->id_input")->widget(Select2::class, [
+				echo $form->field($model, $attribute)->widget(Select2::class, [
                     'data' => [],
                     'pluginOptions' => [
                         'multiple' => false,
@@ -225,7 +233,7 @@ JS;
                 ]);
 				break;
 			case CollectionColumn::TYPE_STREET:
-				echo $form->field($model, "input$input->id_input")->widget(Select2::class, [
+				echo $form->field($model, $attribute)->widget(Select2::class, [
                     'data' => [],
                     'pluginOptions' => [
                         'multiple' => false,
@@ -241,10 +249,11 @@ JS;
                 ]);
 				break;
 			case CollectionColumn::TYPE_HOUSE:
-				echo $form->field($model, "input$input->id_input")->dropDownList($input->getArrayValues(),$options);
+				echo $form->field($model, $attribute)->dropDownList($input->getArrayValues(),$options);
 				break;
 			case CollectionColumn::TYPE_JSON:
 				$columns = $input->getArrayValues();
+				$data = json_decode($model->$attribute);
 
 ?>
 				<table class="form-table">
@@ -259,14 +268,28 @@ JS;
 					<tbody id="inputs<?=$input->id_input?>">
 						<tr>
 							<?php
-								$i = 0;
-								foreach ($columns as $key => $column) {
-									echo '<td><input id="input'.$input->id_input.'_col'.$i.'" type="text" name="FormDynamic[input'.$input->id_input.'][0]['.$i.']" class="form-control"/></td>';
-									$i++;
+								if (empty($data)){
+									$i = 0;
+									foreach ($columns as $key => $column) {
+										echo '<td><input id="input'.$input->id_input.'_col'.$i.'" type="text" name="FormDynamic[input'.$input->id_input.'][0]['.$i.']" class="form-control"/></td>';
+										$i++;
+									}
+								}
+								else 
+								{
+									foreach ($data as $key => $row)
+									{
+										$i = 0;
+
+										foreach ($columns as $key => $column) {
+											echo '<td><input id="input'.$input->id_input.'_col'.$i.'" type="text" value="'.($row[$i]??'').'" name="FormDynamic[input'.$input->id_input.'][0]['.$i.']" class="form-control"/></td>';
+											$i++;
+										}
+									}
 								}
 							?>
 							<td width="10" class="td-close">
-								<a class="close" onclick="return removeRow(this)" href="javascript:">close</a>
+								<a class="close" onclick="return removeRow(this)" href="javascript:">&times;</a>
 							</td>
 						</tr>
 					</tbody>

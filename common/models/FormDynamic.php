@@ -54,6 +54,17 @@ class FormDynamic extends DynamicModel
         }
     }
 
+    public function loadDataFromRecord($data)
+    {
+        foreach ($this->inputs as $key => $input) {
+            if (isset($data[$input->id_column]))
+            {
+                $var = 'input'.$input->id_input;
+                $this->$var = $data[$input->id_column];
+            }
+        }
+    }
+
     public function prepareData($columnAsIndex=fale, $post=null)
     {
         $data = [];

@@ -5,10 +5,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\Collectionrecord */
 
-$this->title = 'Update Collectionrecord: ' . $model->id_record;
-$this->params['breadcrumbs'][] = ['label' => 'Collectionrecords', 'url' => ['index']];
+$this->title = 'Редактироваться запись: ' . $model->id_record;
 $this->params['breadcrumbs'][] = ['label' => $model->id_record, 'url' => ['view', 'id' => $model->id_record]];
-$this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="collectionrecord-update">
 
@@ -16,6 +14,7 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'collection'=>$collection
     ]) ?>
 
 </div>

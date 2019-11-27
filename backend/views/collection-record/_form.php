@@ -10,10 +10,14 @@ use yii\widgets\ActiveForm;
 
 <?php $form = ActiveForm::begin(); ?>
 
-<?=\frontend\widgets\FormsWidget::widget(['form'=>$collection->form,'inputs'=>[
-    'id_collection'=>$collection->id_collection,
-    'id_record'=>$model->id_record,
-]])?>
+<?=\frontend\widgets\FormsWidget::widget([
+    'form'=>$collection->form,
+    'collectionRecord'=>$model,
+    'inputs'=>[
+        'id_collection'=>$collection->id_collection,
+        'id_record'=>$model->id_record,
+    ]]
+)?>
 
 <?php ActiveForm::end(); ?>
 

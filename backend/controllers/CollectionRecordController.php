@@ -55,7 +55,7 @@ class CollectionRecordController extends Controller
                 'urlCreator' => function ($action, $model, $key, $index) use ($id)
                 {
                     if ($action === 'update') {
-                        $url ='update?id='.$model['id_record'].'&id='.$id;
+                        $url ='update?id='.$model['id_record'];
                         return $url;
                     }
                     if ($action === 'delete') {
@@ -215,13 +215,24 @@ class CollectionRecordController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $collection = $model->collection;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_record]);
+        $form = new FormDynamic($collection->form);
+
+        if ($form->load(Yii::$app->request->post()) && $form->validate())
+        {
+            $prepare = $form->prepareData(true);
+
+            if ($model = $collection->insertRecord($prepare))
+                return $this->redirect(['index', 'id' => $model->id_collection]);
         }
+
+        if (Yii::$app->request->isAjax)
+            return $this->renderAjax('_form',['model'=>$model,'collection'=>$collection]);
 
         return $this->render('update', [
             'model' => $model,
+            'collection'=>$collection,
         ]);
     }
 
