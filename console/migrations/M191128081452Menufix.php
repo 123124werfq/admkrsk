@@ -46,8 +46,6 @@ class M191128081452Menufix extends Migration
                 }
             }
         }
-
-        return false;
     }
 
     /**
