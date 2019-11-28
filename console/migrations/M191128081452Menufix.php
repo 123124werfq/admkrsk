@@ -25,21 +25,30 @@ class M191128081452Menufix extends Migration
 
             foreach ($page->childs as $key => $child)
             {
-                $link = MenuLink::find()->where(['id_menu'=>$menu->id_menu,'id_page'=>$child->id_page])->one();
+                $link = MenuLink::find()->where([
+                    'id_menu'=>$menu->id_menu,
+                    'id_page'=>$child->id_page])->one();
+                echo "$link->label";
 
                 if (empty($link))
                 {
+
                     $link = new MenuLink;
                     $link->id_menu = $menu->id_menu;
                     $link->id_page = $child->id_page;
                     $link->state = 1-$child->hidemenu;
                     $link->label = $child->title;
                     $link->ord = $child->ord;
+
+                    echo "$link->label ---";
+
                     if (!$link->save())
                         print_r($link->errors);
                 }
             }
         }
+
+        return false;
     }
 
     /**
