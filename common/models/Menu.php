@@ -125,6 +125,11 @@ class Menu extends \yii\db\ActiveRecord
         $link->save();
     }
 
+    public function getPage()
+    {
+        return $this->hasOne(Page::class, ['id_page' => 'id_page']);
+    }
+
     public function getLinks()
     {
         return $this->hasMany(MenuLink::class, ['id_menu' => 'id_menu'])->orderBy('ord ASC');
