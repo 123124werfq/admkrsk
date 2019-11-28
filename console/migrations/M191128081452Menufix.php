@@ -28,7 +28,7 @@ class M191128081452Menufix extends Migration
                 $link = MenuLink::find()->where([
                     'id_menu'=>$menu->id_menu,
                     'id_page'=>$child->id_page])->one();
-                echo "$link->label";
+
 
                 if (empty($link))
                 {
