@@ -139,7 +139,12 @@ if(!Yii::$app->user->isGuest){
             </a>
             <h1 class="accessability-title">Администрация города Красноярск</h1>
             <div class="header_menu">
-                <?=\frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'header_menu'])?>
+                <?php
+                if (Yii::$app->request->url=='/citytoday/socialpolicy/projects/new-year2019')
+                    echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'new_year_menu']);
+                else
+                    echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'header_menu']);
+                ?>
                 <button class="header-menu_link header-menu_search search-toggle">
                     <span class="material-icons">search</span>
                     <span class="header-menu_btn-text">Поиск по сайту</span>

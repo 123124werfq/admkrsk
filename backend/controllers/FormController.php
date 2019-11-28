@@ -32,7 +32,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['get-form'],
-                        'roles' => ['@'],                        
+                        'roles' => ['@'],
                     ],
                     [
                         'allow' => true,
@@ -274,7 +274,7 @@ class FormController extends Controller
     {
         $model = FormRow::findOne($id_row);
         $id_form = $model->id_form;
-        
+
         $model->delete();
 
         return $this->redirect(['form/view', 'id' => $id_form]);
