@@ -9,7 +9,12 @@
                 </div>
                 <a href="#" class="btn btn__transparent">Обратная связь</a>
             </div>
-            <?=frontend\widgets\MenuWidget::widget(['alias'=>'footer_menu','template'=>'footer_menu']);?>
+            <?php
+                if (strpos(Yii::$app->request->url, 'new-year2019') || strpos(Yii::$app->request->hostInfo, 'newyear.'))
+                    {   }// nY-menu
+                else
+                    frontend\widgets\MenuWidget::widget(['alias'=>'footer_menu','template'=>'footer_menu']);
+            ?>
             <hr class="footer-hr">
 
             <div class="footer-contacts">
@@ -21,13 +26,7 @@
                     <p class="footer-contacts_label">Телефон/факс:</p>
                     <p class="footer-contacts_text">660049, г. Красноярск, ул. Карла Маркса, 93</p>
                 </div>
-                <?php
-
-                if (strpos(Yii::$app->request->url, 'new-year2019') || strpos(Yii::$app->request->hostInfo, 'newyear.'))
-                    {   }// nY-menu
-                else
-                    frontend\widgets\MenuWidget::widget(['alias'=>'footer_social_menu','template'=>'footer_social_menu']);
-                ?>
+                <?= frontend\widgets\MenuWidget::widget(['alias'=>'footer_social_menu','template'=>'footer_social_menu']); ?>
             </div>
 
             <hr class="footer-hr">
