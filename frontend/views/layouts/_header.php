@@ -140,7 +140,7 @@ if(!Yii::$app->user->isGuest){
             <h1 class="accessability-title">Администрация города Красноярск</h1>
             <div class="header_menu">
                 <?php
-                if (strpos(Yii::$app->request->url, 'new-year2019') || strpos(Yii::$app->request->url, 'newyear.'))
+                if (strpos(Yii::$app->request->url, 'new-year2019') || strpos(Yii::$app->request->hostInfo, 'newyear.'))
                     echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'new_year_menu_header']);
                 else
                     echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'header_menu']);
