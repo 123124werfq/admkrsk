@@ -25,7 +25,7 @@ class NewyearUrlRule extends BaseObject implements UrlRuleInterface
         if(!strpos($hostInfo, 'newyear.admkrsk'))
             return false;
 
-        if(strlen($pathInfo) && !strpos($pathInfo, 'new-year2019') && !strpos($pathInfo, 'program'))
+        if(strlen($pathInfo) && !strpos($pathInfo, 'ew-year2019') && !strpos($pathInfo, 'program'))
             \Yii::$app->response->redirect('http://www.admkrsk.ru', 301);
 
 
