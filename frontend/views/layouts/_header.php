@@ -141,7 +141,7 @@ if(!Yii::$app->user->isGuest){
             <div class="header_menu">
                 <?php
                 if (Yii::$app->request->url=='/citytoday/socialpolicy/projects/new-year2019')
-                    echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'new_year_menu']);
+                    echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'new_year_menu_header']);
                 else
                     echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'header_menu']);
                 ?>
