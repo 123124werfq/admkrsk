@@ -38,12 +38,16 @@ class NewyearUrlRule extends BaseObject implements UrlRuleInterface
             $alias = substr($alias, 0, strpos($alias, '?'));
 */
 
+        if(strlen($pathInfo)<2) {
 
-        $page = Page::find()->where(['alias' => 'new-year2019'])->one();
+            $page = Page::find()->where(['alias' => 'new-year2019'])->one();
 
-        if(!$page)
-            return false;
+            if (!$page)
+                return false;
 
-        return ['site/page', ['page'=>$page]];
+            return ['site/page', ['page' => $page]];
+        }
+
+        return false;
     }
 }
