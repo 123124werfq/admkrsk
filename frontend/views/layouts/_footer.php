@@ -21,7 +21,13 @@
                     <p class="footer-contacts_label">Телефон/факс:</p>
                     <p class="footer-contacts_text">660049, г. Красноярск, ул. Карла Маркса, 93</p>
                 </div>
-                <?=frontend\widgets\MenuWidget::widget(['alias'=>'footer_social_menu','template'=>'footer_social_menu']);?>
+                <?php
+
+                if (strpos(Yii::$app->request->url, 'new-year2019') || strpos(Yii::$app->request->hostInfo, 'newyear.'))
+                    {   }// nY-menu
+                else
+                    frontend\widgets\MenuWidget::widget(['alias'=>'footer_social_menu','template'=>'footer_social_menu']);
+                ?>
             </div>
 
             <hr class="footer-hr">
