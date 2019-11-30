@@ -243,8 +243,10 @@ class CollectionRecordController extends Controller
         if ($form->load(Yii::$app->request->post()) && $form->validate())
         {
             $prepare = $form->prepareData(true);
-
-            if ($model = $collection->insertRecord($prepare))
+            
+            $model->data = $form->prepareData(true);
+            
+            if ($model->save())
                 return $this->redirect(['index', 'id' => $model->id_collection]);
         }
 

@@ -5,7 +5,7 @@
 		{
 			echo $this->render('_default_template_row',[
 				'columns'=>$columns,
-				'allrows'=>$allrows,
+				'row'=>$row,
 			])
 		}
 		else
