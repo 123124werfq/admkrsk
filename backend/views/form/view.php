@@ -21,13 +21,19 @@ $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $
     ],
 ]);
 ?>
-<div class="row" id="form-template">
-    <div class="col-sm-8 col-sm-offset-2">
-    	<div class="ibox">
-    		<div class="ibox-title">
-    			Шаблон формы
-    		</div>
-    		<div class="ibox-content">
+<div class="tabs-container">
+    <ul class="nav nav-tabs" role="tablist">
+        <li>
+            <?=Html::a('Данные', ['collection-record/index', 'id' => $model->id_collection], ['class' => 'nav-link'])?>
+        </li>
+        <li class="active">
+            <?=Html::a('Форма', ['form/view', 'id' => $model->id_form], ['class' => 'nav-link'])?>
+        </li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane active">
+        <div id="form-template" class="panel-body">
+
     			<?php foreach ($rows as $key => $row){?>
     				<div class="form-row flex-row" data-id="<?=$row->id_row?>">
     					<?php foreach ($row->elements as $ikey => $element) {?>
@@ -40,7 +46,7 @@ $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $
     					<?php }?>
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-plus-circle"></i>
+                            ...
                             <!--span class="caret"></span-->
                         </button>
                         <ul class="dropdown-menu">
@@ -55,9 +61,9 @@ $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $
                     </div>
     				</div>
     			<?php }?>
-                <center>
-                    <a class="btn btn-default" href="create-row?id_form=<?=$model->id_form?>">Добавить строку</a>
-                </center>
+            <center>
+                <a class="btn btn-default" href="create-row?id_form=<?=$model->id_form?>">Добавить строку</a>
+            </center>
     		</div>
     	</div>
     </div>

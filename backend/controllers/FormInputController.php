@@ -157,6 +157,12 @@ class FormInputController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save() && $element->save())
         {
+            if ($model->column->type != $model->type)
+            {
+                $model->column->type = $model->type;
+                $model->column->save();
+            }
+
             if (!Yii::$app->request->isAjax)
                 return $this->redirect(['form/view', 'id' => $model->id_form]);
         }

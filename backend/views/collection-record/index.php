@@ -28,20 +28,30 @@ $this->params['action-block'][] = Html::a('Создать представлен
 $this->params['action-block'][] = Html::a('Создать копию', ['/collection/copy', 'id' => $model->id_collection]);
 
 ?>
-<div class="collection-view">
-    <div class="ibox">
-        <div class="ibox-content">
-            <div class="table-responsive">
-                <?= GridView::widget([
-                    'dataProvider' => $dataProvider,
-                    'columns'=>$columns,
-                    'tableOptions'=>[
-                        'emptyCell '=>'',
-                        'class'=>'table table-striped valign-middle table-hover ids-style'
-                    ]
-                ]); ?>
-            </div>
+<div class="tabs-container">
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <?=Html::a('Данные', ['collection-record/index', 'id' => $model->id_collection], ['class' => 'nav-link'])?>
+        </li>
+        <li>
+            <?=Html::a('Форма', ['form/view', 'id' => $model->id_form], ['class' => 'nav-link'])?>
+        </li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane active">
+        <div class="panel-body">
+          <div class="table-responsive">
+              <?= GridView::widget([
+                  'dataProvider' => $dataProvider,
+                  'columns'=>$columns,
+                  'tableOptions'=>[
+                      'emptyCell '=>'',
+                      'class'=>'table table-striped valign-middle table-hover ids-style'
+                  ]
+              ]); ?>
+          </div>
         </div>
+      </div>
     </div>
 </div>
 
