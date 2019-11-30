@@ -117,7 +117,7 @@ JS;
 	                    </div>
 	                    <div class="fileupload_content">
 	                        <p class="fileupload_label">Перетащите сюда файлы для загрузки</p>
-	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — '.($options['filesize']?$options['filesize']:'10').' Мб</p>
+	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — '.(!empty($options['filesize'])?$options['filesize']:'10').' Мб</p>
 	                    </div>
 	                </div>
 	                <div class="fileupload_list"></div>
@@ -141,7 +141,7 @@ JS;
 	                    </div>
 	                    <div class="fileupload_content">
 	                        <p class="fileupload_label">Перетащите сюда файлы для загрузки</p>
-	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — '.($options['filesize']?$options['filesize']:'10').' Мб</p>
+	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — '.(!empty($options['filesize'])?$options['filesize']:'10').' Мб</p>
 	                    </div>
 	                </div>
 	                <div class="fileupload_list"></div>
