@@ -1,4 +1,4 @@
-<?php 
+<?php
     $attributes = [
         'reestr_number',
         'fullname',
@@ -47,22 +47,20 @@
                     </div>
                 </div>
                 <div class="btn-group">
-                    <?php if (!empty($service->id_form && empty($service->targets)))
-                        echo '<a href="create?id='.$service->id_service.'" class="btn-group_item btn btn__secondary">Направить заявление</a>';
-                    else if (count($service->targets)==1 && !empty($service->targets[0]->id_form))
-                        echo '<a href="create?id_target='.$service->targets[0]->id_target.'" class="btn-group_item btn btn__secondary">Направить заявление</a>';
+                    <?php if (count($service->activeTargets)==1 && !empty($service->activeTargets[0]->id_form))
+                        echo '<a href="create?id_service='.$service->id_service.'&id_target='.$service->targets[0]->id_target.'" class="btn-group_item btn btn__secondary">Направить заявление</a>';
                     ?>
                     <a href="#" class="btn-group_item btn btn__gray">Подать жалобу</a>
                 </div>
 
-                <?php if (count($service->targets)>1){?>
+                <?php if (count($service->activeTargets)>1){?>
                 <div class="file-list">
-                    <?php foreach ($service->targets as $key => $target) {?>
+                    <?php foreach ($service->activeTargets as $key => $target) {?>
                         <div class="file-item">
                             <div class="file-td file-td__date"><?=$target->reestr_number?></div>
-                            <div class="file-td file-td__name"><?=$target->name?></div>
+                            <div class="file-td file-td__name"><?=$target->name.' '.$target->place?></div>
                             <div class="file-td file-td__control">
-                                <a href="#" class="btn btn__secondary btn__block-sm">Направить заявление</a>
+                                <a href="create?id_service=<?=$service->id_service?>&id_target<?=$target->id_target?>" class="btn btn__secondary btn__block-sm">Направить заявление</a>
                             </div>
                         </div>
                     <?php }?>

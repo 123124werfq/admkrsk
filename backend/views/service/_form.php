@@ -24,13 +24,17 @@ if (!empty($id_situations))
 
         <?php $form = ActiveForm::begin(); ?>
 
-        <?=$form->field($model, 'id_form')->widget(Select2::class, [
+        <?= '' /*$form->field($model, 'id_form')->widget(Select2::class, [
             'data' => ArrayHelper::map(Form::find()->all(), 'id_form', 'name'),
             'pluginOptions' => [
                 'allowClear' => true,
                 'placeholder' => 'Форма приема заявления',
             ],
-        ])?>
+        ])*/?>
+
+        <?= $form->field($model, 'old')->checkBox() ?>
+
+        <?= $form->field($model, 'online')->dropDownList([0=>'Оффлайн',1=>'В электронном виде']) ?>
 
         <?=$form->field($model, 'id_rub')->widget(Select2::class, [
             'data' => ArrayHelper::map(ServiceRubric::find()->joinWith('childs as childs')->all(), 'id_rub', 'name'),
@@ -93,10 +97,6 @@ if (!empty($id_situations))
         <?= $form->field($model, 'procedure_information')->textarea(['rows' => 6]) ?>
 
         <?= $form->field($model, 'max_duration_queue')->textarea(['rows' => 6]) ?>
-
-        <?= $form->field($model, 'old')->checkBox() ?>
-
-        <?= $form->field($model, 'online')->dropDownList([0=>'Оффлайн',1=>'В электронном виде']) ?>
 
         <?php if (Yii::$app->user->can('admin.service')): ?>
 

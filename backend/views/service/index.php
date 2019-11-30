@@ -23,7 +23,13 @@ $this->params['button-block'][] = Html::a('Добавить', ['create'], ['clas
         'columns' => [
             'id_service',
             'reestr_number:text:Номер',
-            'name',
+            [
+                'attribute'=>'name',
+                'options'=>[
+                    'width'=>'40%',
+                ]
+            ],
+
             'rubric.name:text:Рубрики',
             [
                 'label'=>"Целей",
@@ -52,7 +58,7 @@ $this->params['button-block'][] = Html::a('Добавить', ['create'], ['clas
                 'attribute'=>'online',
                 'label'=>"Форма",
                 'value' => function($model){
-                    return ($model->online)?'В электронном виде':'Оффлайн';
+                    return ($model->online)?'Онлайн':'Оффлайн';
                 },
             ],
             [

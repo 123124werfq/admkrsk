@@ -18,11 +18,11 @@ use common\models\ServiceRubric;
         'method' => 'get',
     ]); ?>
     <div class="row">
-        <div class="col-sm-3">
-            <?= $form->field($model, 'fullname') ?>
+        <div class="col-sm-1">
+            <?= $form->field($model, 'reestr_number')->label('Номер') ?>
         </div>
         <div class="col-sm-3">
-            <?= $form->field($model, 'reestr_number') ?>
+            <?= $form->field($model, 'fullname') ?>
         </div>
         <div class="col-sm-3">
             <?=$form->field($model, 'id_rub')->widget(Select2::class, [

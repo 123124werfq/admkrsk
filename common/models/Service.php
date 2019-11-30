@@ -82,8 +82,7 @@ class Service extends \yii\db\ActiveRecord
             [['keywords', 'addresses', 'result', 'client_category', 'duration', 'documents', 'price', 'appeal', 'legal_grounds', 'regulations', 'refuse','regulations_link', 'duration_order', 'availability', 'procedure_information', 'max_duration_queue'], 'string'],
             [['id_situations', 'client_type'],'safe'],
             [['reestr_number'], 'string', 'max' => 255],
-            [['fullname', 'name'], 'string'],
-
+            [['fullname', 'name', 'type'], 'string'],
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
             ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
@@ -102,6 +101,7 @@ class Service extends \yii\db\ActiveRecord
             'reestr_number' => 'Реестровый номер услуги',
             'fullname' => 'Полное наименование',
             'name' => 'Название',
+            'type'=> 'Орган или Учреждение',
             'keywords' => 'Корпоративные ключевые слова',
             'addresses' => 'Сведения о местах информирования о порядке предоставления услуги',
             'result' => 'Результат предоставления услуги',
@@ -209,6 +209,11 @@ class Service extends \yii\db\ActiveRecord
     public function getRubric()
     {
         return $this->hasOne(ServiceRubric::class, ['id_rub' => 'id_rub']);
+    }
+
+    public function getActiveTargets()
+    {
+        return $this->hasMany(ServiceTarget::class, ['id_service' => 'id_service'])->where(['state'=>1]);
     }
 
     public function getTargets()
