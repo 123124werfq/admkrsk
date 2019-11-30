@@ -329,10 +329,10 @@ jQuery(document).ready(function()
       return false;
     })
 
-    $("#form-template .ibox-content").sortable({
+    $("#form-template").sortable({
       stop: function(event, ui){
         var ords = [];
-        $("#form-template .ibox-content .form-row").each(function(i){
+        $("#form-template .form-row").each(function(i){
           ords.push($(this).data('id'));
         });
         $.ajax({

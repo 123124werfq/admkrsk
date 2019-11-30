@@ -160,20 +160,48 @@ class CollectionRecord extends \yii\db\ActiveRecord
         return $output;
     }
 
-    public function getMedia($id,$firstElement)
+    public function getAllMedias()
     {
-        if (!empty($this->loadData[$id]))
+        $output = [];
+
+        foreach ($this->collection->columns as $key => $column)
         {
-            $ids = json_decode($this->loadData[$id],true);
+            if ($column->type == CollectionColumn::TYPE_FILE || $column->type == CollectionColumn::TYPE_IMAGE)
+            {
+                $medias = $this->getMedia($column->id_column)
+
+                foreach ($medias as $key => $media)
+                    $output[] = $media->getUrl();
+            }
+        }
+
+        return $output;
+    }
+
+    public function getMedia($id_column,$firstElement)
+    {
+        if (empty($this->loadData))
+            $this->getData();
+
+        if (!empty($this->loadData[$id_column]))
+        {
+            $ids = json_decode($this->loadData[$id_column],true);
 
             $medias = Media::find()->where(['id_media'=>$ids])->all();
 
             if (!empty($medias))
                 return ($firstElement)?array_shift($medias):$medias;
-
         }
 
         return null;
+    }
+
+    protected function getLoadData()
+    {
+        if (empty($this->loadData))
+            $this->getData();
+
+        return $this->loadData;
     }
 
     public function getCollection()
