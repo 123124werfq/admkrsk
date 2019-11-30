@@ -42,11 +42,11 @@ class FormInput extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_form', 'id_type', 'id_collection', 'visibleInput', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','label'], 'default', 'value' => null],
-            [['id_form', 'id_type', 'id_collection', 'visibleInput', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','required','type'], 'integer'],
+            [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','label'], 'default', 'value' => null],
+            [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','required','type'], 'integer'],
             [['name', 'type'], 'required'],
             [['values', 'hint','label'], 'string'],
-            [['visibleInputValue','options'],'safe'],
+            [['options'],'safe'],
             [['name', 'fieldname','alias'], 'string', 'max' => 255],
         ];
     }
@@ -67,8 +67,6 @@ class FormInput extends \yii\db\ActiveRecord
             'name' => 'Название',
             'hint' => 'Пояснение',
             'fieldname' => 'Псевдоним переменной',
-            'visibleInput' => 'Зависимость видимости',
-            'visibleInputValue' => 'Значение',
             'values' => 'Значения',
             'size' => 'Размер',
             'options' => 'Опции',
@@ -83,8 +81,8 @@ class FormInput extends \yii\db\ActiveRecord
 
     public function beforeValidate()
     {
-        if (!empty($this->visibleInputValue) && !is_array($this->visibleInputValue))
-            $this->visibleInputValue = [$this->visibleInputValue];
+        /*if (!empty($this->visibleInputValue) && !is_array($this->visibleInputValue))
+            $this->visibleInputValue = [$this->visibleInputValue];*/
 
         return parent::beforeValidate();
     }
@@ -94,7 +92,6 @@ class FormInput extends \yii\db\ActiveRecord
         if (!empty($this->type->service_attribute))
         {
             $values = Service::getAttributeValues($this->type->service_attribute,$model);
-
             return $values;
         }
 
@@ -127,9 +124,9 @@ class FormInput extends \yii\db\ActiveRecord
         return $this->hasOne(FormInputType::class, ['id_type' => 'id_type']);
     }
 
-    public function getVisibleInputModel()
+    public function getVisibleInputs()
     {
-        return $this->hasOne(FormInput::class, ['id_input' => 'visibleInput']);
+        return $this->hasMany(FormInput::class, ['id_input_visible' => 'id_input_visible'])->viaTable('forml_visibleinput',['id_input'=>'id_input']);
     }
 
 }
