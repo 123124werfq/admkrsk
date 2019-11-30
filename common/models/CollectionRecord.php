@@ -168,10 +168,10 @@ class CollectionRecord extends \yii\db\ActiveRecord
         {
             if ($column->type == CollectionColumn::TYPE_FILE || $column->type == CollectionColumn::TYPE_IMAGE)
             {
-                $medias = $this->getMedia($column->id_column)
-
-                foreach ($medias as $key => $media)
-                    $output[] = $media->getUrl();
+                $medias = $this->getMedia($column->id_column);
+                if(!empty($medias))
+                    foreach ($medias as $key => $media)
+                        $output[] = $media->getUrl();
             }
         }
 
