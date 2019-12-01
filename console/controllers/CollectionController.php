@@ -20,6 +20,7 @@ class CollectionController extends Controller
         try {
             foreach ($collection as $key => $collection)
             {
+                echo "$collection->name \r\n";
                 $form = new Form;
                 $form->id_collection = $collection->id_collection;
                 $form->name = $collection->name;
