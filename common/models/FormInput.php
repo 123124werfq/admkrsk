@@ -83,7 +83,6 @@ class FormInput extends \yii\db\ActiveRecord
         ];
     }
 
-
         /**
      * {@inheritdoc}
      */
@@ -97,10 +96,8 @@ class FormInput extends \yii\db\ActiveRecord
                 'class' => RelationBehavior::class,
                 'relations'=> [
                     'visibleInputs'=>[
-                        'modelname'=> 'FormInput',
-                        'added'=>false,
-                        'jtable'=>'forml_visibleinput',
-                        'fields_dbl'=>['visibleValues']
+                        'modelname'=> 'FormVisibleInput',
+                        'added'=>true,
                     ],
                 ]
             ]

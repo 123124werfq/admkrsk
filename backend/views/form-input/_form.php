@@ -80,10 +80,10 @@ if (!empty($model->id_form))
     <?php
         echo $this->render('_element_options',['element'=>$model->element]);
     ?>
-    
+
     <?php if (!empty($visibleInputs)){
 
-        $records = FormInput::find()->where(['visibleInputs.id_input'=>$model->id_input])->joinWith('visibleInputs')->all();
+        $records = $model->getRecords('visibleInputs');
 
         foreach ($records as $key => $visibleInput) {?>
             <div id="visibles" class="multiyiinput">
@@ -95,8 +95,8 @@ if (!empty($model->id_form))
                         <?=(!empty($visibleInput->id_input))?$this->render('_input',['visibleInput'=>$visibleInput,'model'=>$model,'form'=>$form]):''?>
                     </div>
                 </div>
-            </div>            
-    <?php 
+            </div>
+    <?php
         }}
     ?>
 

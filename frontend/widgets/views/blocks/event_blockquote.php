@@ -21,25 +21,30 @@
 			</div>
 			<div class="col-third person-col order-xs-0">
 				<?php if (!empty($blockVars['autor'])){
-					$record = \common\models\CollectionRecord::findOne($blockVars['autor']->value);
+					$records = \common\models\CollectionRecord::find()->where(['id_record'=>json_decode($blockVars['autor']->value,true)])->all();
 
-					if (!empty($record))
+					if (!empty($records))
 					{
-						$data = $record->getData(true);
-						$photo = $record->getMedia('photo',true);
+						foreach ($records as $key => $record)
+						{
+							$data = $record->getData(true);
+							$photo = $record->getMedia('photo',true);
+
 				?>
-				<div class="person-card person-card__mini">
-					<?php if (!empty($photo)){?>
-                        <img class="person-card_img" src="<?=$photo->showThumb(['w'=>160,'h'=>160])?>" alt="<?=$data['name']??''?>">
-                    <?php }?>
-					<div class="person-card_content">
-						<h4 class="person-card_title"><?=$data['name']??''?></h4>
-						<p class="person-card_subtitle">
-							<?=nl2br($data['description']??'')?>
-						</p>
-					</div>
-				</div>
-				<?php }}?>
+							<div class="person-card person-card__mini">
+								<?php if (!empty($photo)){?>
+			                        <img class="person-card_img" src="<?=$photo->showThumb(['w'=>160,'h'=>160])?>" alt="<?=$data['name']??''?>">
+			                    <?php }?>
+								<div class="person-card_content">
+									<h4 class="person-card_title"><?=$data['name']??''?></h4>
+									<p class="person-card_subtitle">
+										<?=nl2br($data['description']??'')?>
+									</p>
+								</div>
+							</div>
+				<?php }
+					}
+				}?>
 			</div>
 		</div>
 	</div>

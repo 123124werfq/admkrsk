@@ -137,7 +137,8 @@ class Block extends \yii\db\ActiveRecord
                 'autor'=>[
                     'name'=>'Автор',
                     'type'=>BlockVar::TYPE_COLLECTION_RECORD,
-                    'alias'=>'press_people'
+                    'alias'=>'press_people',
+                    'multiple'=>'multiple',
                 ],
             ]
         ],

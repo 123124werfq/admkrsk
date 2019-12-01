@@ -50,7 +50,7 @@ class BlockVar extends \yii\db\ActiveRecord
         return [
             [['id_block', 'id_media', 'type'], 'default', 'value' => null],
             [['id_block', 'id_media', 'type'], 'integer'],
-            [['value'], 'string'],
+            [['value'], 'safe'],
             [['name', 'alias'], 'string', 'max' => 255],
         ];
     }
@@ -79,6 +79,19 @@ class BlockVar extends \yii\db\ActiveRecord
     public function getMedias()
     {
         return $this->hasMany(Media::className(), ['id_media' => 'id_media'])->viaTable('dbl_block_var_media', ['id_var' => 'id_var']);
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert))
+        {
+            if (is_array($this->value))
+                $this->value = json_encode($this->value);
+
+            return true;
+        }
+        else
+            return false;
     }
 
     public function behaviors()

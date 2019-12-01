@@ -9,11 +9,12 @@ use kartik\select2\Select2;
 /* @var $model common\models\Block */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
 <div class="ibox">
     <div class="ibox-content">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+    	//'fieldsTemplates'=>'{input}{error}'
+    ]); ?>
 
     <?=$form->field($model, 'code')->textarea(['rows' => 6,'class'=>'redactor']);?>
 
@@ -23,6 +24,9 @@ use kartik\select2\Select2;
     	$vars = $model->getVars();
 
     	foreach ($vars as $ckey => $var) {
+
+    		$varOptions = $model->blocks[$model->type]['vars'][$var->alias];
+
     		echo '<div class=form-group>
     		<label class="control-label">'.$var->name.'</label>';
 
@@ -45,8 +49,23 @@ use kartik\select2\Select2;
 	            case $var::TYPE_COLLECTION:
                     echo Html::activeDropDownList($var,"[$ckey]value",ArrayHelper::map(Collection::find()->all(), 'id_collection', 'name'),['class'=>'form-control','Value_'.$ckey]);
                     break;
+
                 case $var::TYPE_COLLECTION_RECORD:
-                    echo Html::activeDropDownList($var,"[$ckey]value",Collection::getArrayByAlias("press_people"),['class'=>'form-control','Value_'.$ckey]);
+
+                	if ($varOptions['multiple'] && !is_array($var->value))
+                		$var->value = json_decode($var->value,true);
+
+                	echo $form->field($var, "[$ckey]value")->widget(Select2::class, [
+	                    'data' => Collection::getArrayByAlias("press_people"),
+	                    'pluginOptions' => [
+	                        'allowClear' => true,
+	                        'placeholder' => 'Запись',
+	                        'multiple'=>$varOptions['multiple']??false
+	                    ],
+	                    'options'=>[
+	                    	'multiple'=>$varOptions['multiple']??false
+	                	]
+                	]);
                     break;
                 case $var::TYPE_SELECT:
 	                echo Html::activeDropDownList($var,"[$ckey]value",$model->blocks[$model->type]['vars'][$var->alias]['values'],['class'=>'form-control','id'=>'Value_'.$ckey]);
