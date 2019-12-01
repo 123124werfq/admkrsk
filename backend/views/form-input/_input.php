@@ -10,16 +10,17 @@
 	        $values = $visibleInput->getArrayValues();
 
 	        $selected = [];
-	        if (is_array($model->visibleInputValue))
-		        foreach ($model->visibleInputValue as $key => $value) {
+
+	        if (is_array($model->values))
+		        foreach ($model->values as $key => $value) {
 		        	$selected[$value] = ["selected"=>true];
 		        };
 
 	        if (!empty($values))
 	        {
-	        	//echo $form->field($model, 'FormInput[visibleInputs][visibleValues]')->dropDownList($values,['multiple'=>'multiple']);
+	        	//echo $form->field($model, 'FormInput[visibleInputs][values]')->dropDownList($values,['multiple'=>'multiple']);
 
-	        	echo $form->field($model, 'visibleInputs[][visibleValues]')->widget(Select2::class, [
+	        	echo $form->field($model, "[visibleInputs][$rowKey]values",['template'=>"{input}"])->widget(Select2::class, [
                     'data' => $values,
                     'pluginOptions' => [
                         'multiple' => true,
@@ -27,13 +28,14 @@
                     'options'=>[
                     	'multiple'=>'multiple',
                     	'options'=>$selected,
+                    	'id'=>'visibleInputs_values_'.$rowKey
                     ],
                 ]);
 	        }
 	        else if (!empty($model->id_collection))
 	        {
-	        	echo $form->field($model, 'visibleInputs[]visibleValues')->widget(Select2::class, [
-                    'data' => $model->visibleInputValue,
+	        	echo $form->field($model, "[visibleInputs][$rowKey]values",['template'=>"{input}"])->widget(Select2::class, [
+                    'data' => $model->values,
                     'pluginOptions' => [
                         'multiple' => true,
                         'allowClear' => true,
@@ -45,13 +47,13 @@
                             'data' => new JsExpression('function(params) { return {q:params.term}; }')
                         ],
                     ],
-                    'options'=>['multiple'=>'multiple'],
+                    'options'=>['multiple'=>'multiple','id'=>'visibleInputs_values_'.$rowKey],
                 ]);
 	        }
 	    }
 	    else
 	    {
-	    	echo $form->field($model, 'visibleInputs[]visibleValues')->textInput(['value'=>(is_array($model->visibleInputValue))?implode(';',$model->visibleInputValue):'']);
+	    	echo $form->field($model, "[visibleInputs][$rowKey]values",['template'=>"{input}"])->textInput(['value'=>(is_array($model->values))?implode(';',$model->values):'','id'=>'visibleInputs_values_'.$rowKey]);
 	    }
     ?>
 </div>

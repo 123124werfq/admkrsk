@@ -154,11 +154,13 @@ class RelationBehavior extends Behavior
 			// берем нужные нам POST
 			$post = $this->getPOST($model_name, $relation_name);
 
-			if ($post!==false) {
+			if ($post!==false)
+			{
 				// очищаем записи
 				$this->records[$relation_name] = [];
 
-				foreach ($post as $post) {
+				foreach ($post as $post)
+				{
 					$class = "common\models\\".$model_name;
 					$object = new $class;
 					$default_attributes = $object->attributes;
@@ -166,23 +168,25 @@ class RelationBehavior extends Behavior
 
 					// ищем по ПК если передали ПК
 					if (!empty($post[$pk_field]))
-					{
 						$find_object = $object->findOne($post[$pk_field]);
-                    }
+					else
+						$find_object = null;
 
 					// записываем данные из POST
-					if (!empty($find_object)) {
+					if (!empty($find_object))
+					{
 						$find_object->attributes = $post;
 						$this->records[$relation_name][] = $find_object;
 
 						if (($default_attributes != $find_object->attributes) || !empty($relation['validated']) || !empty($relation['required'])) {
 							$validation = $validation && $find_object->validate();
-
 							/*if (!$validation)
 								print_r($object->errors);*/
 						}
 					}
-					else {
+					else
+					{
+						$object->attributes = $post;
 						$this->records[$relation_name][] = $object;
                     }
 				}
@@ -361,7 +365,7 @@ class RelationBehavior extends Behavior
                     	if (empty($model))
                     		$model = $model_obj;
                     }
-                    else
+                    elseif(!isset($record[$pkr_field]))
                     {
                     	$record[$pk_field] = $pk_value;
                     	// пытаемся найти по введеным данным
@@ -381,11 +385,14 @@ class RelationBehavior extends Behavior
 							$class = "common\models\\".$model_name;
 							$model = new $class;
 							$model->attributes = $record;
+							$model->$pk_field = $pk_value;
 						}
                     }
 
                     if ($model->save())
 						$pk_ids[] = $model->primaryKey;
+
+					$model = null;
 				}
 
 				$where = '';

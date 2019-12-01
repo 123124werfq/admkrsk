@@ -164,6 +164,7 @@ class FormInputController extends Controller
             ];
         }
 
+
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $element->validate())
         {
             if (Yii::$app->request->isAjax)

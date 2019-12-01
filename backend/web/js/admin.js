@@ -118,6 +118,8 @@ function addInput(block)
     // добавляем в конец блока и меням ID у input
     input_row.appendTo("#"+block);
 
+    input_row.find(".visibleInputValues").html('');
+
     input_row.find("input, select, textarea").each(function(i)
     {
         var clone_input = $(this);
@@ -145,6 +147,7 @@ function addInput(block)
                 tinymce.init(cloneConfig);
             }
         }
+
     });
 
     if ($("#"+block).hasClass('sortable'))

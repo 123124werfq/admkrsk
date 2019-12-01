@@ -96,7 +96,7 @@ class FormInput extends \yii\db\ActiveRecord
                 'class' => RelationBehavior::class,
                 'relations'=> [
                     'visibleInputs'=>[
-                        'modelname'=> 'FormVisibleInput',
+                        'modelname'=> 'FormVisibleinput',
                         'added'=>true,
                     ],
                 ]
