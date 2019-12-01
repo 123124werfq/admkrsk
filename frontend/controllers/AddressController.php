@@ -50,18 +50,19 @@ class AddressController extends \yii\web\Controller
      * @param string $search
      * @return array
      */
-    public function actionSubregion($id_region, $search = '')
+    public function actionSubregion($id_region=null, $search = '')
     {
         $query = Subregion::find()
-            ->joinWith('houses', false)
-            ->filterWhere([House::tableName() . '.id_region' => $id_region])
-            ->groupBy(Subregion::tableName() . '.id_subregion')
+            ->joinWith('houses', false);
+        if (!empty($id_region))
+            $query->filterWhere([House::tableName() . '.id_region' => $id_region]);
+
+        $query->groupBy(Subregion::tableName() . '.id_subregion')
             ->orderBy([Subregion::tableName() . '.name' => SORT_ASC])
             ->asArray();
 
-        if ($search) {
+        if ($search)
             $query->andFilterWhere(['ilike', Subregion::tableName() . '.name', $search]);
-        }
 
         $results = [];
         foreach ($query->all() as $subregion) {

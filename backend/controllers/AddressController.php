@@ -7,12 +7,26 @@ use common\models\House;
 use backend\models\search\HouseSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
+use common\models\City;
+use common\models\District;
+use common\models\Region;
+use common\models\Street;
+use common\models\Subregion;
 
 /**
  * AddressController implements the CRUD actions for House model.
  */
 class AddressController extends Controller
 {
+    public function beforeAction($action)
+    {
+        if (Yii::$app->request->isAjax)
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+        return parent::beforeAction($action);
+    }
+
     /**
      * Lists all House models.
      * @return mixed
@@ -55,5 +69,201 @@ class AddressController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+     /**
+     * @param string $search
+     * @return array
+     */
+    public function actionRegion($search = '')
+    {
+        $query = Region::find()->asArray();
+
+        if ($search) {
+            $query->filterWhere(['ilike', 'name', $search]);
+        }
+
+        $results = [];
+        foreach ($query->all() as $region) {
+            $results[] = [
+                'id' => $region['id_region'],
+                'text' => $region['name'],
+            ];
+        }
+
+        return ['results' => $results];
+    }
+
+    /**
+     * @param int $id_region
+     * @param string $search
+     * @return array
+     */
+    public function actionSubregion($id_region=null, $search = '')
+    {
+        $query = Subregion::find()
+            ->joinWith('houses', false);
+        if (!empty($id_region))
+            $query->filterWhere([House::tableName() . '.id_region' => $id_region]);
+
+        $query->groupBy(Subregion::tableName() . '.id_subregion')
+            ->orderBy([Subregion::tableName() . '.name' => SORT_ASC])
+            ->asArray();
+
+        if ($search)
+            $query->andFilterWhere(['ilike', Subregion::tableName() . '.name', $search]);
+
+        $results = [];
+        foreach ($query->all() as $subregion) {
+            $results[] = [
+                'id' => $subregion['id_subregion'],
+                'text' => $subregion['name'],
+            ];
+        }
+
+        return ['results' => $results];
+    }
+
+    /**
+     * @param int $id_region
+     * @param int $id_subregion
+     * @param string $search
+     * @return array
+     * @throws BadRequestHttpException
+     */
+    public function actionCity($id_region = null, $id_subregion = null, $search = '')
+    {
+        if (!$id_region && !$id_subregion) {
+            throw new BadRequestHttpException(Yii::t('yii', 'Missing required parameters: {params}', [
+                'params' => 'id_region или id_subregion',
+            ]));
+        }
+
+        $query = City::find()
+            ->joinWith('houses', false)
+            ->filterWhere([
+                House::tableName() . '.id_region' => $id_region,
+                House::tableName() . '.id_subregion' => $id_subregion,
+            ])
+            ->groupBy(City::tableName() . '.id_city')
+            ->orderBy([City::tableName() . '.name' => SORT_ASC])
+            ->asArray();
+
+        if ($search) {
+            $query->andFilterWhere(['ilike', City::tableName() . '.name', $search]);
+        }
+
+        $results = [];
+        foreach ($query->all() as $city) {
+            $results[] = [
+                'id' => $city['id_city'],
+                'text' => $city['name'],
+            ];
+        }
+
+        return ['results' => $results];
+    }
+
+    /**
+     * @param int $id_city
+     * @param string $search
+     * @return array
+     */
+    public function actionDistrict($id_city=null, $search = '')
+    {
+        $query = District::find()
+            ->joinWith('houses', false);
+        
+        if (!empty($id_city))
+            $query->filterWhere([House::tableName() . '.id_city' => $id_city]);
+
+        $query->groupBy(District::tableName() . '.id_district')
+            ->orderBy([District::tableName() . '.name' => SORT_ASC])
+            ->limit(20)
+            ->asArray();
+
+        if ($search) {
+            $query->andFilterWhere(['ilike', District::tableName() . '.name', $search]);
+        }
+
+        $results = [];
+        foreach ($query->all() as $district) {
+            $results[] = [
+                'id' => $district['id_district'],
+                'text' => $district['name'],
+            ];
+        }
+
+        return ['results' => $results];
+    }
+
+    /**
+     * @param int $id_city
+     * @param string $search
+     * @return array
+     */
+    public function actionStreet($id_city, $search = '')
+    {
+        $query = Street::find()
+            ->joinWith('houses', false)
+            ->filterWhere([House::tableName() . '.id_city' => $id_city])
+            ->groupBy(Street::tableName() . '.id_street')
+            ->orderBy([Street::tableName() . '.name' => SORT_ASC])
+            ->limit(20)
+            ->asArray();
+
+        if ($search) {
+            $query->andFilterWhere(['ilike', Street::tableName() . '.name', $search]);
+        }
+
+        $results = [];
+        foreach ($query->all() as $street) {
+            $results[] = [
+                'id' => $street['id_street'],
+                'text' => $street['name'],
+            ];
+        }
+
+        return ['results' => $results];
+    }
+
+    /**
+     * @param int $id_street
+     * @param string $search
+     * @return array
+     */
+    public function actionHouse($id_street, $search = '')
+    {
+        if (empty($id_street))
+            return ['results' => []];;
+
+        $query = House::find()
+            ->filterWhere(['id_street' => $id_street])
+            ->groupBy('id_house')
+            ->orderBy(['name' => SORT_ASC])
+            ->limit(20)
+            ->asArray();
+
+        if ($search) {
+            $query->andFilterWhere(['ilike', 'name', $search]);
+        }
+
+        $results = [];
+        foreach ($query->all() as $house) {
+            $results[] = [
+                'id' => $house['id_house'],
+                'text' => $house['name'],
+                'postalcode'=> $house['postalcode'],
+            ];
+        }
+
+        if (empty($results))
+            $results = [
+                'id' => null,
+                'text' => $search,
+                'postalcode'=> ''
+            ];
+
+        return ['results' => $results];
     }
 }
