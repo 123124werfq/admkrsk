@@ -32,7 +32,7 @@ class CollectionController extends Controller
                         $input->label = $input->name = $column->name;
                         $input->type = $column->type;
                         $input->id_form = $form->id_form;
-                        $input->id_column = $column->id_column
+                        $input->id_column = $column->id_column;
 
                         if (!$input->save())
                             print_r($input->errors);
@@ -52,7 +52,7 @@ class CollectionController extends Controller
                     $collection->id_form = $form->id_form;
                     $collection->updateAttributes(['id_form']);
                 }
-                else 
+                else
                     print_r($form->errors);
             }
 
