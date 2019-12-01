@@ -62,6 +62,7 @@ class CollectionController extends Controller
         } catch (\Exception $e) 
         {
             $transaction->rollBack();
+            throw $e;
         }
 
     }
