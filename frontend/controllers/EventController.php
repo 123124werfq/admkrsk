@@ -68,7 +68,9 @@ class EventController extends \yii\web\Controller
         }
 
         if (!empty($_GET['place']))
+        {
             $collection->whereByAlias(['place'=>$_GET['place']]);
+        }
 
         if (!empty($_GET['category']))
             $collection->whereByAlias(['category'=>$_GET['category']]);

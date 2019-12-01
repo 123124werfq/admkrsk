@@ -178,6 +178,13 @@ class FormInputController extends Controller
                     $model->column->save();
                 }
 
+                if ($model->column->alias != $model->fieldname)
+                {
+                    $model->column->alias = $model->fieldname;
+                    $model->column->updateAttributes(['alias']);
+                }
+
+
                 if (!Yii::$app->request->isAjax)
                     return $this->redirect(['form/view', 'id' => $model->id_form]);
             }

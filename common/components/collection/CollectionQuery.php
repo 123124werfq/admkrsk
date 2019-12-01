@@ -93,7 +93,7 @@ class CollectionQuery extends \yii\mongodb\Query
 
     public function whereByAlias($condition=[])
     {
-        if (count($condition)==2)
+        if (count($condition)==1)
         {
             $alias = key($condition);
             $id_column = $this->GetIDColumnByAlias($alias);

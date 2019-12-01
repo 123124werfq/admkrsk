@@ -6,19 +6,21 @@
     <div class="program-event">
         <div class="program_row">
             <div class="program_col-main">
-                <h4 class="program_label"><?=$event['name']?></h4>
+                <h4 class="program_label"><?=$event['name']??''?></h4>
             </div>
             <div class="program_col-area">
-                <span class="area">​<?=$event['place']?> <?=(!empty($event['place_info']))?"({$event['place_info']})":''?></span>
+                <span class="area">​<?=$event['place']??''?> <?=(!empty($event['place_info']))?"({$event['place_info']})":''?></span>
             </div>
             <div class="program_col-time">
-                <?=$event['time']?>
+                <?=$event['time']??''?>
             </div>
             <div class="program_col-main order-xs-1">
                 <p class="program_desc hidden" id="event-1-1">
-                    <?=$event['description']?>
+                    <?=$event['description']??''?>
                 </p>
-                <a href="#" class="program_more js-show" data-target="#event-1-1">Читать подробнее</a>
+                <?php if (!empty($event['description'])){?>
+                    <a href="#" class="program_more js-show" data-target="#event-1-1">Читать подробнее</a>
+                <?php }?>
             </div>
             <!--div class="program_col-main order-xs-0">
                 <div class="program_tags">
