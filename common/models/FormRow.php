@@ -36,7 +36,7 @@ class FormRow extends \yii\db\ActiveRecord
         return [
             [['id_form', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
             [['id_form', 'created_at', 'ord', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
-            [['ord','id_form'], 'required'],
+            [['id_form'], 'required'],
             [['content'], 'string'],
             [['options'], 'safe'],
         ];
