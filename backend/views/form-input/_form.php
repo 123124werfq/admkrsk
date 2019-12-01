@@ -21,7 +21,6 @@ if (!empty($model->id_form))
                         ->andWhere('id_input <> '.(int)$model->id_input)->all(), 'id_input', 'name');
 }
 ?>
-
 <div class="form-input-form">
     <?php $form = ActiveForm::begin([
         'options' => [
@@ -29,11 +28,6 @@ if (!empty($model->id_form))
         ]
     ]); ?>
 
-    <?php
-        echo $this->render('_element_options',['element'=>$model->element]);
-    ?>
-
-    <hr>
     <?= $form->field($model, 'required')->checkBox()?>
 
     <div class="row">
@@ -59,21 +53,6 @@ if (!empty($model->id_form))
 
     <?=$form->field($model, 'fieldname')->textInput(['maxlength' => 255]) ?>
 
-    <?php if (!empty($visibleInputs))
-    {?>
-    <hr>
-    <div class="row">
-        <div class="col-sm-6">
-            <?=$form->field($model, 'visibleInput')->dropDownLIst(
-                $visibleInputs,
-                ['prompt'=>'Выберите поле зависимости']
-            ) ?>
-        </div>
-        <div id="visibleInputValues" class="col-sm-6">
-            <?=(!empty($model->visibleInput))?$this->render('_input',['visibleInput'=>$model->visibleInputModel,'model'=>$model,'form'=>$form]):''?>
-        </div>
-    </div>
-    <?php }?>
     <?php if ($model->type == CollectionColumn::TYPE_SELECT || $model->type == CollectionColumn::TYPE_RADIO){?>
         <?=$form->field($model, 'id_collection')->widget(Select2::class, [
             'data' => ArrayHelper::map(Collection::find()->all(), 'id_collection', 'name'),
@@ -96,6 +75,30 @@ if (!empty($model->id_form))
             echo $this->render('_options',['model'=>$model]);
         ?>
     </div>
+
+    <h3>Настройка отображения</h3>
+    <?php
+        echo $this->render('_element_options',['element'=>$model->element]);
+    ?>
+    
+    <?php if (!empty($visibleInputs)){
+
+        $records = FormInput::find()->where(['visibleInputs.id_input'=>$model->id_input])->joinWith('visibleInputs')->all();
+
+        foreach ($records as $key => $visibleInput) {?>
+            <div id="visibles" class="multiyiinput">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <?=$form->field($model, 'visibleInputs[][id_input]')->dropDownList($visibleInputs,['class'=>'form-control visible-field','prompt'=>'Выберите поле зависимости'])?>
+                    </div>
+                    <div id="visibleInputValues" class="col-sm-6">
+                        <?=(!empty($visibleInput->id_input))?$this->render('_input',['visibleInput'=>$visibleInput,'model'=>$model,'form'=>$form]):''?>
+                    </div>
+                </div>
+            </div>            
+    <?php 
+        }}
+    ?>
 
     <div class="form-group">
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

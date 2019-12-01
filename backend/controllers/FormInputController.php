@@ -155,18 +155,6 @@ class FormInputController extends Controller
         $element = $model->element;
         $element->load(Yii::$app->request->post());
 
-        if ($model->load(Yii::$app->request->post()) && $model->save() && $element->save())
-        {
-            if ($model->column->type != $model->type)
-            {
-                $model->column->type = $model->type;
-                $model->column->save();
-            }
-
-            if (!Yii::$app->request->isAjax)
-                return $this->redirect(['form/view', 'id' => $model->id_form]);
-        }
-
         if (Yii::$app->request->isAjax)
         {
             Yii::$app->assetManager->bundles = [
@@ -174,9 +162,28 @@ class FormInputController extends Controller
                 'yii\web\JqueryAsset'=>false,
                 'yii\web\YiiAsset'=>false,
             ];
-
-            return $this->renderAjax('_form',['model' => $model]);
         }
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $element->validate())
+        {
+            if (Yii::$app->request->isAjax)
+                return $this->renderAjax('_form',['model' => $model]);
+
+            if ($model->save() && $element->save())
+            {
+                if ($model->column->type != $model->type)
+                {
+                    $model->column->type = $model->type;
+                    $model->column->save();
+                }
+
+                if (!Yii::$app->request->isAjax)
+                    return $this->redirect(['form/view', 'id' => $model->id_form]);
+            }
+        }
+
+        if (Yii::$app->request->isAjax)
+            return $this->renderAjax('_form',['model' => $model]);
 
         return $this->render('update', [
             'model' => $model,

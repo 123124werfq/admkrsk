@@ -3,6 +3,10 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use common\components\yiinput\RelationBehavior;
+use common\modules\log\behaviors\LogBehavior;
 
 /**
  * This is the model class for table "form_input".
@@ -27,7 +31,7 @@ use Yii;
  */
 class FormInput extends \yii\db\ActiveRecord
 {
-    public $alias;
+    public $alias, $visibleValues;
     /**
      * {@inheritdoc}
      */
@@ -79,6 +83,30 @@ class FormInput extends \yii\db\ActiveRecord
         ];
     }
 
+
+        /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'ts' => TimestampBehavior::class,
+            'ba' => BlameableBehavior::class,
+            'log' => LogBehavior::class,
+            'yiinput' => [
+                'class' => RelationBehavior::class,
+                'relations'=> [
+                    'visibleInputs'=>[
+                        'modelname'=> 'FormInput',
+                        'added'=>false,
+                        'jtable'=>'forml_visibleinput',
+                        'fields_dbl'=>['visibleValues']
+                    ],
+                ]
+            ]
+        ];
+    }
+
     public function beforeValidate()
     {
         /*if (!empty($this->visibleInputValue) && !is_array($this->visibleInputValue))
@@ -126,7 +154,7 @@ class FormInput extends \yii\db\ActiveRecord
 
     public function getVisibleInputs()
     {
-        return $this->hasMany(FormInput::class, ['id_input_visible' => 'id_input_visible'])->viaTable('forml_visibleinput',['id_input'=>'id_input']);
+        return $this->hasMany(FormVisibleInput::class, ['id_input' => 'id_input']);
     }
 
 }

@@ -206,7 +206,7 @@ jQuery(document).ready(function()
         });
     });
 
-    $('body').delegate("#forminput-visibleinput,#forminput-type",'change',function(){
+    $('body').delegate(".visible-field, #forminput-type",'change',function(){
         var $form = $("#formInput-form");
 
         $.ajax({

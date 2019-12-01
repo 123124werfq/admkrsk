@@ -9,9 +9,6 @@
 	    {
 	        $values = $visibleInput->getArrayValues();
 
-	        /*if (!empty($model->visibleInputValue))
-	        	$model->visibleInputValue = $model->visibleInputValue->getValue();*/
-
 	        $selected = [];
 	        if (is_array($model->visibleInputValue))
 		        foreach ($model->visibleInputValue as $key => $value) {
@@ -20,9 +17,9 @@
 
 	        if (!empty($values))
 	        {
-	        	//echo $form->field($model, 'visibleInputValue[]')->dropDownList($values,['multiple'=>'multiple']);
+	        	//echo $form->field($model, 'FormInput[visibleInputs][visibleValues]')->dropDownList($values,['multiple'=>'multiple']);
 
-	        	echo $form->field($model, 'visibleInputValue[]')->widget(Select2::class, [
+	        	echo $form->field($model, 'visibleInputs[][visibleValues]')->widget(Select2::class, [
                     'data' => $values,
                     'pluginOptions' => [
                         'multiple' => true,
@@ -35,7 +32,7 @@
 	        }
 	        else if (!empty($model->id_collection))
 	        {
-	        	echo $form->field($model, 'visibleInputValue[]')->widget(Select2::class, [
+	        	echo $form->field($model, 'visibleInputs[]visibleValues')->widget(Select2::class, [
                     'data' => $model->visibleInputValue,
                     'pluginOptions' => [
                         'multiple' => true,
@@ -54,7 +51,7 @@
 	    }
 	    else
 	    {
-	    	echo $form->field($model, 'visibleInputValue')->textInput(['value'=>(is_array($model->visibleInputValue))?implode(';',$model->visibleInputValue):'']);
+	    	echo $form->field($model, 'visibleInputs[]visibleValues')->textInput(['value'=>(is_array($model->visibleInputValue))?implode(';',$model->visibleInputValue):'']);
 	    }
     ?>
 </div>
