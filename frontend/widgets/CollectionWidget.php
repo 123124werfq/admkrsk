@@ -49,7 +49,6 @@ class CollectionWidget extends \yii\base\Widget
 
         return $this->render('collection/'.$this->template,[
         	'model'=>$model,
-            'page'=>$page,
             'pagination'=>$pagination,
             'columns'=>$columns,
             'allrows'=>$query->getArray(),
