@@ -34,7 +34,7 @@ class CollectionWidget extends \yii\base\Widget
         if (empty($model) || empty($this->columns))
             return '';
 
-        $p = (int)Yii::$app->request->get('page',0);
+        $p = (int)Yii::$app->request->get('p',0);
 
         $query = $model->getDataQueryByOptions($this->columns);
         $pagination = new Pagination([
