@@ -34,7 +34,7 @@ class CollectionWidget extends \yii\base\Widget
         if (empty($model) || empty($this->columns))
             return '';
 
-        $page = (int)Yii::$app->request->get('page',0);
+        $p = (int)Yii::$app->request->get('page',0);
 
         $query = $model->getDataQueryByOptions($this->columns);
         $pagination = new Pagination([
@@ -42,7 +42,7 @@ class CollectionWidget extends \yii\base\Widget
             'route'=>Yii::$app->request->url
         ]);
 
-        $query->offset($page*$pagination->limit)->limit($pagination->limit);
+        $query->offset($p*$pagination->limit)->limit($pagination->limit);
         $query->keyAsAlias = true;
 
         $columns = $query->columns;
