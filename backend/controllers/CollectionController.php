@@ -452,13 +452,14 @@ class CollectionController extends Controller
             $options['filters'] = [];
 
             foreach ($_POST['ViewFilters'] as $key => $data)
-                {
+            {
+                if (!empty($data['id_column']))
                     $options['filters'][] = [
                         'id_column' => $data['id_column'],
                         'operator' => $data['operator'],
                         'value' => (!empty($data['value']))?$data['value']:''
                     ];
-                }
+            }
         }
 
         if ($return)

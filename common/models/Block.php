@@ -209,8 +209,11 @@ class Block extends \yii\db\ActiveRecord
                 ],
                 'template'=>[
                     'name'=>'Шаблон',
-                    'type'=>BlockVar::TYPE_HIDDEN,
-                    'value'=>'partners'
+                    'type'=>BlockVar::TYPE_SELECT,
+                    'values'=>[
+                        'partners'=>'Как блок на странице',
+                        'partners_full'=>'На всю страницу'
+                    ]
                 ],
             ]
         ],
