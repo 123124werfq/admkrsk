@@ -281,8 +281,10 @@ class Block extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_page', 'state', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
+            [['id_page', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
+            [['state'], 'value' => 1],
             [['id_page', 'state', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+
             [['code','type'], 'string'],
             [['widget'], 'string', 'max' => 255],
         ];
@@ -298,7 +300,7 @@ class Block extends \yii\db\ActiveRecord
             'id_page' => 'Раздел',
             'widget' => 'Виджет',
             'code' => 'Код',
-            'state' => 'Статус',
+            'state' => 'Активен',
             'type'=>'Тип блока',
             'ord' => 'Позиция',
             'created_at' => 'Created At',
