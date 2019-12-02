@@ -99,7 +99,7 @@ class EventController extends \yii\web\Controller
             if (!empty($data['category']))
                 $categories[$data['category']] = $data['category'];
 
-            $date = (is_numeric($data['date']))?strftime('%e %B (%A)',(int)$date)):$data['date'];
+            $date = (is_numeric($data['date']))?strftime('%e %B (%A)',(int)$date):$data['date'];
             $program[(!empty($data['group']))?$data['group']:$date][$key] = $data;
         }
 
