@@ -58,7 +58,7 @@ class EventController extends \yii\web\Controller
                 $date_end = mktime(24,60,60,date('m',$date_end),date('d',$date_end),date('Y',$date_end));
 
                 $collection->whereByAlias(['>','date',$date_begin]);
-                //$collection->whereByAlias(['<','date',$date_end]);
+                $collection->whereByAlias(['<','date',$date_end]);
             }
         }
 
@@ -86,7 +86,7 @@ class EventController extends \yii\web\Controller
         $categories = [0=>'Любая категория'];
 
         foreach ($collection as $key => $data)
-        {   
+        {
             if (!isset($data['date']))
                 return false;
 
@@ -100,7 +100,7 @@ class EventController extends \yii\web\Controller
                 $categories[$data['category']] = $data['category'];
 
             $date = (is_string($data['date']))?strtotime($data['date']):$data['date'];
-            
+
             $program[$date][$key] = $data;
         }
 
