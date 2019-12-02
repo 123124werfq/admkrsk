@@ -99,7 +99,7 @@ if(!Yii::$app->user->isGuest){
                     <span class="material-icons gosbar-icon" id="gosbar-search-go">search</span>
                     <span class="gosbar_btn-text">Поиск по сайту</span>
                 </a>
-                <a href="#" class="gosbar_btn"><span class="material-icons gosbar-icon">g_translate</span><span class="gosbar_btn-text">English</span></a>
+                <!--a href="#" class="gosbar_btn"><span class="material-icons gosbar-icon">g_translate</span><span class="gosbar_btn-text">English</span></a-->
                 <a href="#" class="gosbar_btn link-accessability">
                     <span class="material-icons gosbar-icon">visibility</span>
                     <span class="gosbar_btn-text">Версия для слабовидящих</span>

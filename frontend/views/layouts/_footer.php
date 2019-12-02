@@ -23,7 +23,7 @@
                     <p class="footer-contacts_text"><a href="tel:+73912119876">+7 (391) 211-98-76</a></p>
                 </div>
                 <div class="footer-address">
-                    <p class="footer-contacts_label">Телефон/факс:</p>
+                    <p class="footer-contacts_label">Адрес:</p>
                     <p class="footer-contacts_text">660049, г. Красноярск, ул. Карла Маркса, 93</p>
                 </div>
                 <?= frontend\widgets\MenuWidget::widget(['alias'=>'footer_social_menu','template'=>'footer_social_menu']); ?>
