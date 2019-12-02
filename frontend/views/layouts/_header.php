@@ -160,7 +160,7 @@ if(!Yii::$app->user->isGuest){
         <div class="container">
             <?php
             if (strpos(Yii::$app->request->url, 'new-year2019') || strpos(Yii::$app->request->hostInfo, 'newyear.'))
-                echo \frontend\widgets\MenuWidget::widget(['alias'=>'subheader_menu','template'=>'subheader_menu_ny']);
+                echo \frontend\widgets\MenuWidget::widget(['alias'=>'subheader_menu_тн','template'=>'subheader_menu']);
             else
                 echo \frontend\widgets\MenuWidget::widget(['alias'=>'subheader_menu','template'=>'subheader_menu']);
             ?>
