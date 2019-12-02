@@ -4,7 +4,6 @@
 		<div class="row">
 		    <div class="col-2-third">
 		        <h1>Городские проекты и события</h1>
-
 		        <div class="events-list">
 	            <?php foreach ($projects as $key => $data) {?>
 	                <div class="events-item">

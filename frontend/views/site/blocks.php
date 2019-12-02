@@ -1,5 +1,5 @@
 <?php
-foreach ($page->blocks as $key => $block)
+foreach ($page->getBlocks()->where(['state'=>1])->all() as $key => $block)
 {
 	$widget = $block->getWidget();
 

@@ -174,13 +174,16 @@ class AddressController extends Controller
     public function actionDistrict($id_city=null, $search = '')
     {
         $query = District::find()
-            ->select(['map_district.id_district','map_district.name'])
+            ->select([District::tableName().'.id_district',District::tableName().'.name'])
             ->joinWith('houses', false);
 
         if (!empty($id_city))
             $query->filterWhere([House::tableName() . '.id_city' => $id_city]);
 
-        $query->groupBy(District::tableName() . '.id_district')
+        $query->groupBy([
+            District::tableName().'.id_district',
+            District::tableName().'.name'
+        ])
             ->orderBy([District::tableName() . '.name' => SORT_ASC])
             ->limit(20)
             ->asArray();

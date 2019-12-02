@@ -80,7 +80,7 @@ else
             <div class="row">
                 <div class="col-sm-5">
                     <div class="form-group">
-                        <?=Html::dropDownList("ViewFilters[$key][id_column]",$data['id_column'],$columns,['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_id_column'.$key]);?>
+                        <?=Html::dropDownList("ViewFilters[$key][id_column]",$data['id_column'],$columns,['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_id_column'.$key,'prompt'=>'Выберите колонку']);?>
                     </div>
                 </div>
                 <div class="col-sm-1">
@@ -90,7 +90,7 @@ else
                 </div>
                 <div class="col-sm-5">
                     <div class="form-group">
-                        <?=Html::textInput("ViewFilters[$key][value]",$data['value'],['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_value_'.$key,'placeholder'=>'Введите название']);?>
+                        <?=Html::textInput("ViewFilters[$key][value]",$data['value'],['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_value_'.$key,'placeholder'=>'Введите значение']);?>
                     </div>
                 </div>
                 <div class="col-sm-1">

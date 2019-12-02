@@ -157,7 +157,7 @@ class CollectionRecordController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
-                'pageSize' => 10,
+                'pageSize' => 30,
             ],
             'sort' => [
                 'attributes'=>$sortAttributes,
@@ -243,9 +243,9 @@ class CollectionRecordController extends Controller
         if ($form->load(Yii::$app->request->post()) && $form->validate())
         {
             $prepare = $form->prepareData(true);
-            
+
             $model->data = $form->prepareData(true);
-            
+
             if ($model->save())
                 return $this->redirect(['index', 'id' => $model->id_collection]);
         }

@@ -94,7 +94,7 @@ class News extends \yii\db\ActiveRecord
             'content' => 'Содержание',
             'date_publish' => 'Дата публикации',
             'date_unpublish' => 'Снять с публикации',
-            'state' => 'Статус',
+            'state' => 'Активен',
             'pages' => 'Опубликовать в',
             'tagNames'=>'Теги',
             'main' => 'На главную',
@@ -198,7 +198,7 @@ class News extends \yii\db\ActiveRecord
     public function getContact()
     {
         return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_record_contact']);
-    }    
+    }
 
     /**
      * @return ActiveQuery

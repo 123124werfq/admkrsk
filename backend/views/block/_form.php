@@ -16,7 +16,8 @@ use kartik\select2\Select2;
     	//'fieldsTemplates'=>'{input}{error}'
     ]); ?>
 
-    <?=$form->field($model, 'code')->textarea(['rows' => 6,'class'=>'redactor']);?>
+    <?=$form->field($model, 'state')->checkBox();?>
+    <?=''//$form->field($model, 'code')->textarea(['rows' => 6,'class'=>'redactor']);?>
 
     <?php
     if (!empty($model->blocks[$model->type]['vars']))
