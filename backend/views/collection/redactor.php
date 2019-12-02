@@ -58,6 +58,8 @@ else
 {
     $columns = ArrayHelper::map($model->parent->columns, 'id_column', 'name');
 ?>
+    <?=$form->field($model, 'template_view')->dropDownList(['table'=>'Таблицей','template'=>'Шаблоном'])->hint('Если не заполнен шаблон вывода элемента, то выведятся все данные из колонок отображения в виде списка');?>
+
     <?=$form->field($model, 'id_parent_collection')->hiddenInput();?>
 
     <h3>Условия</h3>
@@ -139,31 +141,28 @@ else
         <button class="btn btn-primary" id="submit-redactor">Вставить</button>
     </center>
     <br/><br/><br/>
-
+s
     <script>
-    document.getElementById('submit-redactor').addEventListener('click', function (event) {
-        $form = $("#collection-redactor");
-
-        var origin = '<?=$_SERVER["HTTP_REFERER"]?>';
-
-        $.ajax({
-            url: $form.attr('action'),
-            type: 'post',
-            dataType:'json',
-            data: $form.serialize()+'&json=1',
-            success: function(data)
-            {
-                window.parent.postMessage({
-                    mceAction: 'execCommand',
-                    cmd: 'iframeCommand',
-                    value: data
-                }, origin);
-            }
-        });
-
-        event.preventDefault();
-   });
-</script>
+        document.getElementById('submit-redactor').addEventListener('click', function (event) {
+            $form = $("#collection-redactor");
+            var origin = '<?=$_SERVER["HTTP_REFERER"]?>';
+            $.ajax({
+                url: $form.attr('action'),
+                type: 'post',
+                dataType:'json',
+                data: $form.serialize()+'&json=1',
+                success: function(data)
+                {
+                    window.parent.postMessage({
+                        mceAction: 'execCommand',
+                        cmd: 'iframeCommand',
+                        value: data
+                    }, origin);
+                }
+            });
+            event.preventDefault();
+       });
+    </script>
 <?php }?>
 
 

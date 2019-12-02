@@ -15,11 +15,11 @@
                 <?=$event['time']??''?>
             </div>
             <div class="program_col-main order-xs-1">
-                <p class="program_desc hidden" id="event-1-1">
+                <p class="program_desc hidden" id="event-<?=$key?>">
                     <?=$event['description']??''?>
                 </p>
                 <?php if (!empty($event['description'])){?>
-                    <a href="#" class="program_more js-show" data-target="#event-1-1">Читать подробнее</a>
+                    <a href="#" class="program_more js-show" data-target="#event-<?=$key?>">Читать подробнее</a>
                 <?php }?>
             </div>
             <!--div class="program_col-main order-xs-0">
