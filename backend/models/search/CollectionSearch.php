@@ -51,9 +51,7 @@ class CollectionSearch extends Collection
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'defaultOrder' => [
-                'date' => SORT_ASC
-            ]
+            'sort' => ['defaultOrder'=>'id_collection DESC']
         ]);
 
         $this->load($params);
