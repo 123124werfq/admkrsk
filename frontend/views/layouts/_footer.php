@@ -7,13 +7,13 @@
                     <h3 class="footer-title_header">Красноярск</h3>
                     <p class="footer-title_text">Администрация города</p>
                 </div>
-                <a href="#" class="btn btn__transparent">Обратная связь</a>
+                <a href="https://www.admkrsk.ru/reception/Pages/request.aspx" class="btn btn__transparent">Обратная связь</a>
             </div>
             <?php
                 if (strpos(Yii::$app->request->url, 'new-year2019') || strpos(Yii::$app->request->hostInfo, 'newyear.'))
                     {   }// nY-menu
                 else
-                    frontend\widgets\MenuWidget::widget(['alias'=>'footer_menu','template'=>'footer_menu']);
+                    echo frontend\widgets\MenuWidget::widget(['alias'=>'footer_menu','template'=>'footer_menu']);
             ?>
             <hr class="footer-hr">
 
