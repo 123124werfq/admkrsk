@@ -351,6 +351,7 @@ class CollectionController extends Controller
             {
                 $json = $this->saveView($model,true);
                 $json['id_collection'] = $model->id_parent_collection;
+                $json['template'] = $model->template_view;
 
                 return json_encode($json);
             }

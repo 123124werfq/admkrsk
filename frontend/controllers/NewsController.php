@@ -25,9 +25,28 @@ class NewsController extends \yii\web\Controller
             $rubrics->andWhere(['id_page'=>$page->id_page]);
         }
 
-        $id_rub = Yii::$app->request->get('id_rub');
+        $id_rub = (int)Yii::$app->request->get('id_rub');
+        $date = Yii::$app->request->get('date');
 
         $rubrics = $rubrics->groupBy('id_rub')->column();
+
+        // фильтр даты
+        if (!empty($date))
+        {
+            $dates = explode('-', $date);
+
+            if (count($dates)==2)
+            {
+                $date_begin = strtotime(trim($dates[0]));
+                $date_begin = mktime(0,0,0,date('m',$date_begin),date('d',$date_begin),date('Y',$date_begin));
+
+                $date_end = strtotime(trim($dates[1]));
+                $date_end = mktime(24,59,59,date('m',$date_end),date('d',$date_end),date('Y',$date_end));
+
+                $news->andWhere(['>=','date_publish',$date_begin]);
+                $news->andWhere(['<=','date_publish',$date_end]);
+            }
+        }
 
         // фильтр рубрики
         if (!empty($id_rub))

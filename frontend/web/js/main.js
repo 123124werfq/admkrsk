@@ -1112,7 +1112,7 @@
     });
 
     $body.on('click', '.form-control-reset', function() {
-        $(this).prev('input').val('').removeClass('datepicker__filled');
+        $(this).prev('input').val('').removeClass('datepicker__filled').change();
     });
     // /DATEPICKER
 

@@ -48,6 +48,14 @@ function addInput(block)
 
 $(document).ready(function() {
 
+    $("#news-rubric, #news-date").change(function(){
+        $("#news-filter").submit();
+    });
+
+    $("#news-date").on('datepicker-change', function(event,obj) {
+        $("#news-filter").submit();
+    });
+
     $("reestr-filters select").change(function(){
 
     });
@@ -88,10 +96,10 @@ $(document).ready(function() {
             {
                 if (source.is(':checked'))
                     var val = source.val();
-                else 
+                else
                     var val = null
             }
-            else 
+            else
                 var val = source.val();
 
             if (values.indexOf(val)<0)
