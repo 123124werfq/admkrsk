@@ -282,7 +282,7 @@ class Block extends \yii\db\ActiveRecord
     {
         return [
             [['id_page', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
-            [['state'], 'value' => 1],
+            [['state'], 'default', 'value' => 1],
             [['id_page', 'state', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
 
             [['code','type'], 'string'],
