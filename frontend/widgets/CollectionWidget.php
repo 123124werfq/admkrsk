@@ -21,10 +21,11 @@ class CollectionWidget extends \yii\base\Widget
             if (!empty($this->attributes['id']))
                 $this->id_collection = (int)$this->attributes['id'];
 
+            if (!empty($this->attributes['template']))
+                $this->template = $this->attributes['template'];
+
             if (!empty($this->attributes['columns']))
-            {
                 $this->columns = json_decode(str_replace("&quot;", '"', $this->attributes['columns']),true);
-            }
         }
 
     	$model = Collection::find()->where(['id_collection'=>$this->id_collection])->one();
@@ -33,6 +34,8 @@ class CollectionWidget extends \yii\base\Widget
             return '';
 
         $query = $model->getDataQueryByOptions($this->columns)->limit(30);
+        $query->keyAsAlias = true;
+
         $columns = $query->columns;
 
         return $this->render('collection/'.$this->template,[

@@ -350,6 +350,7 @@ class CollectionController extends Controller
             if (!empty($_POST['json']))
             {
                 $json = $this->saveView($model,true);
+
                 $json['id_collection'] = $model->id_parent_collection;
                 $json['template'] = $model->template_view;
 
@@ -571,6 +572,8 @@ class CollectionController extends Controller
                                 {
                                     $column = new CollectionColumn;
                                     $column->name = (!empty($value))?$value:'Колонка '.$tdkey;
+                                    $column->type = CollectionColumn::TYPE_INPUT;
+                                    $column->alias = \common\components\helper\Helper::transFileName($column->name);
                                     $column->id_collection = $collection->id_collection;
 
                                     if ($column->save())

@@ -62,6 +62,7 @@ return [
             ],
             'rules' => [
                 'search/address'=>'search/address',
+                'collection'=>'collection/view',
                 'site/test'=>'site/test',
                 'address/region'=>'address/region',
                 'form/view/<id>'=>'form/view',

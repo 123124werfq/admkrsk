@@ -44,7 +44,7 @@
                     $collection.attr('id',value.id_collection);
                     $collection.text('Список #'+value.id_collection);
                     */
-                    editor.insertContent('<collection data-columns=\''+JSON.stringify(value)+'\' data-id="'+value.id_collection+'">Список #'+value.id_collection+'.</collection>');
+                    editor.insertContent('<collection data-columns=\''+JSON.stringify(value)+'\' data-id="'+value.id_collection+'" data-template="'+value.template+'">Список #'+value.id_collection+'.</collection>');
                 }
 
                 $(".tox-button--secondary").click();
