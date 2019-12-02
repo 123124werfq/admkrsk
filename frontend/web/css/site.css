@@ -29,6 +29,8 @@ margin-bottom: 36px;
     margin-right: 8px;
 }
 
+.collection-element {border-bottom: 1px solid #dde1e6;}
+
 ul.pagination , ul.pagination li {list-style-type: none;}
 .content ul.pagination li::before {display: none!important;}
 ul.pagination li {display: inline-block;}
