@@ -88,7 +88,7 @@ class EventController extends \yii\web\Controller
         foreach ($collection as $key => $data)
         {
             if (!isset($data['date']))
-                return false;
+                $data['date'] = 0;
 
             if (!empty($data['district']) && isset($allDistricts[$data['district']]))
                 $districts[$data['district']] = $allDistricts[$data['district']]->name;
