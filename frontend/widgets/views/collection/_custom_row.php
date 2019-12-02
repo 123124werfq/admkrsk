@@ -1,6 +1,7 @@
 <?php
 	preg_match_all ("/{(.+?)}/is", $template, $matches);
 
+	print_r($row);
 	if (!empty($matches[1]))
 	{
 		foreach ($matches[1] as $key => $alias)
