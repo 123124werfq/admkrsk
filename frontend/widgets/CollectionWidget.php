@@ -3,6 +3,7 @@ namespace frontend\widgets;
 
 use Yii;
 use common\models\Collection;
+use yii\data\Pagination;
 
 class CollectionWidget extends \yii\base\Widget
 {
@@ -33,13 +34,23 @@ class CollectionWidget extends \yii\base\Widget
         if (empty($model) || empty($this->columns))
             return '';
 
-        $query = $model->getDataQueryByOptions($this->columns)->limit(30);
+        $page = (int)Yii::$app->request->get('page',0);
+
+        $query = $model->getDataQueryByOptions($this->columns);
+        $pagination = new Pagination([
+            'totalCount' => $query->count(),
+            'route'=>Yii::$app->request->url
+        ]);
+
+        $query->offset($page*$pagination->limit)->limit($pagination->limit);
         $query->keyAsAlias = true;
 
         $columns = $query->columns;
 
         return $this->render('collection/'.$this->template,[
         	'model'=>$model,
+            'page'=>$page,
+            'pagination'=>$pagination,
             'columns'=>$columns,
             'allrows'=>$query->getArray(),
         ]);

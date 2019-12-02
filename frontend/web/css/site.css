@@ -29,6 +29,11 @@ margin-bottom: 36px;
     margin-right: 8px;
 }
 
+ul.pagination , ul.pagination li {list-style-type: none;}
+.content ul.pagination li::before {display: none!important;}
+ul.pagination li {display: inline-block;}
+ul.pagination {text-align: center;}
+
 .footer-socials_item {opacity: 0.6;}
 .footer-socials_item:hover {opacity: 1;}
 

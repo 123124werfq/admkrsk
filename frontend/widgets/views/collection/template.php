@@ -16,4 +16,8 @@
 				'template'=>$model->template_element,
 			]);
 	}
+
+	echo \yii\widgets\LinkPager::widget([
+	    'pagination' => $pagination,
+	]);
 ?>
