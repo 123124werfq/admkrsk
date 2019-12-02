@@ -35,7 +35,7 @@ class CollectionWidget extends \yii\base\Widget
         $query = $model->getDataQueryByOptions($this->columns)->limit(30);
         $columns = $query->columns;
 
-        return $this->render($this->template,[
+        return $this->render('collection/'.$this->template,[
         	'model'=>$model,
             'columns'=>$columns,
             'allrows'=>$query->getArray(),
