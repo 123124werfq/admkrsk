@@ -13,21 +13,21 @@
                                 <button class="form-control-reset material-icons" type="button">clear</button>
                             </div>
                         </div>
-                        <?php if (!empty($districts)){?>
+                        <?php if (!empty($districts) && count($districts)>1){?>
                         <div class="btn-group_item">
                             <div class="custom-select custom-select__placeholder custom-select__inline ui-front">
                                 <?=Html::dropDownList('district','',$districts,['prompt'=>'Район'])?>
                             </div>
                         </div>
                         <?php }?>
-                        <?php if (!empty($places)){?>
+                        <?php if (!empty($places) && count($places)>1){?>
                         <div class="btn-group_item">
                             <div class="custom-select custom-select__placeholder custom-select__inline ui-front">
                                 <?=Html::dropDownList('place','',$places,['prompt'=>'Место'])?>
                             </div>
                         </div>
                         <?php }?>
-                        <?php if (!empty($categories)){?>
+                        <?php if (!empty($categories) && count($categories)>1){?>
                         <div class="btn-group_item">
                             <div class="custom-select custom-select__placeholder custom-select__inline ui-front">
                                 <?=Html::dropDownList('category','',$categories,['prompt'=>'Категория мероприятия'])?>
