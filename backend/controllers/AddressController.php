@@ -180,7 +180,10 @@ class AddressController extends Controller
         if (!empty($id_city))
             $query->filterWhere([House::tableName() . '.id_city' => $id_city]);
 
-        $query->groupBy(District::tableName() . '.id_district', District::tableName().'.name')
+        $query->groupBy([
+            District::tableName().'.id_district',
+            District::tableName().'.name'
+        ])
             ->orderBy([District::tableName() . '.name' => SORT_ASC])
             ->limit(20)
             ->asArray();
