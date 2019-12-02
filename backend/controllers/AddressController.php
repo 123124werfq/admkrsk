@@ -174,7 +174,7 @@ class AddressController extends Controller
     public function actionDistrict($id_city=null, $search = '')
     {
         $query = District::find()
-            ->select([District::tableName()'.id_district',District::tableName().'.name'])
+            ->select([District::tableName().'.id_district',District::tableName().'.name'])
             ->joinWith('houses', false);
 
         if (!empty($id_city))
