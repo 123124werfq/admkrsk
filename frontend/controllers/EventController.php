@@ -99,9 +99,8 @@ class EventController extends \yii\web\Controller
             if (!empty($data['category']))
                 $categories[$data['category']] = $data['category'];
 
-            $date = (is_string($data['date']))?strtotime($data['date']):$data['date'];
-
-            $program[$date][$key] = $data;
+            $date = (is_numeric($data['date']))?strftime('%e %B (%A)',(int)$date)):$data['date'];
+            $program[(!empty($data['group']))?$data['group']:$date][$key] = $data;
         }
 
         if (Yii::$app->request->isAjax)

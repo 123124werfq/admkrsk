@@ -154,7 +154,7 @@ class Block extends \yii\db\ActiveRecord
                     'type'=>BlockVar::TYPE_MEDIA,
                 ],
                 'cover_mobile'=>[
-                    'name'=>'Обложка',
+                    'name'=>'Обложка мобильная',
                     'type'=>BlockVar::TYPE_MEDIA,
                 ],
                 'content'=>[

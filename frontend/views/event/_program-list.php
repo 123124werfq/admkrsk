@@ -1,6 +1,6 @@
-<?php foreach ($program as $date => $day) {?>
+<?php foreach ($program as $group => $day) {?>
 <div class="program">
-    <h2 class="program_date"><?=strftime('%e %B (%A)',(int)$date) ?></h2>
+    <h2 class="program_date"><?=$group?></h2>
     <!--h3 class="program_event-title">«Город для детей»</h3-->
     <?php foreach ($day as $key => $event) {?>
     <div class="program-event">
