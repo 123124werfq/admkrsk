@@ -70,6 +70,9 @@ $contacts = Collection::getArrayByAlias("press_people");
 
                 <?= $form->field($model, 'title')->textarea(['maxlength' => 255]) ?>
                 <?= $form->field($model, 'description')->textarea(['maxlength' => 255]) ?>
+
+                <?= $form->field($model, 'url')->textInput(['maxlength' => 255])->hint('Заполняется если требуется сделать новость-ссылку')?>
+
                 <?= $form->field($model, 'content')->textarea(['rows' => 6,'class'=>'redactor']) ?>
 
                 <div class="row">

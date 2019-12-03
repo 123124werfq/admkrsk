@@ -51,6 +51,7 @@ class FormSearch extends Form
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=> ['defaultOrder' => ['id_form'=>SORT_DESC]]
         ]);
 
         $this->load($params);
