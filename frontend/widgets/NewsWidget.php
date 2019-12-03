@@ -22,14 +22,27 @@ class NewsWidget extends \yii\base\Widget
             if (empty($page))
                 return false;
 
-            $news = News::find()->where(['state'=>1,'id_page'=>$page->id_page])
-                        ->orderBy('date_publish DESC')->limit(7)->all();
+            $wide = News::find()->where([
+                        'main'=>1,
+                        'state'=>1,
+                        'id_page'=>$page->id_page,
+                        'highlight'=>1,
+                    ])->one();
+
+            if (!empty($wide))
+                $news = News::find()->where(['state'=>1,'id_page'=>$page->id_page])
+                        ->andWhere('date_publish < '.time())
+                        ->orderBy('date_publish DESC')->limit(6)->all();
+            else
+                $news = News::find()->where(['state'=>1,'id_page'=>$page->id_page])
+                        ->orderBy('date_publish DESC')->limit(9)->all();
 
             if (empty($news))
                 return false;
 
             return $this->render('news/news_single',[
                 'blockVars'=>$blockVars,
+                'wide'=>$wide,
                 'news'=>$news,
                 'page'=>$page,
             ]);
@@ -52,7 +65,6 @@ class NewsWidget extends \yii\base\Widget
                 $tabs[$link->id_link]['news'] = News::find()
                                                     ->where(['main'=>1,'state'=>1,'id_page'=>$link->id_page])
                                                     ->andWhere('date_unpublish > '.time().' OR date_unpublish IS NULL');
-                                                    
 
                 $tabs[$link->id_link]['widenews'] = News::find()
                         ->where([

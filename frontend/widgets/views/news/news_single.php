@@ -1,6 +1,5 @@
 <?php
     use yii\helpers\Html;
-    $wide = array_shift($news);
 ?>
 <div class="press <?=(!empty($blockVars['background']))?$blockVars['background']->value:''?>">
     <div class="container">
@@ -14,7 +13,7 @@
                 <div class="news-list">
                     <div class="news-item news-item__wide">
                         <div class="news-item_container">
-                            <?php if (!empty($wide->id_media)){?>
+                            <?php if (!empty($wide)){?>
                             <div class="news-item_picture">
                                 <a href="<?=$wide->getUrl()?>" class="news-item_img">
                                     <img class="img-responsive" src="<?=$wide->makeThumb(['w'=>768,'h'=>384])?>" alt="<?=Html::encode($wide->title)?>">
@@ -35,9 +34,12 @@
                             </div>
                         </div>
                     </div>
-                    <?php foreach ($news as $nkey => $data){
-                        echo $this->render('_news',['data'=>$data,'page'=>$page]);
-                    }?>
+                    <?php foreach ($news as $nkey => $data)
+                        echo $this->render('_news',[
+                            'data'=>$data,
+                            'page'=>$page]
+                        );
+                    ?>
                 </div>
                 <a class="press-more <?=(!empty($blockVars['button_color']))?$blockVars['button_color']->value:''?> btn btn__block" href="<?=$page->getUrl()?>"><?=(!empty($blockVars['button_text']))?$blockVars['button_text']->value:'Все новости'?></a>
             </div>
