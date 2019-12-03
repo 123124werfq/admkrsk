@@ -61,6 +61,7 @@ return [
                 'class' => 'yii\web\UrlNormalizer',
             ],
             'rules' => [
+                'odata.svc<query:(.*)>'=>'o-data/index',
                 'search/address'=>'search/address',
                 'collection'=>'collection/view',
                 'site/test'=>'site/test',
