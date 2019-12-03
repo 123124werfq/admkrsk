@@ -84,13 +84,11 @@ if(!Yii::$app->user->isGuest){
 <section class="gosbar">
     <div class="container">
         <div class="gosbar__wrapper">
-            <a href="#" class="gosbar_btn popup-block-link">
-                <!--
+            <a href="http://admkrsk.ru" class="gosbar_btn popup-block-link">
                 <span class="gosbar-icon">
                     <svg class="gocbar-svgicon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="#list_icon_svg"/><defs><path id="list_icon_svg" fill-rule="evenodd" d="M0 4h4V0H0v4zm6 12h4v-4H6v4zm-2 0H0v-4h4v4zm-4-6h4V6H0v4zm10 0H6V6h4v4zm2-10v4h4V0h-4zm-2 4H6V0h4v4zm2 6h4V6h-4v4zm4 6h-4v-4h4v4z"/></defs></svg>
                 </span>
-                <span class="gosbar_btn-text">Другие сайты государства</span>
-                -->
+                <span class="gosbar_btn-text">Сайт администрации города</span>
             </a>
 
             <div class="gosbar__right-block">
@@ -105,6 +103,9 @@ if(!Yii::$app->user->isGuest){
                     <span class="gosbar_btn-text">Версия для слабовидящих</span>
                 </a>
 
+                <?php
+                if (!strpos(Yii::$app->request->url, 'new-year2019') && !strpos(Yii::$app->request->hostInfo, 'newyear.')){
+                  ?>
                 <div class="dropdown dropdown-flex">
                     <span class="gosbar_btn dropdown-toggle">
                         <span class="material-icons gosbar-icon">account_circle</span>
@@ -123,6 +124,8 @@ if(!Yii::$app->user->isGuest){
                         <?php endif; ?>
                     </div>
                 </div>
+                    <?php
+                } ?>
                 <!-- Если есть уведомления добавить класс gosbar-icon__active -->
                 <!--a href="#" class="gosbar_btn"><span class="material-icons gosbar-icon gosbar-icon__active">notifications</span>745</a-->
             </div>
