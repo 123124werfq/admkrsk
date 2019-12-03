@@ -33,8 +33,9 @@
 		if (!empty($menu))
 			foreach ($menu->getLinks()->where(['state'=>1])->all() as $key => $link)
 			{
+				$url = $link->getUrl();
 ?>
-			<li><a href="<?=$link->getUrl()?>"><?=$link->label?></a></li>
+			<li <?=$url==Yii::$app->request->url?'class="selected active"':''?>><a href="<?=$url?>"><?=$link->label?></a></li>
 <?php
 		 	}
 ?>
