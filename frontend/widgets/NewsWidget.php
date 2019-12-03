@@ -23,7 +23,6 @@ class NewsWidget extends \yii\base\Widget
                 return false;
 
             $wide = News::find()->where([
-                        'main'=>1,
                         'state'=>1,
                         'id_page'=>$page->id_page,
                         'highlight'=>1,
