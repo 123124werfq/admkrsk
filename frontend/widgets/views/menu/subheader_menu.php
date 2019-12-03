@@ -2,7 +2,9 @@
     <!-- элементам с подменю добавлять класс sitemap_menu-item__submenu -->
     <?php foreach ($menu->getLinks()->where('id_parent IS NULL')->all() as $key => $link) {?>
     <li class="sitemap_menu-item <?=!empty($link->childs)?'sitemap_menu-item__submenu':''?>">
-        <a href="<?=$link->getUrl()?>" class="sitemap_header"><span class="sitemap_header-text"><?=$link->label?></span></a>
+        <span class="sitemap_header-wrap">
+            <a href="<?=$link->getUrl()?>" class="sitemap_header"><span class="sitemap_header-text"><?=$link->label?></span></a>
+        </span>
         <?php if (!empty($link->childs)){?>
         <ul class="sitemap_submenu">
             <?php foreach ($link->childs as $key => $child) {?>
