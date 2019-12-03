@@ -31,8 +31,8 @@ class NewsWidget extends \yii\base\Widget
             if (!empty($wide))
                 $news = News::find()
                         ->where(['state'=>1,'id_page'=>$page->id_page])
-                        ->andWhere('date_publish < '.time())
-                        ->andWhere('id_page <> '.$wide->id_page)
+                        //->andWhere('date_publish < '.time())
+                        ->andWhere('id_news <> '.$wide->id_news)
                         ->orderBy('date_publish DESC')->limit(6)->all();
             else
                 $news = News::find()->where(['state'=>1,'id_page'=>$page->id_page])
