@@ -9,6 +9,7 @@ class GalleryWidget extends \yii\base\Widget
     public $attributes = [];
     public $id_gallery;
     public $limit;
+    public $page;
 
     public function run()
     {

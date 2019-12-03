@@ -43,7 +43,7 @@ function parseAttributesFromTag($tag){
                                 {
                                     $class = 'frontend\widgets\\'.ucwords($matches[1][$key]).'Widget';
 
-                                    $page->content = str_replace($match, $class::widget(['attributes'=>$attributes]), $page->content);
+                                    $page->content = str_replace($match, $class::widget(['attributes'=>$attributes,'page'=>$page]), $page->content);
                                 }
                             }
 

@@ -19,5 +19,6 @@
 
 	echo \yii\widgets\LinkPager::widget([
 	    'pagination' => $pagination,
+	    'pageVar' => 'p',
 	]);
 ?>

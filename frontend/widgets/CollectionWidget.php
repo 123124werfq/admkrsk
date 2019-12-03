@@ -12,8 +12,8 @@ class CollectionWidget extends \yii\base\Widget
     public $id_collection;
     public $columns = [];
     public $limit = 20;
-
     public $template = 'table';
+    public $page;
 
     public function run()
     {
@@ -52,6 +52,7 @@ class CollectionWidget extends \yii\base\Widget
             'pagination'=>$pagination,
             'columns'=>$columns,
             'allrows'=>$query->getArray(),
+            'page'=>$page,
         ]);
     }
 }

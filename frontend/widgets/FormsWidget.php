@@ -17,6 +17,7 @@ class FormsWidget extends \yii\base\Widget
     public $action = null; // куда направляеть форму, если пусто то пойдут в унивартсальный контролер
     public $data = null; // данные
     public $collectionRecord = null; // данные
+    public $page;
 
     public function run()
     {
