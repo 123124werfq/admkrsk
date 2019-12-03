@@ -82,7 +82,7 @@ class FormDynamic extends DynamicModel
                         $data[$index] = (float)$this->$attribute;
                         break;
                     case CollectionColumn::TYPE_INPUT:
-                        $data[$index] = (string)$this->$attribute;
+                        $data[$index] = trim((string)$this->$attribute);
                         break;
                     case CollectionColumn::TYPE_JSON:
                         $data[$index] = json_encode($this->$attribute);
@@ -115,7 +115,11 @@ class FormDynamic extends DynamicModel
                         break;
                     default:
 
-                        $data[$index] = $this->$attribute;
+                        if (is_string($this->$attribute))
+                            $data[$index] = trim($this->$attribute);
+                        else
+                            $data[$index] = $this->$attribute;
+
                         break;
                 }
             }

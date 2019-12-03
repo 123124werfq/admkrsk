@@ -7,18 +7,18 @@
 		{
 			if ($alias=='link')
 				continue;
-			
+
 			if (isset($row[$alias]))
 				$replate = $row[$alias];
-			else 
+			else
 				$replate = '';
 
 			$template = str_replace('{'.$alias.'}', $replate, $template);
 		}
 
-		$template = str_replace('{link}', '/collection?id='.$id_record,$template);
+		$template = str_replace('{link}', '/collection?id='.$id_record.'&id_page='.$id_page,$template);
 	}
 ?>
 <div class="collection-element">
-<?=$template?>
+	<?=$template?>
 </div>

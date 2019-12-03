@@ -13,12 +13,12 @@
 				'columns'=>$columns,
 				'row'=>$row,
 				'id_record'=>$id_record,
+				'id_page'=>$page->id_page,
 				'template'=>$model->template_element,
 			]);
 	}
 
 	echo \yii\widgets\LinkPager::widget([
 	    'pagination' => $pagination,
-	    'pageVar' => 'p',
 	]);
 ?>

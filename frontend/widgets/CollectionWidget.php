@@ -37,9 +37,11 @@ class CollectionWidget extends \yii\base\Widget
         $p = (int)Yii::$app->request->get('p',0);
 
         $query = $model->getDataQueryByOptions($this->columns);
+
         $pagination = new Pagination([
             'totalCount' => $query->count(),
-            'route'=>Yii::$app->request->url
+            'route'=>str_replace('?p='.$p,'',Yii::$app->request->url),
+            'pageParam'=>'p'
         ]);
 
         $query->offset($p*$pagination->limit)->limit($pagination->limit);
@@ -52,7 +54,7 @@ class CollectionWidget extends \yii\base\Widget
             'pagination'=>$pagination,
             'columns'=>$columns,
             'allrows'=>$query->getArray(),
-            'page'=>$page,
+            'page'=>$this->page,
         ]);
     }
 }

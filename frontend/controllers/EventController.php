@@ -124,6 +124,9 @@ class EventController extends \yii\web\Controller
 
         $page = Page::findOne($id_page);
 
+        if (empty($page))
+            throw new NotFoundHttpException('');
+
         return $this->render('program',[
             'page'=>$page,
             'program'=>$program,

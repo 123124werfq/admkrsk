@@ -15,7 +15,7 @@
                     <?=(!empty($blockVars['content']))?$blockVars['content']->value:''?>
                 </p>
                 <?php if (!empty($blockVars['programm'])){?>
-                <a href="/event/program?id=<?=$blockVars['programm']->value?>&id_page=<?=$page->id_page?>" class="btn btn__secondary">Посмотреть программу</a>
+                <a href="/event/program?id=<?=$blockVars['programm']->value?>&id_page=<?=$blockVars['id_page']->value??$page->id_page?>" class="btn btn__secondary">Посмотреть программу</a>
                 <?php }?>
                 <div class="main-countdown-holder">
                     <h4><?=(!empty($blockVars['countdown_title']))?$blockVars['countdown_title']->value:''?></h4>

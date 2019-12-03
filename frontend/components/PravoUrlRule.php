@@ -5,8 +5,6 @@ namespace frontend\components;
 use yii\web\UrlRuleInterface;
 use yii\base\BaseObject;
 
-
-
 use Yii;
 
 class PravoUrlRule extends BaseObject implements UrlRuleInterface

@@ -11,7 +11,7 @@
     <div class="container">
         <div class="row">
             <div class="col-2-third">
-
+                <?=frontend\widgets\Breadcrumbs::widget(['page'=>$page])?>
             </div>
         </div>
         <div class="row">
@@ -29,14 +29,13 @@
                                 else 
                                     $template = str_replace('{'.$alias.'}', '', $template);
                             }
-
-                            $template = str_replace('{link}', '/collection?id='.$id_record,$template);
                         }
                     ?>
                     <?=$template?>
             	</div>
             </div>
             <div class="col-third order-xs-0">
+                <?=frontend\widgets\RightMenuWidget::widget(['page'=>$page])?>
             </div>
         </div>
 
