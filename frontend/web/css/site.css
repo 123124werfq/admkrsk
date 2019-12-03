@@ -29,6 +29,8 @@ margin-bottom: 36px;
     margin-right: 8px;
 }
 
+.sidemenu > ul > li.current {display: none;}
+
 .collection-element {border-bottom: 1px solid #dde1e6;}
 
 ul.pagination , ul.pagination li {list-style-type: none;}
@@ -123,8 +125,4 @@ a[href$=".txt"]:before {background:#fff url('/img/files/txt.svg'); width:26px; h
 
 .fileupload_list:empty {
     display: none;
-}
-
-.ui-selectmenu-menu .ui-menu{
-    max-width: 90% !important;
 }

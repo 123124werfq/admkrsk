@@ -57,8 +57,7 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
             $pages[$route->controller.'/index'] = $route->page;
 
             $actions = explode(',', $route->actions);
-            $actions[] = 'collection';
-            
+
             foreach ($actions as $akey => $action)
             {
                 if ($action!='index' && !empty($action))
@@ -71,8 +70,8 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
 
         if ($route = array_search($pathInfo, $urls))
         {
-            if (strpos($route, '/collection')>0 && !empty($_GET['id']))
-                return ['collection/view',['id'=>$_GET['id'],'page'=>$pages[$route]]];
+            /*if (strpos($route, '/collection')>0 && !empty($_GET['id']))
+                return ['collection/view',['id'=>$_GET['id'],'page'=>$pages[$route]]];*/
 
             return [$route,['page'=>$pages[$route]]];
         }

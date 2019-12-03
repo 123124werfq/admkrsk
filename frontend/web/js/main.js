@@ -199,13 +199,12 @@
         $(this).addClass('active').parents('li').addClass('active');
     });
 
-    /*
+
     if ($('.sidemenu a.selected').length) {
         $('.sidemenu a.selected').last().clone().removeClass('active selected').insertBefore('.sidemenu > ul > li:first').wrap('<li class="current"></li>');
     } else {
         $('<li class="current"><a href="#">Выберите Раздел</a></li>').insertBefore('.sidemenu > ul > li:first');
     }
-    */
 
     $body.on('click', '.sidemenu .current', function(e) {
         e.preventDefault();
