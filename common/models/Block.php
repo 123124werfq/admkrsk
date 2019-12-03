@@ -173,6 +173,10 @@ class Block extends \yii\db\ActiveRecord
                     'name'=>'Программа мероприятия',
                     'type'=>BlockVar::TYPE_COLLECTION,
                 ],
+                'id_page'=>[
+                    'name'=>'Раздел для программ мероприятий',
+                    'type'=>BlockVar::TYPE_PAGE,
+                ],
             ]
         ],
         'service_search'=> [
