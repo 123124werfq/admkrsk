@@ -127,12 +127,10 @@ class CollectionRecordController extends Controller
             if ($col->type==CollectionColumn::TYPE_DATETIME)
                 $dataProviderColumns[$col->id_column]['format'] = ['date', 'php:d.m.Y H:i'];
 
-            $sortAttributes[] = [
-                $col->id_column => [
+            $sortAttributes[$col->id_column] = [
                     'asc' => [$col->id_column => SORT_ASC],
                     'desc' => [$col->id_column => SORT_DESC],
                     'default' => SORT_ASC
-                ],
             ];
         }
 

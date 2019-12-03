@@ -126,7 +126,3 @@ a[href$=".txt"]:before {background:#fff url('/img/files/txt.svg'); width:26px; h
 .fileupload_list:empty {
     display: none;
 }
-
-.ui-selectmenu-menu .ui-menu{
-    max-width: 90% !important;
-}
