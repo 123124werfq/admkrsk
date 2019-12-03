@@ -20,9 +20,18 @@ $this->params['button-block'][] = Html::a('Добавить', ['create'], ['clas
         //'filterModel' => $searchModel,
         'columns' => [
             'id_form',
-            'name',
-            'collection.name',
+            [
+                'attribute'=>'name',
+                'format'=>'html',
+                'value'=>function($model){
+                    $output = $model->name;
+                    if (!empty($model->collection))
+                        $output .='<br>'.Html::a('Открыть список', ['collection/view','id'=>$model->id_collection]);
+                    return $output;
+                }
+            ],
             'created_at:date',
+            'updated_at:date',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'contentOptions'=>['class'=>'button-column']

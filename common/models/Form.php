@@ -78,7 +78,7 @@ class Form extends \yii\db\ActiveRecord
             'url'=>'Переход на ссылку при успешном отправлении',
             'created_at' => 'Создана',
             'created_by' => 'Created By',
-            'updated_at' => 'Updated At',
+            'updated_at' => 'Изменено',
             'updated_by' => 'Updated By',
             'deleted_at' => 'Deleted At',
             'deleted_by' => 'Deleted By',
