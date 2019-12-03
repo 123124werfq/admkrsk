@@ -19,7 +19,6 @@
                                     <img class="img-responsive" src="<?=$wide->makeThumb(['w'=>768,'h'=>384])?>" alt="<?=Html::encode($wide->title)?>">
                                 </a>
                             </div>
-                            <?php }?>
                             <div class="news-item_content">
                                 <ul class="events_info">
                                     <?php if (!empty($wide->id_rub)){?>
@@ -28,6 +27,7 @@
                                     <li class="events_info-item"><?=strftime('%d %B %Y, %M:%S',$wide->date_publish)?></li>
                                 </ul>
                             </div>
+                            <?php }?>
                         </div>
                     </div>
                     <?php foreach ($news as $nkey => $data)
