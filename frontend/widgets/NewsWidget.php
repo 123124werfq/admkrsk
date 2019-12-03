@@ -38,7 +38,7 @@ class NewsWidget extends \yii\base\Widget
                 $news = News::find()->where(['state'=>1,'id_page'=>$page->id_page])
                         ->orderBy('date_publish DESC')->limit(9)->all();
 
-            if (empty($news))
+            if (empty($news) && empty($wide))
                 return false;
 
             return $this->render('news/news_single',[
