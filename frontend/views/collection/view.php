@@ -27,8 +27,6 @@
                                 if (isset($data[$alias]))
                                     $template = str_replace('{'.$alias.'}', $data[$alias] , $template);
                             }
-
-                            $template = str_replace('{link}', '/collection?id='.$id_record,$template);
                         }
                     ?>
                     <?=$template?>
