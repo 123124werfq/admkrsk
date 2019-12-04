@@ -158,8 +158,14 @@ class ServiceController extends \yii\web\Controller
                    if($state->save())
                    {
                        $appeal->state = $state->state;
-                       $appeal->internal_number = $appeal->id_appeal; // пока такой внутренний номер
-                       $appeal->updateAttributes(['state', 'internal_number']);
+                       $appeal->number_internal = $appeal->id_appeal; // пока такой внутренний номер
+                       $appeal->updateAttributes(['state', 'number_internal']);
+
+                        // запрос к СЭД
+                        $attachments = $record->getAllMedias();
+
+                        var_dump($attachments);
+
                    }
                }
                else
