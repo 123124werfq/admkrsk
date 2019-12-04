@@ -208,7 +208,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             [['id_collection', 'name', 'type'], 'required'],
             [['id_collection', 'id_dictionary', 'type', 'show_column_admin', 'ord'], 'default', 'value' => null],
             [['id_collection', 'id_dictionary', 'type', 'show_column_admin', 'ord'], 'integer'],
-            [['name','alias'], 'string', 'max' => 255],
+            [['name','alias'], 'string', 'max' => 500],
             [['variables'], 'string'],
             [['type'], 'default', 'value' => self::TYPE_INPUT],
         ];

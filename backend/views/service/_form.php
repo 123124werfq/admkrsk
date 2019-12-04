@@ -34,8 +34,6 @@ if (!empty($id_situations))
 
         <?= $form->field($model, 'old')->checkBox() ?>
 
-        <?= $form->field($model, 'online')->dropDownList([0=>'Оффлайн',1=>'В электронном виде']) ?>
-
         <?=$form->field($model, 'id_rub')->widget(Select2::class, [
             'data' => ArrayHelper::map(ServiceRubric::find()->joinWith('childs as childs')->all(), 'id_rub', 'name'),
             'pluginOptions' => [
@@ -56,9 +54,16 @@ if (!empty($id_situations))
             ]
         ])?>
 
-        <?= $form->field($model, 'client_type')->checkBoxList([2=>'Физ. лица', 4=>'Юр. лица'])?>
+        <hr>
 
         <?= $form->field($model, 'reestr_number')->textInput(['maxlength' => true]) ?>
+
+        <?= $form->field($model, 'online')->dropDownList([0=>'Оффлайн',1=>'В электронном виде']) ?>
+
+        <?= $form->field($model, 'client_type')->checkBoxList($model::getAttributeValues('client_type'))?>
+
+        <?= $form->field($model, 'type')->dropDownList($model::getAttributeValues('type'),['prompt'=>'Выберите значение'])?>
+
 
         <?= $form->field($model, 'name')->textInput(['maxlength' => 500]) ?>
 

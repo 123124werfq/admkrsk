@@ -154,6 +154,13 @@ class Service extends \yii\db\ActiveRecord
                 self::TYPE_PEOPLE=>'Физическое лицо',
                 self::TYPE_FIRM=>'Юридическое лицо'
             ];
+        else
+        if ($attribute=='type')
+            return [
+                'услуга органа'=>'услуга органа',
+                'настройка для ДО'=>'настройка для ДО',
+                'услуга учреждения'=>'услуга учреждения',
+            ];
     }
 
     public function beforeSave($insert)
