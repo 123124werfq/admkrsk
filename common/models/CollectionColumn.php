@@ -110,7 +110,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'type'=>'input',
                 ],
             ],
-            
+
             self::TYPE_IMAGE => [
                 'acceptedFiles'=>[
                     'name'=>'Допустимые расширения файлов',
@@ -210,6 +210,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             [['id_collection', 'id_dictionary', 'type', 'show_column_admin', 'ord'], 'integer'],
             [['name','alias'], 'string', 'max' => 255],
             [['variables'], 'string'],
+            [['options'], 'safe'],
             [['type'], 'default', 'value' => self::TYPE_INPUT],
         ];
     }
@@ -225,6 +226,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             'name' => 'Название',
             'type' => 'Тип',
             'alias' => 'Алиас',
+            'options' => 'Настройки',
             'show_column_admin' => 'Show Column Admin',
             'ord' => 'Ord',
         ];

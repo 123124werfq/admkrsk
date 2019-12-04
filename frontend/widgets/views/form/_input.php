@@ -54,13 +54,13 @@
 				break;
 			case CollectionColumn::TYPE_DATE:
 				$options['type'] = 'date';
-				if (is_numeric($model->$attribute))  
+				if (is_numeric($model->$attribute))
 					$model->$attribute = date('Y-m-d', $model->$attribute);
 
 				echo $form->field($model, $attribute)->textInput($options);
 				break;
 			case CollectionColumn::TYPE_DATETIME:
-				if (is_numeric($model->$attribute))  
+				if (is_numeric($model->$attribute))
 					$model->$attribute = date('Y-m-d\TH:i:s', $model->$attribute);
 				$options['type'] = 'datetime';
 				echo $form->field($model, $attribute)->textInput($options);
@@ -101,7 +101,7 @@ JS;
 			case CollectionColumn::TYPE_FILE:
 
 				$dataOptions = [];
-				
+
 				if (!empty($options['acceptedFiles']))
 					$dataOptions[] = 'data-acceptedfiles="'.$options['acceptedFiles'].'"';
 
@@ -125,7 +125,7 @@ JS;
 				break;
 			case CollectionColumn::TYPE_IMAGE:
 				$dataOptions = [];
-				
+
 				if (!empty($options['acceptedFiles']))
 					$dataOptions[] = 'data-acceptedFiles="'.$options['acceptedFiles'];
 
@@ -177,8 +177,18 @@ JS;
 				break;
 
 			case CollectionColumn::TYPE_DISTRICT:
+
+				$value = [];
+
+				if (!empty($model->$attribute))
+				{
+					$district = \common\models\District::findOne($model->$attribute);
+					if (!empty($district))
+						$value = [$district->id_district=>$district->name];
+				}
+
 				echo $form->field($model, $attribute)->widget(Select2::class, [
-                    'data' => [],
+                    'data' => $value,
                     'pluginOptions' => [
                         'multiple' => false,
                         //'allowClear' => true,
@@ -286,7 +296,7 @@ JS;
                         ],
                     ],
                     'pluginEvents'=>[
-                    	"select2:select" => "function(e) { 
+                    	"select2:select" => "function(e) {
                     		if ($('#postalcode').length>0)
                     			$('#postalcode').val(e.params.data.postalcode);
                     	}",
@@ -317,7 +327,7 @@ JS;
 										$i++;
 									}
 								}
-								else 
+								else
 								{
 									foreach ($data as $key => $row)
 									{

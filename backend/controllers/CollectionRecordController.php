@@ -82,6 +82,21 @@ class CollectionRecordController extends Controller
             if ($col->type==CollectionColumn::TYPE_DATE)
                 $dataProviderColumns[$col->id_column]['format'] = ['date', 'php:d.m.Y'];
 
+            if ($col->type==CollectionColumn::TYPE_DISTRICT)
+            {
+                $dataProviderColumns[$col->id_column]['value'] = function($model) use ($col) {
+                    if (empty($model[$col->id_column]))
+                        return '';
+
+                    $district = \common\models\District::findOne($model[$col->id_column]);
+
+                    if (!empty($district))
+                        return $district->name;
+
+                    return '';
+                };
+            }
+
             if ($col->type==CollectionColumn::TYPE_FILE)
             {
                 $dataProviderColumns[$col->id_column]['format'] = 'raw';
