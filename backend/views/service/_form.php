@@ -8,7 +8,9 @@ use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use common\models\ServiceRubric;
 use common\models\Form;
+use common\models\Collection;
 use common\models\ServiceSituation;
+
 /* @var $this yii\web\View */
 /* @var $model common\models\Service */
 /* @var $form yii\widgets\ActiveForm */
@@ -17,8 +19,19 @@ $id_situations = $model->getSituations()->indexBy('id_situation')->all();
 
 if (!empty($id_situations))
     $model->id_situations = array_keys($id_situations);
-?>
 
+
+$id_firms = $model->getFirms()->indexBy('id_record')->all();
+
+if (!empty($id_firms))
+    $model->id_firms = array_keys($id_firms);
+
+$offices = Collection::find()->where(['alias'=>'service_offices'])->one();
+
+if (!empty($offices))
+    $offices = $offices->getArray();
+
+?>
 <div class="ibox">
     <div class="ibox-content">
 
@@ -67,6 +80,18 @@ if (!empty($id_situations))
         <?= $form->field($model, 'keywords')->textarea(['rows' => 6]) ?>
 
         <hr/>
+
+        <?=$form->field($model, 'id_firms')->widget(Select2::class, [
+            'data' => $offices,
+            'pluginOptions' => [
+                'allowClear' => true,
+                'tags'=>true,
+                'placeholder' => 'Выберите офисы',
+            ],
+            'options'=>[
+                'multiple'=>true,
+            ]
+        ])?>
 
         <?= $form->field($model, 'addresses')->textarea(['rows' => 6]) ?>
 

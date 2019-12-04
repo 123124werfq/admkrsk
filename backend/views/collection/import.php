@@ -4,7 +4,7 @@
     use yii\grid\GridView;
     use yii\data\ArrayDataProvider;
 
-    $this->title = 'Импорт XML';
+    $this->title = 'Импорт XLS, CSV';
     $this->params['breadcrumbs'][] = $this->title;
 
 ?>

@@ -32,6 +32,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
     //const TYPE_FILES = 18;
     const TYPE_IMAGE = 9;
     const TYPE_COLLECTION = 13;
+    const TYPE_COLLECTIONS = 25;
     const TYPE_RADIO = 15;
     const TYPE_ADDRESS = 16;
     const TYPE_JSON = 17;
@@ -148,7 +149,8 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_RADIO => "Радио кнопки",
             self::TYPE_MAP => "Координаты",
             self::TYPE_FILE => "Файл",
-            self::TYPE_COLLECTION => "Список",
+            self::TYPE_COLLECTION => "Данные из списока",
+            self::TYPE_COLLECTIONS => "Данные из списока, несколько элементов ",
             self::TYPE_IMAGE => "Изображение",
             self::TYPE_ADDRESS => "Адрес",
             self::TYPE_JSON => "Таблицы",
@@ -230,7 +232,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             [['id_collection', 'name', 'type'], 'required'],
             [['id_collection', 'id_dictionary', 'type', 'show_column_admin', 'ord'], 'default', 'value' => null],
             [['id_collection', 'id_dictionary', 'type', 'show_column_admin', 'ord'], 'integer'],
-            [['name','alias'], 'string', 'max' => 255],
+            [['name','alias'], 'string', 'max' => 500],
             [['variables'], 'string'],
             [['options'], 'safe'],
             [['type'], 'default', 'value' => self::TYPE_INPUT],
