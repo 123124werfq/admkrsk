@@ -102,7 +102,7 @@ class EventController extends \yii\web\Controller
             if (!isset($data['time']) && array_key_exists('date_end',$data))
             {
                 $time = [];
-                
+
                 if (!empty($data['date']))
                     $time[] = date('d.m.Y',(int)$data['date']);
 
@@ -110,6 +110,9 @@ class EventController extends \yii\web\Controller
                     $time[] = date('d.m.Y',(int)$data['date_end']);
 
                 $data['time'] = implode('-', $time);
+
+                if (!empty($data['date_time']))
+                    $data['time'] .= '<br>'.$data['date_time'];
             }
 
             $date = (is_numeric($data['date']))?strftime('%e %B (%A)',(int)$data['date']):$data['date'];
