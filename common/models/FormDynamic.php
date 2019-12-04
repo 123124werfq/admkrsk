@@ -65,7 +65,7 @@ class FormDynamic extends DynamicModel
         }
     }
 
-    public function prepareData($columnAsIndex=fale, $post=null)
+    public function prepareData($columnAsIndex=false, $post=null)
     {
         $data = [];
 

@@ -5,7 +5,7 @@
             <div class="col-2-third order-xs-1">
                 <h1 class="h2"><?=$service->name?></h1>
 
-                <?=frontend\widgets\FormsWidget::widget(['form'=>$form,'inputs'=>$inputs])?>
+                <?=frontend\widgets\FormsWidget::widget(['form'=>$form,'inputs'=>$inputs,'action'=>''])?>
 
                 <div class="subscribe">
                     <div class="subscribe_left">
