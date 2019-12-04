@@ -82,8 +82,8 @@ class EventController extends \yii\web\Controller
         $allDistricts = District::find()->select(['name','id_district'])->indexBy('id_district')->orderBy('name')->all();
 
         $districts = [0=>'Все районы'];
-        $places = [0=>'Все места'];
-        $categories = [0=>'Любая категория'];
+        $places = [];
+        $categories = [];
 
         foreach ($collection as $key => $data)
         {
@@ -118,6 +118,12 @@ class EventController extends \yii\web\Controller
             $date = (is_numeric($data['date']))?strftime('%e %B (%A)',(int)$data['date']):$data['date'];
             $program[(!empty($data['group']))?$data['group']:$date][$key] = $data;
         }
+
+        asort($places);
+        asort($categories);
+
+        array_unshift($places,'Все места');
+        array_unshift($categories,'Любая категория');
 
         if (Yii::$app->request->isAjax)
         {
