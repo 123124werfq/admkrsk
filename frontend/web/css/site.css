@@ -11,6 +11,7 @@ form .row {flex-wrap: nowrap!important;}
 .fileupload {margin-bottom: 40px;}
 
 .text-row {padding: 0px 15px; width: 100%;}
+.text-row p:first-child {margin-top: 0px}
 
 .header-search{padding: 10px; border: none; border-radius: 5px; width: 100%;}
 
@@ -28,6 +29,10 @@ margin-bottom: 36px;
     margin-bottom: 15px;
     margin-right: 8px;
 }
+
+.form-inside * {font-size: 16px;}
+
+.col .checkbox-group {margin-bottom: 36px;}
 
 .sidemenu > ul > li.current {display: none;}
 

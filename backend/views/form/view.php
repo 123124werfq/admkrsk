@@ -41,11 +41,11 @@ $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $
     				<div class="form-row flex-row" data-id="<?=$row->id_row?>">
     					<?php foreach ($row->elements as $ikey => $element) {?>
 							<?php
-                                if (!empty($element->id_input))
-                                    echo $this->render('_input',['element'=>$element]);
-                                else if (!empty($element->content))
-                                    echo $this->render('_element',['element'=>$element]);
-                            ?>
+                      if (!empty($element->id_input))
+                          echo $this->render('_input',['element'=>$element]);
+                      else if (!empty($element->content))
+                          echo $this->render('_element',['element'=>$element]);
+              ?>
     					<?php }?>
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">

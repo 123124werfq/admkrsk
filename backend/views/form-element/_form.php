@@ -12,7 +12,12 @@ use yii\widgets\ActiveForm;
 	'id'=>'ElementForm'
 ]); ?>
 
+<?php
+    echo $this->render('/form-input/_element_options',['element'=>$model]);
+?>
+
 <?= $form->field($model, 'content')->textarea(['rows' => 6,'class'=>'form-control redactor']) ?>
+
 <div class="form-group">
     <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
 </div>

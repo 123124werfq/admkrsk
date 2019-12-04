@@ -171,8 +171,7 @@ ul.menu-container ul .create-menu {display: none;}
 
 .modal-body .btn {display: none;}
 
-.form-element {padding: 5px; min-height: 40px;}
-.form-element {position: relative;}
+.form-element {padding: 5px; min-height: 40px; position: relative; margin-top: 0px!important;}
 
 .form-row .col {
   width: 100%;
