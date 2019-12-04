@@ -191,6 +191,28 @@ class CollectionColumn extends \yii\db\ActiveRecord
         parent::afterSave($insert, $changedAttributes);
     }
 
+    public function getOptionsData()
+    {
+        $options = [
+            'width'=>[
+                'name'=>'Ширина',
+                'type'=>'number',
+                'value'=>'100',
+                'min'=>50,
+            ],
+        ];
+
+        $data = $this->options;
+
+        foreach ($options as $key => $value)
+        {
+            if (!empty($data[$key]))
+                $options[$key]['value'] = $data[$key];
+        }
+
+        return $options;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -230,5 +252,10 @@ class CollectionColumn extends \yii\db\ActiveRecord
             'show_column_admin' => 'Show Column Admin',
             'ord' => 'Ord',
         ];
+    }
+
+    public function getCollection()
+    {
+        return $this->hasOne(Collection::class, ['id_collection' => 'id_collection']);
     }
 }

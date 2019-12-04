@@ -85,7 +85,7 @@ else
                 </div>
                 <div class="col-sm-1">
                     <div class="form-group">
-                        <?=Html::dropDownList("ViewFilters[$key][operator]",$data['operator'],['='=>'=','>','>=','<','<=','<>'],['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_operator'.$key]);?>
+                        <?=Html::dropDownList("ViewFilters[$key][operator]",$data['operator'],$operators,['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_operator'.$key]);?>
                     </div>
                 </div>
                 <div class="col-sm-5">

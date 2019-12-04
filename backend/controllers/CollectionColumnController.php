@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\CollectionColumn;
+use common\models\Collection;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -35,12 +36,23 @@ class CollectionColumnController extends Controller
      */
     public function actionIndex($id)
     {
+        $collection = Collection::findOne($id);
+
+        if (empty($collection))
+            throw new NotFoundHttpException('The requested page does not exist.');
+
         $dataProvider = new ActiveDataProvider([
-            'query' => CollectionColumn::find()->where(['id_collection'=>$id]),
+            'query' => CollectionColumn::find()->where(['id_collection'=>$collection->id_collection]),
+            'sort' => [
+                'defaultOrder' => [
+                    'ord' => SORT_ASC
+                ]
+            ]
         ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'collection'=>$collection,
         ]);
     }
 
@@ -68,7 +80,7 @@ class CollectionColumnController extends Controller
         $model->id_collection = $id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_column]);
+            return $this->redirect(['index', 'id' => $model->id_collection]);
         }
 
         return $this->render('create', [
@@ -89,7 +101,7 @@ class CollectionColumnController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save())
         {
-            return $this->redirect(['view', 'id' => $model->id_column]);
+            return $this->redirect(['index', 'id' => $model->id_collection]);
         }
 
         return $this->render('update', [
@@ -125,5 +137,13 @@ class CollectionColumnController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionOrder()
+    {
+        $ords = Yii::$app->request->post('ords');
+
+        foreach ($ords as $key => $id)
+            Yii::$app->db->createCommand()->update('db_collection_column',['ord'=>$key],['id_column'=>$id])->execute();
     }
 }

@@ -70,10 +70,16 @@ class CollectionRecordController extends Controller
         foreach ($columns as $key => $col)
         {
 
+            $options = [];
+
+            if (!empty($col->options['width']))
+                $options['width'] = $col->options['width'].'px';
+
             $dataProviderColumns[$col->id_column] = [
                 'label'=>$col->name,
                 'attribute'=>$col->id_column,
                 'format' => 'text',
+                'headerOptions'=>$options,
             ];
 
             if ($col->type==CollectionColumn::TYPE_INTEGER)
