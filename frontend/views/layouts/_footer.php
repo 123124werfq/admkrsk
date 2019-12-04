@@ -33,7 +33,6 @@
 
             <div class="footer-end">
                 <p class="copyright">&copy; 2001-2018 Администрация г. Красноярска</p>
-                <a class="devby" href="http://alente.ru" target="_blank">разработка сайта <img src="<?= $bundle->baseUrl . '/img/icons/alente.svg' ?>" alt="alente"> <strong>alente</strong></a>
             </div>
         </div>
     </div>
