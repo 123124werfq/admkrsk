@@ -34,7 +34,7 @@ class CollectionQuery extends \yii\mongodb\Query
         return $query;
     }
 
-    public function select($id_columns=[])
+    public function select(array $id_columns=[])
     {
         $columns = $this->collection->getColumns()->select(['alias','id_column','name']);
 
