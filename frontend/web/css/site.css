@@ -29,6 +29,7 @@ margin-bottom: 36px;
     margin-right: 8px;
 }
 
+
 .sidemenu > ul > li.current {display: none;}
 
 .collection-element {border-bottom: 1px solid #dde1e6;}
