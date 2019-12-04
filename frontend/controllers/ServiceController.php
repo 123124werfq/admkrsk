@@ -4,6 +4,8 @@ namespace frontend\controllers;
 
 use common\models\Service;
 use common\models\Form;
+use common\models\Workflow;
+use common\models\Integration;
 use common\models\ServiceAppeal;
 use common\models\ServiceAppealState;
 use common\models\ServiceRubric;
@@ -142,9 +144,10 @@ class ServiceController extends \yii\web\Controller
                $appeal->date = time();
                $appeal->id_target = $id_target;
                $appeal->state = 'empty'; // это переехало в ServiceAppealState, убрать в перспективе
+               $appeal->created_at = time();
 
                $idents = [
-                   'giud' => Service::generateGUID()
+                   'guid' => Service::generateGUID()
                ];
 
                $appeal->data = json_encode($idents);
@@ -164,8 +167,30 @@ class ServiceController extends \yii\web\Controller
                         // запрос к СЭД
                         $attachments = $record->getAllMedias();
 
-                        var_dump($attachments);
+                        $wf = new Workflow;
+                        $wf->generateArchive($idents['guid'], $attachments);
 
+                        // ... тут XML
+
+                        $opres = $wf->sendServiceMessage($appeal);
+                        $integration = new Integration;
+                        $integration->system = Integration::SYSTEM_SED;
+                        $integration->direction = Integration::DIRECTION_OUTPUT;
+                        if($opres)
+                            $integration->status = Integration::STATUS_OK;
+                        else
+                            $integration->status = Integration::STATUS_ERROR;
+
+                        $integration->description = ' Запрос услуги ' . $appeal->number_internal;
+
+                        $integration->data = json_encode([
+                            'appeal' => $appeal->number_internal,
+                            'user' => $appeal->id_user,
+                            'target' => $appeal->id_target,
+                            'collection' => $appeal->id_collection
+                        ]);
+                       $integration->created_at = time();
+                        $integration->save();
                    }
                }
                else
