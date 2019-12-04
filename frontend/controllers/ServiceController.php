@@ -129,6 +129,7 @@ class ServiceController extends \yii\web\Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
             $prepare = $model->prepareData();
+            print_r($_POST);
             print_r($prepare);
 
             /*print_r($_FILES);

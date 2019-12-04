@@ -178,7 +178,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
         return $output;
     }
 
-    public function getMedia($id_column,$firstElement)
+    public function getMedia($id_column, $firstElement=false)
     {
         if (empty($this->loadData))
             $this->getData();

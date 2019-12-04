@@ -220,6 +220,11 @@ class ServiceController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionMakeDoc()
+    {
+        \common\components\worddoc\WordDoc::makeDoc([1,2,3],'11.docx');
+    }
+
     /**
      * Finds the Service model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
