@@ -115,8 +115,6 @@ class ServiceController extends \yii\web\Controller
     {
         $inputs = [];
 
-        
-
         $target = $this->findTarget($id_target);
         $service = $target->service;
         $form = $target->form;
@@ -141,7 +139,7 @@ class ServiceController extends \yii\web\Controller
         }
 
         return $this->render('create',[
-            'form'=>$model,
+            'form'=>$form,
             'service'=>$service,
             'page'=>$page,
             'inputs'=>$inputs,
