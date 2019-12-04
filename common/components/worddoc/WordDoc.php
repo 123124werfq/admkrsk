@@ -36,5 +36,31 @@ class WordDoc
 
         return true;
     }
+
+    public static function makeDocByForm($form, $data, $template)
+    {
+        $root = Yii::getAlias('@app');
+
+        $template = new TemplateProcessor($root.'/template/'.$template);
+
+        foreach ($data as $alias => $value)
+        {
+            $template->setValue($alias, $value);
+        }
+
+        /*$template->cloneRow('name', count($data));
+
+        foreach ($data as $key => $value)
+        {
+            $i = $key+1;
+
+            $template->setValue("name#$i", $key);
+            $template->setValue("value#$i", $value);
+        }*/
+
+        $template->saveAs($root."/template/out.docx");
+
+        return true;
+    }
 }
 ?>

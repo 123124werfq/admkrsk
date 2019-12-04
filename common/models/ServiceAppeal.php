@@ -68,4 +68,9 @@ class ServiceAppeal extends \yii\db\ActiveRecord
             'deleted_by' => 'Deleted By',
         ];
     }
+
+    public function getCollectionRecord()
+    {
+        return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_record']);
+    }
 }

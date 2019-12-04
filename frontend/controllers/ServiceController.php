@@ -130,7 +130,7 @@ class ServiceController extends \yii\web\Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
-            $prepare = $model->prepareData();
+            $prepare = $model->prepareData(true);
 
             if ($record = $form->collection->insertRecord($prepare))
             {
@@ -149,7 +149,7 @@ class ServiceController extends \yii\web\Controller
 
                $appeal->data = json_encode($idents);
 
-               if($appeal->save())
+               if ($appeal->save())
                {
                    $state = new ServiceAppealState;
                    $state->id_appeal = $appeal->id_appeal;

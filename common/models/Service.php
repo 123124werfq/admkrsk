@@ -146,6 +146,18 @@ class Service extends \yii\db\ActiveRecord
                 'class' => AccessControlBehavior::class,
                 'permission' => 'backend.service',
             ],
+            'multiupload' => [
+                'class' => \common\components\multifile\MultiUploadBehavior::class,
+                'relations'=>
+                [
+                    'template'=>[
+                        'model'=>'Media',
+                        'fk_cover' => 'id_media_tempalte',
+                        'cover' => 'template',
+                    ],
+                ],
+                'cover'=>'template'
+            ],
         ];
     }
 

@@ -13,41 +13,50 @@ use common\models\Form;
 
 <div class="ibox">
     <div class="ibox-content">
-    <?php $form = ActiveForm::begin(); ?>
+        <?php $form = ActiveForm::begin(); ?>
 
-    <?=$form->field($model, 'id_form')->widget(Select2::class, [
-            'data' => ArrayHelper::map(Form::find()->all(), 'id_form', 'name'),
-            'pluginOptions' => [
-                'allowClear' => true,
-                'placeholder' => 'Форма приема заявления',
-            ],
-        ])?>
+        <?= $form->field($model, 'state')->checkBox() ?>
+        
+        <?=$form->field($model, 'id_form')->widget(Select2::class, [
+                'data' => ArrayHelper::map(Form::find()->all(), 'id_form', 'name'),
+                'pluginOptions' => [
+                    'allowClear' => true,
+                    'placeholder' => 'Форма приема заявления',
+                ],
+            ])?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
+        <?= $form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
 
-    <?= $form->field($model, 'place')->textInput(['maxlength' => 255]) ?>
+        <?= $form->field($model, 'place')->textInput(['maxlength' => 255]) ?>
 
-    <?= $form->field($model, 'reestr_number')->textInput(['maxlength' => 255]) ?>
+        <?= $form->field($model, 'reestr_number')->textInput(['maxlength' => 255]) ?>
 
-    <div class="row">
-        <div class="col-sm-6">
-            <?= $form->field($model, 'target')->textInput(['maxlength' => 255]) ?>
+        <div class="row">
+            <div class="col-sm-6">
+                <?= $form->field($model, 'target')->textInput(['maxlength' => 255]) ?>
+            </div>
+            <div class="col-sm-6">
+                <?= $form->field($model, 'target_code')->textInput(['maxlength' => 255]) ?>
+            </div>
         </div>
-        <div class="col-sm-6">
-            <?= $form->field($model, 'target_code')->textInput(['maxlength' => 255]) ?>
+
+        <?= $form->field($model, 'service_code')->textInput(['maxlength' => 255]) ?>
+
+        <?= $form->field($model, 'obj_name')->textInput(['maxlength' => 255]) ?>
+
+        <?=common\components\multifile\MultiFileWidget::widget([
+            'model'=>$model,
+            'single'=>true,
+            'relation'=>'template',
+            'extensions'=>['docx'],
+            'grouptype'=>1,
+            'showPreview'=>false
+        ]);?>
+
+        <div class="form-group">
+            <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
         </div>
-    </div>
 
-    <?= $form->field($model, 'service_code')->textInput(['maxlength' => 255]) ?>
-
-    <?= $form->field($model, 'obj_name')->textInput(['maxlength' => 255]) ?>
-
-    <?= $form->field($model, 'state')->checkBox() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
-    </div>
-
-    <?php ActiveForm::end(); ?>
+        <?php ActiveForm::end(); ?>
     </div>
 </div>
