@@ -54,6 +54,7 @@ class Service extends \yii\db\ActiveRecord
     const TITLE_ATTRIBUTE = 'name';
 
     public $id_situations = [];
+    public $id_firms = [];
 
     const TYPE_PEOPLE = 2;
     const TYPE_FIRM = 4;
@@ -80,7 +81,7 @@ class Service extends \yii\db\ActiveRecord
             [['old'], 'default', 'value' => 0],
             [['id_rub', 'old', 'online', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_form'], 'integer'],
             [['keywords', 'addresses', 'result', 'client_category', 'duration', 'documents', 'price', 'appeal', 'legal_grounds', 'regulations', 'refuse','regulations_link', 'duration_order', 'availability', 'procedure_information', 'max_duration_queue'], 'string'],
-            [['id_situations', 'client_type'],'safe'],
+            [['id_situations', 'client_type', 'id_firms'],'safe'],
             [['reestr_number'], 'string', 'max' => 255],
             [['fullname', 'name', 'type'], 'string'],
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
@@ -121,6 +122,7 @@ class Service extends \yii\db\ActiveRecord
             'max_duration_queue' => 'Максимальный срок ожидания в очереди при подаче запроса о предоставлении муниципальной услуги, если заявитель захочет лично подать запрос о предоставлении муниципальной услуги',
             'old' => 'Услуга устарела',
             'id_situations'=>'Жизенные ситуации',
+            'id_firms'=>'Обслуживающие организации',
             'online' => 'Форма предоставления',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
@@ -193,12 +195,30 @@ class Service extends \yii\db\ActiveRecord
             }
         }
 
+        if (isset($_POST['Service']['id_firms']))
+        {
+            Yii::$app->db->createCommand()->delete('servicel_collection_firm',['id_service'=>$this->id_service])->execute();
+
+            if (!empty($this->id_firms))
+            {
+                $insert = CollectionRecord::find()->select('id_record')->where(['id_record'=>$this->id_firms])->all();
+
+                foreach ($insert as $key => $data)
+                    $this->link('firms',$data);
+            }
+        }
+
         parent::afterSave($insert, $changedAttributes);
     }
 
     public function getUrl()
     {
         return Url::to(['service/view', 'id' => $this->id_service]);
+    }
+
+    public function getFirms()
+    {
+        return $this->hasMany(CollectionRecord::class, ['id_record' => 'id_record'])->viaTable('servicel_collection_firm',['id_service'=>'id_service']);
     }
 
     public function getSituations()

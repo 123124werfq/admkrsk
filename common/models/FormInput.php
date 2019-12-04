@@ -51,7 +51,7 @@ class FormInput extends \yii\db\ActiveRecord
             [['name', 'type'], 'required'],
             [['values', 'hint','label'], 'string'],
             [['options'],'safe'],
-            [['name', 'fieldname','alias'], 'string', 'max' => 255],
+            [['name', 'fieldname','alias'], 'string', 'max' => 500],
         ];
     }
 

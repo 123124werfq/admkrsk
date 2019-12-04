@@ -67,27 +67,33 @@
                 </div>
                 <?php }?>
 
-                <!--h2>Органы, оказывающие услугу:</h2>
-                <p>Управление учета и реализации жилищной политики администрации города</p>
-
-                <div class="content">
-                    <div class="table-reponsive">
-                        <table class="label-table">
-                            <tr>
-                                <td>Адрес:</td>
-                                <td>г. Красноярск, ул. К. Маркса, 93 , Каб. 615</td>
-                            </tr>
-                            <tr>
-                                <td>Телефон:</td>
-                                <td>(391)226-15-68, (391)226-13-24</td>
-                            </tr>
-                            <tr>
-                                <td>Режим работы:</td>
-                                <td>Прием заявлений, выдача результата: понедельник - четверг с 9.00 до 13.00</td>
-                            </tr>
-                        </table>
+                <?php if (!empty($service->firms)){?>
+                <h2>Органы, оказывающие услугу:</h2>
+                <?php foreach ($service->firms as $key => $record){
+                        $data = $record->getData(true);
+                ?>
+                    <p><?=$data['department']??''?></p>
+                    <div class="content">
+                        <div class="table-reponsive">
+                            <table class="label-table">
+                                <tr>
+                                    <td>Адрес:</td>
+                                    <td><?=nl2br($data['office']??'')?></td>
+                                </tr>
+                                <tr>
+                                    <td>Телефон:</td>
+                                    <td><?=nl2br($data['phones']??'')?></td>
+                                </tr>
+                                <tr>
+                                    <td>Режим работы:</td>
+                                    <td><?=$data['worktime']??''?></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
-                </div-->
+                <?php
+                    }}
+                ?>
 
                 <div class="subscribe">
                     <div class="subscribe_left">

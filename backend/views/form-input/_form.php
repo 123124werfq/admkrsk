@@ -53,7 +53,11 @@ if (!empty($model->id_form))
 
     <?=$form->field($model, 'fieldname')->textInput(['maxlength' => 255]) ?>
 
-    <?php if ($model->type == CollectionColumn::TYPE_SELECT || $model->type == CollectionColumn::TYPE_RADIO){?>
+    <?php if ($model->type == CollectionColumn::TYPE_SELECT
+           || $model->type == CollectionColumn::TYPE_RADIO
+           || $model->type == CollectionColumn::TYPE_COLLECTION
+           || $model->type == CollectionColumn::TYPE_COLLECTIONS
+       ){?>
         <?=$form->field($model, 'id_collection')->widget(Select2::class, [
             'data' => ArrayHelper::map(Collection::find()->all(), 'id_collection', 'name'),
             'pluginOptions' => [

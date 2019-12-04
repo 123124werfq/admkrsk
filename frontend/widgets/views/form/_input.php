@@ -176,6 +176,70 @@ JS;
 				}
 				break;
 
+			case CollectionColumn::TYPE_COLLECTION:
+
+				$value = [];
+
+				if (!empty($model->$attribute))
+				{
+					$record = \common\models\Collection::findOne($model->$attribute);
+					if (!empty($record))
+						$value = [$record->id_collection=>$record->name];
+				}
+
+				echo $form->field($model, $attribute)->widget(Select2::class, [
+                    'data' => $value,
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        //'allowClear' => true,
+                        'minimumInputLength' => 0,
+                        'placeholder' => 'Выберите запись',
+                        'ajax' => [
+                            'url' => '/collection/list',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:$("#input-city").val()};}')
+                        ],
+                    ],
+                    'options'=>[
+                    	'id'=>'input-district'
+                    ]
+                ]);
+				break;
+
+			case CollectionColumn::TYPE_COLLECTIONS:
+
+				$value = [];
+
+				if (!empty($model->$attribute))
+				{
+					$records = json_decode($model->$attribute);
+					$records = \common\models\CollectionRecord::find()->where(['id_record'=>$records]);
+
+					if (!empty($records))
+					{
+						$value[] = [$record->id_record=>$record->getLabel()];
+					}
+				}
+
+				echo $form->field($model, $attribute)->widget(Select2::class, [
+                    'data' => $value,
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        //'allowClear' => true,
+                        'minimumInputLength' => 0,
+                        'placeholder' => 'Выберите записи',
+                        'ajax' => [
+                            'url' => '/collection/record-list',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {search:params.term,id:'.$input->id_collection.'};}')
+                        ],
+                    ],
+                    'options'=>[
+                    	'id'=>'input-district'
+                    ]
+                ]);
+				break;
+
 			case CollectionColumn::TYPE_DISTRICT:
 
 				$value = [];
