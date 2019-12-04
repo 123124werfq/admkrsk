@@ -99,7 +99,7 @@ class EventController extends \yii\web\Controller
             if (!empty($data['category']))
                 $categories[$data['category']] = $data['category'];
 
-            if (!isset($data['time']) && array_key_exists('date_end',$data))
+            if (!isset($data['time']) && isset($data['group']) && $data['date'])
             {
                 $time = [];
 
