@@ -111,24 +111,17 @@ class ServiceController extends \yii\web\Controller
         ]);
     }
 
-    public function actionCreate($id=null,$id_target=null,$page=null)
+    public function actionCreate($id,$id_target,$page=null)
     {
         $inputs = [];
 
-        if (!empty($id))
-        {
-            $service = $this->findModel($id);
-            $form = $service->form;
-            $inputs['id_service'] = $id;
-        }
-        else
-        {
-            $target = $this->findTarget($id_target);
-            $service = $target->service;
-            $form = $target->form;
-            $inputs['id_service'] = $service->id_service;
-            $inputs['id_target'] = $target->id_target;
-        }
+        
+
+        $target = $this->findTarget($id_target);
+        $service = $target->service;
+        $form = $target->form;
+        $inputs['id_service'] = $service->id_service;
+        $inputs['id_target'] = $target->id_target;
 
         if (empty($form))
             throw new NotFoundHttpException('Такой страницы не существует');
