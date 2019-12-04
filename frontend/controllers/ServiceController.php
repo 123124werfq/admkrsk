@@ -153,8 +153,12 @@ class ServiceController extends \yii\web\Controller
                    $state = new ServiceAppealState;
                    $state->id_appeal = $appeal->id_appeal;
                    $state->date = time();
-                   $state->state = ServiceAppealState::STATE_INIT;
-                   $state->save();
+                   $state->state = (string)ServiceAppealState::STATE_INIT;
+                   if($state->save())
+                   {
+                       $appeal->state = $state->state;
+                       $appeal->updateAttributes(['state']);
+                   }
                }
                else
                {
