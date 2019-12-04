@@ -32,7 +32,7 @@
             <hr class="footer-hr">
 
             <div class="footer-end">
-                <p class="copyright">&copy; 2001-2018 Администрация г. Красноярска</p>
+                <p class="copyright">&copy; 2001-<?=date("Y");?> Администрация г. Красноярска</p>
             </div>
         </div>
     </div>
