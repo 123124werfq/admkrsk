@@ -49,8 +49,8 @@ class FormInput extends \yii\db\ActiveRecord
             [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','label'], 'default', 'value' => null],
             [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','required','type'], 'integer'],
             [['name', 'type'], 'required'],
-            [['values', 'hint','label'], 'string'],
-            [['options'],'safe'],
+            [['hint','label'], 'string'],
+            [['options','values'],'safe'],
             [['name', 'fieldname','alias'], 'string', 'max' => 500],
         ];
     }
@@ -106,8 +106,8 @@ class FormInput extends \yii\db\ActiveRecord
 
     public function beforeValidate()
     {
-        /*if (!empty($this->visibleInputValue) && !is_array($this->visibleInputValue))
-            $this->visibleInputValue = [$this->visibleInputValue];*/
+        if ($this->type==CollectionColumn::TYPE_JSON)
+            $this->values = json_encode($this->values);
 
         return parent::beforeValidate();
     }
@@ -133,6 +133,60 @@ class FormInput extends \yii\db\ActiveRecord
 
         return $values;
     }
+
+    public function getTableOptions()
+    {
+        $options = [
+            'name'=>[
+                'name'=>'Название',
+                'type'=>'input',
+                'value'=>'',
+            ],
+            'width'=>[
+                'name'=>'Ширина %',
+                'type'=>'number',
+                'value'=>'100',
+                'min'=>1,
+                'max'=>100
+            ],
+            'type'=>[
+                'name'=>'Тип ввода',
+                'type'=>'dropdown',
+                'value'=>'',
+                'values'=>[
+                    'text'=>"Текст",
+                    'email'=>"Емейл",
+                    'number'=>"Число",
+                    'url'=>"Ссылка",
+                    'datetime'=>"Дата+Время",
+                    'date'=>"Дата",
+                ],
+            ],
+        ];
+
+        $data = json_decode($this->values,true);
+        
+        if (empty($data))
+            return [$options];
+
+        $output = [];
+
+        foreach ($data as $key => $row)
+        {
+            $line = $options;
+            
+            foreach ($line as $key => $value)
+            {
+                if (!empty($row[$key]))
+                    $line[$key]['value'] = $row[$key];
+            }
+
+            $output[] = $line;
+        }
+
+        return $output;
+    }
+
 
     public function getElement()
     {

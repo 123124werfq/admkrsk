@@ -7,23 +7,28 @@
 			<h2 class="mt-0"><?=$rub->name?></h2>
 			<div class="reestr">
                 <?php
-                    if (!empty($rubrics[$rub->id_rub]))
+                if (!empty($rubrics[$rub->id_rub]))
                     foreach ($rubrics[$rub->id_rub] as $ckey => $child) {?>
 					<h3 <?=empty($rubrics[$child->id_rub])?'class="collapse-control '.$active.'"':''?>><?=$child->name?></h3>
-                    <?php foreach ($rubrics[$child->id_rub] as $cskey => $subchild) {
-                        if (!empty($servicesRubs[$subchild->id_rub])){
-                    ?>
-						<h4 class="fw-500 collapse-control <?=$active?>"><?=$subchild->name?></h4>
-						<div class="collapse-content content" <?=$active?'style="display:block;"':''?>>
-                            <?=$this->render('_table',['services'=>$servicesRubs[$subchild->id_rub]])?>
-						</div>
-                    <?php }}?>
+                    
+                    <?php 
+                        if (!empty($rubrics[$child->id_rub]))
+                            foreach ($rubrics[$child->id_rub] as $cskey => $subchild) {
+                                if (!empty($servicesRubs[$subchild->id_rub])){?>
+            						<h4 class="fw-500 collapse-control <?=$active?>"><?=$subchild->name?></h4>
+            						<div class="collapse-content content" <?=$active?'style="display:block;"':''?>>
+                                        <?=$this->render('_table',['services'=>$servicesRubs[$subchild->id_rub]])?>
+            						</div>
+                            <?php }
+                            }?>
+
                     <?php if (empty($rubrics[$child->id_rub])){
                         if (!empty($servicesRubs[$child->id_rub])){?>
                         <div class="collapse-content content" <?=$active?'style="display:block;"':''?>>
                             <?=$this->render('_table',['services'=>$servicesRubs[$child->id_rub]])?>
                         </div>
-				     <?php }}?>
+				        <?php }
+                        }?>
                  <?php }?>
 			</div>
             <?php }?>

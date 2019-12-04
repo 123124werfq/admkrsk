@@ -24,6 +24,12 @@ img {max-width: 100%;}
 
 .tox {z-index: 9999!important;}
 
+.row-flex .col-close, .col-close {
+    align-items: center;
+    display: flex;
+    width: 30px;
+}
+
 .multiyiinput .form-inline {margin-bottom: 10px;}
 .multiyiinput .item {background:#fff;}
 .multiyiinput.sortable .item td:first-child{position: relative;}
@@ -64,8 +70,6 @@ img {max-width: 100%;}
 }
 
 .navbar-static-side {z-index:500;}
-
-.col-close {width: 30px;}
 
 /*.multiyiinput .form-inline,.multiyiinput .row {margin-bottom: 10px;}*/
 

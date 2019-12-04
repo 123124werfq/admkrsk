@@ -81,7 +81,7 @@ class FormElement extends \yii\db\ActiveRecord
     {
         $options = [
             'width'=>[
-                'name'=>'Ширина',
+                'name'=>'Ширина %',
                 'type'=>'number',
                 'value'=>'100',
                 'min'=>1,
