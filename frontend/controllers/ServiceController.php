@@ -140,6 +140,7 @@ class ServiceController extends \yii\web\Controller
                $appeal->id_record = $record->id_record;
                $appeal->id_collection = $form->collection->id_collection;
                $appeal->date = time();
+               $appeal->id_target = $id_target;
                $appeal->state = 'empty'; // это переехало в ServiceAppealState, убрать в перспективе
 
                $idents = [
@@ -157,7 +158,8 @@ class ServiceController extends \yii\web\Controller
                    if($state->save())
                    {
                        $appeal->state = $state->state;
-                       $appeal->updateAttributes(['state']);
+                       $appeal->internal_number = $appeal->id_appeal; // пока такой внутренний номер
+                       $appeal->updateAttributes(['state', 'internal_number']);
                    }
                }
                else
