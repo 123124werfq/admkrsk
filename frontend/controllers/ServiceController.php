@@ -43,27 +43,59 @@ class ServiceController extends \yii\web\Controller
 
         $services = Service::find()->where(['old'=>0]);
 
+        $open = false;
+
         if (!empty($clientType) || !empty($online))
         {
             if (!empty($clientType))
+            {
+                $open = true;
                 $services->andWhere('client_type&',$clientType.'='.$clientType);
+            }
 
             if (!empty($online))
+            {
+                $open = true;
                 $services->andWhere(['online'=>1]);
+            }
+        }
+
+        if (!empty($id_situation))
+        {
+            $id_situation = (int)$id_situation;
+            $open = true;
+            $services->andWhere("id_service IN (SELECT id_service FROM servicel_situation WHERE id_situation = $id_situation)");
         }
 
         $servicesRubs = [];
+
         foreach ($services->all() as $key => $data)
             $servicesRubs[(int)$data->id_rub][$data->id_service] = $data;
 
-        $rubrics = ServiceRubric::find()
-                        ->with('childs')
-                        ->where('id_parent IS NULL')->all();
+        $rubrics = ServiceRubric::find()->with(['childs','parent'])->where(['id_rub'=>array_keys($servicesRubs)])->all();
+
+        $tree = [];
+
+        foreach ($rubrics as $key => $rub)
+        {
+            $tree[(int)$rub->id_parent][$rub->id_rub] = $rub;
+
+            if (!empty($rub->id_parent))
+            {
+                $tree[(int)$rub->parent->id_parent][$rub->id_parent] = $rub->parent;
+
+                if (!empty($rub->parent->id_parent))
+                {
+                    $tree[(int)$rub->parent->parent->id_parent][$rub->parent->parent->id_parent] = $rub->parent->parent;
+                }
+            }
+        }
 
         return $this->render('reestr',[
             'page'=>$page,
             'servicesRubs'=>$servicesRubs,
-            'rubrics'=>$rubrics,
+            'rubrics'=>$tree,
+            'open'=>$open,
         ]);
     }
 

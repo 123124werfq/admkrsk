@@ -5,15 +5,13 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\CollectionColumn */
 
-$this->title = 'Update Collection Column: ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Collection Columns', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id_column]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Редактировать колонку: ' . $model->name;
+$this->params['breadcrumbs'][] = ['label' => $model->collection->name, 'url' => ['collection-column/index', 'id' => $model->id_collection]];
 ?>
-<div class="collection-column-update">
-
+<div class="ibox">
+    <div class="ibox-content">
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
-
+    </div>
 </div>

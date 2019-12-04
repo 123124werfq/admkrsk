@@ -34,6 +34,9 @@ $this->params['action-block'][] = Html::a('Создать копию', ['/collec
             <?=Html::a('Данные', ['collection-record/index', 'id' => $model->id_collection], ['class' => 'nav-link'])?>
         </li>
         <li>
+            <?=Html::a('Колонки', ['collection-column/index', 'id' => $model->id_collection], ['class' => 'nav-link'])?>
+        </li>
+        <li>
             <?=Html::a('Форма', ['form/view', 'id' => $model->id_form], ['class' => 'nav-link'])?>
         </li>
     </ul>

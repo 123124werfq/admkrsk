@@ -70,10 +70,16 @@ class CollectionRecordController extends Controller
         foreach ($columns as $key => $col)
         {
 
+            $options = [];
+
+            if (!empty($col->options['width']))
+                $options['width'] = $col->options['width'].'px';
+
             $dataProviderColumns[$col->id_column] = [
                 'label'=>$col->name,
                 'attribute'=>$col->id_column,
                 'format' => 'text',
+                'headerOptions'=>$options,
             ];
 
             if ($col->type==CollectionColumn::TYPE_INTEGER)
@@ -81,6 +87,21 @@ class CollectionRecordController extends Controller
 
             if ($col->type==CollectionColumn::TYPE_DATE)
                 $dataProviderColumns[$col->id_column]['format'] = ['date', 'php:d.m.Y'];
+
+            if ($col->type==CollectionColumn::TYPE_DISTRICT)
+            {
+                $dataProviderColumns[$col->id_column]['value'] = function($model) use ($col) {
+                    if (empty($model[$col->id_column]))
+                        return '';
+
+                    $district = \common\models\District::findOne($model[$col->id_column]);
+
+                    if (!empty($district))
+                        return $district->name;
+
+                    return '';
+                };
+            }
 
             if ($col->type==CollectionColumn::TYPE_FILE)
             {

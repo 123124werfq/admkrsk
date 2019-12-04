@@ -51,7 +51,7 @@
             </div>
 
             <div class="smart-menu-content">
-                <?=$this->render('_reestr',['rubrics'=>$rubrics,'servicesRubs'=>$servicesRubs])?>
+                <?=$this->render('_reestr',['rubrics'=>$rubrics,'servicesRubs'=>$servicesRubs,'active'=>($open)?'active':''])?>
                 <div id="situations" class="tab-content">
                     <div class="svg-hidden">
                         <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">

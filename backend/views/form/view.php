@@ -26,6 +26,9 @@ $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $
         <li>
             <?=Html::a('Данные', ['collection-record/index', 'id' => $model->id_collection], ['class' => 'nav-link'])?>
         </li>
+        <li>
+            <?=Html::a('Колонки', ['collection-column/index', 'id' => $model->id_collection], ['class' => 'nav-link'])?>
+        </li>
         <li class="active">
             <?=Html::a('Форма', ['form/view', 'id' => $model->id_form], ['class' => 'nav-link'])?>
         </li>

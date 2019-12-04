@@ -73,7 +73,7 @@ class FormDynamic extends DynamicModel
         {
             $attribute = 'input'.$input->id_input;
 
-            if (!empty($this->$attribute))
+            if (isset($this->$attribute))
             {
                 $index = ($columnAsIndex)?$input->id_column:$input->id_input;
 

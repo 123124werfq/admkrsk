@@ -204,6 +204,35 @@ class CollectionController extends Controller
         return ['results' => $results];
     }
 
+    public function actionRecordList($id,$q)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $collection = $this->findModel($id);
+        $collection = $stripos->getArray();
+
+        $i = 0;
+        $results = [];
+
+        foreach ($collection as $key => $value)
+        {
+            if ($i>15)
+                break;
+
+            if (stripos($value, $q))
+            {
+                $results[] = [
+                    'id' => $key,
+                    'text' => $value,
+                ];
+
+                $i++;
+            }
+        }
+
+        return ['results' => $results];
+    }
+
     public function actionCopy($id)
     {
         $model = $this->findModel($id);
@@ -578,6 +607,11 @@ class CollectionController extends Controller
 
                                     if ($column->save())
                                         $columns[$tdkey] = $column;
+                                    else
+                                    {
+                                        print_r($column->errors);
+                                        die();
+                                    }
                                 }
 
                                 foreach ($records as $rkey => $row)

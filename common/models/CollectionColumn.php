@@ -32,6 +32,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
     //const TYPE_FILES = 18;
     const TYPE_IMAGE = 9;
     const TYPE_COLLECTION = 13;
+    const TYPE_COLLECTIONS = 25;
     const TYPE_RADIO = 15;
     const TYPE_ADDRESS = 16;
     const TYPE_JSON = 17;
@@ -110,7 +111,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'type'=>'input',
                 ],
             ],
-            
+
             self::TYPE_IMAGE => [
                 'acceptedFiles'=>[
                     'name'=>'Допустимые расширения файлов',
@@ -148,7 +149,8 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_RADIO => "Радио кнопки",
             self::TYPE_MAP => "Координаты",
             self::TYPE_FILE => "Файл",
-            self::TYPE_COLLECTION => "Список",
+            self::TYPE_COLLECTION => "Данные из списока",
+            self::TYPE_COLLECTIONS => "Данные из списока, несколько элементов ",
             self::TYPE_IMAGE => "Изображение",
             self::TYPE_ADDRESS => "Адрес",
             self::TYPE_JSON => "Таблицы",
@@ -191,6 +193,28 @@ class CollectionColumn extends \yii\db\ActiveRecord
         parent::afterSave($insert, $changedAttributes);
     }
 
+    public function getOptionsData()
+    {
+        $options = [
+            'width'=>[
+                'name'=>'Ширина',
+                'type'=>'number',
+                'value'=>'100',
+                'min'=>50,
+            ],
+        ];
+
+        $data = $this->options;
+
+        foreach ($options as $key => $value)
+        {
+            if (!empty($data[$key]))
+                $options[$key]['value'] = $data[$key];
+        }
+
+        return $options;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -210,6 +234,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             [['id_collection', 'id_dictionary', 'type', 'show_column_admin', 'ord'], 'integer'],
             [['name','alias'], 'string', 'max' => 500],
             [['variables'], 'string'],
+            [['options'], 'safe'],
             [['type'], 'default', 'value' => self::TYPE_INPUT],
         ];
     }
@@ -225,8 +250,14 @@ class CollectionColumn extends \yii\db\ActiveRecord
             'name' => 'Название',
             'type' => 'Тип',
             'alias' => 'Алиас',
+            'options' => 'Настройки',
             'show_column_admin' => 'Show Column Admin',
             'ord' => 'Ord',
         ];
+    }
+
+    public function getCollection()
+    {
+        return $this->hasOne(Collection::class, ['id_collection' => 'id_collection']);
     }
 }
