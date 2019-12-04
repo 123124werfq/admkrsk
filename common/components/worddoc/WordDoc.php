@@ -58,7 +58,7 @@ class WordDoc
             $template->setValue("value#$i", $value);
         }*/
 
-        $template->saveAs($root."/runtime/$template.docx");
+        $template->saveAs($root."/template/out.docx");
 
         return true;
     }

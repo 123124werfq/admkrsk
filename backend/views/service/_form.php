@@ -128,6 +128,16 @@ if (!empty($offices))
 
         <?= $form->field($model, 'max_duration_queue')->textarea(['rows' => 6]) ?>
 
+        <?=common\components\multifile\MultiFileWidget::widget([
+            'model'=>$model,
+            'single'=>true,
+            'relation'=>'template',
+            'extensions'=>['docx'],
+            'grouptype'=>1,
+            'showPreview'=>false
+        ]);?>
+
+
         <?php if (Yii::$app->user->can('admin.service')): ?>
 
             <hr>

@@ -1,7 +1,9 @@
 <?php
 
 namespace common\models;
-
+use common\modules\log\behaviors\LogBehavior;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 use Yii;
 
 /**
@@ -69,6 +71,32 @@ class ServiceTarget extends \yii\db\ActiveRecord
             'deleted_at' => 'Deleted At',
             'deleted_by' => 'Deleted By',
         ];
+    }
+    
+    public function behaviors()
+    {
+        return [
+            'ts' => TimestampBehavior::class,
+            'ba' => BlameableBehavior::class,
+            'log' => LogBehavior::class,
+            'multiupload' => [
+                'class' => \common\components\multifile\MultiUploadBehavior::class,
+                'relations'=>
+                [
+                    'template'=>[
+                        'model'=>'Media',
+                        'fk_cover' => 'id_media_tempalte',
+                        'cover' => 'template',
+                    ],
+                ],
+                'cover'=>'template'
+            ],
+        ];
+    }
+
+    public function getTemplate()
+    {
+        return $this->hasOne(Service::class, ['id_service' => 'id_service']);
     }
 
     public function getService()

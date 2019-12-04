@@ -30,21 +30,15 @@
 	if ($input->type==CollectionColumn::TYPE_SELECT)
 		$groupClass .= ' custom-select';
 
-	$visibleField = '';
 
-	if (!empty($input->visibleInput))
-		$visibleField = 'data-visible-field="input'.$input->visibleInput.'"';
-
-	$visibleInputValue = '';
-
-	if (!empty($input->visibleInputValue))
-		$visibleInputValue = 'data-values="'.implode(',', $input->visibleInputValue).'"';
+	if (!empty($input->visibleInputs))
+		$groupClass .= ' visibled';
 
 	$attribute = "input$input->id_input";
 ?>
 
 <div class="col">
-	<div class="form-group <?=$groupClass?>" <?=$visibleField?> <?=$visibleInputValue?>>
+	<div id="inputGroup<?=$input->id_input?>" class="form-group <?=$groupClass?>">
 		<?php if (!empty($input->label)){?>
 		<label class="form-label"><?=$input->label?><?=!empty($options['required'])?'*':''?></label>
 		<?php }?>

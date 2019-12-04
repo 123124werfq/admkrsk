@@ -153,7 +153,9 @@ class CollectionRecord extends \yii\db\ActiveRecord
         $output = [];
 
         foreach ($rows->all() as $key => $data)
+        {
             $output[$keyAsAlias?$data['alias']:$data['id_column']] = $data['value'];
+        }
 
         $this->loadData = $output;
 

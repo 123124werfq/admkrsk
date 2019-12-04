@@ -30,7 +30,7 @@ class ServiceController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index'],
+                        'actions' => ['index','make-doc'],
                         'roles' => ['backend.service.index'],
                         'roleParams' => [
                             'class' => Service::class,
@@ -222,7 +222,13 @@ class ServiceController extends Controller
 
     public function actionMakeDoc()
     {
-        \common\components\worddoc\WordDoc::makeDoc([1,2,3],'11.docx');
+        $appeal = \common\models\ServiceAppeal::findOne(6);
+
+        $data = $appeal->collectionRecord->getData(true);
+
+        $form = $appeal->collectionRecord->collection->form;
+
+        \common\components\worddoc\WordDoc::makeDocByForm($form, $data, 'test2.docx');
     }
 
     /**

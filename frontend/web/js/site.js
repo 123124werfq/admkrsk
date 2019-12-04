@@ -82,6 +82,67 @@ $(document).ready(function() {
         });
     });
 
+    if (visibleInput!==undefined)
+    {
+        for (var id_vinput in visibleInput)
+        {
+            var source = $("#input"+id_vinput);
+
+            function getValue(input)
+            {
+                if (input.is(':checkbox'))
+                {
+                    if (input.is(':checked'))
+                        var val = input.val();
+                    else
+                        var val = null
+                }
+                else
+                    var val = input.val();
+
+                return val;
+            }
+            
+            function check(source)
+            {
+                var val = getValue(source);
+
+                for (var id_input in visibleInput[id_vinput])
+                {
+                    if (visibleInput[id_vinput][id_input].indexOf(val)<0)
+                      $("#inputGroup"+id_input).hide();
+                    else
+                    {
+                        var show = true;
+
+                        for (var id_source in visibleSourceInput[id_input])
+                        {
+                            var val = getValue($("#input"+id_source));
+
+                            console.log(val+' '+id_source);
+                            console.log(visibleSourceInput[id_input][id_source]);
+
+                            if (visibleSourceInput[id_input][id_source].indexOf(val)<0)
+                                show = false;
+                        }
+
+                        console.log(show);
+                        if (!show)
+                            $("#inputGroup"+id_input).hide();
+                        else 
+                            $("#inputGroup"+id_input).show();
+                    }
+                }
+            }
+
+            source.change(function(){
+                check(source);
+            });
+
+            check(source);
+        }   
+    }
+
     $("div[data-visible-field]").each(function(){
 
         var source = $("#"+$(this).data('visible-field'));
