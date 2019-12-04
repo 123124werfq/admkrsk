@@ -55,10 +55,10 @@ class EventController extends \yii\web\Controller
                 $date_begin = mktime(0,0,0,date('m',$date_begin),date('d',$date_begin),date('Y',$date_begin));
 
                 $date_end = strtotime(trim($dates[1]));
-                $date_end = mktime(24,59,59,date('m',$date_end),date('d',$date_end),date('Y',$date_end));
+                $date_end = mktime(23,59,59,date('m',$date_end),date('d',$date_end),date('Y',$date_end));
 
-                $collection->whereByAlias(['>','date',$date_begin]);
-                $collection->whereByAlias(['<','date',$date_end]);
+                $collection->whereByAlias(['>=','date',$date_begin]);
+                $collection->whereByAlias(['<=','date',$date_end]);
             }
         }
 
