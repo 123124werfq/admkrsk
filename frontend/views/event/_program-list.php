@@ -8,9 +8,11 @@
             <div class="program_col-main">
                 <h4 class="program_label"><?=$event['name']??''?></h4>
             </div>
+            <?php if (!empty($event['place'])){?>
             <div class="program_col-area">
                 <span class="area">​<?=$event['place']??''?> <?=(!empty($event['place_info']))?"({$event['place_info']})":''?></span>
             </div>
+            <?php }?>
             <div class="program_col-time">
                 <?=$event['time']??''?>
             </div>
