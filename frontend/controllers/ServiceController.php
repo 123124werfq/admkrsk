@@ -4,6 +4,8 @@ namespace frontend\controllers;
 
 use common\models\Service;
 use common\models\Form;
+use common\models\ServiceAppeal;
+use common\models\ServiceAppealState;
 use common\models\ServiceRubric;
 use common\models\ServiceSituation;
 use common\models\ServiceTarget;
@@ -129,11 +131,45 @@ class ServiceController extends \yii\web\Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
             $prepare = $model->prepareData();
-            print_r($_POST);
-            print_r($prepare);
 
-            /*print_r($_FILES);
-            print_r($model->attributes);*/
+            if ($record = $form->collection->insertRecord($prepare))
+            {
+               $appeal = new ServiceAppeal;
+               $appeal->id_user = Yii::$app->user->id;
+               $appeal->id_service = $service->id_service;
+               $appeal->id_record = $record->id_record;
+               $appeal->id_collection = $form->collection->id_collection;
+               $appeal->date = time();
+               $appeal->state = 'empty'; // это переехало в ServiceAppealState, убрать в перспективе
+
+               $idents = [
+                   'giud' => Service::generateGUID()
+               ];
+
+               $appeal->data = json_encode($idents);
+
+               if($appeal->save())
+               {
+                   $state = new ServiceAppealState;
+                   $state->id_appeal = $appeal->id_appeal;
+                   $state->date = time();
+                   $state->state = ServiceAppealState::STATE_INIT;
+                   $state->save();
+               }
+               else
+               {
+                   var_dump($appeal->errors);
+                   die();
+               }
+
+
+            }
+
+            /*
+            print_r($prepare);
+            print_r($_FILES);
+            print_r($model->attributes);
+            */
             die();
 
             return $this->redirect('/service-recieved');
@@ -181,4 +217,5 @@ class ServiceController extends \yii\web\Controller
 
         throw new NotFoundHttpException('Такой страницы не существует');
     }
+
 }

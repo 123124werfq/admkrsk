@@ -17,6 +17,12 @@ use Yii;
  */
 class ServiceAppealState extends \yii\db\ActiveRecord
 {
+
+    const STATE_INIT = 0;
+    const STATE_SEND = 1;
+    const STATE_RESPONSE = 2;
+    const STATE_CLOSED = 99;
+
     /**
      * {@inheritdoc}
      */
