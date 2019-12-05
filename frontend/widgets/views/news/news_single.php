@@ -28,7 +28,7 @@
                                     <?php if (!empty($wide->id_rub)){?>
                                     <li class="events_info-item events_info-item__place"><a href="<?=$page->getUrl()?>?id_rub=<?=$wide->id_rub?>"><?=$wide->rub->getLineValue()?></a></li>
                                     <?php }?>
-                                    <li class="events_info-item"><?=strftime('%d %B %Y, %M:%S',$wide->date_publish)?></li>
+                                    <li class="events_info-item"><?=Yii::$app->formatter->asDatetime($wide->date_publish,'d MMMM yyyy HH:mm')?></li>
                                 </ul>
                             </div>
                         <?php }?>
