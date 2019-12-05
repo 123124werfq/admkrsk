@@ -82,7 +82,7 @@ $(document).ready(function() {
         });
     });
 
-    if (visibleInput!==undefined)
+    if (typeof visibleInput !== 'undefined')
     {
         for (var id_vinput in visibleInput)
         {
