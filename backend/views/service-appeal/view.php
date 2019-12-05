@@ -11,9 +11,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Заявки по услугам',
 $this->params['breadcrumbs'][] = $this->title;
 
 if (!empty($model->target->service->template))
-{
-    $this->params['button-block'][] = Html::a('Скачать документ', ['doc'], ['class' => 'btn btn-success']);
-}
+    $this->params['button-block'][] = Html::a('Скачать документ', ['doc','id'=>$model->id_appeal], ['class' => 'btn btn-success']);
 
 \yii\web\YiiAsset::register($this);
 ?>

@@ -103,19 +103,26 @@ class ServiceAppealController extends Controller
 
         $form = $appeal->collectionRecord->collection->form;
 
-        /*$media = $appeal->collectionRecord->collection->template;
+        $media = $appeal->target->service->template;
         $url = $media->getUrl();
 
-        \common\components\worddoc\WordDoc::makeDocByForm($form, $data, 'test2.docx');
+        $template = file_get_contents($url);
+        $root = Yii::getAlias('@app');
+        $template_path = $root.'/runtime/template_'.$media->id_media.'_'.time().'docx';
+        $template = file_put_contents($template_path);
+
+        $export_path = \common\components\worddoc\WordDoc::makeDocByForm($form, $data, $template_path);
 
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="Результаты_собрания_'.$id.'.'.$extension.'"');
+        header('Content-Disposition: attachment; filename="'.$appeal->targer->number.' '.$appeal->created_at.'"');
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
-        header('Content-Length: ' . filesize($path));
-        readfile($path);
+        header('Content-Length: ' . filesize($export_path));
+        readfile($export_path);
+
+        unlink($export_path);
     }
 
     /**

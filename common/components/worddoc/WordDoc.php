@@ -58,9 +58,10 @@ class WordDoc
             $template->setValue("value#$i", $value);
         }*/
 
-        $template->saveAs($root."/template/out.docx");
+        $export_path = $root."/runtimer/".time().'_out.docx';
+        $template->saveAs($export_path);
 
-        return true;
+        return $export_path;
     }
 }
 ?>
