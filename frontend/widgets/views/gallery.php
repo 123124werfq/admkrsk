@@ -15,7 +15,7 @@
 		<div class="content-gallery_item">
 			<a href="<?=$media->getUrl()?>" data-fancybox="gallery-<?=$gallery->id_gallery?>">
 				<img src="<?=$media->showThumb(['w'=>768,'h'=>450])?>" alt="">
-				<?php if ($key>$limit-1 && count($medias)>$limit+1){?>
+				<?php if ($key>($limit-1) && count($medias)>($limit+1)){?>
 				<span class="content-gallery_count">+<?=count($medias)-$limit-1?></span>
 				<?php }?>
 			</a>
