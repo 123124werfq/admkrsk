@@ -23,7 +23,7 @@ class LangUrlRule extends BaseObject implements UrlRuleInterface
 
         //$parts = explode("/", $pathInfo);
 
-        if(strpos(" ".$pathInfo, "en/")==1)
+        if(strpos(" ".$pathInfo, "en")==1)
             Yii::$app->language = 'en';
 
 
