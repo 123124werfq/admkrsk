@@ -11,7 +11,7 @@
             <?php if (!empty($data->id_rub)){?>
             <li class="press_info-item press_info-item__place"><a href="?id_rub=<?=$data->id_rub?>"><?=$data->rub->getLineValue()?></a></li>
             <?php }?>
-            <li class="press_info-item"><?= Yii::$app->formatter->asDatetime($data->date_publish) ?></li>
+            <li class="press_info-item"><?= Yii::$app->formatter->asDatetime($data->date_publish,'d MMMM yyyy HH:mm') ?></li>
         </ul>
     </div>
     <?php if (!empty($data->id_media)){?>
