@@ -1,7 +1,7 @@
 <div id="reestr" class="tab-content active">
     <div class="row">
         <div class="col-2-third">
-            <?php
+            <?php if(isset($rubrics[0]))
             foreach ($rubrics[0] as $key => $rub) {
                 ?>
 			<h2 class="mt-0"><?=$rub->name?></h2>
