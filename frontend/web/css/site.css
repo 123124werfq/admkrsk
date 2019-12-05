@@ -24,7 +24,7 @@ margin-bottom: 36px;
 	padding: 13px 16px!important;
 	    height: 47px!important;
 }
-.ms-asset-icon {display: none!important;}
+img [src="http://www.admkrsk.ru/_layouts/images/icdocx.png"], .ms-asset-icon {display: none!important;}
 
 .btn-group .btn-group_item {
 	margin-left: 0px;
