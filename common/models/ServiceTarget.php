@@ -85,7 +85,7 @@ class ServiceTarget extends \yii\db\ActiveRecord
                 [
                     'template'=>[
                         'model'=>'Media',
-                        'fk_cover' => 'id_media_tempalte',
+                        'fk_cover' => 'id_media_template',
                         'cover' => 'template',
                     ],
                 ],

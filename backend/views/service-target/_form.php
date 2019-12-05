@@ -16,7 +16,7 @@ use common\models\Form;
         <?php $form = ActiveForm::begin(); ?>
 
         <?= $form->field($model, 'state')->checkBox() ?>
-        
+
         <?=$form->field($model, 'id_form')->widget(Select2::class, [
                 'data' => ArrayHelper::map(Form::find()->all(), 'id_form', 'name'),
                 'pluginOptions' => [
@@ -44,6 +44,7 @@ use common\models\Form;
 
         <?= $form->field($model, 'obj_name')->textInput(['maxlength' => 255]) ?>
 
+        <h3>Шаблон документа</h3>
         <?=common\components\multifile\MultiFileWidget::widget([
             'model'=>$model,
             'single'=>true,

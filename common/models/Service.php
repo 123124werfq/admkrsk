@@ -60,6 +60,7 @@ class Service extends \yii\db\ActiveRecord
     const TYPE_FIRM = 4;
 
     public $access_user_ids;
+    public $id_target;
     public $access_user_group_ids;
 
     /**
@@ -99,6 +100,7 @@ class Service extends \yii\db\ActiveRecord
             'id_service' => 'ID',
             'id_rub' => 'Рубрика',
             'id_form' => 'Форма приема заявления',
+            'id_target'=> 'Цель',
             'reestr_number' => 'Реестровый номер услуги',
             'fullname' => 'Полное наименование',
             'name' => 'Название',
@@ -152,7 +154,7 @@ class Service extends \yii\db\ActiveRecord
                 [
                     'template'=>[
                         'model'=>'Media',
-                        'fk_cover' => 'id_media_tempalte',
+                        'fk_cover' => 'id_media_template',
                         'cover' => 'template',
                     ],
                 ],
@@ -175,6 +177,16 @@ class Service extends \yii\db\ActiveRecord
                 'настройка для ДО'=>'настройка для ДО',
                 'услуга учреждения'=>'услуга учреждения',
             ];
+        if ($attribute=='id_target')
+        {
+            $output = [];
+
+            foreach ($this->targets as $key => $target)
+                $output[$target->id_target] = $target->name;
+
+            return $output;
+        }
+
     }
 
     public function beforeSave($insert)

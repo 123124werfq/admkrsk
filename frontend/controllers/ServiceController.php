@@ -158,7 +158,8 @@ class ServiceController extends \yii\web\Controller
                    $state->id_appeal = $appeal->id_appeal;
                    $state->date = time();
                    $state->state = (string)ServiceAppealState::STATE_INIT;
-                   if($state->save())
+
+                   if ($state->save())
                    {
                        $appeal->state = $state->state;
                        $appeal->number_internal = $appeal->id_appeal; // пока такой внутренний номер
@@ -171,7 +172,6 @@ class ServiceController extends \yii\web\Controller
                         $wf->generateArchive($idents['guid'], $attachments);
 
                         // ... тут XML
-
                         $opres = $wf->sendServiceMessage($appeal);
                         $integration = new Integration;
                         $integration->system = Integration::SYSTEM_SED;
@@ -198,8 +198,6 @@ class ServiceController extends \yii\web\Controller
                    var_dump($appeal->errors);
                    die();
                }
-
-
             }
 
             /*
@@ -222,6 +220,7 @@ class ServiceController extends \yii\web\Controller
         return $this->render('create',[
             'form'=>$form,
             'service'=>$service,
+            'target'=>$target,
             'page'=>$page,
             'inputs'=>$inputs,
         ]);

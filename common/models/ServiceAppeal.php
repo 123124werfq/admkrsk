@@ -73,4 +73,9 @@ class ServiceAppeal extends \yii\db\ActiveRecord
     {
         return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_record']);
     }
+
+     public function getTarget()
+    {
+        return $this->hasOne(ServiceTarget::class, ['id_target' => 'id_target']);
+    }
 }

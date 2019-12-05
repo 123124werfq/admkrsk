@@ -127,6 +127,7 @@ if (!empty($offices))
 
         <?= $form->field($model, 'max_duration_queue')->textarea(['rows' => 6]) ?>
 
+        <h3>Шаблон документа</h3>
         <?=common\components\multifile\MultiFileWidget::widget([
             'model'=>$model,
             'single'=>true,
@@ -135,7 +136,6 @@ if (!empty($offices))
             'grouptype'=>1,
             'showPreview'=>false
         ]);?>
-
 
         <?php if (Yii::$app->user->can('admin.service')): ?>
 
