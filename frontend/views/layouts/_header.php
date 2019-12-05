@@ -15,7 +15,7 @@ if(!Yii::$app->user->isGuest){
     <div class="blockWrapper">
         <div class="linkBlock">
             <div class="blockWrapper">
-                <a href="?accessability=off" class="link link-accessability">Обычная версия сайта</a>
+                <a href="?accessability=off" class="link link-accessability"><?=Yii::t('site', 'Обычная версия сайта')?></a>
             </div>
         </div>
         <div class="settingsBlock" data-type="common">
@@ -88,23 +88,23 @@ if(!Yii::$app->user->isGuest){
                 <span class="gosbar-icon">
                     <svg class="gocbar-svgicon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="#list_icon_svg"/><defs><path id="list_icon_svg" fill-rule="evenodd" d="M0 4h4V0H0v4zm6 12h4v-4H6v4zm-2 0H0v-4h4v4zm-4-6h4V6H0v4zm10 0H6V6h4v4zm2-10v4h4V0h-4zm-2 4H6V0h4v4zm2 6h4V6h-4v4zm4 6h-4v-4h4v4z"/></defs></svg>
                 </span>
-                <span class="gosbar_btn-text">Сайт администрации города</span>
+                <span class="gosbar_btn-text"><?=Yii::t('site', 'Сайт администрации города')?></span>
             </a>
 
             <div class="gosbar__right-block">
                 <form id="top-search" action="/search"><input class="header-search" name="q"></form>
                 <a href="#" class="gosbar_btn">
                     <span class="material-icons gosbar-icon" id="gosbar-search-go">search</span>
-                    <span class="gosbar_btn-text">Поиск по сайту</span>
+                    <span class="gosbar_btn-text"><?=Yii::t('site', 'Поиск по сайту')?></span>
                 </a>
                 <a href="/en" class="gosbar_btn"><span class="material-icons gosbar-icon">g_translate</span><span class="gosbar_btn-text">English</span></a>
                 <a href="#" class="gosbar_btn link-accessability">
                     <span class="material-icons gosbar-icon">visibility</span>
-                    <span class="gosbar_btn-text">Версия для слабовидящих</span>
+                    <span class="gosbar_btn-text"><?=Yii::t('site', 'Версия для слабовидящих')?></span>
                 </a>
 
                 <?php
-                if (!strpos(Yii::$app->request->url, 'new-year2019') && !strpos(Yii::$app->request->hostInfo, 'newyear.')){
+                if (Yii::$app->language != 'en' && !strpos(Yii::$app->request->url, 'new-year2019') && !strpos(Yii::$app->request->hostInfo, 'newyear.')){
                   ?>
                 <div class="dropdown dropdown-flex">
                     <span class="gosbar_btn dropdown-toggle">
@@ -136,23 +136,25 @@ if(!Yii::$app->user->isGuest){
     <div class="container">
         <div class="header-wrapper">
             <a href="/" class="header_logo">
-                <img class="header_logo-img" src="<?=$bundle->baseUrl.'/img/logo.svg' ?>" alt="Администрация города Красноярск">
+                <img class="header_logo-img" src="<?=$bundle->baseUrl.'/img/logo.svg' ?>" alt="<?=Yii::t('site', 'Администрация города Красноярск')?>">
                 <span class="header_logo-title-holder">
-                    <span class="header_logo-title">Красноярск</span>
-                    <span class="header_logo-subtitle">Администрация города</span>
+                    <span class="header_logo-title"><?=Yii::t('site', 'Красноярск')?></span>
+                    <span class="header_logo-subtitle"><?=Yii::t('site', 'Администрация города')?></span>
                 </span>
             </a>
-            <h1 class="accessability-title">Администрация города Красноярск</h1>
+            <h1 class="accessability-title"><?=Yii::t('site', 'Администрация города Красноярск')?></h1>
             <div class="header_menu">
                 <?php
-                if (strpos(Yii::$app->request->url, 'new-year2019') || strpos(Yii::$app->request->hostInfo, 'newyear.'))
+                if(Yii::$app->language == 'en')
+                    echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'en_header_menu']);
+                elseif (strpos(Yii::$app->request->url, 'new-year2019') || strpos(Yii::$app->request->hostInfo, 'newyear.'))
                     echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'new_year_menu_header']);
                 else
                     echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'header_menu']);
                 ?>
                 <button class="header-menu_link header-menu_search search-toggle">
                     <span class="material-icons">search</span>
-                    <span class="header-menu_btn-text">Поиск по сайту</span>
+                    <span class="header-menu_btn-text"><?=Yii::t('site', 'Поиск по сайту')?></span>
                 </button>
                 <button class="header-menu_link sitemap-toggle">
                     <span class="material-icons"><span class="sitemap-toggle_dots">more_horiz</span><span class="sitemap-toggle_menu">menu</span></span>
@@ -164,7 +166,9 @@ if(!Yii::$app->user->isGuest){
     <div class="sitemap">
         <div class="container">
             <?php
-            if (strpos(Yii::$app->request->url, 'new-year2019') || strpos(Yii::$app->request->hostInfo, 'newyear.'))
+            if(Yii::$app->language == 'en')
+                echo \frontend\widgets\MenuWidget::widget(['alias'=>'subheader_menu_en','template'=>'subheader_menu']);
+            elseif (strpos(Yii::$app->request->url, 'new-year2019') || strpos(Yii::$app->request->hostInfo, 'newyear.'))
                 echo \frontend\widgets\MenuWidget::widget(['alias'=>'subheader_menu_ny','template'=>'subheader_menu']);
             else
                 echo \frontend\widgets\MenuWidget::widget(['alias'=>'subheader_menu','template'=>'subheader_menu']);

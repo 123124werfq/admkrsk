@@ -30,6 +30,20 @@ return [
                 ],
             ],
         ],
+        'i18n' => array(
+            'translations' => array(
+                '*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@frontend/messages',
+                    'sourceLanguage' => 'ru',
+                    //'on missingTranslation' => ['app\components\TranslationEventHandler', 'handleMissingTranslation']
+                    'fileMap' => [
+                        'app' => 'app.php',
+                        'app/error' => 'error.php',
+                    ],
+                ],
+            )
+        ),
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
@@ -75,6 +89,9 @@ return [
                 'book/available' => 'book/available',
                 'book/intervals' => 'book/intervals',
                 [
+                    'class' => 'frontend\components\LangUrlRule',
+                ],
+                [
                     'class' => 'frontend\components\PravoUrlRule',
                 ],
                 [
@@ -103,5 +120,8 @@ return [
 
         ],
     ],
+    'sourceLanguage' => 'ru',
+    'language' => 'ru',
+
     'params' => $params,
 ];
