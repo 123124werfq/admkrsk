@@ -95,7 +95,7 @@ if(!Yii::$app->user->isGuest){
                 <form id="top-search" action="/search"><input class="header-search" name="q"></form>
                 <a href="#" class="gosbar_btn">
                     <span class="material-icons gosbar-icon" id="gosbar-search-go">search</span>
-                    <span class="gosbar_btn-text">Поиск по сайту</span>
+                    <span class="gosbar_btn-text"><?=Yii::t('site', 'Поиск по сайту')?></span>
                 </a>
                 <a href="/en" class="gosbar_btn"><span class="material-icons gosbar-icon">g_translate</span><span class="gosbar_btn-text">English</span></a>
                 <a href="#" class="gosbar_btn link-accessability">
@@ -166,7 +166,9 @@ if(!Yii::$app->user->isGuest){
     <div class="sitemap">
         <div class="container">
             <?php
-            if (strpos(Yii::$app->request->url, 'new-year2019') || strpos(Yii::$app->request->hostInfo, 'newyear.'))
+            if(Yii::$app->language == 'en')
+                echo \frontend\widgets\MenuWidget::widget(['alias'=>'subheader_menu_en','template'=>'subheader_menu']);
+            elseif (strpos(Yii::$app->request->url, 'new-year2019') || strpos(Yii::$app->request->hostInfo, 'newyear.'))
                 echo \frontend\widgets\MenuWidget::widget(['alias'=>'subheader_menu_ny','template'=>'subheader_menu']);
             else
                 echo \frontend\widgets\MenuWidget::widget(['alias'=>'subheader_menu','template'=>'subheader_menu']);
