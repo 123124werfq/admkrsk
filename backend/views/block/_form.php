@@ -55,18 +55,17 @@ use kartik\select2\Select2;
 
                 	if ($varOptions['multiple'] && !is_array($var->value))
                 		$var->value = json_decode($var->value,true);
-
                 	echo $form->field($var, "[$ckey]value")->widget(Select2::class, [
-	                    'data' => Collection::getArrayByAlias("press_people"),
+	                    'data' => Collection::getArrayByAlias($varOptions['alias']),
 	                    'pluginOptions' => [
 	                        'allowClear' => true,
 	                        'placeholder' => 'Запись',
 	                        'multiple'=>$varOptions['multiple']??false
 	                    ],
 	                    'options'=>[
-	                    	'multiple'=>$varOptions['multiple']??false
+	                    	'multiple'=>$varOptions['multiple']??false,
 	                	]
-                	]);
+                	])->label(false);
                     break;
                 case $var::TYPE_SELECT:
 	                echo Html::activeDropDownList($var,"[$ckey]value",$model->blocks[$model->type]['vars'][$var->alias]['values'],['class'=>'form-control','id'=>'Value_'.$ckey]);
