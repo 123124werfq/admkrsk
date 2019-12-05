@@ -103,7 +103,7 @@ JS;
 					$dataOptions[] = 'data-maxfiles="'.$options['maxFiles'].'"';
 
 				echo'
-				<div data-input="'.$input->id_input.'" class="fileupload" '.implode(' ', $dataOptions).' >
+				<div data-input="'.$input->id_input.'" class="fileupload" '.implode(' ', $dataOptions).'>
 	                <div class="fileupload_dropzone">
 	                    <div class="fileupload_btn">
 	                        <span class="fileupload_btn-text">Выберите файлы</span>
@@ -121,10 +121,10 @@ JS;
 				$dataOptions = [];
 
 				if (!empty($options['acceptedFiles']))
-					$dataOptions[] = 'data-acceptedFiles="'.$options['acceptedFiles'];
+					$dataOptions[] = 'data-acceptedFiles="'.$options['acceptedFiles'].'"';
 
 				if (!empty($options['maxFiles']))
-					$dataOptions[] = 'data-maxFiles="'.$options['maxFiles'];
+					$dataOptions[] = 'data-maxFiles="'.$options['maxFiles'].'"';
 
 				echo'
 				<div data-input="'.$input->id_input.'" class="fileupload" '.implode(' ', $dataOptions).' >
