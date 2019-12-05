@@ -77,7 +77,6 @@ if (!empty($offices))
 
         <?= $form->field($model, 'type')->dropDownList($model::getAttributeValues('type'),['prompt'=>'Выберите значение'])?>
 
-
         <?= $form->field($model, 'name')->textInput(['maxlength' => 500]) ?>
 
         <?= $form->field($model, 'fullname')->textArea() ?>
@@ -141,13 +140,9 @@ if (!empty($offices))
         <?php if (Yii::$app->user->can('admin.service')): ?>
 
             <hr>
-
             <h3>Доступ</h3>
-
             <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>
-
             <?= $form->field($model, 'access_user_group_ids')->label('Группы пользоватей')->widget(UserGroupAccessControl::class) ?>
-
         <?php endif; ?>
 
         <hr>

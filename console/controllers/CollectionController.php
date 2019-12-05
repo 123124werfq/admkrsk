@@ -3,6 +3,9 @@
 namespace console\controllers;
 
 use common\models\Collection;
+use common\models\CollectionRecord;
+use common\models\Service;
+
 use common\models\Form;
 use common\models\FormRow;
 use common\models\FormElement;
@@ -24,7 +27,7 @@ class CollectionController extends Controller
                 $form = new Form;
                 $form->id_collection = $collection->id_collection;
                 $form->name = $collection->name;
-                
+
                 if ($form->save())
                 {
                     foreach ($collection->columns as $ckey => $column)
@@ -59,11 +62,30 @@ class CollectionController extends Controller
 
             $transaction->commit();
 
-        } catch (\Exception $e) 
+        } catch (\Exception $e)
         {
             $transaction->rollBack();
             throw $e;
         }
 
+    }
+
+    public function actionService()
+    {
+        $collection = Collection::find()->where(['alias'=>'service_offices'])->one();
+
+        $data = $collection->getData([],true);
+
+        foreach ($data as $key => $row)
+        {
+            if (!empty((int)$row['UslugaID']))
+            {
+                $record = CollectionRecord::findOne($key);
+                $service = Service::findOne((int)$row['UslugaID']);
+
+                if (!empty($record) && !empty($service))
+                    $service->link('firms',$record);
+            }
+        }
     }
 }

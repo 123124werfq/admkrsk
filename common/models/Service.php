@@ -245,6 +245,11 @@ class Service extends \yii\db\ActiveRecord
         return $this->hasMany(ServiceSituation::class, ['id_situation' => 'id_situation'])->viaTable('servicel_situation',['id_service'=>'id_service']);
     }
 
+    public function getTemplate()
+    {
+        return $this->hasOne(Media::class, ['id_media' => 'id_media_template']);
+    }
+
     public function getRubric()
     {
         return $this->hasOne(ServiceRubric::class, ['id_rub' => 'id_rub']);
