@@ -206,10 +206,17 @@ class ServiceController extends \yii\web\Controller
             print_r($prepare);
             print_r($_FILES);
             print_r($model->attributes);
-            */
+
             die();
 
             return $this->redirect('/service-recieved');
+            */
+            return $this->render('result',[
+                'number'=> isset($appeal->number_internal)?$appeal->number_internal:false,
+                'page' => $page
+            ]);
+
+
         }
 
         return $this->render('create',[
