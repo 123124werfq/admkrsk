@@ -96,7 +96,7 @@ class FormInput extends \yii\db\ActiveRecord
                 'class' => RelationBehavior::class,
                 'relations'=> [
                     'visibleInputs'=>[
-                        'modelname'=> 'FormVisibleinput',
+                        'modelname'=> 'FormVisibleInput',
                         'added'=>true,
                     ],
                 ]
@@ -165,7 +165,7 @@ class FormInput extends \yii\db\ActiveRecord
         ];
 
         $data = json_decode($this->values,true);
-        
+
         if (empty($data))
             return [$options];
 
@@ -174,7 +174,7 @@ class FormInput extends \yii\db\ActiveRecord
         foreach ($data as $key => $row)
         {
             $line = $options;
-            
+
             foreach ($line as $key => $value)
             {
                 if (!empty($row[$key]))
