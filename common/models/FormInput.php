@@ -164,7 +164,8 @@ class FormInput extends \yii\db\ActiveRecord
             ],
         ];
 
-        $data = json_decode($this->values,true);
+        if (is_string($this->values))
+            $data = json_decode($this->values,true);
 
         if (empty($data))
             return [$options];
