@@ -262,6 +262,14 @@ class Block extends \yii\db\ActiveRecord
         ],
         'people_grid'=> [
             'label'=>'Сетка с контактами',
+            'vars'=>[
+                'peoples'=>[
+                    'name'=>'Люди',
+                    'type'=>BlockVar::TYPE_COLLECTION_RECORD,
+                    'alias'=>'press_people_en',
+                    'multiple'=>'multiple',
+                ],
+            ]
         ],
         'content'=> [
             'label'=>'Содержение',
