@@ -1,18 +1,5 @@
 <?php
-	$styles = [];
-
-	if (!empty($element->options))
-	{
-		foreach ($element->options as $style => $value)
-		{
-			$styles[$style] = $style.':'.$value;
-
-			if ($style=='width')
-				$styles[$style] .= '%';
-			else
-				$styles[$style] .= 'px';
-		}
-	}
+	$styles = $element->getStyles();
 ?>
 <div data-id="<?=$element->id_element?>" class="form-element col" <?=(!empty($styles))?'style="'.implode(';',$styles).'"':''?>>
 	<div class="input form-control" <?=(!empty($styles['font-size']))?'style="'.$styles['font-size'].'"':''?>><?=$element->input->name?></div>

@@ -77,6 +77,26 @@ class FormElement extends \yii\db\ActiveRecord
         return $this->hasOne(FormForm::class, ['id_form' => 'id_input']);
     }
 
+    public function getStyles()
+    {
+        $styles = [];
+
+        if (!empty($this->options))
+        {
+            foreach ($this->options as $style => $value)
+            {
+                $styles[$style] = $style.':'.$value;
+
+                if ($style=='width')
+                    $styles[$style] .= '%';
+                else
+                    $styles[$style] .= 'px';
+            }
+        }
+
+        return $styles;
+    }
+
     public function getOptionsData()
     {
         $options = [
@@ -87,11 +107,11 @@ class FormElement extends \yii\db\ActiveRecord
                 'min'=>1,
                 'max'=>100
             ],
-            'font-size'=>[
-                'name'=>'Размер шрифта',
+            'margin-top'=>[
+                'name'=>'Отступ сверху',
                 'type'=>'number',
-                'min'=>1,
-                'value'=>16,
+                'min'=>0,
+                'value'=>0,
             ],
         ];
 

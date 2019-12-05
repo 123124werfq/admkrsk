@@ -54,9 +54,12 @@
 		foreach ($row->elements as $ekey => $element)
 		{
 			if (!empty($element->id_input))
-				echo $this->render('_input',['input'=>$element->input,'model'=>$model,'form'=>$activeForm]);
+				echo $this->render('_input',['input'=>$element->input,'element'=>$element,'model'=>$model,'form'=>$activeForm]);
 			elseif (!empty($element->content))
-				echo '<div class="text-row">'.$element->content.'</div>';
+			{
+				$styles = $element->getStyles();
+				echo '<div class="text-row" '.((!empty($styles))?'style="'.implode(';',$styles).'"':'').'>'.$element->content.'</div>';
+			}
 		}
 		echo '</div>';
 	}

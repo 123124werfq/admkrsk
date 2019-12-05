@@ -4,6 +4,8 @@
 	use kartik\select2\Select2;
 	use yii\web\JsExpression;
 
+	$styles = $element->getStyles();
+
 	$options = $input->options;
 	$clear = [];
 
@@ -30,15 +32,13 @@
 	if ($input->type==CollectionColumn::TYPE_SELECT)
 		$groupClass .= ' custom-select';
 
-
-	if (!empty($input->visibleInputs))
-		$groupClass .= ' visibled';
-
 	$attribute = "input$input->id_input";
+
+	$styles = $element->getStyles();
 ?>
 
 <div class="col">
-	<div id="inputGroup<?=$input->id_input?>" class="form-group <?=$groupClass?>">
+	<div id="inputGroup<?=$input->id_input?>" <?=(!empty($styles))?'style="'.implode(';',$styles).'"':''?> class="form-group <?=$groupClass?>">
 		<?php if (!empty($input->label)){?>
 		<label class="form-label"><?=$input->label?><?=!empty($options['required'])?'*':''?></label>
 		<?php }?>
