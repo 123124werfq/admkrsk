@@ -12,7 +12,7 @@ use Yii;
  * @property int $id_input_visible
  * @property string $values
  */
-class FormVisibleinput extends \yii\db\ActiveRecord
+class FormVisibleInput extends \yii\db\ActiveRecord
 {
     public $visibleInputs;
     /**
