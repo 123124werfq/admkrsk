@@ -97,7 +97,7 @@ if(!Yii::$app->user->isGuest){
                     <span class="material-icons gosbar-icon" id="gosbar-search-go">search</span>
                     <span class="gosbar_btn-text">Поиск по сайту</span>
                 </a>
-                <!--a href="#" class="gosbar_btn"><span class="material-icons gosbar-icon">g_translate</span><span class="gosbar_btn-text">English</span></a-->
+                <a href="/en" class="gosbar_btn"><span class="material-icons gosbar-icon">g_translate</span><span class="gosbar_btn-text">English</span></a>
                 <a href="#" class="gosbar_btn link-accessability">
                     <span class="material-icons gosbar-icon">visibility</span>
                     <span class="gosbar_btn-text">Версия для слабовидящих</span>
@@ -136,7 +136,7 @@ if(!Yii::$app->user->isGuest){
     <div class="container">
         <div class="header-wrapper">
             <a href="/" class="header_logo">
-                <img class="header_logo-img" src="<?= $bundle->baseUrl . '/img/logo.svg' ?>" alt="Администрация города Красноярск">
+                <img class="header_logo-img" src="<?=$bundle->baseUrl.'/img/logo.svg' ?>" alt="Администрация города Красноярск">
                 <span class="header_logo-title-holder">
                     <span class="header_logo-title">Красноярск</span>
                     <span class="header_logo-subtitle">Администрация города</span>

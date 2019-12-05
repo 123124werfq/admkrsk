@@ -13,7 +13,7 @@
                     {
                         type: 'cancel',
                         name: 'cancel',
-                        text: 'Close Dialog'
+                        text: 'Закрыть'
                     }
                 ],
                 onAction: function (instance, trigger) {
@@ -26,14 +26,12 @@
                     instance.close();
                 },
 
-
                 width: 1000,
                 height: 600
             };
 
             editor.addCommand('iframeCommand', function (ui, value) {
 
-                console.log(value);
                 if (value.id_collection == '')
                     editor.windowManager.alert('Вы не выбрали список');
                 else
@@ -44,6 +42,7 @@
                     $collection.attr('id',value.id_collection);
                     $collection.text('Список #'+value.id_collection);
                     */
+                    console.log('<collection data-columns=\''+JSON.stringify(value)+'\' data-id="'+value.id_collection+'" data-template="'+value.template+'">Список #'+value.id_collection+'.</collection>');
                     editor.insertContent('<collection data-columns=\''+JSON.stringify(value)+'\' data-id="'+value.id_collection+'" data-template="'+value.template+'">Список #'+value.id_collection+'.</collection>');
                 }
 
