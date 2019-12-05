@@ -17,7 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Администрация г. Красноярска' => '',
+    'Администрация г. Красноярска' => 'Krasnoyarsk City Administration',
     'Администрация города' => 'City Administration',
     'Администрация города Красноярск' => '',
     'Адрес' => 'Address',
