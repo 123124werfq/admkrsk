@@ -72,7 +72,7 @@ class ServiceTarget extends \yii\db\ActiveRecord
             'deleted_by' => 'Deleted By',
         ];
     }
-    
+
     public function behaviors()
     {
         return [
@@ -96,7 +96,7 @@ class ServiceTarget extends \yii\db\ActiveRecord
 
     public function getTemplate()
     {
-        return $this->hasOne(Service::class, ['id_service' => 'id_service']);
+        return $this->hasOne(Media::class, ['id_media' => 'id_media_template']);
     }
 
     public function getService()
