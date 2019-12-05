@@ -23,7 +23,7 @@
                             <?=nl2br($data['subtitle']??'')?>
                         </p>
                         <p>
-                            <?=$data['description']??''?>
+                            <?=nl2br($data['description']??'')?>
                         </p>
                         <div class="person-card_contact">
                             <a class="person-card_contact-item person-card_contact-item__phone" href="tel:+<?=preg_replace('/\D/', '', $data['phone']??'')?>"><?=$data['phone']??''?></a>
