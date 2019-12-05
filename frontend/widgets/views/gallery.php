@@ -9,7 +9,7 @@
 	</div>
 	<div class="content-gallery_list">
 		<?php foreach ($medias as $key => $media) {
-			if ($key>$limit)
+			if ($key>=$limit)
 				continue;
 		?>
 		<div class="content-gallery_item">
