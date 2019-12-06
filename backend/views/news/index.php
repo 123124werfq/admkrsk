@@ -7,6 +7,8 @@ use yii\grid\GridView;
 /* @var $searchModel backend\models\search\NewsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
+$archive = Yii::$app->request->get('archive');
+
 $this->title = $page->title;
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -15,6 +17,11 @@ $this->render('/page/_head',['model'=>$page]);
 $this->params['button-block'][] = Html::a('Экпорт XLS', ['','export'=>1,'id_page' => $page->id_page], ['class' => 'btn btn-default']);
 
 if (Yii::$app->user->can('admin.news'))
+    if ($archive) {
+        $this->params['button-block'][] = Html::a('Все записи', ['index', 'id_page' => $page->id_page], ['class' => 'btn btn-default']);
+    } else {
+        $this->params['button-block'][] = Html::a('Архив', ['index', 'id_page' => $page->id_page, 'archive' => 1], ['class' => 'btn btn-default']);
+    }
     $this->params['button-block'][] = Html::a('Добавить новость', ['create','id_page'=>Yii::$app->request->get('id_page',0)], ['class' => 'btn btn-success'])
 ?>
 
@@ -51,6 +58,17 @@ if (Yii::$app->user->can('admin.news'))
                             'updated_at:date:Отредактировано',
                             [
                                 'class' => 'yii\grid\ActionColumn',
+                                'template' => '{view} {update} ' . ($archive ? '{undelete}' : '{delete}'),
+                                'buttons' => [
+                                    'undelete' => function($url, $model, $key) {
+                                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-floppy-disk"]);
+                                        return Html::a($icon, $url, [
+                                            'title' => 'Восстановить',
+                                            'aria-label' => 'Восстановить',
+                                            'data-pjax' => '0',
+                                        ]);
+                                    },
+                                ],
                                 'contentOptions'=>['class'=>'button-column']
                             ],
                         ],

@@ -63,7 +63,7 @@ class ServiceRubricController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['delete'],
+                        'actions' => ['delete', 'undelete'],
                         'roles' => ['backend.serviceRubric.delete'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
@@ -110,7 +110,7 @@ class ServiceRubricController extends Controller
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -124,7 +124,13 @@ class ServiceRubricController extends Controller
      */
     public function actionIndex()
     {
-        $recordsQuery = ServiceRubric::find()->where('id_parent IS NULL');
+        if (Yii::$app->request->get('archive')) {
+            $query = ServiceRubric::findDeleted();
+        } else {
+            $query = ServiceRubric::find();
+        }
+
+        $recordsQuery = $query->where('id_parent IS NULL');
 
         if (!Yii::$app->user->can('admin.opendata')) {
             $recordsQuery->andWhere(['id_rub' => AuthEntity::getEntityIds(ServiceRubric::class)]);
@@ -209,6 +215,22 @@ class ServiceRubricController extends Controller
     }
 
     /**
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionUndelete($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->restore()) {
+            $model->createAction(Action::ACTION_UNDELETE);
+        }
+
+        return $this->redirect(['index', 'archive' => 1]);
+    }
+
+    /**
      * Finds the ServiceRubric model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
@@ -217,7 +239,7 @@ class ServiceRubricController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = ServiceRubric::findOne($id)) !== null) {
+        if (($model = ServiceRubric::findOneWithDeleted($id)) !== null) {
             return $model;
         }
 

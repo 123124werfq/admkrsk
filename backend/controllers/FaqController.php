@@ -67,7 +67,7 @@ class FaqController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['delete'],
+                        'actions' => ['delete', 'undelete'],
                         'roles' => ['backend.faq.delete'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
@@ -229,6 +229,22 @@ class FaqController extends Controller
     }
 
     /**
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionUndelete($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->restore()) {
+            $model->createAction(Action::ACTION_UNDELETE);
+        }
+
+        return $this->redirect(['index', 'archive' => 1]);
+    }
+
+    /**
      * Finds the Faq model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
@@ -237,7 +253,7 @@ class FaqController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Faq::findOne($id)) !== null) {
+        if (($model = Faq::findOneWithDeleted($id)) !== null) {
             return $model;
         }
 

@@ -43,7 +43,11 @@ class GallerySearch extends GalleryModel
      */
     public function search($params)
     {
-        $query = GalleryModel::find();
+        if (Yii::$app->request->get('archive')) {
+            $query = GalleryModel::findDeleted();
+        } else {
+            $query = GalleryModel::find();
+        }
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.gallery')) {

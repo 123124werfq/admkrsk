@@ -62,7 +62,7 @@ class GalleryController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['delete'],
+                        'actions' => ['delete', 'undelete'],
                         'roles' => ['backend.gallery.delete'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
@@ -218,6 +218,22 @@ class GalleryController extends Controller
     }
 
     /**
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionUndelete($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->restore()) {
+            $model->createAction(Action::ACTION_UNDELETE);
+        }
+
+        return $this->redirect(['index', 'archive' => 1]);
+    }
+
+    /**
      * Finds the Gallery model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
@@ -226,7 +242,7 @@ class GalleryController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Gallery::findOne($id)) !== null) {
+        if (($model = Gallery::findOneWithDeleted($id)) !== null) {
             return $model;
         }
 

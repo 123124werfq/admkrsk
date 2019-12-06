@@ -60,7 +60,7 @@ class VarsController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['delete'],
+                        'actions' => ['delete', 'undelete'],
                         'roles' => ['backend.vars.delete'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
@@ -121,7 +121,11 @@ class VarsController extends Controller
      */
     public function actionIndex()
     {
-        $query = Vars::find();
+        if (Yii::$app->request->get('archive')) {
+            $query = Vars::findDeleted();
+        } else {
+            $query = Vars::find();
+        }
 
         if (!Yii::$app->user->can('admin.vars')) {
             $query->andWhere(['id_var' => AuthEntity::getEntityIds(Vars::class)]);
@@ -213,6 +217,22 @@ class VarsController extends Controller
     }
 
     /**
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionUndelete($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->restore()) {
+            $model->createAction(Action::ACTION_UNDELETE);
+        }
+
+        return $this->redirect(['index', 'archive' => 1]);
+    }
+
+    /**
      * Finds the Vars model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
@@ -221,7 +241,7 @@ class VarsController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Vars::findOne($id)) !== null) {
+        if (($model = Vars::findOneWithDeleted($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

@@ -42,7 +42,11 @@ class FormInputTypeSearch extends FormInputType
      */
     public function search($params)
     {
-        $query = FormInputType::find();
+        if (Yii::$app->request->get('archive')) {
+            $query = FormInputType::findDeleted();
+        } else {
+            $query = FormInputType::find();
+        }
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.formInputType')) {

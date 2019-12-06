@@ -34,6 +34,7 @@ class Action extends ActiveRecord
     const ACTION_CREATE = 'create';
     const ACTION_UPDATE = 'update';
     const ACTION_DELETE = 'delete';
+    const ACTION_UNDELETE = 'undelete';
     const ACTION_SIGNUP = 'signup';
     const ACTION_SIGNUP_ESIA = 'signup-esia';
     const ACTION_LOGIN = 'login';
@@ -145,7 +146,10 @@ class Action extends ActiveRecord
                 $summary = 'Редактирование ' . Html::a($model->pageTitle, ['/' . Inflector::camel2id(StringHelper::basename($this->model)) . '/view', 'id' => $this->model_id], ['target' => '_blank']);
                 break;
             case self::ACTION_DELETE:
-                $summary = 'Удаление ' . ($model->pageTitle);
+                $summary = 'Удаление ' . Html::a($model->pageTitle, ['/' . Inflector::camel2id(StringHelper::basename($this->model)) . '/view', 'id' => $this->model_id], ['target' => '_blank']);
+                break;
+            case self::ACTION_UNDELETE:
+                $summary = 'Восстановил из архива ' . Html::a($model->pageTitle, ['/' . Inflector::camel2id(StringHelper::basename($this->model)) . '/view', 'id' => $this->model_id], ['target' => '_blank']);
                 break;
             case self::ACTION_SIGNUP:
                 $summary = 'Регистрация';

@@ -42,7 +42,11 @@ class MenuSearch extends Menu
      */
     public function search($params)
     {
-        $query = Menu::find();
+        if (Yii::$app->request->get('archive')) {
+            $query = Menu::findDeleted();
+        } else {
+            $query = Menu::find();
+        }
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.menu')) {

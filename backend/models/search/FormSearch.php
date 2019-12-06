@@ -42,7 +42,11 @@ class FormSearch extends Form
      */
     public function search($params)
     {
-        $query = Form::find();
+        if (Yii::$app->request->get('archive')) {
+            $query = Form::findDeleted();
+        } else {
+            $query = Form::find();
+        }
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.form')) {

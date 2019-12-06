@@ -73,7 +73,7 @@ class OpendataController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['delete'],
+                        'actions' => ['delete', 'undelete'],
                         'roles' => ['backend.opendata.delete'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
@@ -207,6 +207,22 @@ class OpendataController extends Controller
     }
 
     /**
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionUndelete($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->restore()) {
+            $model->createAction(Action::ACTION_UNDELETE);
+        }
+
+        return $this->redirect(['index', 'archive' => 1]);
+    }
+
+    /**
      * Upload files.
      * @param integer $id
      * @return mixed
@@ -265,7 +281,7 @@ class OpendataController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Opendata::findOne($id)) !== null) {
+        if (($model = Opendata::findOneWithDeleted($id)) !== null) {
             return $model;
         }
 

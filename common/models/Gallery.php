@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\behaviors\AccessControlBehavior;
+use common\components\softdelete\SoftDeleteTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
@@ -25,6 +26,7 @@ class Gallery extends \yii\db\ActiveRecord
 {
     use MetaTrait;
     use ActionTrait;
+    use SoftDeleteTrait;
 
     const VERBOSE_NAME = 'Галерея';
     const VERBOSE_NAME_PLURAL = 'Галереи';

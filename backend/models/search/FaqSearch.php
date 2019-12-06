@@ -42,7 +42,11 @@ class FaqSearch extends Faq
      */
     public function search($params)
     {
-        $query = Faq::find();
+        if (Yii::$app->request->get('archive')) {
+            $query = Faq::findDeleted();
+        } else {
+            $query = Faq::find();
+        }
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.faq')) {

@@ -42,7 +42,11 @@ class CollectionSearch extends Collection
      */
     public function search($params)
     {
-        $query = Collection::find();
+        if (Yii::$app->request->get('archive')) {
+            $query = Collection::findDeleted();
+        } else {
+            $query = Collection::find();
+        }
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.collection')) {

@@ -2,6 +2,9 @@
 
 namespace common\models;
 
+use common\components\softdelete\SoftDeleteTrait;
+use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 
 /**
@@ -23,6 +26,13 @@ use Yii;
  */
 class ServiceTarget extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+    use ActionTrait;
+    use SoftDeleteTrait;
+
+    const VERBOSE_NAME = 'Цель услуг';
+    const VERBOSE_NAME_PLURAL = 'Цели услуг';
+
     /**
      * {@inheritdoc}
      */

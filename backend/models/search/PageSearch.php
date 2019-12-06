@@ -42,7 +42,11 @@ class PageSearch extends Page
      */
     public function search($params)
     {
-        $query = Page::find();
+        if (Yii::$app->request->get('archive')) {
+            $query = Page::findDeleted();
+        } else {
+            $query = Page::find();
+        }
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.page')) {

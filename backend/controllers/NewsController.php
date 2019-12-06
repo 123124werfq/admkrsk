@@ -63,7 +63,7 @@ class NewsController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['delete'],
+                        'actions' => ['delete', 'undelete'],
                         'roles' => ['backend.news.delete'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
@@ -282,7 +282,23 @@ class NewsController extends Controller
             $model->createAction(Action::ACTION_DELETE);
         }
 
-        return $this->redirect(['index']);
+        return $this->redirect(['index', 'id_page' => $model->id_page]);
+    }
+
+    /**
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionUndelete($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->restore()) {
+            $model->createAction(Action::ACTION_UNDELETE);
+        }
+
+        return $this->redirect(['index', 'id_page' => $model->id_page, 'archive' => 1]);
     }
 
     /**
@@ -294,7 +310,7 @@ class NewsController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = News::findOne($id)) !== null) {
+        if (($model = News::findOneWithDeleted($id)) !== null) {
             return $model;
         }
 
