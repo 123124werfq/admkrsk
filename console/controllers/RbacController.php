@@ -760,7 +760,7 @@ class RbacController extends Controller
             $backendPollCreate->ruleName = $entityRule->name;
             $auth->add($backendPollCreate);
 
-            $backendPollQuestionCreate = $auth->createPermission('backend.poll.question.create');
+            $backendPollQuestionCreate = $auth->createPermission('backend.poll.questionCreate');
             $backendPollQuestionCreate->description = 'Создание вопроса';
             $backendPollQuestionCreate->ruleName = $entityRule->name;
             $auth->add($backendPollQuestionCreate);
@@ -770,7 +770,7 @@ class RbacController extends Controller
             $backendPollUpdate->ruleName = $entityRule->name;
             $auth->add($backendPollUpdate);
 
-            $backendPollQuestionUpdate = $auth->createPermission('backend.poll.question.update');
+            $backendPollQuestionUpdate = $auth->createPermission('backend.poll.questionUpdate');
             $backendPollQuestionUpdate->description = 'Редактирование вопроса';
             $backendPollQuestionUpdate->ruleName = $entityRule->name;
             $auth->add($backendPollQuestionUpdate);
@@ -780,7 +780,7 @@ class RbacController extends Controller
             $backendPollDelete->ruleName = $entityRule->name;
             $auth->add($backendPollDelete);
 
-            $backendPollQuestionDelete = $auth->createPermission('backend.poll.question.delete');
+            $backendPollQuestionDelete = $auth->createPermission('backend.poll.questionDelete');
             $backendPollQuestionDelete->description = 'Удаление вопроса';
             $backendPollQuestionDelete->ruleName = $entityRule->name;
             $auth->add($backendPollQuestionDelete);

@@ -58,7 +58,7 @@ class PollController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create-question'],
-                        'roles' => ['backend.poll.question.create'],
+                        'roles' => ['backend.poll.questionCreate'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id_poll'),
                             'class' => Poll::class,
@@ -69,21 +69,21 @@ class PollController extends Controller
                         'actions' => ['update'],
                         'roles' => ['backend.poll.update'],
                         'roleParams' => [
-                            'entity_id' => function () {
-                                if (($question = Question::findOne(Yii::$app->request->get('id'))) !== null) {
-                                    return $question->id_poll;
-                                }
-                                return null;
-                            },
+                            'entity_id' => Yii::$app->request->get('id'),
                             'class' => Poll::class,
                         ],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['update-question'],
-                        'roles' => ['backend.poll.question.update'],
+                        'roles' => ['backend.poll.questionUpdate'],
                         'roleParams' => [
-                            'entity_id' => Yii::$app->request->get('id'),
+                            'entity_id' => function () {
+                                if (($question = Question::findOne(Yii::$app->request->get('id'))) !== null) {
+                                    return $question->id_poll;
+                                }
+                                return null;
+                            },
                             'class' => Poll::class,
                         ],
                     ],
@@ -92,21 +92,21 @@ class PollController extends Controller
                         'actions' => ['delete', 'undelete'],
                         'roles' => ['backend.poll.delete'],
                         'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => Poll::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['delete-question'],
+                        'roles' => ['backend.poll.questionDelete'],
+                        'roleParams' => [
                             'entity_id' => function () {
                                 if (($question = Question::findOne(Yii::$app->request->get('id'))) !== null) {
                                     return $question->id_poll;
                                 }
                                 return null;
                             },
-                            'class' => Poll::class,
-                        ],
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['delete'],
-                        'roles' => ['backend.poll.question.delete'],
-                        'roleParams' => [
-                            'entity_id' => Yii::$app->request->get('id'),
                             'class' => Poll::class,
                         ],
                     ],

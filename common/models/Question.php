@@ -5,6 +5,7 @@ namespace common\models;
 use common\behaviors\OrderBehavior;
 use common\components\yiinput\RelationBehavior;
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
@@ -51,6 +52,7 @@ use yii\helpers\ArrayHelper;
 class Question extends \yii\db\ActiveRecord
 {
     use MetaTrait;
+    use ActionTrait;
 
     const VERBOSE_NAME = 'Вопрос';
     const VERBOSE_NAME_PLURAL = 'Вопросы';
@@ -86,7 +88,7 @@ class Question extends \yii\db\ActiveRecord
             [['id_poll', 'type', 'ord', 'chart_type'], 'integer'],
             [['question', 'description'], 'string'],
             [['is_option', 'is_hidden'], 'boolean'],
-            [['id_poll'], 'exist', 'skipOnError' => true, 'targetClass' => Poll::class, 'targetAttribute' => ['id_poll' => 'id_poll']],
+//            [['id_poll'], 'exist', 'skipOnError' => true, 'targetClass' => Poll::class, 'targetAttribute' => ['id_poll' => 'id_poll']],
         ];
     }
 
