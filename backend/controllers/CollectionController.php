@@ -637,6 +637,8 @@ class CollectionController extends Controller
 
                                 Yii::$app->session->setFlash('success', 'Данные импортированы');
 
+                                $collection->createForm();
+
                                 unlink($model->filepath);
 
                                 return $this->redirect(['view', 'id' => $collection->id_collection]);

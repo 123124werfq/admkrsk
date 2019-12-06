@@ -308,4 +308,54 @@ class Collection extends \yii\db\ActiveRecord
         return $options;
     }
 
+    public function createForm()
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+            $form = new Form;
+            $form->id_collection = $this->id_collection;
+            $form->name = $this->name;
+
+            if ($form->save())
+            {
+                foreach ($this->columns as $ckey => $column)
+                {
+                    $input = new FormInput;
+                    $input->label       = $input->name = $column->name;
+                    $input->type        = $column->type;
+                    $input->id_form     = $form->id_form;
+                    $input->id_column   = $column->id_column;
+
+                    if (!$input->save())
+                        print_r($input->errors);
+
+                    $row = new FormRow;
+                    $row->id_form = $form->id_form;
+
+                    if (!$row->save())
+                        print_r($row->errors);
+
+                    $element = new FormElement;
+                    $element->id_row = $row->id_row;
+                    $element->id_input = $input->id_input;
+
+                    if (!$element->save())
+                        print_r($element->errors);
+                }
+
+                $this->id_form = $form->id_form;
+                $this->updateAttributes(['id_form']);
+            }
+
+            $transaction->commit();
+        }
+        catch (\Exception $e)
+        {
+            $transaction->rollBack();
+            throw $e;
+        }
+    }
+
+
 }
