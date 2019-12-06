@@ -566,14 +566,19 @@ class CollectionController extends Controller
 
                         $model->load($_POST['CollectionImportForm'][$sheet_pos]);
 
-                        $model->skip = $post['skip'];
-                        $model->keyrow = $post['keyrow'];
+                        $model->skip = (int)$post['skip'];
+                        $model->keyrow = (int)$post['keyrow'];
                         $model->firstRowAsName = $post['firstRowAsName'];
 
                         foreach ($data[$model->sheet] as $rowkey => $row)
                         {
                             if ($rowkey==$model->keyrow && $model->keyrow>0)
+                            {
+                                if (empty($columns))
+                                    $columns = $row;
+
                                 $keys = $row;
+                            }
 
                             if (!empty($model->skip) && $rowkey<=$model->skip)
                                 continue;
