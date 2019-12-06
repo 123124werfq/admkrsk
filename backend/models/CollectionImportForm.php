@@ -12,7 +12,8 @@ class CollectionImportForm extends Model
 {
     public $file;
     public $sheet;
-    public $skip = 0;
+    public $skip = '';
+    public $keyrow = '';
     public $name;
     public $filepath;
     public $firstRowAsName = false;
@@ -37,6 +38,7 @@ class CollectionImportForm extends Model
         return [
             'file'=>'Файл',
             'skip'=>'Начать со строки',
+            'keyrow'=>'Взять ключи с',
             'firstRowAsName'=>'Использовать первую строку как названия столбцов',
         ];
     }

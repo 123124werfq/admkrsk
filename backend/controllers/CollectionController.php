@@ -541,8 +541,8 @@ class CollectionController extends Controller
                 $model->filepath = '../../temp/import_test.'.$model->file->extension;
                 $model->file->saveAs($model->filepath);
             }
-
             try {
+
                 $data = \moonland\phpexcel\Excel::import($model->filepath, [
                     'setFirstRecordAsKeys' => false, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel.
                     'setIndexSheetByName' => true, // set this if your excel data with multiple worksheet, the index of array will be set with the sheet name. If this not set, the index will use numeric.
@@ -557,6 +557,7 @@ class CollectionController extends Controller
                     if (!empty($model->sheet))
                     {
                         $columns = [];
+                        $keys = [];
                         $records = [];
 
                         $sheet_pos = array_search($model->sheet, array_keys($data));
@@ -566,10 +567,14 @@ class CollectionController extends Controller
                         $model->load($_POST['CollectionImportForm'][$sheet_pos]);
 
                         $model->skip = $post['skip'];
+                        $model->keyrow = $post['keyrow'];
                         $model->firstRowAsName = $post['firstRowAsName'];
 
                         foreach ($data[$model->sheet] as $rowkey => $row)
                         {
+                            if ($rowkey==$model->keyrow && $model->keyrow>0)
+                                $keys = $row;
+
                             if (!empty($model->skip) && $rowkey<=$model->skip)
                                 continue;
 
@@ -602,7 +607,8 @@ class CollectionController extends Controller
                                     $column = new CollectionColumn;
                                     $column->name = (!empty($value))?$value:'Колонка '.$tdkey;
                                     $column->type = CollectionColumn::TYPE_INPUT;
-                                    $column->alias = \common\components\helper\Helper::transFileName($column->name);
+
+                                    $column->alias = strtolower(\common\components\helper\Helper::transFileName(($model->keyrow)?$keys[$tdkey]:$column->name));
                                     $column->id_collection = $collection->id_collection;
 
                                     if ($column->save())

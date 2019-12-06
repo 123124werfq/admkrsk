@@ -97,6 +97,7 @@ h1.page-header {margin-top: 10px;}
 table th a {font-weight: 600; border-bottom: 1px dashed #337ab7;}
 .table img {max-width: 100%;}
 .table .disable td{background: #eee;}
+.table .keyrow td:first-child {background: #1ab394!important; color: #fff;}
 
 /*.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td
 {padding: 5px 10px;}*/

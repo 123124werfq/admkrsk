@@ -406,6 +406,20 @@ jQuery(document).ready(function()
 
     });
 
+     $(".import-collection-key").change(function(){
+
+      var $table = $(this).closest('.panel-body').find('table');
+
+      if ($(this).val()>0)
+      {
+        $table.find('.keyrow').removeClass('keyrow');
+        $table.find('tr:eq('+($(this).val()-1)+')').addClass('keyrow');
+      }
+      else
+        $table.find('.keyrow').removeClass('keyrow');
+
+    });
+
     $(".sortable").sortable({
       stop: function(event, ui){
         $(this).find('.row').each(function(i){

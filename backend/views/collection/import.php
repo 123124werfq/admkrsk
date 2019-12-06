@@ -55,14 +55,7 @@
 <?php }else echo Html::activeHiddenInput($model, 'name');?>
 
 
-<?php if (!empty($table)){
-    /*$dataProvider = new ArrayDataProvider([
-        'allModels' => $cvs,
-        'pagination' => [
-            'pageSize' => 9999,
-        ],
-    ]);*/
-?>
+<?php if (!empty($table)){?>
     <div class="ibox m-t">
         <div class="ibox-content">
            <div class="tabs-container">
@@ -80,13 +73,16 @@
                         <div role="tabpanel" id="tab-<?=$i?>" class="tab-pane <?=$i==0?'active':''?>">
                             <div class="panel-body">
                                 <div class="row">
-                                    <div class="col-sm-2">
-                                        <?=Html::activeTextInput($model, "[$i]skip",['placeholder'=>'Начать со строки','class'=>'form-control import-collection-start','type'=>'number','min'=>0])?>
+                                    <div class="col-sm-3">
+                                        <?=Html::activeTextInput($model, "[$i]keyrow",['placeholder'=>'Ключи','class'=>'form-control import-collection-key','type'=>'number','min'=>0])?>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <?=Html::activeTextInput($model, "[$i]skip",['placeholder'=>'Пропустить строк','class'=>'form-control import-collection-start','type'=>'number','min'=>0])?>
                                     </div>
                                     <div class="col-sm-3">
                                         <?=Html::activeCheckBox($model, "[$i]firstRowAsName")?>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <?=Html::submitButton('Импортировать', ['class' => 'btn btn-primary','value'=>$sheetname,'name'=>'CollectionImportForm[sheet]']) ?>
                                     </div>
                                 </div>
@@ -115,5 +111,4 @@
         </div>
     </div>
 <?php }?>
-
 <?php ActiveForm::end();?>
