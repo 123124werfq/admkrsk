@@ -17,4 +17,7 @@
 			<?php }?>
 		</tbody>
 </table>
+	<?=\yii\widgets\LinkPager::widget([
+	    'pagination' => $pagination,
+	]);?>
 </div>

@@ -153,7 +153,9 @@ class CollectionRecord extends \yii\db\ActiveRecord
         $output = [];
 
         foreach ($rows->all() as $key => $data)
+        {
             $output[$keyAsAlias?$data['alias']:$data['id_column']] = $data['value'];
+        }
 
         $this->loadData = $output;
 
@@ -178,7 +180,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
         return $output;
     }
 
-    public function getMedia($id_column,$firstElement)
+    public function getMedia($id_column, $firstElement=false)
     {
         if (empty($this->loadData))
             $this->getData();

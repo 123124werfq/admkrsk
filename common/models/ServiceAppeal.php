@@ -39,10 +39,10 @@ class ServiceAppeal extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_user', 'id_service', 'id_record', 'id_collection', 'date', 'archive', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
-            [['id_user', 'id_service', 'id_record', 'id_collection', 'date', 'archive', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['id_user', 'id_service', 'id_record', 'id_collection', 'date', 'archive', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_target'], 'default', 'value' => null],
+            [['id_user', 'id_service', 'id_record', 'id_collection', 'date', 'archive', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_target'], 'integer'],
             [['state'], 'required'],
-            [['data'], 'string'],
+            [['data', 'number_internal', 'number_system', 'number_common'], 'string'],
             [['state'], 'string', 'max' => 255],
         ];
     }
@@ -67,5 +67,15 @@ class ServiceAppeal extends \yii\db\ActiveRecord
             'deleted_at' => 'Deleted At',
             'deleted_by' => 'Deleted By',
         ];
+    }
+
+    public function getCollectionRecord()
+    {
+        return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_record']);
+    }
+
+     public function getTarget()
+    {
+        return $this->hasOne(ServiceTarget::class, ['id_target' => 'id_target']);
     }
 }

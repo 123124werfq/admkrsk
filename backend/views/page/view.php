@@ -10,6 +10,8 @@ use yii\widgets\Pjax;
 
 $this->title = $model->pageTitle;
 $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
+if (!empty($model->parent))
+    $this->params['breadcrumbs'][] = ['label' => $model->parent->title, 'url' => ['view', 'id' => $model->id_parent]];
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->render('_head',['model'=>$model]);

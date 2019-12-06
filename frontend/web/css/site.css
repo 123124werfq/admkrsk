@@ -11,6 +11,7 @@ form .row {flex-wrap: nowrap!important;}
 .fileupload {margin-bottom: 40px;}
 
 .text-row {padding: 0px 15px; width: 100%;}
+.text-row p:first-child {margin-top: 0px}
 
 .header-search{padding: 10px; border: none; border-radius: 5px; width: 100%;}
 
@@ -23,11 +24,28 @@ margin-bottom: 36px;
 	padding: 13px 16px!important;
 	    height: 47px!important;
 }
+img[src*="http://www.admkrsk.ru/_layouts/images/icdocx.png"], .ms-asset-icon {display: none!important;}
+
 .btn-group .btn-group_item {
 	margin-left: 0px;
     margin-bottom: 15px;
     margin-right: 8px;
 }
+
+.person-card_content {flex-direction: column;}
+
+.form-inside * {font-size: 16px;}
+
+.col .checkbox-group {margin-bottom: 36px;}
+
+.sidemenu > ul > li.current {display: none;}
+
+.collection-element {border-bottom: 1px solid #dde1e6;}
+
+ul.pagination , ul.pagination li {list-style-type: none;}
+.content ul.pagination li::before {display: none!important;}
+ul.pagination li {display: inline-block;}
+ul.pagination {text-align: center;}
 
 .footer-socials_item {opacity: 0.6;}
 .footer-socials_item:hover {opacity: 1;}
@@ -116,8 +134,4 @@ a[href$=".txt"]:before {background:#fff url('/img/files/txt.svg'); width:26px; h
 
 .fileupload_list:empty {
     display: none;
-}
-
-.ui-selectmenu-menu .ui-menu{
-    max-width: 90% !important;
 }

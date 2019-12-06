@@ -5,6 +5,9 @@ namespace common\models;
 use common\components\softdelete\SoftDeleteTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
+use common\modules\log\behaviors\LogBehavior;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 use Yii;
 
 /**
@@ -79,6 +82,32 @@ class ServiceTarget extends \yii\db\ActiveRecord
             'deleted_at' => 'Deleted At',
             'deleted_by' => 'Deleted By',
         ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            'ts' => TimestampBehavior::class,
+            'ba' => BlameableBehavior::class,
+            'log' => LogBehavior::class,
+            'multiupload' => [
+                'class' => \common\components\multifile\MultiUploadBehavior::class,
+                'relations'=>
+                [
+                    'template'=>[
+                        'model'=>'Media',
+                        'fk_cover' => 'id_media_template',
+                        'cover' => 'template',
+                    ],
+                ],
+                'cover'=>'template'
+            ],
+        ];
+    }
+
+    public function getTemplate()
+    {
+        return $this->hasOne(Media::class, ['id_media' => 'id_media_template']);
     }
 
     public function getService()

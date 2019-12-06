@@ -2339,7 +2339,7 @@ textarea {
     transition: width .2s linear,margin-left .2s linear;
 }
 .header-submenu {
-    display: none !important; /* DELETE FOR ENABLEР’ */
+    display: none !important; /* DELETE FOR ENABLE╨атАЩ */
     list-style: none;
     padding: 8px 0;
     margin: 0;
@@ -2484,10 +2484,10 @@ textarea {
         padding-top: 190px;
     }
 }*/
-/* /PAGE ALERTР’ */
+/* /PAGE ALERT╨атАЩ */
 
 
-/* SITEMAPР’ */
+/* SITEMAP╨атАЩ */
 .sitemap {
     position: absolute;
     width: 100%;
@@ -2936,7 +2936,7 @@ a.sitemap_header:hover {
         margin: 0 5px;
     }
 }
-/* /SMART MENUР’ */
+/* /SMART MENU╨атАЩ */
 
 
 /* SEARCH */
@@ -3565,10 +3565,10 @@ a.sitemap_header:hover {
 .press.press_invert {
     background: #FFF;
 }
-/* /PRESSР’ */
+/* /PRESS╨атАЩ */
 
 
-/* NEWSР’ */
+/* NEWS╨атАЩ */
 .news {
     padding-top: 54px;
 }
@@ -4048,10 +4048,10 @@ a.sitemap_header:hover {
         background: #DDE1E6;
     }
 }
-/* /EVENTSР’ */
+/* /EVENTS╨атАЩ */
 
 
-/* GIDР’ */
+/* GID╨атАЩ */
 .gid {
     background: #3B4256;
     position: relative;
@@ -4959,10 +4959,10 @@ a.sitemap_header:hover {
 .situations_content.active .situations_title a{
   color: #E4292F !important;
 }
-/* /BACKEND FIXES Р’ */
+/* /BACKEND FIXES ╨атАЩ */
 
 
-/* BREADCRUMBSР’ */
+/* BREADCRUMBS╨атАЩ */
 .breadcrumbs {
     font-size: 1.6rem;
     font-weight: 500;
@@ -6006,13 +6006,27 @@ a.sitemap_header:hover {
     background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCI+ICAgIDxkZWZzPiAgICAgICAgPHBhdGggaWQ9ImEiIGQ9Ik04LjI5NSAxNi4yOTVsNC41OC00LjU5LTQuNTgtNC41OSAxLjQxLTEuNDEgNiA2LTYgNnoiLz4gICAgPC9kZWZzPiAgICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHRyYW5zZm9ybT0icm90YXRlKDkwIDEyIDEyKSI+ICAgICAgICA8cGF0aCBkPSJNMCAwaDI0djI0SDB6Ii8+ICAgICAgICA8bWFzayBpZD0iYiIgZmlsbD0iI2ZmZiI+ICAgICAgICAgICAgPHVzZSB4bGluazpocmVmPSIjYSIvPiAgICAgICAgPC9tYXNrPiAgICAgICAgPGcgZmlsbD0iIzNCNDI1NiIgbWFzaz0idXJsKCNiKSI+ICAgICAgICAgICAgPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNCIvPiAgICAgICAgPC9nPiAgICA8L2c+PC9zdmc+);
 }
 .custom-select {
-    margin-bottom: 36px;
+    margin-bottom: 15px;
+    position: relative;
 }
+.custom-select.ui-front {
+    z-index: auto;
+}
+.ui-selectmenu-menu.ui-front {
+   z-index: 9999;
+}
+.custom-select .ui-selectmenu-menu {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 .custom-select__placeholder .ui-menu .ui-menu-item:first-child {
     display: none;
 }
 .custom-select.custom-select__inline {
     min-width: 290px;
+    max-width: 290px;
 }
 
 @media screen and (max-width: 767px) {
@@ -6022,6 +6036,7 @@ a.sitemap_header:hover {
     .custom-select.custom-select__inline {
         display: block;
         width: 100%;
+        max-width: none;
     }
 }
 /* /SELECTIZE */
@@ -6489,7 +6504,7 @@ a.sitemap_header:hover {
 .ms-cui-menu {
     position: fixed !important;
 }
-/* /RIBON PANELР’ */
+/* /RIBON PANEL╨атАЩ */
 
 
 /* Map */

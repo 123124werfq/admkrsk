@@ -79,6 +79,10 @@ return [
                 'title'=>'Услуги',
                 'roles' => ['backend.service'],
             ],
+            'service-appeal'=>[
+                'title'=>'Заявки',
+                'roles' => ['backend.service'],
+            ],
             'service-situation'=>[
                 'title'=>'Жизненные ситуации',
                 'roles' => ['backend.serviceSituation'],

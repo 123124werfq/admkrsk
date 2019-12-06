@@ -55,10 +55,10 @@ class EventController extends \yii\web\Controller
                 $date_begin = mktime(0,0,0,date('m',$date_begin),date('d',$date_begin),date('Y',$date_begin));
 
                 $date_end = strtotime(trim($dates[1]));
-                $date_end = mktime(24,59,59,date('m',$date_end),date('d',$date_end),date('Y',$date_end));
+                $date_end = mktime(23,59,59,date('m',$date_end),date('d',$date_end),date('Y',$date_end));
 
-                $collection->whereByAlias(['>','date',$date_begin]);
-                $collection->whereByAlias(['<','date',$date_end]);
+                $collection->whereByAlias(['>=','date',$date_begin]);
+                $collection->whereByAlias(['<=','date',$date_end]);
             }
         }
 
@@ -82,8 +82,8 @@ class EventController extends \yii\web\Controller
         $allDistricts = District::find()->select(['name','id_district'])->indexBy('id_district')->orderBy('name')->all();
 
         $districts = [0=>'Все районы'];
-        $places = [0=>'Все места'];
-        $categories = [0=>'Любая категория'];
+        $places = [];
+        $categories = [];
 
         foreach ($collection as $key => $data)
         {
@@ -99,9 +99,10 @@ class EventController extends \yii\web\Controller
             if (!empty($data['category']))
                 $categories[$data['category']] = $data['category'];
 
-            if (!isset($data['time']) && isset($data['date_end']))
+            if (!isset($data['time']) && isset($data['group']) && $data['date'])
             {
                 $time = [];
+
                 if (!empty($data['date']))
                     $time[] = date('d.m.Y',(int)$data['date']);
 
@@ -109,11 +110,20 @@ class EventController extends \yii\web\Controller
                     $time[] = date('d.m.Y',(int)$data['date_end']);
 
                 $data['time'] = implode('-', $time);
+
+                if (!empty($data['date_time']))
+                    $data['time'] .= '<br>'.$data['date_time'];
             }
 
             $date = (is_numeric($data['date']))?strftime('%e %B (%A)',(int)$data['date']):$data['date'];
             $program[(!empty($data['group']))?$data['group']:$date][$key] = $data;
         }
+
+        asort($places);
+        asort($categories);
+
+        array_unshift($places,'Все места');
+        array_unshift($categories,'Любая категория');
 
         if (Yii::$app->request->isAjax)
         {
@@ -123,6 +133,9 @@ class EventController extends \yii\web\Controller
         }
 
         $page = Page::findOne($id_page);
+
+        if (empty($page))
+            throw new NotFoundHttpException('');
 
         return $this->render('program',[
             'page'=>$page,

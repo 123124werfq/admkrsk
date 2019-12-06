@@ -4,6 +4,10 @@ namespace frontend\controllers;
 
 use common\models\Service;
 use common\models\Form;
+use common\models\Workflow;
+use common\models\Integration;
+use common\models\ServiceAppeal;
+use common\models\ServiceAppealState;
 use common\models\ServiceRubric;
 use common\models\ServiceSituation;
 use common\models\ServiceTarget;
@@ -43,27 +47,59 @@ class ServiceController extends \yii\web\Controller
 
         $services = Service::find()->where(['old'=>0]);
 
+        $open = false;
+
         if (!empty($clientType) || !empty($online))
         {
             if (!empty($clientType))
+            {
+                $open = true;
                 $services->andWhere('client_type&',$clientType.'='.$clientType);
+            }
 
             if (!empty($online))
+            {
+                $open = true;
                 $services->andWhere(['online'=>1]);
+            }
+        }
+
+        if (!empty($id_situation))
+        {
+            $id_situation = (int)$id_situation;
+            $open = true;
+            $services->andWhere("id_service IN (SELECT id_service FROM servicel_situation WHERE id_situation = $id_situation)");
         }
 
         $servicesRubs = [];
+
         foreach ($services->all() as $key => $data)
             $servicesRubs[(int)$data->id_rub][$data->id_service] = $data;
 
-        $rubrics = ServiceRubric::find()
-                        ->with('childs')
-                        ->where('id_parent IS NULL')->all();
+        $rubrics = ServiceRubric::find()->with(['childs','parent'])->where(['id_rub'=>array_keys($servicesRubs)])->all();
+
+        $tree = [];
+
+        foreach ($rubrics as $key => $rub)
+        {
+            $tree[(int)$rub->id_parent][$rub->id_rub] = $rub;
+
+            if (!empty($rub->id_parent))
+            {
+                $tree[(int)$rub->parent->id_parent][$rub->id_parent] = $rub->parent;
+
+                if (!empty($rub->parent->id_parent))
+                {
+                    $tree[(int)$rub->parent->parent->id_parent][$rub->parent->parent->id_parent] = $rub->parent->parent;
+                }
+            }
+        }
 
         return $this->render('reestr',[
             'page'=>$page,
             'servicesRubs'=>$servicesRubs,
-            'rubrics'=>$rubrics,
+            'rubrics'=>$tree,
+            'open'=>$open,
         ]);
     }
 
@@ -79,24 +115,15 @@ class ServiceController extends \yii\web\Controller
         ]);
     }
 
-    public function actionCreate($id=null,$id_target=null,$page=null)
+    public function actionCreate($id,$id_target,$page=null)
     {
         $inputs = [];
 
-        if (!empty($id))
-        {
-            $service = $this->findModel($id);
-            $form = $service->form;
-            $inputs['id_service'] = $id;
-        }
-        else
-        {
-            $target = $this->findTarget($id_target);
-            $service = $target->service;
-            $form = $target->form;
-            $inputs['id_service'] = $service->id_service;
-            $inputs['id_target'] = $target->id_target;
-        }
+        $target = $this->findTarget($id_target);
+        $service = $target->service;
+        $form = $target->form;
+        $inputs['id_service'] = $service->id_service;
+        $inputs['id_target'] = $target->id_target;
 
         if (empty($form))
             throw new NotFoundHttpException('Такой страницы не существует');
@@ -105,19 +132,95 @@ class ServiceController extends \yii\web\Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
-            $prepare = $model->prepareData();
-            print_r($prepare);
+            $prepare = $model->prepareData(true);
 
-            /*print_r($_FILES);
-            print_r($model->attributes);*/
+            if ($record = $form->collection->insertRecord($prepare))
+            {
+               $appeal = new ServiceAppeal;
+               $appeal->id_user = Yii::$app->user->id;
+               $appeal->id_service = $service->id_service;
+               $appeal->id_record = $record->id_record;
+               $appeal->id_collection = $form->collection->id_collection;
+               $appeal->date = time();
+               $appeal->id_target = $id_target;
+               $appeal->state = 'empty'; // это переехало в ServiceAppealState, убрать в перспективе
+               $appeal->created_at = time();
+
+               $idents = [
+                   'guid' => Service::generateGUID()
+               ];
+
+               $appeal->data = json_encode($idents);
+
+               if ($appeal->save())
+               {
+                   $state = new ServiceAppealState;
+                   $state->id_appeal = $appeal->id_appeal;
+                   $state->date = time();
+                   $state->state = (string)ServiceAppealState::STATE_INIT;
+
+                   if ($state->save())
+                   {
+                       $appeal->state = $state->state;
+                       $appeal->number_internal = $appeal->id_appeal; // пока такой внутренний номер
+                       $appeal->updateAttributes(['state', 'number_internal']);
+
+                        // запрос к СЭД
+                        $attachments = $record->getAllMedias();
+
+                        $wf = new Workflow;
+                        $wf->generateArchive($idents['guid'], $attachments);
+
+                        // ... тут XML
+                        $opres = $wf->sendServiceMessage($appeal);
+                        $integration = new Integration;
+                        $integration->system = Integration::SYSTEM_SED;
+                        $integration->direction = Integration::DIRECTION_OUTPUT;
+                        if($opres)
+                            $integration->status = Integration::STATUS_OK;
+                        else
+                            $integration->status = Integration::STATUS_ERROR;
+
+                        $integration->description = ' Запрос услуги ' . $appeal->number_internal;
+
+                        $integration->data = json_encode([
+                            'appeal' => $appeal->number_internal,
+                            'user' => $appeal->id_user,
+                            'target' => $appeal->id_target,
+                            'collection' => $appeal->id_collection
+                        ]);
+                       $integration->created_at = time();
+                        $integration->save();
+                   }
+               }
+               else
+               {
+                   var_dump($appeal->errors);
+                   die();
+               }
+            }
+
+            /*
+            print_r($prepare);
+            print_r($_FILES);
+            print_r($model->attributes);
+
             die();
 
             return $this->redirect('/service-recieved');
+            */
+            return $this->render('result',[
+                'number'=> isset($appeal->number_internal)?$appeal->number_internal:false,
+                'page' => $page
+            ]);
+
+
         }
 
         return $this->render('create',[
-            'form'=>$model,
+            'form'=>$form,
             'service'=>$service,
+            'target'=>$target,
             'page'=>$page,
             'inputs'=>$inputs,
         ]);
@@ -157,4 +260,5 @@ class ServiceController extends \yii\web\Controller
 
         throw new NotFoundHttpException('Такой страницы не существует');
     }
+
 }

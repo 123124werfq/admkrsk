@@ -78,6 +78,12 @@ use common\models\Collection;
 
     <?= $form->field($model, 'template_element')->textInput(['class' => 'form-control redactor'])?>
 
+    <table class="table">
+    <?php foreach ($model->columns as $key => $column) {
+        echo '<tr><th width="100">'.($column->alias?$column->alias:'column_'.$column->id_column).'</th><td>'.$column->name.'</td></tr>';
+    }?>
+    </table>
+
     <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
 
     <?php if (!$model->isNewRecord){?>

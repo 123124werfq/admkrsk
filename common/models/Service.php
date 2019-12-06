@@ -56,11 +56,13 @@ class Service extends \yii\db\ActiveRecord
     const TITLE_ATTRIBUTE = 'name';
 
     public $id_situations = [];
+    public $id_firms = [];
 
     const TYPE_PEOPLE = 2;
     const TYPE_FIRM = 4;
 
     public $access_user_ids;
+    public $id_target;
     public $access_user_group_ids;
 
     /**
@@ -82,7 +84,7 @@ class Service extends \yii\db\ActiveRecord
             [['old'], 'default', 'value' => 0],
             [['id_rub', 'old', 'online', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_form'], 'integer'],
             [['keywords', 'addresses', 'result', 'client_category', 'duration', 'documents', 'price', 'appeal', 'legal_grounds', 'regulations', 'refuse','regulations_link', 'duration_order', 'availability', 'procedure_information', 'max_duration_queue'], 'string'],
-            [['id_situations', 'client_type'],'safe'],
+            [['id_situations', 'client_type', 'id_firms'],'safe'],
             [['reestr_number'], 'string', 'max' => 255],
             [['fullname', 'name', 'type'], 'string'],
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
@@ -100,6 +102,7 @@ class Service extends \yii\db\ActiveRecord
             'id_service' => 'ID',
             'id_rub' => 'Рубрика',
             'id_form' => 'Форма приема заявления',
+            'id_target'=> 'Цель',
             'reestr_number' => 'Реестровый номер услуги',
             'fullname' => 'Полное наименование',
             'name' => 'Название',
@@ -123,6 +126,7 @@ class Service extends \yii\db\ActiveRecord
             'max_duration_queue' => 'Максимальный срок ожидания в очереди при подаче запроса о предоставлении муниципальной услуги, если заявитель захочет лично подать запрос о предоставлении муниципальной услуги',
             'old' => 'Услуга устарела',
             'id_situations'=>'Жизенные ситуации',
+            'id_firms'=>'Обслуживающие организации',
             'online' => 'Форма предоставления',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
@@ -146,6 +150,18 @@ class Service extends \yii\db\ActiveRecord
                 'class' => AccessControlBehavior::class,
                 'permission' => 'backend.service',
             ],
+            'multiupload' => [
+                'class' => \common\components\multifile\MultiUploadBehavior::class,
+                'relations'=>
+                [
+                    'template'=>[
+                        'model'=>'Media',
+                        'fk_cover' => 'id_media_template',
+                        'cover' => 'template',
+                    ],
+                ],
+                'cover'=>'template'
+            ],
         ];
     }
 
@@ -156,6 +172,23 @@ class Service extends \yii\db\ActiveRecord
                 self::TYPE_PEOPLE=>'Физическое лицо',
                 self::TYPE_FIRM=>'Юридическое лицо'
             ];
+        else
+        if ($attribute=='type')
+            return [
+                'услуга органа'=>'услуга органа',
+                'настройка для ДО'=>'настройка для ДО',
+                'услуга учреждения'=>'услуга учреждения',
+            ];
+        if ($attribute=='id_target')
+        {
+            $output = [];
+
+            foreach ($this->targets as $key => $target)
+                $output[$target->id_target] = $target->name;
+
+            return $output;
+        }
+
     }
 
     public function beforeSave($insert)
@@ -195,6 +228,19 @@ class Service extends \yii\db\ActiveRecord
             }
         }
 
+        if (isset($_POST['Service']['id_firms']))
+        {
+            Yii::$app->db->createCommand()->delete('servicel_collection_firm',['id_service'=>$this->id_service])->execute();
+
+            if (!empty($this->id_firms))
+            {
+                $insert = CollectionRecord::find()->select('id_record')->where(['id_record'=>$this->id_firms])->all();
+
+                foreach ($insert as $key => $data)
+                    $this->link('firms',$data);
+            }
+        }
+
         parent::afterSave($insert, $changedAttributes);
     }
 
@@ -203,9 +249,19 @@ class Service extends \yii\db\ActiveRecord
         return Url::to(['service/view', 'id' => $this->id_service]);
     }
 
+    public function getFirms()
+    {
+        return $this->hasMany(CollectionRecord::class, ['id_record' => 'id_record'])->viaTable('servicel_collection_firm',['id_service'=>'id_service']);
+    }
+
     public function getSituations()
     {
         return $this->hasMany(ServiceSituation::class, ['id_situation' => 'id_situation'])->viaTable('servicel_situation',['id_service'=>'id_service']);
+    }
+
+    public function getTemplate()
+    {
+        return $this->hasOne(Media::class, ['id_media' => 'id_media_template']);
     }
 
     public function getRubric()
@@ -226,5 +282,15 @@ class Service extends \yii\db\ActiveRecord
     public function getForm()
     {
         return $this->hasOne(Form::class, ['id_form' => 'id_form']);
+    }
+
+    static public function generateGUID(){
+        if (function_exists('com_create_guid') === true)
+            return trim(com_create_guid(), '{}');
+
+            $data = openssl_random_pseudo_bytes(16);
+            $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+            $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 }

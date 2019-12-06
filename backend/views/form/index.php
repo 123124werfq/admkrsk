@@ -29,9 +29,18 @@ if (Yii::$app->user->can('admin.form')) {
         //'filterModel' => $searchModel,
         'columns' => [
             'id_form',
-            'name',
-            'collection.name',
+            [
+                'attribute'=>'name',
+                'format'=>'html',
+                'value'=>function($model){
+                    $output = $model->name;
+                    if (!empty($model->collection))
+                        $output .='<br>'.Html::a('Открыть список', ['collection/view','id'=>$model->id_collection]);
+                    return $output;
+                }
+            ],
             'created_at:date',
+            'updated_at:date',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view} {update} ' . ($archive ? '{undelete}' : '{delete}'),

@@ -102,6 +102,7 @@ class AddressController extends Controller
     public function actionSubregion($id_region=null, $search = '')
     {
         $query = Subregion::find()
+            ->select(['map_subregion.id_subregion','map_subregion.name'])
             ->joinWith('houses', false);
         if (!empty($id_region))
             $query->filterWhere([House::tableName() . '.id_region' => $id_region]);
@@ -140,6 +141,7 @@ class AddressController extends Controller
         }
 
         $query = City::find()
+            ->select(['map_city.id_city','map_city.name'])
             ->joinWith('houses', false)
             ->filterWhere([
                 House::tableName() . '.id_region' => $id_region,
@@ -172,12 +174,16 @@ class AddressController extends Controller
     public function actionDistrict($id_city=null, $search = '')
     {
         $query = District::find()
+            ->select([District::tableName().'.id_district',District::tableName().'.name'])
             ->joinWith('houses', false);
-        
+
         if (!empty($id_city))
             $query->filterWhere([House::tableName() . '.id_city' => $id_city]);
 
-        $query->groupBy(District::tableName() . '.id_district')
+        $query->groupBy([
+            District::tableName().'.id_district',
+            District::tableName().'.name'
+        ])
             ->orderBy([District::tableName() . '.name' => SORT_ASC])
             ->limit(20)
             ->asArray();
@@ -205,6 +211,7 @@ class AddressController extends Controller
     public function actionStreet($id_city, $search = '')
     {
         $query = Street::find()
+            ->select(['map_street.id_street','map_street.name'])
             ->joinWith('houses', false)
             ->filterWhere([House::tableName() . '.id_city' => $id_city])
             ->groupBy(Street::tableName() . '.id_street')
@@ -238,15 +245,15 @@ class AddressController extends Controller
             return ['results' => []];;
 
         $query = House::find()
+            ->select(['id_house','name','postalcode'])
             ->filterWhere(['id_street' => $id_street])
             ->groupBy('id_house')
             ->orderBy(['name' => SORT_ASC])
             ->limit(20)
             ->asArray();
 
-        if ($search) {
+        if ($search)
             $query->andFilterWhere(['ilike', 'name', $search]);
-        }
 
         $results = [];
         foreach ($query->all() as $house) {

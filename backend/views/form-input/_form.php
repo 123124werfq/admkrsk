@@ -53,7 +53,11 @@ if (!empty($model->id_form))
 
     <?=$form->field($model, 'fieldname')->textInput(['maxlength' => 255]) ?>
 
-    <?php if ($model->type == CollectionColumn::TYPE_SELECT || $model->type == CollectionColumn::TYPE_RADIO){?>
+    <?php if ($model->type == CollectionColumn::TYPE_SELECT
+           || $model->type == CollectionColumn::TYPE_RADIO
+           || $model->type == CollectionColumn::TYPE_COLLECTION
+           || $model->type == CollectionColumn::TYPE_COLLECTIONS
+       ){?>
         <?=$form->field($model, 'id_collection')->widget(Select2::class, [
             'data' => ArrayHelper::map(Collection::find()->all(), 'id_collection', 'name'),
             'pluginOptions' => [
@@ -65,10 +69,41 @@ if (!empty($model->id_form))
 
     <?php if ($model->type == CollectionColumn::TYPE_SELECT ||
               $model->type == CollectionColumn::TYPE_RADIO ||
-              $model->type == CollectionColumn::TYPE_CHECKBOX ||
-              $model->type == CollectionColumn::TYPE_JSON){?>
+              $model->type == CollectionColumn::TYPE_CHECKBOX){?>
         <?=$form->field($model, 'values')->textarea(['rows' => 6])->hint('Вводить через ;')?>
     <?php }?>
+
+    <?php if ($model->type == CollectionColumn::TYPE_JSON)
+    {
+                echo "<br/>
+                <h3>Настройки таблицы</h3>";
+
+                $data = $model->getTableOptions();
+
+                echo '<div class="row-flex">';
+                foreach ($data[0] as $key => $option)
+                    echo '<div class="col"><label class="control-label">'.$option['name'].'</label></div>';
+                echo '</div>';
+
+                echo '<div id="table_options" class="multiyiinput">';
+                foreach ($data as $key => $row)
+                {
+                    echo '<div class="row-flex">';
+                    foreach ($row as $okey => $option)
+                    {
+                        $option['class'] = 'form-control';
+                        $option['id'] = 'values_'.$okey.'_'.$key;
+                        echo '<div class="col">';
+                                echo Html::textInput("FormInput[values][$key][$okey]",$option['value'],$option);
+                        echo '</div>';
+                    }
+                    echo '<div class="col col-close"><a class="close" href="javascript:">&times;</a></div>';
+                    echo '</div>';
+                }
+                echo '</div>';
+
+                echo '<a class="btn btn-default btn-visible" href="javascript:" onclick="return addInput(\'table_options\')">Добавить столбец</a>';
+    }?>
 
     <div id="input-options">
         <?php

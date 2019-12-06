@@ -48,7 +48,7 @@
                 </div>
                 <div class="btn-group">
                     <?php if (count($service->activeTargets)==1 && !empty($service->activeTargets[0]->id_form))
-                        echo '<a href="create?id_service='.$service->id_service.'&id_target='.$service->targets[0]->id_target.'" class="btn-group_item btn btn__secondary">Направить заявление</a>';
+                        echo '<a href="create?id='.$service->id_service.'&id_target='.$service->targets[0]->id_target.'" class="btn-group_item btn btn__secondary">Направить заявление</a>';
                     ?>
                     <a href="#" class="btn-group_item btn btn__gray">Подать жалобу</a>
                 </div>
@@ -60,34 +60,40 @@
                             <div class="file-td file-td__date"><?=$target->reestr_number?></div>
                             <div class="file-td file-td__name"><?=$target->name.' '.$target->place?></div>
                             <div class="file-td file-td__control">
-                                <a href="create?id_service=<?=$service->id_service?>&id_target<?=$target->id_target?>" class="btn btn__secondary btn__block-sm">Направить заявление</a>
+                                <a href="create?id=<?=$service->id_service?>&id_target<?=$target->id_target?>" class="btn btn__secondary btn__block-sm">Направить заявление</a>
                             </div>
                         </div>
                     <?php }?>
                 </div>
                 <?php }?>
 
-                <!--h2>Органы, оказывающие услугу:</h2>
-                <p>Управление учета и реализации жилищной политики администрации города</p>
-
-                <div class="content">
-                    <div class="table-reponsive">
-                        <table class="label-table">
-                            <tr>
-                                <td>Адрес:</td>
-                                <td>г. Красноярск, ул. К. Маркса, 93 , Каб. 615</td>
-                            </tr>
-                            <tr>
-                                <td>Телефон:</td>
-                                <td>(391)226-15-68, (391)226-13-24</td>
-                            </tr>
-                            <tr>
-                                <td>Режим работы:</td>
-                                <td>Прием заявлений, выдача результата: понедельник - четверг с 9.00 до 13.00</td>
-                            </tr>
-                        </table>
+                <?php if (!empty($service->firms)){?>
+                <h2>Органы, оказывающие услугу:</h2>
+                <?php foreach ($service->firms as $key => $record){
+                        $data = $record->getData(true);
+                ?>
+                    <p><?=$data['department']??''?></p>
+                    <div class="content">
+                        <div class="table-reponsive">
+                            <table class="label-table">
+                                <tr>
+                                    <td>Адрес:</td>
+                                    <td><?=nl2br($data['office']??'')?></td>
+                                </tr>
+                                <tr>
+                                    <td>Телефон:</td>
+                                    <td><?=nl2br($data['phones']??'')?></td>
+                                </tr>
+                                <tr>
+                                    <td>Режим работы:</td>
+                                    <td><?=$data['worktime']??''?></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
-                </div-->
+                <?php
+                    }}
+                ?>
 
                 <div class="subscribe">
                     <div class="subscribe_left">

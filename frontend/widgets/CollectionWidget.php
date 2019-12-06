@@ -3,6 +3,7 @@ namespace frontend\widgets;
 
 use Yii;
 use common\models\Collection;
+use yii\data\Pagination;
 
 class CollectionWidget extends \yii\base\Widget
 {
@@ -11,8 +12,8 @@ class CollectionWidget extends \yii\base\Widget
     public $id_collection;
     public $columns = [];
     public $limit = 20;
-
     public $template = 'table';
+    public $page;
 
     public function run()
     {
@@ -21,10 +22,11 @@ class CollectionWidget extends \yii\base\Widget
             if (!empty($this->attributes['id']))
                 $this->id_collection = (int)$this->attributes['id'];
 
+            if (!empty($this->attributes['template']))
+                $this->template = $this->attributes['template'];
+
             if (!empty($this->attributes['columns']))
-            {
                 $this->columns = json_decode(str_replace("&quot;", '"', $this->attributes['columns']),true);
-            }
         }
 
     	$model = Collection::find()->where(['id_collection'=>$this->id_collection])->one();
@@ -32,13 +34,27 @@ class CollectionWidget extends \yii\base\Widget
         if (empty($model) || empty($this->columns))
             return '';
 
-        $query = $model->getDataQueryByOptions($this->columns)->limit(30);
+        $p = (int)Yii::$app->request->get('p',0);
+
+        $query = $model->getDataQueryByOptions($this->columns);
+
+        $pagination = new Pagination([
+            'totalCount' => $query->count(),
+            'route'=>str_replace('?p='.$p,'',Yii::$app->request->url),
+            'pageParam'=>'p'
+        ]);
+
+        $query->offset($p*$pagination->limit)->limit($pagination->limit);
+        $query->keyAsAlias = true;
+
         $columns = $query->columns;
 
         return $this->render('collection/'.$this->template,[
         	'model'=>$model,
+            'pagination'=>$pagination,
             'columns'=>$columns,
             'allrows'=>$query->getArray(),
+            'page'=>$this->page,
         ]);
     }
 }

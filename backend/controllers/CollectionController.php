@@ -204,6 +204,35 @@ class CollectionController extends Controller
         return ['results' => $results];
     }
 
+    public function actionRecordList($id,$q)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $collection = $this->findModel($id);
+        $collection = $stripos->getArray();
+
+        $i = 0;
+        $results = [];
+
+        foreach ($collection as $key => $value)
+        {
+            if ($i>15)
+                break;
+
+            if (stripos($value, $q))
+            {
+                $results[] = [
+                    'id' => $key,
+                    'text' => $value,
+                ];
+
+                $i++;
+            }
+        }
+
+        return ['results' => $results];
+    }
+
     public function actionCopy($id)
     {
         $model = $this->findModel($id);
@@ -350,7 +379,9 @@ class CollectionController extends Controller
             if (!empty($_POST['json']))
             {
                 $json = $this->saveView($model,true);
+
                 $json['id_collection'] = $model->id_parent_collection;
+                $json['template'] = $model->template_view;
 
                 return json_encode($json);
             }
@@ -452,13 +483,14 @@ class CollectionController extends Controller
             $options['filters'] = [];
 
             foreach ($_POST['ViewFilters'] as $key => $data)
-                {
+            {
+                if (!empty($data['id_column']))
                     $options['filters'][] = [
                         'id_column' => $data['id_column'],
                         'operator' => $data['operator'],
                         'value' => (!empty($data['value']))?$data['value']:''
                     ];
-                }
+            }
         }
 
         if ($return)
@@ -569,10 +601,17 @@ class CollectionController extends Controller
                                 {
                                     $column = new CollectionColumn;
                                     $column->name = (!empty($value))?$value:'Колонка '.$tdkey;
+                                    $column->type = CollectionColumn::TYPE_INPUT;
+                                    $column->alias = \common\components\helper\Helper::transFileName($column->name);
                                     $column->id_collection = $collection->id_collection;
 
                                     if ($column->save())
                                         $columns[$tdkey] = $column;
+                                    else
+                                    {
+                                        print_r($column->errors);
+                                        die();
+                                    }
                                 }
 
                                 foreach ($records as $rkey => $row)

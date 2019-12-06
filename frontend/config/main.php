@@ -30,6 +30,20 @@ return [
                 ],
             ],
         ],
+        'i18n' => array(
+            'translations' => array(
+                '*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@frontend/messages',
+                    'sourceLanguage' => 'ru',
+                    //'on missingTranslation' => ['app\components\TranslationEventHandler', 'handleMissingTranslation']
+                    'fileMap' => [
+                        'app' => 'app.php',
+                        'app/error' => 'error.php',
+                    ],
+                ],
+            )
+        ),
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
@@ -61,7 +75,9 @@ return [
                 'class' => 'yii\web\UrlNormalizer',
             ],
             'rules' => [
+                'odata.svc<query:(.*)>'=>'o-data/index',
                 'search/address'=>'search/address',
+                'collection'=>'collection/view',
                 'site/test'=>'site/test',
                 'address/region'=>'address/region',
                 'form/view/<id>'=>'form/view',
@@ -72,6 +88,9 @@ return [
                 'address/house'=>'address/house',
                 'book/available' => 'book/available',
                 'book/intervals' => 'book/intervals',
+                [
+                    'class' => 'frontend\components\LangUrlRule',
+                ],
                 [
                     'class' => 'frontend\components\PravoUrlRule',
                 ],
@@ -101,5 +120,8 @@ return [
 
         ],
     ],
+    'sourceLanguage' => 'ru',
+    'language' => 'ru',
+
     'params' => $params,
 ];

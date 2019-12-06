@@ -110,6 +110,6 @@ class ServiceRubric extends \yii\db\ActiveRecord
 
     public function getParent()
     {
-        return $this->hasMany(ServiceRubric::className(), ['id_rub' => 'id_parent']);
+        return $this->hasOne(ServiceRubric::className(), ['id_rub' => 'id_parent']);
     }
 }

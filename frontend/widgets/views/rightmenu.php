@@ -2,10 +2,14 @@
 	$submenu = false;
 	$siblings = false;
 
-	if (empty($page->menu))
+	$menu = $page->menu;
+
+	if (empty($menu))
 	{
 		if (!empty($page->childs))
 			$submenu = $page->getChilds()->where(['hidemenu'=>0])->all();
+		else if (!empty($page->parent->menu))
+			$menu = $page->parent->menu;
 		else if (!empty($page->parent->childs))
 		{
 			$siblings = true;
@@ -26,11 +30,12 @@
 		}
 ?>
 <?php
-		if (!empty($page->menu))
-			foreach ($page->menu->getLinks()->where(['state'=>1])->all() as $key => $link)
+		if (!empty($menu))
+			foreach ($menu->getLinks()->where(['state'=>1])->all() as $key => $link)
 			{
+				$url = $link->getUrl();
 ?>
-			<li><a href="<?=$link->getUrl()?>"><?=$link->label?></a></li>
+			<li <?=$url==Yii::$app->request->url?'class="selected active"':''?>><a href="<?=$url?>"><?=$link->label?></a></li>
 <?php
 		 	}
 ?>

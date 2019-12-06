@@ -86,7 +86,6 @@ if(!Yii::$app->user->isGuest){
         <div class="gosbar__wrapper">
             <a href="#" class="gosbar_btn popup-block-link">
             </a>
-
             <div class="gosbar__right-block">
                 <a href="#" class="gosbar_btn link-accessability">
                     <span class="material-icons gosbar-icon">visibility</span>
