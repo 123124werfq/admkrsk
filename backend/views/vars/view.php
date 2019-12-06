@@ -9,21 +9,22 @@ use yii\widgets\DetailView;
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Vars', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$this->params['button-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_var], ['class' => 'btn btn-primary']);
+
+if ($model->isDeleted()) {
+    $this->params['button-block'][] = Html::a('Восстановить', ['undelete', 'id' => $model->id_var], ['class' => 'btn btn-danger']);
+} else {
+    $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id_var], [
+        'class' => 'btn btn-danger',
+        'data' => [
+            'confirm' => 'Вы уверены, что хотите удалить этот элемент?',
+            'method' => 'post',
+        ],
+    ]);
+}
 ?>
 <div class="vars-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id_var], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id_var], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
 
     <?= DetailView::widget([
         'model' => $model,

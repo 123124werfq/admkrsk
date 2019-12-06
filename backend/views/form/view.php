@@ -9,17 +9,19 @@ use yii\widgets\DetailView;
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Формы', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
 
-$this->params['button-block'][] = '<a class="btn btn-default" href="'.Yii::$app->params['frontendUrl'].'/form/view?id='.$model->id_form.'">Предпросмотр</a>';
-$this->params['button-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_form], ['class' => 'btn btn-primary']);
-$this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id_form], [
-    'class' => 'btn btn-danger',
-    'data' => [
-        'confirm' => 'Вы уверены что хотите удалить форму?',
-        'method' => 'post',
-    ],
-]);
+$this->params['action-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_form]);
+
+if ($model->isDeleted()) {
+    $this->params['action-block'][] = Html::a('Восстановить', ['undelete', 'id' => $model->id_form]);
+} else {
+    $this->params['action-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id_form], [
+        'data' => [
+            'confirm' => 'Вы уверены что хотите удалить форму?',
+            'method' => 'post',
+        ],
+    ]);
+}
 ?>
 <div class="tabs-container">
     <ul class="nav nav-tabs" role="tablist">

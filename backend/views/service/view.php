@@ -9,16 +9,20 @@ use yii\grid\GridView;
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Услуги', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
 
 $this->params['button-block'][] = Html::a('Добавить цель', ['service-target/create', 'id' => $model->id_service], ['class' => 'btn btn-default']);
 $this->params['button-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_service], ['class' => 'btn btn-primary']);
-$this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id_service], ['class' => 'btn btn-danger',
-    'data' => [
-        'confirm' => 'Вы уверены что хотите удалить эту услугу?',
-        'method' => 'post',
-    ],
-]);
+
+if ($model->isDeleted()) {
+    $this->params['button-block'][] = Html::a('Восстановить', ['undelete', 'id' => $model->id_service], ['class' => 'btn btn-danger']);
+} else {
+    $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id_service], ['class' => 'btn btn-danger',
+        'data' => [
+            'confirm' => 'Вы уверены что хотите удалить эту услугу?',
+            'method' => 'post',
+        ],
+    ]);
+}
 ?>
 
 <div class="row">

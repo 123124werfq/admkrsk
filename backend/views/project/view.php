@@ -9,22 +9,21 @@ use yii\widgets\DetailView;
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Projects', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
+
+$this->params['action-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_project]);
+
+if ($model->isDeleted()) {
+    $this->params['action-block'][] = Html::a('Восстановить', ['undelete', 'id' => $model->id_project]);
+} else {
+    $this->params['action-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id_project], [
+        'data' => [
+            'confirm' => 'Вы уверены что хотите удалить этот элемент?',
+            'method' => 'post',
+        ],
+    ]);
+}
 ?>
 <div class="project-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id_project], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id_project], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
 
     <?= DetailView::widget([
         'model' => $model,

@@ -15,12 +15,17 @@ $this->params['button-block'][] = Html::a('Добавить', ['record', 'id' =>
 
 $this->params['action-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_collection]);
 
-$this->params['action-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id_collection],[
-    'data' => [
-        'confirm' => 'Вы уверены, что хотите удалить этот элемент?',
-        'method' => 'post',
-    ],
-]);
+if ($model->isDeleted()) {
+    $this->params['action-block'][] = Html::a('Восстановить', ['undelete', 'id' => $model->id_collection]);
+} else {
+    $this->params['action-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id_collection], [
+        'data' => [
+            'confirm' => 'Вы уверены, что хотите удалить этот элемент?',
+            'method' => 'post',
+        ],
+    ]);
+}
+
 $this->params['action-block'][] = Html::a('История', ['history', 'id' => $model->id_collection]);
 
 $this->params['action-block'][] = Html::a('Создать представление', ['create-view', 'id' => $model->id_collection]);

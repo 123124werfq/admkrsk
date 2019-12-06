@@ -38,7 +38,7 @@ class MenuLinkController extends Controller
      */
     public function actionIndex($id)
     {
-        $model = Menu::findOne($id);
+        $model = Menu::findOneWithDeleted($id);
 
         if (empty($model))
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -117,7 +117,7 @@ class MenuLinkController extends Controller
                 $menu = $page->menu;
         }
         else
-            $menu = Menu::findOne($id_menu);
+            $menu = Menu::findOneWithDeleted($id_menu);
 
         if (empty($menu))
             throw new NotFoundHttpException('The requested page does not exist.');

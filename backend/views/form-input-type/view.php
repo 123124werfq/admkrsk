@@ -9,7 +9,19 @@ use yii\widgets\DetailView;
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Form Input Types', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
+
+$this->params['action-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_type]);
+
+if ($model->isDeleted()) {
+    $this->params['action-block'][] = Html::a('Восстановить', ['undelete', 'id' => $model->id_type]);
+} else {
+    $this->params['action-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id_type], [
+        'data' => [
+            'confirm' => 'Вы уверены что хотите удалить этот элемент?',
+            'method' => 'post',
+        ],
+    ]);
+}
 ?>
 <div class="form-input-type-view">
 
