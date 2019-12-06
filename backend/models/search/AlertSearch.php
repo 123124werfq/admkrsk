@@ -42,7 +42,11 @@ class AlertSearch extends Alert
      */
     public function search($params)
     {
-        $query = Alert::find();
+        if (Yii::$app->request->get('archive')) {
+            $query = Alert::findDeleted();
+        } else {
+            $query = Alert::find();
+        }
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.alert')) {

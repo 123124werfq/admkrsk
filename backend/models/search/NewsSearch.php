@@ -42,7 +42,11 @@ class NewsSearch extends News
      */
     public function search($params)
     {
-        $query = News::find();
+        if (Yii::$app->request->get('archive')) {
+            $query = News::findDeleted();
+        } else {
+            $query = News::find();
+        }
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.news')) {

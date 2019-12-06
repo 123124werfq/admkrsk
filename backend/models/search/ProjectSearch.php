@@ -42,7 +42,11 @@ class ProjectSearch extends Project
      */
     public function search($params)
     {
-        $query = Project::find();
+        if (Yii::$app->request->get('archive')) {
+            $query = Project::findDeleted();
+        } else {
+            $query = Project::find();
+        }
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.project')) {

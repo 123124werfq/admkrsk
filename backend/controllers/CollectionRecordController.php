@@ -312,7 +312,7 @@ class CollectionRecordController extends Controller
 
     protected function findCollection($id)
     {
-        if (($model = Collection::findOne($id)) !== null) {
+        if (($model = Collection::findOneWithDeleted($id)) !== null) {
             return $model;
         }
 

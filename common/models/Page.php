@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\behaviors\AccessControlBehavior;
+use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
@@ -36,6 +37,7 @@ class Page extends \yii\db\ActiveRecord
 {
     use MetaTrait;
     use ActionTrait;
+    use SoftDeleteTrait;
 
     const VERBOSE_NAME = 'Страница';
     const VERBOSE_NAME_PLURAL = 'Страницы';

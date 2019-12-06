@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\Action;
 use Yii;
 use common\models\ServiceTarget;
 use yii\data\ActiveDataProvider;
@@ -21,7 +22,7 @@ class ServiceTargetController extends Controller
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -35,7 +36,11 @@ class ServiceTargetController extends Controller
      */
     public function actionIndex($id=null)
     {
-        $query = ServiceTarget::find();
+        if (Yii::$app->request->get('archive')) {
+            $query = ServiceTarget::findDeleted();
+        } else {
+            $query = ServiceTarget::find();
+        }
 
         if (!empty($id))
             $query->where(['id_service'=>$id]);
@@ -73,6 +78,7 @@ class ServiceTargetController extends Controller
         $model->id_service = $id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['service/view', 'id' => $model->id_service]);
         }
 
@@ -93,6 +99,7 @@ class ServiceTargetController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['service/view', 'id' => $model->id_service]);
         }
 
@@ -112,9 +119,28 @@ class ServiceTargetController extends Controller
     {
         $model = $this->findModel($id);
         $id_service = $model->id_service;
-        $model->delete();
+
+        if ($model->delete()) {
+            $model->createAction(Action::ACTION_DELETE);
+        }
 
         return $this->redirect(['service/view', 'id' => $id_service]);
+    }
+
+    /**
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionUndelete($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->restore()) {
+            $model->createAction(Action::ACTION_UNDELETE);
+        }
+
+        return $this->redirect(['index', 'archive' => 1]);
     }
 
     /**
@@ -126,7 +152,7 @@ class ServiceTargetController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = ServiceTarget::findOne($id)) !== null) {
+        if (($model = ServiceTarget::findOneWithDeleted($id)) !== null) {
             return $model;
         }
 

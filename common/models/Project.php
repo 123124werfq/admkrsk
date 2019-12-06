@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\behaviors\AccessControlBehavior;
+use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
@@ -32,6 +33,7 @@ class Project extends \yii\db\ActiveRecord
 {
     use MetaTrait;
     use ActionTrait;
+    use SoftDeleteTrait;
 
     const VERBOSE_NAME = 'Проекты и события';
     const VERBOSE_NAME_PLURAL = 'Проекты и события';

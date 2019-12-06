@@ -42,7 +42,11 @@ class OpendataSearch extends Opendata
      */
     public function search($params)
     {
-        $query = Opendata::find();
+        if (Yii::$app->request->get('archive')) {
+            $query = Opendata::findDeleted();
+        } else {
+            $query = Opendata::find();
+        }
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.opendata')) {

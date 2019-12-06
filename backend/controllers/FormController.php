@@ -70,7 +70,7 @@ class FormController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['update-row','delete-row'],
+                        'actions' => ['update-row', 'undelete', 'delete-row'],
                         'roles' => ['backend.form.updateRow'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id_form'),
@@ -281,6 +281,22 @@ class FormController extends Controller
     }
 
     /**
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionUndelete($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->restore()) {
+            $model->createAction(Action::ACTION_UNDELETE);
+        }
+
+        return $this->redirect(['index', 'archive' => 1]);
+    }
+
+    /**
      * Updates an existing Form model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -350,7 +366,7 @@ class FormController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Form::findOne($id)) !== null) {
+        if (($model = Form::findOneWithDeleted($id)) !== null) {
             return $model;
         }
 

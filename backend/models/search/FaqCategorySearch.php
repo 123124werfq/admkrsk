@@ -42,7 +42,11 @@ class FaqCategorySearch extends FaqCategory
      */
     public function search($params)
     {
-        $query = FaqCategory::find();
+        if (Yii::$app->request->get('archive')) {
+            $query = FaqCategory::findDeleted();
+        } else {
+            $query = FaqCategory::find();
+        }
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.faqCategory')) {

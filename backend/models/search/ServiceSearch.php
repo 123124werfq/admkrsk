@@ -42,7 +42,11 @@ class ServiceSearch extends Service
      */
     public function search($params)
     {
-        $query = Service::find();
+        if (Yii::$app->request->get('archive')) {
+            $query = Service::findDeleted();
+        } else {
+            $query = Service::find();
+        }
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.service')) {

@@ -58,7 +58,7 @@ class HistoryAction extends Action
      */
     protected function findModelClass($id)
     {
-        if (($model = $this->modelClass::findOne($id)) !== null) {
+        if (($model = $this->modelClass::findOneWithDeleted($id)) !== null) {
             return $model;
         }
 

@@ -43,7 +43,11 @@ class PollSearch extends Poll
      */
     public function search($params)
     {
-        $query = Poll::find();
+        if (Yii::$app->request->get('archive')) {
+            $query = Poll::findDeleted();
+        } else {
+            $query = Poll::find();
+        }
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.poll')) {

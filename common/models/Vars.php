@@ -3,7 +3,9 @@
 namespace common\models;
 
 use common\behaviors\AccessControlBehavior;
+use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
 
@@ -19,6 +21,8 @@ use Yii;
 class Vars extends \yii\db\ActiveRecord
 {
     use MetaTrait;
+    use ActionTrait;
+    use SoftDeleteTrait;
 
     const VERBOSE_NAME = 'Переменная';
     const VERBOSE_NAME_PLURAL = 'Переменные';

@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\behaviors\AccessControlBehavior;
+use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
@@ -49,6 +50,7 @@ class Opendata extends \yii\db\ActiveRecord
 {
     use MetaTrait;
     use ActionTrait;
+    use SoftDeleteTrait;
 
     const VERBOSE_NAME = 'Открытые данные';
     const VERBOSE_NAME_PLURAL = 'Открытые данные';

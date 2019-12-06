@@ -7,7 +7,6 @@ use common\models\AuthEntity;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\ServiceSituation;
-use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -63,7 +62,7 @@ class ServiceSituationController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['delete'],
+                        'actions' => ['delete', 'undelete'],
                         'roles' => ['backend.serviceSituation.delete'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
@@ -124,7 +123,13 @@ class ServiceSituationController extends Controller
      */
     public function actionIndex()
     {
-        $recordsQuery = ServiceSituation::find()->where('id_parent IS NULL');
+        if (Yii::$app->request->get('archive')) {
+            $query = ServiceSituation::findDeleted();
+        } else {
+            $query = ServiceSituation::find();
+        }
+
+        $recordsQuery = $query->where('id_parent IS NULL');
 
         if (!Yii::$app->user->can('admin.serviceSituation')) {
             $recordsQuery->andWhere(['id_situation' => AuthEntity::getEntityIds(ServiceSituation::class)]);
@@ -208,6 +213,22 @@ class ServiceSituationController extends Controller
         return $this->redirect(['index']);
     }
 
+    /**
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionUndelete($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->restore()) {
+            $model->createAction(Action::ACTION_UNDELETE);
+        }
+
+        return $this->redirect(['index', 'archive' => 1]);
+    }
+
     public function actionOrder()
     {
         $ords = Yii::$app->request->post('ords');
@@ -225,7 +246,7 @@ class ServiceSituationController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = ServiceSituation::findOne($id)) !== null) {
+        if (($model = ServiceSituation::findOneWithDeleted($id)) !== null) {
             return $model;
         }
 

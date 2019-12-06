@@ -22,7 +22,7 @@ class CollectionQuery extends \yii\mongodb\Query
     public static function getQuery($id_collection)
     {
         $query = new CollectionQuery;
-        $query->collection = Collection::findOne($id_collection);
+        $query->collection = Collection::findOneWithDeleted($id_collection);
         $query->from('collection'.$id_collection);
 
         if (!empty($pagesize))

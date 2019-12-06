@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\behaviors\AccessControlBehavior;
+use common\components\softdelete\SoftDeleteTrait;
 use common\components\yiinput\RelationBehavior;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
@@ -34,6 +35,7 @@ class Collection extends \yii\db\ActiveRecord
 {
     use MetaTrait;
     use ActionTrait;
+    use SoftDeleteTrait;
 
     const VERBOSE_NAME = 'Список';
     const VERBOSE_NAME_PLURAL = 'Списки';

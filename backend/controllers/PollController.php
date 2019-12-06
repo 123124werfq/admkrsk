@@ -89,7 +89,7 @@ class PollController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['delete'],
+                        'actions' => ['delete', 'undelete'],
                         'roles' => ['backend.poll.delete'],
                         'roleParams' => [
                             'entity_id' => function () {
@@ -415,6 +415,22 @@ class PollController extends Controller
     }
 
     /**
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionUndelete($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->restore()) {
+            $model->createAction(Action::ACTION_UNDELETE);
+        }
+
+        return $this->redirect(['index', 'archive' => 1]);
+    }
+
+    /**
      * Deletes an existing Poll model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -443,7 +459,7 @@ class PollController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Poll::findOne($id)) !== null) {
+        if (($model = Poll::findOneWithDeleted($id)) !== null) {
             return $model;
         }
 
