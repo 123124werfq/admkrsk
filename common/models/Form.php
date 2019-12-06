@@ -103,6 +103,7 @@ class Form extends \yii\db\ActiveRecord
         ];
     }
 
+    // deprecated
     public function createFromByCollection()
     {
         foreach ($this->collection->columns as $key => $column)
@@ -113,23 +114,6 @@ class Form extends \yii\db\ActiveRecord
 
             if ($row->save())
             {
-                /*$where = ['type'=>$column->type];
-
-                if ($column->type == CollectionColumn::TYPE_COLLECTION)
-                    $where['id_collection'] = $column->variables;
-
-                $type = FormInputType::find()->where($where)->andWhere('esia IS NULL AND service_attribute IS NULL')->one();
-
-                if (empty($type))
-                {
-                    $type = new FormInputType;
-                    foreach ($where as $tkey => $value)
-                        $type->$tkey = $value;
-
-                    $type->name =  $column::getTypeLabel($column->type);
-                    $type->save();
-                }*/
-
                 $input = new FormInput;
                 $input->type = $column->type;
                 $input->id_form = $this->id_form;
