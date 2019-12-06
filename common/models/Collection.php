@@ -349,6 +349,8 @@ class Collection extends \yii\db\ActiveRecord
             }
 
             $transaction->commit();
+
+            $form->createAction(Action::ACTION_CREATE);
         }
         catch (\Exception $e)
         {

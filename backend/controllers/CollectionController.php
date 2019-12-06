@@ -409,16 +409,7 @@ class CollectionController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save())
         {
-            $form = new Form;
-            $form->id_collection = $model->id_collection;
-            $form->name = 'Форма к колекции '.$model->id_collection;
-
-            if ($form->save())
-            {
-                $form->createFromByCollection();
-                $model->id_form = $form->id_form;
-                $model->updateAttributes(['id_form']);
-            }
+            $model->creaetForm();
 
             $model->createAction(Action::ACTION_CREATE);
 
