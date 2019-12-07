@@ -64,7 +64,7 @@ if ($model->isDeleted()) {
                           <?php if (count($row->elements)==0){?>
                             <li><a href="/form/delete-row?id_row=<?=$row->id_row?>" class="delete-row" data-pjax="0" data-confirm="Вы уверены, что хотите удалить этот элемент?" data-method="post">Удалить строку</a></li>
                           <?php }?>
-                          <li><a href="/form/assign-form?id_row=<?=$row->id_row?>" class="create-form-text">Добавить подформу</a></li>
+                          <li><a href="/form/assign-form?id_row=<?=$row->id_row?>" class="create-subform">Добавить подформу</a></li>
                         </ul>
                     </div>
     				</div>

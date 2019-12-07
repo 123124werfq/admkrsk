@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\FormElement */
@@ -9,19 +10,14 @@ use yii\widgets\ActiveForm;
 ?>
 
 <?php $form = ActiveForm::begin([
-	'id'=>'ElementForm'
+	'id'=>'SubformForm'
 ]); ?>
 
-<?php
-    echo $this->render('/form-input/_element_options',['element'=>$model]);
-?>
+<?= $form->field($model, 'id_form')->dropDownList(ArrayHelper::map($forms, 'id_form', 'name')) ?>
 
-<?=$form->field($model, 'content')->textarea(['rows' => 6,'class'=>'form-control redactor'])?>
+<?= $form->field($model, 'prefix')->input(['maxlength' => 255]) ?>
 
 <div class="form-group">
     <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
 </div>
 <?php ActiveForm::end(); ?>
-<script type="text/javascript">
-	tinymce.init(tinymceConfig);
-</script>

@@ -16,6 +16,8 @@ use yii\web\JsExpression;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'id_group')->dropDownList(\common\models\Collection::getArrayByAlias('form_groups'))?>
+
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <div class="row">

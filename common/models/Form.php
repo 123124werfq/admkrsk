@@ -53,13 +53,13 @@ class Form extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_collection','id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
+            [['id_collection','id_page', 'id_group', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
             [['id_collection', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','make_collection','id_page'], 'integer'],
             [['name'], 'required'],
             [['message_success'], 'string'],
             [['name','url'], 'string', 'max' => 255],
 
-            [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
+            [['access_user_ids', 'access_user_group_ids', 'id_group'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
             ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
         ];
@@ -74,6 +74,7 @@ class Form extends \yii\db\ActiveRecord
             'id_form' => 'ID',
             'id_collection' => 'Коллекция',
             'name' => 'Название',
+            'id_group' => 'Группа',
             'make_collection'=>'Создать коллекцию',
             'message_success'=>'Сообщение при успешном отправлении',
             'id_page'=>'Переход на раздел при успешном отправлении',
@@ -165,6 +166,11 @@ class Form extends \yii\db\ActiveRecord
     public function getTemplate()
     {
         return $this->hasOne(Media::class, ['id_media' => 'id_media_template']);
+    }
+
+    public function getGroup()
+    {
+        return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_group']);
     }
 
     public function makeDoc($collectionRecord, $addData=null)

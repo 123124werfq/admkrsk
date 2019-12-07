@@ -229,17 +229,31 @@ class FormController extends Controller
 
     public function actionAssignForm($id_row)
     {
-        $form = $this->findModel($id_form);
+        $row = FormRow::findOne($id_row);
 
-        $model = new FormRow;
-        $model->id_form = $id_form;
-        $model->ord = FormRow::find()->where(['id_form'=>$id_form])->count();
+        $form = new \backend\models\InsertForm;
+        $form->id_form_parent = $row->id_form;
 
-        if ($model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_form]);
+        Yii::$app->assetManager->bundles = [
+            'yii\bootstrap\BootstrapAsset' => false,
+            'yii\web\JqueryAsset'=>false,
+            'yii\web\YiiAsset'=>false,
+        ];
+
+        if ($form->load(Yii::$app->request->post()) && $form->validate())
+        {
+            if (!Yii::$app->request->isAjax)
+            {
+                $this->redirect(['/form/view','id'=>$id_form]);
+            }
         }
 
-        return $this->redirect(['view', 'id' => $model->id_form]);
+        $forms = Form::find()->all();
+
+        return $this->renderAjax('_assign_form', [
+            'model'=>$form,
+            'forms'=>$forms,
+        ]);
     }
 
 

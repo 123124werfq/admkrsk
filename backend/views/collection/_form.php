@@ -15,6 +15,8 @@ use common\models\Collection;
 
 <?php $form = ActiveForm::begin(); ?>
 
+<?= $form->field($model, 'id_group')->dropDownList(Collection::getArrayByAlias('collection_group'))?>
+
 <?= $form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
 
 <!--div class="row">

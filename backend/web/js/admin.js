@@ -228,7 +228,8 @@ jQuery(document).ready(function()
       $(".modal-body form").submit();
     });
 
-    $("#form-template").delegate(".create-form-input, .update-input, .create-element, .update-row",'click',function(){
+    $("#form-template").delegate(".create-form-input, .update-input, .create-element, .update-rowm, .create-subform", 'click',function(){
+
       var $link = $(this);
 
       $('#FormElement').modal({

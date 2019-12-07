@@ -61,7 +61,7 @@ class Collection extends \yii\db\ActiveRecord
         return [
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
-            [['id_parent_collection'], 'integer'],
+            [['id_parent_collection','id_group'], 'integer'],
             [['filter', 'options','label'], 'safe'],
             [['template','template_element','template_view'], 'string'],
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
@@ -158,16 +158,6 @@ class Collection extends \yii\db\ActiveRecord
             return $this->hasMany(CollectionColumn::class, ['id_collection' => 'id_parent_collection'])->orderBy('ord ASC');
     }
 
-    public static function getArrayByAlias($alias)
-    {
-        $collection = Collection::find()->where(['alias'=>$alias])->one();
-
-        if (!empty($collection))
-            return $collection->getArray();
-
-        return [];
-    }
-
     public function getArray()
     {
         $data = $this->getData((!empty($this->label))?$this->label:[]);
@@ -175,11 +165,19 @@ class Collection extends \yii\db\ActiveRecord
         $output = [];
 
         foreach ($data as $key => $row)
-        {
             $output[$key] = implode(' ', $row);
-        }
 
         return $output;
+    }
+
+    public static function getArrayByAlias($alias)
+    {
+        $collection = Collection::find()->where(['alias'=>$alias])->one();
+
+        if (empty($collection))
+            return [];
+
+        return $collection->getArray();
     }
 
     public function getData($id_columns=[], $keyAsAlias=false)
@@ -276,6 +274,11 @@ class Collection extends \yii\db\ActiveRecord
         }
 
         return $query;
+    }
+
+    public function getGroup()
+    {
+        return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_group']);
     }
 
     public function getViewFilters()

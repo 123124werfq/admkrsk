@@ -1,15 +1,6 @@
 <?php
-
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\helpers\ArrayHelper;
-use kartik\select2\Select2;
-
-use common\models\FormInputType;
-use common\models\FormInput;
-
-use common\models\Collection;
-use common\models\CollectionColumn;
 ?>
 
 <div class="form-input-form">

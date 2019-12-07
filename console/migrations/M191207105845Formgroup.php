@@ -5,16 +5,15 @@ namespace console\migrations;
 use yii\db\Migration;
 
 /**
- * Class M191207082954Forminelement
+ * Class M191207105845Formgroup
  */
-class M191207082954Forminelement extends Migration
+class M191207105845Formgroup extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-
     }
 
     /**
@@ -22,7 +21,7 @@ class M191207082954Forminelement extends Migration
      */
     public function safeDown()
     {
-        echo "M191207082954Forminelement cannot be reverted.\n";
+        echo "M191207105845Formgroup cannot be reverted.\n";
 
         return false;
     }
@@ -36,7 +35,7 @@ class M191207082954Forminelement extends Migration
 
     public function down()
     {
-        echo "M191207082954Forminelement cannot be reverted.\n";
+        echo "M191207105845Formgroup cannot be reverted.\n";
 
         return false;
     }
