@@ -109,6 +109,16 @@ class FormInput extends \yii\db\ActiveRecord
             $values = Service::getAttributeValues($this->type->service_attribute,$model);
             return $values;
         }
+        else if ($this->type == CollectionColumn::TYPE_SERVICETARGET)
+        {
+            $records = ServiceTarget::find()->where(['id_form'=>$this->id_form])->all();
+            $output = [];
+
+            foreach ($records as $key => $data)
+                $output[$data->id_target] = $data->name;
+
+            return $output;
+        }
 
         $values = [];
 
@@ -116,9 +126,8 @@ class FormInput extends \yii\db\ActiveRecord
         {
             $vars = explode(';', $this->values);
 
-            foreach ($vars as $key => $value) {
+            foreach ($vars as $key => $value)
                 $values[$value] = $value;
-            }
         }
 
         return $values;

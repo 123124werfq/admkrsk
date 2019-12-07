@@ -79,7 +79,7 @@ class FormController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['update','order'],
+                        'actions' => ['update','order','assign-form'],
                         'roles' => ['backend.form.update'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
@@ -226,6 +226,22 @@ class FormController extends Controller
             'model' => $model,
         ]);
     }
+
+    public function actionAssignForm($id_row)
+    {
+        $form = $this->findModel($id_form);
+
+        $model = new FormRow;
+        $model->id_form = $id_form;
+        $model->ord = FormRow::find()->where(['id_form'=>$id_form])->count();
+
+        if ($model->save()) {
+            return $this->redirect(['view', 'id' => $model->id_form]);
+        }
+
+        return $this->redirect(['view', 'id' => $model->id_form]);
+    }
+
 
     public function actionCreateRow($id_form)
     {

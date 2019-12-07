@@ -29,7 +29,7 @@
 	<script>
 		var visibleInput = <?=json_encode($visibleField)?>;
 		var visibleSourceInput = <?=json_encode($visibleSourceField)?>;
-		
+
 	</script>
 	<?php }?>
 

@@ -33,7 +33,7 @@ if ($model->isDeleted()) {
             'id_form',
             'name',
             'reestr_number',
-            'old',
+            'state',
             'modified_at',
             'created_at',
             'created_by',
