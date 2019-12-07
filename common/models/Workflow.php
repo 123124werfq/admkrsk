@@ -144,10 +144,45 @@ class Workflow extends Model
         if(isset($recordItems['id_target']))
             $targetItems = ServiceTarget::findOne($recordItems['id_target']);
 
-        var_dump($recordItems);
-        var_dump($targetItems);
+        $fixedFields = [
+            'name',
+            'surname',
+            'parental_name'
+        ];
+
+        $formFields = [];
+
+        foreach ($recordItems as $rkey => $ritem)
+        {
+            if(!in_array($rkey, $fixedFields)) {
+                $column = CollectionColumn::find()->where(['id_collection' => $record->id_collection, 'alias' => $rkey])->one();
+                $formFields[$rkey] = ['value' => $ritem, 'name' => $column->name];
+            }
+        }
+
+        var_dump($formFields);
+
+        //var_dump($recordItems);
+        //var_dump($targetItems);
 
         die();
+    }
+
+    protected function fillRequestTemplate(array $params)
+    {
+        $placeholders = [
+          '{service name}', // reestr_number
+
+        ];
+
+        $appDataItems = [];
+
+
+        $messageDataItems = [];
+
+
+
+
     }
 
 
@@ -169,63 +204,38 @@ class Workflow extends Model
           <rev:Code>OSAK01241</rev:Code>
           <rev:Name>Официальный сайт администрации города Красноярска</rev:Name>
         </rev:Originator>
-        <rev:ServiceName>03/00/004</rev:ServiceName>
+        <rev:ServiceName>{target-reestr_number}</rev:ServiceName>
         <rev:TypeCode>GSRV</rev:TypeCode>
         <rev:Status>REQUEST</rev:Status>
-        <rev:Date>2019-08-20T18:32:39.4965852+07:00</rev:Date>
+        <rev:Date>{date}</rev:Date>
         <rev:ExchangeType>1</rev:ExchangeType>
-        <rev:ServiceCode>2400000010000000000</rev:ServiceCode>
-        <rev:CaseNumber>7A06C1C502184672A6EB7EF46529803E</rev:CaseNumber>
+        <rev:ServiceCode>{target-service_code}</rev:ServiceCode>
+        <rev:CaseNumber>{case_number}</rev:CaseNumber>
       </rev:Message>
       <rev:MessageData>
         <rev:AppData>
-          <OrderID>6995</OrderID>
-          <ServiceCode>03/00/004</ServiceCode>
-          <ServiceTarget>выписка на жилое помещение</ServiceTarget>
+          <OrderID>{order_id}</OrderID>
+          <ServiceCode>{target-reestr_number}</ServiceCode>
+          <ServiceTarget>{target-name}</ServiceTarget>
           <ServicePlace>Город</ServicePlace>
-          <DocDate>2019-08-20</DocDate>
-          <FL_FIO LastName="Потапов" FirstName="Александр" MiddleName="Владимирович" />
-          <FL_SNILS>148-049-977 00</FL_SNILS>
-          <FL_PASSPORT PassportSeriesAndNum="0408 №650182" PassportWhoIssued="Территориальным пунктом УФМС России по Красноярскому краю в Тасеевском районе" PassportWhenIssued="2008-11-05" />
-          <ADR ADR_Country="Россия" ADR_Region_Code="2400000000000" ADR_Region="Красноярский край" ADR_City_Code="2400000100000" ADR_City="Красноярск г" ADR_City_District="Советский район" ADR_Street_Code="240000010000322" ADR_Street="Краснодарская ул" ADR_House="14" ADR_Zip="660005" />
-          <FL_ContactInfo Tel="7 (904) 897-45-56" />
-          <FL_SUBJECT>	Прошу предоставить выписку из Реестра муниципальной собственности на
-	 квартира
-	расположенное по адресу:
-	улица, г. Красноярск Краснодарская
-	номер дома (строения/литера - при наличии) 14
-	номер жилого помещения в доме 11
-
-Способ получения выписки:
-Лично -
-Почтовым отправлением по адресу -
-Направить в электронном виде - Да
-Выдать через МФЦ (в случае, если заявление было подано в МФЦ) -
-
-Дата и время запроса услуги на Сайте: 20.08.2019 18:32.
-Регистрационный номер запроса услуги на Сайте: 03/00/004-0438.
-Логин пользователя на Сайте: esia#1056781441@gosuslugi.ru.
-Уровень достоверности: Подтвержденная учетная запись ЕСИА физического лица, аутентификация по логину и паролю.</FL_SUBJECT>
+          <DocDate>{docdate}</DocDate>
+          <FL_FIO LastName="{surname}" FirstName="{name}" MiddleName="{parental_name}" />
+          <FL_SNILS>{snils}</FL_SNILS>
+          <FL_PASSPORT PassportSeriesAndNum="{passport_serie} {passport_number}" PassportWhoIssued="{passport_issued}" PassportWhenIssued="{passport_date}" />
+          <ADR ADR_Country="{addr_country}" ADR_Region_Code="{addr_region_code}" ADR_Region="{addr_region}" ADR_City_Code="{addr_city_code}" ADR_City="{addr_city}" ADR_City_District="{addr_district}" ADR_Street_Code="{addr_street_code}" ADR_Street="{addr_street}" ADR_House="{addr_house}" ADR_Zip="{addr_zip}" />
+          <FL_ContactInfo Tel="{phone}" />
+          <FL_SUBJECT>{subject_text}</FL_SUBJECT>
           <FIELDS>
-            <Field FLD_Name="Без имени" FLD_Type="string" FLD_Value="квартира" />
-            <Field FLD_Name="Без имени" FLD_Type="string" FLD_Value="Краснодарская" />
-            <Field FLD_Name="Без имени" FLD_Type="string" FLD_Value="14" />
-            <Field FLD_Name="Без имени" FLD_Type="string" FLD_Value="11" />
-            <Field FLD_Name="Без имени" FLD_Type="string" FLD_Value="здание" />
-            <Field FLD_Name="Без имени" FLD_Type="string" FLD_Value="прилагается" />
-            <Field FLD_Name="Способ получения выписки" FLD_Code="Лично" FLD_Type="string" FLD_Value="">false</Field>
-            <Field FLD_Name="Способ получения выписки" FLD_Code="Почтовым отправлением по адресу" FLD_Type="string" FLD_Value="">false</Field>
-            <Field FLD_Name="Способ получения выписки" FLD_Code="Направить в электронном виде" FLD_Type="string" FLD_Value="Да">true</Field>
-            <Field FLD_Name="Способ получения выписки" FLD_Code="Выдать через МФЦ (в случае, если заявление было подано в МФЦ)" FLD_Type="string" FLD_Value="">false</Field>
+            {fields_list}
           </FIELDS>
-          <AuthorProfile ConfidenceLevel="Подтвержденная учетная запись ЕСИА физического лица, аутентификация по логину и паролю" Login="esia#1056781441@gosuslugi.ru" RequestRegNum="03/00/004-0438" />
+          <AuthorProfile ConfidenceLevel="{confidence_level}" Login="{esialogin}" RequestRegNum="{regnum}" />
         </rev:AppData>
         <rev:AppDocument>
-          <rev:RequestCode>req_7a06c1c5-0218-4672-a6eb-7ef46529803e</rev:RequestCode>
+          <rev:RequestCode>{request_code}</rev:RequestCode>
           <rev:Reference>
-            <xop:Include href="cid:5aeaa450-17f0-4484-b845-a8480c363444" xmlns:xop="http://www.w3.org/2004/08/xop/include" />
+            <xop:Include href="cid:{archive_cid}" xmlns:xop="http://www.w3.org/2004/08/xop/include" />
           </rev:Reference>
-          <rev:DigestValue>DNmdDWA7PdxrjvHOVmmUUOpUf/M=</rev:DigestValue>
+          <rev:DigestValue>{digest}</rev:DigestValue>
         </rev:AppDocument>
       </rev:MessageData>
     </int:Input_03_00_004FL>

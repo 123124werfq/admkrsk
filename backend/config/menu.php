@@ -145,6 +145,10 @@ return [
                 'title'=>'Открытые данные',
                 'roles' => ['backend.opendata'],
             ],
+            'integrations'=>[
+                'title' => 'Интеграции',
+                'roles' => ['backend.service']
+            ],
         ],
     ],
 ];

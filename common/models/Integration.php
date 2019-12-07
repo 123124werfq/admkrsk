@@ -30,7 +30,7 @@ class Integration extends \yii\db\ActiveRecord
     public const SYSTEM_SUO = 3;
 
     public const DIRECTION_OUTPUT = 1;
-    public const DIRECTION_INPUT = 1;
+    public const DIRECTION_INPUT = 2;
 
     public const STATUS_OK = 1;
     public const STATUS_ERROR = 88;
