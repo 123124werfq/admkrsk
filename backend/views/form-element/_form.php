@@ -16,7 +16,9 @@ use yii\widgets\ActiveForm;
     echo $this->render('/form-input/_element_options',['element'=>$model]);
 ?>
 
-<?=$form->field($model, 'content')->textarea(['rows' => 6,'class'=>'form-control redactor'])?>
+<?php if (empty($element->id_form)){?>
+	<?=$form->field($model, 'content')->textarea(['rows' => 6,'class'=>'form-control redactor'])?>
+<?php }?>
 
 <div class="form-group">
     <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

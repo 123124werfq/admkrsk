@@ -120,7 +120,7 @@ class FormElementController extends Controller
                 'yii\web\YiiAsset'=>false,
             ];
 
-            return $this->renderAjax('_form',['model' => $model]);
+            return $this->renderAjax('_form',['model' => $model,'id_form'=>$model->row->id_form]);
         }
 
         return $this->render('update', [
