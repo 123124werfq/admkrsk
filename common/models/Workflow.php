@@ -139,11 +139,15 @@ class Workflow extends Model
 
     public function generateServiceRequest(CollectionRecord $record)
     {
-        $recrordItems = $record->getData(true);
+        $recordItems = $record->getData(true);
+        $targetItems = [];
+        if(isset($recordItems['id_target']))
+            $targetItems = ServiceTarget::findOne($recordItems['id_target']);
 
-        var_dump($recrordItems); die();
+        var_dump($recordItems);
+        var_dump($targetItems);
 
-
+        die();
     }
 
 
