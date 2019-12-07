@@ -56,6 +56,7 @@ class ServiceAppeal extends \yii\db\ActiveRecord
             'id_appeal' => 'Id Appeal',
             'id_user' => 'Id User',
             'id_service' => 'Id Service',
+            'id_record' => 'ID record',
             'state' => 'State',
             'date' => 'Date',
             'data' => 'Data',

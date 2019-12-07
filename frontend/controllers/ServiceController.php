@@ -168,8 +168,10 @@ class ServiceController extends \yii\web\Controller
                         // запрос к СЭД
                         $attachments = $record->getAllMedias();
 
+                        $export_path = $record->collection->form->makeDoc($record);
+
                         $wf = new Workflow;
-                        $wf->generateArchive($idents['guid'], $attachments);
+                        $wf->generateArchive($idents['guid'], $attachments, $export_path);
 
                         // ... тут XML
                         $opres = $wf->sendServiceMessage($appeal);
