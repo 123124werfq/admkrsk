@@ -154,7 +154,7 @@ class Form extends \yii\db\ActiveRecord
 
     public function getRows()
     {
-        return $this->hasMany(FormRow::class, ['id_form' => 'id_form']);
+        return $this->hasMany(FormRow::class, ['id_form' => 'id_form'])->orderBy('ord ASC');
     }
 
     public function getService()
