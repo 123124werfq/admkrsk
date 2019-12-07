@@ -229,10 +229,12 @@ class FormController extends Controller
 
     public function actionAssignForm($id_row)
     {
-        $row = FormRow::findOne($id_row);
+        $insertRow = FormRow::findOne($id_row);
 
         $form = new \backend\models\InsertForm;
-        $form->id_form_parent = $row->id_form;
+        $form->id_form_parent = $insertRow->id_form;
+
+        $parentForm = Form::findOne($form->id_form_parent);
 
         Yii::$app->assetManager->bundles = [
             'yii\bootstrap\BootstrapAsset' => false,
@@ -242,10 +244,61 @@ class FormController extends Controller
 
         if ($form->load(Yii::$app->request->post()) && $form->validate())
         {
-            if (!Yii::$app->request->isAjax)
-            {
-                $this->redirect(['/form/view','id'=>$id_form]);
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+
+                $newElement = new FormElement;
+                $newElement->id_row = $id_row;
+                $newElement->ord = Yii::$app->db->createCommand("SELECT count(*) FROM form_element WHERE id_row = $id_row")->queryScalar();
+                $newElement->save();
+
+                $copyForm = Form::findOne($form->id_form);
+
+                $subForm = new Form;
+                $subForm->id_collection = $form->id_collection;
+                $subForm->name = 'Element '.$newElement->id_element;
+                $subForm->save();
+
+                foreach ($copyForm->rows as $key => $row)
+                {
+                    $newRow = new Row;
+                    $newRow->id_form = $subForm->id_form;
+                    $newRow->ord = $row->ord;
+                    $newRow->save();
+
+                    foreach ($row->elements as $key => $element)
+                    {
+                        $copyElement = new FormElement;
+                        $copyElement->id_row = $newRow->id_row;
+                        $copyElement->save();
+
+                        if (!empty($elemen->input))
+                        {
+                            $newInput = new FormInput;
+                            $newInput->attributes = $elemen->input->attributes;
+                            $newInput->id_form = $insertRow->id_form;
+                            $newInput->fieldname = $form->prefix.'_'.$newInput->fieldname.
+                            $newInput->save();
+
+                            $column = new CollectionColumn;
+                            $column->name = $newInput->name;
+                            $column->alias = $newInput->fieldname;
+                            $column->id_collection = $parentForm->id_collection;
+                            $column->type = $model->type;
+                            $column->save();
+                        }
+                    }
+                }
+
+                $transaction->commit();
             }
+            catch (\Exception $e)
+            {
+                $transaction->rollBack();
+                throw $e;
+            }
+
+            $this->redirect(['/form/view','id'=>$parentForm->id_form_parent]);
         }
 
         $forms = Form::find()->all();
