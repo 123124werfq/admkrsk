@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use common\components\yiinput\RelationBehavior;
 
 /**
  * This is the model class for table "form_element".
@@ -97,6 +98,21 @@ class FormElement extends \yii\db\ActiveRecord
         return $styles;
     }
 
+    public function behaviors()
+    {
+        return [
+            'yiinput' => [
+                'class' => RelationBehavior::class,
+                'relations'=> [
+                    'visibleInputs'=>[
+                        'modelname'=> 'FormVisibleInput',
+                        'added'=>true,
+                    ],
+                ]
+            ]
+        ];
+    }
+
     public function getOptionsData()
     {
         $options = [
@@ -124,5 +140,10 @@ class FormElement extends \yii\db\ActiveRecord
         }
 
         return $options;
+    }
+
+    public function getVisibleInputs()
+    {
+        return $this->hasMany(FormVisibleInput::class, ['id_element' => 'id_element']);
     }
 }

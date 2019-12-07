@@ -5,7 +5,6 @@ namespace common\models;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
-use common\components\yiinput\RelationBehavior;
 use common\modules\log\behaviors\LogBehavior;
 
 /**
@@ -92,15 +91,6 @@ class FormInput extends \yii\db\ActiveRecord
             'ts' => TimestampBehavior::class,
             'ba' => BlameableBehavior::class,
             'log' => LogBehavior::class,
-            'yiinput' => [
-                'class' => RelationBehavior::class,
-                'relations'=> [
-                    'visibleInputs'=>[
-                        'modelname'=> 'FormVisibleInput',
-                        'added'=>true,
-                    ],
-                ]
-            ]
         ];
     }
 
@@ -188,7 +178,6 @@ class FormInput extends \yii\db\ActiveRecord
         return $output;
     }
 
-
     public function getElement()
     {
         return $this->hasOne(FormElement::class, ['id_input' => 'id_input']);
@@ -203,10 +192,4 @@ class FormInput extends \yii\db\ActiveRecord
     {
         return $this->hasOne(FormInputType::class, ['id_type' => 'id_type']);
     }
-
-    public function getVisibleInputs()
-    {
-        return $this->hasMany(FormVisibleInput::class, ['id_input' => 'id_input']);
-    }
-
 }
