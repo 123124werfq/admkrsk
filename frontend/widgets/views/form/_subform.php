@@ -1,3 +1,4 @@
+<div class="col">
 <?php foreach ($element->subForm->rows as $key => $row)
 {
 	echo '<div class="row">';
@@ -16,3 +17,4 @@
 	echo '</div>';
 }
 ?>
+</div>
