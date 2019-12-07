@@ -58,7 +58,7 @@ class Form extends \yii\db\ActiveRecord
             [['name'], 'required'],
             [['message_success'], 'string'],
             [['name','url','fullname'], 'string', 'max' => 255],
-            [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
+            [['access_user_ids', 'access_user_group_ids', 'id_group'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
             ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
         ];
@@ -75,6 +75,7 @@ class Form extends \yii\db\ActiveRecord
             'id_service' => 'Услуга',
             'name' => 'Название',
             'fullname' => 'Полное название',
+            'id_group' => 'Группа',
             'make_collection'=>'Создать коллекцию',
             'message_success'=>'Сообщение при успешном отправлении',
             'id_page'=>'Переход на раздел при успешном отправлении',
@@ -101,6 +102,18 @@ class Form extends \yii\db\ActiveRecord
             'ac' => [
                 'class' => AccessControlBehavior::class,
                 'permission' => 'backend.form',
+            ],
+            'multiupload' => [
+                'class' => \common\components\multifile\MultiUploadBehavior::class,
+                'relations'=>
+                [
+                    'template'=>[
+                        'model'=>'Media',
+                        'fk_cover' => 'id_media_template',
+                        'cover' => 'template',
+                    ],
+                ],
+                'cover'=>'template'
             ],
         ];
     }
@@ -144,11 +157,54 @@ class Form extends \yii\db\ActiveRecord
 
     public function getRows()
     {
-        return $this->hasMany(FormRow::class, ['id_form' => 'id_form']);
+        return $this->hasMany(FormRow::class, ['id_form' => 'id_form'])->orderBy('ord ASC');
     }
 
     public function getService()
     {
         return $this->hasOne(Service::class, ['id_service' => 'id_service']);
+    }
+
+    public function getTemplate()
+    {
+        return $this->hasOne(Media::class, ['id_media' => 'id_media_template']);
+    }
+
+    public function getGroup()
+    {
+        return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_group']);
+    }
+
+    public function makeDoc($collectionRecord, $addData=null)
+    {
+        if (empty($this->template))
+            return false;
+
+        $media = $this->template;
+        $url = $media->getUrl();
+
+        $data = $collectionRecord->getData(true);
+
+        $template = file_get_contents($url);
+        $root = Yii::getAlias('@app');
+
+        $template_path = $root.'/runtime/templates/template_'.$media->id_media.'_'.time().'.docx';
+        $template = file_put_contents($template_path,file_get_contents($url));
+
+        $export_path = \common\components\worddoc\WordDoc::makeDocByForm($this, $data, $template_path);
+
+        /*header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="'.$appeal->targer->number.' '.$appeal->created_at.'"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($export_path));
+
+        readfile($export_path);
+        unlink($export_path);
+        */
+
+        return $export_path;
     }
 }

@@ -43,6 +43,9 @@
 		<label class="form-label"><?=$input->label?><?=!empty($options['required'])?'*':''?></label>
 		<?php }?>
 		<?php switch ($input->type) {
+			case CollectionColumn::TYPE_SERVICETARGET:
+				echo $form->field($model, $attribute)->dropDownList($input->getArrayValues(),$options);
+				break;
 			case CollectionColumn::TYPE_SELECT:
 				echo $form->field($model, $attribute)->dropDownList($input->getArrayValues(),$options);
 				break;

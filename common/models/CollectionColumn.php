@@ -42,6 +42,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
     const TYPE_STREET = 21;
     const TYPE_HOUSE = 22;
     const TYPE_SUBREGION = 24;
+    const TYPE_SERVICETARGET = 26;
 
     public static function getTypeOptions($type)
     {
@@ -152,14 +153,16 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_COLLECTION => "Данные из списока",
             self::TYPE_COLLECTIONS => "Данные из списока, несколько элементов ",
             self::TYPE_IMAGE => "Изображение",
-            self::TYPE_ADDRESS => "Адрес",
             self::TYPE_JSON => "Таблицы",
+            self::TYPE_SERVICETARGET => "Цель муниципальной услуги",
+            self::TYPE_ADDRESS => "Адрес строкой",
             self::TYPE_REGION => 'Регион',
             self::TYPE_SUBREGION => 'Область',
             self::TYPE_CITY => 'Город',
             self::TYPE_DISTRICT => 'Район города',
             self::TYPE_STREET => 'Улица',
             self::TYPE_HOUSE => 'Дом',
+
         ];
 
         if (empty($type))

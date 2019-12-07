@@ -11,15 +11,7 @@ use common\models\FormInput;
 use common\models\Collection;
 use common\models\CollectionColumn;
 
-$types = FormInputType::find()->all();
 
-$visibleInputs = [];
-if (!empty($model->id_form))
-{
-    $visibleInputs = ArrayHelper::map(FormInput::find()
-                        ->where(['id_form'=>$model->id_form, 'type'=>[CollectionColumn::TYPE_SELECT,CollectionColumn::TYPE_CHECKBOX]])
-                        ->andWhere('id_input <> '.(int)$model->id_input)->all(), 'id_input', 'name');
-}
 ?>
 <div class="form-input-form">
     <?php $form = ActiveForm::begin([
@@ -114,35 +106,7 @@ if (!empty($model->id_form))
     <br/>
     <h3>Настройка отображения</h3>
     <?php
-        echo $this->render('_element_options',['element'=>$model->element]);
-    ?>
-
-    <?php if (!empty($visibleInputs)){
-        $records = $model->getRecords('visibleInputs');
-    ?>
-            <p>Отображать если:</p>
-            <div id="visibles" class="multiyiinput">
-            <?php foreach ($records as $key => $visibleInput) {?>
-                <div class="row">
-                    <div class="col-sm-5">
-                    <?=$form->field($visibleInput, "[visibleInputs][$key]id",['template'=>"{input}"])->hiddenInput()?>
-                        <?=$form->field($visibleInput, "[visibleInputs][$key]id_input_visible",['template'=>"{input}"])->dropDownList($visibleInputs,['class'=>'form-control visible-field','prompt'=>'Выберите поле зависимости'])?>
-                    </div>
-                    <div class="col-sm-6 visibleInputValues">
-                        <?=(!empty($visibleInput->id_input_visible))?$this->render('_input',['visibleInput'=>$visibleInput->visibleInput,'model'=>$visibleInput,'form'=>$form,'rowKey'=>$key]):''?>
-                    </div>
-                    <div class="col-sm-1">
-                        <a class="close" href="javascript:">&times;</a>
-                    </div>
-                </div>
-            <?php
-                }
-            ?>
-            </div>
-
-            <a onclick="return addInput('visibles')" href="#" class="btn btn-default btn-visible">Добавить еще</a>
-    <?php
-        }
+        echo $this->render('_element_options',['element'=>$model->element,'id_form'=>$model->id_form,'form'=>$form]);
     ?>
 
     <div class="form-group">

@@ -409,7 +409,7 @@ class CollectionController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save())
         {
-            $model->creaetForm();
+            $model->createForm();
 
             $model->createAction(Action::ACTION_CREATE);
 
