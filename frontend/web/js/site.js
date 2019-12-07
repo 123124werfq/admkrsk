@@ -81,7 +81,7 @@ $(document).ready(function() {
             $(".program-list").html(data);
         });
     });
-
+/*
     if (typeof visibleInput !== 'undefined')
     {
         for (var id_vinput in visibleInput)
@@ -142,7 +142,7 @@ $(document).ready(function() {
             check(source);
         }   
     }
-
+*/
     $("div[data-visible-field]").each(function(){
 
         var source = $("#"+$(this).data('visible-field'));
