@@ -7,7 +7,11 @@ use common\modules\log\models\Log;
 use Yii;
 use common\models\Form;
 use common\models\FormRow;
+use common\models\FormElement;
+use common\models\FormInput;
 use common\models\Collection;
+use common\models\CollectionColumn;
+
 
 use backend\models\search\FormSearch;
 use yii\filters\AccessControl;
@@ -247,47 +251,69 @@ class FormController extends Controller
             $transaction = Yii::$app->db->beginTransaction();
             try {
 
-                $newElement = new FormElement;
-                $newElement->id_row = $id_row;
-                $newElement->ord = Yii::$app->db->createCommand("SELECT count(*) FROM form_element WHERE id_row = $id_row")->queryScalar();
-                $newElement->save();
-
                 $copyForm = Form::findOne($form->id_form);
-
+                
                 $subForm = new Form;
-                $subForm->id_collection = $form->id_collection;
-                $subForm->name = 'Element '.$newElement->id_element;
-                $subForm->save();
-
-                foreach ($copyForm->rows as $key => $row)
+                $subForm->id_collection = $copyForm->id_collection;
+                $subForm->name = $parentForm->name.' '.$copyForm->name;
+                
+                if ($subForm->save())
                 {
-                    $newRow = new Row;
-                    $newRow->id_form = $subForm->id_form;
-                    $newRow->ord = $row->ord;
-                    $newRow->save();
+                    $newElement = new FormElement;
+                    $newElement->id_row = $id_row;
+                    $newElement->ord = Yii::$app->db->createCommand("SELECT count(*) FROM form_element WHERE id_row = $id_row")->queryScalar();
+                    $newElement->id_form = $subForm->id_form;
 
-                    foreach ($row->elements as $key => $element)
+                    if ($newElement->save())
                     {
-                        $copyElement = new FormElement;
-                        $copyElement->id_row = $newRow->id_row;
-                        $copyElement->save();
-
-                        if (!empty($elemen->input))
+                        foreach ($copyForm->rows as $key => $row)
                         {
-                            $newInput = new FormInput;
-                            $newInput->attributes = $elemen->input->attributes;
-                            $newInput->id_form = $insertRow->id_form;
-                            $newInput->fieldname = $form->prefix.'_'.$newInput->fieldname.
-                            $newInput->save();
+                            $newRow = new FormRow;
+                            $newRow->attributes = $row->attributes;
+                            $newRow->id_form = $subForm->id_form;
+                            $newRow->ord = $row->ord;
+                            
+                            if ($newRow->save())
+                            {
+                                foreach ($row->elements as $key => $element)
+                                {
+                                    $copyElement = new FormElement;
+                                    $copyElement->attributes = $element->attributes;
+                                    $copyElement->id_row = $newRow->id_row;
 
-                            $column = new CollectionColumn;
-                            $column->name = $newInput->name;
-                            $column->alias = $newInput->fieldname;
-                            $column->id_collection = $parentForm->id_collection;
-                            $column->type = $model->type;
-                            $column->save();
+                                    if (!empty($element->input))
+                                    {
+                                        $newInput = new FormInput;
+                                        $newInput->attributes = $element->input->attributes;
+                                        $newInput->id_form = $parentForm->id_form;
+                                        $newInput->fieldname = $form->prefix.'_'.$newInput->fieldname;
+                                        
+                                        if (!$newInput->save())
+                                            print_r($newInput->errors);
+
+                                        $copyElement->id_input = $newInput->id_input;
+
+                                        $column = new CollectionColumn;
+                                        $column->name = $newInput->name;
+                                        $column->alias = $newInput->fieldname;
+                                        $column->id_collection = $parentForm->id_collection;
+                                        $column->type = $newInput->type;
+
+                                        if (!$column->save())
+                                            print_r($column->errors);
+
+                                        $newInput->id_column = $column->id_column;
+                                        $newInput->updateAttributes(['id_column']);
+                                    }
+
+                                    $copyElement->save();
+                                }
+                            }
+                            else print_r($newRow->errors);
                         }
                     }
+                    else 
+                        print_r($newElement->errors);
                 }
 
                 $transaction->commit();
@@ -298,7 +324,7 @@ class FormController extends Controller
                 throw $e;
             }
 
-            $this->redirect(['/form/view','id'=>$parentForm->id_form_parent]);
+            $this->redirect(['/form/view','id'=>$parentForm->id_form]);
         }
 
         $forms = Form::find()->all();

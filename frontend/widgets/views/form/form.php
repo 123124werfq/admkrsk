@@ -47,23 +47,7 @@
 			echo Html::hiddenInput($name,$value);
 	?>
 
-
-	<?php foreach ($form->rows as $key => $row)
-	{
-		echo '<div class="row">';
-		foreach ($row->elements as $ekey => $element)
-		{
-			if (!empty($element->id_input))
-				echo $this->render('_input',['input'=>$element->input,'element'=>$element,'model'=>$model,'form'=>$activeForm]);
-			elseif (!empty($element->content))
-			{
-				$styles = $element->getStyles();
-				echo '<div class="text-row" '.((!empty($styles))?'style="'.implode(';',$styles).'"':'').'>'.$element->content.'</div>';
-			}
-		}
-		echo '</div>';
-	}
-	?>
+	<?=$this->render('_rows',['rows'=>$form->rows,'model'=>$model,'activeForm'=>$activeForm])?>
 	<div class="form-end">
         <div class="form-end_right">
             <input type="submit" class="btn btn__secondary" value="Отправить">
