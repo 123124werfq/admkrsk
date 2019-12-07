@@ -41,6 +41,7 @@ use Yii;
  */
 class EsiaUser extends \yii\db\ActiveRecord
 {
+    public $usertype;
     /**
      * {@inheritdoc}
      */
@@ -84,6 +85,8 @@ class EsiaUser extends \yii\db\ActiveRecord
             'mobile' => 'Мобильный номер',
             'contacts' => 'Contacts',
 
+            'usertype' => 'Физ.лицо / Юр.Лицо',
+
             'first_name' => 'Имя',
             'last_name' => 'Фамилия',
             'middle_name' => 'Отчество',
@@ -113,6 +116,14 @@ class EsiaUser extends \yii\db\ActiveRecord
             'deleted_at' => 'Deleted At',
             'deleted_by' => 'Deleted By',
         ];
+    }
+
+    public function getUsertype()
+    {
+        if (!empty($this->org_fullname))
+            return 'Юридическое лицо';
+
+        return 'Физическое лицо';
     }
 
     public function actualize($client)

@@ -61,7 +61,7 @@ class Collection extends \yii\db\ActiveRecord
         return [
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
-            [['id_parent_collection'], 'integer'],
+            [['id_parent_collection','id_group'], 'integer'],
             [['filter', 'options','label'], 'safe'],
             [['template','template_element','template_view'], 'string'],
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
@@ -86,12 +86,13 @@ class Collection extends \yii\db\ActiveRecord
             'template' => 'Шаблон для страницы',
             'template_view' => 'Вывод в разделе',
             'template_element' => 'Шаблон для элемента',
-            'created_at' => 'Создано',
-            'created_by' => 'Создал',
-            'updated_at' => 'Обновлено',
-            'updated_by' => 'Обновил',
-            'deleted_at' => 'Удалено',
-            'deleted_by' => 'Удалил',
+            'id_group'=>'Группа',
+            'created_at' => 'Создана',
+            'created_by' => 'Кем создана',
+            'updated_at' => 'Изменено',
+            'updated_by' => 'Кем отредактирована',
+            'deleted_at' => 'Удалена',
+            'deleted_by' => 'Кем удалена',
         ];
     }
 

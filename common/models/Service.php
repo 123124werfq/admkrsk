@@ -82,7 +82,7 @@ class Service extends \yii\db\ActiveRecord
             [['id_rub','client_type','name'],'required'],
             [['id_rub', 'client_type', 'online', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','refuse'], 'default', 'value' => null],
             [['old'], 'default', 'value' => 0],
-            [['id_rub', 'old', 'online', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_form'], 'integer'],
+            [['id_rub', 'old', 'online', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['keywords', 'addresses', 'result', 'client_category', 'duration', 'documents', 'price', 'appeal', 'legal_grounds', 'regulations', 'refuse','regulations_link', 'duration_order', 'availability', 'procedure_information', 'max_duration_queue'], 'string'],
             [['id_situations', 'client_type', 'id_firms'],'safe'],
             [['reestr_number'], 'string', 'max' => 255],
@@ -101,7 +101,6 @@ class Service extends \yii\db\ActiveRecord
         return [
             'id_service' => 'ID',
             'id_rub' => 'Рубрика',
-            'id_form' => 'Форма приема заявления',
             'id_target'=> 'Цель',
             'reestr_number' => 'Реестровый номер услуги',
             'fullname' => 'Полное наименование',
@@ -169,11 +168,10 @@ class Service extends \yii\db\ActiveRecord
     {
         if ($attribute=='client_type')
             return [
-                self::TYPE_PEOPLE=>'Физическое лицо',
-                self::TYPE_FIRM=>'Юридическое лицо'
+                self::TYPE_PEOPLE => 'Физическое лицо',
+                self::TYPE_FIRM => 'Юридическое лицо'
             ];
-        else
-        if ($attribute=='type')
+        else if ($attribute=='type')
             return [
                 'услуга органа'=>'услуга органа',
                 'настройка для ДО'=>'настройка для ДО',
@@ -188,7 +186,6 @@ class Service extends \yii\db\ActiveRecord
 
             return $output;
         }
-
     }
 
     public function beforeSave($insert)
@@ -279,9 +276,9 @@ class Service extends \yii\db\ActiveRecord
         return $this->hasMany(ServiceTarget::class, ['id_service' => 'id_service']);
     }
 
-    public function getForm()
+    public function getForms()
     {
-        return $this->hasOne(Form::class, ['id_form' => 'id_form']);
+        return $this->hasMany(Form::class, ['id_service' => 'id_service']);
     }
 
     static public function generateGUID(){

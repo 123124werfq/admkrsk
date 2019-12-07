@@ -37,14 +37,6 @@ if (!empty($offices))
 
         <?php $form = ActiveForm::begin(); ?>
 
-        <?= '' /*$form->field($model, 'id_form')->widget(Select2::class, [
-            'data' => ArrayHelper::map(Form::find()->all(), 'id_form', 'name'),
-            'pluginOptions' => [
-                'allowClear' => true,
-                'placeholder' => 'Форма приема заявления',
-            ],
-        ])*/?>
-
         <?= $form->field($model, 'old')->checkBox() ?>
 
         <?=$form->field($model, 'id_rub')->widget(Select2::class, [
@@ -128,6 +120,7 @@ if (!empty($offices))
         <?= $form->field($model, 'max_duration_queue')->textarea(['rows' => 6]) ?>
 
         <h3>Шаблон документа</h3>
+        
         <?=common\components\multifile\MultiFileWidget::widget([
             'model'=>$model,
             'single'=>true,

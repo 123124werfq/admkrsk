@@ -13,11 +13,11 @@ $this->title = 'Муниципальные услуги';
 $this->params['breadcrumbs'][] = $this->title;
 
 if (Yii::$app->user->can('admin.service')) {
-    if ($archive) {
-        $this->params['button-block'][] = Html::a('Все записи', ['index'], ['class' => 'btn btn-default']);
-    } else {
-        $this->params['button-block'][] = Html::a('Архив', ['index', 'archive' => 1], ['class' => 'btn btn-default']);
-    }
+    if ($archive)
+        $this->params['action-block'][] = Html::a('Все записи', ['index'], ['class' => 'btn btn-default']);
+    else
+        $this->params['action-block'][] = Html::a('Архив', ['index', 'archive' => 1], ['class' => 'btn btn-default']);
+
     $this->params['button-block'][] = Html::a('Добавить', ['create'], ['class' => 'btn btn-success']);
 }
 ?>

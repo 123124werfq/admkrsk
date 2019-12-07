@@ -79,6 +79,10 @@ return [
                 'title'=>'Услуги',
                 'roles' => ['backend.service'],
             ],
+            'form/index?group=service'=>[
+                'title'=>'Формы',
+                'roles' => ['backend.service'],
+            ],
             'service-appeal'=>[
                 'title'=>'Заявки',
                 'roles' => ['backend.service'],

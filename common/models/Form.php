@@ -53,12 +53,11 @@ class Form extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_collection','id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
-            [['id_collection', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','make_collection','id_page'], 'integer'],
+            [['id_collection','id_page', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_group'], 'default', 'value' => null],
+            [['id_collection', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','make_collection','id_page','id_group'], 'integer'],
             [['name'], 'required'],
             [['message_success'], 'string'],
-            [['name','url'], 'string', 'max' => 255],
-
+            [['name','url','fullname'], 'string', 'max' => 255],
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
             ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
@@ -73,17 +72,20 @@ class Form extends \yii\db\ActiveRecord
         return [
             'id_form' => 'ID',
             'id_collection' => 'Коллекция',
+            'id_service' => 'Услуга',
             'name' => 'Название',
+            'fullname' => 'Полное название',
             'make_collection'=>'Создать коллекцию',
             'message_success'=>'Сообщение при успешном отправлении',
             'id_page'=>'Переход на раздел при успешном отправлении',
             'url'=>'Переход на ссылку при успешном отправлении',
+            'id_group'=>'Группа',
             'created_at' => 'Создана',
-            'created_by' => 'Created By',
+            'created_by' => 'Кем создана',
             'updated_at' => 'Изменено',
-            'updated_by' => 'Updated By',
-            'deleted_at' => 'Deleted At',
-            'deleted_by' => 'Deleted By',
+            'updated_by' => 'Кем отредактирована',
+            'deleted_at' => 'Удалена',
+            'deleted_by' => 'Кем удалена',
         ];
     }
 
@@ -147,6 +149,6 @@ class Form extends \yii\db\ActiveRecord
 
     public function getService()
     {
-        return $this->hasMany(Service::class, ['id_form' => 'id_form']);
+        return $this->hasOne(Service::class, ['id_service' => 'id_service']);
     }
 }
