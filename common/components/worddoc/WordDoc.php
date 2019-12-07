@@ -37,11 +37,11 @@ class WordDoc
         return true;
     }
 
-    public static function makeDocByForm($form, $data, $template)
+    public static function makeDocByForm($form, $data, $templatePath)
     {
         $root = Yii::getAlias('@app');
 
-        $template = new TemplateProcessor($root.'/template/'.$template);
+        $template = new TemplateProcessor($templatePath);
 
         foreach ($data as $alias => $value)
         {
@@ -58,7 +58,8 @@ class WordDoc
             $template->setValue("value#$i", $value);
         }*/
 
-        $export_path = $root."/runtimer/".time().'_out.docx';
+
+        $export_path = $root."/runtime/templates/".time().md5(serialize($data)).'_out.docx';
         $template->saveAs($export_path);
 
         return $export_path;

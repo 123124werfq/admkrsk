@@ -203,6 +203,29 @@ class CollectionRecordController extends Controller
         ]);
     }
 
+    public function actionDownloadDoc($id)
+    {
+        $model = $this->findModel($id);
+
+        if (!empty($model->collection->form->template))
+        {
+            $export_path = $model->collection->form->makeDoc($model);
+
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="Record_'.$id.'.docx"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($export_path));
+
+            readfile($export_path);
+            unlink($export_path);
+        }
+
+        Yii::$app->end();
+    }
+
     /**
      * Displays a single CollectionRecord model.
      * @param integer $id

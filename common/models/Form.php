@@ -100,6 +100,18 @@ class Form extends \yii\db\ActiveRecord
                 'class' => AccessControlBehavior::class,
                 'permission' => 'backend.form',
             ],
+            'multiupload' => [
+                'class' => \common\components\multifile\MultiUploadBehavior::class,
+                'relations'=>
+                [
+                    'template'=>[
+                        'model'=>'Media',
+                        'fk_cover' => 'id_media_template',
+                        'cover' => 'template',
+                    ],
+                ],
+                'cover'=>'template'
+            ],
         ];
     }
 
@@ -148,5 +160,43 @@ class Form extends \yii\db\ActiveRecord
     public function getService()
     {
         return $this->hasMany(Service::class, ['id_form' => 'id_form']);
+    }
+
+    public function getTemplate()
+    {
+        return $this->hasOne(Media::class, ['id_media' => 'id_media_template']);
+    }
+
+    public function makeDoc($collectionRecord, $addData=null)
+    {
+        if (empty($this->template))
+            return false;
+
+        $media = $this->template;
+        $url = $media->getUrl();
+
+        $data = $collectionRecord->getData(true);
+
+        $template = file_get_contents($url);
+        $root = Yii::getAlias('@app');
+
+        $template_path = $root.'/runtime/templates/template_'.$media->id_media.'_'.time().'.docx';
+        $template = file_put_contents($template_path,file_get_contents($url));
+
+        $export_path = \common\components\worddoc\WordDoc::makeDocByForm($this, $data, $template_path);
+
+        /*header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="'.$appeal->targer->number.' '.$appeal->created_at.'"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($export_path));
+
+        readfile($export_path);
+        unlink($export_path);
+        */
+
+        return $export_path;
     }
 }

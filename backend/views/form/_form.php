@@ -13,7 +13,7 @@ use yii\web\JsExpression;
 
 <div class="ibox">
     <div class="ibox-content">
-    	
+
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
@@ -40,6 +40,16 @@ use yii\web\JsExpression;
         </div>
     </div>
     <?= $form->field($model, 'message_success')->textArea(['maxlength' => true,'class'=>'redactor']) ?>
+
+    <h3>Шаблон документа</h3>
+    <?=common\components\multifile\MultiFileWidget::widget([
+        'model'=>$model,
+        'single'=>true,
+        'relation'=>'template',
+        'extensions'=>['docx'],
+        'grouptype'=>1,
+        'showPreview'=>false
+    ]);?>
 
     <?php if (Yii::$app->user->can('admin.form')): ?>
 
