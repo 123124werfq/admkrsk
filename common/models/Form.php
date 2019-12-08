@@ -181,10 +181,14 @@ class Form extends \yii\db\ActiveRecord
 
     public function makeDoc($collectionRecord, $addData=null)
     {
-        if (empty($this->template))
+        if (empty($this->template) && empty($this->service->template))
             return false;
 
-        $media = $this->template;
+        if (!empty($this->template))
+            $media = $this->template;
+        else if (!empty($this->service->template))
+            $media = $this->service->template;
+
         $url = $media->getUrl();
 
         $data = $collectionRecord->getData(true);

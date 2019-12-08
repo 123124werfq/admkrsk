@@ -56,6 +56,9 @@ class ServiceAppealController extends Controller
     {
         $sa = $this->findModel($id);
 
+        if (empty($sa->collectionRecord))
+            throw new NotFoundHttpException('Ошибка чтения данных');
+
         $insertedData = $sa->collectionRecord->getData();
 
         $columns = CollectionColumn::find()->where(['id_collection' => $sa->collectionRecord->id_collection])->indexBy('id_column')->orderBy('ord')->all();
@@ -121,7 +124,7 @@ class ServiceAppealController extends Controller
 
     public function actionDoc($id)
     {
-        $appeal = \common\models\ServiceAppeal::findOne($id);
+        $appeal = $this->findModel($id);
 
         //$data = $appeal->collectionRecord->getData(true);
 
