@@ -24,14 +24,6 @@ use yii\web\JsExpression;
 
     <?= $form->field($model, 'id_group')->dropDownList(\common\models\Collection::getArrayByAlias('form_groups'))?>
 
-    <?= $form->field($model, 'id_page')->widget(Select2::class, [
-        'data' => $model->id_page ? [$model->id_page=>$model->page->title]:[],
-        'pluginOptions' => [
-            'multiple' => false,
-            'allowClear' => true,
-        ],
-    ]) ?>
-
     <?= $form->field($model, "id_service")->widget(Select2::class, [
             'data' => ArrayHelper::map(\common\models\Service::find()->all(), 'id_service', 'reestr_number'),
             'pluginOptions' => [
