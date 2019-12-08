@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 $this->render('/page/_head',['model'=>$page]);
 
-$this->params['button-block'][] = Html::a('Экпорт XLS', ['','export'=>1,'id_page' => $page->id_page], ['class' => 'btn btn-default']);
+$this->params['button-block'][] = Html::a('Экспорт XLS', ['','export'=>1,'id_page' => $page->id_page], ['class' => 'btn btn-default']);
 
 if (Yii::$app->user->can('admin.news'))
     if ($archive) {
