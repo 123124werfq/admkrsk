@@ -146,7 +146,7 @@ class ServiceController extends \yii\web\Controller
 
             if ($record = $form->collection->insertRecord($prepare))
             {
-                $inseredData = $record->getData(true);
+                $insertedData = $record->getData(true);
 
                 $appeal = new ServiceAppeal;
                 $appeal->id_user = Yii::$app->user->id;
@@ -154,7 +154,7 @@ class ServiceController extends \yii\web\Controller
                 $appeal->id_record = $record->id_record;
                 //$appeal->id_collection = $form->collection->id_collection;
                 $appeal->date = time();
-                $appeal->id_target = $inseredData['id_target'];
+                $appeal->id_target = $insertedData['id_target'];
                 $appeal->state = 'empty'; // это переехало в ServiceAppealState, убрать в перспективе
                 $appeal->created_at = time();
 
@@ -198,10 +198,10 @@ class ServiceController extends \yii\web\Controller
                         $integration->description = ' Запрос услуги ' . $appeal->number_internal;
 
                         $integration->data = json_encode([
-                            'appeal' => $appeal->number_internal,
-                            'user' => $appeal->id_user,
-                            'target' => $appeal->id_target,
-                            'record' => $appeal->record
+                            'appeal' => $appeal->number_internal ?? null,
+                            'user' => $appeal->id_user ?? null,
+                            'target' => $appeal->id_target ?? null,
+                            'record' => $appeal->record ?? null
                         ]);
 
                         $integration->created_at = time();
@@ -226,7 +226,7 @@ class ServiceController extends \yii\web\Controller
             */
             return $this->render('result',[
                 'number'=> isset($appeal->number_internal)?$appeal->number_internal:false,
-                'target' => $target,
+                //'target' => $target,
                 'page' => $page
             ]);
         }

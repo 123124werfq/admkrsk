@@ -8,6 +8,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\models\CollectionColumn;
 
 /**
  * ServiceAppealController implements the CRUD actions for ServiceAppeal model.
@@ -52,8 +53,22 @@ class ServiceAppealController extends Controller
      */
     public function actionView($id)
     {
+        $sa = $this->findModel($id);
+        $insertedData = $sa->collectionRecord->getData(true);
+
+        foreach ($insertedData as $rkey => $ritem)
+        {
+                $column = CollectionColumn::find()->where(['id_collection' => $sa->collectionRecord->id_collection, 'alias' => $rkey])->one();
+                $formFields[$rkey] = ['value' => $ritem, 'name' => $column->name];
+        }
+
+        $attachments = $sa->collectionRecord->getAllMedias();
+
+//        var_dump($attachments); die();
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $sa,
+            'formFields' => $formFields
         ]);
     }
 

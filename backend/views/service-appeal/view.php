@@ -25,4 +25,20 @@ if (!empty($model->target->service->template))
         ],
     ]) ?>
 
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <td>Поле</td>
+            <td>Значение</td>
+        </tr>
+        </thead>
+        <tbody>
+    <?php foreach ($formFields as $alias => $field) {?>
+        <tr>
+            <td><?=$field['name']?></td>
+            <td><?=$field['value']?></td>
+        </tr>
+    <?php } ?>
+        </tbody>
+    </table>
 </div>
