@@ -229,6 +229,7 @@ class ServiceController extends \yii\web\Controller
             return $this->render('result',[
                 'number'=> isset($appeal->number_internal)?$appeal->number_internal:false,
                 //'target' => $target,
+                'service'=>$service,
                 'page' => $page
             ]);
         }
