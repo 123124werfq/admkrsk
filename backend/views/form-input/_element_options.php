@@ -9,7 +9,7 @@
 	$visibleInputs = [];
 
 	$inputs = FormInput::find()->where([
-				'id_form'=>$element->row->id_form,
+				'id_form'=>$id_form,
 				'type'=>[CollectionColumn::TYPE_SELECT,
 						 CollectionColumn::TYPE_CHECKBOX]
 			  ]);
