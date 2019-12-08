@@ -34,7 +34,7 @@ class ServiceTargetController extends Controller
      * Lists all ServiceTarget models.
      * @return mixed
      */
-    public function actionIndex($id=null)
+    public function actionIndex()
     {
         if (Yii::$app->request->get('archive')) {
             $query = ServiceTarget::findDeleted();
@@ -42,8 +42,8 @@ class ServiceTargetController extends Controller
             $query = ServiceTarget::find();
         }
 
-        if (!empty($id))
-            $query->where(['id_service'=>$id]);
+        /*if (!empty($id))
+            $query->where(['id_service'=>$id]);*/
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -79,7 +79,7 @@ class ServiceTargetController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_CREATE);
-            return $this->redirect(['service/view', 'id' => $model->id_service]);
+            return $this->redirect(['index', 'id' => $model->id_service]);
         }
 
         return $this->render('create', [
@@ -100,7 +100,7 @@ class ServiceTargetController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_UPDATE);
-            return $this->redirect(['service/view', 'id' => $model->id_service]);
+            return $this->redirect(['index', 'id' => $model->id_service]);
         }
 
         return $this->render('update', [
