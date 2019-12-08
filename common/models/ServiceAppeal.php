@@ -39,8 +39,8 @@ class ServiceAppeal extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_user', 'id_service', 'id_record', 'id_collection', 'date', 'archive', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_target'], 'default', 'value' => null],
-            [['id_user', 'id_service', 'id_record', 'id_collection', 'date', 'archive', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_target'], 'integer'],
+            [['id_user', 'id_service', 'id_record', 'date', 'archive', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_target'], 'default', 'value' => null],
+            [['id_user', 'id_service', 'id_record', 'date', 'archive', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_target'], 'integer'],
             [['state'], 'required'],
             [['data', 'number_internal', 'number_system', 'number_common'], 'string'],
             [['state'], 'string', 'max' => 255],

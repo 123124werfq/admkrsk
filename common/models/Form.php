@@ -38,6 +38,7 @@ class Form extends \yii\db\ActiveRecord
 
     public $access_user_ids;
     public $access_user_group_ids;
+    public $client_type; // для формы услуг
 
     /**
      * {@inheritdoc}
@@ -55,9 +56,10 @@ class Form extends \yii\db\ActiveRecord
         return [
             [['id_collection','id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_group'], 'default', 'value' => null],
             [['state'], 'default', 'value' => 1],
-            [['id_collection', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','make_collection','id_page','id_group','state'], 'integer'],
+            [['id_collection', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','make_collection','id_page','id_group','state','is_template'], 'integer'],
             [['name'], 'required'],
             [['message_success'], 'string'],
+            [['client_type'], 'safe'],
             [['name','url','fullname'], 'string', 'max' => 255],
             [['access_user_ids', 'access_user_group_ids', 'id_group'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
@@ -83,6 +85,7 @@ class Form extends \yii\db\ActiveRecord
             'id_page'=>'Переход на раздел при успешном отправлении',
             'url'=>'Переход на ссылку при успешном отправлении',
             'id_group'=>'Группа',
+            'is_template' => "Это подформа",
             'created_at' => 'Создана',
             'created_by' => 'Кем создана',
             'updated_at' => 'Изменено',

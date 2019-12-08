@@ -3,14 +3,13 @@
 namespace backend\models;
 
 use Yii;
-use yii\base\Model;
 
-class FormService extends Model
+class FormService extends \common\models\Form;
 {
-    public  $id_service,
-            $name,
-            $fullname,
-            $client_type;
+    public $id_service,
+           $name,
+           $fullname,
+           $client_type;
     /**
      * {@inheritdoc}
      */

@@ -168,8 +168,8 @@ class Service extends \yii\db\ActiveRecord
     {
         if ($attribute=='client_type')
             return [
-                self::TYPE_PEOPLE => 'Физическое лицо',
-                self::TYPE_FIRM => 'Юридическое лицо'
+                'Физическое лицо' => 'Физическое лицо',
+                'Юридическое лицо' => 'Юридическое лицо'
             ];
         else if ($attribute=='type')
             return [
