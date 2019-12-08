@@ -365,7 +365,8 @@ JS;
                 ]);
 				break;
 			case CollectionColumn::TYPE_JSON:
-				$columns = $input->getArrayValues();
+				
+				$columns = json_decode($input->values,true);
 				$data = json_decode($model->$attribute);
 
 ?>
@@ -373,7 +374,7 @@ JS;
 					<thead>
 						<tr>
 						<?php foreach ($columns as $key => $column) {
-							echo '<th>'.$column.'</th>';
+							echo '<th '.(!empty($column['width'])?'style="width:'.$column['width'].'%"':'').' >'.$column['name'].'</th>';
 						}?>
 						<th></th>
 						</tr>
@@ -384,7 +385,7 @@ JS;
 								if (empty($data)){
 									$i = 0;
 									foreach ($columns as $key => $column) {
-										echo '<td><input id="input'.$input->id_input.'_col'.$i.'" type="text" name="FormDynamic[input'.$input->id_input.'][0]['.$i.']" class="form-control"/></td>';
+										echo '<td><input id="input'.$input->id_input.'_col'.$i.'" type="'.($column['type']??'text').'" name="FormDynamic[input'.$input->id_input.'][0]['.$i.']" class="form-control"/></td>';
 										$i++;
 									}
 								}
@@ -393,9 +394,8 @@ JS;
 									foreach ($data as $key => $row)
 									{
 										$i = 0;
-
 										foreach ($columns as $key => $column) {
-											echo '<td><input id="input'.$input->id_input.'_col'.$i.'" type="text" value="'.($row[$i]??'').'" name="FormDynamic[input'.$input->id_input.'][0]['.$i.']" class="form-control"/></td>';
+											echo '<td><input id="input'.$input->id_input.'_col'.$i.'" type="'.($column['type']??'text').'" value="'.($row[$i]??'').'" name="FormDynamic[input'.$input->id_input.'][0]['.$i.']" class="form-control"/></td>';
 											$i++;
 										}
 									}
