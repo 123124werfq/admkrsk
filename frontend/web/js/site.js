@@ -81,68 +81,63 @@ $(document).ready(function() {
             $(".program-list").html(data);
         });
     });
-/*
-    if (typeof visibleInput !== 'undefined')
+
+    if (typeof visibleInputs !== 'undefined')
     {
-        for (var id_vinput in visibleInput)
+        console.log(123);
+        function getValue(id_input)
+        {
+            var input = $("#input"+id_input);
+            if (input.is(':checkbox'))
+            {
+                if (input.is(':checked'))
+                    var val = input.val();
+                else
+                    var val = null
+            }
+            else
+                var val = input.val();
+
+            return val;
+        }
+
+        function check(id_element)
+        {
+            var show = true;
+
+            for (var id_input in visibleElements[id_element])
+            {
+                var value = getValue(id_input);
+
+                if (visibleElements[id_element][id_input].indexOf(value)<0)
+                    show = false;
+                    break;
+            }
+
+            if (show)
+                $("#element"+id_element).show();
+            else
+                $("#element"+id_element).hide();
+        }
+
+        for (var id_vinput in visibleInputs)
         {
             var source = $("#input"+id_vinput);
 
-            function getValue(input)
-            {
-                if (input.is(':checkbox'))
-                {
-                    if (input.is(':checked'))
-                        var val = input.val();
-                    else
-                        var val = null
-                }
-                else
-                    var val = input.val();
-
-                return val;
-            }
-            
-            function check(source)
-            {
-                var val = getValue(source);
-
-                for (var id_input in visibleInput[id_vinput])
-                {
-                    if (visibleInput[id_vinput][id_input].indexOf(val)<0)
-                      $("#inputGroup"+id_input).hide();
-                    else
-                    {
-                        var show = true;
-
-                        for (var id_source in visibleSourceInput[id_input])
-                        {
-                            var val = getValue($("#input"+id_source));
-
-                            console.log(val+' '+id_source);
-                            console.log(visibleSourceInput[id_input][id_source]);
-
-                            if (visibleSourceInput[id_input][id_source].indexOf(val)<0)
-                                show = false;
-                        }
-
-                        console.log(show);
-                        if (!show)
-                            $("#inputGroup"+id_input).hide();
-                        else 
-                            $("#inputGroup"+id_input).show();
-                    }
-                }
-            }
-
             source.change(function(){
-                check(source);
+                for (var id_element in visibleInputs[id_vinput])
+                    check(id_element);
             });
+        }
 
-            check(source);
-        }   
+        for (var id_element in visibleElements)
+        {
+            check(id_element);
+        }
+
+
     }
-*/
+
     $("div[data-visible-field]").each(function(){
 
         var source = $("#"+$(this).data('visible-field'));

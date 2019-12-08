@@ -10,7 +10,7 @@
 		elseif (!empty($element->content))
 		{
 			$styles = $element->getStyles();
-			echo '<div class="text-row" '.((!empty($styles))?'style="'.implode(';',$styles).'"':'').'>'.$element->content.'</div>';
+			echo '<div id="elemen'.$element->id_element.'" class="text-row" '.((!empty($styles))?'style="'.implode(';',$styles).'"':'').'>'.$element->content.'</div>';
 		}
 	}
 	echo '</div>';

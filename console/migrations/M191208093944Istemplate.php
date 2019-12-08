@@ -14,7 +14,7 @@ class M191208093944Istemplate extends Migration
      */
     public function safeUp()
     {
-
+        $this->addColumn('form_form', 'is_template', $this->integer()->defaultValue(0));
     }
 
     /**

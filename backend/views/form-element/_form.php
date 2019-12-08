@@ -13,10 +13,10 @@ use yii\widgets\ActiveForm;
 ]); ?>
 
 <?php
-    echo $this->render('/form-input/_element_options',['element'=>$model]);
+    echo $this->render('/form-input/_element_options',['element'=>$model,'form'=>$form]);
 ?>
 
-<?php if (empty($element->id_form)){?>
+<?php if (empty($model->id_form)){?>
 	<?=$form->field($model, 'content')->textarea(['rows' => 6,'class'=>'form-control redactor'])?>
 <?php }?>
 

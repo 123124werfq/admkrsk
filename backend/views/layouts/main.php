@@ -96,7 +96,7 @@ $this->beginPage();
             <?= $content ?>
         </div>
 
-        <div id="right-sidebar" class="animated">
+        <!--div id="right-sidebar" class="animated">
             <div class="sidebar-container">
 
                 <ul class="nav nav-tabs navs-3">
@@ -339,7 +339,6 @@ $this->beginPage();
                                 <a href="#">
                                     <span class="label label-primary pull-right">NEW</span>
                                     <h4>The generated</h4>
-                                    <!--<div class="small pull-right m-t-xs">9 hours ago</div>-->
                                     There are many variations of passages of Lorem Ipsum available.
                                     <div class="small">Completion with: 22%</div>
                                     <div class="small text-muted m-t-xs">Project end: 4:00 pm - 12.06.2014</div>
@@ -468,7 +467,7 @@ $this->beginPage();
                     </div>
                 </div>
             </div>
-        </div>
+        </div-->
     </div>
 
 <?php $this->endBody();?>

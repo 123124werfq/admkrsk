@@ -37,7 +37,7 @@
 	$styles = $element->getStyles();
 ?>
 
-<div class="col">
+<div id="element<?=$element->id_element?>" class="col">
 	<div id="inputGroup<?=$input->id_input?>" <?=(!empty($styles))?'style="'.implode(';',$styles).'"':''?> class="form-group <?=$groupClass?>">
 		<?php if (!empty($input->label)){?>
 		<label class="form-label"><?=$input->label?><?=!empty($options['required'])?'*':''?></label>
