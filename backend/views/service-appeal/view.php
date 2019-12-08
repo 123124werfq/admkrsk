@@ -20,8 +20,23 @@ if (!empty($model->target->service->template))
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id_appeal',
+            [
+                  'attribute' => 'id_appeal',
+                'label' => '№'
+            ],
             'created_at:date',
+            [
+                'attribute' => 'state',
+                'label' => 'Статус',
+                'value' => function($model){
+                    switch ($model->state){
+                        case 0: return 'Ожидает обработки';
+                        case 1: return 'Отправлено';
+                        case 2: return 'Ответ получен';
+                        case 88: return 'Закрыто';
+                    }
+                }
+            ]
         ],
     ]) ?>
 
