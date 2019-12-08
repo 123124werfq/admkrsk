@@ -188,6 +188,14 @@ class Page extends \yii\db\ActiveRecord
         parent::afterSave($insert, $changedAttributes);
     }
 
+    public function beforeValidate()
+    {
+        $this->content = str_replace(['&lt;','&gt;','&quote;'], ['<','>','"'], $this->content);
+
+        return parent::beforeValidate();
+    }
+
+
 
     /**
      * {@inheritdoc}
