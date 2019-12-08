@@ -9,12 +9,12 @@
                     <div class="btn-group">
                         <div class="btn-group_item">
                             <div class="custom-select custom-select__placeholder custom-select__inline ui-front">
-                                <select>
+                                <select name="firm">
                                     <option selected="selected">Орган, оказывающий услугу</option>
                                     <option value="0">Любой орган</option>
-                                    <option value="1">Орган 1</option>
-                                    <option value="2">Орган 2</option>
-                                    <option value="3">Орган 3</option>
+                                    <?php foreach ($firms as $id => $name) {
+                                        echo '<option value="'.$id.'">'.$name.'</option>';
+                                    }?>
                                 </select>
                             </div>
                         </div>
