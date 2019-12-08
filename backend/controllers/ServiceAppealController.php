@@ -54,17 +54,19 @@ class ServiceAppealController extends Controller
     public function actionView($id)
     {
         $sa = $this->findModel($id);
-        $insertedData = $sa->collectionRecord->getData(true);
+
+        $insertedData = $sa->collectionRecord->getData();
+
+        $columns = CollectionColumn::find()->where(['id_collection' => $sa->collectionRecord->id_collection])->indexBy('id_column')->all();
 
         foreach ($insertedData as $rkey => $ritem)
         {
-                $column = CollectionColumn::find()->where(['id_collection' => $sa->collectionRecord->id_collection, 'alias' => $rkey])->one();
-                $formFields[$rkey] = ['value' => $ritem, 'name' => $column->name];
+            $formFields[$columns[$rkey]->alias] = ['value' => $ritem, 'name' => $columns[$rkey]->name];
         }
 
         $attachments = $sa->collectionRecord->getAllMedias();
 
-//        var_dump($attachments); die();
+        var_dump($attachments); die();
 
         return $this->render('view', [
             'model' => $sa,

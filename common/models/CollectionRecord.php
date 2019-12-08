@@ -151,13 +151,15 @@ class CollectionRecord extends \yii\db\ActiveRecord
             $rows->andWhere(['dcv.id_column'=>$id_columns]);
 
         $output = [];
+        $cache = [];
 
         foreach ($rows->all() as $key => $data)
         {
             $output[$keyAsAlias?$data['alias']:$data['id_column']] = $data['value'];
+            $cache[$data['id_column']] = $data['value'];
         }
 
-        //$this->loadData = $output;
+        $this->loadData = $cache;
 
         return $output;
     }
@@ -171,6 +173,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
             if ($column->type == CollectionColumn::TYPE_FILE || $column->type == CollectionColumn::TYPE_IMAGE)
             {
                 $medias = $this->getMedia($column->id_column);
+
                 if (!empty($medias))
                     foreach ($medias as $key => $media)
                         $output[] = $media->getUrl();
