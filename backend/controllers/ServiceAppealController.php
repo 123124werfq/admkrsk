@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\ServiceTarget;
 use Yii;
 use common\models\ServiceAppeal;
 use yii\data\ActiveDataProvider;
@@ -57,20 +58,26 @@ class ServiceAppealController extends Controller
 
         $insertedData = $sa->collectionRecord->getData();
 
-        $columns = CollectionColumn::find()->where(['id_collection' => $sa->collectionRecord->id_collection])->indexBy('id_column')->all();
+        $columns = CollectionColumn::find()->where(['id_collection' => $sa->collectionRecord->id_collection])->indexBy('id_column')->orderBy('ord')->all();
 
         foreach ($insertedData as $rkey => $ritem)
         {
-            $formFields[$columns[$rkey]->alias] = ['value' => $ritem, 'name' => $columns[$rkey]->name];
+            if($columns[$rkey]->alias == 'id_target') {
+                $target = ServiceTarget::findOne($ritem);
+                $formFields[$columns[$rkey]->alias] = ['value' => $target->reestr_number." ".$target->name, 'name' => $columns[$rkey]->name, 'ord' => $columns[$rkey]->ord];
+            }
+            else
+                $formFields[$columns[$rkey]->alias] = ['value' => empty($ritem)?"[не заполнено]":$ritem, 'name' => $columns[$rkey]->name, 'ord' => $columns[$rkey]->ord];
         }
+
+        usort($formFields, function($a, $b){return ($a['ord']<$b["ord"])?-1:1;});
 
         $attachments = $sa->collectionRecord->getAllMedias();
 
-        var_dump($attachments); die();
-
         return $this->render('view', [
             'model' => $sa,
-            'formFields' => $formFields
+            'formFields' => $formFields,
+            'attachments' => $attachments
         ]);
     }
 

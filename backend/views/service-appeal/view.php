@@ -28,12 +28,21 @@ if (!empty($model->target->service->template))
     <table class="table table-striped">
         <thead>
         <tr>
-            <td>Поле</td>
-            <td>Значение</td>
+            <td><strong>Поле</strong></td>
+            <td><strong>Значение</strong></td>
         </tr>
         </thead>
         <tbody>
-    <?php foreach ($formFields as $alias => $field) {?>
+    <?php foreach ($formFields as $alias => $field) {
+
+        foreach ($attachments as $filename)
+        {
+            $pi = pathinfo($filename);
+
+            if("[{$pi['filename']}]" == $field['value'])
+                $field['value'] = "<a href=$filename target='_blank'>Скачать</a>";
+        }
+        ?>
         <tr>
             <td><?=$field['name']?></td>
             <td><?=$field['value']?></td>
