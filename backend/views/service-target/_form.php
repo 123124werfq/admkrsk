@@ -18,7 +18,7 @@ use common\models\Form;
         <?= $form->field($model, 'state')->checkBox() ?>
 
         <?=$form->field($model, 'id_form')->widget(Select2::class, [
-                'data' => ArrayHelper::map(Form::find()->all(), 'id_form', 'name'),
+                'data' => ArrayHelper::map(Form::find()->where(['state'=>1,'is_template'=>0])->all(), 'id_form', 'name'),
                 'pluginOptions' => [
                     'allowClear' => true,
                     'placeholder' => 'Форма приема заявления',

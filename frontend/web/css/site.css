@@ -73,8 +73,9 @@ ul.pagination {text-align: center;}
 .content  table.form-table tbody tr:last-child td {border-bottom: 0px;}
 
 .td-close {vertical-align: middle!important;}
-.form-table .btn {width: 100%; border-bottom: 0px!important; margin: 0px 6px;}
+.form-table .btn {width: 100%; border-bottom: 0px!important; margin: 0px 0px;}
 .form-table {margin-left: -8px; margin-right: -8px;}
+.form-table td {padding: 5px;}
 .form-table th {background: #fff!important;}
 .page .form-table .form-control {margin-bottom: 0px;}
 

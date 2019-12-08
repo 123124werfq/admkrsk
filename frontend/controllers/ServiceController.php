@@ -42,7 +42,7 @@ class ServiceController extends \yii\web\Controller
 
     public function actionReestr($page=null,$id_situation=null)
     {
-        $clientType = (int)Yii::$app->request->get('client_type');
+        $clientType = Yii::$app->request->get('client_type');
         $firm = (int)Yii::$app->request->get('firm');
         $online = (int)Yii::$app->request->get('online');
 
@@ -67,11 +67,10 @@ class ServiceController extends \yii\web\Controller
         }
 
         asort($firms);
-
         if (!empty($clientType) && in_array($clientType, Service::getAttributeValues('client_type')))
         {
             $open = true;
-            $services->andWhere(['@>','clientType','{'.$clientType.'}']);
+            $services->andWhere(['@>','client_type','{'.$clientType.'}']);
         }
 
         if (!empty($online))
