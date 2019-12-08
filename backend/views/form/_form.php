@@ -4,6 +4,7 @@ use backend\widgets\UserAccessControl;
 use backend\widgets\UserGroupAccessControl;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use yii\web\JsExpression;
 /* @var $this yii\web\View */
@@ -16,9 +17,30 @@ use yii\web\JsExpression;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'state')->checkBox()?>
+
     <?= $form->field($model, 'id_group')->dropDownList(\common\models\Collection::getArrayByAlias('form_groups'))?>
 
+    <?= $form->field($model, 'id_page')->widget(Select2::class, [
+        'data' => $model->id_page ? [$model->id_page=>$model->page->title]:[],
+        'pluginOptions' => [
+            'multiple' => false,
+            'allowClear' => true,
+        ],
+    ]) ?>
+
+    <?= $form->field($model, "id_service")->widget(Select2::class, [
+            'data' => ArrayHelper::map(\common\models\Service::find()->all(), 'id_service', 'reestr_number'),
+            'pluginOptions' => [
+                'allowClear' => true,
+                'placeholder' => 'Выберите услугу',
+            ],
+        ])->label(false);
+    ?>
+
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'fullname')->textInput(['maxlength' => true]) ?>
 
     <div class="row">
         <div class="col-sm-6">

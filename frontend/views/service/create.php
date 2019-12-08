@@ -5,8 +5,6 @@
             <div class="col-2-third order-xs-1">
                 <h1 class="h2"><?=$service->name?></h1>
 
-                <p><b><?=$target->reestr_number?> <?=date('d.m.Y',$service->updated_at)?></b></p>
-
                 <?=frontend\widgets\FormsWidget::widget(['form'=>$form,'inputs'=>$inputs,'action'=>''])?>
 
                 <div class="subscribe">

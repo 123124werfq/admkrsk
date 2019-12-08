@@ -10,7 +10,7 @@ $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Услуги', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$this->params['action-block'][] = Html::a('Добавить форму', ['form/create','id_service'=>], ['class' => 'btn btn-success']);
+$this->params['action-block'][] = Html::a('Добавить форму', ['form/create','id_service'=>$model->id_service], ['class' => 'btn btn-success']);
 $this->params['button-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_service], ['class' => 'btn btn-primary']);
 
 if ($model->isDeleted()) {
@@ -24,20 +24,16 @@ if ($model->isDeleted()) {
     ]);
 }
 ?>
-
 <div class="row">
     <div class="col-lg-12">
         <div class="ibox">
             <div class="ibox-content">
-                <h2>Цели</h2>
+                <h2>Формы</h2>
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'columns' => [
-                        'id_target',
-                        'name',
-                        'reestr_number',
                         'id_form',
-                        'state:boolean',
+                        'name',
                         [
                             'class' => 'yii\grid\ActionColumn',
                             'contentOptions'=>['class'=>'button-column'],
@@ -52,7 +48,7 @@ if ($model->isDeleted()) {
                                     'method' => 'post',
                                 ],]);
                                 }
-                            ], 
+                            ],
                         ],
                     ],
                     'tableOptions'=>[

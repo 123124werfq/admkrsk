@@ -62,7 +62,7 @@ class Service extends \yii\db\ActiveRecord
     const TYPE_FIRM = 4;
 
     public $access_user_ids;
-    public $id_target;
+    //public $id_target;
     public $access_user_group_ids;
 
     /**
@@ -101,7 +101,7 @@ class Service extends \yii\db\ActiveRecord
         return [
             'id_service' => 'ID',
             'id_rub' => 'Рубрика',
-            'id_target'=> 'Цель',
+            //'id_target'=> 'Цель',
             'reestr_number' => 'Реестровый номер услуги',
             'fullname' => 'Полное наименование',
             'name' => 'Название',
@@ -177,7 +177,8 @@ class Service extends \yii\db\ActiveRecord
                 'настройка для ДО'=>'настройка для ДО',
                 'услуга учреждения'=>'услуга учреждения',
             ];
-        if ($attribute=='id_target')
+
+        /*if ($attribute=='id_target')
         {
             $output = [];
 
@@ -185,7 +186,7 @@ class Service extends \yii\db\ActiveRecord
                 $output[$target->id_target] = $target->name;
 
             return $output;
-        }
+        }*/
     }
 
     public function beforeSave($insert)
@@ -266,6 +267,7 @@ class Service extends \yii\db\ActiveRecord
         return $this->hasOne(ServiceRubric::class, ['id_rub' => 'id_rub']);
     }
 
+    /* DEPRICATED
     public function getActiveTargets()
     {
         return $this->hasMany(ServiceTarget::class, ['id_service' => 'id_service'])->where(['state'=>1]);
@@ -274,7 +276,7 @@ class Service extends \yii\db\ActiveRecord
     public function getTargets()
     {
         return $this->hasMany(ServiceTarget::class, ['id_service' => 'id_service']);
-    }
+    }*/
 
     public function getForms()
     {

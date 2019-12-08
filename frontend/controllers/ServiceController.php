@@ -10,7 +10,6 @@ use common\models\ServiceAppeal;
 use common\models\ServiceAppealState;
 use common\models\ServiceRubric;
 use common\models\ServiceSituation;
-use common\models\ServiceTarget;
 use common\models\FormDynamic;
 use Yii;
 use yii\web\NotFoundHttpException;
@@ -115,18 +114,15 @@ class ServiceController extends \yii\web\Controller
         ]);
     }
 
-    public function actionCreate($id,$id_target,$page=null)
+    public function actionCreate($id_form,$page=null)
     {
         $inputs = [];
 
-        $target = $this->findTarget($id_target);
-        $service = $target->service;
-        $form = $target->form;
-        $inputs['id_service'] = $service->id_service;
-        $inputs['id_target'] = $target->id_target;
+        $form  = $this->findForm($id_form);
+        $service = $this->findModel($form->id_service);
 
-        if (empty($form))
-            throw new NotFoundHttpException('Такой страницы не существует');
+        $inputs['id_service'] = $service->id_service;
+        $inputs['id_form'] = $id_form;
 
         $model = new FormDynamic($form);
 
@@ -136,24 +132,26 @@ class ServiceController extends \yii\web\Controller
 
             if ($record = $form->collection->insertRecord($prepare))
             {
-               $appeal = new ServiceAppeal;
-               $appeal->id_user = Yii::$app->user->id;
-               $appeal->id_service = $service->id_service;
-               $appeal->id_record = $record->id_record;
-               $appeal->id_collection = $form->collection->id_collection;
-               $appeal->date = time();
-               $appeal->id_target = $id_target;
-               $appeal->state = 'empty'; // это переехало в ServiceAppealState, убрать в перспективе
-               $appeal->created_at = time();
+                $inseredData = $record->getData(true);
 
-               $idents = [
+                $appeal = new ServiceAppeal;
+                $appeal->id_user = Yii::$app->user->id;
+                $appeal->id_service = $service->id_service;
+                $appeal->id_record = $record->id_record;
+                //$appeal->id_collection = $form->collection->id_collection;
+                $appeal->date = time();
+                $appeal->id_target = $inseredData['id_target'];
+                $appeal->state = 'empty'; // это переехало в ServiceAppealState, убрать в перспективе
+                $appeal->created_at = time();
+
+                $idents = [
                    'guid' => Service::generateGUID()
-               ];
+                ];
 
-               $appeal->data = json_encode($idents);
+                $appeal->data = json_encode($idents);
 
-               if ($appeal->save())
-               {
+                if ($appeal->save())
+                {
                    $state = new ServiceAppealState;
                    $state->id_appeal = $appeal->id_appeal;
                    $state->date = time();
@@ -189,17 +187,18 @@ class ServiceController extends \yii\web\Controller
                             'appeal' => $appeal->number_internal,
                             'user' => $appeal->id_user,
                             'target' => $appeal->id_target,
-                            'collection' => $appeal->id_collection
+                            'record' => $appeal->record
                         ]);
-                       $integration->created_at = time();
+
+                        $integration->created_at = time();
                         $integration->save();
                    }
-               }
-               else
-               {
+                }
+                else
+                {
                    var_dump($appeal->errors);
                    die();
-               }
+                }
             }
 
             /*
@@ -215,14 +214,11 @@ class ServiceController extends \yii\web\Controller
                 'number'=> isset($appeal->number_internal)?$appeal->number_internal:false,
                 'page' => $page
             ]);
-
-
         }
 
         return $this->render('create',[
             'form'=>$form,
             'service'=>$service,
-            'target'=>$target,
             'page'=>$page,
             'inputs'=>$inputs,
         ]);
@@ -254,9 +250,9 @@ class ServiceController extends \yii\web\Controller
         throw new NotFoundHttpException('Такой страницы не существует');
     }
 
-    protected function findTarget($id)
+    protected function findForm($id)
     {
-        if (($model = ServiceTarget::findOne($id)) !== null) {
+        if (($model = Form::findOne($id)) !== null) {
             return $model;
         }
 

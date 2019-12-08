@@ -53,8 +53,9 @@ class Form extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_collection','id_page', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_group'], 'default', 'value' => null],
-            [['id_collection', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','make_collection','id_page','id_group'], 'integer'],
+            [['id_collection','id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_group'], 'default', 'value' => null],
+            [['state'], 'default', 'value' => 1],
+            [['id_collection', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','make_collection','id_page','id_group','state'], 'integer'],
             [['name'], 'required'],
             [['message_success'], 'string'],
             [['name','url','fullname'], 'string', 'max' => 255],
@@ -76,6 +77,7 @@ class Form extends \yii\db\ActiveRecord
             'name' => 'Название',
             'fullname' => 'Полное название',
             'id_group' => 'Группа',
+            'state' => 'Включена',
             'make_collection'=>'Создать коллекцию',
             'message_success'=>'Сообщение при успешном отправлении',
             'id_page'=>'Переход на раздел при успешном отправлении',
