@@ -1,5 +1,5 @@
 <div>
-    <a href="#"><?=$data->name?></a>
+    <a href="#"><?=$data->name?> / <?=$data->getServices()->count()?></a>
     <div class="button-column">
         <a href="service-situation/create?&id_parent=<?=$data->id_situation?>" title="Добавить" aria-label="Добавить"><span class="glyphicon glyphicon-plus"></span></a>
         <a href="service-situation/update?id=<?=$data->id_situation?>" title="Редактировать" aria-label="Редактировать"><span class="glyphicon glyphicon-pencil"></span></a>

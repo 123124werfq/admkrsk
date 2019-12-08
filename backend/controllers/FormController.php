@@ -233,10 +233,15 @@ class FormController extends Controller
 
     public function actionCreateService($id_service)
     {
-        $model = new \backend\models\FormService;
+        $model = new Form;
         $model->id_service = $id_service;
 
-        $this->render('service',[
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
+
+        }
+
+        return $this->render('service',[
             'model'=>$model
         ]);
     }
