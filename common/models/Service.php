@@ -79,12 +79,12 @@ class Service extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_rub','client_type','name'],'required'],
-            [['id_rub', 'client_type', 'online', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','refuse'], 'default', 'value' => null],
+            [['id_rub','client_type','name'], 'required'],
+            [['id_rub', 'online', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','refuse'], 'default', 'value' => null],
             [['old'], 'default', 'value' => 0],
             [['id_rub', 'old', 'online', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['keywords', 'addresses', 'result', 'client_category', 'duration', 'documents', 'price', 'appeal', 'legal_grounds', 'regulations', 'refuse','regulations_link', 'duration_order', 'availability', 'procedure_information', 'max_duration_queue'], 'string'],
-            [['id_situations', 'client_type', 'id_firms'],'safe'],
+            [['id_situations', 'client_type', 'id_firms'], 'safe'],
             [['reestr_number'], 'string', 'max' => 255],
             [['fullname', 'name', 'type'], 'string'],
             [['test'],'safe'],
@@ -110,7 +110,7 @@ class Service extends \yii\db\ActiveRecord
             'keywords' => 'Корпоративные ключевые слова',
             'addresses' => 'Сведения о местах информирования о порядке предоставления услуги',
             'result' => 'Результат предоставления услуги',
-            'client_type' => 'Физ./Юр. ',
+            'client_type' => 'Физ./Юр.',
             'client_category' => 'Категория заявителя',
             'duration' => 'Срок предоставления услуги',
             'refuse' => 'Перечень оснований для отказа в предоставлении услуги',
@@ -190,27 +190,16 @@ class Service extends \yii\db\ActiveRecord
         }*/
     }
 
-    public function beforeSave($insert)
+    /*public function beforeSave($insert)
     {
         if (parent::beforeSave($insert))
         {
-            /*$result = 0;
-
-            if (is_array($this->client_type))
-            {
-                foreach ($this->client_type as $key => $value) {
-                    $result += $value;
-                }
-            }
-
-            $this->client_type = $result;*/
-
+      
             return true;
         }
         else
             return false;
-    }
-
+    }*/
 
     public function afterSave($insert, $changedAttributes)
     {

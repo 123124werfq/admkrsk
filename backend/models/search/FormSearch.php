@@ -48,6 +48,8 @@ class FormSearch extends Form
             $query = Form::find();
         }
 
+        $query->where(['is_template'=>0]);
+
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.form')) {
             $query->andWhere(['id_form' => AuthEntity::getEntityIds(Form::class)]);

@@ -269,6 +269,7 @@ class FormController extends Controller
                 $copyForm = Form::findOne($form->id_form);
 
                 $subForm = new Form;
+                $subForm->is_template = 2;
                 $subForm->id_collection = $copyForm->id_collection;
                 $subForm->name = $parentForm->name.' '.$copyForm->name;
 

@@ -185,14 +185,6 @@ class ServiceController extends Controller
     {
         $model = $this->findModel($id);
 
-        $client_type = [];
-        if ($model->client_type&2)
-            $client_type[] = 2;
-        if ($model->client_type&4)
-            $client_type[] = 4;
-
-        $model->client_type = $client_type;
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['service/view', 'id' => $model->id_service]);
