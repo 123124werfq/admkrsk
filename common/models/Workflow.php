@@ -16,7 +16,7 @@ class Workflow extends Model
 
     private $path = '/tmp/';
 
-    private $debug = true;
+    private $debug = false;
 
     public $error;
 
@@ -31,7 +31,7 @@ class Workflow extends Model
         return $res;
     }
 
-    private function sendPost($message, $url)
+    private function sendPost($message, $url, $archive = false)
     {
         $this->error = '';
 
@@ -73,7 +73,7 @@ class Workflow extends Model
         if($this->debug)
             return true;
 
-        return $this->sendPost($serviceRecord->toString(), $this->sendServiceURL);
+        return $this->sendPost($opres, $this->sendServiceURL);
     }
 
     public function getServiceMessage($raw)
@@ -164,6 +164,11 @@ class Workflow extends Model
         //var_dump($targetItems);
 
         //die();
+
+        $processed = $this->serviceRequestTemplate;
+        $processed = str_replace("{fields_list}", "", $processed);
+
+        return $processed;
     }
 
     protected function fillRequestTemplate(array $params)
