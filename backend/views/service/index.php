@@ -38,12 +38,10 @@ if (Yii::$app->user->can('admin.service')) {
                     'width'=>'40%',
                 ]
             ],
-
-            'rubric.name:text:Рубрики',
             [
-                'label'=>"Целей",
+                'label'=>"Формы",
                 'value' => function($model){
-                    return $model->getTargets()->count();
+                    return $model->getForms()->where(['state'=>1])->count();
                 },
             ],
             'old:boolean:Устарела',
