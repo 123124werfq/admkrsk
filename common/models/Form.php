@@ -61,7 +61,7 @@ class Form extends \yii\db\ActiveRecord
             [['message_success'], 'string'],
             [['client_type'], 'safe'],
             [['name','url','fullname'], 'string', 'max' => 255],
-            [['access_user_ids', 'access_user_group_ids', 'id_group'], 'each', 'rule' => ['integer']],
+            [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
             ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
         ];
@@ -84,7 +84,6 @@ class Form extends \yii\db\ActiveRecord
             'message_success'=>'Сообщение при успешном отправлении',
             'id_page'=>'Переход на раздел при успешном отправлении',
             'url'=>'Переход на ссылку при успешном отправлении',
-            'id_group'=>'Группа',
             'is_template' => "Это подформа",
             'created_at' => 'Создана',
             'created_by' => 'Кем создана',
