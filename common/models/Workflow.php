@@ -68,7 +68,7 @@ class Workflow extends Model
     {
         $record = CollectionRecord::findOne($serviceRecord->id_record);
 
-        $this->generateServiceRequest($record);
+        $opres = $this->generateServiceRequest($record);
 
         if($this->debug)
             return true;
@@ -134,7 +134,6 @@ class Workflow extends Model
 
             return $zip_path;
         }
-
     }
 
     public function generateServiceRequest(CollectionRecord $record)
@@ -160,12 +159,11 @@ class Workflow extends Model
             }
         }
 
-        var_dump($formFields);
-
+        //var_dump($formFields);
         //var_dump($recordItems);
         //var_dump($targetItems);
 
-        die();
+        //die();
     }
 
     protected function fillRequestTemplate(array $params)
