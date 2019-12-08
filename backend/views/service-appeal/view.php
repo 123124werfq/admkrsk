@@ -10,8 +10,8 @@ $this->title = $model->id_appeal;
 $this->params['breadcrumbs'][] = ['label' => 'Заявки по услугам', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-if (!empty($model->target->service->template))
-    $this->params['button-block'][] = Html::a('Скачать документ', ['doc','id'=>$model->id_appeal], ['class' => 'btn btn-success']);
+//if (!empty($model->target->service->template))
+//    $this->params['button-block'][] = Html::a('Скачать документ', ['doc','id'=>$model->id_appeal], ['class' => 'btn btn-success']);
 
 \yii\web\YiiAsset::register($this);
 ?>
@@ -65,4 +65,5 @@ if (!empty($model->target->service->template))
     <?php } ?>
         </tbody>
     </table>
+    <?= Html::a('Скачать документ', ['doc','id'=>$model->id_appeal], ['class' => 'btn btn-success']);?>
 </div>

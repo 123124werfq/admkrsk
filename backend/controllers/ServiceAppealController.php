@@ -123,10 +123,13 @@ class ServiceAppealController extends Controller
     {
         $appeal = \common\models\ServiceAppeal::findOne($id);
 
-        $data = $appeal->collectionRecord->getData(true);
+        //$data = $appeal->collectionRecord->getData(true);
 
-        $form = $appeal->collectionRecord->collection->form;
+        //$form = $appeal->collectionRecord->collection->form;
 
+        $export_path = $appeal->collectionRecord->collection->form->makeDoc($appeal->collectionRecord);
+
+        /*
         $media = $appeal->target->service->template;
         $url = $media->getUrl();
 
@@ -136,10 +139,11 @@ class ServiceAppealController extends Controller
         $template = file_put_contents($template_path);
 
         $export_path = \common\components\worddoc\WordDoc::makeDocByForm($form, $data, $template_path);
+        */
 
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="'.$appeal->targer->number.' '.$appeal->created_at.'"');
+        header('Content-Disposition: attachment; filename="'.$appeal->target->reestr_number.' '.$appeal->created_at.'"');
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
