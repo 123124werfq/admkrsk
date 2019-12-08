@@ -50,8 +50,8 @@ class ServiceTarget extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_service', 'state', 'modified_at', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
-            [['id_service', 'state', 'modified_at', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['id_service', 'state', 'id_form', 'modified_at', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
+            [['id_service', 'state', 'id_form', 'modified_at', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['name'], 'string', 'max' => 500],
             [['reestr_number','target','place','target_code','service_code','obj_name'], 'string', 'max' => 255],
         ];
@@ -71,6 +71,7 @@ class ServiceTarget extends \yii\db\ActiveRecord
             'target'=> 'Код',
             'target_code'=> 'Код цели',
             'place'=>'Место',
+            'id_form'=>'Форма',
             'service_code'=> 'Код сервиса',
             'obj_name' => 'Наименование объекта',
             'modified_at' => 'Modified At',

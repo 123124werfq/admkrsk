@@ -44,16 +44,6 @@ use common\models\Form;
 
         <?= $form->field($model, 'obj_name')->textInput(['maxlength' => 255]) ?>
 
-        <h3>Шаблон документа</h3>
-        <?=common\components\multifile\MultiFileWidget::widget([
-            'model'=>$model,
-            'single'=>true,
-            'relation'=>'template',
-            'extensions'=>['docx'],
-            'grouptype'=>1,
-            'showPreview'=>false
-        ]);?>
-
         <div class="form-group">
             <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
         </div>
