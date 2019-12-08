@@ -91,7 +91,6 @@ $(document).ready(function() {
 
     if (typeof visibleInputs !== 'undefined')
     {
-        console.log(123);
         function getValue(id_input)
         {
             var input = $("#input"+id_input);
@@ -117,8 +116,10 @@ $(document).ready(function() {
                 var value = getValue(id_input);
 
                 if (visibleElements[id_element][id_input].indexOf(value)<0)
+                {
                     show = false;
                     break;
+                }
             }
 
             if (show)
@@ -138,11 +139,7 @@ $(document).ready(function() {
         }
 
         for (var id_element in visibleElements)
-        {
             check(id_element);
-        }
-
-
     }
 
     $("div[data-visible-field]").each(function(){
