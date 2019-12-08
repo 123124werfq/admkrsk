@@ -10,7 +10,7 @@ $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Услуги', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$this->params['button-block'][] = Html::a('Добавить цель', ['service-target/create', 'id' => $model->id_service], ['class' => 'btn btn-default']);
+$this->params['action-block'][] = Html::a('Добавить форму', ['form/create','id_service'=>], ['class' => 'btn btn-success']);
 $this->params['button-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_service], ['class' => 'btn btn-primary']);
 
 if ($model->isDeleted()) {

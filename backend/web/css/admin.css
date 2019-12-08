@@ -1,4 +1,4 @@
-html {overflow: inherit!important; padding-right: 0px!important;}
+form-row html {overflow: inherit!important; padding-right: 0px!important;}
 .control-label {margin-bottom: 10px!important;}
 
 .summary {
@@ -64,6 +64,9 @@ img {max-width: 100%;}
     position: relative;
 }
 .form-row .btn-group {position: absolute; right: -50px; top: 18px;}
+
+.form-row .form-row .btn {display: none;}
+
 .form-row .form-element .btn-group {
     right: 12px;
     top: 8px;

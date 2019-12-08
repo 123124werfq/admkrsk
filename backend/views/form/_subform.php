@@ -2,7 +2,7 @@
 	$styles = $element->getStyles();
 ?>
 <div data-id="<?=$element->id_element?>" class="form-element col" <?=(!empty($styles))?'style="'.implode(';',$styles).'"':''?>>
-	<?=$element->content?>
+	<?=$this->render('_form_view',['rows'=>$element->subForm->rows])?>
 	<div class="btn-group">
 	    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 	        ...

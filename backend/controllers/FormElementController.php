@@ -120,7 +120,7 @@ class FormElementController extends Controller
                 'yii\web\YiiAsset'=>false,
             ];
 
-            return $this->renderAjax('_form',['model' => $model]);
+            return $this->renderAjax('_form',['model' => $model,'id_form'=>$model->row->id_form]);
         }
 
         return $this->render('update', [
@@ -137,9 +137,11 @@ class FormElementController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $id_form = $model->row->id_form;
+        $model->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['form/view', 'id' => $id_form]);
     }
 
     /**

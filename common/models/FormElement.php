@@ -73,9 +73,9 @@ class FormElement extends \yii\db\ActiveRecord
         return $this->hasOne(FormInput::class, ['id_input' => 'id_input']);
     }
 
-    public function getForm()
+    public function getSubForm()
     {
-        return $this->hasOne(FormForm::class, ['id_form' => 'id_input']);
+        return $this->hasOne(Form::class, ['id_form' => 'id_form']);
     }
 
     public function getStyles()
