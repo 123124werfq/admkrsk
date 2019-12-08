@@ -66,11 +66,10 @@ class ServiceAppealController extends Controller
 
         $attachments = $sa->collectionRecord->getAllMedias();
 
-        var_dump($attachments); die();
-
         return $this->render('view', [
             'model' => $sa,
-            'formFields' => $formFields
+            'formFields' => $formFields,
+            'attachments' => $attachments
         ]);
     }
 
