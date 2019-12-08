@@ -64,8 +64,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     {
                         if(isset($details->user)) $output.= "<a href='/user/view?id={$details->user}'>Пользователь</a><br>";
                         if(isset($details->appeal)) $output.= "<a href='/service-appeal/view?id={$details->appeal}'>Заявка</a><br>";
-                        if(isset($details->target)) $output.= "<a href='/collection-record/index?id={$details->target}'>Список</a><br>";
-                        if(isset($details->record)) $output.= "<a href='/service-appeal/index?id={$details->record}'>Заявка</a><br>";
+                        //if(isset($details->target)) $output.= "<a href='/collection-record/index?id={$details->target}'>Список</a><br>";
+                        //if(isset($details->record)) $output.= "<a href='/service-appeal/index?id={$details->record}'>Заявка</a><br>";
                         return $output;
                     }
 
