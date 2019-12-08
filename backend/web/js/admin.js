@@ -210,7 +210,7 @@ jQuery(document).ready(function()
     });
 
     $('body').delegate(".visible-field, #forminput-type",'change',function(){
-        var $form = $("#formInput-form");
+        var $form = $("#FormElement form");
 
         $.ajax({
             url: $form.attr('action'),

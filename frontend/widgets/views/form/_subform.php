@@ -1,4 +1,4 @@
-<div class="col">
+<div id="element<?=$element->id_element?>" class="col">
 <?php foreach ($element->subForm->rows as $key => $row)
 {
 	echo '<div class="row">';

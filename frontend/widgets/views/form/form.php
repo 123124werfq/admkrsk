@@ -1,35 +1,28 @@
 <?php
 	use yii\widgets\ActiveForm;
 	use yii\helpers\Html;
+	use common\models\FormVisibleInput;
 
 	$this->registerJsFile('/js/dropzone/dropzone.js',['depends'=>[\yii\web\JqueryAsset::className()],'position'=>\yii\web\View::POS_END]);
 	$this->registerCssFile('/js/dropzone/dropzone.min.css');
 
-	$visibleField = [];
-	$visibleSourceField = [];
+	$visibleElements = [];
+	$visibleInputs = [];
 
-	foreach ($form->rows as $key => $row)
-		foreach ($row->elements as $ekey => $element)
-		{
-			if (!empty($element->id_input) && !empty($element->input))
-			{
-				if (!empty($element->input->visibleInputs))
-				{
-					foreach ($element->input->visibleInputs as $vkey => $vinput)
-					{
-						$visibleField[$vinput->id_input_visible][$element->input->id_input] = $vinput->values;
-						$visibleSourceField[$element->input->id_input][$vinput->id_input_visible] = $vinput->values;
-					}
-				}
-			}
-		}
+	$visibleInputs = FormVisibleInput::find()->joinWith(['visibleInput'])->where(['id_form'=>$form->id_form])->all();
+
+	foreach ($visibleInputs as $vkey => $vinput)
+	{
+		$visibleInputs[$vinput->id_input_visible][$vinput->id_element] = $vinput->id_element;
+
+		$visibleElements[$vinput->id_element][$vinput->id_input_visible] = $vinput->values;
+	}
 ?>
 <div class="boxed form-inside">
-	<?php if (!empty($visibleField)){?>
+	<?php if (!empty($visibleInputs)){?>
 	<script>
-		var visibleInput = <?=json_encode($visibleField)?>;
-		var visibleSourceInput = <?=json_encode($visibleSourceField)?>;
-
+		var visibleInputs = <?=json_encode($visibleInputs)?>;
+		var visibleElements = <?=json_encode($visibleElements)?>;
 	</script>
 	<?php }?>
 

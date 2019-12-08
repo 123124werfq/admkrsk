@@ -104,14 +104,6 @@ class FormElementController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save())
-        {
-            if (!Yii::$app->request->isAjax)
-                return $this->redirect(['form/view', 'id' => $model->row->id_form]);
-            else
-                return $this->renderPartial('/form/_element',['element'=>$model]);
-        }
-
         if (Yii::$app->request->isAjax)
         {
             Yii::$app->assetManager->bundles = [
@@ -119,9 +111,21 @@ class FormElementController extends Controller
                 'yii\web\JqueryAsset'=>false,
                 'yii\web\YiiAsset'=>false,
             ];
-
-            return $this->renderAjax('_form',['model' => $model,'id_form'=>$model->row->id_form]);
         }
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            if (!Yii::$app->request->isAjax)
+            {
+                $model->save();
+                return $this->redirect(['form/view', 'id' => $model->row->id_form]);
+            }
+            else
+                return $this->renderAjax('_form',['model' => $model,'id_form'=>$model->row->id_form]);
+        }
+
+        if (Yii::$app->request->isAjax)
+            return $this->renderAjax('_form',['model' => $model,'id_form'=>$model->row->id_form]);
 
         return $this->render('update', [
             'model' => $model,
