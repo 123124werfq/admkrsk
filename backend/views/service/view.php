@@ -10,13 +10,13 @@ $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Услуги', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$this->params['action-block'][] = Html::a('Добавить форму', ['form/create','id_service'=>$model->id_service], ['class' => 'btn btn-success']);
+$this->params['action-block'][] = Html::a('Добавить форму', ['form/create-service','id_service'=>$model->id_service], ['class' => '']);
 $this->params['button-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_service], ['class' => 'btn btn-primary']);
 
 if ($model->isDeleted()) {
     $this->params['button-block'][] = Html::a('Восстановить', ['undelete', 'id' => $model->id_service], ['class' => 'btn btn-danger']);
 } else {
-    $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id_service], ['class' => 'btn btn-danger',
+    $this->params['action-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id_service], ['class' => '',
         'data' => [
             'confirm' => 'Вы уверены что хотите удалить эту услугу?',
             'method' => 'post',
@@ -40,10 +40,10 @@ if ($model->isDeleted()) {
                             'template' => '{update} {delete}',
                             'buttons' => [
                                 'update' => function ($url, $model, $key) {
-                                    return Html::a('', ['/service-target/update', 'id' => $model->id_target],['class' => 'glyphicon glyphicon-pencil']);
+                                    return Html::a('', ['/form/update', 'id' => $model->id_form],['class' => 'glyphicon glyphicon-pencil']);
                                 },
                                  'delete' => function ($url, $model, $key) {
-                                      return Html::a('', ['/service-target/delete', 'id' => $model->id_target],['class' => 'glyphicon glyphicon-trash','data' => [
+                                      return Html::a('', ['/form/delete', 'id' => $model->id_form],['class' => 'glyphicon glyphicon-trash','data' => [
                                     'confirm' => 'Вы уверены что хотите удалить цель?',
                                     'method' => 'post',
                                 ],]);

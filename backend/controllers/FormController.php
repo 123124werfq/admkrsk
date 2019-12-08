@@ -57,7 +57,7 @@ class FormController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['create'],
+                        'actions' => ['create','create-service'],
                         'roles' => ['backend.form.create'],
                         'roleParams' => [
                             'class' => Form::class,
@@ -231,6 +231,16 @@ class FormController extends Controller
         ]);
     }
 
+    public function actionCreateService($id_service)
+    {
+        $model = new \backend\models\FormService;
+        $model->id_service = $id_service;
+
+        $this->render('service',[
+            'model'=>$model
+        ]);
+    }
+
     public function actionAssignForm($id_row)
     {
         $insertRow = FormRow::findOne($id_row);
@@ -252,11 +262,11 @@ class FormController extends Controller
             try {
 
                 $copyForm = Form::findOne($form->id_form);
-                
+
                 $subForm = new Form;
                 $subForm->id_collection = $copyForm->id_collection;
                 $subForm->name = $parentForm->name.' '.$copyForm->name;
-                
+
                 if ($subForm->save())
                 {
                     $newElement = new FormElement;
@@ -272,7 +282,7 @@ class FormController extends Controller
                             $newRow->attributes = $row->attributes;
                             $newRow->id_form = $subForm->id_form;
                             $newRow->ord = $row->ord;
-                            
+
                             if ($newRow->save())
                             {
                                 foreach ($row->elements as $key => $element)
@@ -287,7 +297,7 @@ class FormController extends Controller
                                         $newInput->attributes = $element->input->attributes;
                                         $newInput->id_form = $parentForm->id_form;
                                         $newInput->fieldname = $form->prefix.'_'.$newInput->fieldname;
-                                        
+
                                         if (!$newInput->save())
                                             print_r($newInput->errors);
 
@@ -312,7 +322,7 @@ class FormController extends Controller
                             else print_r($newRow->errors);
                         }
                     }
-                    else 
+                    else
                         print_r($newElement->errors);
                 }
 

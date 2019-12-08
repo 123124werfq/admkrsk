@@ -2,17 +2,20 @@
 
 namespace backend\controllers;
 
-use common\models\Action;
-use common\modules\log\models\Log;
+
 use Yii;
-use common\models\Service;
-use common\models\ServiceTarget;
+
 use yii\data\ActiveDataProvider;
-use backend\models\search\ServiceSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
+use common\models\Service;
+use common\models\Form;
+use common\models\Action;
+use common\modules\log\models\Log;
+use backend\models\search\ServiceSearch;
 
 /**
  * ServiceController implements the CRUD actions for Service model.
@@ -142,8 +145,8 @@ class ServiceController extends Controller
      */
     public function actionView($id)
     {
-       $dataProvider = new ActiveDataProvider([
-            'query' => ServiceTarget::find()->where(['id_service'=>$id]),
+        $dataProvider = new ActiveDataProvider([
+            'query' => Form::find()->where(['id_service'=>$id]),
         ]);
 
         return $this->render('view', [
@@ -187,7 +190,7 @@ class ServiceController extends Controller
             $client_type[] = 2;
         if ($model->client_type&4)
             $client_type[] = 4;
-        
+
         $model->client_type = $client_type;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
