@@ -87,6 +87,7 @@ class Service extends \yii\db\ActiveRecord
             [['id_situations', 'client_type', 'id_firms'],'safe'],
             [['reestr_number'], 'string', 'max' => 255],
             [['fullname', 'name', 'type'], 'string'],
+            [['test'],'safe'],
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
             ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
@@ -193,7 +194,7 @@ class Service extends \yii\db\ActiveRecord
     {
         if (parent::beforeSave($insert))
         {
-            $result = 0;
+            /*$result = 0;
 
             if (is_array($this->client_type))
             {
@@ -202,7 +203,7 @@ class Service extends \yii\db\ActiveRecord
                 }
             }
 
-            $this->client_type = $result;
+            $this->client_type = $result;*/
 
             return true;
         }

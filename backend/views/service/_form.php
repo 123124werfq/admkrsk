@@ -66,6 +66,8 @@ if (!empty($offices))
 
         <?= $form->field($model, 'client_type')->checkBoxList($model::getAttributeValues('client_type'))?>
 
+        <?= $form->field($model, 'test')->checkBoxList($model::getAttributeValues('client_type'))?>
+
         <?= $form->field($model, 'type')->dropDownList($model::getAttributeValues('type'),['prompt'=>'Выберите значение'])?>
 
         <?= $form->field($model, 'name')->textInput(['maxlength' => 500]) ?>

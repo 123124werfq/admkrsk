@@ -56,8 +56,15 @@ $(document).ready(function() {
         $("#news-filter").submit();
     });
 
-    $("reestr-filters select").change(function(){
-
+    $("#reestr-filters select").change(function(){
+        $.ajax({
+            type: "GET",
+            dataType: "html",
+            url: "",
+            data: $("#reestr-filters").serialize()
+        }).done(function(data){
+            $("#reestr").html(data);
+        });
     });
 
     $("#program-filter input").on('datepicker-change', function(event,obj) {

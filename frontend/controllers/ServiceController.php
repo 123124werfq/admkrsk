@@ -48,19 +48,16 @@ class ServiceController extends \yii\web\Controller
 
         $open = false;
 
-        if (!empty($clientType) || !empty($online))
+        if (!empty($clientType) && in_array($clientType, Service::getAttributeValues('client_type')))
         {
-            if (!empty($clientType))
-            {
-                $open = true;
-                $services->andWhere('client_type&',$clientType.'='.$clientType);
-            }
+            $open = true;
+            $services->andWhere(['@>','clientType','{'.$clientType.'}']);
+        }
 
-            if (!empty($online))
-            {
-                $open = true;
-                $services->andWhere(['online'=>1]);
-            }
+        if (!empty($online))
+        {
+            $open = true;
+            $services->andWhere(['online'=>1]);
         }
 
         if (!empty($id_situation))
@@ -106,6 +103,11 @@ class ServiceController extends \yii\web\Controller
                     return ($a->ord < $b->ord)?-1:1;
                 });
             }
+        }
+
+        if (Yii::$app->request->isAjax)
+        {
+            return $this->renderPartial('_reestr',['rubrics'=>$tree,'servicesRubs'=>$servicesRubs,'active'=>($open)?'active':'']);
         }
 
         return $this->render('reestr',[

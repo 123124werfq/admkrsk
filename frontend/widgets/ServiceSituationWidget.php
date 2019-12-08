@@ -24,15 +24,18 @@ class ServiceSituationWidget extends \yii\base\Widget
     	if ($this->bytype)
     	{
     		$sql = "SELECT id_situation FROM service_service ss
-                        LEFT JOIN servicel_situation sls ON ss.id_service = sls.id_service
-                            WHERE client_type&".Service::TYPE_PEOPLE.'='.Service::TYPE_PEOPLE;
+                        INNER JOIN servicel_situation sls ON ss.id_service = sls.id_service
+                            WHERE 'Физическое лицо' = ANY (client_type)
+                            AND ss.old = 0";
     		$ids = Yii::$app->db->createCommand($sql)->queryColumn();
 
     		$situations = ServiceSituation::find()->joinWith('childs as childs')->where('service_situation.id_parent IS NULL')->andWhere(['childs.id_situation'=>$ids])->all();
 
             $sql = "SELECT id_situation FROM service_service ss
-                        LEFT JOIN servicel_situation sls ON ss.id_service = sls.id_service
-                            WHERE client_type&".Service::TYPE_FIRM.'='.Service::TYPE_FIRM;
+                        INNER JOIN servicel_situation sls ON ss.id_service = sls.id_service
+                            WHERE 'Юридическое лицо' = ANY (client_type)
+                            AND ss.old = 0";
+
             $ids = Yii::$app->db->createCommand($sql)->queryColumn();
 
             $firmsituations = ServiceSituation::find()->joinWith('childs as childs')->where('service_situation.id_parent IS NULL')->andWhere(['childs.id_situation'=>$ids])->all();
