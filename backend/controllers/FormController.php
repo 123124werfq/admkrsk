@@ -208,6 +208,7 @@ class FormController extends Controller
     public function actionCreate()
     {
         $model = new Form();
+        $model->state = 1;
 
         if ($model->load(Yii::$app->request->post()) && $model->save())
         {
@@ -343,7 +344,7 @@ class FormController extends Controller
             $this->redirect(['/form/view','id'=>$parentForm->id_form]);
         }
 
-        $forms = Form::find()->all();
+        $forms = Form::find()->where(['is_template'=>1])->all();
 
         return $this->renderAjax('_assign_form', [
             'model'=>$form,

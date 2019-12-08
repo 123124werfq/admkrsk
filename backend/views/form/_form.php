@@ -17,7 +17,10 @@ use yii\web\JsExpression;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'state')->checkBox()?>
+    <div class="row">
+        <div class="col-sm-6"><?= $form->field($model, 'is_template')->checkBox()?></div>
+        <div class="col-sm-6"><?= $form->field($model, 'state')->checkBox()?></div>
+    </div>
 
     <?= $form->field($model, 'id_group')->dropDownList(\common\models\Collection::getArrayByAlias('form_groups'))?>
 
