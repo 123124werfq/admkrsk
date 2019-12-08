@@ -81,16 +81,30 @@ class ServiceController extends \yii\web\Controller
 
         foreach ($rubrics as $key => $rub)
         {
-            $tree[(int)$rub->id_parent][$rub->id_rub] = $rub;
+            $tree[(int)$rub->id_parent][(int)$rub->id_rub] = $rub;
 
             if (!empty($rub->id_parent))
             {
-                $tree[(int)$rub->parent->id_parent][$rub->id_parent] = $rub->parent;
+                $tree[(int)$rub->parent->id_parent][(int)$rub->id_parent] = $rub->parent;
 
-                if (!empty($rub->parent->id_parent))
+                if (!empty($rub->parent->parent->id_parent))
                 {
-                    $tree[(int)$rub->parent->parent->id_parent][$rub->parent->parent->id_parent] = $rub->parent->parent;
+                    $tree[(int)$rub->parent->parent->id_parent][(int)$rub->parent->parent->id_parent] = $rub->parent->parent;
                 }
+            }
+        }
+
+        foreach ($tree as $key => &$array)
+        {
+            if (is_array($array))
+            {
+                uasort($array, function ($a, $b)
+                {
+                    if ($a->ord == $b->ord)
+                        return 0;
+
+                    return ($a->ord < $b->ord)?-1:1;
+                });
             }
         }
 

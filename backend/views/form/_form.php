@@ -35,7 +35,7 @@ use yii\web\JsExpression;
                 'allowClear' => true,
                 'placeholder' => 'Выберите услугу',
             ],
-        ])->label(false);
+        ]);
     ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>

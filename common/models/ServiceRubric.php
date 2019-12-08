@@ -105,7 +105,7 @@ class ServiceRubric extends \yii\db\ActiveRecord
 
     public function getChilds()
     {
-        return $this->hasMany(ServiceRubric::className(), ['id_parent' => 'id_rub']);
+        return $this->hasMany(ServiceRubric::className(), ['id_parent' => 'id_rub'])->orderBY('ord ASC');
     }
 
     public function getParent()

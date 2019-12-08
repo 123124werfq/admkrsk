@@ -137,7 +137,7 @@ class ServiceRubricController extends Controller
         }
 
         return $this->render('index', [
-            'records'=>$recordsQuery->all(),
+            'records'=>$recordsQuery->orderBy('ord ASC')->all(),
         ]);
     }
 
@@ -186,7 +186,11 @@ class ServiceRubricController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_UPDATE);
-            return $this->redirect(['view', 'id' => $model->id_rub]);
+
+            if (!Yii::$app->request->isAjax)
+                return $this->redirect(['view', 'id' => $model->id_rub]);
+            else
+                $this->actionOrder();
         }
 
         return $this->render('update', [
@@ -250,7 +254,8 @@ class ServiceRubricController extends Controller
     {
         $ords = Yii::$app->request->post('ords');
 
-        foreach ($ords as $key => $id)
-            Yii::$app->db->createCommand()->update('service_rubric',['ord'=>$key],['id_rubric'=>$id])->execute();
+        if (!empty($ords) && is_array($ords))
+            foreach ($ords as $key => $id)
+                Yii::$app->db->createCommand()->update('service_rubric',['ord'=>$key],['id_rub'=>$id])->execute();
     }
 }

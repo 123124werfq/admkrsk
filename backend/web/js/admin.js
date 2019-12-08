@@ -363,24 +363,34 @@ jQuery(document).ready(function()
       }
     }).disableSelection();
 
-    $(".menu-container,.menu-childs").sortable({
+    $(".menu-container, .menu-childs").sortable({
       connectWith: ".menu-childs, .menu-container",
       stop: function(event, ui){
+        var data = {};
+
+        data['_csrf'] = csrf_value;
+
+        var ords = [];
+
+        ui.item.parent().children().each(function(i){
+            ords.push($(this).data('id'));
+        });
+
+        data['ords'] = ords;
+
+        data[$(".menu-container").data('model')] = {
+          id_parent:ui.item.parent().data('id')
+        };
 
         $.ajax({
-            url: 'update?id='+ui.item.data('id'),
+            url: document.location+'/update?id='+ui.item.data('id'),
             type: 'post',
-            data: {
-              _csrf: csrf_value,
-              MenuLink: {
-                ord:ui.item.index(),
-                id_parent:ui.item.parent().data('id')
-              }
-            },
+            data: data,
             success: function(data)
             {
             }
         });
+
         $(".menu-container").removeClass('start-sorting');
       },
       start: function( event, ui ) {

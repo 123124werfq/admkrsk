@@ -20,7 +20,6 @@ $id_situations = $model->getSituations()->indexBy('id_situation')->all();
 if (!empty($id_situations))
     $model->id_situations = array_keys($id_situations);
 
-
 $id_firms = $model->getFirms()->indexBy('id_record')->all();
 
 if (!empty($id_firms))
@@ -120,7 +119,7 @@ if (!empty($offices))
         <?= $form->field($model, 'max_duration_queue')->textarea(['rows' => 6]) ?>
 
         <h3>Шаблон документа</h3>
-        
+
         <?=common\components\multifile\MultiFileWidget::widget([
             'model'=>$model,
             'single'=>true,

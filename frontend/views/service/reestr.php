@@ -7,7 +7,7 @@
             <div class="header-controls">
                 <form id="reestr-filters" action="" method="get">
                     <div class="btn-group">
-                        <!--div class="btn-group_item">
+                        <div class="btn-group_item">
                             <div class="custom-select custom-select__placeholder custom-select__inline ui-front">
                                 <select>
                                     <option selected="selected">Орган, оказывающий услугу</option>
@@ -17,7 +17,7 @@
                                     <option value="3">Орган 3</option>
                                 </select>
                             </div>
-                        </div-->
+                        </div>
                         <div class="btn-group_item">
                             <div class="custom-select custom-select__placeholder custom-select__inline ui-front">
                                 <select name="client_type">

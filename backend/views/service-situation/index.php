@@ -14,7 +14,7 @@ $this->params['button-block'][] = Html::a('Добавить', ['create'], ['clas
 
 <div class="row">
     <div class="col-sm-7">
-        <ul data-id="null" class="menu-container">
+        <ul data-id="null" class="menu-container" data-model="ServiceSituation">
         <?php foreach ($records as $key => $parent)
         {
             echo '<li data-id="'.$parent->id_situation.'"" class="menu-item">
