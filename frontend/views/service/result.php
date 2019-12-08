@@ -3,7 +3,7 @@
         <?=frontend\widgets\Breadcrumbs::widget(['page'=>$page])?>
         <div class="row">
             <div class="col-2-third order-xs-1">
-                <h1 class="h2"><?=$target->service->reestr_number?> <?=$target->service->name?></h1>
+                <h1 class="h2"><?=$service->reestr_number?> <?=$service->name?></h1>
 
                 <?php if($number) {?>
                 <p>Зявка на оказание услуги отправлена. Номер регистрации <?=$number?>. Информацию о ходе оказания услуги вы можете получить в личном кабинете.</p>
