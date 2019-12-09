@@ -5,6 +5,7 @@ namespace backend\controllers;
 use common\models\ServiceTarget;
 use Yii;
 use common\models\ServiceAppeal;
+use backend\models\search\ServiceAppealSearch;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -37,9 +38,8 @@ class ServiceAppealController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => ServiceAppeal::find(),
-        ]);
+        $searchModel = new ServiceAppealSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
