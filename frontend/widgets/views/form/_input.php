@@ -365,8 +365,12 @@ JS;
                 ]);
 				break;
 			case CollectionColumn::TYPE_JSON:
-				
+
 				$columns = json_decode($input->values,true);
+
+				if (is_string($columns))
+					$columns = json_decode($columns,true);
+
 				$data = json_decode($model->$attribute);
 
 ?>

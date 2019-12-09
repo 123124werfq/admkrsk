@@ -40,7 +40,7 @@ return [
                 'roles' => ['backend.form'],
             ],
             'form-input-type'=>[
-                'title'=>'Типы полей',
+                'title'=>'Поведения полей',
                 'roles' => ['backend.formInputType'],
             ],
         ],

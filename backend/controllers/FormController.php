@@ -236,10 +236,21 @@ class FormController extends Controller
     {
         $model = new Form;
         $model->id_service = $id_service;
+        $model->state = 1;
 
         if ($model->load(Yii::$app->request->post()) && $model->save())
         {
+            $collection = new Collection;
+            $collection->name = $model->name;
+            $collection->id_form = $model->id_form;
 
+            if ($collection->save())
+            {
+                $model->id_collection = $collection->id_collection;
+                $model->updateAttributes(['id_collection']);
+            }
+
+            return $this->redirect(['view', 'id' => $model->id_form]);
         }
 
         return $this->render('service',[

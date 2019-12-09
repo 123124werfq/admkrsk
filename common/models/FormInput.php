@@ -63,7 +63,7 @@ class FormInput extends \yii\db\ActiveRecord
             'id_input' => 'Id Input',
             'id_form' => 'Форма',
             'type' => 'Тип поля',
-            'id_type' => 'Пресет поля',
+            'id_type' => 'Поведение поля',
             'required' => 'Обязательно',
             'id_collection' => 'Коллекция',
             'label' => 'Подпись',
@@ -163,8 +163,20 @@ class FormInput extends \yii\db\ActiveRecord
             ],
         ];
 
+
         if (is_string($this->values))
+        {
             $data = json_decode($this->values,true);
+
+            // какаято проблема с экранированием строки в PG
+            if (is_string($data))
+            {
+                $data = json_decode($data,true);
+            }
+        }
+
+        //var_dump($data);
+        //die();
 
         if (empty($data))
             return [$options];

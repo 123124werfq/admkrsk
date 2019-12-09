@@ -11,7 +11,8 @@
 	$inputs = FormInput::find()->where([
 				'id_form'=>$id_form,
 				'type'=>[CollectionColumn::TYPE_SELECT,
-						 CollectionColumn::TYPE_CHECKBOX]
+						 CollectionColumn::TYPE_CHECKBOX,
+						 CollectionColumn::TYPE_SERVICETARGET]
 			  ]);
 
 	if (!empty($input))

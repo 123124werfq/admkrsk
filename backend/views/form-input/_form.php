@@ -31,7 +31,7 @@ use common\models\CollectionColumn;
                 'data' => ArrayHelper::map(FormInputType::find()->where(['type'=>$model->type])->all(), 'id_type', 'name'),
                 'pluginOptions' => [
                     'allowClear' => true,
-                    'placeholder' => 'Настройки поля',
+                    'placeholder' => 'Поведение поля',
                 ],
             ])?>
         </div>
@@ -88,7 +88,7 @@ use common\models\CollectionColumn;
                         echo '<div class="col">';
                             if (empty($option['values']))
                                 echo Html::textInput("FormInput[values][$key][$okey]",$option['value'],$option);
-                            else 
+                            else
                                 echo Html::dropDownList("FormInput[values][$key][$okey]",$option['value'],$option['values'],$option);
                         echo '</div>';
                     }
