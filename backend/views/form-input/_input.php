@@ -5,7 +5,9 @@
 ?>
 <div class="form-group">
 	<?php
-		if ($visibleInput->type==CollectionColumn::TYPE_SELECT || $visibleInput->type==CollectionColumn::TYPE_CHECKBOX)
+		if ($visibleInput->type==CollectionColumn::TYPE_SELECT ||
+			$visibleInput->type==CollectionColumn::TYPE_CHECKBOX ||
+			$visibleInput->type==CollectionColumn::TYPE_SERVICETARGET)
 	    {
 	        $values = $visibleInput->getArrayValues();
 

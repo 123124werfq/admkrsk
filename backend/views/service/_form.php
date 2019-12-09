@@ -30,6 +30,16 @@ $offices = Collection::find()->where(['alias'=>'service_offices'])->one();
 if (!empty($offices))
     $offices = $offices->getArray();
 
+/*var_dump($model->client_type);
+
+$client_types = [];
+foreach ($model->client_type as $key => $value)
+    $client_types[$value]=$value;
+
+$model->client_type = $client_types;
+
+var_dump($model->client_type);*/
+
 ?>
 <div class="ibox">
     <div class="ibox-content">

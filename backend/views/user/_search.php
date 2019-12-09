@@ -9,22 +9,23 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="user-search">
+    <div class="row">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
-        'options' => [
-                'class' => 'form-inline'
-        ]
     ]); ?>
 
     <?php // $form->field($model, 'id') ?>
-
-    <?= $form->field($model, 'username') ?>
-
-    <?= $form->field($model, 'email') ?>
-
-    <?= $form->field($model, 'source')->dropDownlist([0=>'Все',1=>'ЕСИА', 2=>'Active Directory']) ?>
+    <div class="col-md-2">
+        <?= $form->field($model, 'username') ?>
+    </div>
+    <div class="col-md-2">
+        <?= $form->field($model, 'email') ?>
+    </div>
+    <div class="col-md-2">
+        <?= $form->field($model, 'source')->dropDownlist([0=>'Все',1=>'ЕСИА', 2=>'Active Directory']) ?>
+    </div>
 
     <?php // $form->field($model, 'password_hash') ?>
 
@@ -49,8 +50,8 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'fullname') ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-outline-secondary']) ?>
+        <?= Html::submitButton('Найти', ['class' => 'btn btn-primary']) ?>
+        <?= Html::resetButton('Сбросить', ['class' => 'btn btn-outline-secondary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

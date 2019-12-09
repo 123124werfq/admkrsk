@@ -73,7 +73,6 @@ if ($model->isDeleted()) {
                         'keywords:raw',
                         'addresses:raw',
                         'result:raw',
-                        'client_type',
                         'client_category:raw',
                         'duration:raw',
                         'documents:raw',

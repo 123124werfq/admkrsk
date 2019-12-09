@@ -2,16 +2,14 @@
 
 namespace backend\models\search;
 
-use common\models\AuthEntity;
-use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Form;
+use common\models\ServiceAppeal;
 
 /**
- * FormSearch represents the model behind the search form of `common\models\Form`.
+ * ServiceAppealSearch represents the model behind the search form of `common\models\ServiceAppeal`.
  */
-class FormSearch extends Form
+class ServiceAppealSearch extends ServiceAppeal
 {
     /**
      * {@inheritdoc}
@@ -19,8 +17,8 @@ class FormSearch extends Form
     public function rules()
     {
         return [
-            [['id_form', 'id_collection', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
-            [['name'], 'safe'],
+            [['id_appeal', 'id_user', 'id_service', 'date', 'archive', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_record', 'id_collection', 'number_system', 'number_common'], 'integer'],
+            [['state', 'data', 'number_internal', 'id_target'], 'safe'],
         ];
     }
 
@@ -42,22 +40,13 @@ class FormSearch extends Form
      */
     public function search($params)
     {
-        if (Yii::$app->request->get('archive')) {
-            $query = Form::findDeleted();
-        } else {
-            $query = Form::find();
-        }
-
-        $query->where(['is_template'=>0]);
+        $query = ServiceAppeal::find();
 
         // add conditions that should always apply here
-        if (!Yii::$app->user->can('admin.form')) {
-            $query->andWhere(['id_form' => AuthEntity::getEntityIds(Form::class)]);
-        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['id_form'=>SORT_DESC]]
+            'sort'=> ['defaultOrder' => ['id_appeal'=>SORT_DESC]]
         ]);
 
         $this->load($params);
@@ -70,17 +59,27 @@ class FormSearch extends Form
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id_form' => $this->id_form,
-            'id_collection' => $this->id_collection,
+            'id_appeal' => $this->id_appeal,
+            'id_user' => $this->id_user,
+            'id_service' => $this->id_service,
+            'date' => $this->date,
+            'archive' => $this->archive,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,
             'updated_by' => $this->updated_by,
             'deleted_at' => $this->deleted_at,
             'deleted_by' => $this->deleted_by,
+            'id_record' => $this->id_record,
+            'id_collection' => $this->id_collection,
+            'number_system' => $this->number_system,
+            'number_common' => $this->number_common,
         ]);
 
-        $query->andFilterWhere(['ilike', 'name', $this->name]);
+        $query->andFilterWhere(['ilike', 'state', $this->state])
+            ->andFilterWhere(['ilike', 'data', $this->data])
+            ->andFilterWhere(['ilike', 'number_internal', $this->number_internal])
+            ->andFilterWhere(['ilike', 'id_target', $this->id_target]);
 
         return $dataProvider;
     }

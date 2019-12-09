@@ -98,7 +98,7 @@ class ServiceTargetController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()){
             $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['index', 'id' => $model->id_service]);
         }

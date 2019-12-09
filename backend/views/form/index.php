@@ -39,6 +39,16 @@ if (Yii::$app->user->can('admin.form')) {
                     return $output;
                 }
             ],
+            [
+                'attribute'=>'id_service',
+                'format'=>'html',
+                'value'=>function($model){
+                    $output = '';
+                    if (!empty($model->service))
+                        $output = Html::a($model->service->reestr_number, ['service/view','id'=>$model->id_service]);
+                    return $output;
+                }
+            ],
             'created_at:date',
             'updated_at:date',
             [

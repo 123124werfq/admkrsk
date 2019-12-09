@@ -17,17 +17,12 @@ use yii\web\JsExpression;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'state')->checkBox()?>
+    <div class="row">
+        <div class="col-sm-6"><?= $form->field($model, 'is_template')->checkBox()?></div>
+        <div class="col-sm-6"><?= $form->field($model, 'state')->checkBox()?></div>
+    </div>
 
     <?= $form->field($model, 'id_group')->dropDownList(\common\models\Collection::getArrayByAlias('form_groups'))?>
-
-    <?= $form->field($model, 'id_page')->widget(Select2::class, [
-        'data' => $model->id_page ? [$model->id_page=>$model->page->title]:[],
-        'pluginOptions' => [
-            'multiple' => false,
-            'allowClear' => true,
-        ],
-    ]) ?>
 
     <?= $form->field($model, "id_service")->widget(Select2::class, [
             'data' => ArrayHelper::map(\common\models\Service::find()->all(), 'id_service', 'reestr_number'),

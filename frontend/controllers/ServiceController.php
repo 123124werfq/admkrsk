@@ -6,6 +6,7 @@ use common\models\Service;
 use common\models\Form;
 use common\models\Workflow;
 use common\models\Integration;
+use common\models\Collection;
 use common\models\ServiceAppeal;
 use common\models\ServiceAppealState;
 use common\models\ServiceRubric;
@@ -41,29 +42,60 @@ class ServiceController extends \yii\web\Controller
 
     public function actionReestr($page=null,$id_situation=null)
     {
-        $clientType = (int)Yii::$app->request->get('client_type');
+        $clientType = Yii::$app->request->get('client_type');
+        $firm = (int)Yii::$app->request->get('firm');
         $online = (int)Yii::$app->request->get('online');
 
         $services = Service::find()->where(['old'=>0]);
 
         $open = false;
 
-        if (!empty($clientType) || !empty($online))
-        {
-            if (!empty($clientType))
-            {
-                $open = true;
-                $services->andWhere('client_type&',$clientType.'='.$clientType);
-            }
+        $collection = Collection::find()->where(['alias'=>'service_offices'])->one();
 
-            if (!empty($online))
+        $firms = [];
+        if (!empty($collection))
+        {
+            $records = $collection->getData([],true);
+
+            foreach ($records as $key => $record)
             {
-                $open = true;
-                $services->andWhere(['online'=>1]);
+                if (empty($record['OrganID']) || empty($record['department']))
+                    continue;
+                
+                $firms[$record['OrganID']??0] = $record['department'];
             }
         }
 
-        if (!empty($id_situation))
+        asort($firms);
+        if (!empty($clientType) && in_array($clientType, Service::getAttributeValues('client_type')))
+        {
+            $open = true;
+            $services->andWhere(['@>','client_type','{'.$clientType.'}']);
+        }
+
+        if (!empty($online))
+        {
+            $open = true;
+            $services->andWhere(['online'=>1]);
+        }
+
+        if (!empty($firm))
+        {
+            $open = true;
+            
+            $id_records = [];
+            
+            foreach ($records as $key => $record)
+            {
+                if (!empty($record['OrganID']) && $record['OrganID']==$firm)
+                    $id_records[] = $key;
+            }
+
+            if (!empty($id_records))
+                $services->andWhere('id_service IN (SELECT id_service FROM servicel_collection_firm WHERE id_record IN ('.implode(',', $id_records).'))');
+        }
+
+        if (!empty($id_situation) && !$open)
         {
             $id_situation = (int)$id_situation;
             $open = true;
@@ -108,11 +140,17 @@ class ServiceController extends \yii\web\Controller
             }
         }
 
+        if (Yii::$app->request->isAjax)
+        {
+            return $this->renderPartial('_reestr',['rubrics'=>$tree,'servicesRubs'=>$servicesRubs,'active'=>($open)?'active':'']);
+        }
+
         return $this->render('reestr',[
             'page'=>$page,
             'servicesRubs'=>$servicesRubs,
             'rubrics'=>$tree,
             'open'=>$open,
+            'firms'=>$firms,
         ]);
     }
 

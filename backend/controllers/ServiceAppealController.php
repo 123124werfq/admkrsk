@@ -5,6 +5,7 @@ namespace backend\controllers;
 use common\models\ServiceTarget;
 use Yii;
 use common\models\ServiceAppeal;
+use backend\models\search\ServiceAppealSearch;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -37,9 +38,8 @@ class ServiceAppealController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => ServiceAppeal::find(),
-        ]);
+        $searchModel = new ServiceAppealSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -55,6 +55,9 @@ class ServiceAppealController extends Controller
     public function actionView($id)
     {
         $sa = $this->findModel($id);
+
+        if (empty($sa->collectionRecord))
+            throw new NotFoundHttpException('Ошибка чтения данных');
 
         $insertedData = $sa->collectionRecord->getData();
 
@@ -121,7 +124,7 @@ class ServiceAppealController extends Controller
 
     public function actionDoc($id)
     {
-        $appeal = \common\models\ServiceAppeal::findOne($id);
+        $appeal = $this->findModel($id);
 
         //$data = $appeal->collectionRecord->getData(true);
 
@@ -143,7 +146,7 @@ class ServiceAppealController extends Controller
 
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="'.$appeal->target->reestr_number.' '.$appeal->created_at.'"');
+        header('Content-Disposition: attachment; filename="'.$appeal->target->reestr_number.' '.$appeal->created_at.'.docx"');
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');

@@ -40,7 +40,7 @@ return [
                 'roles' => ['backend.form'],
             ],
             'form-input-type'=>[
-                'title'=>'Типы полей',
+                'title'=>'Поведения полей',
                 'roles' => ['backend.formInputType'],
             ],
         ],
@@ -79,10 +79,10 @@ return [
                 'title'=>'Услуги',
                 'roles' => ['backend.service'],
             ],
-            'form/index?group=service'=>[
+            /*'form/index?group=service'=>[
                 'title'=>'Формы',
                 'roles' => ['backend.service'],
-            ],
+            ],*/
             'service-appeal'=>[
                 'title'=>'Заявки',
                 'roles' => ['backend.service'],

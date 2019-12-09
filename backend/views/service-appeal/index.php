@@ -31,7 +31,6 @@ $this->params['breadcrumbs'][] = $this->title;
             //'number_system',
             //'number_common',
             //'id_target:ntext',
-
             [
                 'class' => 'yii\grid\ActionColumn',
                 'contentOptions'=>['class'=>'button-column']
