@@ -299,6 +299,11 @@ $(document).ready(function() {
 
     $('a[href$=".doc"], a[href$=".docx"], a[href$=".xls"], a[href$=".xlsx"]').each(function(idx,el){
         let originalLink = $(el).attr('href');
+
+        originalLink = originalLink.replace('administration', '_administration');
+
+        if(originalLink.indexOf('://')==-1) originalLink = location.origin + originalLink;
+
         let previewLink = "https://docs.google.com/gview?embedded=true&url="+originalLink;
         //$(el).append('<a href="'+previewLink+'" traget="_blank">просмотр</a>');
         $(el).attr('href', previewLink).attr('target', '_blank');
