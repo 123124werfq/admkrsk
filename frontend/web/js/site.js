@@ -355,6 +355,9 @@ $(document).ready(function() {
                     $(file.previewElement).append(
                         '<input type="hidden" name="FormDynamic[input'+id_input+']['+new_index+'][file_path]" value="'+response.file+'"/>'
                     );
+                    $(file.previewElement).append(
+                        '<input type="hidden" name="FormDynamic[input'+id_input+']['+new_index+'][filename]" value="'+response.filename+'"/>'
+                    );
                     if ($(file.previewElement).find('.fileupload_preview-type img').attr('src')==undefined)
                         $(file.previewElement).find('.fileupload_preview-type').text(response.file.split('.').pop());
 

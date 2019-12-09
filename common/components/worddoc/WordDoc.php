@@ -3,6 +3,7 @@ namespace common\components\worddoc;
 
 use Yii;
 use PhpOffice\PhpWord\TemplateProcessor;
+use common\models\CollectionColumn;
 
 class WordDoc
 {
@@ -43,21 +44,30 @@ class WordDoc
 
         $template = new TemplateProcessor($templatePath);
 
+        $columns = $form->collection->getColumns()->indexBy('alias')->all();
+
         foreach ($data as $alias => $value)
         {
-            $template->setValue($alias, $value);
+            if (isset($columns[$alias]) && $columns[$alias]->type==CollectionColumn::TYPE_JSON)
+            {
+                $value = json_decode($value,true);
+
+                if (is_string($value))
+                    $value = json_decode($value,true);
+
+                $template->cloneRow($alias.'_1', count($value));
+
+                foreach ($value as $rkey => $row)
+                {
+                    $i = $rkey+1;
+
+                    foreach ($row as $tkey => $td)
+                        $template->setValue($alias."_".($tkey+1)."#$i", $td);
+                }
+            }
+            else
+                $template->setValue($alias, $value);
         }
-
-        /*$template->cloneRow('name', count($data));
-
-        foreach ($data as $key => $value)
-        {
-            $i = $key+1;
-
-            $template->setValue("name#$i", $key);
-            $template->setValue("value#$i", $value);
-        }*/
-
 
         $export_path = $root."/runtime/templates/".time().md5(serialize($data)).'_out.docx';
         $template->saveAs($export_path);
