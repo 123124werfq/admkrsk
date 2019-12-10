@@ -29,7 +29,7 @@ class CollectionQuery extends \yii\mongodb\Query
             $query->pagesize = $pagesize;
 
         // сортировка по умолчанию
-        $query->orderBy('id_record ASC');
+        //$query->orderBy('id_record ASC');
 
         return $query;
     }
@@ -44,11 +44,14 @@ class CollectionQuery extends \yii\mongodb\Query
         $columns = $columns->indexBy('id_column')->all();
         $this->columns = $columns;
 
-        $columns = array_keys($columns);
-        $columns[] = 'id_record';
-        $columns[] = '_id';
+        $select = [];
+        foreach ($columns as $key => $value) {
+            $select[] = 'col'.$key;
+        }
+        $select[] = 'id_record';
+        $select[] = '_id';
 
-        parent::select($columns);
+        parent::select($select);
 
         return $this;
     }
@@ -129,13 +132,15 @@ class CollectionQuery extends \yii\mongodb\Query
 
             foreach ($record as $vkey => $value)
             {
-                if (!isset($this->columns[$vkey]))
+                $id_column = str_replace('col', '', $vkey);
+
+                if (!isset($this->columns[$id_column]))
                     continue;
 
-                if ($this->keyAsAlias && !empty($this->columns[$vkey]->alias))
-                    $alias = $this->columns[$vkey]->alias;
+                if ($this->keyAsAlias && !empty($this->columns[$id_column]->alias))
+                    $alias = $this->columns[$id_column]->alias;
                 else
-                    $alias = $vkey;
+                    $alias = $id_column;
 
                 $output[$record['id_record']][$alias] = $value;
             }

@@ -93,8 +93,12 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                 // запись в mongo
                 $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
-                $this->data['id_record'] = $this->id_record;
-                $collection->insert($this->data);
+
+                $insert = ['id_record'=>$this->id_record];
+                foreach ($this->data as $key => $value)
+                    $insert['col'.$key] = (is_numeric($value))?(int)$value:$value;
+
+                $collection->insert($insert);
             }
             else
             {
@@ -111,8 +115,8 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                     if ($updateData!==null)
                     {
-                        $count = Yii::$app->db->createCommand("SELECT count(*) FROM db_collection_value WHERE id_record=$this->id_record AND
-                            id_column=$column->id_column")->queryScalar();
+                        $count = Yii::$app->db->createCommand("SELECT count(*) FROM db_collection_value WHERE id_record = $this->id_record AND
+                            id_column = $column->id_column")->queryScalar();
 
                         if ($count>0)
                             Yii::$app->db->createCommand()->update('db_collection_value',['value'=>$updateData],[
@@ -129,8 +133,12 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 }
 
                 $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
-                $this->data['id_record'] = $this->id_record;
-                $collection->update(['id_record'=>$this->id_record],$this->data);
+
+                $update = ['id_record'=>$this->id_record];
+                foreach ($this->data as $key => $value)
+                    $update['col'.$key] = (is_numeric($value))?(int)$value:$value;
+
+                $collection->update(['id_record'=>$this->id_record],$update);
             }
         }
     }

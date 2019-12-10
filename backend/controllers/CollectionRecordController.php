@@ -44,6 +44,9 @@ class CollectionRecordController extends Controller
         $model = $this->findCollection($id);
 
         $query = $model->getDataQuery();
+        /*$query = new \yii\mongodb\Query;
+        $query->from('collection'.$id);*/
+
         $columns = $model->getColumns()->all();
 
         $dataProviderColumns = [
@@ -69,32 +72,33 @@ class CollectionRecordController extends Controller
         $sortAttributes = ['id_record'];
         foreach ($columns as $key => $col)
         {
+            $col_alias = 'col'.$col->id_column;
 
             $options = [];
 
             if (!empty($col->options['width']))
                 $options['width'] = $col->options['width'].'px';
 
-            $dataProviderColumns[$col->id_column] = [
+            $dataProviderColumns[$col_alias] = [
                 'label'=>$col->name,
-                'attribute'=>$col->id_column,
+                'attribute'=>$col_alias,
                 'format' => 'text',
                 'headerOptions'=>$options,
             ];
 
             if ($col->type==CollectionColumn::TYPE_INTEGER)
-                $dataProviderColumns[$col->id_column]['format'] = 'integer';
+                $dataProviderColumns[$col_alias]['format'] = 'integer';
 
             if ($col->type==CollectionColumn::TYPE_DATE)
-                $dataProviderColumns[$col->id_column]['format'] = ['date', 'php:d.m.Y'];
+                $dataProviderColumns[$col_alias]['format'] = ['date', 'php:d.m.Y'];
 
             if ($col->type==CollectionColumn::TYPE_DISTRICT)
             {
-                $dataProviderColumns[$col->id_column]['value'] = function($model) use ($col) {
-                    if (empty($model[$col->id_column]))
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col) {
+                    if (empty($model[$col_alias]))
                         return '';
 
-                    $district = \common\models\District::findOne($model[$col->id_column]);
+                    $district = \common\models\District::findOne($model[$col_alias]);
 
                     if (!empty($district))
                         return $district->name;
@@ -105,13 +109,13 @@ class CollectionRecordController extends Controller
 
             if ($col->type==CollectionColumn::TYPE_FILE)
             {
-                $dataProviderColumns[$col->id_column]['format'] = 'raw';
-                $dataProviderColumns[$col->id_column]['value'] = function($model) use ($col) {
+                $dataProviderColumns[$col_alias]['format'] = 'raw';
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col) {
 
-                    if (empty($model[$col->id_column]))
+                    if (empty($model[$col_alias]))
                         return '';
 
-                    $ids = json_decode($model[$col->id_column],true);
+                    $ids = json_decode($model[$col_alias],true);
 
                     $medias = Media::find()->where(['id_media'=>$ids])->all();
 
@@ -126,13 +130,13 @@ class CollectionRecordController extends Controller
 
             if ($col->type==CollectionColumn::TYPE_IMAGE)
             {
-                $dataProviderColumns[$col->id_column]['format'] = 'raw';
-                $dataProviderColumns[$col->id_column]['value'] = function($model) use ($col) {
+                $dataProviderColumns[$col_alias]['format'] = 'raw';
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col) {
 
-                    if (empty($model[$col->id_column]))
+                    if (empty($model[$col_alias]))
                         return '';
 
-                    $ids = json_decode($model[$col->id_column],true);
+                    $ids = json_decode($model[$col_alias],true);
 
                     $medias = Media::find()->where(['id_media'=>$ids])->all();
 
@@ -146,32 +150,14 @@ class CollectionRecordController extends Controller
             }
 
             if ($col->type==CollectionColumn::TYPE_DATETIME)
-                $dataProviderColumns[$col->id_column]['format'] = ['date', 'php:d.m.Y H:i'];
+                $dataProviderColumns[$col_alias]['format'] = ['date', 'php:d.m.Y H:i'];
 
-            $sortAttributes[$col->id_column] = [
-                    'asc' => [$col->id_column => SORT_ASC],
-                    'desc' => [$col->id_column => SORT_DESC],
-                    'default' => SORT_ASC
+            $sortAttributes[$col_alias] = [
+                'asc' => [$col_alias => SORT_ASC],
+                'desc' => [$col_alias => SORT_DESC],
+                'default' => SORT_ASC
             ];
         }
-
-        /*$dataProvider->setSort([
-            'attributes' => [
-                'product_name' => [
-                    'asc' => ['product_name' => SORT_ASC],
-                    'desc' => ['product_name' => SORT_DESC],
-                    'default' => SORT_ASC
-                ],
-                'date' => [
-                    'asc' => ['date' => SORT_ASC],
-                    'desc' => ['date' => SORT_DESC],
-                    'default' => SORT_ASC,
-                ],
-            ],
-            'defaultOrder' => [
-                'date' => SORT_ASC
-            ]
-        ]);*/
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
