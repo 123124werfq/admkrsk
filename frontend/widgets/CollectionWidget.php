@@ -65,15 +65,20 @@ class CollectionWidget extends \yii\base\Widget
 
         $columns = $query->columns;
 
+        $group_alias = false;
+        
+        if (!empty($this->group) && !empty($columns[$this->group]))
+            $group_alias = $columns[$this->group]->alias;
+
         $allrows = $query->getArray();
 
         if ($this->group)
         {
             $group_rows = [];
-            if (!empty($this->group))
+            if (!empty($group_alias))
             {
                 foreach ($allrows as $id_record => $row)
-                    $group_rows[isset($row[$this->group])?$row[$this->group]:0][$id_record] = $row;
+                    $group_rows[isset($row[$group_alias])?$row[$group_alias]:0][$id_record] = $row;
             }
 
             return $this->render('collection/group/'.$this->template,[

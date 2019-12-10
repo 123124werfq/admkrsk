@@ -123,7 +123,7 @@ class CollectionQuery extends \yii\mongodb\Query
         $emptyRow = [];
 
         foreach ($this->columns as $key => $col) {
-            $emptyRow[$col->id_column] = '';
+            $emptyRow[$this->keyAsAlias?$col->alias:$col->id_column] = '';
         }
 
         foreach ($this->all() as $key => $record)
