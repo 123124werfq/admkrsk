@@ -42,7 +42,7 @@ class MongoController extends Controller
                 $id_record = $data['id_record'];
             }
 
-            $insert[$data['id_column']] = $data['value'];
+            $insert['col'.$data['id_column']] = $data['value'];
         }
     }
 }

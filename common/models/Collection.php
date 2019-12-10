@@ -43,7 +43,11 @@ class Collection extends \yii\db\ActiveRecord
 
     public $access_user_ids;
     public $access_user_group_ids;
+
     public $template_view = 'table';
+    public $id_column_group = null;
+    public $id_column_order = null;
+    public $order_direction = SORT_DESC;
 
     /**
      * {@inheritdoc}
@@ -62,9 +66,9 @@ class Collection extends \yii\db\ActiveRecord
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
             [['id_parent_collection','id_group'], 'integer'],
-            [['filter', 'options','label'], 'safe'],
+            [['filter', 'options','label','order_direction'], 'safe'],
             [['template','template_element','template_view'], 'string'],
-            [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
+            [['access_user_ids', 'access_user_group_ids','id_column_order','id_column_group'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
             ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
         ];
