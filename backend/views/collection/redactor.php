@@ -21,7 +21,7 @@ $operators = [
     '>='=>'>=',
     '<'=>'<',
     '<='=>'<=',
-    '<>'=>'<>'
+    //'<>'=>'<>'
 ];
 
 if (empty($filtes))
@@ -33,7 +33,6 @@ if (empty($filtes))
         ]
     ]
 ?>
-
 
 <?php $form = ActiveForm::begin(['id'=>'collection-redactor']); ?>
 
@@ -62,7 +61,19 @@ else
 
     <?=$form->field($model, 'id_parent_collection')->hiddenInput();?>
 
+    <?=$form->field($model, 'id_group')->dropDownList($columns,['prompt'=>'Выберите колонку для группировки']);?>
+
+    <div class="row">
+        <div class="col-md-6">
+            <?=$form->field($model, 'id_column_order')->dropDownList($columns,['prompt'=>'Выберите колонку для сортировки']);?>
+        </div>
+        <div class="col-md-6">
+            <?=$form->field($model, 'order_direction')->dropDownList([SORT_ASC=>'По возрастанию',SORT_DESC=>'По убыванию']);?>
+        </div>
+    </div>
+
     <h3>Условия</h3>
+
     <br/>
     <div class="row">
         <div class="col-sm-5">

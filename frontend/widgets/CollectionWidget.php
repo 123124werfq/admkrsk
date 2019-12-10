@@ -13,6 +13,9 @@ class CollectionWidget extends \yii\base\Widget
     public $columns = [];
     public $limit = 20;
     public $template = 'table';
+    public $group;
+    public $sort;
+    public $dir = SORT_ASC;
     public $page;
 
     public function run()
@@ -24,6 +27,15 @@ class CollectionWidget extends \yii\base\Widget
 
             if (!empty($this->attributes['template']))
                 $this->template = $this->attributes['template'];
+
+            if (!empty($this->attributes['sort']))
+                $this->sort = (int)$this->attributes['sort'];
+
+            if (!empty($this->attributes['dir']))
+                $this->dir = (int)$this->attributes['dir'];
+
+            if (!empty($this->attributes['group']))
+                $this->group = (int)$this->attributes['group'];
 
             if (!empty($this->attributes['columns']))
                 $this->columns = json_decode(str_replace("&quot;", '"', $this->attributes['columns']),true);
@@ -37,6 +49,11 @@ class CollectionWidget extends \yii\base\Widget
         $p = (int)Yii::$app->request->get('p',0);
 
         $query = $model->getDataQueryByOptions($this->columns);
+
+        var_dump($this->sort);
+        // сортировка
+        if (!empty($this->sort))
+            $query->orderBy(['col'.$this->sort=>$this->dir]);
 
         $pagination = new Pagination([
             'totalCount' => $query->count(),

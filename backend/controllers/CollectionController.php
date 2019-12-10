@@ -382,6 +382,9 @@ class CollectionController extends Controller
 
                 $json['id_collection'] = $model->id_parent_collection;
                 $json['template'] = $model->template_view;
+                $json['group'] = $model->id_group;
+                $json['sort'] = $model->id_column_order;
+                $json['dir'] = $model->order_direction;
 
                 return json_encode($json);
             }

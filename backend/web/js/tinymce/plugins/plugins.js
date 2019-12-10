@@ -42,8 +42,7 @@
                     $collection.attr('id',value.id_collection);
                     $collection.text('Список #'+value.id_collection);
                     */
-                    console.log('<collection data-columns=\''+JSON.stringify(value)+'\' data-id="'+value.id_collection+'" data-template="'+value.template+'">Список #'+value.id_collection+'.</collection>');
-                    editor.insertContent('<collection data-columns=\''+JSON.stringify(value)+'\' data-id="'+value.id_collection+'" data-template="'+value.template+'">Список #'+value.id_collection+'.</collection>');
+                    editor.insertContent('<collection data-columns=\''+JSON.stringify(value)+'\' data-id="'+value.id_collection+'" data-template="'+value.template+'" data-group="'+value.group+'" data-sort="'+value.sort+'" data-dir="'+value.dir+'">Список #'+value.id_collection+'.</collection>');
                 }
 
                 $(".tox-button--secondary").click();

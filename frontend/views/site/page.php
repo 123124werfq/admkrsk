@@ -35,9 +35,12 @@ function parseAttributesFromTag($tag){
                         preg_match_all ("/<(collection|gallery|forms)\s(.+?)>(.+?)<\/(collection|gallery|forms)>/is", $page->content, $matches);
 
                         if (!empty($matches[0]))
-                            foreach ($matches[0] as $key => $match) 
+                            foreach ($matches[0] as $key => $match)
                             {
+
                                 $attributes = parseAttributesFromTag($match);
+
+                                print_r($attributes);
 
                                 if (!empty($attributes['id']))
                                 {
