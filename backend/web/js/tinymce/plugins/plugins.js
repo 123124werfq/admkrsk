@@ -17,9 +17,6 @@
                     }
                 ],
                 onAction: function (instance, trigger) {
-
-                    console.log($("#collection-redactor").serialize());
-
                     editor.windowManager.alert('onAction is running.<br><br>You can code your own onAction handler within the plugin.');
 
                     // close the dialog
@@ -58,97 +55,6 @@
         });
     }());
 })();
-
-/*tinymce.PluginManager.add("collections", function (editor, url) {
-    var _dialog = false;
-    var _typeOptions = [];
-    function _getDialogConfig()
-    {
-        return {
-            title: 'Вставить список',
-            body: {
-                type: 'panel',
-                items: [{
-                    type: 'selectbox',
-                    name: 'type',
-                    label: 'Список',
-                    items: _typeOptions,
-                    flex: true
-                },
-                {
-                    type: 'checkboxlist',
-                    name: 'columns',
-                    label: 'Колонки',
-                    items: _typeOptions,
-                    flex: true
-                },
-                {
-                    type: 'input',
-                    name: 'limit',
-                    label: 'Записей на страницу',
-                    flex: true
-                }
-                ]
-            },
-            onSubmit: function (api) {
-                // insert markup
-                editor.insertContent('<collection data-id="'+api.getData().type+'" data-limit="'+api.getData().limit+'">Список #'+api.getData().type+'.</collection>');
-                // close the dialog
-                api.close();
-            },
-            buttons: [
-                {
-                    text: 'Close',
-                    type: 'cancel',
-                    onclick: 'close'
-                },
-                {
-                    text: 'Insert',
-                    type: 'submit',
-                    primary: true,
-                    enabled: false
-                }
-            ]
-        };
-    }
-    function _onAction()
-    {
-        _dialog = editor.windowManager.open(_getDialogConfig());
-        _dialog.block('Loading...');
-
-        setTimeout(function () {
-            _typeOptions = [
-            ];
-
-            $.ajax({
-                url: '/collection/get-collections',
-                type: 'get',
-                dataType: 'json',
-                //data: {_csrf: csrf_value},
-                success: function(data)
-                {
-                  _typeOptions = data;
-                  _dialog.redial(_getDialogConfig());
-                  // unblock the dialog
-                  _dialog.unblock();
-                }
-            });
-        }, 100);
-    }
-    // Define the Toolbar button
-    editor.ui.registry.addButton('collections', {
-        text: "Списки",
-        //icon: 'bubbles',
-        onAction: _onAction
-    });
-
-    // Define the Menu Item
-    editor.ui.registry.addMenuItem('collections', {
-        text: 'Списки',
-        context: 'insert',
-        onAction: _onAction
-    });
-});*/
 
 tinymce.PluginManager.add("form", function (editor, url) {
     var _dialog = false;

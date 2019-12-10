@@ -37,10 +37,7 @@ function parseAttributesFromTag($tag){
                         if (!empty($matches[0]))
                             foreach ($matches[0] as $key => $match)
                             {
-
                                 $attributes = parseAttributesFromTag($match);
-
-                                print_r($attributes);
 
                                 if (!empty($attributes['id']))
                                 {
