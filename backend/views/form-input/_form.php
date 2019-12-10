@@ -20,8 +20,14 @@ use common\models\CollectionColumn;
         ]
     ]); ?>
 
-    <?= $form->field($model, 'required')->checkBox()?>
-
+    <div class="row">
+        <div class="col-md-6">
+            <?= $form->field($model, 'required')->checkBox()?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'readonly')->checkBox()?>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-6">
             <?= $form->field($model, 'type')->dropDownList(CollectionColumn::getTypeLabel()) ?>

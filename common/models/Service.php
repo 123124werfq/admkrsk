@@ -168,10 +168,12 @@ class Service extends \yii\db\ActiveRecord
     public static function getAttributeValues($attribute,$model=null)
     {
         if ($attribute=='client_type')
+        {
             return [
                 'Физическое лицо' => 'Физическое лицо',
                 'Юридическое лицо' => 'Юридическое лицо'
             ];
+        }
         else if ($attribute=='type')
             return [
                 'услуга органа'=>'услуга органа',
@@ -188,13 +190,15 @@ class Service extends \yii\db\ActiveRecord
 
             return $output;
         }*/
+
+        return [];
     }
 
     /*public function beforeSave($insert)
     {
         if (parent::beforeSave($insert))
         {
-      
+
             return true;
         }
         else

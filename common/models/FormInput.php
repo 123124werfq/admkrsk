@@ -105,9 +105,14 @@ class FormInput extends \yii\db\ActiveRecord
 
     public function getArrayValues($model=null)
     {
-        if (!empty($this->type->service_attribute))
+        if (!empty($this->typeOptions->service_attribute))
         {
-            $values = Service::getAttributeValues($this->type->service_attribute,$model);
+            $values = Service::getAttributeValues($this->typeOptions->service_attribute,$model);
+            return $values;
+        }
+        else if (!empty($this->typeOptions->esia))
+        {
+            $values = EsiaUser::getAttributeValues($this->typeOptions->esia,$model);
             return $values;
         }
         else if ($this->type == CollectionColumn::TYPE_SERVICETARGET)

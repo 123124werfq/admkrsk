@@ -21,6 +21,9 @@
 	if (!empty($input->required))
 		$options['required'] = true;
 
+	if (!empty($input->readonly))
+		$options['readonly'] = true;
+
 	if(empty($options['id']))
 		$options['id'] = "input".$input->id_input;
 
