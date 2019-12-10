@@ -50,7 +50,6 @@ class CollectionWidget extends \yii\base\Widget
 
         $query = $model->getDataQueryByOptions($this->columns);
 
-        var_dump($this->sort);
         // сортировка
         if (!empty($this->sort))
             $query->orderBy(['col'.$this->sort=>$this->dir]);
@@ -74,9 +73,7 @@ class CollectionWidget extends \yii\base\Widget
             if (!empty($this->group))
             {
                 foreach ($allrows as $id_record => $row)
-                {
                     $group_rows[isset($row[$this->group])?$row[$this->group]:0][$id_record] = $row;
-                }
             }
 
             return $this->render('collection/group/'.$this->template,[
