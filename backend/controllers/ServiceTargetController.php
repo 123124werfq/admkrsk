@@ -9,6 +9,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use backend\models\search\ServiceTargetSearch;
 
 /**
  * ServiceTargetController implements the CRUD actions for ServiceTarget model.
@@ -36,21 +37,15 @@ class ServiceTargetController extends Controller
      */
     public function actionIndex()
     {
-        if (Yii::$app->request->get('archive')) {
-            $query = ServiceTarget::findDeleted();
-        } else {
-            $query = ServiceTarget::find();
-        }
+        $searchModel = new ServiceTargetSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         /*if (!empty($id))
             $query->where(['id_service'=>$id]);*/
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'searchModel'=>$searchModel,
         ]);
     }
 

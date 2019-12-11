@@ -19,6 +19,8 @@ if ($archive) {
 ?>
 <div class="service-target-index">
 
+    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
@@ -34,7 +36,6 @@ if ($archive) {
             //'updated_by',
             //'deleted_at',
             //'deleted_by',
-
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view} {update} ' . ($archive ? '{undelete}' : '{delete}'),
