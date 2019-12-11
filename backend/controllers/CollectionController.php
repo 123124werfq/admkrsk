@@ -607,7 +607,16 @@ class CollectionController extends Controller
                                     $column->name = (!empty($value))?$value:'Колонка '.$tdkey;
                                     $column->type = CollectionColumn::TYPE_INPUT;
 
-                                    $column->alias = strtolower(\common\components\helper\Helper::transFileName(($model->keyrow)?$keys[$tdkey]:$column->name));
+                                    if ($model->keyrow && !empty(trim($keys[$tdkey])))
+                                        $column->alias = $keys[$tdkey];
+                                    else
+                                        $column->alias = $column->name;
+
+                                    if (empty($column->alias))
+                                        $column->alias = 'column_'.$tdkey;
+
+                                    $column->alias = strtolower(\common\components\helper\Helper::transFileName($column->alias));
+
                                     $column->id_collection = $collection->id_collection;
 
                                     if ($column->save())

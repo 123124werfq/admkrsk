@@ -46,13 +46,32 @@ class CollectionWidget extends \yii\base\Widget
         if (empty($model) || empty($this->columns))
             return '';
 
-        $p = (int)Yii::$app->request->get('p',0);
-
         $query = $model->getDataQueryByOptions($this->columns);
 
-        // сортировка
+        // страница
+        $p = (int)Yii::$app->request->get('p',0);
+
+        // колонки коллекции
+        $columns = $query->columns;
+
+        // массив сортировки
+        $orderBy = [];
+
+        // имя колонки группировки
+        $group_alias = false;
+
+        if (!empty($this->group) && !empty($columns[$this->group]))
+        {
+            $orderBy['col'.$this->group] = SORT_ASC;
+            $group_alias = $columns[$this->group]->alias;
+        }
+
         if (!empty($this->sort))
-            $query->orderBy(['col'.$this->sort=>$this->dir]);
+            $orderBy['col'.$this->sort] = $this->dir;
+
+        // сортировка
+        if (!empty($orderBy))
+            $query->orderBy($orderBy);
 
         $pagination = new Pagination([
             'totalCount' => $query->count(),
@@ -63,18 +82,12 @@ class CollectionWidget extends \yii\base\Widget
         $query->offset($p*$pagination->limit)->limit($pagination->limit);
         $query->keyAsAlias = true;
 
-        $columns = $query->columns;
-
-        $group_alias = false;
-        
-        if (!empty($this->group) && !empty($columns[$this->group]))
-            $group_alias = $columns[$this->group]->alias;
-
         $allrows = $query->getArray();
 
         if ($this->group)
         {
             $group_rows = [];
+
             if (!empty($group_alias))
             {
                 foreach ($allrows as $id_record => $row)
