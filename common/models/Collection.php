@@ -260,7 +260,7 @@ class Collection extends \yii\db\ActiveRecord
         if (!empty($options['columns']))
         {
             foreach ($options['columns'] as $key => $col)
-                $id_cols[] = 'col'.$col['id_column'];
+                $id_cols[] = $col['id_column'];
 
             $query->select($id_cols);
         }
@@ -274,7 +274,7 @@ class Collection extends \yii\db\ActiveRecord
         {
             foreach ($options['filters'] as $key => $filter)
             {
-                $where = [$filter['operator'],'col'.$filter['id_column'],(is_numeric($filter['value']))?(float)$filter['value']:$filter['value']];
+                $where = [$filter['operator'],$filter['id_column'],(is_numeric($filter['value']))?(float)$filter['value']:$filter['value']];
                 $query->andWhere($where);
             }
         }
