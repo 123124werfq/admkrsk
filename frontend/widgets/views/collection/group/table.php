@@ -12,7 +12,7 @@
 			foreach ($groups as $group => $allrows)
 			{
 				if (!empty($group))
-					echo '<tr><th colspan="'.count($columns).'">'.$group.'</th></tr>';
+					echo '<tr><td class="table-group" colspan="'.count($columns).'">'.$group.'</td></tr>';
 
 			foreach ($allrows as $key => $row){
 ?>
