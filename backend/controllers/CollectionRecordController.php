@@ -94,7 +94,7 @@ class CollectionRecordController extends Controller
 
             if ($col->type==CollectionColumn::TYPE_DISTRICT)
             {
-                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col) {
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
                     if (empty($model[$col_alias]))
                         return '';
 
@@ -110,7 +110,7 @@ class CollectionRecordController extends Controller
             if ($col->type==CollectionColumn::TYPE_FILE)
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
-                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col) {
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
 
                     if (empty($model[$col_alias]))
                         return '';
@@ -131,7 +131,7 @@ class CollectionRecordController extends Controller
             if ($col->type==CollectionColumn::TYPE_IMAGE)
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
-                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col) {
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
 
                     if (empty($model[$col_alias]))
                         return '';
