@@ -154,10 +154,12 @@ class Form extends \yii\db\ActiveRecord
         }
     }
 
-    public function assignForm()
+    public function assignForm($id_form)
     {
+        $transaction = Yii::$app->db->beginTransaction();
+
         try {
-            $copyForm = Form::findOne($form->id_form);
+            $copyForm = Form::findOne($id_form);
 
             $subForm = new Form;
             $subForm->is_template = 2;
