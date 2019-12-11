@@ -38,6 +38,8 @@
 	$attribute = "input$input->id_input";
 
 	$styles = $element->getStyles();
+
+	$id_subform = $subform?$subform->id_form:'';
 ?>
 
 <div id="element<?=$element->id_element?>" class="col">
@@ -261,11 +263,11 @@ JS;
                         'ajax' => [
                             'url' => '/address/district',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:$("#input-city").val()};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:$("#input-city"'.$id_subform.').val()};}')
                         ],
                     ],
                     'options'=>[
-                    	'id'=>'input-district'
+                    	'id'=>'input-district'.$id_subform
                     ]
                 ]);
 				break;
@@ -284,7 +286,7 @@ JS;
                         ],
                     ],
                     'options'=>[
-                    	'id'=>'input-region'
+                    	'id'=>'input-region'.$id_subform
                     ]
                 ]);
 				break;
@@ -299,11 +301,11 @@ JS;
                         'ajax' => [
                             'url' => '/address/subregion',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_region:$("#input-region").val()};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_region:$("#input-region'.$id_subform.'").val()};}')
                         ],
                     ],
                     'options'=>[
-                    	'id'=>'input-subregion'
+                    	'id'=>'input-subregion'.$id_subform
                     ]
                 ]);
 				break;
@@ -318,11 +320,11 @@ JS;
                         'ajax' => [
                             'url' => '/address/city',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_region:$("#input-region").val(),id_subregion:$("#input-subregion").val()};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_region:$("#input-region").val(),id_subregion:$("#input-subregion'.$id_subform.'").val()};}')
                         ],
                     ],
                     'options'=>[
-                    	'id'=>'input-city'
+                    	'id'=>'input-city'.$id_subform
                     ]
                 ]);
 				break;
@@ -337,11 +339,11 @@ JS;
                         'ajax' => [
                             'url' => '/address/street',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:$("#input-city").val(),id_district:$("#input-district").val()};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:$("#input-city").val(),id_district:$("#input-district'.$id_subform.'").val()};}')
                         ],
                     ],
                     'options'=>[
-                    	'id'=>'input-street'
+                    	'id'=>'input-street'.$id_subform
                     ]
                 ]);
 				break;
@@ -356,13 +358,13 @@ JS;
                         'ajax' => [
                             'url' => '/address/house',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_street:$("#input-street").val()};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_street:$("#input-street'.$id_subform.'").val()};}')
                         ],
                     ],
                     'pluginEvents'=>[
                     	"select2:select" => "function(e) {
-                    		if ($('#postalcode').length>0)
-                    			$('#postalcode').val(e.params.data.postalcode);
+                    		if ($('#postalcode".$id_subform."').length>0)
+                    			$('#postalcode".$id_subform."').val(e.params.data.postalcode);
                     	}",
                     ]
                 ]);
