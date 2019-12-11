@@ -17,6 +17,7 @@ class CollectionController extends \yii\web\Controller
 
 		return $this->render('view', [
 			'data' => $model->getData(true),
+			'columns'=> $model->collection->getColumns()->indexBy('alias')->all(),
 			'template'=>$model->collection->template,
 			'page'=>$page,
 		]);

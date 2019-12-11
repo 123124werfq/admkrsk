@@ -25,9 +25,16 @@
                             foreach ($matches[1] as $key => $alias)
                             {
                                 if (isset($data[$alias]))
-                                    $template = str_replace('{'.$alias.'}', $data[$alias] , $template);
-                                else 
-                                    $template = str_replace('{'.$alias.'}', '', $template);
+                                {
+                                    if (isset($columns[$alias]))
+                                        $replace = $columns[$alias]->getValueByType($data[$alias]);
+                                    else
+                                        $replace = $data[$alias];
+                                }
+                                else
+                                    $replace = '';
+
+                                $template = str_replace('{'.$alias.'}', $replace , $template);
                             }
                         }
                     ?>
