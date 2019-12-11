@@ -44,7 +44,9 @@ img[src*="http://www.admkrsk.ru/_layouts/images/icdocx.png"], .ms-asset-icon {di
 
 ul.pagination , ul.pagination li {list-style-type: none;}
 .content ul.pagination li::before {display: none!important;}
-ul.pagination li {display: inline-block;}
+.content .pagination li.prev a, .content .pagination li.next a {border-bottom-color: transparent!important;}
+.content .pagination li.active a {border-bottom-color: transparent!important; color: #aaa!important;}
+ul.pagination li {display: inline-block; padding: 5px;}
 ul.pagination {text-align: center;}
 
 .footer-socials_item {opacity: 0.6;}
