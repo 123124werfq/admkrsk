@@ -36,7 +36,7 @@ class CollectionQuery extends \yii\mongodb\Query
 
     public function select(array $id_columns=[])
     {
-        $columns = $this->collection->getColumns()->select(['alias','id_column','name']);
+        $columns = $this->collection->getColumns()->select(['alias','id_column','name','type']);
 
         if (!empty($id_columns))
             $columns->where(['id_column'=>$id_columns]);
