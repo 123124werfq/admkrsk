@@ -179,7 +179,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             {
                 $values = Yii::$app->db->createCommand("SELECT * FROM db_collection_value WHERE id_column = $this->id_column")->queryAll();
 
-                $collection = Yii::$app->mongodb->getCollection('collection'.$model->id_collection);
+                $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
 
                 foreach ($values as $key => $value)
                 {
