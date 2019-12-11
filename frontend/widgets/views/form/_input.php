@@ -39,7 +39,7 @@
 
 	$styles = $element->getStyles();
 
-	$id_subform = $subform?$subform->id_form:'';
+	$id_subform = (!empty($subform))?$subform->id_form:'';
 ?>
 
 <div id="element<?=$element->id_element?>" class="col">
