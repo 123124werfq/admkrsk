@@ -38,7 +38,7 @@
                             }
                         }
                     ?>
-                    <?=$template?>
+                    <?=str_replace('\n', '', $template)?>
             	</div>
             </div>
             <div class="col-third order-xs-0">
