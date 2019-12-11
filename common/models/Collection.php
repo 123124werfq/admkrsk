@@ -335,7 +335,7 @@ class Collection extends \yii\db\ActiveRecord
                     $input->type        = $column->type;
                     $input->id_form     = $form->id_form;
                     $input->id_column   = $column->id_column;
-                    $input->alias       = $column->alias;
+                    $input->fieldname   = $column->alias;
 
                     if (!$input->save())
                         print_r($input->errors);
