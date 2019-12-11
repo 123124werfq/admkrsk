@@ -42,14 +42,12 @@ class FormSearch extends Form
      */
     public function search($params)
     {
-        if (Yii::$app->request->get('archive')) {
+        if (Yii::$app->request->get('archive'))
             $query = Form::findDeleted();
-        } else {
+        else
             $query = Form::find();
-        }
 
-
-        if (Yii::$app->request->get('is_template')) {
+        if (Yii::$app->request->get('is_template'))
             $query->where(['is_template'=>1]);
         else
             $query->where(['is_template'=>0]);
