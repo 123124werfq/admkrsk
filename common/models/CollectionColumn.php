@@ -175,9 +175,9 @@ class CollectionColumn extends \yii\db\ActiveRecord
     {
         if (!$insert && !empty($changedAttributes['type']))
         {
-            if ($changedAttributes['type'] == CollectionColumn::TYPE_DATE || $changedAttributes['type'] == CollectionColumn::TYPE_DATETIME)
+            if ($this->type == CollectionColumn::TYPE_DATE || $this->type == CollectionColumn::TYPE_DATETIME)
             {
-                $values = Yii::$app->db->createCommand("SELECT * FROM db_collection_value WHERE id_column = $column->id_column")->queryAll();
+                $values = Yii::$app->db->createCommand("SELECT * FROM db_collection_value WHERE id_column = $this->id_column")->queryAll();
 
                 $collection = Yii::$app->mongodb->getCollection('collection'.$model->id_collection);
 
@@ -188,14 +188,14 @@ class CollectionColumn extends \yii\db\ActiveRecord
                         Yii::$app->db->createCommand()->update('db_collection_value',[
                             'value'=>strtotime($value['value'])],
                             [
-                                'id_column'=>$column->id_column,
+                                'id_column'=>$this->id_column,
                                 'id_record'=>$value['id_record']
                             ]
                         )->execute();
 
                         $collection->update(
                             ['id_record'=>$value['id_record']],
-                            ['col'.$value['id_column']=>strtotime($value['value'])]
+                            ['col'.$this->id_column=>strtotime($value['value'])]
                         );
                     }
                 }
