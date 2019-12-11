@@ -253,6 +253,9 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
     public function getValueByType($value)
     {
+        if (empty($value))
+            return $value;
+
         switch ($this->type)
         {
             case self::TYPE_DATE:
