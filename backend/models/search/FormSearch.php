@@ -48,7 +48,11 @@ class FormSearch extends Form
             $query = Form::find();
         }
 
-        $query->where(['is_template'=>0]);
+
+        if (Yii::$app->request->get('is_template')) {
+            $query->where(['is_template'=>1]);
+        else
+            $query->where(['is_template'=>0]);
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.form')) {

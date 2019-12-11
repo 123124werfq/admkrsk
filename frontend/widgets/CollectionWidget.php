@@ -84,6 +84,12 @@ class CollectionWidget extends \yii\base\Widget
 
         $allrows = $query->getArray();
 
+        // переворачиваем колонки на алиас
+        $columnsByAlias = [];
+
+        foreach ($columns as $key => $col)
+            $columnsByAlias[$col->alias] = $col;
+
         if ($this->group)
         {
             $group_rows = [];
@@ -97,7 +103,7 @@ class CollectionWidget extends \yii\base\Widget
             return $this->render('collection/group/'.$this->template,[
                 'model'=>$model,
                 'pagination'=>$pagination,
-                'columns'=>$columns,
+                'columns'=>$columnsByAlias,
                 'groups'=>$group_rows,
                 'page'=>$this->page,
             ]);
@@ -106,7 +112,7 @@ class CollectionWidget extends \yii\base\Widget
         return $this->render('collection/'.$this->template,[
         	'model'=>$model,
             'pagination'=>$pagination,
-            'columns'=>$columns,
+            'columns'=>$columnsByAlias,
             'allrows'=>$allrows,
             'page'=>$this->page,
         ]);

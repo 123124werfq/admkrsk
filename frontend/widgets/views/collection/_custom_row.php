@@ -9,11 +9,16 @@
 				continue;
 
 			if (isset($row[$alias]))
-				$replate = $row[$alias];
+			{
+				if (isset($columns[$alias]))
+					$columns[$alias]->getValueByType($row[$alias]);
+				else
+					$replace = $row[$alias];
+			}
 			else
-				$replate = '';
+				$replace = '';
 
-			$template = str_replace('{'.$alias.'}', $replate, $template);
+			$template = str_replace('{'.$alias.'}', $replace, $template);
 		}
 
 		$template = str_replace('{link}', '/collection?id='.$id_record.'&id_page='.$id_page,$template);

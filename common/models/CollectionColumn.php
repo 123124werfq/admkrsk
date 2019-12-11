@@ -251,6 +251,22 @@ class CollectionColumn extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getValueByType($value)
+    {
+        switch ($this->type)
+        {
+            case self::TYPE_DATE:
+                return date('d.m.Y',$value);
+                break;
+            case self::TYPE_DATETIME:
+                return date('d.m.Y H:i',$value);
+                break;
+            default:
+                return $value;
+                break;
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
