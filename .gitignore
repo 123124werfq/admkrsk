@@ -38,8 +38,10 @@ phpunit.phar
 /frontend/web/index.php
 /frontend/web/index-test.php
 /frontend/web/robots.txt
+/frontend/web/upload/*
 /backend/web/index.php
 /backend/web/upload/*
+/backend/template/*
 /backend/web/index-test.php
 /backend/web/robots.txt
 
