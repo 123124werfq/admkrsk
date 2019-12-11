@@ -18,7 +18,7 @@ class ServiceTargetSearch extends ServiceTarget
     {
         return [
             [['id_target', 'id_service', 'id_form', 'modified_at', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_media_template'], 'integer'],
-            [['name', 'reestr_number', 'target', 'target_code', 'service_code', 'obj_name', 'place', 'state', 'test'], 'safe'],
+            [['name', 'reestr_number', 'target', 'target_code', 'service_code', 'obj_name', 'place', 'state'], 'safe'],
         ];
     }
 
@@ -82,8 +82,7 @@ class ServiceTargetSearch extends ServiceTarget
             ->andFilterWhere(['ilike', 'service_code', $this->service_code])
             ->andFilterWhere(['ilike', 'obj_name', $this->obj_name])
             ->andFilterWhere(['ilike', 'place', $this->place])
-            ->andFilterWhere(['ilike', 'state', $this->state])
-            ->andFilterWhere(['ilike', 'test', $this->test]);
+            ->andFilterWhere(['ilike', 'state', $this->state]);
 
         return $dataProvider;
     }
