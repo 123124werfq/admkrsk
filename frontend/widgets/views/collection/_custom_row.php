@@ -11,7 +11,7 @@
 			if (isset($row[$alias]))
 			{
 				if (isset($columns[$alias]))
-					$columns[$alias]->getValueByType($row[$alias]);
+					$replace = $columns[$alias]->getValueByType($row[$alias]);
 				else
 					$replace = $row[$alias];
 			}
