@@ -49,7 +49,7 @@ class CollectionWidget extends \yii\base\Widget
         $query = $model->getDataQueryByOptions($this->columns);
 
         // страница
-        $p = (int)Yii::$app->request->get('p',1)-1;
+        $p = (int)Yii::$app->request->get('p',1);
 
         // колонки коллекции
         $columns = $query->columns;
@@ -79,7 +79,7 @@ class CollectionWidget extends \yii\base\Widget
             'pageParam'=>'p'
         ]);
 
-        $query->offset($p*$pagination->limit)->limit($pagination->limit);
+        $query->offset(($p-1)*$pagination->limit)->limit($pagination->limit);
         $query->keyAsAlias = true;
 
         $allrows = $query->getArray();
