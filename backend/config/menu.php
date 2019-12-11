@@ -151,4 +151,27 @@ return [
             ],
         ],
     ],
+    'reserve'=>[
+        'title'=>'Кадровый резерв',
+        'icon'=>'fa fa-address-book',
+        'roles' => ['backend.menu', 'backend.alert', 'backend.vars', 'backend.controllerPage', 'backend.form'],
+        'submenu'=>[
+            'profile'=>[
+                'title'=>'Анкеты',
+                'roles' => ['backend.form'],
+            ],
+            'contest'=>[
+                'title'=>'Конкурсы',
+                'roles' => ['backend.form'],
+            ],
+            'experts'=>[
+                'title'=>'Эксперты',
+                'roles' => ['backend.form'],
+            ],
+            'archive'=>[
+                'title'=>'Архив',
+                'roles' => ['backend.form'],
+            ],
+        ],
+    ],
 ];
