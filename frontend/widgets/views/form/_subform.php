@@ -2,16 +2,18 @@
 <?php foreach ($element->subForm->rows as $key => $row)
 {
 	echo '<div class="row">';
-	foreach ($row->elements as $ekey => $element)
+	foreach ($row->elements as $ekey => $rowelement)
 	{
-		if (!empty($element->id_input))
-			echo $this->render('_input',['input'=>$element->input,'element'=>$element,'subform'=>$element->subForm,'model'=>$model,'form'=>$activeForm]);
+		if (!empty($rowelement->id_input))
+		{
+			echo $this->render('_input',['input'=>$rowelement->input,'element'=>$rowelement,'subform'=>$element->subForm,'model'=>$model,'form'=>$activeForm]);
+		}
 		/*if (!empty($element->subForm))
 			echo $this->render('_rows',['rows'=>$element->subForm->rows,'model'=>$model,,'subform'=>$element->subForm,'activeForm'=>$activeForm]);*/
-		elseif (!empty($element->content))
+		elseif (!empty($rowelement->content))
 		{
-			$styles = $element->getStyles();
-			echo '<div class="text-row" '.((!empty($styles))?'style="'.implode(';',$styles).'"':'').'>'.$element->content.'</div>';
+			$styles = $rowelement->getStyles();
+			echo '<div class="text-row" '.((!empty($styles))?'style="'.implode(';',$styles).'"':'').'>'.$rowelement->content.'</div>';
 		}
 	}
 	echo '</div>';

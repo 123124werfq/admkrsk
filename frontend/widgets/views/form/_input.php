@@ -40,6 +40,7 @@
 	$styles = $element->getStyles();
 
 	$id_subform = (!empty($subform))?$subform->id_form:'';
+
 ?>
 
 <div id="element<?=$element->id_element?>" class="col">
@@ -199,11 +200,11 @@ JS;
                         'ajax' => [
                             'url' => '/collection/list',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:$("#input-city").val()};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:$("#input-city'.$id_subform.'").val()};}')
                         ],
                     ],
                     'options'=>[
-                    	'id'=>'input-district'
+                    	'id'=>'input-district'.$id_subform
                     ]
                 ]);
 				break;
@@ -263,7 +264,7 @@ JS;
                         'ajax' => [
                             'url' => '/address/district',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:$("#input-city"'.$id_subform.').val()};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:$("#input-city'.$id_subform.'").val()};}')
                         ],
                     ],
                     'options'=>[
