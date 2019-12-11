@@ -51,8 +51,16 @@ use common\models\CollectionColumn;
 
     <?=$form->field($model, 'fieldname')->textInput(['maxlength' => 255]) ?>
 
+    <?php if ($model->type == CollectionColumn::TYPE_SELECT ||
+              $model->type == CollectionColumn::TYPE_RADIO ||
+              $model->type == CollectionColumn::TYPE_CHECKBOXLIST ||
+              $model->type == CollectionColumn::TYPE_CHECKBOX){?>
+        <?=$form->field($model, 'values')->textarea(['rows' => 6])->hint('Вводить через ;')?>
+    <?php }?>
+
     <?php if ($model->type == CollectionColumn::TYPE_SELECT
            || $model->type == CollectionColumn::TYPE_RADIO
+           || $model->type == CollectionColumn::TYPE_CHECKBOXLIST
            || $model->type == CollectionColumn::TYPE_COLLECTION
            || $model->type == CollectionColumn::TYPE_COLLECTIONS
        ){?>
@@ -60,15 +68,9 @@ use common\models\CollectionColumn;
             'data' => ArrayHelper::map(Collection::find()->all(), 'id_collection', 'name'),
             'pluginOptions' => [
                 'allowClear' => true,
-                'placeholder' => 'Выберите коллекцию',
+                'placeholder' => 'Выберите список',
             ],
-        ])?>
-    <?php }?>
-
-    <?php if ($model->type == CollectionColumn::TYPE_SELECT ||
-              $model->type == CollectionColumn::TYPE_RADIO ||
-              $model->type == CollectionColumn::TYPE_CHECKBOX){?>
-        <?=$form->field($model, 'values')->textarea(['rows' => 6])->hint('Вводить через ;')?>
+        ])->label('Или взять данные из списка')?>
     <?php }?>
 
     <?php if ($model->type == CollectionColumn::TYPE_JSON)

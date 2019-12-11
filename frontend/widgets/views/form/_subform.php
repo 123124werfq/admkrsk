@@ -6,7 +6,7 @@
 	{
 		if (!empty($rowelement->id_input))
 		{
-			echo $this->render('_input',['input'=>$rowelement->input,'element'=>$rowelement,'subform'=>$element->subForm,'model'=>$model,'form'=>$activeForm]);
+			echo $this->render('_input',['input'=>$rowelement->input,'element'=>$rowelement,'subform'=>$element->subForm,'model'=>$model,'form'=>$activeForm,'arrayGroup'=>$arrayGroup]);
 		}
 		/*if (!empty($element->subForm))
 			echo $this->render('_rows',['rows'=>$element->subForm->rows,'model'=>$model,,'subform'=>$element->subForm,'activeForm'=>$activeForm]);*/

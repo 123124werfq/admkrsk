@@ -13,10 +13,13 @@ class FormsWidget extends \yii\base\Widget
 	public $id_form = null; // id моделя формы
 	public $form = null; // модель формы
 	public $template = 'form'; // шаблон
-    public $inputs = []; // инпуты которые нужно передать в POST
+    public $inputs = []; // скрытые инпуты которые нужно передать в POST
     public $action = null; // куда направляеть форму, если пусто то пойдут в унивартсальный контролер
     public $data = null; // данные
     public $collectionRecord = null; // данные
+    public $arrayGroup = null; // группирующий признак для подколлекций
+    public $activeForm = null; // класс эктив форм для подколлекций
+    
     public $page;
 
     public function run()
@@ -40,6 +43,9 @@ class FormsWidget extends \yii\base\Widget
             'model'=>$model,
             'inputs'=>$this->inputs,
             'action'=>$this->action,
+            
+            'arrayGroup'=>$this->arrayGroup,
+            'activeForm'=>$this->activeForm,
         ]);
     }
 }

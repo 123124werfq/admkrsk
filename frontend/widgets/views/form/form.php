@@ -40,7 +40,7 @@
 			echo Html::hiddenInput($name,$value);
 	?>
 
-	<?=$this->render('_rows',['rows'=>$form->rows,'model'=>$model,'activeForm'=>$activeForm])?>
+	<?=$this->render('_rows',['rows'=>$form->rows,'model'=>$model,'activeForm'=>$activeForm,'arrayGroup'=>$arrayGroup])?>
 	<div class="form-end">
         <div class="form-end_right">
             <input type="submit" class="btn btn__secondary" value="Отправить">

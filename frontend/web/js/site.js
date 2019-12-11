@@ -52,6 +52,27 @@ $(document).ready(function() {
         $("#news-filter").submit();
     });
 
+    $('.boxed.form-inside').delegate(".delete-subform",'click',function(){
+        if ($(this).closest('.subform').siblings().length>0)
+            $(this).closest('.subform').remove();
+        return false;
+    });
+
+    $(".form-copy").click(function(){
+        var $link = $(this);
+
+         $.ajax({
+            type: "GET",
+            dataType: "html",
+            url: "/form/form-collection",
+            data: {id:$link.data('id')}
+        }).done(function(data){
+            $("#"+$link.data('group')).append(data);
+        });
+
+        return false;
+    })
+
     $("#news-date").on('datepicker-change', function(event,obj) {
         $("#news-filter").submit();
     });

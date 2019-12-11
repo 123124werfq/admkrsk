@@ -74,6 +74,16 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'type'=>'input',
                 ],
             ],
+            self::TYPE_COLLECTIONS => [
+                'accept_add'=>[
+                    'name'=>'Разрешить добавление',
+                    'type'=>'dropdown',
+                    'values'=>[
+                        '0'=>"Нет",
+                        '1'=>"Да",
+                    ]
+                ],
+            ],
             self::TYPE_INTEGER => [
                 'min'=>[
                     'name'=>'Минимум',

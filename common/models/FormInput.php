@@ -66,7 +66,7 @@ class FormInput extends \yii\db\ActiveRecord
             'id_type' => 'Поведение поля',
             'required' => 'Обязательно',
             'readonly' => 'Только для чтения',
-            'id_collection' => 'Коллекция',
+            'id_collection' => 'Данные из списка',
             'label' => 'Подпись',
             'name' => 'Название',
             'hint' => 'Пояснение',
@@ -124,6 +124,14 @@ class FormInput extends \yii\db\ActiveRecord
                 $output[$data->id_target] = $data->name;
 
             return $output;
+        }
+        else if (!empty($this->id_collection))
+        {
+            $collection = Collection::findOne($this->id_collection);
+            if (!empty($collection))
+                return $collection->getArray();
+            else 
+                return [];
         }
 
         $values = [];
@@ -208,6 +216,11 @@ class FormInput extends \yii\db\ActiveRecord
     public function getElement()
     {
         return $this->hasOne(FormElement::class, ['id_input' => 'id_input']);
+    }
+
+    public function getCollection()
+    {
+        return $this->hasOne(Collection::class, ['id_collection' => 'id_collection']);
     }
 
     public function getColumn()

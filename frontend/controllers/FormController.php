@@ -7,6 +7,7 @@ use Yii;
 use common\models\Form;
 use common\models\FormDynamic;
 use common\models\Page;
+use common\models\FormInput;
 
 class FormController extends \yii\web\Controller
 {
@@ -41,6 +42,25 @@ class FormController extends \yii\web\Controller
             else
                 echo "Данные не сохранены";
         }
+    }
+
+    public function actionFormCollection($id)
+    {
+        $input = FormInput::findOne($id);
+
+        if (empty($input))
+            return '';
+
+        $activeForm = \yii\widgets\ActiveForm::begin([
+            'fieldConfig' => [
+                'template' => '{input}{error}',
+            ]
+        ]);
+
+        return $this->renderAjax('collection_form',[
+            'form'=>$activeForm,
+            'input'=>$input,
+        ]);
     }
 
     protected function findModel($id)

@@ -37,6 +37,10 @@
 
 	$attribute = "input$input->id_input";
 
+	if (!empty($arrayGroup))
+		$attribute = "[$arrayGroup]".$attribute;
+
+
 	$styles = $element->getStyles();
 
 	$id_subform = (!empty($subform))?$subform->id_form:'';
@@ -169,16 +173,18 @@ JS;
 				</div>';
 				break;
 			case CollectionColumn::TYPE_CHECKBOXLIST:
+				echo '<div class="checkboxes">';
 				foreach ($input->getArrayValues() as $key => $value) {
-					echo '<div class="checkbox-group">
+					echo '
+					<div class="checkbox-group">
 						<label class="checkbox checkbox__ib">
 							<input type="checkbox" name="input'.$input->id_input.'[]" value="'.Html::encode($value).'" class="checkbox_control">
 							<span class="checkbox_label">'.$value.'</span>
 						</label>
 					</div>';
 				}
+				echo '</div>';
 				break;
-
 			case CollectionColumn::TYPE_COLLECTION:
 
 				$value = [];
@@ -211,38 +217,56 @@ JS;
 
 			case CollectionColumn::TYPE_COLLECTIONS:
 
-				$value = [];
-
-				if (!empty($model->$attribute))
+				if (!empty($options['accept_add']))
 				{
-					$records = json_decode($model->$attribute);
-					$records = \common\models\CollectionRecord::find()->where(['id_record'=>$records]);
+					$arrayGroup = md5(rand(0,10000).time());
+					echo '<div id="subforms'.$input->id_input.'">';
+					echo \frontend\widgets\FormsWidget::widget([
+						'form'=>$input->collection->form,
+						'arrayGroup'=>$arrayGroup,
+						'activeForm'=>$form,
+						'inputs'=>[$attribute.'[]'=>$arrayGroup],
+						'template'=>'form_in_form',
+					]);
+					echo '</div>';
 
-					if (!empty($records))
-					{
-						$value[] = [$record->id_record=>$record->getLabel()];
-					}
+					echo '<div class="collections-action-buttons"><a data-id="'.$input->id_input.'" data-group="subforms'.$input->id_input.'" class="btn btn__secondary form-copy" href="javascript:">Добавить еще</a></div>';
 				}
+				else 
+				{
+					$value = [];
 
-				echo $form->field($model, $attribute)->widget(Select2::class, [
-                    'data' => $value,
-                    'pluginOptions' => [
-                        'multiple' => false,
-                        //'allowClear' => true,
-                        'minimumInputLength' => 0,
-                        'placeholder' => 'Выберите записи',
-                        'ajax' => [
-                            'url' => '/collection/record-list',
-                            'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id:'.$input->id_collection.'};}')
-                        ],
-                    ],
-                    'options'=>[
-                    	'id'=>'input-district'
-                    ]
-                ]);
+					if (!empty($model->$attribute))
+					{
+						$records = json_decode($model->$attribute);
+						$records = \common\models\CollectionRecord::find()->where(['id_record'=>$records]);
+
+						if (!empty($records))
+						{
+							$value[] = [$record->id_record=>$record->getLabel()];
+						}
+					}
+
+					echo $form->field($model, $attribute)->widget(Select2::class, [
+	                    'data' => $value,
+	                    'pluginOptions' => [
+	                        'multiple' => true,
+	                        //'allowClear' => true,
+	                        'minimumInputLength' => 0,
+	                        'placeholder' => 'Выберите записи',
+	                        'ajax' => [
+	                            'url' => '/collection/record-list',
+	                            'dataType' => 'json',
+	                            'data' => new JsExpression('function(params) { return {search:params.term,id:'.$input->id_collection.'};}')
+	                        ],
+	                    ],
+	                    'options'=>[
+	                    	'id'=>'input-district',
+	                    	'multiple' => true,
+	                    ]
+	                ]);
+				}
 				break;
-
 			case CollectionColumn::TYPE_DISTRICT:
 
 				$value = [];
