@@ -8,16 +8,25 @@
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ($allrows as $key => $row){?>
+			<?php
+			foreach ($groups as $group => $allrows)
+			{
+				if (!empty($group))
+					echo '<tr><th colspan="'.count($columns).'">'.$group.'</th></tr>';
+
+			foreach ($allrows as $key => $row){
+?>
 				<tr>
-				<?php foreach ($row as $tkey => $td) {
+				<?php foreach ($row as $tkey => $td){
 					echo "<td>$td</td>";
 				}?>
 				</tr>
-			<?php }?>
+		<?php }
+			}
+		?>
 		</tbody>
 </table>
-	<?=\yii\widgets\LinkPager::widget([
-	    'pagination' => $pagination,
-	]);?>
 </div>
+<?=\yii\widgets\LinkPager::widget([
+    'pagination' => $pagination,
+]);?>

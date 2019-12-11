@@ -10,7 +10,6 @@
                 if (!empty($rubrics[$rub->id_rub]))
                     foreach ($rubrics[$rub->id_rub] as $ckey => $child) {?>
 					<h3 <?=empty($rubrics[$child->id_rub])?'class="collapse-control '.$active.'"':''?>><?=$child->name?></h3>
-
                     <?php
                         if (!empty($rubrics[$child->id_rub]))
                             foreach ($rubrics[$child->id_rub] as $cskey => $subchild) {
