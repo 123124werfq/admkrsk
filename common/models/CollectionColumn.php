@@ -150,8 +150,8 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_RADIO => "Радио кнопки",
             self::TYPE_MAP => "Координаты",
             self::TYPE_FILE => "Файл",
-            self::TYPE_COLLECTION => "Данные из списока",
-            self::TYPE_COLLECTIONS => "Данные из списока, несколько элементов ",
+            self::TYPE_COLLECTION => "Данные из списка",
+            self::TYPE_COLLECTIONS => "Данные из списка, несколько элементов ",
             self::TYPE_IMAGE => "Изображение",
             self::TYPE_JSON => "Таблицы",
             self::TYPE_SERVICETARGET => "Цель муниципальной услуги",
@@ -185,9 +185,18 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 {
                     if (!is_numeric($value['value']))
                     {
-                        Yii::$app->db->createCommand()->update('db_collection_value',['value'=>strtotime($value['value'])],['id_column'=>$column->id_column,'id_record'=>$value['id_record']])->execute();
+                        Yii::$app->db->createCommand()->update('db_collection_value',[
+                            'value'=>strtotime($value['value'])],
+                            [
+                                'id_column'=>$column->id_column,
+                                'id_record'=>$value['id_record']
+                            ]
+                        )->execute();
 
-                        $collection->update(['id_record'=>$value['id_record']],[$value['id_column']=>strtotime($value['value'])]);
+                        $collection->update(
+                            ['id_record'=>$value['id_record']],
+                            ['col'.$value['id_column']=>strtotime($value['value'])]
+                        );
                     }
                 }
             }
