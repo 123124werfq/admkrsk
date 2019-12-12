@@ -176,12 +176,9 @@ JS;
 				}
 				break;
 			case CollectionColumn::TYPE_CHECKBOX:
-				echo '<div class="checkbox-group">
-					<label class="checkbox checkbox__ib">
-						<input '.(!empty($options['popup'])?'data-modal="input'.$input->id_input.'Modal"':'').' id="input'.$input->id_input.'" type="checkbox" name="FormDynamic'.$attribute.'" value="'.(!empty($input->values)?Html::encode($input->values):1).'" class="checkbox_control '.(!empty($options['popup'])?'modal-checkbox':'').'">
-						<span class="checkbox_label">'.$input->name.'</span>
-					</label>
-				</div>';
+
+				if (!empty($options['popup']))
+					$options['data-modal'] = 'input'.$input->id_input.'Modal';
 
 				if (!empty($options['popup']))
 				{
@@ -195,6 +192,19 @@ JS;
 						        </p>
 						   </div>';
 				}
+
+				$options['class'] = 'checkbox_control'.(!empty($options['popup'])?' modal-checkbox':'');
+				$options['value'] = (!empty($input->values)?Html::encode($input->values):1);
+
+				unset($options['popup']);
+				unset($options['terms']);
+
+				echo '<div class="checkbox-group">
+					<label class="checkbox checkbox__ib">
+						'.Html::checkBox('FormDynamic'.$attribute,'',$options).'
+						<span class="checkbox_label">'.$input->name.'</span>
+					</label>
+				</div>';
 				break;
 			case CollectionColumn::TYPE_CHECKBOXLIST:
 				echo '<div class="checkboxes">';
