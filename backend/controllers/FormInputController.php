@@ -212,6 +212,7 @@ class FormInputController extends Controller
 
         $input = $this->findModel($id);
         $id_form = $input->id_form;
+        $input->column->delete();
         $input->delete();
         $element->delete();
 

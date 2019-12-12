@@ -2,6 +2,20 @@
 /* @var common\models\News $model */
 
 use yii\helpers\Html;
+function parseAttributesFromTag($tag){
+    $pattern = '/(\w+)=[\'"]([^\'"]*)/';
+
+    preg_match_all($pattern,$tag,$matches,PREG_SET_ORDER);
+
+    $result = [];
+    foreach($matches as $match){
+        $attrName = $match[1];
+        $attrValue = is_numeric($match[2])? (int)$match[2]: trim($match[2]);
+        $result[$attrName] = $attrValue;
+    }
+
+    return $result;
+}
 ?>
 <div class="main">
     <div class="container">
@@ -31,20 +45,22 @@ use yii\helpers\Html;
             <div class="col-2-third col-sm-12">
             	<div class="content searchable">
 					<?php
-                        preg_match_all ("/<(collection|gallery)\s(.+?)>(.+?)<\/(collection|gallery)>/is", $model->content, $matches);
+                        preg_match_all ("/<(collection|gallery|forms)\s(.+?)>(.+?)<\/(collection|gallery|forms)>/is", $page->content, $matches);
 
                         if (!empty($matches[0]))
-                            foreach ($matches[0] as $key => $match) {
+                            foreach ($matches[0] as $key => $match)
+                            {
                                 $attributes = parseAttributesFromTag($match);
 
                                 if (!empty($attributes['id']))
                                 {
                                     $class = 'frontend\widgets\\'.ucwords($matches[1][$key]).'Widget';
-                                    $model->content = str_replace($match, $class::widget(['attributes'=>$attributes]), $model->content);
+
+                                    $page->content = str_replace($match, $class::widget(['attributes'=>$attributes,'page'=>$page]), $page->content);
                                 }
                             }
 
-                        echo $model->content;
+                        echo $page->content;
                     ?>
 				</div>
             </div>

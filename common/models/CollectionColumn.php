@@ -84,6 +84,20 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     ]
                 ],
             ],
+            self::TYPE_CHECKBOX => [
+                'popup'=>[
+                    'name'=>'Трубется дополнительное подтверждение',
+                    'type'=>'dropdown',
+                    'values'=>[
+                        '0'=>"Нет",
+                        '1'=>"Да",
+                    ]
+                ],
+                'terms'=>[
+                    'name'=>'Соглашение',
+                    'type'=>'richtext',
+                ],
+            ],
             self::TYPE_INTEGER => [
                 'min'=>[
                     'name'=>'Минимум',

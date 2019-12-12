@@ -2,8 +2,9 @@
 .content table {width: 100%;}
 
 .col {width: 100%; padding: 0px 15px;}
-form .row {flex-wrap: nowrap!important;}
+
 .text-help {margin-top: -25px;}
+.subform .text-help {margin-top: 0px;}
 
 .checkboxlist {margin-bottom: 40px;}
 .checkboxlist .form-label {margin-bottom: 20px;}
@@ -14,6 +15,12 @@ form .row {flex-wrap: nowrap!important;}
 .text-row p:first-child {margin-top: 0px}
 
 .table-group {font-weight: bold!important;}
+
+.checkbox_control {
+    display: block!important;
+    position: absolute;
+    opacity: 0;
+}
 
 .header-search{padding: 10px; border: none; border-radius: 5px; width: 100%;}
 
@@ -36,7 +43,7 @@ img[src*="http://www.admkrsk.ru/_layouts/images/icdocx.png"], .ms-asset-icon {di
 
 .page .subform .form-control {margin-bottom: 10px!important;}
 .subform-action-buttons {text-align: right;}
-.collections-action-buttons {text-align: right; padding-right: 120px; margin-top: -48px;}
+.collections-action-buttons {text-align: right; padding-right: 120px; margin-top: -48px; margin-bottom: 30px;}
 
 .person-card_content {flex-direction: column;}
 
@@ -144,4 +151,8 @@ a[href$=".txt"]:before {background:#fff url('/img/files/txt.svg'); width:26px; h
 
 .fileupload_list:empty {
     display: none;
+}
+
+@media screen and (min-width: 992px) {
+    form .row {flex-wrap: nowrap!important;}
 }

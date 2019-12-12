@@ -61,14 +61,25 @@
 				break;
 			case CollectionColumn::TYPE_DATE:
 				$options['type'] = 'date';
-				if (is_numeric($model->$attribute))
-					$model->$attribute = date('Y-m-d', $model->$attribute);
+				if (strpos($attribute, ']')>0)
+					$clearAttribute = substr($attribute, strpos($attribute, ']')+1);
+				else
+					$clearAttribute = $attribute;
+
+				if (is_numeric($model->$clearAttribute))
+					$model->$clearAttribute = date('Y-m-d', $model->$clearAttribute);
 
 				echo $form->field($model, $attribute)->textInput($options);
 				break;
 			case CollectionColumn::TYPE_DATETIME:
-				if (is_numeric($model->$attribute))
-					$model->$attribute = date('Y-m-d\TH:i:s', $model->$attribute);
+
+				if (strpos($attribute, ']')>0)
+					$clearAttribute = substr($attribute, strpos($attribute, ']')+1);
+				else
+					$clearAttribute = $attribute;
+				if (is_numeric($model->$clearAttribute))
+					$model->$clearAttribute = date('Y-m-d\TH:i:s', $model->$clearAttribute);
+
 				$options['type'] = 'datetime';
 				echo $form->field($model, $attribute)->textInput($options);
 				break;
@@ -158,16 +169,39 @@ JS;
 				foreach ($input->getArrayValues() as $key => $value) {
 					echo '<div class="radio-group">
 								<label class="radio">
-									<input type="radio" name="input'.$input->id_input.'" value="'.Html::encode($value).'" class="radio_control">
+									<input type="radio" name="FormDynamic'.$attribute.'" value="'.Html::encode($value).'" class="radio_control">
 									<span class="radio_label">'.$value.'</span>
 								</label>
 						  </div>';
 				}
 				break;
 			case CollectionColumn::TYPE_CHECKBOX:
+
+				if (!empty($options['popup']))
+					$options['data-modal'] = 'input'.$input->id_input.'Modal';
+
+				if (!empty($options['popup']))
+				{
+					echo '<div id="input'.$input->id_input.'Modal" style="display: none; max-width: 1000px;">
+								'.$options['terms'].'
+						        <p>
+						        	<center>
+							        	<button data-id="input'.$input->id_input.'" class="btn btn__secondary accept-checkbox">Ознакомлен</button>
+							            <button data-fancybox-close="" class="btn btn-primary">Закрыть</button>
+						            <center>
+						        </p>
+						   </div>';
+				}
+
+				$options['class'] = 'checkbox_control'.(!empty($options['popup'])?' modal-checkbox':'');
+				$options['value'] = (!empty($input->values)?Html::encode($input->values):1);
+
+				unset($options['popup']);
+				unset($options['terms']);
+
 				echo '<div class="checkbox-group">
 					<label class="checkbox checkbox__ib">
-						<input id="input'.$input->id_input.'" type="checkbox" name="input'.$input->id_input.'" value="'.(!empty($input->values)?Html::encode($input->values):1).'" class="checkbox_control">
+						'.Html::checkBox('FormDynamic'.$attribute,'',$options).'
 						<span class="checkbox_label">'.$input->name.'</span>
 					</label>
 				</div>';
@@ -178,7 +212,7 @@ JS;
 					echo '
 					<div class="checkbox-group">
 						<label class="checkbox checkbox__ib">
-							<input type="checkbox" name="input'.$input->id_input.'[]" value="'.Html::encode($value).'" class="checkbox_control">
+							<input type="checkbox" name="FormDynamic'.$attribute.'[]" value="'.Html::encode($value).'" class="checkbox_control">
 							<span class="checkbox_label">'.$value.'</span>
 						</label>
 					</div>';
@@ -232,7 +266,7 @@ JS;
 
 					echo '<div class="collections-action-buttons"><a data-id="'.$input->id_input.'" data-group="subforms'.$input->id_input.'" class="btn btn__secondary form-copy" href="javascript:">Добавить еще</a></div>';
 				}
-				else 
+				else
 				{
 					$value = [];
 

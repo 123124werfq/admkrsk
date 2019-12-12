@@ -16,7 +16,7 @@
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
             ...
         </button>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu pull-right">
           <li><a href="/form-input/create?id_row=<?=$row->id_row?>" class="create-form-input">Добавить поле</a></li>
           <li><a href="/form-element/create?id_row=<?=$row->id_row?>" class="create-element">Добавить текст</a></li>
           <li><a href="/form/update-row?id_row=<?=$row->id_row?>" class="update-row">Редактировать стили</a></li>

@@ -88,6 +88,41 @@ class FormDynamic extends DynamicModel
                     case CollectionColumn::TYPE_JSON:
                         $data[$index] = json_encode($this->$attribute);
                         break;
+                    case CollectionColumn::TYPE_CHECKBOXLIST:
+                        $data[$index] = json_encode($this->$attribute);
+                        break;
+                    case CollectionColumn::TYPE_COLLECTIONS:
+                        if ($input->options['accept_add'])
+                        {
+                            $ids = [];
+
+                            if (!empty($_POST['input'.$input->id_input]) && is_array($_POST['input'.$input->id_input]))
+                            {
+                                foreach ($_POST['input'.$input->id_input] as $key => $group)
+                                {
+                                    if (!empty($_POST['FormDynamic'][$group]))
+                                    {
+                                        $insertData = new FormDynamic($input->collection->form);
+                                        $insertData->attributes = $_POST['FormDynamic'][$group];
+
+                                        if ($insertData->validate())
+                                        {
+                                            $collectionRecord = $input->collection->insertRecord($insertData->prepareData(true));
+
+                                            if (!empty($collectionRecord->id_record))
+                                                $ids[] = $collectionRecord->id_record;
+                                        }
+                                        else
+                                            print_r($insertData->attributes);
+
+                                    }
+                                }
+                            }
+                            $data[$index] = json_encode($ids);
+                        }
+                        else
+                            $data[$index] = json_encode($data[$index]);
+                        break;
                     case CollectionColumn::TYPE_DATE:
                     case CollectionColumn::TYPE_DATETIME:
                         $data[$index] = strtotime($this->$attribute);
@@ -102,7 +137,7 @@ class FormDynamic extends DynamicModel
                             foreach ($this->$attribute as $key => $file)
                             {
                                 $media = new Media;
-                                $media->getImageAttributes($file['file_path']);
+                                $media->getImageAttributes($file['file_path'],$file);
 
                                 if ($media->save())
                                     $media->saveFile();
