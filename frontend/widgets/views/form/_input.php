@@ -61,14 +61,17 @@
 				break;
 			case CollectionColumn::TYPE_DATE:
 				$options['type'] = 'date';
-				if (is_numeric($model->$attribute))
-					$model->$attribute = date('Y-m-d', $model->$attribute);
+				$clearAttribute = substr($attribute, strpos($attribute, ']'));
+				if (is_numeric($model->$clearAttribute))
+					$model->$clearAttribute = date('Y-m-d', $model->$clearAttribute);
 
 				echo $form->field($model, $attribute)->textInput($options);
 				break;
 			case CollectionColumn::TYPE_DATETIME:
-				if (is_numeric($model->$attribute))
-					$model->$attribute = date('Y-m-d\TH:i:s', $model->$attribute);
+				$clearAttribute = substr($attribute, strpos($attribute, ']'));
+				if (is_numeric($model->$clearAttribute))
+					$model->$clearAttribute = date('Y-m-d\TH:i:s', $model->$clearAttribute);
+
 				$options['type'] = 'datetime';
 				echo $form->field($model, $attribute)->textInput($options);
 				break;
@@ -232,7 +235,7 @@ JS;
 
 					echo '<div class="collections-action-buttons"><a data-id="'.$input->id_input.'" data-group="subforms'.$input->id_input.'" class="btn btn__secondary form-copy" href="javascript:">Добавить еще</a></div>';
 				}
-				else 
+				else
 				{
 					$value = [];
 
