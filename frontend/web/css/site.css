@@ -2,7 +2,7 @@
 .content table {width: 100%;}
 
 .col {width: 100%; padding: 0px 15px;}
-form .row {flex-wrap: nowrap!important;}
+
 .text-help {margin-top: -25px;}
 .subform .text-help {margin-top: 0px;}
 
@@ -151,4 +151,8 @@ a[href$=".txt"]:before {background:#fff url('/img/files/txt.svg'); width:26px; h
 
 .fileupload_list:empty {
     display: none;
+}
+
+@media screen and (min-width: 992px) {
+    form .row {flex-wrap: nowrap!important;}
 }
