@@ -18,7 +18,7 @@ class News extends \common\models\News
             },
             'title',
             'description',
-//            'content',
+            'content',
             'date_publish' => function (News $model) {
                 return $model->date_publish ? Yii::$app->formatter->asDatetime($model->date_publish) : null;
             },
