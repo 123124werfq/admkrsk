@@ -61,14 +61,22 @@
 				break;
 			case CollectionColumn::TYPE_DATE:
 				$options['type'] = 'date';
-				$clearAttribute = substr($attribute, strpos($attribute, ']'));
+				if (strpos($attribute, ']')>0)
+					$clearAttribute = substr($attribute, strpos($attribute, ']')+1);
+				else
+					$clearAttribute = $attribute;
+
 				if (is_numeric($model->$clearAttribute))
 					$model->$clearAttribute = date('Y-m-d', $model->$clearAttribute);
 
 				echo $form->field($model, $attribute)->textInput($options);
 				break;
 			case CollectionColumn::TYPE_DATETIME:
-				$clearAttribute = substr($attribute, strpos($attribute, ']'));
+
+				if (strpos($attribute, ']')>0)
+					$clearAttribute = substr($attribute, strpos($attribute, ']')+1);
+				else
+					$clearAttribute = $attribute;
 				if (is_numeric($model->$clearAttribute))
 					$model->$clearAttribute = date('Y-m-d\TH:i:s', $model->$clearAttribute);
 
