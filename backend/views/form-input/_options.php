@@ -11,7 +11,8 @@
 		foreach ($options as $key => $option)
 		{
 			$inputOption = ['class'=>'form-control'];
-			echo '<div class="col">
+
+			echo '<div class="col '.($option['type']=='richtext'?'fullwidth':'').'">
 					<label class="control-label">'.$option['name'].'</label>';
 
 			$value = (isset($model->options[$key]))?$model->options[$key]:'';
@@ -20,6 +21,11 @@
 			{
 				case 'input':
 					echo Html::textInput("FormInput[options][$key]",$value,$inputOption);
+					break;
+				case 'richtext':
+					$inputOption['class'] .= ' redactor';
+					echo Html::textArea("FormInput[options][$key]",$value,$inputOption);
+					echo '<script type="text/javascript">tinymce.init(tinymceConfig);</script>';
 					break;
 				case 'dropdown':
 					echo Html::dropDownList("FormInput[options][$key]",$value,$option['values'],$inputOption);

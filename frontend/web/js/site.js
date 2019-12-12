@@ -58,6 +58,28 @@ $(document).ready(function() {
         return false;
     });
 
+    $('body').delegate(".accept-checkbox",'click',function(){
+        var inputID = $(this).data('id');
+        $("#"+inputID).prop('checked','true');
+        $.fancybox.close();
+        return false;
+    });
+
+
+
+    $(".modal-checkbox").change(function(){
+        if ($(this).is(':checked'))
+        {
+            $(this).prop('checked',false);
+
+            var modal = $(this).data('modal');
+            $.fancybox.open({
+                src: '#'+modal,
+                modal: true
+            });
+        }
+    });
+
     $(".form-copy").click(function(){
         var $link = $(this);
 

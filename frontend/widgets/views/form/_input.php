@@ -169,7 +169,7 @@ JS;
 				foreach ($input->getArrayValues() as $key => $value) {
 					echo '<div class="radio-group">
 								<label class="radio">
-									<input type="radio" name="input'.$input->id_input.'" value="'.Html::encode($value).'" class="radio_control">
+									<input type="radio" name="FormDynamic'.$attribute.'" value="'.Html::encode($value).'" class="radio_control">
 									<span class="radio_label">'.$value.'</span>
 								</label>
 						  </div>';
@@ -178,10 +178,23 @@ JS;
 			case CollectionColumn::TYPE_CHECKBOX:
 				echo '<div class="checkbox-group">
 					<label class="checkbox checkbox__ib">
-						<input id="input'.$input->id_input.'" type="checkbox" name="input'.$input->id_input.'" value="'.(!empty($input->values)?Html::encode($input->values):1).'" class="checkbox_control">
+						<input '.(!empty($options['popup'])?'data-modal="input'.$input->id_input.'Modal"':'').' id="input'.$input->id_input.'" type="checkbox" name="FormDynamic'.$attribute.'" value="'.(!empty($input->values)?Html::encode($input->values):1).'" class="checkbox_control '.(!empty($options['popup'])?'modal-checkbox':'').'">
 						<span class="checkbox_label">'.$input->name.'</span>
 					</label>
 				</div>';
+
+				if (!empty($options['popup']))
+				{
+					echo '<div id="input'.$input->id_input.'Modal" style="display: none; max-width: 1000px;">
+								'.$options['terms'].'
+						        <p>
+						        	<center>
+							        	<button data-id="input'.$input->id_input.'" class="btn btn__secondary accept-checkbox">Принимаю</button>
+							            <button data-fancybox-close="" class="btn btn-primary">Закрыть</button>
+						            <center>
+						        </p>
+						   </div>';
+				}
 				break;
 			case CollectionColumn::TYPE_CHECKBOXLIST:
 				echo '<div class="checkboxes">';
@@ -189,7 +202,7 @@ JS;
 					echo '
 					<div class="checkbox-group">
 						<label class="checkbox checkbox__ib">
-							<input type="checkbox" name="input'.$input->id_input.'[]" value="'.Html::encode($value).'" class="checkbox_control">
+							<input type="checkbox" name="FormDynamic'.$attribute.'[]" value="'.Html::encode($value).'" class="checkbox_control">
 							<span class="checkbox_label">'.$value.'</span>
 						</label>
 					</div>';
