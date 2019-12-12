@@ -27,6 +27,15 @@ use yii\helpers\ArrayHelper;
  * @property int $updated_by
  * @property int $deleted_at
  * @property int $deleted_by
+ * @property int $id_parent_collection
+ * @property int $id_form
+ * @property array $label
+ * @property int $id_group
+ * @property int $system
+ * @property array $filter
+ * @property array $options
+ * @property string $template
+ * @property string $template_element
  * @property array $access_user_ids
  *
  * @property CollectionColumn[] $columns

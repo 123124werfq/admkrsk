@@ -33,7 +33,14 @@ use yii\db\ActiveQuery;
  * @property int $updated_by
  * @property int $deleted_at
  * @property int $deleted_by
+ * @property int $id_user_contact
+ * @property int $id_user
+ * @property int $id_record_contact
+ * @property int $highlight
+ * @property string $fullUrl
  * @property array $access_user_ids
+ *
+ * @property Media $media
  */
 class News extends \yii\db\ActiveRecord
 {

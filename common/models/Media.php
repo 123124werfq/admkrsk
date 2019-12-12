@@ -27,6 +27,8 @@ use yii\imagine\Image;
  * @property int $updated_by
  * @property int $deleted_at
  * @property int $deleted_by
+ *
+ * @property string $url
  */
 class Media extends \yii\db\ActiveRecord
 {
