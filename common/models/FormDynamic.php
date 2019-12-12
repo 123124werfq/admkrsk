@@ -137,7 +137,7 @@ class FormDynamic extends DynamicModel
                             foreach ($this->$attribute as $key => $file)
                             {
                                 $media = new Media;
-                                $media->getImageAttributes($file['file_path']);
+                                $media->getImageAttributes($file['file_path'],$file);
 
                                 if ($media->save())
                                     $media->saveFile();
