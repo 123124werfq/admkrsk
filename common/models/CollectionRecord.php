@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\mongodb\Query;
 
 /**
  * This is the model class for table "db_collection_record".
@@ -229,4 +230,22 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
         parent::afterDelete();
      }
+
+    public function getRecord()
+    {
+        $record = (new Query())
+            ->from('collection' . $this->id_collection)
+            ->where(['id_record' => $this->id_record])
+            ->one();
+
+        if (isset($record['_id'])) {
+            unset($record['_id']);
+        }
+
+        if (isset($record['id_record'])) {
+            unset($record['id_record']);
+        }
+
+        return $record;
+    }
 }

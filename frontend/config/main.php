@@ -15,6 +15,9 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
+    'modules' => [
+        'api' => \frontend\modules\api\Module::class,
+    ],
     'components' => [
         'assetManager' => [
             'bundles' => [
@@ -75,7 +78,19 @@ return [
                 'class' => 'yii\web\UrlNormalizer',
             ],
             'rules' => [
-                'odata.svc<query:(.*)>'=>'o-data/index',
+                [
+
+                    'class' => 'yii\web\GroupUrlRule',
+                    'prefix' => 'api',
+                    'rules' => [
+                        // collection
+                        ['verb' => ['GET', 'OPTIONS'], 'pattern' => 'collection/<alias:\w+>', 'route' => 'collection/index'],
+                        ['verb' => ['GET', 'OPTIONS'], 'pattern' => 'collection/<alias:\w+>/<id:\d+>', 'route' => 'collection/view'],
+                        // news
+                        ['verb' => ['GET', 'OPTIONS'], 'pattern' => 'news', 'route' => 'news/index'],
+                        ['verb' => ['GET', 'OPTIONS'], 'pattern' => 'news/<id:\d+>', 'route' => 'news/view'],
+                    ],
+                ],
                 'search/address'=>'search/address',
                 'collection'=>'collection/view',
                 'site/test'=>'site/test',
