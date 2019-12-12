@@ -488,7 +488,15 @@ class FormController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->delete()) {
+        // ищем связанную коллекцию
+        if ($model->id_form == $model->collection->id_form)
+            $collection = $model->collection;
+
+        if ($model->delete())
+        {
+            if (!empty($collection))
+                $collection->delete();
+
             $model->createAction(Action::ACTION_DELETE);
         }
 
