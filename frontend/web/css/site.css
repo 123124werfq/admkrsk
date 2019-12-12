@@ -16,6 +16,12 @@ form .row {flex-wrap: nowrap!important;}
 
 .table-group {font-weight: bold!important;}
 
+.checkbox_control {
+    display: block!important;
+    position: absolute;
+    opacity: 0;
+}
+
 .header-search{padding: 10px; border: none; border-radius: 5px; width: 100%;}
 
 .select2-container--krajee .select2-selection {background: #F4F7FB!important; border: 0px!important; box-shadow: none!important;
