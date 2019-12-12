@@ -62,7 +62,7 @@
                             <div class="file-td file-td__date"><?=$form->name?></div>
                             <div class="file-td file-td__name"><?=$form->fullname?></div>
                             <div class="file-td file-td__control">
-                                <a href="create?id_form<?=$form->id_form?>" class="btn btn__secondary btn__block-sm">Направить заявление</a>
+                                <a href="create?id_form=<?=$form->id_form?>" class="btn btn__secondary btn__block-sm">Направить заявление</a>
                             </div>
                         </div>
                     <?php }?>
