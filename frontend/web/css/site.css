@@ -43,7 +43,7 @@ img[src*="http://www.admkrsk.ru/_layouts/images/icdocx.png"], .ms-asset-icon {di
 
 .page .subform .form-control {margin-bottom: 10px!important;}
 .subform-action-buttons {text-align: right;}
-.collections-action-buttons {text-align: right; padding-right: 120px; margin-top: -48px;}
+.collections-action-buttons {text-align: right; padding-right: 120px; margin-top: -48px; margin-bottom: 30px;}
 
 .person-card_content {flex-direction: column;}
 

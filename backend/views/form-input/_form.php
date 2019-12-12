@@ -49,7 +49,12 @@ use common\models\CollectionColumn;
 
     <?=$form->field($model, 'hint')->textInput(['maxlength' => 255]) ?>
 
-    <?=$form->field($model, 'fieldname')->textInput(['maxlength' => 255]) ?>
+    <?php
+    if ($model->type==CollectionColumn::TYPE_SERVICETARGET)
+        echo $form->field($model, 'fieldname')->textInput(['maxlength' => 255,'readonly'=>true,'value'=>'id_target']);
+    else
+        echo $form->field($model, 'fieldname')->textInput(['maxlength' => 255]);
+    ?>
 
     <?php if ($model->type == CollectionColumn::TYPE_SELECT ||
               $model->type == CollectionColumn::TYPE_RADIO ||
