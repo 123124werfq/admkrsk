@@ -34,8 +34,6 @@ class Form extends \yii\db\ActiveRecord
     const VERBOSE_NAME_PLURAL = 'Формы';
     const TITLE_ATTRIBUTE = 'name';
 
-    public $make_collection = 0;
-
     public $access_user_ids;
     public $access_user_group_ids;
     public $client_type; // для формы услуг
@@ -56,7 +54,7 @@ class Form extends \yii\db\ActiveRecord
         return [
             [['id_collection','id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_group'], 'default', 'value' => null],
             [['state'], 'default', 'value' => 1],
-            [['id_collection', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','make_collection','id_page','id_group','state','is_template'], 'integer'],
+            [['id_collection', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_page','id_group','state','is_template'], 'integer'],
             [['name'], 'required'],
             [['message_success'], 'string'],
             [['client_type'], 'safe'],
@@ -80,7 +78,6 @@ class Form extends \yii\db\ActiveRecord
             'fullname' => 'Полное название',
             'id_group' => 'Группа',
             'state' => 'Включена',
-            'make_collection'=>'Создать коллекцию',
             'message_success'=>'Сообщение при успешном отправлении',
             'id_page'=>'Переход на раздел при успешном отправлении',
             'url'=>'Переход на ссылку при успешном отправлении',

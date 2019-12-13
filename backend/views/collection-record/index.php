@@ -27,6 +27,8 @@ $this->params['action-block'][] = Html::a('Создать представлен
 
 $this->params['action-block'][] = Html::a('Создать копию', ['/collection/copy', 'id' => $model->id_collection]);
 
+$this->params['action-block'][] = Html::a('Связать данные', ['/collection/assign', 'id' => $model->id_collection]);
+
 ?>
 <div class="tabs-container">
     <ul class="nav nav-tabs" role="tablist">

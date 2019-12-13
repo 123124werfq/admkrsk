@@ -123,6 +123,30 @@ class CollectionColumnController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionList($q,$id_collection)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $query = CollectionColumn::find();
+
+        $query->andWhere([
+            ['id_collection' => $id_collection],
+            ['ilike', 'name', $q],
+        ]);
+
+        $results = [];
+
+        foreach ($query->all() as $column) {
+            /* @var Collection $collection */
+            $results[] = [
+                'id' => $column->id_column,
+                'text' => $column->name,
+            ];
+        }
+
+        return ['results' => $results];
+    }
+
     /**
      * Finds the CollectionColumn model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

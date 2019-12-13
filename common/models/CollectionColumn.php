@@ -175,7 +175,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_MAP => "Координаты",
             self::TYPE_FILE => "Файл",
             self::TYPE_COLLECTION => "Данные из списка",
-            self::TYPE_COLLECTIONS => "Данные из списка, несколько элементов ",
+            self::TYPE_COLLECTIONS => "Данные из списка, несколько элементов",
             self::TYPE_IMAGE => "Изображение",
             self::TYPE_JSON => "Таблицы",
             self::TYPE_SERVICETARGET => "Цель муниципальной услуги",

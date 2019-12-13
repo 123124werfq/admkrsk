@@ -15,13 +15,13 @@ use common\models\Collection;
 
 <?php $form = ActiveForm::begin(); ?>
 
-<?= $form->field($model, 'id_group')->dropDownList(Collection::getArrayByAlias('collection_group'))?>
+    <?= $form->field($model, 'id_group')->dropDownList(Collection::getArrayByAlias('collection_group'))?>
 
-<?= $form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
+    <?= $form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
 
-<?php if (Yii::$app->user->can('admin.collection')): ?>
+    <?php if (Yii::$app->user->can('admin.collection')): ?>
+
     <hr>
-
     <?= $form->field($model, 'template')->textInput(['class' => 'form-control redactor'])?>
 
     <?= $form->field($model, 'template_element')->textInput(['class' => 'form-control redactor'])?>

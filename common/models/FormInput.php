@@ -130,7 +130,7 @@ class FormInput extends \yii\db\ActiveRecord
             $collection = Collection::findOne($this->id_collection);
             if (!empty($collection))
                 return $collection->getArray();
-            else 
+            else
                 return [];
         }
 

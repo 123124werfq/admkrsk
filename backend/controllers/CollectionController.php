@@ -80,7 +80,7 @@ class CollectionController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['create','record', 'create-view','copy','assign-collection'],
+                        'actions' => ['create','record', 'create-view','copy','assign'],
                         'roles' => ['backend.collection.create'],
                         'roleParams' => [
                             'class' => Collection::class,
@@ -278,7 +278,7 @@ class CollectionController extends Controller
         else print_r($newCollection->errors);
     }
 
-    public function actionAssignCollection($id)
+    public function actionAssign($id)
     {
         $collection = $this->findModel($id);
 
@@ -290,8 +290,8 @@ class CollectionController extends Controller
 
         }
 
-        $this->render('assign',[
-            'form'=>$form,
+        return $this->render('assign',[
+            'formAssign'=>$form,
             'model'=>$collection,
         ]);
     }
@@ -620,11 +620,14 @@ class CollectionController extends Controller
                                         $columns[$rkey] = 'Колонка №'.($i++);
                                 }
 
+                                $i = 0;
+
                                 foreach ($columns as $tdkey => $value)
                                 {
                                     $column = new CollectionColumn;
                                     $column->name = (!empty($value))?$value:'Колонка '.$tdkey;
                                     $column->type = CollectionColumn::TYPE_INPUT;
+                                    $column->ord = $i;
 
                                     if ($model->keyrow && !empty(trim($keys[$tdkey])))
                                         $column->alias = $keys[$tdkey];
@@ -645,6 +648,8 @@ class CollectionController extends Controller
                                         print_r($column->errors);
                                         die();
                                     }
+
+                                    $i++;
                                 }
 
                                 foreach ($records as $rkey => $row)
