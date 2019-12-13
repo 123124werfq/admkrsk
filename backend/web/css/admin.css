@@ -30,6 +30,35 @@ img {max-width: 100%;}
     width: 30px;
 }
 
+.modal-backdrop.in {opacity: 0.1;}
+.modal.in .modal-dialog {
+    position: fixed;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    background: #fff;
+    margin: 0px;
+    display: flex;
+    align-items: center;
+    padding: 0px 0px 0px 20px;
+    height: 100vh;
+}
+
+.modal .modal-footer {border-top: 0px;}
+
+.modal-content {
+        background-clip: padding-box;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 4px;
+    box-shadow: none;
+    outline: 0 none;
+    position: relative;
+    width: 100%;
+    max-height: 100vh;
+    overflow-y: auto;
+}
+
 .desc:after {display: inline-block;
 width: 0;
 height: 0;
@@ -206,6 +235,14 @@ ul.menu-container ul .create-menu {display: none;}
 .nav-list-topbar.nav > li.active a {background: #fff; color: #333;}
 
 .modal-body .btn {display: none;}
+
+.modal-body {
+    padding: 20px 20px 30px 10px;
+}
+
+.modal-body .row {display: flex;}
+
+.col {width: 100%; padding: 0px 15px;}
 
 .form-element {padding: 5px; min-height: 40px; position: relative; margin-top: 0px!important;}
 

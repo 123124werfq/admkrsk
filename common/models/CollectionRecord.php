@@ -136,6 +136,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
 
                 $update = ['id_record'=>$this->id_record];
+                
                 foreach ($this->data as $key => $value)
                     $update['col'.$key] = (is_numeric($value))?(int)$value:$value;
 

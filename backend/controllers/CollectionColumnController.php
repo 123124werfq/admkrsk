@@ -9,7 +9,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\web\Response;
 /**
  * CollectionColumnController implements the CRUD actions for CollectionColumn model.
  */
@@ -123,24 +123,24 @@ class CollectionColumnController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionList($q,$id_collection)
+    public function actionList($q='',$id_collection)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $query = CollectionColumn::find();
 
-        $query->andWhere([
-            ['id_collection' => $id_collection],
-            ['ilike', 'name', $q],
-        ]);
+        $query->andWhere(['id_collection' => $id_collection]);
+
+        if (!empty($q))
+            $query->andWhere('or',['ilike', 'name', $q],['ilike', 'alias', $q]);
 
         $results = [];
 
         foreach ($query->all() as $column) {
-            /* @var Collection $collection */
+            
             $results[] = [
                 'id' => $column->id_column,
-                'text' => $column->name,
+                'text' => $column->name.' ('.$column->alias.')',
             ];
         }
 

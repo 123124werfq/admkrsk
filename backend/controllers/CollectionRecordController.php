@@ -44,8 +44,12 @@ class CollectionRecordController extends Controller
         $model = $this->findCollection($id);
 
         $query = $model->getDataQuery();
+        
         /*$query = new \yii\mongodb\Query;
-        $query->from('collection'.$id);*/
+        $query->from('collection'.$id);
+        $query->where(['in','testcol',14791]);
+        var_dump($query->all());
+        die();*/
 
         $columns = $model->getColumns()->all();
 
