@@ -460,25 +460,32 @@ jQuery(document).ready(function()
     }).disableSelection();
 
     $(".form-row").sortable({
+      start: function(event, ui) {
+          ui.item.data('pos', ui.item.index()+'_'+ui.item.parent().data('id'));
+      },
       stop: function(event, ui){
-          var ords = [];
-          var parents = [];
-          var $block = $(this);
 
-          ui.item.parent().children().each(function(i){
-              ords.push($(this).data('id'));
-              parents.push(ui.item.parent().data('id'));
-          });
+          if (ui.item.data('pos') != ui.item.index()+'_'+ui.item.parent().data('id'))
+          {
+            var ords = [];
+            var parents = [];
+            var $block = $(this);
 
-          $.ajax({
-              url: '/form-element/order',
-              type: 'post',
-              data: {ords: ords, parents: parents, _csrf: csrf_value},
-              success: function(data)
-              {
-                toastr.success('Порядок изменен', '');
-              }
-          });
+            ui.item.parent().children().each(function(i){
+                ords.push($(this).data('id'));
+                parents.push(ui.item.parent().data('id'));
+            });
+
+            $.ajax({
+                url: '/form-element/order',
+                type: 'post',
+                data: {ords: ords, parents: parents, _csrf: csrf_value},
+                success: function(data)
+                {
+                  toastr.success('Порядок изменен', '');
+                }
+            });
+          }
       },
       connectWith: ".form-row",
     }).disableSelection();
@@ -486,6 +493,7 @@ jQuery(document).ready(function()
 
     $(".ordered tbody, ul.ordered").sortable({
       stop: function(event, ui){
+
           reordModels($(this));
 
           /*if ($(this).prop("tagName")=='TBODY')

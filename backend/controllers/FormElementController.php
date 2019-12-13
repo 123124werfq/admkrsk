@@ -170,6 +170,9 @@ class FormElementController extends Controller
         $parents = Yii::$app->request->post('parents');
 
         foreach ($ords as $key => $id)
-            Yii::$app->db->createCommand()->update('form_element',['ord'=>$key,'id_row'=>$parents[$key]],['id_element'=>$id])->execute();
+        {
+            if (!empty($parents[$key]) && !empty($id))
+                Yii::$app->db->createCommand()->update('form_element',['ord'=>$key,'id_row'=>$parents[$key]],['id_element'=>$id])->execute();
+        }
     }
 }
