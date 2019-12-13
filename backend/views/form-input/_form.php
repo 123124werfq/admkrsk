@@ -45,9 +45,9 @@ use common\models\CollectionColumn;
 
     <?=$form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
 
-    <?=$form->field($model, 'label')->textInput(['maxlength' => 255]) ?>
+    <?=$form->field($model, 'label')->textArea()->hint('Жирным шрифтом вверху')?>
 
-    <?=$form->field($model, 'hint')->textInput(['maxlength' => 255]) ?>
+    <?=$form->field($model, 'hint')->textArea()->hint('Подсказка внизу серым шрифтом')?>
 
     <?php
     if ($model->type==CollectionColumn::TYPE_SERVICETARGET)
