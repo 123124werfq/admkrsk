@@ -45,7 +45,11 @@ class CollectionQuery extends \yii\mongodb\Query
         $this->columns = $columns;
 
         $select = [];
-        foreach ($columns as $key => $value) {
+        foreach ($columns as $key => $column)
+        {
+            if ($column->type == CollectionColumn::TYPE_COLLECTIONS || $column->type == CollectionColumn::TYPE_COLLECTION)
+                $select[] = 'col'.$key.'_search';
+            
             $select[] = 'col'.$key;
         }
         $select[] = 'id_record';
