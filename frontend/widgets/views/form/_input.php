@@ -398,7 +398,7 @@ JS;
                         'ajax' => [
                             'url' => '/address/street',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:$("#input-city").val(),id_district:$("#input-district'.$id_subform.'").val()};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:$("#input-city'.$id_subform.'").val(),id_district:$("#input-district'.$id_subform.'").val()};}')
                         ],
                     ],
                     'options'=>[
