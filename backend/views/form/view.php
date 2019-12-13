@@ -15,6 +15,13 @@ $this->params['button-block'][] = '<a class="btn btn-default" href="'.Yii::$app-
 
 $this->params['action-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_form]);
 
+$this->params['action-block'][] = Html::a('Сделать копию', ['copy', 'id' => $model->id_form],[
+        'data' => [
+            'confirm' => 'Вы уверены что хотите сделать копию формы?',
+            'method' => 'post',
+        ],
+    ]);
+
 if ($model->isDeleted()) {
     $this->params['action-block'][] = Html::a('Восстановить', ['undelete', 'id' => $model->id_form]);
 } else {

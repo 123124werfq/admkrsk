@@ -57,7 +57,7 @@ class FormController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['create','create-service'],
+                        'actions' => ['create','create-service','copy'],
                         'roles' => ['backend.form.create'],
                         'roleParams' => [
                             'class' => Form::class,
@@ -258,11 +258,11 @@ class FormController extends Controller
         ]);
     }
 
-    public function actionCopyForm($id)
+    public function actionCopy($id)
     {
-        $transaction = Yii::$app->db->beginTransaction();
-
         $form = $this->findModel($id);
+
+        $transaction = Yii::$app->db->beginTransaction();
 
         try
         {
@@ -285,7 +285,7 @@ class FormController extends Controller
                 {
                     $newRow = new FormRow;
                     $newRow->attributes = $row->attributes;
-                    $newRow->id_form = $subForm->id_form;
+                    $newRow->id_form = $copyForm->id_form;
                     $newRow->ord = $row->ord;
 
                     if ($newRow->save())
@@ -302,7 +302,7 @@ class FormController extends Controller
                             if (!empty($element->visibleInputs))
                             {
                                 foreach ($element->visibleInputs as $vikey => $vinput)
-                                    $visibleInputs[$vinput->id_input] = $vinput->values;
+                                    $visibleInputs[$vinput->id_input_visible] = $vinput->values;
                             }
 
                             if (!empty($element->input))
@@ -341,23 +341,27 @@ class FormController extends Controller
                                 {
                                     Yii::$app->db->createCommand()->insert('form_visibleinput',[
                                         'id_element'=>$copyElement->id_element,
-                                        'value'=>$values,
+                                        'values'=>$values,
                                         'id_input_visible'=>$vikey,
                                     ])->execute();
                                 }
                             }
 
                             if (!empty($element->subForm))
+                            {
                                 $this->assignForm($element->id_form,'',$copyForm,'',$copyElement);
+                            }
                         }
                     }
                     else
                     {
-                        $transaction->rollBack();
+                        print_r($newRow->errors);
                     }
                 }
 
                 $transaction->commit();
+
+                return $this->redirect(['view', 'id'=>$copyForm->id_form]);
             }
         }
         catch (\Exception $e)
@@ -386,10 +390,11 @@ class FormController extends Controller
                     $newElement = new FormElement;
                     $newElement->id_row = $id_row;
                     $newElement->ord = Yii::$app->db->createCommand("SELECT count(*) FROM form_element WHERE id_row = $id_row")->queryScalar();
-                    $newElement->id_form = $subForm->id_form;
                 }
                 else
                     $newElement = $element;
+
+                $newElement->id_form = $subForm->id_form;
 
                 if ($newElement->save())
                 {
@@ -444,6 +449,7 @@ class FormController extends Controller
             }
 
             $transaction->commit();
+
         }
         catch (\Exception $e)
         {
