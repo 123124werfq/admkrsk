@@ -379,7 +379,7 @@ JS;
                         'ajax' => [
                             'url' => '/address/city',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_region:$("#input-region").val(),id_subregion:$("#input-subregion'.$id_subform.'").val()};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_region:$("#input-region'.$id_subform.'").val(),id_subregion:$("#input-subregion'.$id_subform.'").val()};}')
                         ],
                     ],
                     'options'=>[

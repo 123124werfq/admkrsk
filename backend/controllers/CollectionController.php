@@ -11,6 +11,7 @@ use common\models\CollectionColumn;
 use common\models\Form;
 use backend\models\search\CollectionSearch;
 use backend\models\CollectionImportForm;
+use backend\models\forms\CollectionCombineForm;
 use yii\helpers\ArrayHelper;
 use yii\validators\NumberValidator;
 use yii\web\Response;
@@ -79,7 +80,7 @@ class CollectionController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['create','record', 'create-view','copy'],
+                        'actions' => ['create','record', 'create-view','copy','assign-collection'],
                         'roles' => ['backend.collection.create'],
                         'roleParams' => [
                             'class' => Collection::class,
@@ -275,6 +276,24 @@ class CollectionController extends Controller
             $this->redirect(["collection/view",'id'=>$newCollection->id_collection]);
         }
         else print_r($newCollection->errors);
+    }
+
+    public function actionAssignCollection($id)
+    {
+        $collection = $this->findModel($id);
+
+        $form = new CollectionCombineForm;
+        $form->id_collection = $collection->id_collection;
+
+        if ($form->load(Yii::$app->request->post()) && $form->validate())
+        {
+
+        }
+
+        $this->render('assign',[
+            'form'=>$form,
+            'model'=>$collection,
+        ]);
     }
 
     /**

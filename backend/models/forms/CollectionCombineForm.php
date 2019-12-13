@@ -14,68 +14,22 @@ class CollectionCombineForm extends Model
     public $id_collection_from;
     public $id_collection_from_column;
 
-    public $alias
+    public $alias,$column_name;
 
     public function rules()
     {
         return [
             [['id_collection','id_collection_column','id_collection_from','id_collection_from_column'], 'required'],
             [['id_collection','id_collection_column','id_collection_from','id_collection_from_column'], 'integer'],
-            [['alias'], 'string'],
+            [['alias','column_name'], 'string'],
         ];
     }
 
     public function attributeLabels()
     {
         return [
-            'id_collection' => 'Пользователь',
+            'id_collection' => 'Список',
         ];
     }
 
-    /**
-     * @return bool
-     * @throws \Exception
-     */
-    public function assign()
-    {
-        if ($this->validate()) {
-            /* @var yii\rbac\DbManager $auth */
-            $auth = Yii::$app->authManager;
-
-            $role = $auth->getRole($this->name);
-            $user = User::findOne($this->id_user);
-
-            if ($role && $user && !$user->can($role->name)) {
-                $auth->assign($role, $user->id);
-                $auth->invalidateCache();
-                $this->id_user = null;
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function revoke()
-    {
-        if ($this->validate()) {
-            /* @var yii\rbac\DbManager $auth */
-            $auth = Yii::$app->authManager;
-
-            $role = $auth->getRole($this->name);
-            $user = User::findOne($this->id_user);
-
-            if ($role && $user && $user->can($role->name)) {
-                $auth->revoke($role, $user->id);
-                $auth->invalidateCache();
-                $this->id_user = null;
-                return true;
-            }
-        }
-
-        return false;
-    }
 }
