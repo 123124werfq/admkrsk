@@ -49,7 +49,7 @@
 
 <div id="element<?=$element->id_element?>" class="col">
 	<div id="inputGroup<?=$input->id_input?>" <?=(!empty($styles))?'style="'.implode(';',$styles).'"':''?> class="form-group <?=$groupClass?>">
-		<?php if (!empty($input->label)){?>
+		<?php if (!empty($input->label) && $input->type !=CollectionColumn::TYPE_CHECKBOX){?>
 		<label class="form-label"><?=$input->label?><?=!empty($options['required'])?'*':''?></label>
 		<?php }?>
 		<?php switch ($input->type) {
@@ -202,7 +202,7 @@ JS;
 				echo '<div class="checkbox-group">
 					<label class="checkbox checkbox__ib">
 						'.Html::checkBox('FormDynamic'.$attribute,'',$options).'
-						<span class="checkbox_label">'.$input->name.'</span>
+						<span class="checkbox_label">'.($input->label??$input->name).'</span>
 					</label>
 				</div>';
 				break;

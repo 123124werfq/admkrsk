@@ -166,9 +166,9 @@ $(document).ready(function() {
             }
 
             if (show)
-                $("#element"+id_element).show();
+                $("#element"+id_element).show().find('input, textarea, select').prop('disabled',false);
             else
-                $("#element"+id_element).hide();
+                $("#element"+id_element).hide().find('input, textarea, select').prop('disabled',true);
         }
 
         for (var id_vinput in visibleInputs)
@@ -184,42 +184,6 @@ $(document).ready(function() {
         for (var id_element in visibleElements)
             check(id_element);
     }
-
-    $("div[data-visible-field]").each(function(){
-
-        var source = $("#"+$(this).data('visible-field'));
-
-        var block = $(this);
-
-        function check()
-        {
-            var values = block.data('values').split(',');
-
-            if (source.is(':checkbox'))
-            {
-                if (source.is(':checked'))
-                    var val = source.val();
-                else
-                    var val = null
-            }
-            else
-                var val = source.val();
-
-            if (values.indexOf(val)<0)
-              block.hide();
-            else
-              block.show();
-        }
-
-        if (source.length>0)
-        {
-          source.change(function(){
-            check();
-          });
-
-          check();
-        }
-    });
 
     $("#service_search_input").autocomplete({
         'minLength':'2',

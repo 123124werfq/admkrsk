@@ -45,7 +45,7 @@ use common\models\CollectionColumn;
 
     <?=$form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
 
-    <?=$form->field($model, 'label')->textArea()->hint('Жирным шрифтом вверху')?>
+    <?=$form->field($model, 'label')->textArea(['required'=>($model->type==CollectionColumn::TYPE_CHECKBOX)])->hint('Сверху поля ввода или если это чекбокс справо от чекбокса')?>
 
     <?=$form->field($model, 'hint')->textArea()->hint('Подсказка внизу серым шрифтом')?>
 
@@ -60,7 +60,7 @@ use common\models\CollectionColumn;
               $model->type == CollectionColumn::TYPE_RADIO ||
               $model->type == CollectionColumn::TYPE_CHECKBOXLIST ||
               $model->type == CollectionColumn::TYPE_CHECKBOX){?>
-        <?=$form->field($model, 'values')->textarea(['rows' => 6])->hint('Вводить через ;')?>
+        <?=$form->field($model, 'values')->textarea(['rows' => 6,'required'=>($model->type==CollectionColumn::TYPE_CHECKBOX)])->hint('Вводить через ;')?>
     <?php }?>
 
     <?php if ($model->type == CollectionColumn::TYPE_SELECT
