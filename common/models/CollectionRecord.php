@@ -116,12 +116,16 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                         if (!empty($column->input->id_collection) && !empty($column->input->id_collection_column))
                         {
-                            $ids = json_decode($value,true);
+                            if (is_numeric($value))
+                                $ids = [$value];
+                            else 
+                                $ids = json_decode($value,true);
+
                             $ids = $ids??[];
                             $mongoLabels = $this->getLabelsByID($ids,$column);
 
                             $insertDataMongo['col'.$column->id_column] = $ids;
-                            $insertDataMongo['col'.$column->id_column.'_search'] = implode(',', $mongoLabels);
+                            $insertDataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);
                         }
                         else
                             $insertDataMongo['col'.$column->id_column] = (is_numeric($value))?(int)$value:$value;
@@ -168,7 +172,11 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                         if (!empty($column->input->id_collection) && !empty($column->input->id_collection_column))
                         {
-                            $ids = json_decode($updateData,true);
+                            if (is_numeric($updateData))
+                                $ids = [$updateData];
+                            else 
+                                $ids = json_decode($updateData,true);
+
                             $ids = $ids??[];
                             $mongoLabels = $this->getLabelsByID($ids,$column);
 

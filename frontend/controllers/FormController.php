@@ -31,6 +31,8 @@ class FormController extends \yii\web\Controller
 
             if ($collection->insertRecord($prepare))
             {
+                echo "OK!";
+                
                 if (!empty($form->url))
                 	return $this->redirect($form->url);
 

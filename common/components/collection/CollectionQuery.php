@@ -36,7 +36,7 @@ class CollectionQuery extends \yii\mongodb\Query
 
     public function select(array $id_columns=[])
     {
-        $columns = $this->collection->getColumns()->select(['alias','id_column','name','type']);
+        $columns = $this->collection->getColumns()->with('input')->select(['alias','id_column','name','type','id_collection']);
 
         if (!empty($id_columns))
             $columns->where(['id_column'=>$id_columns]);
@@ -47,7 +47,7 @@ class CollectionQuery extends \yii\mongodb\Query
         $select = [];
         foreach ($columns as $key => $column)
         {
-            if ($column->type == CollectionColumn::TYPE_COLLECTIONS || $column->type == CollectionColumn::TYPE_COLLECTION)
+            if (!empty($column->input->id_collection))
                 $select[] = 'col'.$key.'_search';
             
             $select[] = 'col'.$key;

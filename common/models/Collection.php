@@ -174,9 +174,14 @@ class Collection extends \yii\db\ActiveRecord
             return $this->hasMany(CollectionColumn::class, ['id_collection' => 'id_parent_collection'])->orderBy('ord ASC');
     }
 
-    public function getArray()
+    public function getArray($id_column=null)
     {
-        $data = $this->getData((!empty($this->label))?$this->label:[]);
+        if (!empty($id_column))
+            $label = [$id_column];
+        else 
+            $label = (!empty($this->label))?$this->label:[];
+
+        $data = $this->getData($label);
 
         $output = [];
 

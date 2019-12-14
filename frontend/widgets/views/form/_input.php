@@ -169,7 +169,7 @@ JS;
 				foreach ($input->getArrayValues() as $key => $value) {
 					echo '<div class="radio-group">
 								<label class="radio">
-									<input type="radio" name="FormDynamic['.$attribute.']" value="'.Html::encode($value).'" class="radio_control">
+									<input type="radio" name="FormDynamic['.$attribute.']" value="'.Html::encode($key).'" class="radio_control">
 									<span class="radio_label">'.$value.'</span>
 								</label>
 						  </div>';
