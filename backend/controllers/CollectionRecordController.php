@@ -44,7 +44,7 @@ class CollectionRecordController extends Controller
         $model = $this->findCollection($id);
 
         $query = $model->getDataQuery();
-        
+
         /*$query = new \yii\mongodb\Query;
         $query->from('collection'.$id);
         $query->where(['in','testcol',14791]);
@@ -161,8 +161,10 @@ class CollectionRecordController extends Controller
                     if (empty($model[$col_alias]))
                         return '';
 
-                    //$ids = $model[$col_alias];
-                    $texts = explode(';', $model[$col_alias.'_search']);
+                    if (!empty($model[$col_alias.'_search']))
+                        $texts = explode(';', $model[$col_alias.'_search']);
+                    else
+                        $texts = [];
 
                     return implode('<br>', $texts);
                 };
