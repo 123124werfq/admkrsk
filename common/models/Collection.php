@@ -71,6 +71,7 @@ class Collection extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['alias'], 'unique'],
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
             [['id_parent_collection','id_group','id_column_order','order_direction'], 'integer'],
