@@ -47,7 +47,7 @@ class FormInput extends \yii\db\ActiveRecord
         return [
             [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','label','id_collection_column'], 'default', 'value' => null],
             [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','required','type','readonly','id_collection_column'], 'integer'],
-            [['name', 'type'], 'required'],
+            [['name', 'type', 'alias'], 'required'],
             [['hint','label'], 'string'],
             [['options','values'],'safe'],
             [['name', 'fieldname','alias'], 'string', 'max' => 500],

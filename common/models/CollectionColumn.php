@@ -265,7 +265,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_collection', 'name', 'type'], 'required'],
+            [['id_collection', 'name', 'type', 'alias'], 'required'],
             [['id_collection', 'id_dictionary', 'type', 'show_column_admin', 'ord'], 'default', 'value' => null],
             [['id_collection', 'id_dictionary', 'type', 'show_column_admin', 'ord'], 'integer'],
             [['name','alias'], 'string', 'max' => 500],
@@ -314,5 +314,10 @@ class CollectionColumn extends \yii\db\ActiveRecord
     public function getCollection()
     {
         return $this->hasOne(Collection::class, ['id_collection' => 'id_collection']);
+    }
+
+    public function getInput()
+    {
+        return $this->hasOne(FormInput::class, ['id_column' => 'id_column'])->andWhere(['id_form'=>$this->collection->id_form]);
     }
 }

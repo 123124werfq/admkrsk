@@ -68,6 +68,26 @@ class CollectionRecord extends \yii\db\ActiveRecord
         return implode(' ', $data);
     }
 
+    protected function getLabelsByID($ids,$column)
+    {
+        $mongoLabels = [];
+        if (!empty($ids))
+        {
+            $labels = (new \yii\db\Query())
+                ->select(['value', 'id_record'])
+                ->from('db_collection_value')
+                ->where([
+                    'id_record' => $ids,
+                    'id_column'=>$column->input->id_collection_column
+                ])->all();
+
+            foreach ($labels as $lkey => $data)
+                $mongoLabels[$data['id_record']] = $data['value'];
+        }
+
+        return $mongoLabels;
+    }
+
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
@@ -80,30 +100,44 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                 // запись в postgree
                 $insertData = [];
+                $insertDataMongo = [];
 
-                foreach ($this->data as $key => $value)
+                foreach ($this->collection->getColumns()->with(['input'])->all() as $key => $column)
                 {
-                    $insertData[] = [
-                        'id_column'=>$key,
-                        'id_record'=>$this->id_record,
-                        'value'=>$value
-                    ];
+                    if (isset($this->data[$column->id_column]))
+                    {
+                        $value = $this->data[$column->id_column];
+
+                        $insertData[] = [
+                            'id_column'=>$column->id_column,
+                            'id_record'=>$this->id_record,
+                            'value'=>$value
+                        ];
+
+                        if (!empty($column->input->id_collection) && !empty($column->input->id_collection_column))
+                        {
+                            $ids = json_decode($value,true);
+                            $ids = $ids??[];
+                            $mongoLabels = $this->getLabelsByID($ids,$column);
+
+                            $insertDataMongo['col'.$column->id_column] = $ids;
+                            $insertDataMongo['col'.$column->id_column.'_search'] = implode(',', $mongoLabels);
+                        }
+                        else
+                            $insertDataMongo['col'.$column->id_column] = (is_numeric($value))?(int)$value:$value;
+                    }
                 }
 
                 Yii::$app->db->createCommand()->batchInsert('db_collection_value',['id_column','id_record','value'],$insertData)->execute();
 
                 // запись в mongo
                 $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
-
-                $insert = ['id_record'=>$this->id_record];
-                foreach ($this->data as $key => $value)
-                    $insert['col'.$key] = (is_numeric($value))?(int)$value:$value;
-
-                $collection->insert($insert);
+                $insertDataMongo['id_record'] = $this->id_record;
+                $collection->insert($insertDataMongo);
             }
             else
             {
-                $update = [];
+                $updateDataMongo = [];
 
                 foreach ($this->collection->columns as $key => $column)
                 {
@@ -120,7 +154,8 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             id_column = $column->id_column")->queryScalar();
 
                         if ($count>0)
-                            Yii::$app->db->createCommand()->update('db_collection_value',['value'=>$updateData],[
+                            Yii::$app->db->createCommand()->update('db_collection_value',
+                                ['value'=>$updateData],[
                                 'id_record'=>$this->id_record,
                                 'id_column'=>$column->id_column
                             ])->execute();
@@ -130,17 +165,29 @@ class CollectionRecord extends \yii\db\ActiveRecord
                                 'id_column'=>$column->id_column,
                                 'value'=>$updateData
                             ])->execute();
+
+                        if (!empty($column->input->id_collection) && !empty($column->input->id_collection_column))
+                        {
+                            $ids = json_decode($updateData,true);
+                            $ids = $ids??[];
+                            $mongoLabels = $this->getLabelsByID($ids,$column);
+
+                            $updateDataMongo['col'.$column->id_column] = $ids;
+                            $updateDataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);
+                        }
+                        else
+                            $updateDataMongo['col'.$column->id_column] = (is_numeric($updateData))?(int)$updateData:$updateData;
                     }
                 }
 
                 $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
 
-                $update = ['id_record'=>$this->id_record];
-                
-                foreach ($this->data as $key => $value)
-                    $update['col'.$key] = (is_numeric($value))?(int)$value:$value;
+                $updateDataMongo = ['id_record'=>$this->id_record];
 
-                $collection->update(['id_record'=>$this->id_record],$update);
+                /*foreach ($this->data as $key => $value)
+                    $update['col'.$key] = (is_numeric($value))?(int)$value:$value;*/
+
+                $collection->update(['id_record'=>$this->id_record],$updateDataMongo);
             }
         }
     }

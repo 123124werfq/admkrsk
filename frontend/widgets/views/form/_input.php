@@ -212,7 +212,7 @@ JS;
 					echo '
 					<div class="checkbox-group">
 						<label class="checkbox checkbox__ib">
-							<input type="checkbox" name="FormDynamic['.$attribute.'][]" value="'.Html::encode($value).'" class="checkbox_control">
+							<input type="checkbox" name="FormDynamic['.$attribute.'][]" value="'.Html::encode($key).'" class="checkbox_control">
 							<span class="checkbox_label">'.$value.'</span>
 						</label>
 					</div>';
