@@ -75,7 +75,7 @@ class Form extends \yii\db\ActiveRecord
             'id_form' => 'ID',
             'id_collection' => 'Коллекция',
             'id_service' => 'Услуга',
-            'alias' => 'Системное название формы'
+            'alias' => 'Системное название формы',
             'name' => 'Название',
             'fullname' => 'Полное название',
             'id_group' => 'Группа',
