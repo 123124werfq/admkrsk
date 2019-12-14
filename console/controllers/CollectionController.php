@@ -23,7 +23,9 @@ class CollectionController extends Controller
         try {
             foreach ($collection as $key => $collection)
             {
-                $form = new Form;
+                $collection->createForm();
+
+                /*$form = new Form;
                 $form->id_collection = $collection->id_collection;
                 $form->name = $collection->name;
 
@@ -56,7 +58,7 @@ class CollectionController extends Controller
                     $collection->updateAttributes(['id_form']);
                 }
                 else
-                    print_r($form->errors);
+                    print_r($form->errors);*/
             }
 
             $transaction->commit();

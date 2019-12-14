@@ -343,6 +343,10 @@ class Collection extends \yii\db\ActiveRecord
                     $input = new FormInput;
                     $input->label       = $input->name = $column->name;
                     $input->type        = $column->type;
+
+                    if ($input->type==CollectionColumn::TYPE_CHECKBOX)
+                        $input->values = 1;
+
                     $input->id_form     = $form->id_form;
                     $input->id_column   = $column->id_column;
                     $input->fieldname   = $column->alias;
