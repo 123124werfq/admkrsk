@@ -31,7 +31,6 @@ class ImportController extends Controller
             while (($data = fgetcsv($handle, 0, "|")) !== false) {
                 if (count($data) == 10 && $row > 1) {
                     $poll = new Poll();
-                    $poll->detachBehavior('ba');
                     $poll->id_poll = $data[0];
                     $poll->status = $data[5] == 'True' ? Poll::STATUS_ACTIVE : Poll::STATUS_INACTIVE;
                     $poll->title = trim($data[2]);
@@ -58,7 +57,6 @@ class ImportController extends Controller
             while (($data = fgetcsv($handle, 0, "|")) !== false) {
                 if (count($data) == 15 && $row > 1) {
                     $question = new Question();
-                    $question->detachBehavior('ba');
                     $question->id_poll_question = $data[0];
                     $question->id_poll = $data[8];
 
@@ -113,7 +111,6 @@ class ImportController extends Controller
             while (($data = fgetcsv($handle, 0, "|")) !== false) {
                 if (count($data) == 12 && $row > 1) {
                     $answer = new Answer();
-                    $answer->detachBehavior('ba');
                     $answer->id_poll_answer = $data[0];
                     $answer->id_poll_question = $data[10];
                     $answer->answer = $data[2];
@@ -135,7 +132,6 @@ class ImportController extends Controller
             while (($data = fgetcsv($handle, 0, "|")) !== false) {
                 if (count($data) == 17 && $row > 1) {
                     $vote = new Vote();
-                    $vote->detachBehavior('ba');
                     $vote->id_poll_question = $data[6];
                     $vote->id_poll_answer = $data[11];
                     list($ip, $port) = explode(':', $data[2]);
@@ -147,7 +143,6 @@ class ImportController extends Controller
                     }
                 } elseif (count($data) == 16 && $row > 1) {
                     $vote = new Vote();
-                    $vote->detachBehavior('ba');
                     $vote->id_poll_question = $data[6];
                     $vote->id_poll_answer = $data[11];
                     list($ip, $port) = explode(':', $data[2]);
@@ -223,91 +218,12 @@ class ImportController extends Controller
      */
     public function actionInstitutionToCollection()
     {
-        $institution = new Institution();
-        $columns = $institution->getAttributes(null, [
-            'id_institution',
-            'created_at',
-            'created_by',
-            'updated_at',
-            'updated_by',
-            'deleted_at',
-            'deleted_by',
-        ]);
+        $count = 0;
 
-        if (($collection = Collection::findOne(['alias' => 'institution'])) === null) {
-            $collection = new Collection([
-                'name' => 'Организации',
-                'alias' => 'institution',
-                'is_dictionary' => 1,
-            ]);
-            $collection->detachBehavior('ba');
-            $collection->save();
-        }
-
-        $collectionColumns = $collection->getColumns()->indexBy('alias')->all();
-
-        foreach ($institution->rules() as $rule) {
-            foreach ($rule[0] as $attribute) {
-                switch ($rule[1]) {
-                    case 'string':
-                        $type = 'string';
-                        break;
-                    case 'integer':
-                        $type = 'integer';
-                        break;
-                    case 'boolean':
-                        $type = 'boolean';
-                        break;
-                    case 'safe':
-                        $type = 'json';
-                        break;
-                    default:
-                        $type = null;
-                        break;
-                }
-
-                if (isset($columns[$attribute])) {
-                    $columns[$attribute] = $type;
-                }
-            }
-        }
-
-        foreach ($columns as $column => $type) {
-            if (!isset($collectionColumns[$column])) {
-                switch ($type) {
-                    case 'integer':
-                        $columnType = CollectionColumn::TYPE_INTEGER;
-                        break;
-                    case 'boolean':
-                        $columnType = CollectionColumn::TYPE_CHECKBOX;
-                        break;
-                    case 'json':
-                        $columnType = CollectionColumn::TYPE_JSON;
-                        break;
-                    default:
-                        $columnType = CollectionColumn::TYPE_INPUT;
-                        break;
-                }
-
-                if (in_array($column, ['last_update', 'modified_at'])) {
-                    $columnType = CollectionColumn::TYPE_DATETIME;
-                }
-
-                $collectionColumn = new CollectionColumn([
-                    'id_collection' => $collection->id_collection,
-                    'alias' => $column,
-                    'name' => $institution->getAttributeLabel($column),
-                    'type' => $columnType,
-                ]);
-                $collectionColumn->save();
-
-                $collectionColumns[$column] = $collectionColumn;
-            }
-        }
-
-        $ord = 0;
-        foreach (Institution::find()->each() as $institution) {
-            $attributes = $institution->getAttributes(null, [
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $institution = new Institution();
+            $columns = $institution->getAttributes(null, [
                 'id_institution',
                 'created_at',
                 'created_by',
@@ -317,17 +233,120 @@ class ImportController extends Controller
                 'deleted_by',
             ]);
 
-            $collectionRecord = new CollectionRecord;
-            $collectionRecord->id_collection = $collection->id_collection;
-            $collectionRecord->ord = $ord;
-
-            foreach ($attributes as $attribute => $value) {
-                $collectionRecord->data[$collectionColumns[$attribute]->id_column] = !is_array($value) ? $value : Json::encode($value);
+            if (($collection = Collection::findOne(['alias' => 'institution'])) === null) {
+                $collection = new Collection([
+                    'name' => 'Организации',
+                    'alias' => 'institution',
+                    'is_dictionary' => 1,
+                ]);
+                $collection->save();
             }
 
-            if ($collectionRecord->save()) {
-                $ord++;
+            $collectionColumns = $collection->getColumns()->indexBy('alias')->all();
+
+            foreach ($institution->rules() as $rule) {
+
+                foreach ($rule[0] as $attribute) {
+                    switch ($rule[1]) {
+                        case 'string':
+                            $type = 'string';
+                            break;
+                        case 'integer':
+                            $type = 'integer';
+                            break;
+                        case 'boolean':
+                            $type = 'boolean';
+                            break;
+                        case 'safe':
+                            $type = 'json';
+                            break;
+                        default:
+                            $type = null;
+                            break;
+                    }
+
+                    if (!isset($columns[$attribute])) {
+                        $columns[$attribute] = $type;
+                    }
+                }
             }
+
+            foreach ($columns as $column => $type) {
+                if (!isset($collectionColumns[$column])) {
+                    switch ($type) {
+                        case 'integer':
+                            $columnType = CollectionColumn::TYPE_INTEGER;
+                            break;
+                        case 'boolean':
+                            $columnType = CollectionColumn::TYPE_CHECKBOX;
+                            break;
+                        case 'json':
+                            $columnType = CollectionColumn::TYPE_JSON;
+                            break;
+                        default:
+                            $columnType = CollectionColumn::TYPE_INPUT;
+                            break;
+                    }
+
+                    if (in_array($column, ['last_update', 'modified_at'])) {
+                        $columnType = CollectionColumn::TYPE_DATETIME;
+                    }
+
+                    $collectionColumn = new CollectionColumn([
+                        'id_collection' => $collection->id_collection,
+                        'alias' => $column,
+                        'name' => $institution->getAttributeLabel($column),
+                        'type' => $columnType,
+                    ]);
+                    $collectionColumn->save();
+
+                    $collectionColumns[$column] = $collectionColumn;
+                }
+            }
+
+            foreach ($collection->getData([], true) as $record) {
+                if (isset($record['is_updating']) && isset($record['bus_id'])) {
+                    Institution::updateAll(['is_updating' => (boolean) $record['is_updating']], ['bus_id' => $record['bus_id']]);
+                }
+            }
+
+            foreach (Institution::find()->each() as $institution) {
+                $attributes = $institution->getAttributes(null, [
+                    'id_institution',
+                    'created_at',
+                    'created_by',
+                    'updated_at',
+                    'updated_by',
+                    'deleted_at',
+                    'deleted_by',
+                ]);
+
+                if ($institution->is_updating) {
+                    $collectionRecord = $institution->record;
+
+                    if (!$collectionRecord || $collectionRecord->id_collection != $collection->id_collection) {
+                        $collectionRecord = new CollectionRecord;
+                        $collectionRecord->id_collection = $collection->id_collection;
+                        $collectionRecord->ord = CollectionRecord::find()->where(['id_collection' => $collection->id_collection])->max('ord') + 1;
+                    }
+
+                    foreach ($attributes as $attribute => $value) {
+                        $collectionRecord->data[$collectionColumns[$attribute]->id_column] = !is_array($value) ? $value : Json::encode($value);
+                    }
+
+                    if ($collectionRecord->save()) {
+                        $institution->link('record', $collectionRecord);
+                        $count++;
+                    }
+                }
+            }
+
+            $transaction->commit();
+
+            $this->stdout(Yii::t('app', 'Добавлено/обновлено {count} организаций', ['count' => $count]) . PHP_EOL);
+        } catch (\Exception $exception) {
+            $transaction->rollBack();
+            throw $exception;
         }
     }
 }

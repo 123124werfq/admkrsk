@@ -13,6 +13,7 @@ use yii\behaviors\TimestampBehavior;
  * This is the model class for table "db_institution".
  *
  * @property int $id_institution
+ * @property int $id_record
  * @property int $status
  * @property string $description
  * @property string $comment
@@ -74,6 +75,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $manager
  *
  * @property Document[] $documents
+ * @property CollectionRecord $record
  */
 class Institution extends \yii\db\ActiveRecord
 {
@@ -112,7 +114,7 @@ class Institution extends \yii\db\ActiveRecord
             [['is_updating'], 'default', 'value' => true],
             [['type'], 'default', 'value' => self::TYPE_PRIVATE],
             [['last_update', 'modified_at'], 'default', 'value' => null],
-            [['id_institution', 'status', 'last_update', 'modified_at'], 'integer'],
+            [['id_institution', 'id_record', 'status', 'last_update', 'modified_at'], 'integer'],
             [['is_updating'], 'boolean'],
             [
                 [
@@ -137,6 +139,7 @@ class Institution extends \yii\db\ActiveRecord
     {
         return [
             'id_institution' => '#',
+            'id_record' => 'ID записи в колекции',
             'status' => 'Статус',
             'description' => 'Описание',
             'comment' => 'Комментарий',
@@ -215,6 +218,14 @@ class Institution extends \yii\db\ActiveRecord
     public function getDocuments()
     {
         return $this->hasMany(Document::class, ['id_institution' => 'id_institution']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRecord()
+    {
+        return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_record']);
     }
 
     /**
@@ -324,7 +335,6 @@ class Institution extends \yii\db\ActiveRecord
                 }
             }
 
-            $institution->detachBehavior('ba');
             $institution->attributes = $result;
 
             if ($institution->save()) {

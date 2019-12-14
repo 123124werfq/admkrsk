@@ -437,6 +437,9 @@ JS;
 
 				$data = json_decode($model->$attribute);
 
+				if (!is_array($columns)) {
+                    $columns = [];
+                }
 ?>
 				<table class="form-table">
 					<thead>

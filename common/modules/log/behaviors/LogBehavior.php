@@ -33,11 +33,6 @@ class LogBehavior extends Behavior
     {
         if ($this->isAttributesChanged($event)) {
             $log = new Log();
-
-            if (Yii::$app instanceof \yii\console\Application) {
-                $log->detachBehavior('ba');
-            }
-
             $log->model = get_class($this->owner);
             $log->model_id = $this->owner->primaryKey;
             $log->previous_id = $this->getPreviousId($log);
