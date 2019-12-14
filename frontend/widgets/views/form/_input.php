@@ -201,7 +201,7 @@ JS;
 
 				echo '<div class="checkbox-group">
 					<label class="checkbox checkbox__ib">
-						'.Html::checkBox('FormDynamic['.$attribute.']','',$options).'
+						'.Html::checkBox('FormDynamic['.$attribute.']',!empty($model->$attribute),$options).'
 						<span class="checkbox_label">'.($input->label??$input->name).'</span>
 					</label>
 				</div>';
