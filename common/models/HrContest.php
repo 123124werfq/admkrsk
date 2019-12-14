@@ -60,4 +60,25 @@ class HrContest extends \yii\db\ActiveRecord
             'deleted_by' => 'Deleted By',
         ];
     }
+
+    public function getPositions()
+    {
+        return $this->hasMany(HrProfilePositions::class, ['id_profile' => 'id_profile']);
+    }
+
+    public function getProfiles()
+    {
+        return $this->hasMany(HrProfile::class, ['id_profile' => 'id_profile'])->viaTable('hrl_contest_profile', ['id_contest' => 'id_contest']);
+    }
+
+    public function getExperts()
+    {
+        return $this->hasMany(HrExpert::class, ['id_expert' => 'id_expert'])->viaTable('hrl_contest_expert', ['id_contest' => 'id_contest']);
+    }
+
+    public function getResults()
+    {
+        return $this->hasMany(HrResult::class, ['id_contest' => 'id_contest']);
+    }
+
 }
