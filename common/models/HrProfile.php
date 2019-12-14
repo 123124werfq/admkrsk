@@ -60,4 +60,14 @@ class HrProfile extends \yii\db\ActiveRecord
             'deleted_by' => 'Deleted By',
         ];
     }
+
+    public function getPositions()
+    {
+        return $this->hasMany(HrProfilePositions::class, ['id_profile' => 'id_profile']);
+    }
+
+    public function getContests()
+    {
+        return $this->hasMany(HrContest::class, ['id_contest' => 'id_contest'])->viaTable('hrl_contest_profile', ['id_profile' => 'id_profile']);
+    }
 }
