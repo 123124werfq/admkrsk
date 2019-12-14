@@ -180,18 +180,26 @@ class CollectionRecordController extends Controller
             }
             else if (!empty($col->input->id_collection))
             {
-
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
                 $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias)
                 {
-                    if (!empty($model[$col_alias.'_search']))
-                    {
-                        $texts = explode(';', $model[$col_alias.'_search']);
-                    }
-                    else
-                        $texts = [];
 
-                    return implode('<br>', $texts);
+                    if (empty($model[$col_alias]))
+                        return '';
+
+                    $labels = [];
+
+                    if (!empty($model[$col_alias.'_search']))
+                        $labels = explode(';', $model[$col_alias.'_search']);
+
+                    $links = [];
+                    foreach ($model[$col_alias] as $ckey => $id)
+                    {
+                        if (!empty($labels[$ckey]))
+                            $links[] = '<a href="/collection-record/update?id='.$id.'">'.$labels[$ckey].'</a>';
+                    }
+
+                    return implode('<br>', $links);
                 };
             }
 

@@ -190,7 +190,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                 $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
 
-                $updateDataMongo = ['id_record'=>$this->id_record];
+                $updateDataMongo['id_record'] = $this->id_record;
 
                 /*foreach ($this->data as $key => $value)
                     $update['col'.$key] = (is_numeric($value))?(int)$value:$value;*/
