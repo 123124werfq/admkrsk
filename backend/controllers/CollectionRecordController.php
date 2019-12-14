@@ -42,12 +42,19 @@ class CollectionRecordController extends Controller
     public function actionIndex($id)
     {
         $model = $this->findCollection($id);
-
         $query = $model->getDataQuery();
 
         /*$query = new \yii\mongodb\Query;
         $query->from('collection'.$id);
-        $query->where(['in','testcol',14791]);
+        $q = [
+          'testcol' => [
+            '$regex' => "'/.*ул.*'",
+            '$options' => 'i',
+          ]
+        ];
+
+        $query->where(['regex','testcol',".*ул.*"]);
+        //$query->where($q);
         var_dump($query->all());
         die();*/
 

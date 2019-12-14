@@ -169,7 +169,7 @@ JS;
 				foreach ($input->getArrayValues() as $key => $value) {
 					echo '<div class="radio-group">
 								<label class="radio">
-									<input type="radio" name="FormDynamic'.$attribute.'" value="'.Html::encode($value).'" class="radio_control">
+									<input type="radio" name="FormDynamic['.$attribute.']" value="'.Html::encode($value).'" class="radio_control">
 									<span class="radio_label">'.$value.'</span>
 								</label>
 						  </div>';
@@ -201,7 +201,7 @@ JS;
 
 				echo '<div class="checkbox-group">
 					<label class="checkbox checkbox__ib">
-						'.Html::checkBox('FormDynamic'.$attribute,'',$options).'
+						'.Html::checkBox('FormDynamic['.$attribute.']','',$options).'
 						<span class="checkbox_label">'.($input->label??$input->name).'</span>
 					</label>
 				</div>';
@@ -212,7 +212,7 @@ JS;
 					echo '
 					<div class="checkbox-group">
 						<label class="checkbox checkbox__ib">
-							<input type="checkbox" name="FormDynamic'.$attribute.'[]" value="'.Html::encode($value).'" class="checkbox_control">
+							<input type="checkbox" name="FormDynamic['.$attribute.'][]" value="'.Html::encode($value).'" class="checkbox_control">
 							<span class="checkbox_label">'.$value.'</span>
 						</label>
 					</div>';
