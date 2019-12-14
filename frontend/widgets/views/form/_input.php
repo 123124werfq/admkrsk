@@ -194,12 +194,13 @@ JS;
 
 				echo '<div class="checkbox-group">
 					<label class="checkbox checkbox__ib">
-						'.Html::checkBox('FormDynamic['.$attribute.']',!empty($model->$attribute),$options).'
+						'.Html::checkBox('FormDynamic['.$attribute.']',(!empty($model->$clearAttribute)),$options).'
 						<span class="checkbox_label">'.($input->label??$input->name).'</span>
 					</label>
 				</div>';
 				break;
 			case CollectionColumn::TYPE_CHECKBOXLIST:
+
 				echo '<div class="checkboxes">';
 				foreach ($input->getArrayValues() as $key => $value) {
 					echo '

@@ -205,7 +205,19 @@ class CollectionRecord extends \yii\db\ActiveRecord
         if ($this->isNewRecord)
             return [];
 
-        $rows = (new \yii\db\Query());
+        $record = \common\components\collection\CollectionQuery::getQuery($this->id_collection)
+                    ->select();
+                    ->where(['id_record'=>$this->id_record]);
+
+        $columns = $record->columns;
+
+        $record = $record->getArray();
+
+        if (!empty($record))
+            $this->loadData = $record = array_shift($record);
+        else 
+            return [];
+        /*$rows = (new \yii\db\Query());
 
         $rows = $rows->select(['dcv.id_column', 'value','id_record','dcc.alias as alias'])
                 ->from('db_collection_value as dcv')
@@ -213,20 +225,19 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 ->where(['id_record'=>$this->id_record]);
 
         if (!empty($columns))
-            $rows->andWhere(['dcv.id_column'=>$id_columns]);
+            $rows->andWhere(['dcv.id_column'=>$id_columns]);*/
 
-        $output = [];
-        $cache = [];
-
-        foreach ($rows->all() as $key => $data)
+        if (!empty($keyAsAlias))
         {
-            $output[$keyAsAlias?$data['alias']:$data['id_column']] = $data['value'];
-            $cache[$data['id_column']] = $data['value'];
+            $aliased = [];
+
+            foreach ($columns as $key => $column)
+                $aliased[$column['alias']] = $record[$column->id_column];
+
+            return $aliased;
         }
-
-        $this->loadData = $cache;
-
-        return $output;
+        else 
+            return $record;
     }
 
     public function getAllMedias()
