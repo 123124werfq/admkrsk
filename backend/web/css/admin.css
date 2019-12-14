@@ -16,7 +16,7 @@ img {max-width: 100%;}
 .row-flex .col, .text-row {width: 100%; margin: 0px 10px; padding: 0px;}
 .button-bar {margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;}
 
-.modal-body .checkbox input[type="checkbox"], .modal-body .checkbox input[type="radio"] {opacity: 1;}
+.modal-body .checkbox input[type="checkbox"], .modal-body .checkbox input[type="radio"], .modal-body .radio input[type="radio"] {opacity: 1;}
 
 .select2-container--open {z-index: 9999;}
 

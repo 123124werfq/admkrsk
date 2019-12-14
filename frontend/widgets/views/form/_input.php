@@ -35,16 +35,14 @@
 	if ($input->type==CollectionColumn::TYPE_SELECT)
 		$groupClass .= ' custom-select';
 
-	$attribute = "input$input->id_input";
+	$clearAttribute = $attribute = "input$input->id_input";
 
 	if (!empty($arrayGroup))
 		$attribute = "[$arrayGroup]".$attribute;
 
-
 	$styles = $element->getStyles();
 
 	$id_subform = (!empty($subform))?$subform->id_form:'';
-
 ?>
 
 <div id="element<?=$element->id_element?>" class="col">
@@ -61,10 +59,6 @@
 				break;
 			case CollectionColumn::TYPE_DATE:
 				$options['type'] = 'date';
-				if (strpos($attribute, ']')>0)
-					$clearAttribute = substr($attribute, strpos($attribute, ']')+1);
-				else
-					$clearAttribute = $attribute;
 
 				if (is_numeric($model->$clearAttribute))
 					$model->$clearAttribute = date('Y-m-d', $model->$clearAttribute);
@@ -73,10 +67,6 @@
 				break;
 			case CollectionColumn::TYPE_DATETIME:
 
-				if (strpos($attribute, ']')>0)
-					$clearAttribute = substr($attribute, strpos($attribute, ']')+1);
-				else
-					$clearAttribute = $attribute;
 				if (is_numeric($model->$clearAttribute))
 					$model->$clearAttribute = date('Y-m-d\TH:i:s', $model->$clearAttribute);
 
@@ -166,6 +156,9 @@ JS;
 	            </div>';
 				break;
 			case CollectionColumn::TYPE_RADIO:
+				
+				echo $model->$attribute;
+
 				foreach ($input->getArrayValues() as $key => $value) {
 					echo '<div class="radio-group">
 								<label class="radio">
