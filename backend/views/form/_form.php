@@ -37,6 +37,8 @@ use yii\web\JsExpression;
 
     <?= $form->field($model, 'fullname')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
+
     <div class="row">
         <div class="col-sm-6">
             <?= $form->field($model, 'id_page')->widget(Select2::class, [

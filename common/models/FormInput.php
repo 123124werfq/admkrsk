@@ -45,8 +45,8 @@ class FormInput extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','label'], 'default', 'value' => null],
-            [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','required','type','readonly'], 'integer'],
+            [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','label','id_collection_column'], 'default', 'value' => null],
+            [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','required','type','readonly','id_collection_column'], 'integer'],
             [['name', 'type'], 'required'],
             [['hint','label'], 'string'],
             [['options','values'],'safe'],
@@ -67,6 +67,7 @@ class FormInput extends \yii\db\ActiveRecord
             'required' => 'Обязательно',
             'readonly' => 'Только для чтения',
             'id_collection' => 'Данные из списка',
+            'id_collection_column'=>'Поле из списка',
             'label' => 'Подпись',
             'name' => 'Название',
             'hint' => 'Пояснение',

@@ -3,15 +3,14 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
-use kartik\select2\Select2;
 
 use common\models\FormInputType;
 use common\models\FormInput;
-
 use common\models\Collection;
 use common\models\CollectionColumn;
 
-
+use kartik\select2\Select2;
+use yii\web\JsExpression;
 ?>
 <div class="form-input-form">
     <?php $form = ActiveForm::begin([
@@ -69,6 +68,8 @@ use common\models\CollectionColumn;
            || $model->type == CollectionColumn::TYPE_COLLECTION
            || $model->type == CollectionColumn::TYPE_COLLECTIONS
        ){?>
+    <div class="row">
+        <div class="col-md-6">
         <?=$form->field($model, 'id_collection')->widget(Select2::class, [
             'data' => ArrayHelper::map(Collection::find()->all(), 'id_collection', 'name'),
             'pluginOptions' => [
@@ -76,41 +77,58 @@ use common\models\CollectionColumn;
                 'placeholder' => 'Выберите список',
             ],
         ])->label('Или взять данные из списка')?>
+        </div>
+        <div class="col-md-6">
+        <?=$form->field($model, 'id_collection_column')->widget(Select2::class, [
+            'data' => (!empty($model->collectionColumn))?[$model->id_collection_column=>$model->collectionColumn->name]:[],
+            'pluginOptions' => [
+                'allowClear' => true,
+                'minimumInputLength' => 0,
+                'placeholder' => 'Начните ввод',
+                'ajax' => [
+                    'url' => '/collection-column/list',
+                    'dataType' => 'json',
+                    'data' => new JsExpression('function(params) {return {q:params.term,id_collection:$("#forminput-id_collection").val()}}')
+                ],
+            ],
+        ])->label('Выберите колонку для отображения')?>
+        </div>
+    </div>
     <?php }?>
 
     <?php if ($model->type == CollectionColumn::TYPE_JSON)
     {
-                echo "<br/>
-                <h3>Настройки таблицы</h3>";
+        echo "<br/>
+        <h3>Настройки таблицы</h3>";
 
-                $data = $model->getTableOptions();
+        $data = $model->getTableOptions();
 
-                echo '<div class="row-flex">';
-                foreach ($data[0] as $key => $option)
-                    echo '<div class="col"><label class="control-label">'.$option['name'].'</label></div>';
+        echo '<div class="row-flex">';
+        foreach ($data[0] as $key => $option)
+            echo '<div class="col"><label class="control-label">'.$option['name'].'</label></div>';
+        echo '</div>';
+
+        echo '<div id="table_options" class="multiyiinput">';
+        foreach ($data as $key => $row)
+        {
+            echo '<div class="row-flex">';
+            foreach ($row as $okey => $option)
+            {
+                $option['class'] = 'form-control';
+                $option['id'] = 'values_'.$okey.'_'.$key;
+                echo '<div class="col">';
+                    if (empty($option['values']))
+                        echo Html::textInput("FormInput[values][$key][$okey]",$option['value'],$option);
+                    else
+                        echo Html::dropDownList("FormInput[values][$key][$okey]",$option['value'],$option['values'],$option);
                 echo '</div>';
+            }
+            echo '<div class="col col-close"><a class="close" href="javascript:">&times;</a></div>';
+            echo '</div>';
+        }
+        echo '</div>';
 
-                echo '<div id="table_options" class="multiyiinput">';
-                foreach ($data as $key => $row)
-                {
-                    echo '<div class="row-flex">';
-                    foreach ($row as $okey => $option)
-                    {
-                        $option['class'] = 'form-control';
-                        $option['id'] = 'values_'.$okey.'_'.$key;
-                        echo '<div class="col">';
-                            if (empty($option['values']))
-                                echo Html::textInput("FormInput[values][$key][$okey]",$option['value'],$option);
-                            else
-                                echo Html::dropDownList("FormInput[values][$key][$okey]",$option['value'],$option['values'],$option);
-                        echo '</div>';
-                    }
-                    echo '<div class="col col-close"><a class="close" href="javascript:">&times;</a></div>';
-                    echo '</div>';
-                }
-                echo '</div>';
-
-                echo '<a class="btn btn-default btn-visible" href="javascript:" onclick="return addInput(\'table_options\')">Добавить столбец</a>';
+        echo '<a class="btn btn-default btn-visible" href="javascript:" onclick="return addInput(\'table_options\')">Добавить столбец</a>';
     }?>
 
     <div id="input-options">
@@ -120,6 +138,7 @@ use common\models\CollectionColumn;
     </div>
 
     <br/>
+
     <h3>Настройка отображения</h3>
     <?php
         echo $this->render('_element_options',['element'=>$model->element,'id_form'=>$model->id_form,'form'=>$form]);
