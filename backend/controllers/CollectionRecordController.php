@@ -160,7 +160,7 @@ class CollectionRecordController extends Controller
                 };
             }
 
-            if ($col->type==CollectionColumn::TYPE_COLLECTIONS)
+            if (!empty($col->input->id_collection))
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
                 $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
