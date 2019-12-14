@@ -41,6 +41,10 @@ return [
         ],
     ],
     'components' => [
+        'user' => [
+            'enableSession' => false,
+            'enableAutoLogin' => false,
+        ],
         'log' => [
             'targets' => [
                 [
