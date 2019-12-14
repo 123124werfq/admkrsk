@@ -3,15 +3,14 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
-use kartik\select2\Select2;
 
 use common\models\FormInputType;
 use common\models\FormInput;
-
 use common\models\Collection;
 use common\models\CollectionColumn;
 
-
+use kartik\select2\Select2;
+use yii\web\JsExpression;
 ?>
 <div class="form-input-form">
     <?php $form = ActiveForm::begin([
@@ -78,6 +77,7 @@ use common\models\CollectionColumn;
                 'placeholder' => 'Выберите список',
             ],
         ])->label('Или взять данные из списка')?>
+        </div>
         <div class="col-md-6">
         <?=$form->field($model, 'id_collection_column')->widget(Select2::class, [
             'data' => (!empty($model->collectionColumn))?[$model->id_collection_column=>$model->collectionColumn->name]:[],
@@ -91,7 +91,7 @@ use common\models\CollectionColumn;
                     'data' => new JsExpression('function(params) {return {q:params.term,id_collection:$("#forminput-id_collection").val()}}')
                 ],
             ],
-        ])->label('Выберите колонку')?>
+        ])->label('Выберите колонку для отображения')?>
         </div>
     </div>
     <?php }?>
