@@ -53,7 +53,14 @@ if (Yii::$app->user->can('admin.service')) {
                 'format' => 'html',
                 'value' => function($model){
 
-                    return "";
+                    $output = [];
+
+                    foreach ($model->positions as $pos)
+                        $output[] = $pos->positionName;
+
+                    sort($output);
+
+                    return implode("<br>", $output);
 
                 },
             ],
