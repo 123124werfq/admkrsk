@@ -56,7 +56,11 @@ $lastDataStructureUrl = $model->lastData->structure->url;
                             </tr>
                             <tr>
                                 <td>Гиперссылки (URL) на страницы сайта</td>
-                                <td><?= $model->page ? Html::a($model->page->pageTitle, $model->page->url) : null ?></td>
+                                <td>
+                                    <?php foreach ($model->urls as $url): ?>
+                                        <?= Html::a($url, $url) ?><br>
+                                    <?php endforeach; ?>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Ответственное лицо</td>
