@@ -256,21 +256,28 @@ JS;
 
 				if (!empty($options['accept_add']))
 				{
-					$arrayGroup = md5(rand(0,10000).time());
-
 					echo '<div id="subforms'.$input->id_input.'">';
 					if (empty($records))
 						$records = [null];
 
 					foreach ($records as $key => $record)
+					{
+						$arrayGroup = md5(rand(0,10000).time());
+
+						$inputs[$attribute.'[]'] = $arrayGroup;
+
+						if (!empty($record))
+							$inputs[$attribute.'_id_record[]'] = $record->id_record;
+
 						echo \frontend\widgets\FormsWidget::widget([
 							'form'=>$input->collection->form,
 							'arrayGroup'=>$arrayGroup,
 							'collectionRecord'=>$record,
 							'activeForm'=>$form,
-							'inputs'=>[$attribute.'[]'=>$arrayGroup],
+							'inputs'=>$inputs,
 							'template'=>'form_in_form',
 						]);
+					}
 					echo '</div>';
 
 					echo '<div class="collections-action-buttons"><a data-id="'.$input->id_input.'" data-group="subforms'.$input->id_input.'" class="btn btn__secondary form-copy" href="javascript:">Добавить еще</a></div>';

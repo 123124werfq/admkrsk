@@ -1,9 +1,11 @@
-<?php
+  <?php
 
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
 use yii\grid\GridView;
+use yii\widgets\Pjax;
+
 /* @var $this yii\web\View */
 /* @var $model common\models\Collection */
 
@@ -46,6 +48,12 @@ $this->params['action-block'][] = Html::a('Связать данные', ['/coll
       <div class="tab-pane active">
         <div class="panel-body">
           <div class="table-responsive">
+              <?php yii\widgets\Pjax::begin([
+                'id' => 'collection_grid',
+                //'enablePushState' => false,
+                'scrollTo' => '#collection_grid',
+              ]) ?>
+
               <?= GridView::widget([
                   'dataProvider' => $dataProvider,
                   'columns'=>$columns,
@@ -54,6 +62,8 @@ $this->params['action-block'][] = Html::a('Связать данные', ['/coll
                       'class'=>'table table-striped valign-middle table-hover ids-style'
                   ]
               ]); ?>
+
+              <?php Pjax::end(); ?>
           </div>
         </div>
       </div>

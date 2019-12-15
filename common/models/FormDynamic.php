@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\models\Form;
 use common\models\FormInput;
+use common\models\CollectionRecord;
 use Yii;
 use \yii\base\DynamicModel ;
 
@@ -107,7 +108,21 @@ class FormDynamic extends DynamicModel
 
                                         if ($insertData->validate())
                                         {
-                                            $collectionRecord = $input->collection->insertRecord($insertData->prepareData(true));
+                                            $collectionRecord = null;
+                                            $prepareData  = $insertData->prepareData(true);
+
+                                            if (!empty($_POST['input'.$input->id_input.'_id_record'][$key]))
+                                            {
+                                                $collectionRecord = CollectionRecord::findOne((int)$_POST['input'.$input->id_input.'_id_record'][$key]);
+                                            }
+
+                                            if (empty($collectionRecord))
+                                                $collectionRecord = $input->collection->insertRecord($prepareData);
+                                            else
+                                            {
+                                                $collectionRecord->data = $prepareData;
+                                                $collectionRecord->save();
+                                            }
 
                                             if (!empty($collectionRecord->id_record))
                                                 $ids[] = $collectionRecord->id_record;
