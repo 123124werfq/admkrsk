@@ -32,6 +32,6 @@
 	<?=$this->render('_rows',['rows'=>$form->rows,'model'=>$model,'activeForm'=>$activeForm,'arrayGroup'=>$arrayGroup])?>
 
 	<div class="subform-action-buttons">
-		<a class="btn btn__secondary delete-subform" href="javascript:">Удалить</a>
+		<a class="btn btn-default btn__secondary delete-subform" href="javascript:">Удалить</a>
 	</div>
 </div>

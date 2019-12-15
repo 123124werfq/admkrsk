@@ -16,7 +16,7 @@ img {max-width: 100%;}
 .row-flex .col, .text-row {width: 100%; margin: 0px 10px; padding: 0px;}
 .button-bar {margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;}
 
-.modal-body .checkbox input[type="checkbox"], .modal-body .checkbox input[type="radio"], .modal-body .radio input[type="radio"] {opacity: 1;}
+.checkbox input[type="checkbox"], .checkbox input[type="radio"], .radio input[type="radio"] {opacity: 1;}
 
 .select2-container--open {z-index: 9999;}
 
@@ -105,6 +105,9 @@ position: absolute;
 .search-form .btn, .search .btn {    padding: 9px 12px;}
 
 .btn-visible {display: block!important;}
+.subform-action-buttons .btn {display: inline-block!important;}
+.subform-action-buttons {text-align: right; margin-bottom: 30px;}
+
 .add-plus {position:absolute; right: 70px; margin-top: -5px; width:50px; height: 50px; border-radius: 50px; font-size: 30px; line-height: 36px;}
 
 .search-form {padding-top: 0px;}
