@@ -160,16 +160,16 @@ return [
                 'title'=>'Анкеты',
                 'roles' => ['backend.form'],
             ],
-            'contest'=>[
+            'reserve/contest'=>[
                 'title'=>'Конкурсы',
                 'roles' => ['backend.form'],
             ],
-            'experts'=>[
+            'reserve/experts'=>[
                 'title'=>'Эксперты',
                 'roles' => ['backend.form'],
             ],
-            'archive'=>[
-                'title'=>'Архив',
+            'reserve/list'=>[
+                'title'=>'Резерв',
                 'roles' => ['backend.form'],
             ],
         ],
