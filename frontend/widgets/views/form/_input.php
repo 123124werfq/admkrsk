@@ -201,12 +201,13 @@ JS;
 				break;
 			case CollectionColumn::TYPE_CHECKBOXLIST:
 
+				$current_values = (is_array($model->$clearAttribute))?$model->$clearAttribute:[];
 				echo '<div class="checkboxes">';
 				foreach ($input->getArrayValues() as $key => $value) {
 					echo '
 					<div class="checkbox-group">
 						<label class="checkbox checkbox__ib">
-							<input type="checkbox" name="FormDynamic['.$attribute.'][]" value="'.Html::encode($key).'" class="checkbox_control">
+							<input type="checkbox" '.(in_array($key, $current_values)?'checked':'').' name="FormDynamic['.$attribute.'][]" value="'.Html::encode($key).'" class="checkbox_control">
 							<span class="checkbox_label">'.$value.'</span>
 						</label>
 					</div>';
