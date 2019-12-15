@@ -235,6 +235,10 @@ class Opendata extends \yii\db\ActiveRecord
             $url = Yii::$app->publicStorage->getPublicUrl($this->path);
         }
 
+        if (Yii::$app->request->userIP != '127.0.0.1') {
+            return str_replace('127.0.0.1:9000', 'storage.admkrsk.ru', $url);
+        }
+
         return $url;
     }
 
@@ -247,6 +251,10 @@ class Opendata extends \yii\db\ActiveRecord
 
         if (Yii::$app->publicStorage->has($this->path)) {
             $url = Yii::$app->publicStorage->getMetadata($this->path);
+        }
+
+        if (Yii::$app->request->userIP != '127.0.0.1') {
+            return str_replace('127.0.0.1:9000', 'storage.admkrsk.ru', $url);
         }
 
         return $url;
@@ -263,6 +271,10 @@ class Opendata extends \yii\db\ActiveRecord
             $url = Yii::$app->publicStorage->getPublicUrl(self::OPENDATA_LIST_PATH);
         }
 
+        if (Yii::$app->request->userIP != '127.0.0.1') {
+            return str_replace('127.0.0.1:9000', 'storage.admkrsk.ru', $url);
+        }
+
         return $url;
     }
 
@@ -275,6 +287,10 @@ class Opendata extends \yii\db\ActiveRecord
 
         if (Yii::$app->publicStorage->has(self::OPENDATA_LIST_PATH)) {
             $url = Yii::$app->publicStorage->getMetadata(self::OPENDATA_LIST_PATH);
+        }
+
+        if (Yii::$app->request->userIP != '127.0.0.1') {
+            return str_replace('127.0.0.1:9000', 'storage.admkrsk.ru', $url);
         }
 
         return $url;
