@@ -45,7 +45,7 @@ function parseAttributesFromTag($tag){
             <div class="col-2-third col-sm-12">
             	<div class="content searchable">
 					<?php
-                        preg_match_all ("/<(collection|gallery|forms)\s(.+?)>(.+?)<\/(collection|gallery|forms)>/is", $page->content, $matches);
+                        preg_match_all ("/<(collection|gallery|forms)\s(.+?)>(.+?)<\/(collection|gallery|forms)>/is", $model->content, $matches);
 
                         if (!empty($matches[0]))
                             foreach ($matches[0] as $key => $match)
@@ -56,11 +56,11 @@ function parseAttributesFromTag($tag){
                                 {
                                     $class = 'frontend\widgets\\'.ucwords($matches[1][$key]).'Widget';
 
-                                    $page->content = str_replace($match, $class::widget(['attributes'=>$attributes,'page'=>$page]), $page->content);
+                                    $model->content = str_replace($match, $class::widget(['attributes'=>$attributes,'page'=>$page]), $model->content);
                                 }
                             }
 
-                        echo $page->content;
+                        echo $model->content;
                     ?>
 				</div>
             </div>

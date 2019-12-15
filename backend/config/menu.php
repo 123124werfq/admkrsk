@@ -156,7 +156,7 @@ return [
         'icon'=>'fa fa-address-book',
         'roles' => ['backend.menu', 'backend.alert', 'backend.vars', 'backend.controllerPage', 'backend.form'],
         'submenu'=>[
-            'profile'=>[
+            'reserve/profile'=>[
                 'title'=>'Анкеты',
                 'roles' => ['backend.form'],
             ],

@@ -60,4 +60,13 @@ class HrProfilePositions extends \yii\db\ActiveRecord
             'deleted_by' => 'Deleted By',
         ];
     }
+
+    public function getPositionName()
+    {
+        $rec = CollectionRecord::findOne($this->id_record_position);
+        if(!res)
+            return false;
+        $fields = $rec->getData(true);
+        return $fields['name'];
+    }
 }

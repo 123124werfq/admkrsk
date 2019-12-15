@@ -61,6 +61,7 @@ class HrContest extends \yii\db\ActiveRecord
         ];
     }
 
+
     public function getPositions()
     {
         return $this->hasMany(HrProfilePositions::class, ['id_profile' => 'id_profile']);
