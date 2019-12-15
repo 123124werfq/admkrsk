@@ -17,7 +17,7 @@ class OpendataSearch extends Opendata
     public function rules()
     {
         return [
-            [['id_opendata', 'id_collection', 'id_page', 'id_user', 'period', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['id_opendata', 'id_collection', 'id_user', 'period', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['identifier', 'title', 'description', 'owner', 'keywords', 'columns'], 'safe'],
         ];
     }
@@ -60,7 +60,6 @@ class OpendataSearch extends Opendata
         $query->andFilterWhere([
             'id_opendata' => $this->id_opendata,
             'id_collection' => $this->id_collection,
-            'id_page' => $this->id_page,
             'id_user' => $this->id_user,
             'period' => $this->period,
             'created_at' => $this->created_at,
