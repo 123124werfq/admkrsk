@@ -41,6 +41,33 @@ if (Yii::$app->user->can('admin.service')) {
         //'filterModel' => $searchModel,
         'columns' => [
             'id_expert:integer:ID',
+            [
+                'label' => 'ФИО',
+                'value' => function($model){
+                    return $model->user->getUsername();
+                }
+            ],
+            [
+                'label' => 'Дата добавления',
+                'value' => function($model){
+                    return date("d-m-Y H:i", $model->created_at);
+                }
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{dismiss}',
+                'buttons' => [
+                    'dismiss' => function($url, $model, $key) {
+                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-trash"]);
+                        return Html::a($icon, $url, [
+                            'title' => 'Исключить',
+                            'aria-label' => 'Исключить',
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                ],
+                'contentOptions'=>['class'=>'button-column'],
+            ],
         ],
         'tableOptions'=>[
             'emptyCell' => '',
@@ -52,12 +79,12 @@ if (Yii::$app->user->can('admin.service')) {
 </div>
 
 <div id="user_group-users" class="row form-group">
-    <div class="col-md-8">
+    <div class="col-md-1">
         <h3>Пользователи</h3>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
         <div class="row">
-            <?= Html::beginForm(['/reserve/promote', 'id' => $model->id_expert], 'get', ['data-pjax' => '0', 'class' => 'form-inline']); ?>
+            <?= Html::beginForm(['/reserve/promote', 'id' => $model->id_expert], 'post', ['data-pjax' => '0', 'class' => 'form-inline']); ?>
 
             <div class="form-group col-md-9">
                 <?= Select2::widget([

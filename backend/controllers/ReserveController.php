@@ -20,6 +20,7 @@ use backend\models\search\ProfileSearch;
 use backend\models\search\ContestSearch;
 use backend\models\search\ExpertSearch;
 use backend\models\forms\ExpertForm;
+use backend\models\forms\ContestForm;
 
 class ReserveController extends Controller
 {
@@ -53,7 +54,12 @@ class ReserveController extends Controller
 
     public function actionCreate()
     {
-        $contest = new HrContest;
+        $contest = new ContestForm;
+
+        if ($contest->load(Yii::$app->request->post())) {
+            $contest->create();
+            return $this->redirect('/reserve/contest');
+        }
 
         return $this->render('create', [
             'model' => $contest
@@ -81,6 +87,27 @@ class ReserveController extends Controller
             'expertForm' => $expertForm,
             'assign' => $assign,
         ]);
+    }
+
+    public function actionPromote()
+    {
+        $model = new ExpertForm();
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->promote();
+        }
+
+        return $this->redirect('/reserve/experts');
+    }
+
+    public function actionDismiss()
+    {
+        $expert = HrExpert::findOne((int)$_GET['id']);
+
+        if($expert)
+            $expert->delete();
+
+        return $this->redirect('/reserve/experts');
     }
 
     public function actionList()

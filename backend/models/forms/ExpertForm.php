@@ -33,9 +33,9 @@ class ExpertForm extends Model
         if(!$this->validate())
             return false;
 
-        $idexp = HrExpert::findOne(['id_user' => $this->id_user]);
+        $exp = HrExpert::findOne(['id_user' => $this->id_user]);
 
-        if(!$idexp){
+        if(!$exp){
             $exp = new HrExpert;
             $exp->id_user = $this->id_user;
             $exp->state = 1;
@@ -43,7 +43,7 @@ class ExpertForm extends Model
                 return false;
         }
 
-        return $idexp->id_expert;
+        return $exp->id_expert;
     }
 
     public function dismiss()

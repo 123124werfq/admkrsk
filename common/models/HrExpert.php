@@ -78,4 +78,15 @@ class HrExpert extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'id_user']);
+    }
+
+    public function getName()
+    {
+        return $this->user->getUsername();
+    }
+
+
 }

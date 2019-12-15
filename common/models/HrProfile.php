@@ -137,4 +137,9 @@ class HrProfile extends \yii\db\ActiveRecord
         return $record->getData(true);
     }
 
+    public function getName()
+    {
+        return $this->user->getUsername();
+    }
+
 }
