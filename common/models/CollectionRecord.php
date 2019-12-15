@@ -98,8 +98,6 @@ class CollectionRecord extends \yii\db\ActiveRecord
             {
                 unset($this->data['id_record']);
 
-                var_dump($this->data);
-
                 // запись в postgree
                 $insertData = [];
                 $insertDataMongo = [];
@@ -120,13 +118,17 @@ class CollectionRecord extends \yii\db\ActiveRecord
                         {
                             if (is_numeric($value))
                                 $ids = [$value];
-                            elseif (is_array($ids))
+                            elseif (is_array($value))
                                 $ids = $value; // json_decode($value,true);*/
-                            else if (is_string($ids))
+                            else if (is_string($value))
                                 $ids = json_decode($value,true);
 
                             $ids = $ids??[];
+
                             $mongoLabels = $this->getLabelsByID($ids,$column);
+
+                            foreach ($ids as $idskey => $id)
+                                $ids[$idskey] = (int)$id;
 
                             $insertDataMongo['col'.$column->id_column] = $ids;
                             $insertDataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);
@@ -135,9 +137,6 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             $insertDataMongo['col'.$column->id_column] = (is_numeric($value))?(int)$value:$value;
                     }
                 }
-
-                print_r($insertDataMongo);
-
 
                 Yii::$app->db->createCommand()->batchInsert('db_collection_value',['id_column','id_record','value'],$insertData)->execute();
 
@@ -188,6 +187,9 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                             $ids = $ids??[];
                             $mongoLabels = $this->getLabelsByID($ids,$column);
+
+                            foreach ($ids as $idskey => $id)
+                                $ids[$idskey] = (int)$id;
 
                             $updateDataMongo['col'.$column->id_column] = $ids;
                             $updateDataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);

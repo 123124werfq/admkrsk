@@ -183,7 +183,6 @@ class CollectionRecordController extends Controller
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
                 $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias)
                 {
-
                     if (empty($model[$col_alias]))
                         return '';
 
@@ -193,11 +192,13 @@ class CollectionRecordController extends Controller
                         $labels = explode(';', $model[$col_alias.'_search']);
 
                     $links = [];
-                    foreach ($model[$col_alias] as $ckey => $id)
-                    {
-                        if (!empty($labels[$ckey]))
-                            $links[] = '<a href="/collection-record/update?id='.$id.'">'.$labels[$ckey].'</a>';
-                    }
+
+                    if (is_array($model[$col_alias]))
+                        foreach ($model[$col_alias] as $ckey => $id)
+                        {
+                            if (!empty($labels[$ckey]))
+                                $links[] = '<a href="/collection-record/update?id='.$id.'">'.$labels[$ckey].'</a>';
+                        }
 
                     return implode('<br>', $links);
                 };
