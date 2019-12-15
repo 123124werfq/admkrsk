@@ -156,21 +156,36 @@ class ServiceController extends \yii\web\Controller
 
     public function actionForms($page)
     {
-        $services = Service::find()->with([
+        $models = Service::find()->with([
             'forms',
             'rubric'
         ])->where([
             'old'=>0,
-            'is_online'=>1
+            'online'=>1
         ])->all();
-
 
         $services = [];
 
-        foreach ($services as $key => $service)
+        foreach ($models as $key => $service)
+        {
             $services[$service->id_rub][$service->id_service] = $service;
+        }
 
         $rubs = ServiceRubric::find()->where(['id_rub'=>array_keys($services)])->all();
+
+        /*$parents = [];
+        foreach ($rubs as $key => $rub)
+        {
+            if (!empty($rub->id_parent))
+            {
+                if (!empty($rub->parent->id_parent))
+                {
+
+                }
+            }
+            else 
+                $parents[] = $rub->id_rub;
+        }*/
 
         return $this->render('forms',[
             'rubs'=>$rubs,
