@@ -58,7 +58,7 @@ class CollectionRecordController extends Controller
         var_dump($query->all());
         die();*/
 
-        $columns = $model->getColumns()->all();
+        $columns = $model->getColumns()->with('input')->all();
 
         $dataProviderColumns = [
             ['attribute'=>'id_record','label'=>'#'],
@@ -97,13 +97,14 @@ class CollectionRecordController extends Controller
                 'headerOptions'=>$options,
             ];
 
-            if ($col->type==CollectionColumn::TYPE_INTEGER)
-                $dataProviderColumns[$col_alias]['format'] = 'integer';
+            /*if ($col->type==CollectionColumn::TYPE_INTEGER)
+                $dataProviderColumns[$col_alias]['format'] = 'integer';*/
 
             if ($col->type==CollectionColumn::TYPE_DATE)
                 $dataProviderColumns[$col_alias]['format'] = ['date', 'php:d.m.Y'];
-
-            if ($col->type==CollectionColumn::TYPE_DISTRICT)
+            else if ($col->type==CollectionColumn::TYPE_DATETIME)
+                $dataProviderColumns[$col_alias]['format'] = ['date', 'php:d.m.Y H:i'];
+            else if ($col->type==CollectionColumn::TYPE_DISTRICT)
             {
                 $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
                     if (empty($model[$col_alias]))
@@ -117,8 +118,7 @@ class CollectionRecordController extends Controller
                     return '';
                 };
             }
-
-            if ($col->type==CollectionColumn::TYPE_FILE)
+            else if ($col->type==CollectionColumn::TYPE_FILE)
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
                 $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
@@ -138,8 +138,7 @@ class CollectionRecordController extends Controller
                     return implode('', $output);
                 };
             }
-
-            if ($col->type==CollectionColumn::TYPE_FILE)
+            else if ($col->type==CollectionColumn::TYPE_FILE)
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
                 $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
@@ -159,25 +158,7 @@ class CollectionRecordController extends Controller
                     return implode('', $output);
                 };
             }
-
-            if (!empty($col->input->id_collection))
-            {
-                $dataProviderColumns[$col_alias]['format'] = 'raw';
-                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
-
-                    if (empty($model[$col_alias]))
-                        return '';
-
-                    if (!empty($model[$col_alias.'_search']))
-                        $texts = explode(';', $model[$col_alias.'_search']);
-                    else
-                        $texts = [];
-
-                    return implode('<br>', $texts);
-                };
-            }
-
-            if ($col->type==CollectionColumn::TYPE_IMAGE)
+            else if ($col->type==CollectionColumn::TYPE_IMAGE)
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
                 $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
@@ -197,9 +178,31 @@ class CollectionRecordController extends Controller
                     return implode('', $output);
                 };
             }
+            else if (!empty($col->input->id_collection))
+            {
+                $dataProviderColumns[$col_alias]['format'] = 'raw';
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias)
+                {
+                    if (empty($model[$col_alias]))
+                        return '';
 
-            if ($col->type==CollectionColumn::TYPE_DATETIME)
-                $dataProviderColumns[$col_alias]['format'] = ['date', 'php:d.m.Y H:i'];
+                    $labels = [];
+
+                    if (!empty($model[$col_alias.'_search']))
+                        $labels = explode(';', $model[$col_alias.'_search']);
+
+                    $links = [];
+
+                    if (is_array($model[$col_alias]))
+                        foreach ($model[$col_alias] as $ckey => $id)
+                        {
+                            if (!empty($labels[$ckey]))
+                                $links[] = '<a href="/collection-record/update?id='.$id.'">'.$labels[$ckey].'</a>';
+                        }
+
+                    return implode('<br>', $links);
+                };
+            }
 
             $sortAttributes[$col_alias] = [
                 'asc' => [$col_alias => SORT_ASC],

@@ -128,9 +128,11 @@ class FormInput extends \yii\db\ActiveRecord
         }
         else if (!empty($this->id_collection))
         {
+
             $collection = Collection::findOne($this->id_collection);
+            
             if (!empty($collection))
-                return $collection->getArray();
+                return $collection->getArray($this->id_collection_column??'');
             else
                 return [];
         }

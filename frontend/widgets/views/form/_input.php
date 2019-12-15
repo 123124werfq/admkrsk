@@ -1,6 +1,7 @@
 <?php
 	use yii\helpers\Html;
 	use common\models\CollectionColumn;
+	use common\models\CollectionRecord;
 	use kartik\select2\Select2;
 	use yii\web\JsExpression;
 
@@ -35,16 +36,14 @@
 	if ($input->type==CollectionColumn::TYPE_SELECT)
 		$groupClass .= ' custom-select';
 
-	$attribute = "input$input->id_input";
+	$clearAttribute = $attribute = "input$input->id_input";
 
 	if (!empty($arrayGroup))
 		$attribute = "[$arrayGroup]".$attribute;
 
-
 	$styles = $element->getStyles();
 
 	$id_subform = (!empty($subform))?$subform->id_form:'';
-
 ?>
 
 <div id="element<?=$element->id_element?>" class="col">
@@ -61,10 +60,6 @@
 				break;
 			case CollectionColumn::TYPE_DATE:
 				$options['type'] = 'date';
-				if (strpos($attribute, ']')>0)
-					$clearAttribute = substr($attribute, strpos($attribute, ']')+1);
-				else
-					$clearAttribute = $attribute;
 
 				if (is_numeric($model->$clearAttribute))
 					$model->$clearAttribute = date('Y-m-d', $model->$clearAttribute);
@@ -73,10 +68,6 @@
 				break;
 			case CollectionColumn::TYPE_DATETIME:
 
-				if (strpos($attribute, ']')>0)
-					$clearAttribute = substr($attribute, strpos($attribute, ']')+1);
-				else
-					$clearAttribute = $attribute;
 				if (is_numeric($model->$clearAttribute))
 					$model->$clearAttribute = date('Y-m-d\TH:i:s', $model->$clearAttribute);
 
@@ -166,10 +157,13 @@ JS;
 	            </div>';
 				break;
 			case CollectionColumn::TYPE_RADIO:
+
+				echo $model->$attribute;
+
 				foreach ($input->getArrayValues() as $key => $value) {
 					echo '<div class="radio-group">
 								<label class="radio">
-									<input type="radio" name="FormDynamic['.$attribute.']" value="'.Html::encode($value).'" class="radio_control">
+									<input type="radio" name="FormDynamic['.$attribute.']" value="'.Html::encode($key).'" class="radio_control">
 									<span class="radio_label">'.$value.'</span>
 								</label>
 						  </div>';
@@ -201,18 +195,20 @@ JS;
 
 				echo '<div class="checkbox-group">
 					<label class="checkbox checkbox__ib">
-						'.Html::checkBox('FormDynamic['.$attribute.']',!empty($model->$attribute),$options).'
+						'.Html::checkBox('FormDynamic['.$attribute.']',(!empty($model->$clearAttribute)),$options).'
 						<span class="checkbox_label">'.($input->label??$input->name).'</span>
 					</label>
 				</div>';
 				break;
 			case CollectionColumn::TYPE_CHECKBOXLIST:
+
+				$current_values = (is_array($model->$clearAttribute))?$model->$clearAttribute:[];
 				echo '<div class="checkboxes">';
 				foreach ($input->getArrayValues() as $key => $value) {
 					echo '
 					<div class="checkbox-group">
 						<label class="checkbox checkbox__ib">
-							<input type="checkbox" name="FormDynamic['.$attribute.'][]" value="'.Html::encode($key).'" class="checkbox_control">
+							<input type="checkbox" '.(in_array($key, $current_values)?'checked':'').' name="FormDynamic['.$attribute.'][]" value="'.Html::encode($key).'" class="checkbox_control">
 							<span class="checkbox_label">'.$value.'</span>
 						</label>
 					</div>';
@@ -251,17 +247,30 @@ JS;
 
 			case CollectionColumn::TYPE_COLLECTIONS:
 
+				$ids = $model->$clearAttribute;
+
+				$records = [];
+
+				if (!empty($ids))
+					$records = CollectionRecord::find()->where(['id_record'=>$ids])->all();
+
 				if (!empty($options['accept_add']))
 				{
 					$arrayGroup = md5(rand(0,10000).time());
+
 					echo '<div id="subforms'.$input->id_input.'">';
-					echo \frontend\widgets\FormsWidget::widget([
-						'form'=>$input->collection->form,
-						'arrayGroup'=>$arrayGroup,
-						'activeForm'=>$form,
-						'inputs'=>[$attribute.'[]'=>$arrayGroup],
-						'template'=>'form_in_form',
-					]);
+					if (empty($records))
+						$records = [null];
+
+					foreach ($records as $key => $record)
+						echo \frontend\widgets\FormsWidget::widget([
+							'form'=>$input->collection->form,
+							'arrayGroup'=>$arrayGroup,
+							'collectionRecord'=>$record,
+							'activeForm'=>$form,
+							'inputs'=>[$attribute.'[]'=>$arrayGroup],
+							'template'=>'form_in_form',
+						]);
 					echo '</div>';
 
 					echo '<div class="collections-action-buttons"><a data-id="'.$input->id_input.'" data-group="subforms'.$input->id_input.'" class="btn btn__secondary form-copy" href="javascript:">Добавить еще</a></div>';

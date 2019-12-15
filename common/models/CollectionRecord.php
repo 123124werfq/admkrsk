@@ -111,17 +111,27 @@ class CollectionRecord extends \yii\db\ActiveRecord
                         $insertData[] = [
                             'id_column'=>$column->id_column,
                             'id_record'=>$this->id_record,
-                            'value'=>$value
+                            'value'=>(is_array($value))?json_encode($value):$value,
                         ];
 
                         if (!empty($column->input->id_collection) && !empty($column->input->id_collection_column))
                         {
-                            $ids = json_decode($value,true);
+                            if (is_numeric($value))
+                                $ids = [$value];
+                            elseif (is_array($value))
+                                $ids = $value; // json_decode($value,true);*/
+                            else if (is_string($value))
+                                $ids = json_decode($value,true);
+
                             $ids = $ids??[];
+
                             $mongoLabels = $this->getLabelsByID($ids,$column);
 
+                            foreach ($ids as $idskey => $id)
+                                $ids[$idskey] = (int)$id;
+
                             $insertDataMongo['col'.$column->id_column] = $ids;
-                            $insertDataMongo['col'.$column->id_column.'_search'] = implode(',', $mongoLabels);
+                            $insertDataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);
                         }
                         else
                             $insertDataMongo['col'.$column->id_column] = (is_numeric($value))?(int)$value:$value;
@@ -155,7 +165,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                         if ($count>0)
                             Yii::$app->db->createCommand()->update('db_collection_value',
-                                ['value'=>$updateData],[
+                                ['value'=>is_array($updateData)?json_encode($updateData):$updateData],[
                                 'id_record'=>$this->id_record,
                                 'id_column'=>$column->id_column
                             ])->execute();
@@ -163,14 +173,23 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             Yii::$app->db->createCommand()->insert('db_collection_value',[
                                 'id_record'=>$this->id_record,
                                 'id_column'=>$column->id_column,
-                                'value'=>$updateData
+                                'value'=>is_array($updateData)?json_encode($updateData):$updateData
                             ])->execute();
 
                         if (!empty($column->input->id_collection) && !empty($column->input->id_collection_column))
                         {
-                            $ids = json_decode($updateData,true);
+                            if (is_numeric($updateData))
+                                $ids = [$updateData];
+                            else if (is_array($updateData))
+                                $ids = $updateData;
+                            else if (is_string($updateData))
+                                $ids = json_decode($updateData,true);
+
                             $ids = $ids??[];
                             $mongoLabels = $this->getLabelsByID($ids,$column);
+
+                            foreach ($ids as $idskey => $id)
+                                $ids[$idskey] = (int)$id;
 
                             $updateDataMongo['col'.$column->id_column] = $ids;
                             $updateDataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);
@@ -182,7 +201,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                 $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
 
-                $updateDataMongo = ['id_record'=>$this->id_record];
+                $updateDataMongo['id_record'] = $this->id_record;
 
                 /*foreach ($this->data as $key => $value)
                     $update['col'.$key] = (is_numeric($value))?(int)$value:$value;*/
@@ -197,7 +216,19 @@ class CollectionRecord extends \yii\db\ActiveRecord
         if ($this->isNewRecord)
             return [];
 
-        $rows = (new \yii\db\Query());
+        $record = \common\components\collection\CollectionQuery::getQuery($this->id_collection)
+                    ->select()
+                    ->where(['id_record'=>$this->id_record]);
+
+        $columns = $record->columns;
+
+        $record = $record->getArray();
+
+        if (!empty($record))
+            $this->loadData = $record = array_shift($record);
+        else
+            return [];
+        /*$rows = (new \yii\db\Query());
 
         $rows = $rows->select(['dcv.id_column', 'value','id_record','dcc.alias as alias'])
                 ->from('db_collection_value as dcv')
@@ -205,20 +236,19 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 ->where(['id_record'=>$this->id_record]);
 
         if (!empty($columns))
-            $rows->andWhere(['dcv.id_column'=>$id_columns]);
+            $rows->andWhere(['dcv.id_column'=>$id_columns]);*/
 
-        $output = [];
-        $cache = [];
-
-        foreach ($rows->all() as $key => $data)
+        if (!empty($keyAsAlias))
         {
-            $output[$keyAsAlias?$data['alias']:$data['id_column']] = $data['value'];
-            $cache[$data['id_column']] = $data['value'];
+            $aliased = [];
+
+            foreach ($columns as $key => $column)
+                $aliased[$column['alias']] = $record[$column->id_column];
+
+            return $aliased;
         }
-
-        $this->loadData = $cache;
-
-        return $output;
+        else
+            return $record;
     }
 
     public function getAllMedias()
