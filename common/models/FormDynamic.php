@@ -88,9 +88,9 @@ class FormDynamic extends DynamicModel
                     case CollectionColumn::TYPE_JSON:
                         $data[$index] = json_encode($this->$attribute);
                         break;
-                    case CollectionColumn::TYPE_CHECKBOXLIST:
+                    /*case CollectionColumn::TYPE_CHECKBOXLIST:
                         $data[$index] = json_encode($this->$attribute);
-                        break;
+                        break;*/
                     case CollectionColumn::TYPE_COLLECTIONS:
                         if ($input->options['accept_add'])
                         {
@@ -118,10 +118,12 @@ class FormDynamic extends DynamicModel
                                     }
                                 }
                             }
-                            $data[$index] = json_encode($ids);
+                            //$data[$index] = json_encode($ids);
+                            $data[$index] = $ids;
                         }
                         else
-                            $data[$index] = json_encode($data[$index]);
+                            $data[$index] = $data[$index];
+                            //$data[$index] = json_encode($data[$index]);
                         break;
                     case CollectionColumn::TYPE_DATE:
                     case CollectionColumn::TYPE_DATETIME:
@@ -146,7 +148,8 @@ class FormDynamic extends DynamicModel
                             }
                         }
 
-                        $data[$index] = json_encode($data[$index]);
+                        $data[$index] = $data[$index];
+                        //$data[$index] = json_encode($data[$index]);
 
                         break;
                     default:

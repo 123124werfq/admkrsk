@@ -111,14 +111,14 @@ class CollectionRecord extends \yii\db\ActiveRecord
                         $insertData[] = [
                             'id_column'=>$column->id_column,
                             'id_record'=>$this->id_record,
-                            'value'=>$value
+                            'value'=>(is_array($value))?json_encode($value):$value,
                         ];
 
                         if (!empty($column->input->id_collection) && !empty($column->input->id_collection_column))
                         {
                             if (is_numeric($value))
                                 $ids = [$value];
-                            else 
+                            else
                                 $ids = json_decode($value,true);
 
                             $ids = $ids??[];
@@ -159,7 +159,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                         if ($count>0)
                             Yii::$app->db->createCommand()->update('db_collection_value',
-                                ['value'=>$updateData],[
+                                ['value'=>is_array($updateData)?json_encode($updateData):$updateData],[
                                 'id_record'=>$this->id_record,
                                 'id_column'=>$column->id_column
                             ])->execute();
@@ -167,14 +167,14 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             Yii::$app->db->createCommand()->insert('db_collection_value',[
                                 'id_record'=>$this->id_record,
                                 'id_column'=>$column->id_column,
-                                'value'=>$updateData
+                                'value'=>is_array($updateData)?json_encode($updateData):$updateData
                             ])->execute();
 
                         if (!empty($column->input->id_collection) && !empty($column->input->id_collection_column))
                         {
                             if (is_numeric($updateData))
                                 $ids = [$updateData];
-                            else 
+                            else
                                 $ids = json_decode($updateData,true);
 
                             $ids = $ids??[];
@@ -206,7 +206,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
             return [];
 
         $record = \common\components\collection\CollectionQuery::getQuery($this->id_collection)
-                    ->select();
+                    ->select()
                     ->where(['id_record'=>$this->id_record]);
 
         $columns = $record->columns;
@@ -215,7 +215,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
         if (!empty($record))
             $this->loadData = $record = array_shift($record);
-        else 
+        else
             return [];
         /*$rows = (new \yii\db\Query());
 
@@ -236,7 +236,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
             return $aliased;
         }
-        else 
+        else
             return $record;
     }
 
