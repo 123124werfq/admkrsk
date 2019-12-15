@@ -261,17 +261,6 @@ class Service extends \yii\db\ActiveRecord
         return $this->hasOne(ServiceRubric::class, ['id_rub' => 'id_rub']);
     }
 
-    /* DEPRICATED
-    public function getActiveTargets()
-    {
-        return $this->hasMany(ServiceTarget::class, ['id_service' => 'id_service'])->where(['state'=>1]);
-    }
-
-    public function getTargets()
-    {
-        return $this->hasMany(ServiceTarget::class, ['id_service' => 'id_service']);
-    }*/
-
     public function getForms()
     {
         return $this->hasMany(Form::class, ['id_service' => 'id_service']);
