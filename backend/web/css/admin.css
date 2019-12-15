@@ -32,6 +32,8 @@ img {max-width: 100%;}
     width: 30px;
 }
 
+.modal-lg {width: 1200px;}
+
 .modal-backdrop.in {opacity: 0.1;}
 .modal.in .modal-dialog {
     position: fixed;
