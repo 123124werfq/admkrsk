@@ -18,7 +18,7 @@ use yii\helpers\ArrayHelper;
  * @property int $id_opendata
  * @property int $id_collection
  * @property int $id_user
- * @property int $id_page
+ * @property array $urls
  * @property string $identifier
  * @property string $title
  * @property string $description
@@ -76,13 +76,13 @@ class Opendata extends \yii\db\ActiveRecord
     {
         return [
             [['identifier', 'title', 'owner', 'period'], 'required'],
-            [['id_collection', 'id_user', 'id_page', 'period'], 'default', 'value' => null],
-            [['id_collection', 'id_user', 'id_page', 'period'], 'integer'],
+            [['id_collection', 'id_user', 'period'], 'default', 'value' => null],
+            [['id_collection', 'id_user', 'period'], 'integer'],
             [['description'], 'string'],
+            [['urls'], 'each', 'rule' => ['url', 'enableIDN' => true]],
             [['columns'], 'safe'],
             [['identifier', 'title', 'owner', 'keywords'], 'string', 'max' => 255],
             [['id_collection'], 'exist', 'skipOnError' => true, 'targetClass' => Collection::class, 'targetAttribute' => ['id_collection' => 'id_collection']],
-            [['id_page'], 'exist', 'skipOnError' => true, 'targetClass' => Page::class, 'targetAttribute' => ['id_page' => 'id_page']],
             [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['id_user' => 'id']],
 
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
@@ -100,7 +100,7 @@ class Opendata extends \yii\db\ActiveRecord
             'id_opendata' => '#',
             'id_collection' => 'Список',
             'id_user' => 'Ответственное лицо',
-            'id_page' => 'Гиперссылки (URL) на страницы сайта',
+            'urls' => 'Гиперссылки (URL) на страницы сайта',
             'identifier' => 'Идентификационный номер',
             'title' => 'Наименование набора данных',
             'description' => 'Описание набора данных',
@@ -153,14 +153,6 @@ class Opendata extends \yii\db\ActiveRecord
     public function getCollection()
     {
         return $this->hasOne(Collection::class, ['id_collection' => 'id_collection']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPage()
-    {
-        return $this->hasOne(Page::class, ['id_page' => 'id_page']);
     }
 
     /**
@@ -243,6 +235,10 @@ class Opendata extends \yii\db\ActiveRecord
             $url = Yii::$app->publicStorage->getPublicUrl($this->path);
         }
 
+        if (Yii::$app->request->userIP != '127.0.0.1') {
+            return str_replace('127.0.0.1:9000', 'storage.admkrsk.ru', $url);
+        }
+
         return $url;
     }
 
@@ -255,6 +251,10 @@ class Opendata extends \yii\db\ActiveRecord
 
         if (Yii::$app->publicStorage->has($this->path)) {
             $url = Yii::$app->publicStorage->getMetadata($this->path);
+        }
+
+        if (Yii::$app->request->userIP != '127.0.0.1') {
+            return str_replace('127.0.0.1:9000', 'storage.admkrsk.ru', $url);
         }
 
         return $url;
@@ -271,6 +271,10 @@ class Opendata extends \yii\db\ActiveRecord
             $url = Yii::$app->publicStorage->getPublicUrl(self::OPENDATA_LIST_PATH);
         }
 
+        if (Yii::$app->request->userIP != '127.0.0.1') {
+            return str_replace('127.0.0.1:9000', 'storage.admkrsk.ru', $url);
+        }
+
         return $url;
     }
 
@@ -283,6 +287,10 @@ class Opendata extends \yii\db\ActiveRecord
 
         if (Yii::$app->publicStorage->has(self::OPENDATA_LIST_PATH)) {
             $url = Yii::$app->publicStorage->getMetadata(self::OPENDATA_LIST_PATH);
+        }
+
+        if (Yii::$app->request->userIP != '127.0.0.1') {
+            return str_replace('127.0.0.1:9000', 'storage.admkrsk.ru', $url);
         }
 
         return $url;
