@@ -61,7 +61,7 @@ class ServiceController extends \yii\web\Controller
             {
                 if (empty($record['OrganID']) || empty($record['department']))
                     continue;
-                
+
                 $firms[$record['OrganID']??0] = $record['department'];
             }
         }
@@ -82,9 +82,9 @@ class ServiceController extends \yii\web\Controller
         if (!empty($firm))
         {
             $open = true;
-            
+
             $id_records = [];
-            
+
             foreach ($records as $key => $record)
             {
                 if (!empty($record['OrganID']) && $record['OrganID']==$firm)
@@ -151,6 +151,31 @@ class ServiceController extends \yii\web\Controller
             'rubrics'=>$tree,
             'open'=>$open,
             'firms'=>$firms,
+        ]);
+    }
+
+    public function actionForms($page)
+    {
+        $services = Service::find()->with([
+            'forms',
+            'rubric'
+        ])->where([
+            'old'=>0,
+            'is_online'=>1
+        ])->all();
+
+
+        $services = [];
+
+        foreach ($services as $key => $service)
+            $services[$service->id_rub][$service->id_service] = $service;
+
+        $rubs = ServiceRubric::find()->where(['id_rub'=>array_keys($services)])->all();
+
+        return $this->render('forms',[
+            'rubs'=>$rubs,
+            'page'=>$page,
+            'services'=>$services,
         ]);
     }
 
