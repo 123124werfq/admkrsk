@@ -1,6 +1,7 @@
 <?php
 	use yii\helpers\Html;
 	use common\models\CollectionColumn;
+	use common\models\CollectionRecord;
 	use kartik\select2\Select2;
 	use yii\web\JsExpression;
 
@@ -246,17 +247,30 @@ JS;
 
 			case CollectionColumn::TYPE_COLLECTIONS:
 
+				$ids = $model->$clearAttribute;
+
+				$records = [];
+
+				if (!empty($ids))
+					$records = CollectionRecord::find()->where(['id_record'=>$ids])->all();
+
 				if (!empty($options['accept_add']))
 				{
 					$arrayGroup = md5(rand(0,10000).time());
+
 					echo '<div id="subforms'.$input->id_input.'">';
-					echo \frontend\widgets\FormsWidget::widget([
-						'form'=>$input->collection->form,
-						'arrayGroup'=>$arrayGroup,
-						'activeForm'=>$form,
-						'inputs'=>[$attribute.'[]'=>$arrayGroup],
-						'template'=>'form_in_form',
-					]);
+					if (empty($records))
+						$records = [null];
+
+					foreach ($records as $key => $record)
+						echo \frontend\widgets\FormsWidget::widget([
+							'form'=>$input->collection->form,
+							'arrayGroup'=>$arrayGroup,
+							'collectionRecord'=>$record,
+							'activeForm'=>$form,
+							'inputs'=>[$attribute.'[]'=>$arrayGroup],
+							'template'=>'form_in_form',
+						]);
 					echo '</div>';
 
 					echo '<div class="collections-action-buttons"><a data-id="'.$input->id_input.'" data-group="subforms'.$input->id_input.'" class="btn btn__secondary form-copy" href="javascript:">Добавить еще</a></div>';

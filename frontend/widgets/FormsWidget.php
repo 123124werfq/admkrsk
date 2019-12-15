@@ -19,7 +19,7 @@ class FormsWidget extends \yii\base\Widget
     public $collectionRecord = null; // данные
     public $arrayGroup = null; // группирующий признак для подколлекций
     public $activeForm = null; // класс эктив форм для подколлекций
-    
+
     public $page;
 
     public function run()
@@ -43,7 +43,7 @@ class FormsWidget extends \yii\base\Widget
             'model'=>$model,
             'inputs'=>$this->inputs,
             'action'=>$this->action,
-            
+
             'arrayGroup'=>$this->arrayGroup,
             'activeForm'=>$this->activeForm,
         ]);
