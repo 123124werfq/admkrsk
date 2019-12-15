@@ -93,7 +93,7 @@ class CollectionRecordController extends Controller
             $dataProviderColumns[$col_alias] = [
                 'label'=>$col->name,
                 'attribute'=>$col_alias,
-                'format' => 'text',
+                'format' => 'raw',
                 'headerOptions'=>$options,
             ];
 
@@ -201,6 +201,19 @@ class CollectionRecordController extends Controller
                         }
 
                     return implode('<br>', $links);
+                };
+            }
+            else
+            {
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias)
+                {
+                    if (empty($model[$col_alias]))
+                        return '';
+
+                    if (is_array($model[$col_alias]))
+                        return implode('<br>', $model[$col_alias]);
+                    else
+                        return $model[$col_alias];
                 };
             }
 

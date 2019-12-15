@@ -44,17 +44,12 @@ $this->registerJs("$('#opendata-id_collection').change(function () {
 
 <?= $form->field($model, 'keywords')->textInput(['maxlength' => true]) ?>
 
-<?= $form->field($model, 'id_page')->widget(Select2::class, [
-    'data' => $model->page ? ArrayHelper::map([$model->page], 'id_page', 'title') : [],
+<?= $form->field($model, 'urls')->widget(Select2::class, [
     'pluginOptions' => [
         'allowClear' => true,
-        'minimumInputLength' => 1,
+        'tags' => true,
+        'multiple' => true,
         'placeholder' => 'Начните ввод',
-        'ajax' => [
-            'url' => Url::toRoute(['/page/list']),
-            'dataType' => 'json',
-            'data' => new JsExpression('function(params) { return {q:params.term}; }')
-        ],
     ],
 ]) ?>
 

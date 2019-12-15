@@ -1,6 +1,7 @@
 <?php
 
 use common\models\CollectionColumn;
+use common\models\Opendata;
 use common\models\OpendataData;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
@@ -48,12 +49,23 @@ if ($model->isDeleted()) {
                     'owner',
                     'keywords',
                     [
-                        'attribute' => 'id_page',
-                        'value' => $model->page->title ?? null,
-                    ],
-                    [
                         'attribute' => 'id_user',
                         'value' => $model->user->username?? null,
+                    ],
+                    [
+                        'attribute' => 'urls',
+                        'format' => 'raw',
+                        'value' => function (Opendata $model) {
+                            if ($model->urls) {
+                                $urls = [];
+                                foreach ($model->urls as $url) {
+                                    $urls[] = Html::a($url, $url);
+                                }
+                                return implode('<br>', $urls);
+                            }
+
+                            return null;
+                        },
                     ],
                     [
                         'attribute' => 'columns',
