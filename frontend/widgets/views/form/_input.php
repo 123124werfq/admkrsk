@@ -156,7 +156,7 @@ JS;
 	            </div>';
 				break;
 			case CollectionColumn::TYPE_RADIO:
-				
+
 				echo $model->$attribute;
 
 				foreach ($input->getArrayValues() as $key => $value) {

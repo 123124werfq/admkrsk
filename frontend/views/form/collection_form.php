@@ -1,4 +1,4 @@
-<?php 
+<?php
 	$arrayGroup = md5(rand(0,10000).time());
 
 	echo \frontend\widgets\FormsWidget::widget([
@@ -8,6 +8,4 @@
 		'inputs'=>["input".$input->id_input.'[]'=>$arrayGroup],
 		'template'=>'form_in_form',
 	]);
-
-	echo '<div class="collections-action-buttons"><a class="btn btn__secondary form-copy" href="javascript:">Добавить еще</a></div>';
 ?>

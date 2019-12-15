@@ -98,6 +98,8 @@ class CollectionRecord extends \yii\db\ActiveRecord
             {
                 unset($this->data['id_record']);
 
+                var_dump($this->data);
+
                 // запись в postgree
                 $insertData = [];
                 $insertDataMongo = [];
@@ -118,7 +120,9 @@ class CollectionRecord extends \yii\db\ActiveRecord
                         {
                             if (is_numeric($value))
                                 $ids = [$value];
-                            else
+                            elseif (is_array($ids))
+                                $ids = $value; // json_decode($value,true);*/
+                            else if (is_string($ids))
                                 $ids = json_decode($value,true);
 
                             $ids = $ids??[];
@@ -131,6 +135,9 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             $insertDataMongo['col'.$column->id_column] = (is_numeric($value))?(int)$value:$value;
                     }
                 }
+
+                print_r($insertDataMongo);
+
 
                 Yii::$app->db->createCommand()->batchInsert('db_collection_value',['id_column','id_record','value'],$insertData)->execute();
 
@@ -174,7 +181,9 @@ class CollectionRecord extends \yii\db\ActiveRecord
                         {
                             if (is_numeric($updateData))
                                 $ids = [$updateData];
-                            else
+                            else if (is_array($updateData))
+                                $ids = $updateData;
+                            else if (is_string($updateData))
                                 $ids = json_decode($updateData,true);
 
                             $ids = $ids??[];
