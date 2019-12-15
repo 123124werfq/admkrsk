@@ -17,12 +17,28 @@
 
                         <?php foreach ($services[$rub->id_rub] as $key => $service)
                         {?>
-                            <p><?=$service->reestr_number?> <?=$service->name?></p>
+                            <p>
+                            <?php
+                                if (!empty($service->ext_url))
+                                    $url = $service->ext_url;
+
+                                if (count($service->forms)==1)
+                                    $url = 'create?id_form='.$service->forms[0]->id_form;
+
+                                if (!empty($url))
+                                    echo '<a href="'.$url.'">'.$service->reestr_number.' '.$service->name.'</a>';
+                                else
+                                    echo $service->reestr_number.' '.$service->name;
+                            ?>
+                            </p>
+                            <?php if (count($service->forms)>1){?>
                             <ul>
-                            <?php foreach ($service->forms as $fkey => $form) {
+                            <?php foreach ($service->forms as $fkey => $form)
+                            {
                                 echo '<li><a href="create?id_form='.$form->id_form.'">'.$form->fullname.'</li>';
                             }?>
                             </ul>
+                        <?php }?>
                         <?php }?>
                     <?php }?>
             	</div>
