@@ -56,7 +56,6 @@ class Opendata extends \yii\db\ActiveRecord
     const VERBOSE_NAME_PLURAL = 'Открытые данные';
     const TITLE_ATTRIBUTE = 'title';
 
-    const VERSION = 'http://data.gov.ru/metodicheskie-rekomendacii-po-publikacii-otkrytyh-dannyh-versiya-30';
     const OPENDATA_LIST_PATH = 'opendata/list.csv';
 
     public $access_user_ids;
@@ -294,7 +293,7 @@ class Opendata extends \yii\db\ActiveRecord
      */
     public function getStandardversion()
     {
-        return self::VERSION;
+        return Vars::getVar('opendata_version');
     }
 
     /**
