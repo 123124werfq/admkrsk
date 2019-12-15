@@ -23,7 +23,7 @@ $lastDataStructureUrl = $model->lastData->structure->url;
                         <div class="file-td file-td__date"><?= Yii::$app->formatter->asDate($model->created_at) ?></div>
                         <?php if ($metaUrl): ?>
                             <div class="file-td file-td__name">Экспорт паспорта</div>
-                            <div class="file-td file-td__type"><?= mb_strtoupper($meta['extension']) ?>, <?= Yii::$app->formatter->asShortSize($meta['size'], 0) ?></div>
+                            <div class="file-td file-td__type"><?= mb_strtoupper($meta['extension'] ?? null) ?>, <?= Yii::$app->formatter->asShortSize($meta['size'] ?? null, 0) ?></div>
                             <div class="file-td file-td__control">
                                 <a href="<?= $metaUrl ?>" class="btn btn__secondary btn__block-sm">Скачать <i class="material-icons btn-icon btn-icon__right btn-icon__sm">get_app</i></a>
                             </div>
@@ -57,9 +57,11 @@ $lastDataStructureUrl = $model->lastData->structure->url;
                             <tr>
                                 <td>Гиперссылки (URL) на страницы сайта</td>
                                 <td>
-                                    <?php foreach ($model->urls as $url): ?>
-                                        <?= Html::a($url, $url) ?><br>
-                                    <?php endforeach; ?>
+                                    <?php if ($model->urls): ?>
+                                        <?php foreach ($model->urls as $url): ?>
+                                            <?= Html::a($url, $url) ?><br>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                             <tr>
@@ -80,7 +82,7 @@ $lastDataStructureUrl = $model->lastData->structure->url;
                             </tr>
                             <tr>
                                 <td>Формат данных</td>
-                                <td><?= mb_strtoupper($meta['extension']) ?></td>
+                                <td><?= mb_strtoupper($meta['extension'] ?? null) ?></td>
                             </tr>
                             <tr>
                                 <td>Описание структуры набора открытых данных</td>

@@ -24,7 +24,7 @@
                 echo $page->content;
                 ?>
 
-                <?=frontend\widgets\FormsWidget::widget(['form'=>$form,'inputs'=>$inputs,'action'=>''])?>
+                <?=frontend\widgets\FormsWidget::widget(['form'=>$form,'inputs'=>$inputs,'action'=>'', 'collectionRecord' => $record])?>
 
                 <div class="subscribe">
                     <div class="subscribe_left">

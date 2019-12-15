@@ -301,29 +301,11 @@ class CollectionRecord extends \yii\db\ActiveRecord
         return $this->hasOne(Collection::class, ['id_collection' => 'id_collection']);
     }
 
-     public function afterDelete()
-     {
+    public function afterDelete()
+    {
         $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
         $collection->remove(['id_record'=>$this->id_record]);
 
         parent::afterDelete();
-     }
-
-    public function getRecord()
-    {
-        $record = (new Query())
-            ->from('collection' . $this->id_collection)
-            ->where(['id_record' => $this->id_record])
-            ->one();
-
-        if (isset($record['_id'])) {
-            unset($record['_id']);
-        }
-
-        if (isset($record['id_record'])) {
-            unset($record['id_record']);
-        }
-
-        return $record;
     }
 }

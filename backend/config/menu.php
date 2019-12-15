@@ -156,20 +156,20 @@ return [
         'icon'=>'fa fa-address-book',
         'roles' => ['backend.menu', 'backend.alert', 'backend.vars', 'backend.controllerPage', 'backend.form'],
         'submenu'=>[
-            'profile'=>[
+            'reserve/profile'=>[
                 'title'=>'Анкеты',
                 'roles' => ['backend.form'],
             ],
-            'contest'=>[
+            'reserve/contest'=>[
                 'title'=>'Конкурсы',
                 'roles' => ['backend.form'],
             ],
-            'experts'=>[
+            'reserve/experts'=>[
                 'title'=>'Эксперты',
                 'roles' => ['backend.form'],
             ],
-            'archive'=>[
-                'title'=>'Архив',
+            'reserve/list'=>[
+                'title'=>'Резерв',
                 'roles' => ['backend.form'],
             ],
         ],

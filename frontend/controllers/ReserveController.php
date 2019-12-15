@@ -36,26 +36,23 @@ class ReserveController extends \yii\web\Controller
 
             if ($record = $collection->insertRecord($prepare)) {
 
-                if(!$profile) {
+                if(!$profile)
                     $profile = new HrProfile;
-                    $profile->created_at = time();
-                }
-                else
-                    $profile->updated_at = time();
 
                 $profile->id_user = Yii::$app->user->id;
                 $profile->id_record = $record->id_record;
                 $profile->save();
 
-                // тут привзяка к должностям
+                return $this->render('result', ['page'=>$page, 'form'=>$collection->form]);
             }
 
         }
 
         return $this->render('form', [
-            'form'=>$collection->form,
-            'page'=>$page,
-            'inputs'=>$inputs,
+            'form'      => $collection->form,
+            'page'      => $page,
+            'inputs'    => $inputs,
+            'record'    => $profile->record
         ]);
     }
 

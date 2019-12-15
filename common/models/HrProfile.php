@@ -3,6 +3,11 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use common\behaviors\AccessControlBehavior;
+
+
 
 /**
  * This is the model class for table "hr_profile".
@@ -61,6 +66,52 @@ class HrProfile extends \yii\db\ActiveRecord
         ];
     }
 
+    public function behaviors()
+    {
+        return [
+            'ts' => TimestampBehavior::class,
+            'ba' => BlameableBehavior::class,
+            /*
+            'ac' => [
+                'class' => AccessControlBehavior::class,
+                'permission' => 'backend.news',
+            ]
+            */
+        ];
+    }
+
+    public function afterSave($insert, $changedAttributes){
+        parent::afterSave($insert, $changedAttributes);
+
+        $positions = $this->recordData['target_positions'];
+
+        foreach ($this->positions as $pos)
+        {
+            if(empty($pos->id_result) && !in_array($pos->id_position, $positions))
+                $pos->delete();
+            else
+                $positions = array_diff( $positions, [$pos->id_position] );
+        }
+
+        foreach($positions as $id_pos)
+        {
+            $posRecord = CollectionRecord::findOne($id_pos);
+            if($posRecord){
+                $profilePosition = new HrProfilePositions;
+                $profilePosition->id_profile = $this->id_profile;
+                $profilePosition->id_record_position = $id_pos;
+                $profilePosition->save();
+            }
+        }
+
+        return true;
+    }
+
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'id_user']);
+    }
+
     public function getPositions()
     {
         return $this->hasMany(HrProfilePositions::class, ['id_profile' => 'id_profile']);
@@ -70,4 +121,20 @@ class HrProfile extends \yii\db\ActiveRecord
     {
         return $this->hasMany(HrContest::class, ['id_contest' => 'id_contest'])->viaTable('hrl_contest_profile', ['id_profile' => 'id_profile']);
     }
+
+    public function getRecord()
+    {
+        return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_record']);
+    }
+
+    public function getRecordData()
+    {
+        if(!$this->id_record)
+            return false;
+
+        $record = CollectionRecord::findOne($this->id_record);
+
+        return $record->getData(true);
+    }
+
 }
