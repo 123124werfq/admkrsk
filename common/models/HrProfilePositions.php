@@ -63,10 +63,11 @@ class HrProfilePositions extends \yii\db\ActiveRecord
 
     public function getPositionName()
     {
-        $rec = CollectionRecord::findOne($this->id_record_position);
-        if(!res)
+        $res = CollectionRecord::findOne($this->id_record_position);
+        if(!$res)
             return false;
-        $fields = $rec->getData(true);
-        return $fields['name'];
+        $fields = $res->getData(true);
+
+        return array_shift($fields);
     }
 }
