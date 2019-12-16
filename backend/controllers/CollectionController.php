@@ -80,7 +80,7 @@ class CollectionController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['create','record', 'create-view','copy','assign'],
+                        'actions' => ['create','record', 'create-view','copy','assign','record-list'],
                         'roles' => ['backend.collection.create'],
                         'roleParams' => [
                             'class' => Collection::class,
@@ -359,7 +359,7 @@ class CollectionController extends Controller
                         }
                     }
 
-                    return $this->redirect(['view','id'=>$id]);
+                    return $this->redirect(['view','id'=>$collection->id_collection]);
                 }
                 else
                 {

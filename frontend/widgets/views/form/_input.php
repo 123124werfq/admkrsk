@@ -252,7 +252,7 @@ JS;
 				$records = [];
 
 				if (!empty($ids))
-					$records = CollectionRecord::find()->where(['id_record'=>$ids])->all();
+					$records = CollectionRecord::find()->where(['id_record'=>array_keys($ids)])->all();
 
 				if (!empty($options['accept_add']))
 				{
@@ -286,16 +286,9 @@ JS;
 				{
 					$value = [];
 
-					if (!empty($model->$attribute))
-					{
-						$records = json_decode($model->$attribute);
-						$records = \common\models\CollectionRecord::find()->where(['id_record'=>$records]);
-
-						if (!empty($records))
-						{
-							$value[] = [$record->id_record=>$record->getLabel()];
-						}
-					}
+					foreach ($records as $key => $record)
+						if (isset($ids[$record->id_record]))
+							$value[$record->id_record] = $ids[$record->id_record];
 
 					echo $form->field($model, $attribute)->widget(Select2::class, [
 	                    'data' => $value,
@@ -311,8 +304,9 @@ JS;
 	                        ],
 	                    ],
 	                    'options'=>[
-	                    	'id'=>'input-district',
+	                    	'id'=>$options['id'],
 	                    	'multiple' => true,
+	                    	'value'=>array_keys($value)
 	                    ]
 	                ]);
 				}

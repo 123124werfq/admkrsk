@@ -66,8 +66,20 @@ class ReserveController extends Controller
         ]);
     }
 
-    public function actionUpdate($id)
+    public function actionEdit($id)
     {
+
+        $model = HrContest::findOne($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//            $model->createAction(Action::ACTION_UPDATE);
+            return $this->redirect('/reserve/contest');
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+
 
     }
 
