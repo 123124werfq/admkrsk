@@ -45,8 +45,8 @@ class FormInput extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','label','id_collection_column'], 'default', 'value' => null],
-            [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','required','type','readonly','id_collection_column'], 'integer'],
+            [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'id_column', 'deleted_by','label','id_collection_column'], 'default', 'value' => null],
+            [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_column', 'required','type','readonly','id_collection_column'], 'integer'],
             [['name', 'type', 'fieldname'], 'required'],
             [['hint','label'], 'string'],
             [['options','values'],'safe'],
@@ -130,7 +130,7 @@ class FormInput extends \yii\db\ActiveRecord
         {
 
             $collection = Collection::findOne($this->id_collection);
-            
+
             if (!empty($collection))
                 return $collection->getArray($this->id_collection_column??'');
             else

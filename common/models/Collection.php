@@ -178,7 +178,7 @@ class Collection extends \yii\db\ActiveRecord
     {
         if (!empty($id_column))
             $label = [$id_column];
-        else 
+        else
             $label = (!empty($this->label))?$this->label:[];
 
         $data = $this->getData($label);
@@ -332,6 +332,7 @@ class Collection extends \yii\db\ActiveRecord
         return $options;
     }
 
+    // DEPRECATED
     public function createForm()
     {
         $transaction = Yii::$app->db->beginTransaction();

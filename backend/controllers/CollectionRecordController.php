@@ -183,6 +183,27 @@ class CollectionRecordController extends Controller
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
                 $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias)
                 {
+                    /*
+                    if (empty($model[$col_alias]))
+                        return '';
+
+                    $labels = [];
+
+                    if (!empty($model[$col_alias.'_search']))
+                        $labels = explode(';', $model[$col_alias.'_search']);
+
+                    $links = [];
+
+                    if (is_array($model[$col_alias]))
+                        foreach ($model[$col_alias] as $ckey => $label)
+                        {
+                            if (!empty($labels[$ckey]))
+                                $links[] = '<a href="/collection-record/update?id='.$ckey.'">'.$label.'</a>';
+                        }
+
+                    return implode('<br>', $links);
+                    */
+
                     if (empty($model[$col_alias]))
                         return '';
 

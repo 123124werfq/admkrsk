@@ -49,7 +49,7 @@ class CollectionQuery extends \yii\mongodb\Query
         {
             if (!empty($column->input->id_collection))
                 $select[] = 'col'.$key.'_search';
-            
+
             $select[] = 'col'.$key;
         }
         $select[] = 'id_record';
@@ -140,6 +140,19 @@ class CollectionQuery extends \yii\mongodb\Query
 
                 if (!isset($this->columns[$id_column]))
                     continue;
+
+                if (is_array($value) && isset($record['col'.$id_column.'_search']))
+                {
+
+                    $labels = explode(';', $record['col'.$id_column.'_search']);
+
+                    $combine_value = [];
+
+                    foreach ($value as $ikey => $id)
+                        $combine_value[$id] = $labels[$ikey]??$id;
+
+                    $value = $combine_value;
+                }
 
                 if ($this->keyAsAlias && !empty($this->columns[$id_column]->alias))
                     $alias = $this->columns[$id_column]->alias;

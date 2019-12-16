@@ -70,6 +70,8 @@ var_dump($model->client_type);*/
 
         <hr>
 
+        <?= $form->field($model, 'ext_url')->textInput(['maxlength' => true]) ?>
+
         <?= $form->field($model, 'reestr_number')->textInput(['maxlength' => true]) ?>
 
         <?= $form->field($model, 'online')->dropDownList([0=>'Оффлайн',1=>'В электронном виде']) ?>

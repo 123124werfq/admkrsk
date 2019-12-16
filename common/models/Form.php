@@ -138,8 +138,8 @@ class Form extends \yii\db\ActiveRecord
                 $input->id_column = $column->id_column;
                 $input->label = $input->name = $column->name;
 
-                if ($column->type != CollectionColumn::TYPE_COLLECTION)
-                    $input->values = $column->variables;
+                /*if ($column->type != CollectionColumn::TYPE_COLLECTION)
+                    $input->values = $column->variables;*/
 
                 if ($input->save())
                 {
@@ -153,10 +153,29 @@ class Form extends \yii\db\ActiveRecord
         }
     }
 
-    public function assignForm()
+    public function createInput($attributes)
     {
+        $row = new FormRow;
+        $row->id_form = $this->id_form;
+        $row->ord = FormRow::find()->where(['id_form'=>$this->id_form])->count();
 
+        if ($row->save())
+        {
+            $input = new FormInput;
+            $input->attributes = $attributes;
+            $input->id_form = $this->id_form;
+
+            if ($input->save())
+            {
+                $element = new FormElement;
+                $element->id_row = $row->id_row;
+                $element->id_input = $input->id_input;
+                $element->ord = 0;
+                $element->save();
+            }
+        }
     }
+
 
     public function getCollection()
     {

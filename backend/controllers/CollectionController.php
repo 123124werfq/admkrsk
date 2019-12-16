@@ -80,7 +80,7 @@ class CollectionController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['create','record', 'create-view','copy','assign'],
+                        'actions' => ['create','record', 'create-view','copy','assign','record-list'],
                         'roles' => ['backend.collection.create'],
                         'roleParams' => [
                             'class' => Collection::class,
@@ -234,7 +234,7 @@ class CollectionController extends Controller
         return ['results' => $results];
     }
 
-    public function actionCopy($id)
+    /*public function actionCopy($id)
     {
         $model = $this->findModel($id);
 
@@ -276,7 +276,7 @@ class CollectionController extends Controller
             $this->redirect(["collection/view",'id'=>$newCollection->id_collection]);
         }
         else print_r($newCollection->errors);
-    }
+    }*/
 
     public function actionAssign($id)
     {
@@ -296,6 +296,16 @@ class CollectionController extends Controller
 
             if ($newColumn->save())
             {
+                $newColumn->collection->form->createInput([
+                    'type'=>$form->type,
+                    'name'=> $newColumn->name,
+                    'label'=> $newColumn->name,
+                    'fieldname'=> $newColumn->alias,
+                    'id_column'=> $newColumn->id_column,
+                    'id_collection_column'=>$form->id_collection_from_column,
+                    'id_collection'=>$form->id_collection_from,
+                ]);
+
                 if ($form->type==CollectionColumn::TYPE_COLLECTIONS)
                 {
                     $datas = $collection->getData();
@@ -326,7 +336,6 @@ class CollectionController extends Controller
                                     {
                                         if ($sources[$form->id_collection_from_column] == $id)
                                         {
-                                            //echo "$id - $id_record_source \r\n";
                                             $id_records_source[] = $id_record_source;
                                             $textSearch[] = $kdata[$id];
                                         }
@@ -349,14 +358,14 @@ class CollectionController extends Controller
                             }
                         }
                     }
+
+                    return $this->redirect(['view','id'=>$collection->id_collection]);
                 }
-                else 
+                else
                 {
 
                 }
             }
-
-            print_r($form->attributes);
         }
 
         return $this->render('assign',[
