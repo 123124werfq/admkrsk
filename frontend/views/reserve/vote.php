@@ -5,8 +5,8 @@
     <div class="main">
         <div class="container">
             <div class="row">
-                <div class="col-2-third order-xs-1">
-                    <div class="content searchable">
+                <div class="" style="width: 100%;">
+                    <div class="content">
                         <h1>Интерактивное голосование</h1>
 
                         <?php if(!$data) {?>
@@ -15,7 +15,7 @@
 
                             <p>Период проведения: <?= date('d-m-Y H:i', $data->begin)?> - <?= date('d-m-Y H:i', $data->end)?></p>
 
-                            <table>
+                            <table class="table table-striped vote">
                                 <thead>
                                     <tr>
                                         <td>
@@ -31,16 +31,16 @@
                                             Оценка
                                         </td>
                                     </tr>
-
+                                </thead>
                                 <?php
                                     $count = 1;
                                     foreach ($data->profiles as $profile)
                                     {
                                  ?>
                                     <tr>
-                                        <td>
+                                        <th scope="row">
                                             <?=$count++?>
-                                        </td>
+                                        </th>
                                         <td>
                                             <a href="/reserve/profile?id=<?=$profile->id_profile?>"><?=$profile->name?></a>
                                         </td>
@@ -56,10 +56,16 @@
                                             {
                                                 $result = false;
                                                 foreach ($votes as $vote)
-                                                    if($vote->id_profile==$profile->id_profile && $vote->id_position == $position->id_position)
+                                                    if($vote->id_profile==$profile->id_profile && $vote->id_record == $position->id_profile_position)
                                                         $result = $vote->value;
 
-                                                echo ($result?$result:'нет оценки') . "<br>";
+                                                switch ($result){
+                                                    case 0: echo '<span class="badge secondary">нет оценки</span>'; break;
+                                                    case -1: echo '<span class="badge badge-danger">не включать</span>'; break;
+                                                    case 1: echo '<span class="badge badge-success">включить</span>'; break;
+                                                }
+
+                                                echo "<br>";
                                             }
                                             ?>
 
@@ -68,9 +74,6 @@
                                 <?php
                                     }
                                 ?>
-
-
-                                </thead>
                             </table>
 
 

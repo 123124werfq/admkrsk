@@ -397,5 +397,13 @@ $(document).ready(function() {
         }, 1000);
     }
 
+    $('#allPosOn').click(function(){
+        $('select').each(function(idx,el){$(el).val(1);})
+        return false;
+    });
+    $('#allPosOff').click(function(){
+        $('select').each(function(idx,el){$(el).val(-1);})
+        return false;
+    });
 
 })
