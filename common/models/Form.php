@@ -163,6 +163,7 @@ class Form extends \yii\db\ActiveRecord
         {
             $input = new FormInput;
             $input->attributes = $attributes;
+            $input->id_form = $this->id_form;
 
             if ($input->save())
             {

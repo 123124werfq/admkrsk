@@ -234,7 +234,7 @@ class CollectionController extends Controller
         return ['results' => $results];
     }
 
-    public function actionCopy($id)
+    /*public function actionCopy($id)
     {
         $model = $this->findModel($id);
 
@@ -276,7 +276,7 @@ class CollectionController extends Controller
             $this->redirect(["collection/view",'id'=>$newCollection->id_collection]);
         }
         else print_r($newCollection->errors);
-    }
+    }*/
 
     public function actionAssign($id)
     {
@@ -305,7 +305,7 @@ class CollectionController extends Controller
                     'id_collection_column'=>$form->id_collection_from_column,
                     'id_collection'=>$form->id_collection_from,
                 ]);
-                
+
                 if ($form->type==CollectionColumn::TYPE_COLLECTIONS)
                 {
                     $datas = $collection->getData();
@@ -358,14 +358,14 @@ class CollectionController extends Controller
                             }
                         }
                     }
+
+                    return $this->redirect(['view','id'=>$id]);
                 }
-                else 
+                else
                 {
 
                 }
             }
-
-            print_r($form->attributes);
         }
 
         return $this->render('assign',[

@@ -143,6 +143,7 @@ class CollectionQuery extends \yii\mongodb\Query
 
                 if (is_array($value) && isset($record['col'.$id_column.'_search']))
                 {
+
                     $labels = explode(';', $record['col'.$id_column.'_search']);
 
                     $combine_value = [];
