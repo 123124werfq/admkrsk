@@ -68,7 +68,23 @@ class CollectionController extends Controller
             $transaction->rollBack();
             throw $e;
         }
+    }
 
+    public function actionAlias()
+    {
+        $inputs = FormInput::find()->where("fieldname IS NULL OR fieldname = ''")->all();
+
+        foreach ($inputs as $key => $input)
+        {
+            $input->fieldname = 'input'.$input->id_input;
+            $input->updateAttributes(['fieldname']);
+
+            if (!empty($input->column))
+            {
+                $input->column->alias = $input->fieldname;
+                $input->column->updateAttributes(['alias']);
+            }
+        }
     }
 
     public function actionService()
