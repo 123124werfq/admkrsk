@@ -32,6 +32,21 @@ img {max-width: 100%;}
     width: 30px;
 }
 
+
+#form-template .form-control {
+    border-radius: 5px;
+    border: 0px;
+    background: #efefefbf;
+    line-height: 28px;
+}
+
+#form-template .form-control.required {background: #ff9a837a;}
+
+.subform {
+    background: rgba(25, 179, 147, 0.23);
+    border-radius: 10px;
+}
+
 .modal-lg {width: 1200px;}
 
 .modal-backdrop.in {opacity: 0.1;}
