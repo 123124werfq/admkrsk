@@ -2,7 +2,9 @@
 	$styles = $element->getStyles();
 ?>
 <div data-id="<?=$element->id_element?>" class="form-element col" <?=(!empty($styles))?'style="'.implode(';',$styles).'"':''?>>
-	<div class="input form-control" <?=(!empty($styles['font-size']))?'style="'.$styles['font-size'].'"':''?>><?=$element->input->name?></div>
+	<div class="input form-control <?=!empty($element->input->required)?'required':''?>" <?=(!empty($styles['font-size']))?'style="'.$styles['font-size'].'"':''?>>
+		<?=$element->input->name?> <?=!empty($element->input->typeOptions->esia)?'<span class="badge">ЕСИА</span>':''?>
+	</div>
 	<div class="btn-group">
 	    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 	        ...

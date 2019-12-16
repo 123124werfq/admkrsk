@@ -380,7 +380,7 @@ class FormController extends Controller
 
             $subForm = new Form;
             $subForm->is_template = 2;
-            $subForm->id_collection = $copyForm->id_collection;
+            $subForm->id_collection = $parentForm->id_collection;
             $subForm->name = $parentForm->name.' '.$copyForm->name;
 
             if ($subForm->save())
