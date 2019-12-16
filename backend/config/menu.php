@@ -120,10 +120,33 @@ return [
             ],
         ],
     ],
+    'reserve'=>[
+        'title'=>'Кадровый резерв',
+        'icon'=>'fa fa-address-book',
+        'roles' => ['backend.menu', 'backend.alert', 'backend.vars', 'backend.controllerPage', 'backend.form'],
+        'submenu'=>[
+            'reserve/profile'=>[
+                'title'=>'Анкеты',
+                'roles' => ['backend.form'],
+            ],
+            'reserve/contest'=>[
+                'title'=>'Конкурсы',
+                'roles' => ['backend.form'],
+            ],
+            'reserve/experts'=>[
+                'title'=>'Эксперты',
+                'roles' => ['backend.form'],
+            ],
+            'reserve/list'=>[
+                'title'=>'Резерв',
+                'roles' => ['backend.form'],
+            ],
+        ],
+    ],
     'setting'=>[
         'title'=>'Система',
         'icon'=>'fa fa-gears',
-        'roles' => ['backend.menu', 'backend.alert', 'backend.vars', 'backend.controllerPage', 'backend.opendata'],
+        'roles' => ['backend.menu', 'backend.alert', 'backend.vars', 'backend.controllerPage', 'backend.opendata', 'backend.application'],
         'submenu'=>[
             'menu'=>[
                 'title'=>'Меню',
@@ -149,28 +172,9 @@ return [
                 'title' => 'Интеграции',
                 'roles' => ['backend.service']
             ],
-        ],
-    ],
-    'reserve'=>[
-        'title'=>'Кадровый резерв',
-        'icon'=>'fa fa-address-book',
-        'roles' => ['backend.menu', 'backend.alert', 'backend.vars', 'backend.controllerPage', 'backend.form'],
-        'submenu'=>[
-            'reserve/profile'=>[
-                'title'=>'Анкеты',
-                'roles' => ['backend.form'],
-            ],
-            'reserve/contest'=>[
-                'title'=>'Конкурсы',
-                'roles' => ['backend.form'],
-            ],
-            'reserve/experts'=>[
-                'title'=>'Эксперты',
-                'roles' => ['backend.form'],
-            ],
-            'reserve/list'=>[
-                'title'=>'Резерв',
-                'roles' => ['backend.form'],
+            'application'=>[
+                'title' => 'Приложения (API)',
+                'roles' => ['backend.application']
             ],
         ],
     ],

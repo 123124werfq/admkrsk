@@ -2,7 +2,7 @@
 
 namespace frontend\modules\api\controllers;
 
-use yii\rest\Controller;
+use frontend\modules\api\base\Controller;
 use yii\web\ForbiddenHttpException;
 
 /**

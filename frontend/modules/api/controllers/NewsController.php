@@ -2,10 +2,10 @@
 
 namespace frontend\modules\api\controllers;
 
+use frontend\modules\api\base\Controller;
 use frontend\modules\api\models\News;
 use frontend\modules\api\models\search\NewsSearch;
 use Yii;
-use yii\rest\Controller;
 use yii\web\NotFoundHttpException;
 
 /**

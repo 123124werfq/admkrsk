@@ -53,6 +53,60 @@ class RbacController extends Controller
 
 
 
+            $backendApplicationIndex = $auth->createPermission('backend.application.index');
+            $backendApplicationIndex->description = 'Список приложений';
+            $backendApplicationIndex->ruleName = $entityRule->name;
+            $auth->add($backendApplicationIndex);
+
+            $backendApplicationView = $auth->createPermission('backend.application.view');
+            $backendApplicationView->description = 'Просмотр приложения';
+            $backendApplicationView->ruleName = $entityRule->name;
+            $auth->add($backendApplicationView);
+
+            $backendApplicationCreate = $auth->createPermission('backend.application.create');
+            $backendApplicationCreate->description = 'Создание приложения';
+            $backendApplicationCreate->ruleName = $entityRule->name;
+            $auth->add($backendApplicationCreate);
+
+            $backendApplicationUpdate = $auth->createPermission('backend.application.update');
+            $backendApplicationUpdate->description = 'Редактирование приложения';
+            $backendApplicationUpdate->ruleName = $entityRule->name;
+            $auth->add($backendApplicationUpdate);
+
+            $backendApplicationDelete = $auth->createPermission('backend.application.delete');
+            $backendApplicationDelete->description = 'Удаление приложения';
+            $backendApplicationDelete->ruleName = $entityRule->name;
+            $auth->add($backendApplicationDelete);
+
+            $backendApplicationLogIndex = $auth->createPermission('backend.application.log.index');
+            $backendApplicationLogIndex->description = 'Список изменений';
+            $backendApplicationLogIndex->ruleName = $entityRule->name;
+            $auth->add($backendApplicationLogIndex);
+
+            $backendApplicationLogView = $auth->createPermission('backend.application.log.view');
+            $backendApplicationLogView->description = 'Просмотр изменений';
+            $backendApplicationLogView->ruleName = $entityRule->name;
+            $auth->add($backendApplicationLogView);
+
+            $backendApplicationLogRestore = $auth->createPermission('backend.application.log.restore');
+            $backendApplicationLogRestore->description = 'Восстановление изменений';
+            $backendApplicationLogRestore->ruleName = $entityRule->name;
+            $auth->add($backendApplicationLogRestore);
+
+            $backendManageApplication = $auth->createPermission('backend.application');
+            $backendManageApplication->description = 'Управление приложениями';
+            $auth->add($backendManageApplication);
+            $auth->addChild($backendManageApplication, $backendApplicationIndex);
+            $auth->addChild($backendManageApplication, $backendApplicationView);
+            $auth->addChild($backendManageApplication, $backendApplicationCreate);
+            $auth->addChild($backendManageApplication, $backendApplicationUpdate);
+            $auth->addChild($backendManageApplication, $backendApplicationDelete);
+            $auth->addChild($backendManageApplication, $backendApplicationLogIndex);
+            $auth->addChild($backendManageApplication, $backendApplicationLogView);
+            $auth->addChild($backendManageApplication, $backendApplicationLogRestore);
+
+
+
             $backendAlertIndex = $auth->createPermission('backend.alert.index');
             $backendAlertIndex->description = 'Список всплывающих сообщений';
             $backendAlertIndex->ruleName = $entityRule->name;
@@ -1267,6 +1321,14 @@ class RbacController extends Controller
 
 
 
+            $backendApplication = $auth->createRole('admin.application');
+            $backendApplication->description = 'Редактор приложений';
+            $auth->add($backendApplication);
+            $auth->addChild($backendApplication, $backendManage);
+            $auth->addChild($backendApplication, $backendManageApplication);
+
+
+
             $backendAlert = $auth->createRole('admin.alert');
             $backendAlert->description = 'Редактор списков';
             $auth->add($backendAlert);
@@ -1439,6 +1501,7 @@ class RbacController extends Controller
             $admin->description = 'Администратор';
             $auth->add($admin);
             $auth->addChild($admin, $backendAddress);
+            $auth->addChild($admin, $backendApplication);
             $auth->addChild($admin, $backendAlert);
             $auth->addChild($admin, $backendCollection);
             $auth->addChild($admin, $backendControllerPage);

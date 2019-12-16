@@ -2,11 +2,11 @@
 
 namespace frontend\modules\api\controllers;
 
+use frontend\modules\api\base\Controller;
 use frontend\modules\api\models\Collection;
 use frontend\modules\api\models\CollectionRecord;
 use frontend\modules\api\models\search\CollectionSearch;
 use Yii;
-use yii\rest\Controller;
 use yii\web\NotFoundHttpException;
 
 /**
