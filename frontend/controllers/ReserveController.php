@@ -3,6 +3,9 @@
 namespace frontend\controllers;
 
 
+use common\models\HrContest;
+use common\models\HrExpert;
+use common\models\HrVote;
 use Yii;
 use common\models\Page;
 use common\models\Collection;
@@ -62,5 +65,46 @@ class ReserveController extends \yii\web\Controller
 
         return $this->render('//site/page', ['page'=>$page]);
     }
+
+    public function actionVote()
+    {
+        $now = time();
+        //$contest = HrContest::find()->where("\"begin\"<$now AND \"end\">$now")->one();
+        $contest = HrContest::find()->one();
+
+        if(!$contest)
+            throw new BadRequestHttpException();
+
+        $expert = HrExpert::findOne(['id_user' => Yii::$app->user->id]);
+
+        if(!$expert)
+            throw new BadRequestHttpException();
+
+
+        $enabled = false;
+
+        foreach ($contest->experts as $cexpert)
+            if($cexpert->id_expert == $expert->id_expert)
+                $enabled = true;
+
+        if(!$enabled)
+            throw new BadRequestHttpException();
+
+        $votes = HrVote::find()->where(['id_expert' => $expert->id_expert, 'id_contest' => $contest->id_contest])->all();
+
+        return $this->render('vote', [
+            'data' => $contest,
+            'expert' => $expert,
+            'votes' => $votes
+        ]);
+    }
+
+
+    public function actionProfile($id)
+    {
+
+    }
+
+
 
 }

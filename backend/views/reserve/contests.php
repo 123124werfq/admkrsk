@@ -31,6 +31,67 @@ if (Yii::$app->user->can('admin.service')) {
         //'filterModel' => $searchModel,
         'columns' => [
             'id_contest:integer:ID',
+            'title',
+            [
+                'label' => 'Начало',
+                'value' => function($model){
+                    return date("d-m-Y H:i", $model->begin);
+                }
+            ],
+            [
+                'label' => 'Окончание',
+                'value' => function($model){
+                    return date("d-m-Y H:i", $model->end);
+                }
+            ],
+            [
+                'label' => 'Претенденты',
+                'format' => 'html',
+                'value' => function($model){
+                    $pretenders = [];
+                    foreach ($model->profiles as $profile) {
+                        $pretenders[] = $profile->name;
+                    }
+                    return implode('<br>', $pretenders);
+                }
+            ],
+            [
+                'label' => 'Должности',
+                'format' => 'html',
+                'value' => function($model){
+                    $positions = [];
+                    foreach ($model->profiles as $profile) {
+                        foreach ($profile->positions as $position)
+                            $positions[] = $position->positionName;
+                    }
+                    $positions = array_unique($positions);
+                    return implode('<br>', $positions);
+                }
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{edit} {stop}',
+                'buttons' => [
+                    'stop' => function($url, $model, $key) {
+                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-stop"]);
+                        return Html::a($icon, $url, [
+                            'title' => 'Остановить',
+                            'aria-label' => 'Остановить',
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                    'edit' => function($url, $model, $key) {
+                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-pencil"]);
+                        return Html::a($icon, $url, [
+                            'title' => 'Редактировать',
+                            'aria-label' => 'Редактировать',
+                            'data-pjax' => '0',
+                        ]);
+                    },
+
+                ],
+                'contentOptions'=>['class'=>'button-column'],
+            ],
         ],
         'tableOptions'=>[
             'emptyCell' => '',

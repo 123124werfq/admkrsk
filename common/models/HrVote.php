@@ -36,8 +36,8 @@ class HrVote extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_expert', 'id_profile', 'id_record', 'value', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
-            [['id_expert', 'id_profile', 'id_record', 'value', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['id_expert', 'id_profile', 'id_record', 'id_contest', 'value', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
+            [['id_expert', 'id_profile', 'id_record', 'id_contest', 'value', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['comment'], 'string'],
         ];
     }
