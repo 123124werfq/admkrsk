@@ -19,10 +19,11 @@
                         {?>
                             <p>
                             <?php
+                                $url = '';
+
                                 if (!empty($service->ext_url))
                                     $url = $service->ext_url;
-
-                                if (count($service->forms)==1)
+                                else if (count($service->forms)==1)
                                     $url = 'create?id_form='.$service->forms[0]->id_form;
 
                                 if (!empty($url))
