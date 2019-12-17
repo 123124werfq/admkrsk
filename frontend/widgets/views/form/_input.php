@@ -257,6 +257,7 @@ JS;
 				if (!empty($options['accept_add']))
 				{
 					echo '<div id="subforms'.$input->id_input.'">';
+
 					if (empty($records))
 						$records = [null];
 
@@ -268,6 +269,9 @@ JS;
 
 						if (!empty($record))
 							$inputs[$attribute.'_id_record[]'] = $record->id_record;
+
+						var_dump($record);
+						die();
 
 						echo \frontend\widgets\FormsWidget::widget([
 							'form'=>$input->collection->form,
