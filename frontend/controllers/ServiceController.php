@@ -223,7 +223,6 @@ class ServiceController extends \yii\web\Controller
         return ['results' => $results];
     }
 
-
     public function actionComplaint($page=null)
     {
         return $this->render('complaint');

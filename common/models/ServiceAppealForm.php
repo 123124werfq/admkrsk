@@ -54,7 +54,7 @@ class ServiceAppealForm extends \yii\db\ActiveRecord
         return $this->hasOne(Form::class, ['id_form' => 'id_form']);
     }
 
-    public function getSevice()
+    public function getService()
     {
         return $this->hasOne(Service::class, ['id_service' => 'id_service']);
     }
