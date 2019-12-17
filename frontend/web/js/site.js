@@ -136,7 +136,6 @@ $(document).ready(function() {
     {
         function getValue(id_input)
         {
-            console.log(id_input);
             var input = $("#input"+id_input);
 
             if (input.is(':checkbox'))
@@ -175,9 +174,7 @@ $(document).ready(function() {
 
         for (var id_vinput in visibleInputs)
         {
-            $("#input"+id_vinput).change(function(){
-
-                console.log(id_vinput);
+            $("#input"+id_vinput).change(function(id_vinput){
 
                 for (var id_element in visibleInputs[id_vinput])
                     check(id_element);
