@@ -60,7 +60,7 @@ class ReserveController extends \yii\web\Controller
             'form'      => $collection->form,
             'page'      => $page,
             'inputs'    => $inputs,
-            'record'    => $profile->record
+            'record'    => !empty($profile->record)?$profile->record:null
         ]);
     }
 
