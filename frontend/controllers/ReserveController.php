@@ -190,7 +190,6 @@ class ReserveController extends \yii\web\Controller
         foreach ($votes as $vote)
             $outvotes[$vote->id_record] = $vote->value;
 
-
         return $this->render('profile', [
             'data' => $contest,
             'expert' => $expert,
@@ -200,9 +199,5 @@ class ReserveController extends \yii\web\Controller
             'columns'=>$columns,
             'outvotes' => $outvotes
         ]);
-
     }
-
-
-
 }
