@@ -42,7 +42,7 @@ img {max-width: 100%;}
 
 #form-template .form-control.required {background: #ff9a837a;}
 
-.subform {
+#form-template .subform {
     background: rgba(25, 179, 147, 0.23);
     border-radius: 10px;
 }

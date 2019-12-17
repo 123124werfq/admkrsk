@@ -202,7 +202,11 @@ JS;
 				break;
 			case CollectionColumn::TYPE_CHECKBOXLIST:
 
-				$current_values = (is_array($model->$clearAttribute))?$model->$clearAttribute:[];
+				if (!empty($input->id_collection))
+					$current_values = (is_array($model->$clearAttribute))?array_keys($model->$clearAttribute):[];
+				else
+					$current_values = (is_array($model->$clearAttribute))?$model->$clearAttribute:[];
+
 				echo '<div class="checkboxes">';
 				foreach ($input->getArrayValues() as $key => $value) {
 					echo '
