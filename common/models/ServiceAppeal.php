@@ -53,7 +53,6 @@ class ServiceAppeal extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_appeal' => 'Id Appeal',
             'id_user' => 'Id User',
             'id_service' => 'Id Service',
             'id_record' => 'ID record',
