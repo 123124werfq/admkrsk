@@ -35,6 +35,7 @@ class FormsWidget extends \yii\base\Widget
 
         $model = new FormDynamic($this->form,$this->data);
 
+        var_dump($this->collectionRecord);
         if (!empty($this->collectionRecord) && empty($this->data))
             $model->loadDataFromRecord($this->collectionRecord->getData());
 
