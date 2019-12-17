@@ -38,10 +38,10 @@ use yii\web\JsExpression;
 
                  <div class="row">
                     <div class="col-sm-6">
-                        <?= $form->field($model, 'date_begin')->textInput(['type'=>'datetime-local','value'=>(!empty($model->date_begin))?date('Y-m-d\TH:i:s', $model->date_begin):'']) ?>
+                        <?= $form->field($model, 'date_begin')->textInput(['type'=>'datetime-local','value'=>(!empty($model->date_begin))?date('Y-m-d\TH:i', $model->date_begin):'']) ?>
                     </div>
                     <div class="col-sm-6">
-                        <?= $form->field($model, 'date_end')->textInput(['type'=>'datetime-local','value'=>(!empty($model->date_end))?date('Y-m-d\TH:i:s',$model->date_end):'']) ?>
+                        <?= $form->field($model, 'date_end')->textInput(['type'=>'datetime-local','value'=>(!empty($model->date_end))?date('Y-m-d\TH:i',$model->date_end):'']) ?>
                     </div>
                 </div>
 

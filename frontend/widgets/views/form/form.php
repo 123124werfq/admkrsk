@@ -14,7 +14,6 @@
 	foreach ($visibleInputs as $vkey => $vinput)
 	{
 		$visibleInputs[$vinput->id_input_visible][$vinput->id_element] = $vinput->id_element;
-
 		$visibleElements[$vinput->id_element][$vinput->id_input_visible] = $vinput->values;
 	}
 ?>

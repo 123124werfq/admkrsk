@@ -228,6 +228,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
             $this->loadData = $record = array_shift($record);
         else
             return [];
+
         /*$rows = (new \yii\db\Query());
 
         $rows = $rows->select(['dcv.id_column', 'value','id_record','dcc.alias as alias'])

@@ -52,7 +52,9 @@
                     <?php if (count($forms)==1)
                         echo '<a href="create?&id_form='.$forms[0]->id_form.'" class="btn-group_item btn btn__secondary">Направить заявление</a>';
                     ?>
-                    <a href="#" class="btn-group_item btn btn__gray">Подать жалобу</a>
+                    <?php if ($service->isAppealable()){?>
+                        <a href="complaint" class="btn-group_item btn btn__gray">Подать жалобу</a>
+                    <?php }?>
                 </div>
 
                 <?php if (count($forms)>1){?>

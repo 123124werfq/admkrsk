@@ -67,7 +67,7 @@ class ServiceAppealFormController extends Controller
         $model = new ServiceAppealForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_appeal]);
+            return $this->redirect(['index', 'id' => $model->id_appeal]);
         }
 
         return $this->render('create', [
@@ -87,7 +87,7 @@ class ServiceAppealFormController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_appeal]);
+            return $this->redirect(['index', 'id' => $model->id_appeal]);
         }
 
         return $this->render('update', [

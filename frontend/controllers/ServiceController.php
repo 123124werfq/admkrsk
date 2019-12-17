@@ -183,7 +183,7 @@ class ServiceController extends \yii\web\Controller
 
                 }
             }
-            else 
+            else
                 $parents[] = $rub->id_rub;
         }*/
 
@@ -204,6 +204,28 @@ class ServiceController extends \yii\web\Controller
         	'service'=>$model,
             'page'=>$page,
         ]);
+    }
+
+    public function actionCategory($id_firm)
+    {
+        $query = ServiceAppealForm::find()->with('category as category')->select(['id_category','id_firm','category.lineValue as category_name'])->where(['id_firm'=>$id_firm])->groupBy('id_category');
+
+        $results = [];
+        foreach ($query->asArray()->all() as $category)
+        {
+            $results[] = [
+                'id' => $category['id_category'],
+                'text' => $category['category_name'],
+            ];
+        }
+
+        return ['results' => $results];
+    }
+
+
+    public function actionComplaint($page=null)
+    {
+        return $this->render('complaint');
     }
 
     public function actionCreate($id_form,$page=null)

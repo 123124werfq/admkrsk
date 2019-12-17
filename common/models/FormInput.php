@@ -106,7 +106,17 @@ class FormInput extends \yii\db\ActiveRecord
 
     public function getArrayValues($model=null)
     {
-        if (!empty($this->typeOptions->service_attribute))
+        if ($this->type == CollectionColumn::TYPE_SERVICE)
+        {
+            $records = ServiceAppealForm::find()->joinWith('service')->where(['id_form'=>$this->id_form])->all();
+            $output = [];
+
+            foreach ($records as $key => $data)
+                $output[$data->id_service] = $data->reestr_number.' '.$data->name;
+
+            return $output;
+        }
+        elseif (!empty($this->typeOptions->service_attribute))
         {
             $values = Service::getAttributeValues($this->typeOptions->service_attribute,$model);
             return $values;
