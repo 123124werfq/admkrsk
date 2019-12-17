@@ -139,7 +139,7 @@ class ReserveController extends \yii\web\Controller
         if(!$enabled)
             throw new BadRequestHttpException();
 
-        if(!empty(Yii::$app->request->post()))
+        if (!empty(Yii::$app->request->post()))
         {
             var_dump(Yii::$app->request->post());
 
@@ -171,23 +171,18 @@ class ReserveController extends \yii\web\Controller
 
         $collectionRecord = CollectionRecord::findOne($profile->id_record);
 
-        $insertedData = $collectionRecord->getData();
+        //$insertedData = $collectionRecord->getData();
 
         $columns = CollectionColumn::find()->where(['id_collection' => $collectionRecord->id_collection])->indexBy('id_column')->orderBy('ord')->all();
 
-        foreach ($insertedData as $rkey => $ritem)
+        /*foreach ($insertedData as $rkey => $ritem)
         {
-            /*
-            if($columns[$rkey]->alias == 'id_target') {
-                $target = ServiceTarget::findOne($ritem);
-                $formFields[$columns[$rkey]->alias] = ['value' => $target->reestr_number." ".$target->name, 'name' => $columns[$rkey]->name, 'ord' => $columns[$rkey]->ord];
-            }
-            else
-            */
             $formFields[$columns[$rkey]->alias] = ['value' => empty($ritem)?"[не заполнено]":$ritem, 'name' => $columns[$rkey]->name, 'ord' => $columns[$rkey]->ord];
         }
 
-        usort($formFields, function($a, $b){return ($a['ord']<$b["ord"])?-1:1;});
+        usort($formFields, function($a, $b){
+            return ($a['ord']<$b["ord"])?-1:1;
+        });*/
 
         $votes = HrVote::find()->where(['id_expert' => $expert->id_expert, 'id_contest' => $contest->id_contest, 'id_profile' => $profile->id_profile])->all();
 
@@ -200,7 +195,9 @@ class ReserveController extends \yii\web\Controller
             'data' => $contest,
             'expert' => $expert,
             'profile' => $profile,
-            'formFields' => $formFields,
+            //'insertedData' => $insertedData,
+            'collectionRecord'=>$collectionRecord,
+            'columns'=>$columns,
             'outvotes' => $outvotes
         ]);
 

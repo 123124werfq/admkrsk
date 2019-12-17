@@ -142,7 +142,6 @@ var_dump($model->client_type);*/
         ]);?>
 
         <?php if (Yii::$app->user->can('admin.service')): ?>
-
             <hr>
             <h3>Доступ</h3>
             <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>

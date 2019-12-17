@@ -2,12 +2,13 @@
 /* @var common\models\Page $page */
 
 use yii\helpers\Html;
+use common\models\CollectionColumn;
 
 ?>
 <div class="main">
     <div class="container">
         <div class="row">
-            <div class="" style="">
+            <div class="" style="width: 100%;">
                 <div class="content">
                     <h1>Интерактивное голосование</h1>
 
@@ -57,18 +58,7 @@ use yii\helpers\Html;
                     <?php } ?>
                     <hr class="hr hr__md"/>
 
-                    <table>
-                    <?php
-                        foreach ($formFields as $field){
-                    ?>
-                        <tr>
-                            <td><?=$field['name']?></td>
-                            <td><?=is_array($field['value'])?json_encode($field['value']):$field['value']?></td>
-                        </tr>
-                    <?php
-                        }
-                    ?>
-                    </table>
+                    <?php echo frontend\widgets\CollectionRecordWidget::widget(['collectionRecord'=>$collectionRecord]);?>
                 </div>
             </div>
         </div>

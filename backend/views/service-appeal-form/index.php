@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel backend\models\search\ServiceAppealFormSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Service Appeal Forms';
+$this->title = 'Сзязь форм и услуг для обжалования';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="ibox">
@@ -20,10 +20,10 @@ $this->params['breadcrumbs'][] = $this->title;
         //'filterModel' => $searchModel,
         'columns' => [
             'id_appeal:text:#',
-            'id_form',
-            'id_record_firm',
-            'id_record_category',
-            'id_service',
+            'form.name:text:Форма',
+            'firm.lineValue:text:Организация',
+            'category.lineValue:text:Категория',
+            'service.reestr_number:text:Услуга',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'contentOptions'=>['class'=>'button-column']

@@ -237,6 +237,13 @@ class Service extends \yii\db\ActiveRecord
         parent::afterSave($insert, $changedAttributes);
     }
 
+    public function isAppealable()
+    {
+        $count = ServiceAppealForm::find()->where(['id_service'=>$this->id_service])->count();
+
+        return ($count>0);
+    }
+
     public function getUrl()
     {
         return Url::to(['service/view', 'id' => $this->id_service]);

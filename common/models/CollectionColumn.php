@@ -43,6 +43,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
     const TYPE_HOUSE = 22;
     const TYPE_SUBREGION = 24;
     const TYPE_SERVICETARGET = 26;
+    const TYPE_SERVICE = 27;
 
     public static function getTypeOptions($type)
     {
@@ -164,21 +165,29 @@ class CollectionColumn extends \yii\db\ActiveRecord
         $labels = [
             self::TYPE_INPUT => "Строка",
             self::TYPE_INTEGER => "Число",
+
             self::TYPE_DATE => "Дата",
             self::TYPE_DATETIME => "Дата + Время",
+
             self::TYPE_TEXTAREA => "Текст",
+            self::TYPE_RICHTEXT => "Текст с редактором",
+
             self::TYPE_SELECT => "Выпадающий список",
-            self::TYPE_RICHTEXT => "Редактор текста",
+
             self::TYPE_CHECKBOX => "Чекбокс",
             self::TYPE_CHECKBOXLIST => "Чекбокс множественный",
             self::TYPE_RADIO => "Радио кнопки",
+
             self::TYPE_MAP => "Координаты",
+
             self::TYPE_FILE => "Файл",
+            self::TYPE_IMAGE => "Изображение",
+
             self::TYPE_COLLECTION => "Данные из списка",
             self::TYPE_COLLECTIONS => "Данные из списка, несколько элементов",
-            self::TYPE_IMAGE => "Изображение",
+
             self::TYPE_JSON => "Таблицы",
-            self::TYPE_SERVICETARGET => "Цель муниципальной услуги",
+
             self::TYPE_ADDRESS => "Адрес строкой",
             self::TYPE_REGION => 'Регион',
             self::TYPE_SUBREGION => 'Область',
@@ -187,6 +196,8 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_STREET => 'Улица',
             self::TYPE_HOUSE => 'Дом',
 
+            self::TYPE_SERVICETARGET => "Цель муниципальной услуги",
+            self::TYPE_SERVICE => "Услуги для обжалования",
         ];
 
         if (empty($type))
@@ -289,6 +300,9 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 return date('d.m.Y H:i',$value);
                 break;
             default:
+                if (is_array($value))
+                    return implode('<br>', $value);
+
                 return $value;
                 break;
         }
