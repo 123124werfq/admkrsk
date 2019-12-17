@@ -249,6 +249,9 @@ JS;
 
 				$ids = $model->$clearAttribute;
 
+				var_dump($ids);
+				die();
+
 				$records = [];
 
 				if (!empty($ids))
@@ -269,9 +272,6 @@ JS;
 
 						if (!empty($record))
 							$inputs[$attribute.'_id_record[]'] = $record->id_record;
-
-						var_dump($record);
-						die();
 
 						echo \frontend\widgets\FormsWidget::widget([
 							'form'=>$input->collection->form,
