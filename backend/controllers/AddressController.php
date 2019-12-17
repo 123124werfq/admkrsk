@@ -2,9 +2,11 @@
 
 namespace backend\controllers;
 
+use common\models\Country;
 use Yii;
 use common\models\House;
 use backend\models\search\HouseSearch;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -21,8 +23,9 @@ class AddressController extends Controller
 {
     public function beforeAction($action)
     {
-        if (Yii::$app->request->isAjax)
+        if (Yii::$app->request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
+        }
 
         return parent::beforeAction($action);
     }
@@ -71,13 +74,46 @@ class AddressController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-     /**
+    /**
      * @param string $search
      * @return array
      */
-    public function actionRegion($search = '')
+    public function actionCountry($search = '')
     {
-        $query = Region::find()->asArray();
+        $query = Country::find()->asArray();
+
+        if ($search) {
+            $query->filterWhere(['ilike', 'name', $search]);
+        }
+
+        $results = [];
+        foreach ($query->all() as $country) {
+            $results[] = [
+                'id' => $country['id_country'],
+                'text' => $country['name'],
+            ];
+        }
+
+        return ['results' => $results];
+    }
+
+    /**
+     * @param int $id_country
+     * @param string $search
+     * @return array
+     */
+    public function actionRegion($id_country = null, $search = '')
+    {
+        $query = Region::find()
+            ->joinWith('houses', false);
+
+        if (!empty($id_country)) {
+            $query->filterWhere([House::tableName() . '.id_country' => $id_country]);
+        }
+
+        $query->groupBy(Region::tableName() . '.id_region')
+            ->orderBy([Region::tableName() . '.name' => SORT_ASC])
+            ->asArray();
 
         if ($search) {
             $query->filterWhere(['ilike', 'name', $search]);
@@ -99,20 +135,23 @@ class AddressController extends Controller
      * @param string $search
      * @return array
      */
-    public function actionSubregion($id_region=null, $search = '')
+    public function actionSubregion($id_region = null, $search = '')
     {
         $query = Subregion::find()
-            ->select(['map_subregion.id_subregion','map_subregion.name'])
+            ->select(['map_subregion.id_subregion', 'map_subregion.name'])
             ->joinWith('houses', false);
-        if (!empty($id_region))
+
+        if (!empty($id_region)) {
             $query->filterWhere([House::tableName() . '.id_region' => $id_region]);
+        }
 
         $query->groupBy(Subregion::tableName() . '.id_subregion')
             ->orderBy([Subregion::tableName() . '.name' => SORT_ASC])
             ->asArray();
 
-        if ($search)
+        if ($search) {
             $query->andFilterWhere(['ilike', Subregion::tableName() . '.name', $search]);
+        }
 
         $results = [];
         foreach ($query->all() as $subregion) {
@@ -141,7 +180,7 @@ class AddressController extends Controller
         }
 
         $query = City::find()
-            ->select(['map_city.id_city','map_city.name'])
+            ->select(['map_city.id_city', 'map_city.name'])
             ->joinWith('houses', false)
             ->filterWhere([
                 House::tableName() . '.id_region' => $id_region,
@@ -171,18 +210,19 @@ class AddressController extends Controller
      * @param string $search
      * @return array
      */
-    public function actionDistrict($id_city=null, $search = '')
+    public function actionDistrict($id_city = null, $search = '')
     {
         $query = District::find()
-            ->select([District::tableName().'.id_district',District::tableName().'.name'])
+            ->select([District::tableName() . '.id_district', District::tableName() . '.name'])
             ->joinWith('houses', false);
 
-        if (!empty($id_city))
+        if (!empty($id_city)) {
             $query->filterWhere([House::tableName() . '.id_city' => $id_city]);
+        }
 
         $query->groupBy([
-            District::tableName().'.id_district',
-            District::tableName().'.name'
+            District::tableName() . '.id_district',
+            District::tableName() . '.name'
         ])
             ->orderBy([District::tableName() . '.name' => SORT_ASC])
             ->limit(20)
@@ -211,7 +251,7 @@ class AddressController extends Controller
     public function actionStreet($id_city, $search = '')
     {
         $query = Street::find()
-            ->select(['map_street.id_street','map_street.name'])
+            ->select(['map_street.id_street', 'map_street.name'])
             ->joinWith('houses', false)
             ->filterWhere([House::tableName() . '.id_city' => $id_city])
             ->groupBy(Street::tableName() . '.id_street')
@@ -241,35 +281,38 @@ class AddressController extends Controller
      */
     public function actionHouse($id_street, $search = '')
     {
-        if (empty($id_street))
-            return ['results' => []];;
+        if (empty($id_street)) {
+            return ['results' => []];
+        };
 
         $query = House::find()
-            ->select(['id_house','name','postalcode'])
+            ->select(['id_house', 'name', 'postalcode'])
             ->filterWhere(['id_street' => $id_street])
             ->groupBy('id_house')
             ->orderBy(['name' => SORT_ASC])
             ->limit(20)
             ->asArray();
 
-        if ($search)
+        if ($search) {
             $query->andFilterWhere(['ilike', 'name', $search]);
+        }
 
         $results = [];
         foreach ($query->all() as $house) {
             $results[] = [
                 'id' => $house['id_house'],
                 'text' => $house['name'],
-                'postalcode'=> $house['postalcode'],
+                'postalcode' => $house['postalcode'],
             ];
         }
 
-        if (empty($results))
+        if (empty($results)) {
             $results = [
                 'id' => null,
                 'text' => $search,
-                'postalcode'=> ''
+                'postalcode' => ''
             ];
+        }
 
         return ['results' => $results];
     }

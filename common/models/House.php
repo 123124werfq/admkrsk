@@ -15,6 +15,7 @@ use Yii;
  * @property string $fullname
  *
  * @property FiasHouse $house
+ * @property Country $country
  * @property Region $region
  * @property Subregion $subregion
  * @property City $city
@@ -68,6 +69,14 @@ class House extends \yii\db\ActiveRecord
     public function getHouse()
     {
         return $this->hasOne(FiasHouse::class, ['houseguid' => 'houseguid']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCountry()
+    {
+        return $this->hasOne(Country::class, ['id_country' => 'id_country']);
     }
 
     /**

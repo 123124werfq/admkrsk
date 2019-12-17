@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\models\City;
+use common\models\Country;
 use common\models\District;
 use common\models\House;
 use common\models\Region;
@@ -25,9 +26,42 @@ class AddressController extends \yii\web\Controller
      * @param string $search
      * @return array
      */
-    public function actionRegion($search = '')
+    public function actionCountry($search = '')
     {
-        $query = Region::find()->asArray();
+        $query = Country::find()->asArray();
+
+        if ($search) {
+            $query->filterWhere(['ilike', 'name', $search]);
+        }
+
+        $results = [];
+        foreach ($query->all() as $country) {
+            $results[] = [
+                'id' => $country['id_country'],
+                'text' => $country['name'],
+            ];
+        }
+
+        return ['results' => $results];
+    }
+
+    /**
+     * @param int $id_country
+     * @param string $search
+     * @return array
+     */
+    public function actionRegion($id_country = null, $search = '')
+    {
+        $query = Region::find()
+            ->joinWith('houses', false);
+
+        if (!empty($id_country)) {
+            $query->filterWhere([House::tableName() . '.id_country' => $id_country]);
+        }
+
+        $query->groupBy(Region::tableName() . '.id_region')
+            ->orderBy([Region::tableName() . '.name' => SORT_ASC])
+            ->asArray();
 
         if ($search) {
             $query->filterWhere(['ilike', 'name', $search]);
@@ -49,19 +83,22 @@ class AddressController extends \yii\web\Controller
      * @param string $search
      * @return array
      */
-    public function actionSubregion($id_region=null, $search = '')
+    public function actionSubregion($id_region = null, $search = '')
     {
         $query = Subregion::find()
             ->joinWith('houses', false);
-        if (!empty($id_region))
+
+        if (!empty($id_region)) {
             $query->filterWhere([House::tableName() . '.id_region' => $id_region]);
+        }
 
         $query->groupBy(Subregion::tableName() . '.id_subregion')
             ->orderBy([Subregion::tableName() . '.name' => SORT_ASC])
             ->asArray();
 
-        if ($search)
+        if ($search) {
             $query->andFilterWhere(['ilike', Subregion::tableName() . '.name', $search]);
+        }
 
         $results = [];
         foreach ($query->all() as $subregion) {
@@ -181,8 +218,9 @@ class AddressController extends \yii\web\Controller
      */
     public function actionHouse($id_street, $search = '')
     {
-        if (empty($id_street))
-            return ['results' => []];;
+        if (empty($id_street)) {
+            return ['results' => []];
+        };
 
         $query = House::find()
             ->filterWhere(['id_street' => $id_street])
@@ -200,16 +238,17 @@ class AddressController extends \yii\web\Controller
             $results[] = [
                 'id' => $house['id_house'],
                 'text' => $house['name'],
-                'postalcode'=> $house['postalcode'],
+                'postalcode' => $house['postalcode'],
             ];
         }
 
-        if (empty($results))
+        if (empty($results)) {
             $results = [
                 'id' => null,
                 'text' => $search,
-                'postalcode'=> ''
+                'postalcode' => ''
             ];
+        }
 
         return ['results' => $results];
     }
