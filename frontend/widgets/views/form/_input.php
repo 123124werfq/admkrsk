@@ -249,9 +249,6 @@ JS;
 
 				$ids = $model->$clearAttribute;
 
-				var_dump($ids);
-				die();
-
 				$records = [];
 
 				if (!empty($ids))
