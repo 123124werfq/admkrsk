@@ -174,9 +174,11 @@ $(document).ready(function() {
 
         for (var id_vinput in visibleInputs)
         {
-            $("#input"+id_vinput).change(function(id_vinput){
+            $("#input"+id_vinput).change(function(){
 
-                for (var id_element in visibleInputs[id_vinput])
+                var id = $(this).attr('id').replace('input','');
+
+                for (var id_element in visibleInputs[id])
                     check(id_element);
             });
         }
