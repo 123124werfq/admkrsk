@@ -5,7 +5,11 @@ namespace frontend\controllers;
 
 use common\models\HrContest;
 use common\models\HrExpert;
+use common\models\HrProfilePositions;
 use common\models\HrVote;
+use common\models\CollectionRecord;
+use common\models\CollectionColumn;
+//use frontend\modules\api\models\CollectionRecord;
 use Yii;
 use common\models\Page;
 use common\models\Collection;
@@ -17,6 +21,7 @@ use yii\web\BadRequestHttpException;
 
 class ReserveController extends \yii\web\Controller
 {
+
     public function actionCandidateForm($page=null)
     {
         $inputs = [];
@@ -66,7 +71,7 @@ class ReserveController extends \yii\web\Controller
         return $this->render('//site/page', ['page'=>$page]);
     }
 
-    public function actionVote()
+    public function actionVote($id=null)
     {
         $now = time();
         //$contest = HrContest::find()->where("\"begin\"<$now AND \"end\">$now")->one();
@@ -102,6 +107,102 @@ class ReserveController extends \yii\web\Controller
 
     public function actionProfile($id)
     {
+        $now = time();
+        //$contest = HrContest::find()->where("\"begin\"<$now AND \"end\">$now")->one();
+        $contest = HrContest::find()->one();
+
+        if(!$contest)
+            throw new BadRequestHttpException();
+
+        $expert = HrExpert::findOne(['id_user' => Yii::$app->user->id]);
+
+        if(!$expert)
+            throw new BadRequestHttpException();
+
+        $enabled = false;
+
+        foreach ($contest->experts as $cexpert)
+            if($cexpert->id_expert == $expert->id_expert)
+                $enabled = true;
+
+        if(!$enabled)
+            throw new BadRequestHttpException();
+
+        $profile = HrProfile::findOne($id);
+
+        $enabled = false;
+
+        foreach ($contest->profiles as $cprofile)
+            if($cprofile->id_profile == $profile->id_profile)
+                $enabled = true;
+
+        if(!$enabled)
+            throw new BadRequestHttpException();
+
+        if(!empty(Yii::$app->request->post()))
+        {
+            var_dump(Yii::$app->request->post());
+
+            $positions =  Yii::$app->request->post('position');
+
+            foreach ($positions as $idp => $position)
+            {
+                $vote = HrVote::find()->where(['id_expert' => $expert->id_expert, 'id_contest' => $contest->id_contest, 'id_record' => $idp])->one();
+
+                if(!$vote)
+                {
+                    $vote = new HrVote;
+                    $vote->id_expert = $expert->id_expert;
+                    $vote->id_contest = $contest->id_contest;
+                    $vote->id_profile = $profile->id_profile;
+                    $vote->id_record = $idp;
+                }
+
+                $vote->value = $position;
+                if(!$vote->save())
+                {
+                    var_dump($vote->getErrors()); die();
+                }
+            }
+
+            return $this->redirect('/reserve/vote');
+        }
+
+
+        $collectionRecord = CollectionRecord::findOne($profile->id_record);
+
+        $insertedData = $collectionRecord->getData();
+
+        $columns = CollectionColumn::find()->where(['id_collection' => $collectionRecord->id_collection])->indexBy('id_column')->orderBy('ord')->all();
+
+        foreach ($insertedData as $rkey => $ritem)
+        {
+            /*
+            if($columns[$rkey]->alias == 'id_target') {
+                $target = ServiceTarget::findOne($ritem);
+                $formFields[$columns[$rkey]->alias] = ['value' => $target->reestr_number." ".$target->name, 'name' => $columns[$rkey]->name, 'ord' => $columns[$rkey]->ord];
+            }
+            else
+            */
+            $formFields[$columns[$rkey]->alias] = ['value' => empty($ritem)?"[не заполнено]":$ritem, 'name' => $columns[$rkey]->name, 'ord' => $columns[$rkey]->ord];
+        }
+
+        usort($formFields, function($a, $b){return ($a['ord']<$b["ord"])?-1:1;});
+
+        $votes = HrVote::find()->where(['id_expert' => $expert->id_expert, 'id_contest' => $contest->id_contest, 'id_profile' => $profile->id_profile])->all();
+
+        $outvotes = [];
+        foreach ($votes as $vote)
+            $outvotes[$vote->id_record] = $vote->value;
+
+
+        return $this->render('profile', [
+            'data' => $contest,
+            'expert' => $expert,
+            'profile' => $profile,
+            'formFields' => $formFields,
+            'outvotes' => $outvotes
+        ]);
 
     }
 
