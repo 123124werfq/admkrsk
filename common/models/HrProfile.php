@@ -87,7 +87,7 @@ class HrProfile extends \yii\db\ActiveRecord
 
         foreach ($this->positions as $pos)
         {
-            if(empty($pos->id_result) && !in_array($pos->id_position, $positions))
+            if(empty($pos->id_result) && !in_array($pos->id_profile_position, $positions))
                 $pos->delete();
             else
                 $positions = array_diff( $positions, [$pos->id_position] );
