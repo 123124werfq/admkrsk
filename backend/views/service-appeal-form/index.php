@@ -10,31 +10,29 @@ use yii\grid\GridView;
 $this->title = 'Service Appeal Forms';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="service-appeal-form-index">
+<div class="ibox">
+    <div class="ibox-content">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Service Appeal Form', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        //'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id_appeal',
+            'id_appeal:text:#',
             'id_form',
             'id_record_firm',
             'id_record_category',
             'id_service',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'contentOptions'=>['class'=>'button-column']
+            ],
+        ],
+        'tableOptions'=>[
+            'emptyCell' => '',
+            'class' => 'table table-striped ids-style valign-middle table-hover'
         ],
     ]); ?>
-
-
+    </div>
 </div>

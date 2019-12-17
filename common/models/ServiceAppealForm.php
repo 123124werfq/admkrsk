@@ -29,9 +29,9 @@ class ServiceAppealForm extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_apeal', 'id_form', 'id_record_firm', 'id_record_category', 'id_service'], 'default', 'value' => null],
-            [['id_apeal', 'id_form', 'id_record_firm', 'id_record_category', 'id_service'], 'required'],
-            [['id_apeal', 'id_form', 'id_record_firm', 'id_record_category', 'id_service'], 'integer'],
+            [['id_form', 'id_record_firm', 'id_record_category', 'id_service'], 'default', 'value' => null],
+            [['id_form', 'id_record_firm', 'id_record_category', 'id_service'], 'required'],
+            [['id_form', 'id_record_firm', 'id_record_category', 'id_service'], 'integer'],
         ];
     }
 
@@ -41,7 +41,6 @@ class ServiceAppealForm extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_apeal' => 'ID',
             'id_form' => 'Форма',
             'id_record_firm' => 'Организация',
             'id_record_category' => 'Категория',
