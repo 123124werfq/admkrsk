@@ -137,6 +137,7 @@ $(document).ready(function() {
         function getValue(id_input)
         {
             var input = $("#input"+id_input);
+
             if (input.is(':checkbox'))
             {
                 if (input.is(':checked'))
@@ -158,6 +159,9 @@ $(document).ready(function() {
             {
                 var value = getValue(id_input);
 
+                console.log(value);
+                console.log(visibleElements[id_element][id_input]);
+
                 if (visibleElements[id_element][id_input].indexOf(value)<0)
                 {
                     show = false;
@@ -173,9 +177,7 @@ $(document).ready(function() {
 
         for (var id_vinput in visibleInputs)
         {
-            var source = $("#input"+id_vinput);
-
-            source.change(function(){
+            $("#input"+id_vinput).change(function(){
                 for (var id_element in visibleInputs[id_vinput])
                     check(id_element);
             });
