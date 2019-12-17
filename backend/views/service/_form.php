@@ -48,6 +48,8 @@ var_dump($model->client_type);*/
 
         <?= $form->field($model, 'old')->checkBox() ?>
 
+        <?= $form->field($model, 'show_forms')->checkBox() ?>
+
         <?=$form->field($model, 'id_rub')->widget(Select2::class, [
             'data' => ArrayHelper::map(ServiceRubric::find()->joinWith('childs as childs')->all(), 'id_rub', 'name'),
             'pluginOptions' => [

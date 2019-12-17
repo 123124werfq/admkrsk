@@ -2,18 +2,29 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use common\models\Collection;
 
+use yii\helpers\ArrayHelper;
+
+use kartik\select2\Select2;
 /* @var $this yii\web\View */
 /* @var $model common\models\ServiceAppealForm */
 /* @var $form yii\widgets\ActiveForm */
 
 ?>
 
-<div class="service-appeal-form-form">
+<div class="ibox">
+    <div class="ibox-content">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'id_form')->textInput() ?>
+    <?=$form->field($model, 'id_form')->widget(Select2::class, [
+        'data' => ArrayHelper::map(\common\models\Form::find()->all(), 'id_form', 'name'),
+        'pluginOptions' => [
+            'allowClear' => true,
+            'placeholder' => 'Выберите форму',
+        ],
+    ])?>
 
 	<?=$form->field($model, 'id_record_firm')->widget(Select2::class, [
         'data' => Collection::getArrayByAlias("appeal_firms"),
@@ -45,5 +56,5 @@ use yii\widgets\ActiveForm;
     </div>
 
     <?php ActiveForm::end(); ?>
-
+    </div>
 </div>

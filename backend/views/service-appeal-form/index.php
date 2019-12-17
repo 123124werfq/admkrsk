@@ -9,12 +9,13 @@ use yii\grid\GridView;
 
 $this->title = 'Сзязь форм и услуг для обжалования';
 $this->params['breadcrumbs'][] = $this->title;
+
+$this->params['button-block'][] = Html::a('Добавить', ['create'], ['class' => 'btn btn-success']);
+
 ?>
 <div class="ibox">
     <div class="ibox-content">
-
-    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
-
+    <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,

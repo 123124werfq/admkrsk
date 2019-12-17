@@ -161,6 +161,7 @@ class ServiceController extends \yii\web\Controller
             'rubric'
         ])->where([
             'old'=>0,
+            'show_forms'=>1,
             'online'=>1
         ])->all();
 
