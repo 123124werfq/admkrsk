@@ -87,13 +87,15 @@ class HrProfile extends \yii\db\ActiveRecord
 
         foreach ($this->positions as $pos)
         {
-            if(empty($pos->id_result) && !in_array($pos->id_profile_position, $positions))
+            if(empty($pos->id_result) && !empty($positions[$pos->id_profile_position]))
                 $pos->delete();
             else
-                $positions = array_diff( $positions, [$pos->id_position] );
+                unset($positions[$pos->id_profile_position]);
+
+                //$positions = array_diff( $positions, [$pos->id_position] );
         }
 
-        foreach($positions as $id_pos)
+        foreach($positions as $id_pos=>$label)
         {
             $posRecord = CollectionRecord::findOne($id_pos);
             if($posRecord){
