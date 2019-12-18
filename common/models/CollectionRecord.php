@@ -203,9 +203,6 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                 $updateDataMongo['id_record'] = $this->id_record;
 
-                /*foreach ($this->data as $key => $value)
-                    $update['col'.$key] = (is_numeric($value))?(int)$value:$value;*/
-
                 $collection->update(['id_record'=>$this->id_record],$updateDataMongo);
             }
         }
