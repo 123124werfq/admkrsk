@@ -46,7 +46,9 @@ class WordDoc
 
         $columns = $form->collection->getColumns()->indexBy('alias')->all();
 
-        foreach ($data as $alias => $value)
+        $stringData = $this->convertDataToString($data,$columns);
+
+        foreach ($stringData as $alias => $value)
         {
             if (isset($columns[$alias]) && $columns[$alias]->type==CollectionColumn::TYPE_JSON)
             {
@@ -73,6 +75,90 @@ class WordDoc
         $template->saveAs($export_path);
 
         return $export_path;
+    }
+
+    public function convertDataToString($data,$columns)
+    {
+        $string_output = [];
+
+        foreach ($columns as $key => $col)
+        {
+            $col_alias = $column->alias;
+
+            if (empty($data[$col_alias]))
+                continue;
+            else if ($col->type==CollectionColumn::TYPE_DATE)
+                $string_output[$column->alias] = date('d.m.Y',$data[$col_alias]);
+            else if ($col->type==CollectionColumn::TYPE_DATETIME)
+                $string_output[$column->alias] = date('d.m.Y H:i',$record[$col_alias]);
+            else if ($col->type==CollectionColumn::TYPE_DISTRICT)
+            {
+                $model = \common\models\District::findOne($data[$col_alias]);
+
+                if (!empty($model))
+                    $string_output[$column->alias] = $model->name;
+            }
+            else if ($col->type==CollectionColumn::TYPE_JSON)
+            {
+                $string_output[$col->alias] = $data[$col_alias];
+            }
+            else if ($col->type==CollectionColumn::TYPE_CITY)
+            {
+                $model = \common\models\City::findOne($data[$col_alias]);
+
+                if (!empty($model))
+                    $string_output[$column->alias] = $model->name;
+            }
+            else if ($col->type==CollectionColumn::TYPE_STREET)
+            {
+                $model = \common\models\Street::findOne($data[$col_alias]);
+
+                if (!empty($model))
+                    $string_output[$column->alias] = $model->name;
+            }
+            else if ($col->type==CollectionColumn::TYPE_REGION)
+            {
+                $model = \common\models\Region::findOne($data[$col_alias]);
+
+                if (!empty($model))
+                    $string_output[$column->alias] = $model->name;
+            }
+            else if ($col->type==CollectionColumn::TYPE_HOUSE)
+            {
+                $model = \common\models\House::findOne($data[$col_alias]);
+
+                if (!empty($model))
+                    $string_output[$column->alias] = $model->name;
+            }
+            else if ($col->type==CollectionColumn::TYPE_FILE || $col->type==CollectionColumn::TYPE_IMAGE)
+            {
+                $ids = json_decode($data[$col_alias],true);
+
+                $medias = Media::find()->where(['id_media'=>$ids])->all();
+
+                $output = [];
+                foreach ($medias as $key => $media)
+                    $output[] = $col->name.' '.$media->name.'';
+
+                if (count($output)>1)
+                    $string_output[$col->alias] = implode('<w:br/>', $output);
+                else 
+                    $string_output[$col->alias] = $output[0];
+            }
+            else if (!empty($col->input->id_collection))
+            {
+                $string_output[$col->alias] = implode('<w:br/>', $data[$col_alias]);
+            }
+            else
+            {
+                if (is_array($data[$col_alias]))
+                    $string_output[$col->alias] = implode('<w:br/>', $data[$col_alias]);
+                else
+                    $string_output[$col->alias] = $data[$col_alias];
+            }
+        }
+
+        return $string_output;
     }
 }
 ?>

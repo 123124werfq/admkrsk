@@ -208,6 +208,17 @@ class CollectionRecord extends \yii\db\ActiveRecord
         }
     }
 
+    /*public function getConvertData()
+    {
+        $record = $this->getData();
+
+        $output = [];
+        foreach ($this->collection->columns as $key => $column)
+        {
+                 
+        }
+    }*/
+
     public function getData($keyAsAlias=false,$id_columns=[])
     {
         if ($this->isNewRecord)

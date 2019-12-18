@@ -302,7 +302,7 @@ class CollectionController extends Controller
                     'label'=> $newColumn->name,
                     'fieldname'=> $newColumn->alias,
                     'id_column'=> $newColumn->id_column,
-                    'id_collection_column'=>$form->id_collection_from_column,
+                    'id_collection_column'=>$form->id_collection_from_column_label,
                     'id_collection'=>$form->id_collection_from,
                 ]);
 
@@ -358,13 +358,48 @@ class CollectionController extends Controller
                             }
                         }
                     }
-
-                    return $this->redirect(['view','id'=>$collection->id_collection]);
                 }
                 else
                 {
+                    $datas = $collection->getData();
+                    $datas_source = Collection::findOne($form->id_collection_from)->getData();
 
+                    $collection = Yii::$app->mongodb->getCollection('collection'.$id);
+
+                    foreach ($datas as $id_record => $data)
+                    {
+                        if (!empty($data[$form->id_collection_column]))
+                        {
+                            $id_link = $data[$form->id_collection_column];
+                            $textSearch = $id_source = null;
+
+                            foreach ($datas_source as $id_record_source => $sources)
+                            {
+                                if ($sources[$form->id_collection_from_column] == $id_link)
+                                {
+                                    $id_source = $id_record_source;
+                                    $textSearch = $sources[$form->id_collection_from_column_label];
+                                }
+                            }
+
+                            if (!empty($id_source))
+                            {
+                                Yii::$app->db->createCommand()->insert('db_collection_value',[
+                                    'id_record'=>$id_record,
+                                    'id_column'=>$newColumn->id_column,
+                                    'value'=>json_encode([$id_source])
+                                ])->execute();
+
+                                $update = [];
+                                $update['col'.$newColumn->id_column] = [$id_source];
+                                $update['col'.$newColumn->id_column.'_search'] = $textSearch;
+                                $collection->update(['id_record'=>$id_record],$update);
+                            }
+                        }
+                    }
                 }
+
+                return $this->redirect(['view','id'=>$form->id_collection]);
             }
         }
 

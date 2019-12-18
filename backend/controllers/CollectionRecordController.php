@@ -138,7 +138,7 @@ class CollectionRecordController extends Controller
                     return implode('', $output);
                 };
             }
-            else if ($col->type==CollectionColumn::TYPE_FILE)
+            /*else if ($col->type==CollectionColumn::TYPE_FILE)
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
                 $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
@@ -157,7 +157,7 @@ class CollectionRecordController extends Controller
 
                     return implode('', $output);
                 };
-            }
+            }*/
             else if ($col->type==CollectionColumn::TYPE_IMAGE)
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';

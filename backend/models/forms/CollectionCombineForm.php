@@ -20,8 +20,8 @@ class CollectionCombineForm extends Model
     public function rules()
     {
         return [
-            [['id_collection','id_collection_column','id_collection_from','id_collection_from_column'], 'required'],
-            [['id_collection','type','id_collection_column','id_collection_from','id_collection_from_column'], 'integer'],
+            [['id_collection','id_collection_column','id_collection_from','id_collection_from_column','id_collection_from_column_label'], 'required'],
+            [['id_collection','type','id_collection_column','id_collection_from','id_collection_from_column','id_collection_from_column_label'], 'integer'],
             [['alias','column_name'], 'string'],
         ];
     }
@@ -33,6 +33,7 @@ class CollectionCombineForm extends Model
             'id_collection_column' => 'Откуда брать ключи',
             'id_collection_from' => 'Список, откуда брать данные',
             'id_collection_from_column' => 'Колонка из списка для сопоставления',
+            'id_collection_from_column_label' => 'Колонка из списка для сопоставления текстовое отображение',
             'alias'=>'Псевдоним',
             'column_name'=>'Название',
             'type'=>'Тип',
