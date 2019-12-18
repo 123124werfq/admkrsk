@@ -3,16 +3,17 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\ServiceAppealForm;
-use backend\models\search\ServiceAppealFormSearch;
+use common\models\ServiceСomplaintForm;
+use backend\models\search\ServiceСomplaintFormSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ServiceAppealFormController implements the CRUD actions for ServiceAppealForm model.
+ * ServiceСomplaintFormController implements the CRUD actions for ServiceСomplaintForm model.
  */
-class ServiceAppealFormController extends Controller
+class ServiceComplaintFormController extends Controller
+
 {
     /**
      * {@inheritdoc}
@@ -30,12 +31,12 @@ class ServiceAppealFormController extends Controller
     }
 
     /**
-     * Lists all ServiceAppealForm models.
+     * Lists all ServiceСomplaintForm models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ServiceAppealFormSearch();
+        $searchModel = new ServiceСomplaintFormSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +46,7 @@ class ServiceAppealFormController extends Controller
     }
 
     /**
-     * Displays a single ServiceAppealForm model.
+     * Displays a single ServiceСomplaintForm model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -58,13 +59,13 @@ class ServiceAppealFormController extends Controller
     }
 
     /**
-     * Creates a new ServiceAppealForm model.
+     * Creates a new ServiceСomplaintForm model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new ServiceAppealForm();
+        $model = new ServiceСomplaintForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index', 'id' => $model->id_appeal]);
@@ -76,7 +77,7 @@ class ServiceAppealFormController extends Controller
     }
 
     /**
-     * Updates an existing ServiceAppealForm model.
+     * Updates an existing ServiceСomplaintForm model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -96,7 +97,7 @@ class ServiceAppealFormController extends Controller
     }
 
     /**
-     * Deletes an existing ServiceAppealForm model.
+     * Deletes an existing ServiceСomplaintForm model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -110,15 +111,15 @@ class ServiceAppealFormController extends Controller
     }
 
     /**
-     * Finds the ServiceAppealForm model based on its primary key value.
+     * Finds the ServiceСomplaintForm model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return ServiceAppealForm the loaded model
+     * @return ServiceСomplaintForm the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = ServiceAppealForm::findOne($id)) !== null) {
+        if (($model = ServiceСomplaintForm::findOne($id)) !== null) {
             return $model;
         }
 

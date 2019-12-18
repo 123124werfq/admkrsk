@@ -4,12 +4,12 @@ namespace backend\models\search;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\ServiceAppealForm;
+use common\models\ServiceСomplaintForm;
 
 /**
- * ServiceAppealFormSearch represents the model behind the search form of `common\models\ServiceAppealForm`.
+ * ServiceСomplaintFormSearch represents the model behind the search form of `common\models\ServiceСomplaintForm`.
  */
-class ServiceAppealFormSearch extends ServiceAppealForm
+class ServiceСomplaintFormSearch extends ServiceСomplaintForm
 {
     /**
      * {@inheritdoc}
@@ -39,7 +39,7 @@ class ServiceAppealFormSearch extends ServiceAppealForm
      */
     public function search($params)
     {
-        $query = ServiceAppealForm::find();
+        $query = ServiceСomplaintForm::find();
 
         // add conditions that should always apply here
 

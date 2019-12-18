@@ -91,7 +91,7 @@ return [
                 'title'=>'Цели',
                 'roles' => ['backend.service'],
             ],
-            'service-appeal-form'=>[
+            'service-complaint-form'=>[
                 'title'=>'Связи обжалования',
                 'roles' => ['backend.service'],
             ],

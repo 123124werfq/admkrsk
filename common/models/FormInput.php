@@ -111,7 +111,7 @@ class FormInput extends \yii\db\ActiveRecord
     {
         if ($this->type == CollectionColumn::TYPE_SERVICE)
         {
-            $records = ServiceAppealForm::find()->joinWith('service')->where(['id_form'=>$this->id_form])->all();
+            $records = ServiceСomplaintForm::find()->joinWith('service')->where(['id_form'=>$this->id_form])->all();
             $output = [];
 
             foreach ($records as $key => $data)

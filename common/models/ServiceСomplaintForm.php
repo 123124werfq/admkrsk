@@ -13,7 +13,7 @@ use Yii;
  * @property int|null $id_record_category
  * @property int|null $id_service
  */
-class ServiceAppealForm extends \yii\db\ActiveRecord
+class ServiceСomplaintForm extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
