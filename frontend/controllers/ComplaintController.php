@@ -2,15 +2,15 @@
 
 namespace frontend\controllers;
 
+use Yii;
 use common\models\ServiceComplaintForm;
 use common\models\CollectionRecord;
+use common\models\FormDynamic;
 
 class ComplaintController extends \yii\web\Controller
 {
     public function actionIndex($page=null)
     {
-    	echo "string";
-
         $firms = ServiceComplaintForm::find()
             ->groupBy('id_record_firm')
             ->select('id_record_firm')
@@ -31,23 +31,23 @@ class ComplaintController extends \yii\web\Controller
         if (empty($collectionFirm))
             throw new NotFoundHttpException('Не заполнен справочник организаций');*/
 
-        return $this->render('complaint',[
+        return $this->render('index',[
             'firms'=>$firms,
             'page'=>$page,
         ]);
     }
 
-    public function actionCreate($page,$id_form, $id_category)
+    public function actionCreate($id_firm, $id_category, $page=null)
     {
     	$form = ServiceComplaintForm::find()
     				->with(['form'])
-    				->where(['id_record_form'=>$id_form,'id_category'=>$id_category])
+    				->where(['id_record_firm'=>$id_firm,'id_record_category'=>$id_category])
     				->one();
 
     	if (empty($form))
     		throw new NotFoundHttpException('Такой страницы не существует');
 
-    	$form = $form->$form
+    	$form = $form->form;
 
     	$collection = $form->collection;
 
@@ -73,7 +73,7 @@ class ComplaintController extends \yii\web\Controller
                 echo "Данные не сохранены";
         }
 
-    	$this->render('create',[
+    	return $this->render('create',[
     		'form'=>$form,
     		'page'=>$page,
     	]);

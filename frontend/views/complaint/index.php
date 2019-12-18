@@ -19,7 +19,7 @@
             <div class="col-2-third order-xs-1">
             	<div class="content searchable">
             		<h1><?=$page->title?></h1>
-                    <form action="create" method="get">
+                    <form action="complaint/create" method="get">
                         <div class="form-group">
                             <label class="form-label">Обращение направляется в</label>
                             <div class="custom-select">

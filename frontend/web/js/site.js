@@ -56,7 +56,7 @@ $(document).ready(function() {
             url: "/form/get-categories",
             data: {id:$("#Complaint_id_firm").val()}
         }).done(function(data){
-            $("#Complaint_id_category").html(data);
+            $("#Complaint_id_category").html(data).selectmenu("refresh");
         });
     });
 
