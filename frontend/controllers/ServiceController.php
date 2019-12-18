@@ -56,16 +56,19 @@ class ServiceController extends \yii\web\Controller
         $collection = Collection::find()->where(['alias'=>'service_offices'])->one();
 
         $firms = [];
+        
         if (!empty($collection))
         {
             $records = $collection->getData([],true);
 
             foreach ($records as $key => $record)
             {
-                if (empty($record['OrganID']) || empty($record['department']))
+                if (empty($record['service_firm']))
                     continue;
 
-                $firms[$record['OrganID']??0] = $record['department'];
+                $id_firm = key($record['service_firm']);
+                
+                $firms[$id_firm] = $record['service_firm'][$id_firm];
             }
         }
 
@@ -82,7 +85,7 @@ class ServiceController extends \yii\web\Controller
             $services->andWhere(['online'=>1]);
         }
 
-        if (!empty($firm))
+        if (!empty($firm) && !empty($records))
         {
             $open = true;
 
@@ -90,7 +93,7 @@ class ServiceController extends \yii\web\Controller
 
             foreach ($records as $key => $record)
             {
-                if (!empty($record['OrganID']) && $record['OrganID']==$firm)
+                if (isset($record['service_firm'][$firm]))
                     $id_records[] = $key;
             }
 

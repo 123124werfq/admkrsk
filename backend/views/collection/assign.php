@@ -67,6 +67,22 @@ $this->params['breadcrumbs'][] = 'Связывание';
                 ],
             ])?>
 
+            <?= $form->field($formAssign, 'id_collection_from_column_label')->widget(Select2::class, [
+                'data' => [],
+                'pluginOptions' => [
+                    'multiple' => false,
+                    'allowClear' => true,
+                    'minimumInputLength' => 0,
+                    'placeholder' => 'Начните ввод',
+                    'ajax' => [
+                        'url' => '/collection-column/list',
+                        'dataType' => 'json',
+                        'data' => new JsExpression('function(params) {return {q:params.term,id_collection:$("#collectioncombineform-id_collection_from").val()}}')
+                    ],
+                ],
+            ])?>
+
+
         	<?= Html::submitButton('Связать', ['class' => 'btn btn-success']) ?>
 
 			<?php ActiveForm::end(); ?>
