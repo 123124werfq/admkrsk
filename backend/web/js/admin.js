@@ -302,7 +302,7 @@ jQuery(document).ready(function()
       });
     });
 
-    $("#form-template").delegate(".add-row, .delete-row",'click',function(){
+    $("body").delegate(".add-row, .delete-row",'click',function(){
 
       var $link = $(this);
 
