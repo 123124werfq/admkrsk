@@ -355,6 +355,16 @@ class ServiceController extends \yii\web\Controller
         return json_encode($output);
     }
 
+    public function actionUserhistory($page=null)
+    {
+        $appeals = ServiceAppeal::find()->where(['id_user' => Yii::$app->user->id])->orderBy('id_appeal DESC')->all();
+
+        return $this->render('userhistory', [
+            'page' => $page,
+            'appeals' => $appeals
+        ]);
+    }
+
     protected function findModel($id)
     {
         if (($model = Service::findOne($id)) !== null) {
@@ -372,5 +382,6 @@ class ServiceController extends \yii\web\Controller
 
         throw new NotFoundHttpException('Такой страницы не существует');
     }
+
 
 }

@@ -5,6 +5,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "service_appeal".
@@ -77,5 +79,35 @@ class ServiceAppeal extends \yii\db\ActiveRecord
      public function getTarget()
     {
         return $this->hasOne(ServiceTarget::class, ['id_target' => 'id_target']);
+    }
+
+    public function behaviors()
+    {
+        return [
+            'ts' => TimestampBehavior::class,
+            'ba' => BlameableBehavior::class,
+        ];
+    }
+
+    public function getRecordData()
+    {
+        if(!$this->id_record)
+            return false;
+
+        $record = CollectionRecord::findOne($this->id_record);
+
+        return $record->getData(true);
+    }
+
+
+    public function getStatusName()
+    {
+        $as = ServiceAppealState::find()->where(['id_appeal' => $this->id_record])->orderBy('id_state DESC')->one();
+
+        switch ($as)
+        {
+            case 0: return 'ОЖИДАЕТ РЕГИСТРАЦИИ';
+            case 1: return 'ЗАРЕГИСТРИРОВАНО';
+        }
     }
 }
