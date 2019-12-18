@@ -134,7 +134,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             $insertDataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);
                         }
                         else
-                            $insertDataMongo['col'.$column->id_column] = (is_numeric($value))?(int)$value:$value;
+                            $insertDataMongo['col'.$column->id_column] = (is_numeric($value)&& strpos($value, '.')==false)?(float)$value:$value;
                     }
                 }
 
@@ -195,7 +195,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             $updateDataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);
                         }
                         else
-                            $updateDataMongo['col'.$column->id_column] = (is_numeric($updateData))?(int)$updateData:$updateData;
+                            $updateDataMongo['col'.$column->id_column] = (is_numeric($updateData) && strpos($updateData, '.')==false)?(float)$updateData:$updateData;
                     }
                 }
 
