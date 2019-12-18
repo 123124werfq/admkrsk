@@ -374,6 +374,7 @@ class FormController extends Controller
     protected function assignForm($id_form, $id_row, $parentForm, $prefix='', $element=null)
     {
         $transaction = Yii::$app->db->beginTransaction();
+
         try
         {
             $copyForm = Form::findOne($id_form);
@@ -421,7 +422,10 @@ class FormController extends Controller
                                     $newInput->fieldname = (!empty($prefix)?$prefix.'_':'').$newInput->fieldname;
 
                                     if (!$newInput->save())
+                                    {
+                                        $transaction->rollBack();
                                         print_r($newInput->errors);
+                                    }
 
                                     $copyElement->id_input = $newInput->id_input;
 
@@ -432,7 +436,10 @@ class FormController extends Controller
                                     $column->type = $newInput->type;
 
                                     if (!$column->save())
+                                    {
+                                        $transaction->rollBack();
                                         print_r($column->errors);
+                                    }
 
                                     $newInput->id_column = $column->id_column;
                                     $newInput->updateAttributes(['id_column']);
@@ -441,15 +448,21 @@ class FormController extends Controller
                                 $copyElement->save();
                             }
                         }
-                        else print_r($newRow->errors);
+                        else
+                        {
+                            $transaction->rollBack();
+                            print_r($newRow->errors);
+                        }
                     }
                 }
                 else
+                {
+                    $transaction->rollBack();
                     print_r($newElement->errors);
+                }
             }
 
             $transaction->commit();
-
         }
         catch (\Exception $e)
         {
@@ -477,7 +490,10 @@ class FormController extends Controller
         {
             $this->assignForm($form->id_form, $id_row, $parentForm, $form->prefix);
 
-            $this->redirect(['/form/view','id'=>$parentForm->id_form]);
+            if (!Yii::$app->request->isAjax)
+                $this->redirect(['/form/view','id'=>$parentForm->id_form]);
+            else
+                return '';
         }
 
         $forms = Form::find()->where(['is_template'=>1])->all();
@@ -497,11 +513,13 @@ class FormController extends Controller
         $model->id_form = $id_form;
         $model->ord = FormRow::find()->where(['id_form'=>$id_form])->count();
 
-        if ($model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_form]);
+        if ($model->save())
+        {
+            if (!Yii::$app->request->isAjax)
+                return $this->redirect(['view', 'id' => $model->id_form]);
         }
 
-        return $this->redirect(['view', 'id' => $model->id_form]);
+        return '';
     }
 
     public function actionUpdateRow($id_row)
@@ -539,7 +557,8 @@ class FormController extends Controller
 
         $model->delete();
 
-        return $this->redirect(['form/view', 'id' => $id_form]);
+        if (!Yii::$app->request->isAjax)
+            return $this->redirect(['form/view', 'id' => $id_form]);
     }
 
     /**

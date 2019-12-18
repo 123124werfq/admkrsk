@@ -69,12 +69,15 @@ class FormElementController extends Controller
         $model->id_row = $id_row;
         $model->ord = Yii::$app->db->createCommand("SELECT count(*) FROM form_element WHERE id_row = $id_row")->queryScalar();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-
-            if (!Yii::$app->request->isAjax)
-                return $this->redirect(['form/view', 'id' => $model->row->id_form]);
-            else
-                return $this->renderPartial('/form/_element',['element'=>$model]);
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && !empty($_POST['submit']))
+        {
+            if ($model->save())
+            {
+                if (!Yii::$app->request->isAjax)
+                    return $this->redirect(['form/view', 'id' => $model->row->id_form]);
+                else
+                    return '';
+            }
         }
 
         if (Yii::$app->request->isAjax)

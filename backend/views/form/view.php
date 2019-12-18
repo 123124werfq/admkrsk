@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-
+use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $model common\models\Form */
 
@@ -47,13 +47,17 @@ if ($model->isDeleted()) {
     </ul>
     <div class="tab-content">
       <div class="tab-pane active">
-        <div id="form-template" class="panel-body">
-    			  <?=$this->render('_form_view',['rows'=>$rows])?>
+        <div class="panel-body">
+            <div id="form-template">
+            <?php Pjax::begin(['id' => 'form-template_pjax']) ?>
+                <?=$this->render('_form_view',['rows'=>$rows])?>
+            <?php Pjax::end() ?>
+            </div>
             <center>
-                <a class="btn btn-default" href="create-row?id_form=<?=$model->id_form?>">Добавить строку</a>
+                <a class="btn btn-default add-row" href="create-row?id_form=<?=$model->id_form?>">Добавить строку</a>
             </center>
-    		</div>
-    	</div>
+        </div>
+      </div>
     </div>
 </div>
 <div id="FormElement" class="modal fade" tabindex="-1" role="dialog">

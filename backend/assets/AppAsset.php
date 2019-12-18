@@ -37,7 +37,7 @@ class AppAsset extends AssetBundle
         "inspinia/js/plugins/jasny/jasny-bootstrap.min.js",
         "/js/tinymce/tinymce.min.js",
         "/js/tinymce/plugins/plugins.js",
-        "js/admin.js?2"
+        "js/admin.js?3"
 //        'js/select2/js/select2.js', // если миша захочет раскомментить, надо сначала файл туда положить
     ];
     public $depends = [

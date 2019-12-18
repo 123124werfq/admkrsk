@@ -102,6 +102,60 @@ tinymce.init(tinymceConfig);
   });
 });*/
 
+function formTemplateSortable()
+{
+  $("#form-template_pjax ").sortable({
+      stop: function(event, ui){
+        var ords = [];
+        $("#form-template .form-row").each(function(i){
+          ords.push($(this).data('id'));
+        });
+        $.ajax({
+            url: '/form/order',
+            type: 'post',
+            data: {
+              _csrf: csrf_value,
+              ords:ords
+            },
+            success: function(data)
+            {
+
+            }
+        });
+      }
+    }).disableSelection();
+
+  $(".form-row").sortable({
+      start: function(event, ui) {
+          ui.item.data('pos', ui.item.index()+'_'+ui.item.parent().data('id'));
+      },
+      stop: function(event, ui){
+
+          if (ui.item.data('pos') != ui.item.index()+'_'+ui.item.parent().data('id'))
+          {
+            var ords = [];
+            var parents = [];
+            var $block = $(this);
+
+            ui.item.parent().children().each(function(i){
+                ords.push($(this).data('id'));
+                parents.push(ui.item.parent().data('id'));
+            });
+
+            $.ajax({
+                url: '/form-element/order',
+                type: 'post',
+                data: {ords: ords, parents: parents, _csrf: csrf_value},
+                success: function(data)
+                {
+                  toastr.success('Порядок изменен', '');
+                }
+            });
+          }
+      },
+      connectWith: ".form-row",
+    }).disableSelection();
+}
 
 function addInput(block)
 {
@@ -209,7 +263,7 @@ jQuery(document).ready(function()
         });
     });
 
-    $('body').delegate(".visible-field, #forminput-type",'change',function(){
+    $('body').delegate(".visible-field, #forminput-type, #forminput-id_collection",'change',function(){
         var $form = $("#FormElement form");
 
         $.ajax({
@@ -225,7 +279,47 @@ jQuery(document).ready(function()
     });
 
     $("#FormElement .btn-primary").click(function(){
-      $(".modal-body form button[type=submit]").click();
+
+      var $form = $("#FormElement form");
+
+      $.ajax({
+          url: $form.attr('action'),
+          type: 'post',
+          data: $form.serialize()+'&submit=1',
+          success: function(data)
+          {
+            if (data=='')
+            {
+               $.pjax.reload({container: '#form-template_pjax', async: false});
+              $('#FormElement').modal('hide');
+            }
+            else
+            {
+              $("#FormElement .modal-body").html(data);
+              setVisisble();
+            }
+          }
+      });
+    });
+
+    $("#form-template").delegate(".add-row, .delete-row",'click',function(){
+
+      var $link = $(this);
+
+      $.ajax({
+          url: $link.attr('href'),
+          type: 'post',
+          data: {
+            _csrf: csrf_value,
+          },
+          success: function(data)
+          {
+            toastr.success('Изменено', '');
+            $.pjax.reload({container: '#form-template_pjax', async: false});
+          }
+      });
+
+      return false;
     });
 
     $("#form-template").delegate(".create-form-input, .update-input, .create-element, .update-rowm, .create-subform", 'click',function(){
@@ -244,7 +338,6 @@ jQuery(document).ready(function()
           },
           success: function(data)
           {
-            //$("#form-template").append(data);
             $("#FormElement .modal-body").html(data);
             setVisisble();
           }
@@ -333,26 +426,12 @@ jQuery(document).ready(function()
       return false;
     })
 
-    $("#form-template").sortable({
-      stop: function(event, ui){
-        var ords = [];
-        $("#form-template .form-row").each(function(i){
-          ords.push($(this).data('id'));
-        });
-        $.ajax({
-            url: '/form/order',
-            type: 'post',
-            data: {
-              _csrf: csrf_value,
-              ords:ords
-            },
-            success: function(data)
-            {
+    formTemplateSortable();
 
-            }
-        });
-      }
-    }).disableSelection();
+    $(document).on("pjax:success", "#form-template_pjax",  function(event){
+      formTemplateSortable();
+    });
+
 
     $("#blocks").sortable({
       stop: function(event, ui){
@@ -458,38 +537,6 @@ jQuery(document).ready(function()
               });*/
       }
     }).disableSelection();
-
-    $(".form-row").sortable({
-      start: function(event, ui) {
-          ui.item.data('pos', ui.item.index()+'_'+ui.item.parent().data('id'));
-      },
-      stop: function(event, ui){
-
-          if (ui.item.data('pos') != ui.item.index()+'_'+ui.item.parent().data('id'))
-          {
-            var ords = [];
-            var parents = [];
-            var $block = $(this);
-
-            ui.item.parent().children().each(function(i){
-                ords.push($(this).data('id'));
-                parents.push(ui.item.parent().data('id'));
-            });
-
-            $.ajax({
-                url: '/form-element/order',
-                type: 'post',
-                data: {ords: ords, parents: parents, _csrf: csrf_value},
-                success: function(data)
-                {
-                  toastr.success('Порядок изменен', '');
-                }
-            });
-          }
-      },
-      connectWith: ".form-row",
-    }).disableSelection();
-
 
     $(".ordered tbody, ul.ordered").sortable({
       stop: function(event, ui){

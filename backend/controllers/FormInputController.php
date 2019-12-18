@@ -99,10 +99,7 @@ class FormInputController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $element->load(Yii::$app->request->post()) && $model->validate() && $element->validate())
         {
-            if (Yii::$app->request->isAjax)
-                return $this->renderAjax('_form',['model' => $model]);
-
-            if ($model->save())
+            if (!empty($_POST['submit']) && $model->save())
             {
                 // создается элемент формы
                 $element->id_input = $model->id_input;
@@ -128,14 +125,12 @@ class FormInputController extends Controller
                 if (!Yii::$app->request->isAjax)
                     return $this->redirect(['form/view', 'id' => $model->id_form]);
                 else
-                    return $this->renderPartial('/form/_input',['element'=>$element]);
+                    return '';
             }
         }
 
         if (Yii::$app->request->isAjax)
-        {
             return $this->renderAjax('_form',['model' => $model]);
-        }
 
         return $this->render('create', [
             'model' => $model,
@@ -167,10 +162,7 @@ class FormInputController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $element->validate())
         {
-            if (Yii::$app->request->isAjax)
-                return $this->renderAjax('_form',['model' => $model]);
-
-            if ($model->save() && $element->save())
+            if (!empty($_POST['submit']) && $model->save() && $element->save())
             {
                 if ($model->column->type != $model->type)
                 {
@@ -186,6 +178,8 @@ class FormInputController extends Controller
 
                 if (!Yii::$app->request->isAjax)
                     return $this->redirect(['form/view', 'id' => $model->id_form]);
+                else
+                    return '';
             }
         }
 
