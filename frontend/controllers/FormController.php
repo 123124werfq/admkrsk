@@ -83,6 +83,8 @@ class FormController extends \yii\web\Controller
 
         $firms = [];
 
+        $output = '';
+
         foreach ($records as $key => $record)
             $output .= '<option value="'.$record->id_record.'">'.$record->lineValue.'</option>';
 

@@ -41,18 +41,20 @@
 	if (!empty($arrayGroup))
 		$attribute = "[$arrayGroup]".$attribute;
 
-	$styles = $element->getStyles();
 
 	$id_subform = (!empty($subform))?$subform->id_form:'';
 ?>
 
-<div id="element<?=$element->id_element?>" class="col">
-	<div id="inputGroup<?=$input->id_input?>" <?=(!empty($styles))?'style="'.implode(';',$styles).'"':''?> class="form-group <?=$groupClass?>">
+<div id="element<?=$element->id_element?>" class="col" <?=(!empty($styles))?'style="'.implode(';',$styles).'"':''?>>
+	<div id="inputGroup<?=$input->id_input?>" class="form-group <?=$groupClass?>">
 		<?php if (!empty($input->label) && $input->type !=CollectionColumn::TYPE_CHECKBOX){?>
 		<label class="form-label"><?=$input->label?><?=!empty($options['required'])?'*':''?></label>
 		<?php }?>
 		<?php switch ($input->type) {
 			case CollectionColumn::TYPE_SERVICETARGET:
+				echo $form->field($model, $attribute)->dropDownList($input->getArrayValues(),$options);
+				break;
+			case CollectionColumn::TYPE_SERVICE:
 				echo $form->field($model, $attribute)->dropDownList($input->getArrayValues(),$options);
 				break;
 			case CollectionColumn::TYPE_SELECT:

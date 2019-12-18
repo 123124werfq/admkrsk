@@ -39,6 +39,10 @@ return [
                 'title'=>'Формы',
                 'roles' => ['backend.form'],
             ],
+            'form?is_template=1'=>[
+                'title'=>'Шаблоны форм',
+                'roles' => ['backend.form'],
+            ],
             'form-input-type'=>[
                 'title'=>'Поведения полей',
                 'roles' => ['backend.formInputType'],

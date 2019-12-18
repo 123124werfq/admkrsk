@@ -3,7 +3,7 @@
         <?=frontend\widgets\Breadcrumbs::widget(['page'=>$page])?>
         <div class="row">
             <div class="col-2-third order-xs-1">
-                <h1 class="h2"><?=$service->name?></h1>
+                <h1 class="h2"></h1>
 
                 <?=frontend\widgets\FormsWidget::widget(['form'=>$form,'action'=>''])?>
 

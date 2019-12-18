@@ -111,11 +111,14 @@ class FormInput extends \yii\db\ActiveRecord
     {
         if ($this->type == CollectionColumn::TYPE_SERVICE)
         {
-            $records = ServiceСomplaintForm::find()->joinWith('service')->where(['id_form'=>$this->id_form])->all();
+            $records = ServiceComplaintForm::find()
+                            ->with('service')
+                            ->where(['id_form'=>$this->id_form])
+                            ->all();
             $output = [];
 
             foreach ($records as $key => $data)
-                $output[$data->id_service] = $data->reestr_number.' '.$data->name;
+                $output[$data->id_service] = $data->service->reestr_number.' '.$data->service->name;
 
             return $output;
         }
