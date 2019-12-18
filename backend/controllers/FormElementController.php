@@ -118,13 +118,13 @@ class FormElementController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
-            if (!Yii::$app->request->isAjax)
+            if (!empty($_POST['submit']) && $model->save())
             {
-                $model->save();
-                return $this->redirect(['form/view', 'id' => $model->row->id_form]);
+                if (!Yii::$app->request->isAjax)
+                    return $this->redirect(['form/view', 'id' => $model->row->id_form]);
+                else
+                    return '';
             }
-            else
-                return $this->renderAjax('_form',['model' => $model,'id_form'=>$model->row->id_form]);
         }
 
         if (Yii::$app->request->isAjax)
