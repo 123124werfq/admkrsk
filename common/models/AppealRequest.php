@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "appeal_request".
@@ -65,5 +67,35 @@ class AppealRequest extends \yii\db\ActiveRecord
             'deleted_at' => 'Deleted At',
             'deleted_by' => 'Deleted By',
         ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            'ts' => TimestampBehavior::class,
+            'ba' => BlameableBehavior::class,
+        ];
+    }
+
+    public function getRecordData()
+    {
+        if(!$this->id_record)
+            return false;
+
+        $record = CollectionRecord::findOne($this->id_record);
+
+        return $record->getData(true);
+    }
+
+
+    public function getStatusName()
+    {
+        $as = AppealState::find()->where(['id_request' => $this->id_record])->orderBy('id_state DESC')->one();
+
+        switch ($as)
+        {
+            case 0: return 'ОЖИДАЕТ РЕГИСТРАЦИИ';
+            case 1: return 'ЗАРЕГИСТРИРОВАНО';
+        }
     }
 }

@@ -3,6 +3,9 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+
 
 /**
  * This is the model class for table "appeal_state".
@@ -21,6 +24,12 @@ use Yii;
  */
 class AppealState extends \yii\db\ActiveRecord
 {
+
+    const STATE_INIT = 0;
+    const STATE_SEND = 1;
+    const STATE_RESPONSE = 2;
+    const STATE_CLOSED = 99;
+
     /**
      * {@inheritdoc}
      */
@@ -58,6 +67,14 @@ class AppealState extends \yii\db\ActiveRecord
             'updated_by' => 'Updated By',
             'deleted_at' => 'Deleted At',
             'deleted_by' => 'Deleted By',
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            'ts' => TimestampBehavior::class,
+            'ba' => BlameableBehavior::class,
         ];
     }
 }
