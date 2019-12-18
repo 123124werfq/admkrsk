@@ -7,11 +7,14 @@ use common\models\Form;
 use common\models\Workflow;
 use common\models\Integration;
 use common\models\Collection;
+use common\models\CollectionRecord;
 use common\models\ServiceAppeal;
 use common\models\ServiceAppealState;
 use common\models\ServiceRubric;
 use common\models\ServiceSituation;
+use common\models\ServiceComplaintForm;
 use common\models\FormDynamic;
+
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\filters\AccessControl;
@@ -221,11 +224,6 @@ class ServiceController extends \yii\web\Controller
         }
 
         return ['results' => $results];
-    }
-
-    public function actionComplaint($page=null)
-    {
-        return $this->render('complaint');
     }
 
     public function actionCreate($id_form,$page=null)

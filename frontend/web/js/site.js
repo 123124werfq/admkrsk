@@ -48,6 +48,18 @@ function addInput(block)
 
 $(document).ready(function() {
 
+    $("#Complaint_id_firm").change(function(){
+
+        $.ajax({
+            type: "GET",
+            dataType: "html",
+            url: "/form/get-categories",
+            data: {id:$("#Complaint_id_firm").val()}
+        }).done(function(data){
+            $("#Complaint_id_category").html(data);
+        });
+    });
+
     $("#news-rubric, #news-date").change(function(){
         $("#news-filter").submit();
     });
@@ -83,7 +95,7 @@ $(document).ready(function() {
     $(".form-copy").click(function(){
         var $link = $(this);
 
-         $.ajax({
+        $.ajax({
             type: "GET",
             dataType: "html",
             url: "/form/form-collection",

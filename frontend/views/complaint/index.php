@@ -19,18 +19,18 @@
             <div class="col-2-third order-xs-1">
             	<div class="content searchable">
             		<h1><?=$page->title?></h1>
-                    <form action="complaint-form" method="get">
+                    <form action="create" method="get">
                         <div class="form-group">
                             <label class="form-label">Обращение направляется в</label>
                             <div class="custom-select">
-                                <?=Html::dropDownList('id_firm','',Collection::getArrayByAlias("appeal_firms"),['prompt'=>'Выберите организацию'])?>
+                                <?=Html::dropDownList('id_firm','',$firms,['prompt'=>'Выберите организацию','id'=>'Complaint_id_firm'])?>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Вид</label>
                             <div class="custom-select">
-                                <?=Html::dropDownList('id_category','',[])?>
+                                <?=Html::dropDownList('id_category','',[],['prompt'=>'Выберите вид','id'=>'Complaint_id_category'])?>
                             </div>
                         </div>
 

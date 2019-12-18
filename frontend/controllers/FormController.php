@@ -7,6 +7,9 @@ use Yii;
 use common\models\Form;
 use common\models\FormDynamic;
 use common\models\Page;
+use common\models\CollectionRecord;
+
+use common\models\ServiceComplaintForm;
 use common\models\FormInput;
 
 class FormController extends \yii\web\Controller
@@ -32,7 +35,7 @@ class FormController extends \yii\web\Controller
             if ($collection->insertRecord($prepare))
             {
                 echo "OK!";
-                
+
                 if (!empty($form->url))
                 	return $this->redirect($form->url);
 
@@ -63,6 +66,27 @@ class FormController extends \yii\web\Controller
             'form'=>$activeForm,
             'input'=>$input,
         ]);
+    }
+
+    public function actionGetCategories($id)
+    {
+        $firms = ServiceComplaintForm::find()
+            ->groupBy('id_record_category')
+            ->select('id_record_category')
+            ->asArray()
+            ->indexBy('id_record_category')
+            ->all();
+
+        $ids = array_keys($firms);
+
+        $records = CollectionRecord::find()->where(['id_record'=>$ids])->all();
+
+        $firms = [];
+
+        foreach ($records as $key => $record)
+            $output .= '<option value="'.$record->id_record.'">'.$record->lineValue.'</option>';
+
+        return $output;
     }
 
     protected function findModel($id)

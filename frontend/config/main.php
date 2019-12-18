@@ -79,7 +79,6 @@ return [
             ],
             'rules' => [
                 [
-
                     'class' => 'yii\web\GroupUrlRule',
                     'prefix' => 'api',
                     'rules' => [
@@ -96,6 +95,7 @@ return [
                 'site/test'=>'site/test',
                 'address/region'=>'address/region',
                 'form/view/<id>'=>'form/view',
+                'form/get-categories'=>'form/get-categories',
                 'address/subregion'=>'address/subregion',
                 'address/city'=>'address/city',
                 'address/district'=>'address/district',
