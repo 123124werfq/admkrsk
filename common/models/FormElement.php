@@ -38,8 +38,7 @@ class FormElement extends \yii\db\ActiveRecord
         return [
             [['id_form', 'id_row', 'type', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
             [['id_form', 'type', 'id_row', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
-            [['content'], 'string'],
-            [['options'], 'safe'],
+            [['options','content'], 'safe'],
         ];
     }
 

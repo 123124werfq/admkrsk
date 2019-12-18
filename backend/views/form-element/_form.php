@@ -17,7 +17,7 @@ use yii\widgets\ActiveForm;
 ?>
 
 <?php if (empty($model->id_form)){?>
-	<?=$form->field($model, 'content')->textarea(['rows' => 6,'class'=>'form-control redactor'])?>
+	<?=$form->field($model, 'content')->textarea(['rows' => 6,'class'=>'form-control redactor','id'=>'formelement-content'.rand(0,99999)])?>
 <?php }?>
 
 <div class="form-group">

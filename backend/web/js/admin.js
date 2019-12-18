@@ -94,6 +94,7 @@ var tinymceConfig = {
         ]
     }
 };
+
 tinymce.init(tinymceConfig);
 
 /*tinymce.activeEditor.uploadImages(function(success) {
@@ -281,6 +282,9 @@ jQuery(document).ready(function()
     $("#FormElement .btn-primary").click(function(){
 
       var $form = $("#FormElement form");
+
+      //$('#' + 'your_editor_id').html( tinymce.get('your_editor_id').getContent() );
+      tinyMCE.triggerSave();
 
       $.ajax({
           url: $form.attr('action'),
