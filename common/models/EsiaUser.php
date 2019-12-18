@@ -60,6 +60,7 @@ class EsiaUser extends \yii\db\ActiveRecord
             [['id_user', 'is_org', 'created_at', 'created_by', 'updated_at', 'deleted_at', 'deleted_by'], 'integer'],
             [['fullname', 'birthdate', 'gender', 'snils', 'inn', 'id_doc', 'birthplace', 'medical_doc', 'residence_doc', 'email', 'mobile', 'contacts', 'usr_org', 'usr_avt', 'org_shortname', 'org_fullname', 'org_type', 'org_ogrn', 'org_inn', 'org_leg', 'org_kpp', 'org_ctts', 'org_addrs'], 'string', 'max' => 255],
             [['first_name', 'last_name', 'last_name', 'middle_name', 'trusted', 'home_phone', 'living_addr', 'living_addr_fias', 'register_addr', 'register_addr_fias'], 'string'],
+            [['passport_serie', 'passport_number', 'passport_issuer', 'passport_issuer_id', 'passport_comments', 'userdoc_raw', 'mediacal_raw', 'residence_raw'], 'string'],
         ];
     }
 
@@ -84,6 +85,17 @@ class EsiaUser extends \yii\db\ActiveRecord
             'email' => 'Email',
             'mobile' => 'Мобильный номер',
             'contacts' => 'Contacts',
+
+            'passport_serie' => 'Серия паспорта',
+            'passport_number' => 'Номер паспорта',
+            'passport_date' => 'Дата выдачи паспорта',
+            'passport_issuer' => 'Кем выдан паспорт',
+            'passport_issuer_id' => 'Кем выдан паспорт (код подразделения)',
+            'passport_comments' => 'Дополнительная информация о паспорте',
+
+            'userdoc_raw' => 'Идентификационные документы',
+            'mediacal_raw' => 'Медицинские документы',
+            'residence_raw' => 'Документы, подтверждающие право проживания',
 
             'usertype' => 'Физ.лицо / Юр.Лицо',
 
