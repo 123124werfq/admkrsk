@@ -240,7 +240,7 @@ class Service extends \yii\db\ActiveRecord
 
     public function isAppealable()
     {
-        $count = ServiceСomplaintForm::find()->where(['id_service'=>$this->id_service])->count();
+        $count = ServiceComplaintForm::find()->where(['id_service'=>$this->id_service])->count();
 
         return ($count>0);
     }
