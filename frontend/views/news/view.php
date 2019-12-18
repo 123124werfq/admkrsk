@@ -21,7 +21,7 @@ function parseAttributesFromTag($tag){
     <div class="container">
         <?=frontend\widgets\Breadcrumbs::widget(['page'=>$page])?>
         <div class="row">
-            <div class="col-2-third">
+            <div class="col-2-third col-sm-12">
                 <h1 class="searchable"><?=Html::encode($model->title)?></h1>
                 <ul class="press_info">
                     <?php if (!empty($model->tags)){?>
@@ -35,14 +35,7 @@ function parseAttributesFromTag($tag){
                     <?php }?>
                     <li class="press_info-item"><?=strftime('%d %B %Y, %H:%M', $model->date_publish)?></li>
                 </ul>
-            </div>
-            <div class="col-third">
-                <?=frontend\widgets\RightMenuWidget::widget(['page'=>$page])?>
-            </div>
-        </div>
-        <hr class="hr hr__large">
-        <div class="row">
-            <div class="col-2-third col-sm-12">
+                <!--hr class="hr hr__large"-->
             	<div class="content searchable">
 					<?php
                         preg_match_all ("/<(collection|gallery|forms)\s(.+?)>(.+?)<\/(collection|gallery|forms)>/is", $model->content, $matches);
@@ -63,6 +56,9 @@ function parseAttributesFromTag($tag){
                         echo $model->content;
                     ?>
 				</div>
+            </div>
+            <div class="col-third">
+                <?=frontend\widgets\RightMenuWidget::widget(['page'=>$page])?>
             </div>
         </div>
 		<hr class="hr hr__md">

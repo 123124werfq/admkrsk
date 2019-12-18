@@ -48,6 +48,9 @@ class FormInput extends \yii\db\ActiveRecord
             [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'id_column', 'deleted_by','label','id_collection_column'], 'default', 'value' => null],
             [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_column', 'required','type','readonly','id_collection_column'], 'integer'],
             [['name', 'type', 'fieldname'], 'required'],
+            ['id_collection_column', 'required', 'when' => function($model) {
+                return (!empty($model->id_collection));
+            }],
             [['hint','label'], 'string'],
             [['options','values'],'safe'],
             [['name', 'fieldname','alias'], 'string', 'max' => 500],
