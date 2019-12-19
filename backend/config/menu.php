@@ -99,6 +99,10 @@ return [
                 'title'=>'Связи обжалования',
                 'roles' => ['backend.service'],
             ],
+            'appeal'=>[
+                'title'=>'Обращения',
+                'roles' => ['backend.service'],
+            ],
         ],
     ],
 //    'institution'=>[
