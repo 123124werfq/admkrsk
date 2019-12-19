@@ -311,6 +311,8 @@ class ServiceController extends \yii\web\Controller
                 }
                 else
                 {
+
+
                    var_dump($appeal->errors);
                    die();
                 }
@@ -329,7 +331,8 @@ class ServiceController extends \yii\web\Controller
                 'number'=> isset($appeal->number_internal)?$appeal->number_internal:false,
                 //'target' => $target,
                 'service'=>$service,
-                'page' => $page
+                'page' => $page,
+                'date' => date("d.m.Y", $appeal->created_at)
             ]);
         }
 
