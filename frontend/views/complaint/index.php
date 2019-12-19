@@ -23,14 +23,14 @@
                         <div class="form-group">
                             <label class="form-label">Обращение направляется в</label>
                             <div class="custom-select">
-                                <?=Html::dropDownList('id_firm','',$firms,['prompt'=>'Выберите организацию','id'=>'Complaint_id_firm'])?>
+                                <?=Html::dropDownList('id_firm','',$firms,['prompt'=>'Выберите организацию','id'=>'Complaint_id_firm','required'=>true])?>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Вид</label>
                             <div class="custom-select">
-                                <?=Html::dropDownList('id_category','',[],['prompt'=>'Выберите вид','id'=>'Complaint_id_category'])?>
+                                <?=Html::dropDownList('id_category','',[],['prompt'=>'Выберите вид','id'=>'Complaint_id_category','required'=>true])?>
                             </div>
                         </div>
 
