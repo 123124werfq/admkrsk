@@ -46,7 +46,7 @@ class WordDoc
 
         $columns = $form->collection->getColumns()->indexBy('alias')->all();
 
-        $stringData = $this->convertDataToString($data,$columns);
+        $stringData = WordDoc::convertDataToString($data,$columns);
 
         foreach ($stringData as $alias => $value)
         {
@@ -77,26 +77,35 @@ class WordDoc
         return $export_path;
     }
 
-    public function convertDataToString($data,$columns)
+    public static function convertDataToString($data,$columns)
     {
         $string_output = [];
 
         foreach ($columns as $key => $col)
         {
-            $col_alias = $column->alias;
+            $col_alias = $col->alias;
 
             if (empty($data[$col_alias]))
-                continue;
+                $string_output[$col_alias] = '';
             else if ($col->type==CollectionColumn::TYPE_DATE)
-                $string_output[$column->alias] = date('d.m.Y',$data[$col_alias]);
+                $string_output[$col_alias] = date('d.m.Y',$data[$col_alias]);
             else if ($col->type==CollectionColumn::TYPE_DATETIME)
-                $string_output[$column->alias] = date('d.m.Y H:i',$record[$col_alias]);
+                $string_output[$col_alias] = date('d.m.Y H:i',$record[$col_alias]);
             else if ($col->type==CollectionColumn::TYPE_DISTRICT)
             {
                 $model = \common\models\District::findOne($data[$col_alias]);
 
                 if (!empty($model))
-                    $string_output[$column->alias] = $model->name;
+                    $string_output[$col_alias] = $model->name;
+            }
+            else if ($col->type==CollectionColumn::TYPE_SERVICETARGET)
+            {
+                $model = \common\models\ServiceTarget::findOne($data[$col_alias]);
+
+                if (!empty($model))
+                    $string_output[$col_alias] = $model->name;
+
+                $string_output[$col->alias] = $data[$col_alias];
             }
             else if ($col->type==CollectionColumn::TYPE_JSON)
             {
@@ -107,34 +116,34 @@ class WordDoc
                 $model = \common\models\City::findOne($data[$col_alias]);
 
                 if (!empty($model))
-                    $string_output[$column->alias] = $model->name;
+                    $string_output[$col_alias] = $model->name;
             }
             else if ($col->type==CollectionColumn::TYPE_STREET)
             {
                 $model = \common\models\Street::findOne($data[$col_alias]);
 
                 if (!empty($model))
-                    $string_output[$column->alias] = $model->name;
+                    $string_output[$col_alias] = $model->name;
             }
             else if ($col->type==CollectionColumn::TYPE_REGION)
             {
                 $model = \common\models\Region::findOne($data[$col_alias]);
 
                 if (!empty($model))
-                    $string_output[$column->alias] = $model->name;
+                    $string_output[$col_alias] = $model->name;
             }
             else if ($col->type==CollectionColumn::TYPE_HOUSE)
             {
                 $model = \common\models\House::findOne($data[$col_alias]);
 
                 if (!empty($model))
-                    $string_output[$column->alias] = $model->name;
+                    $string_output[$col_alias] = $model->name;
             }
             else if ($col->type==CollectionColumn::TYPE_FILE || $col->type==CollectionColumn::TYPE_IMAGE)
             {
                 $ids = json_decode($data[$col_alias],true);
 
-                $medias = Media::find()->where(['id_media'=>$ids])->all();
+                $medias = \common\models\Media::find()->where(['id_media'=>$ids])->all();
 
                 $output = [];
                 foreach ($medias as $key => $media)
@@ -142,7 +151,7 @@ class WordDoc
 
                 if (count($output)>1)
                     $string_output[$col->alias] = implode('<w:br/>', $output);
-                else 
+                else
                     $string_output[$col->alias] = $output[0];
             }
             else if (!empty($col->input->id_collection))
