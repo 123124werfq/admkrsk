@@ -56,7 +56,7 @@ class ServiceController extends \yii\web\Controller
         $collection = Collection::find()->where(['alias'=>'service_offices'])->one();
 
         $firms = [];
-        
+
         if (!empty($collection))
         {
             $records = $collection->getData([],true);
@@ -67,7 +67,7 @@ class ServiceController extends \yii\web\Controller
                     continue;
 
                 $id_firm = key($record['service_firm']);
-                
+
                 $firms[$id_firm] = $record['service_firm'][$id_firm];
             }
         }
@@ -125,7 +125,7 @@ class ServiceController extends \yii\web\Controller
             {
                 $tree[(int)$rub->parent->id_parent][(int)$rub->id_parent] = $rub->parent;
 
-                if (!empty($rub->parent->parent->id_parent))
+                if (!empty($rub->parent->parent))
                 {
                     $tree[(int)$rub->parent->parent->id_parent][(int)$rub->parent->parent->id_parent] = $rub->parent->parent;
                 }
