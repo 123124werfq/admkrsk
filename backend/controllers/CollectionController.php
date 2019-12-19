@@ -205,12 +205,12 @@ class CollectionController extends Controller
         return ['results' => $results];
     }
 
-    public function actionRecordList($id,$q)
+    public function actionRecordList($id,$q,$id_column=null)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $collection = $this->findModel($id);
-        $collection = $stripos->getArray();
+        $collection = $collection->getArray($id_column);
 
         $i = 0;
         $results = [];

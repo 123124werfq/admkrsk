@@ -227,27 +227,29 @@ JS;
 
 				if (!empty($model->$attribute))
 				{
-					$record = \common\models\Collection::findOne($model->$attribute);
-					if (!empty($record))
-						$value = [$record->id_collection=>$record->name];
+					/*if (is_array($model->$attribute))
+						$record = \common\models\CollectionRecord::findOne(key($model->$attribute));
+					else
+						$record = \common\models\CollectionRecord::findOne((int)$model->$attribute);*/
+
+					$value = $model->$attribute; // [$record->id_collection=>$record->name];
 				}
 
 				echo $form->field($model, $attribute)->widget(Select2::class, [
                     'data' => $value,
                     'pluginOptions' => [
                         'multiple' => false,
-                        //'allowClear' => true,
-                        'minimumInputLength' => 0,
+                        'minimumInputLength' => 1,
                         'placeholder' => 'Выберите запись',
                         'ajax' => [
-                            'url' => '/collection/list',
+                            'url' => '/collection/record-list',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:$("#input-city'.$id_subform.'").val()};}')
+                            'data' => new JsExpression('function(params) { return {q:params.term,id:'.$input->id_collection.',id_column:'.$input->id_collection_column.'};}')
                         ],
                     ],
                     'options'=>[
-                    	'id'=>'input-district'.$id_subform
-                    ]
+                	    'value'=>key($value)
+                	]
                 ]);
 				break;
 
