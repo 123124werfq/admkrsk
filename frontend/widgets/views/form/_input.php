@@ -60,6 +60,10 @@
 			case CollectionColumn::TYPE_SELECT:
 				echo $form->field($model, $attribute)->dropDownList($input->getArrayValues(),$options);
 				break;
+			case CollectionColumn::TYPE_MAP:
+			//echo Html::textInput("CollectionRecord[$ckey]",(isset($data[$ckey]))?$data[$ckey]:'',['class'=>'form-control','id'=>'Value_'.$ckey,'placeholder'=>$column->name]);
+                echo \backend\widgets\MapInputWidget::widget(['name' => 'FormDynamic['.$attribute.']', 'index' => $options['id']]);
+                break;
 			case CollectionColumn::TYPE_DATE:
 				$options['type'] = 'date';
 

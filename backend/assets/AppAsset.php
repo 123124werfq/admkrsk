@@ -23,7 +23,7 @@ class AppAsset extends AssetBundle
         "css/admin.css?1"
     ];
     public $js = [
-        "https://api-maps.yandex.ru/2.1/?lang=ru_RU&",
+        "https://api-maps.yandex.ru/2.1/?lang=ru_RU",
         "inspinia/js/plugins/metisMenu/jquery.metisMenu.js",
         "inspinia/js/plugins/slimscroll/jquery.slimscroll.min.js",
         "inspinia/js/plugins/peity/jquery.peity.min.js",

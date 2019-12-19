@@ -1,3 +1,7 @@
+<?php
+    $this->registerJsFile('https://api-maps.yandex.ru/2.1/?lang=ru_RU',['position'=>\yii\web\View::POS_BEGIN]);
+
+?>
 <script>
     ymaps.ready(init);
 
@@ -56,12 +60,10 @@
 
     }
 </script>
-
 <div class="input-group bootstrap-touchspin">
     <span class="input-group-addon bootstrap-touchspin-prefix" style="display: none;"></span>
     <input class="touchspin2 form-control" type="text" value="" name="<?=$fname?>[<?=$cid?>]" style="display: block;">
     <span class="input-group-addon bootstrap-touchspin-postfix" id="toggle_wim<?=$cid?>"><i class="fa fa-map-marker"></i></span>
 </div>
 <div class="widget-input-map hidden" id="wim<?=$cid?>">
-
 </div>
