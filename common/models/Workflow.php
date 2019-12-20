@@ -54,6 +54,45 @@ class Workflow extends Model
         }
     }
 
+    public function sendTest()
+    {
+        $url = $this->sendServiceURL;
+        $message = $this->serviceTestTemplate;
+        $this->error = '';
+
+        if( $curl = curl_init() ) {
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $message);
+
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+            $headers = [
+                'SOAPAction:urn:#Operation_01_01_014FL'
+            ];
+
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+            $server_output = curl_exec($curl);
+
+            print_r($server_output);
+            die();
+
+            if(curl_exec($curl) === false)
+            {
+                $this->error = curl_error($url);
+                curl_close($curl);
+                return false;
+            }
+            else
+            {
+                curl_close($curl);
+                return true;
+            }
+        }
+    }
+
     public function sendAppealMessage($appealRecord)
     {
         return $this->sendPost($appealRecord->toString(), $this->sendAppealURL);
@@ -247,5 +286,37 @@ class Workflow extends Model
 SERVICE;
 
 
+    protected $serviceTestTemplate = <<<SERVICE
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:int="http://intertrust.ru/" xmlns:rev="http://smev.gosuslugi.ru/rev120315" xmlns:admkrsk="http://smev.admkrsk.ru/v1.0">
+  <soapenv:Header></soapenv:Header>
+  <soapenv:Body wsu:Id="BodyId-F01F22D69F264C8CB33F8E5C95DDE883" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+    <int:Input_06_01_004FL>
+      <rev:Message>
+        <rev:Sender>
+          <rev:Code>OSAK01241</rev:Code>
+          <rev:Name>Официальный сайт администрации города Красноярска</rev:Name>
+        </rev:Sender>
+        <rev:Recipient>
+          <rev:Code>236402241</rev:Code>
+          <rev:Name>Электронный документооборот администрации города Красноярска</rev:Name>
+        </rev:Recipient>
+        <rev:Originator>
+          <rev:Code>OSAK01241</rev:Code>
+          <rev:Name>Официальный сайт администрации города Красноярска</rev:Name>
+        </rev:Originator>
+        <rev:ServiceName>06/01/006</rev:ServiceName>
+        <rev:TypeCode>GSRV</rev:TypeCode>
+        <rev:Status>REQUEST</rev:Status>
+        <rev:Date>{date}</rev:Date>
+        <rev:ExchangeType>1</rev:ExchangeType>
+        <rev:ServiceCode>06/01/006</rev:ServiceCode>
+        <rev:CaseNumber>06/01/006-000012</rev:CaseNumber>
+      </rev:Message>
+      <rev:MessageData>
+      </rev:MessageData>
+    </int:Input_06_01_006FL>
+  </soapenv:Body>
+</soapenv:Envelope>        
+SERVICE;
 
 }
