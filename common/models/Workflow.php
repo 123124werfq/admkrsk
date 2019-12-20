@@ -69,7 +69,7 @@ class Workflow extends Model
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
             $headers = [
-                'SOAPAction:urn:#Operation_01_01_014FL'
+                'SOAPAction:urn:#Operation_06_01_0064FL'
             ];
 
             curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
