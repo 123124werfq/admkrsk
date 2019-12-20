@@ -20,6 +20,7 @@ use common\models\User;
 use common\models\EsiaUser;
 use yii\web\NotFoundHttpException;
 
+use common\models\Workflow;
 
 /**
  * Site controller
@@ -574,6 +575,11 @@ class SiteController extends Controller
 
         $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
         $objWriter->save('../runtime/helloWorld.docx');
+    }
+
+    public function actionStest(){
+        $ww = new Workflow;
+        $ww->sendTest();
     }
 
     /**
