@@ -2,6 +2,9 @@
 
 namespace common\models;
 
+use common\components\softdelete\SoftDeleteTrait;
+use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 
 /**
@@ -10,12 +13,27 @@ use Yii;
  * @property int $id_region
  * @property string $aoguid
  * @property string $name
+ * @property bool $is_manual
+ * @property int $update_at
+ * @property int $created_by
+ * @property int $updated_at
+ * @property int $updated_by
+ * @property int $deleted_at
+ * @property int $deleted_by
  *
  * @property FiasAddrObj $addrObj
  * @property House[] $houses
  */
 class Region extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+    use ActionTrait;
+    use SoftDeleteTrait;
+
+    const VERBOSE_NAME = 'Регион';
+    const VERBOSE_NAME_PLURAL = 'Регионы';
+    const TITLE_ATTRIBUTE = 'name';
+
     /**
      * {@inheritdoc}
      */
@@ -32,6 +50,7 @@ class Region extends \yii\db\ActiveRecord
         return [
             [['aoguid'], 'string'],
             [['name'], 'string', 'max' => 255],
+            [['is_manual'], 'boolean'],
         ];
     }
 
@@ -41,9 +60,10 @@ class Region extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_region' => 'Id Region',
+            'id_region' => '#',
             'aoguid' => 'Aoguid',
             'name' => 'Регион',
+            'is_manual' => 'Добавлен вручную',
         ];
     }
 

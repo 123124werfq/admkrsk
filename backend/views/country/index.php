@@ -1,12 +1,13 @@
 <?php
 
-use common\models\House;
-use yii\grid\GridView;
 use yii\helpers\Html;
+use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel backend\models\search\HouseSearch */
+/* @var $searchModel backend\models\search\CountrySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+
+$archive = Yii::$app->request->get('archive');
 
 $this->title = $searchModel->breadcrumbsLabel;
 $this->params['breadcrumbs'][] = $this->title;
@@ -17,10 +18,10 @@ if (Yii::$app->user->can('admin.address')) {
     } else {
         $this->params['button-block'][] = Html::a('Архив', ['index', 'archive' => 1], ['class' => 'btn btn-default']);
     }
-    $this->params['button-block'][] = Html::a('Добавить дом', ['create'], ['class' => 'btn btn-success']);
+    $this->params['button-block'][] = Html::a('Добавить страну', ['create'], ['class' => 'btn btn-success']);
 }
 ?>
-<div class="address-index">
+<div class="country-index">
     <div class="ibox">
         <div class="ibox-content">
 
@@ -28,23 +29,10 @@ if (Yii::$app->user->can('admin.address')) {
 
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
-                'filterModel' => $searchModel,
+                //'filterModel' => $searchModel,
                 'columns' => [
-                    'id_house',
-//                    'postalcode',
-//                    'country.name',
-//                    'region.name',
-//                    'subregion.name',
-//                    'city.name',
-//                    'district.name',
-//                    'street.name',
+                    'id_country',
                     'name',
-                    [
-                        'attribute' => 'fullname',
-                        'value' => function (House $model) {
-                            return $model->getFullName();
-                        },
-                    ],
 
                     [
                         'class' => 'yii\grid\ActionColumn',

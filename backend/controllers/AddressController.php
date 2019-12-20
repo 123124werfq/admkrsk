@@ -2,10 +2,12 @@
 
 namespace backend\controllers;
 
+use common\models\Action;
 use common\models\Country;
 use Yii;
 use common\models\House;
 use backend\models\search\HouseSearch;
+use yii\filters\VerbFilter;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -21,13 +23,37 @@ use common\models\Subregion;
  */
 class AddressController extends Controller
 {
-    public function beforeAction($action)
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
     {
-        if (Yii::$app->request->isAjax) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-        }
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
+    }
 
-        return parent::beforeAction($action);
+    public function actions()
+    {
+        return [
+            'history' => [
+                'class' => 'backend\modules\log\actions\IndexAction',
+                'modelClass' => House::class,
+            ],
+            'log' => [
+                'class' => 'backend\modules\log\actions\LogAction',
+                'modelClass' => House::class,
+            ],
+            'restore' => [
+                'class' => 'backend\modules\log\actions\RestoreAction',
+                'modelClass' => House::class,
+            ],
+        ];
     }
 
     /**
@@ -46,7 +72,7 @@ class AddressController extends Controller
     }
 
     /**
-     * Displays a single Address model.
+     * Displays a single House model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -59,6 +85,82 @@ class AddressController extends Controller
     }
 
     /**
+     * Creates a new House model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $model = new House(['is_manual' => true]);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_CREATE);
+            return $this->redirect(['view', 'id' => $model->id_house]);
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Updates an existing House model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->createAction(Action::ACTION_UPDATE);
+            return $this->redirect(['view', 'id' => $model->id_house]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Deletes an existing House model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionDelete($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->delete()) {
+            $model->createAction(Action::ACTION_DELETE);
+        }
+
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionUndelete($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->restore()) {
+            $model->createAction(Action::ACTION_UNDELETE);
+        }
+
+        return $this->redirect(['index', 'archive' => 1]);
+    }
+
+    /**
      * Finds the House model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
@@ -67,7 +169,7 @@ class AddressController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = House::findOne($id)) !== null) {
+        if (($model = House::findOneWithDeleted($id)) !== null) {
             return $model;
         }
 
@@ -80,6 +182,8 @@ class AddressController extends Controller
      */
     public function actionCountry($search = '')
     {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
         $query = Country::find()->asArray();
 
         if ($search) {
@@ -104,6 +208,8 @@ class AddressController extends Controller
      */
     public function actionRegion($id_country = null, $search = '')
     {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
         $query = Region::find()
             ->joinWith('houses', false);
 
@@ -116,7 +222,7 @@ class AddressController extends Controller
             ->asArray();
 
         if ($search) {
-            $query->filterWhere(['ilike', 'name', $search]);
+            $query->filterWhere(['ilike', Region::tableName() . '.name', $search]);
         }
 
         $results = [];
@@ -137,6 +243,8 @@ class AddressController extends Controller
      */
     public function actionSubregion($id_region = null, $search = '')
     {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
         $query = Subregion::find()
             ->select(['map_subregion.id_subregion', 'map_subregion.name'])
             ->joinWith('houses', false);
@@ -173,6 +281,8 @@ class AddressController extends Controller
      */
     public function actionCity($id_region = null, $id_subregion = null, $search = '')
     {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
         if (!$id_region && !$id_subregion) {
             throw new BadRequestHttpException(Yii::t('yii', 'Missing required parameters: {params}', [
                 'params' => 'id_region или id_subregion',
@@ -212,6 +322,8 @@ class AddressController extends Controller
      */
     public function actionDistrict($id_city = null, $search = '')
     {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
         $query = District::find()
             ->select([District::tableName() . '.id_district', District::tableName() . '.name'])
             ->joinWith('houses', false);
@@ -250,6 +362,8 @@ class AddressController extends Controller
      */
     public function actionStreet($id_city, $search = '')
     {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
         $query = Street::find()
             ->select(['map_street.id_street', 'map_street.name'])
             ->joinWith('houses', false)
@@ -281,6 +395,8 @@ class AddressController extends Controller
      */
     public function actionHouse($id_street, $search = '')
     {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
         if (empty($id_street)) {
             return ['results' => []];
         };

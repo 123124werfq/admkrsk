@@ -1,13 +1,13 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Faq */
+/* @var $model common\models\District */
 
-$this->title = 'Создание вопроса';
+$this->title = 'Создание района города';
 $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="faq-create">
+<div class="district-create">
     <div class="ibox">
         <div class="ibox-content">
 

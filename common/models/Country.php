@@ -2,18 +2,33 @@
 
 namespace common\models;
 
-use Yii;
+use common\components\softdelete\SoftDeleteTrait;
+use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 
 /**
  * This is the model class for table "map_country".
  *
  * @property int $id_country
  * @property string|null $name
+ * @property int $update_at
+ * @property int $created_by
+ * @property int $updated_at
+ * @property int $updated_by
+ * @property int $deleted_at
+ * @property int $deleted_by
  *
  * @property House[] $houses
  */
 class Country extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+    use ActionTrait;
+    use SoftDeleteTrait;
+
+    const VERBOSE_NAME = 'Страна';
+    const VERBOSE_NAME_PLURAL = 'Страны';
+
     /**
      * {@inheritdoc}
      */
@@ -38,7 +53,7 @@ class Country extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_country' => 'Id Country',
+            'id_country' => '#',
             'name' => 'Страна',
         ];
     }

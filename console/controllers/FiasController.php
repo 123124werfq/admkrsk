@@ -21,25 +21,19 @@ class FiasController extends Controller
      */
     public function actionUpdateAddresses()
     {
-        //$transaction = Yii::$app->db->beginTransaction();
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             $query = FiasHouse::find()->andWhere(['divtype' => 0]);
 
             $count = 0;
             $fiasHouseCount = $query->count();
 
-            Yii::$app->db->createCommand('TRUNCATE TABLE ' . Region::tableName() . ' CASCADE')->execute();
-            Yii::$app->db->createCommand()->resetSequence(Region::tableName())->execute();
-            Yii::$app->db->createCommand('TRUNCATE TABLE ' . Subregion::tableName() . ' CASCADE')->execute();
-            Yii::$app->db->createCommand()->resetSequence(Subregion::tableName())->execute();
-            Yii::$app->db->createCommand('TRUNCATE TABLE ' . City::tableName() . ' CASCADE')->execute();
-            Yii::$app->db->createCommand()->resetSequence(City::tableName())->execute();
-            Yii::$app->db->createCommand('TRUNCATE TABLE ' . District::tableName() . ' CASCADE')->execute();
-            Yii::$app->db->createCommand()->resetSequence(District::tableName())->execute();
-            Yii::$app->db->createCommand('TRUNCATE TABLE ' . Street::tableName() . ' CASCADE')->execute();
-            Yii::$app->db->createCommand()->resetSequence(Street::tableName())->execute();
-            Yii::$app->db->createCommand('TRUNCATE TABLE ' . House::tableName() . ' CASCADE')->execute();
-            Yii::$app->db->createCommand()->resetSequence(House::tableName())->execute();
+            Region::deleteAll(['is_manual' => false]);
+            Subregion::deleteAll(['is_manual' => false]);
+            City::deleteAll(['is_manual' => false]);
+            District::deleteAll(['is_manual' => false]);
+            Street::deleteAll(['is_manual' => false]);
+            House::deleteAll(['is_manual' => false]);
 
             ProgressHelper::startProgress($count, $fiasHouseCount, "Обновление адресов: ");
 
@@ -102,8 +96,8 @@ class FiasController extends Controller
                     'houseguid' => $fiasHouse->houseguid,
                     'postalcode' => $fiasHouse->postalcode,
                     'name' => $fiasHouse->houseName,
-                    'fullname' => $fiasHouse->fullName,
                 ]);
+                $address->updateAttributes(['fullname' => $address->getFullName()]);
 
                 if ($address->save()) {
                     $count++;
@@ -113,12 +107,20 @@ class FiasController extends Controller
             }
             ProgressHelper::endProgress("100% ($count/$count) Done." . PHP_EOL);
 
-            //$transaction->commit();
+            $transaction->commit();
 
             $this->stdout(Yii::t('app', 'Обновлено {count} адресов', ['count' => $count]) . PHP_EOL);
         } catch (\Exception $e) {
-            //$transaction->rollBack();
+            $transaction->rollBack();
             throw $e;
+        }
+    }
+
+    public function actionUpdateFullname()
+    {
+        foreach (House::find()->each() as $house) {
+            /* @var House $house */
+            $house->updateAttributes(['fullname' => $house->getFullName()]);
         }
     }
 

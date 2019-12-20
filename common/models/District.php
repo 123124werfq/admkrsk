@@ -2,6 +2,9 @@
 
 namespace common\models;
 
+use common\components\softdelete\SoftDeleteTrait;
+use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 
 /**
@@ -9,11 +12,26 @@ use Yii;
  *
  * @property int $id_district
  * @property string $name
+ * @property bool $is_manual
+ * @property int $update_at
+ * @property int $created_by
+ * @property int $updated_at
+ * @property int $updated_by
+ * @property int $deleted_at
+ * @property int $deleted_by
  *
  * @property House[] $houses
  */
 class District extends \yii\db\ActiveRecord
 {
+    use MetaTrait;
+    use ActionTrait;
+    use SoftDeleteTrait;
+
+    const VERBOSE_NAME = 'Район города';
+    const VERBOSE_NAME_PLURAL = 'Районы города';
+    const TITLE_ATTRIBUTE = 'name';
+
     const DISTRICT_ZHELEZNODOROZHNIY = '04401363000';
     const DISTRICT_KIROVSKIY = '04401365000';
     const DISTRICT_LENINSKIY = '04401368000';
@@ -37,6 +55,7 @@ class District extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'string', 'max' => 255],
+            [['is_manual'], 'boolean'],
         ];
     }
 
@@ -46,8 +65,9 @@ class District extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_district' => 'Id District',
+            'id_district' => '#',
             'name' => 'Район',
+            'is_manual' => 'Добавлен вручную',
         ];
     }
 

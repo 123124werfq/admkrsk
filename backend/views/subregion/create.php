@@ -1,13 +1,15 @@
 <?php
 
-/* @var $this yii\web\View */
-/* @var $model common\models\Faq */
+use yii\helpers\Html;
 
-$this->title = 'Создание вопроса';
+/* @var $this yii\web\View */
+/* @var $model common\models\Subregion */
+
+$this->title = 'Создание района';
 $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="faq-create">
+<div class="subregion-create">
     <div class="ibox">
         <div class="ibox-content">
 

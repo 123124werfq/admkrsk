@@ -1,14 +1,14 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Faq */
+/* @var $model common\models\Street */
 
-$this->title = 'Редактировать вопрос: ' . $model->pageTitle;
+$this->title = 'Редактировать улицу: ' . $model->pageTitle;
 $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->pageTitle, 'url' => ['view', 'id' => $model->id_faq]];
+$this->params['breadcrumbs'][] = ['label' => $model->pageTitle, 'url' => ['view', 'id' => $model->id_street]];
 $this->params['breadcrumbs'][] = 'Редактирование';
 ?>
-<div class="faq-update">
+<div class="street-update">
     <div class="ibox">
         <div class="ibox-content">
 

@@ -2,6 +2,8 @@
 
 namespace common\models;
 
+use common\components\softdelete\SoftDeleteTrait;
+use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
 
@@ -11,8 +13,21 @@ use Yii;
  * @property int $id_house
  * @property string $houseguid
  * @property string $postalcode
+ * @property string $id_country
+ * @property string $id_region
+ * @property string $id_subregion
+ * @property string $id_city
+ * @property string $id_district
+ * @property string $id_street
  * @property string $name
  * @property string $fullname
+ * @property bool $is_manual
+ * @property int $update_at
+ * @property int $created_by
+ * @property int $updated_at
+ * @property int $updated_by
+ * @property int $deleted_at
+ * @property int $deleted_by
  *
  * @property FiasHouse $house
  * @property Country $country
@@ -25,10 +40,12 @@ use Yii;
 class House extends \yii\db\ActiveRecord
 {
     use MetaTrait;
+    use ActionTrait;
+    use SoftDeleteTrait;
 
     const VERBOSE_NAME = 'Адрес';
     const VERBOSE_NAME_PLURAL = 'Адреса';
-    const TITLE_ATTRIBUTE = 'fullname';
+    const TITLE_ATTRIBUTE = 'fullName';
 
     /**
      * {@inheritdoc}
@@ -46,6 +63,15 @@ class House extends \yii\db\ActiveRecord
         return [
             [['houseguid'], 'string'],
             [['postalcode', 'name', 'fullname'], 'string', 'max' => 255],
+            [['is_manual'], 'boolean'],
+            [['id_country', 'id_region', 'id_subregion', 'id_city', 'id_district', 'id_street'], 'default', 'value' => null],
+            [['id_country', 'id_region', 'id_subregion', 'id_city', 'id_district', 'id_street'], 'integer'],
+            [['id_country'], 'exist', 'targetClass' => Country::class, 'targetAttribute' => 'id_country'],
+            [['id_region'], 'exist', 'targetClass' => Region::class, 'targetAttribute' => 'id_region'],
+            [['id_subregion'], 'exist', 'targetClass' => Subregion::class, 'targetAttribute' => 'id_subregion'],
+            [['id_city'], 'exist', 'targetClass' => City::class, 'targetAttribute' => 'id_city'],
+            [['id_district'], 'exist', 'targetClass' => District::class, 'targetAttribute' => 'id_district'],
+            [['id_street'], 'exist', 'targetClass' => Street::class, 'targetAttribute' => 'id_street'],
         ];
     }
 
@@ -58,9 +84,26 @@ class House extends \yii\db\ActiveRecord
             'id_house' => '#',
             'houseguid' => 'Houseguid',
             'postalcode' => 'Почтовый индекс',
+            'id_country' => 'Страна',
+            'id_region' => 'Регион',
+            'id_subregion' => 'Район',
+            'id_city' => 'Город',
+            'id_district' => 'Район города',
+            'id_street' => 'Улица',
             'name' => 'Дом',
             'fullname' => 'Полный адрес',
+            'is_manual' => 'Добавлен вручную',
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function beforeSave($insert)
+    {
+        $this->fullname = $this->getFullName();
+
+        return parent::beforeSave($insert);
     }
 
     /**
@@ -117,5 +160,20 @@ class House extends \yii\db\ActiveRecord
     public function getStreet()
     {
         return $this->hasOne(Street::class, ['id_street' => 'id_street']);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullName()
+    {
+        return ($this->postalcode ? $this->postalcode . ', ' : null) .
+            $this->country->name . ', ' .
+            $this->region->name . ', ' .
+            ($this->subregion ? $this->subregion->name . ', ' : null) .
+            $this->city->name . ', ' .
+            ($this->district ? $this->district->name . ', ' : null) .
+            $this->street->name . ', ' .
+            $this->name;
     }
 }
