@@ -121,6 +121,22 @@ class CollectionQuery extends \yii\mongodb\Query
         return $this;
     }
 
+    public function orderByAlias(array $sorts)
+    {
+        $order = [];
+        foreach ($sorts as $alias => $sort)
+        {
+            $id_column = $this->GetIDColumnByAlias($alias);
+
+            if (!empty($id_column))
+                $order['col'.$id_column] = $sort;
+
+        }
+
+        if (!empty($order))
+            parent::orderBy($order);
+    }
+
     public function getArray()
     {
         $output = [];

@@ -18,6 +18,8 @@ img {max-width: 100%;}
 
 .checkbox input[type="checkbox"], .checkbox input[type="radio"], .radio input[type="radio"] {opacity: 1;}
 
+.input-group-space input {margin-right: 10px; margin-bottom: 10px;}
+
 .select2-container--open {z-index: 9999;}
 
 .table-valign-middle td {vertical-align: middle!important;}

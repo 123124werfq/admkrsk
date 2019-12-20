@@ -18,7 +18,8 @@
 
         function updateCoords(coords)
         {
-            $('[name="<?=$fname?><?=$cid?>"]').val(coords[0]+';'+coords[1]);
+            $('#lat<?=$cid?>').val(coords[0]);
+            $('#lon<?=$cid?>').val(coords[1]);
         }
 
         $('#toggle_wim<?=$cid?>').bind({
@@ -60,10 +61,10 @@
 
     }
 </script>
-<div class="input-group bootstrap-touchspin">
-    <span class="input-group-addon bootstrap-touchspin-prefix" style="display: none;"></span>
-    <input class="touchspin2 form-control" type="text" value="" name="<?=$fname?>[<?=$cid?>]" style="display: block;">
-    <span class="input-group-addon bootstrap-touchspin-postfix" id="toggle_wim<?=$cid?>"><i class="fa fa-map-marker"></i></span>
+<div class="input-group input-group-space">
+    <input id="lat<?=$cid?>" class="form-control" type="text" value="" name="<?=$fname?>[]" placeholder="Широта"/>
+    <input id="lon<?=$cid?>" class="form-control" type="text" value="" name="<?=$fname?>[]" placeholder="Долгота" />
+    <span class="btn btn-default btn-visible" id="toggle_wim<?=$cid?>"><i class="fa fa-map-marker"></i></span>
 </div>
 <div class="widget-input-map hidden" id="wim<?=$cid?>">
 </div>

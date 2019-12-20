@@ -44,6 +44,7 @@ class EventController extends \yii\web\Controller
 
         $collection = $model->getDataQuery()->select();
         $collection->keyAsAlias = true;
+        $collection->orderByAlias(['date'=>SORT_ASC]);
 
         if (!empty($_GET['date']))
         {
