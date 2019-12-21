@@ -17,6 +17,7 @@ use common\models\FormDynamic;
 use common\models\Form;
 use common\models\HrProfile;
 use yii\web\BadRequestHttpException;
+use yii\web\NotFoundHttpException;
 
 
 class ReserveController extends \yii\web\Controller
@@ -199,5 +200,22 @@ class ReserveController extends \yii\web\Controller
             'columns'=>$columns,
             'outvotes' => $outvotes
         ]);
+    }
+
+
+    public function actionFinal($id)
+    {
+        $contest = HrContest::findOne($id);
+
+        if(!$contest)
+            throw new BadRequestHttpException();
+
+        $votes = HrVote::find()->where(['id_contest' => $contest->id_contest])->all();
+
+        return $this->render('overall', [
+            'data' => $contest,
+            'votes' => $votes
+        ]);
+
     }
 }

@@ -189,3 +189,7 @@ table.vote thead{
 @media screen and (min-width: 992px) {
     form .row {flex-wrap: nowrap!important;}
 }
+
+table.vote thead td{
+    padding: 10px;
+}
