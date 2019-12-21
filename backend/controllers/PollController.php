@@ -49,6 +49,15 @@ class PollController extends Controller
                     ],
                     [
                         'allow' => true,
+                        'actions' => ['export'],
+                        'roles' => ['backend.poll.export'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => Poll::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
                         'actions' => ['create'],
                         'roles' => ['backend.poll.create'],
                         'roleParams' => [

@@ -809,6 +809,11 @@ class RbacController extends Controller
             $backendPollView->ruleName = $entityRule->name;
             $auth->add($backendPollView);
 
+            $backendPollExport = $auth->createPermission('backend.poll.export');
+            $backendPollExport->description = 'Экспорт опроса';
+            $backendPollExport->ruleName = $entityRule->name;
+            $auth->add($backendPollExport);
+
             $backendPollCreate = $auth->createPermission('backend.poll.create');
             $backendPollCreate->description = 'Создание опроса';
             $backendPollCreate->ruleName = $entityRule->name;
@@ -859,6 +864,7 @@ class RbacController extends Controller
             $auth->add($backendManagePoll);
             $auth->addChild($backendManagePoll, $backendPollIndex);
             $auth->addChild($backendManagePoll, $backendPollView);
+            $auth->addChild($backendManagePoll, $backendPollExport);
             $auth->addChild($backendManagePoll, $backendPollCreate);
             $auth->addChild($backendManagePoll, $backendPollQuestionCreate);
             $auth->addChild($backendManagePoll, $backendPollUpdate);
