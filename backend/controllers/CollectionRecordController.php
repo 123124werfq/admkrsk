@@ -138,26 +138,6 @@ class CollectionRecordController extends Controller
                     return implode('', $output);
                 };
             }
-            /*else if ($col->type==CollectionColumn::TYPE_FILE)
-            {
-                $dataProviderColumns[$col_alias]['format'] = 'raw';
-                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
-
-                    if (empty($model[$col_alias]))
-                        return '';
-
-                    $ids = json_decode($model[$col_alias],true);
-
-                    $medias = Media::find()->where(['id_media'=>$ids])->all();
-
-                    $output = [];
-                    foreach ($medias as $key => $media) {
-                        $output[] = '<a href="'.$media->getUrl().'" download>'.$media->name.'</a>';
-                    }
-
-                    return implode('', $output);
-                };
-            }*/
             else if ($col->type==CollectionColumn::TYPE_IMAGE)
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';

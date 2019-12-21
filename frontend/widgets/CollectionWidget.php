@@ -10,12 +10,17 @@ class CollectionWidget extends \yii\base\Widget
     public $attributes = [];
 
     public $id_collection;
-    public $columns = [];
-    public $limit = 20;
-    public $template = 'table';
-    public $group;
-    public $sort;
-    public $dir = SORT_ASC;
+    public $columns = []; // колонки для отображения
+    public $search = []; // колонки для сортировки
+
+    public $limit = 20; // записей на страницу
+
+    public $template = 'table'; // шаблон отображения
+
+    public $group; // группировка
+    public $sort; // сортировка
+    public $dir = SORT_ASC; // направление сортировки
+
     public $page;
 
     public function run()
@@ -30,6 +35,9 @@ class CollectionWidget extends \yii\base\Widget
 
             if (!empty($this->attributes['sort']))
                 $this->sort = (int)$this->attributes['sort'];
+
+            if (!empty($this->attributes['search']))
+                $this->search = (int)$this->attributes['search'];
 
             if (!empty($this->attributes['dir']))
                 $this->dir = (int)$this->attributes['dir'];
@@ -79,10 +87,20 @@ class CollectionWidget extends \yii\base\Widget
             'pageParam'=>'p'
         ]);
 
-        $query->offset(($p-1)*$pagination->limit)->limit($pagination->limit);
+        //$query->offset(($p-1)*$pagination->limit)->limit($pagination->limit);
         $query->keyAsAlias = true;
 
         $allrows = $query->getArray();
+
+        $search = [];
+
+        if (!empty($this->search) && is_array($this->search))
+        {
+            foreach ($this->search as $key => $column)
+            {
+                if ($search)
+            }
+        }
 
         // переворачиваем колонки на алиас
         $columnsByAlias = [];

@@ -159,7 +159,6 @@ class CollectionQuery extends \yii\mongodb\Query
 
                 if (is_array($value) && isset($record['col'.$id_column.'_search']))
                 {
-
                     $labels = explode(';', $record['col'.$id_column.'_search']);
 
                     $combine_value = [];
@@ -177,6 +176,28 @@ class CollectionQuery extends \yii\mongodb\Query
 
                 $output[$record['id_record']][$alias] = $value;
             }
+        }
+
+        return $output;
+    }
+
+
+    public function getStrinyfyArray()
+    {
+        $output = [];
+
+        foreach ($this->getArray() as $key => $record)
+        {
+            foreach ($record as $rkey => $value)
+            {
+                if (is_array($values))
+                {
+                    implode(glue, pieces)
+                }
+                else
+                    $output[$record['id_record']] = $emptyRow;
+            }
+
         }
 
         return $output;

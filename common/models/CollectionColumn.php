@@ -278,7 +278,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
         return [
             [['id_collection', 'name', 'type', 'alias'], 'required'],
             [['id_collection', 'id_dictionary', 'type', 'show_column_admin', 'ord'], 'default', 'value' => null],
-            [['id_collection', 'id_dictionary', 'type', 'show_column_admin', 'ord'], 'integer'],
+            [['id_collection', 'id_dictionary', 'type', 'show_column_admin', 'ord', 'protected'], 'integer'],
             [['name','alias'], 'string', 'max' => 500],
             [['variables'], 'string'],
             [['options'], 'safe'],

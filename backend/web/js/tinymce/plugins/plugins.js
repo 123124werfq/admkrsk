@@ -33,13 +33,13 @@
                     editor.windowManager.alert('Вы не выбрали список');
                 else
                 {
-                    /*var $collection = $("<collection>");
-                    $collection.data('filters',JSON.stringify(value.filters));
-                    $collection.data('columns',JSON.stringify(value.columns));
-                    $collection.attr('id',value.id_collection);
-                    $collection.text('Список #'+value.id_collection);
-                    */
-                    editor.insertContent('<collection data-columns=\''+JSON.stringify(value)+'\' data-id="'+value.id_collection+'" data-template="'+value.template+'" data-group="'+value.group+'" data-sort="'+value.sort+'" data-dir="'+value.dir+'">Список #'+value.id_collection+'.</collection>');
+                    editor.insertContent('<collection \
+                                            data-columns=\''+JSON.stringify(value)+'\' \
+                                            data-id="'+value.id_collection+'" \
+                                            data-template="'+value.template+'" \
+                                            data-group="'+value.group+'" \
+                                            data-sort="'+value.sort+'" \
+                                            data-dir="'+value.dir+'">Список #'+value.id_collection+'.</collection>');
                 }
 
                 $(".tox-button--secondary").click();

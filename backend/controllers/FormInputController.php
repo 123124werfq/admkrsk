@@ -97,7 +97,7 @@ class FormInputController extends Controller
             ];
         }
 
-        if ($model->load(Yii::$app->request->post()) && $element->load(Yii::$app->request->post()) && $model->validate() && $element->validate())
+        if ($model->load(Yii::$app->request->post()) && $element->load(Yii::$app->request->post()) && $element->validate() && $model->validate())
         {
             if (!empty($_POST['submit']) && $model->save())
             {

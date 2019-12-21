@@ -15,6 +15,7 @@ use yii\web\JsExpression;
 /* @var $form yii\widgets\ActiveForm */
 
 $filtes = $model->getViewFilters();
+
 $operators = [
     '='=>'=',
     '>'=>'>',
@@ -30,6 +31,14 @@ if (empty($filtes))
             'id_column'=>'',
             'operator'=>'',
             'value'=>'',
+        ]
+    ];
+
+if (empty($search))
+    $search = [
+        [
+            'id_column'=>'',
+            'type'=>0,
         ]
     ]
 ?>
@@ -72,7 +81,9 @@ else
         </div>
     </div>
 
-    <h3>Условия</h3>
+    <hr>
+
+    <h3>Условия фильтрации</h3>
 
     <br/>
     <div class="row">
@@ -112,7 +123,8 @@ else
     </div>
     <a onclick="return addInput('view-filters')" href="#" class="btn btn-default">Добавить еще</a>
 
-    <br/><br/>
+    <hr>
+
     <h3>Поля</h3>
     <br/>
     <div class="row">
@@ -124,9 +136,6 @@ else
         </div>
     </div>
     <div id="view-columns" class="multiyiinput sortable">
-        <?php
-            //$records = $model->getRecords('columns');
-        ?>
         <?php foreach ($model->getViewColumns() as $key => $data) {?>
             <div class="row">
                 <div class="col-sm-5">
@@ -146,6 +155,38 @@ else
         <?php }?>
     </div>
     <a onclick="return addInput('view-columns')" href="#" class="btn btn-default">Добавить еще</a>
+    <hr>
+
+    <h3>Выберите колонки для секции поиск</h3>
+    <br/>
+    <div class="row">
+        <div class="col-sm-5">
+            <label class="control-label">Колонка</label>
+        </div>
+    </div>
+    <div id="search-columns" class="multiyiinput sortable">
+    <?php foreach ($model->getSearchColumns() as $key => $data) {?>
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <?=Html::dropDownList("SearchColumns[$key][id_column]",$data['id_column'],$columns,['class'=>'form-control','id'=>'SearchColumns_id_column_'.$key,'placeholder'=>'Выберите колонку']);?>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <?=Html::dropDownList("SearchColumns[$key][type]",$data['type'],[
+                        0=>'Выпадающий список',
+                        1=>'Поиск строкой',
+                    ],['class'=>'form-control','id'=>'SearchColumns_type'.$key,'placeholder'=>'Выберите тип ввода']);?>
+                </div>
+            </div>
+            <div class="col-sm-1 col-close">
+                <a class="close btn" href="#">&times;</a>
+            </div>
+        </div>
+    <?php }?>
+    </div>
+    <a onclick="return addInput('search-columns')" href="#" class="btn btn-default">Добавить еще</a>
 
     <br/><br/>
     <center>

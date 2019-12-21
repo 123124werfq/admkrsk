@@ -47,6 +47,9 @@ class CollectionColumnController extends Controller
                 'defaultOrder' => [
                     'ord' => SORT_ASC
                 ]
+            ],
+            'pagination' => [
+                'pageSize' => 9000,
             ]
         ]);
 
@@ -139,7 +142,7 @@ class CollectionColumnController extends Controller
         $results = [];
 
         foreach ($query->all() as $column) {
-            
+
             $results[] = [
                 'id' => $column->id_column,
                 'text' => $column->name.' ('.$column->alias.')',

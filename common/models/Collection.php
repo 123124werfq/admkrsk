@@ -332,6 +332,29 @@ class Collection extends \yii\db\ActiveRecord
         return $options;
     }
 
+    public function getSearchColumns()
+    {
+        $options = json_decode($this->options,true);
+
+        if (isset($options['search']))
+            return $options['search'];
+
+        /*$options = [];
+
+        foreach ($this->parent->columns as $key => $column)
+        {
+            $options[] = [
+                'id_column'=>$column->id_column,
+                'type'=>0,
+            ];
+        }*/
+
+        return [[
+            'id_column'=>'',
+            'type'=>0,
+        ]];
+    }
+
     // DEPRECATED
     public function createForm()
     {

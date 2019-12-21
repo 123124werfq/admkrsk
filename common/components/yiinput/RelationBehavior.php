@@ -57,7 +57,6 @@ class RelationBehavior extends Behavior
 	protected function loadRecords($relation)
 	{
 		//$this->pk_field = $this->owner->primaryKey();
-
 		// получаем настройки релейшена
 		$behavior = $this->relations[$relation];
 
@@ -95,9 +94,8 @@ class RelationBehavior extends Behavior
 	public function getRecords($relation)
 	{
 		// если записи уже загружены например из post
-		if (isset($this->records[$relation])) {
+		if (isset($this->records[$relation]))
             return $this->records[$relation];
-        }
 
         return $this->loadRecords($relation);
 	}

@@ -604,6 +604,19 @@ class CollectionController extends Controller
             }
         }
 
+        if (!empty($_POST['SearchColumns']))
+        {
+            $options['search'] = [];
+
+            foreach ($_POST['SearchColumns'] as $key => $data)
+            {
+                $options['search'][] = [
+                    'id_column' => $data['id_column'],
+                    'type' => $data['type'],
+                ];
+            }
+        }
+
         if (!empty($_POST['ViewFilters']))
         {
             $options['filters'] = [];
