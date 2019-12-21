@@ -1002,7 +1002,10 @@
 
     // TOOLTIP
     if ($('.tooltip').length) {
-        $('.tooltip').tipso();
+        $('.tooltip').tipso({
+            width: NaN,
+            maxWidth: '100%'
+        });
     }
     // /TOOLTIP
 
