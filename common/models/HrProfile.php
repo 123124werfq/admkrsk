@@ -84,15 +84,12 @@ class HrProfile extends \yii\db\ActiveRecord
         parent::afterSave($insert, $changedAttributes);
 
         $positions = $this->recordData['target_positions'];
-
         foreach ($this->positions as $pos)
         {
-            if(empty($pos->id_result) && !empty($positions[$pos->id_profile_position]))
+            if(empty($pos->id_result) && empty($positions[$pos->id_record_position]))
                 $pos->delete();
             else
-                unset($positions[$pos->id_profile_position]);
-
-                //$positions = array_diff( $positions, [$pos->id_position] );
+                unset($positions[$pos->id_record_position]);
         }
 
         foreach($positions as $id_pos=>$label)
