@@ -77,7 +77,7 @@ use yii\widgets\ActiveForm;
                                                         </label>
 
                                                         <?php if ($answer->description): ?>
-                                                            <span class="tooltip top" data-tipso="<?= $answer->description ?>">?</span>
+                                                            <span class="tooltip top" data-tipso="<?= Html::encode($answer->description) ?>">?</span>
                                                         <?php endif; ?>
                                                     </div>
 
@@ -90,7 +90,7 @@ use yii\widgets\ActiveForm;
                                                         </label>
 
                                                         <?php if ($answer->description): ?>
-                                                            <span class="tooltip top" data-tipso="<?= $answer->description ?>">?</span>
+                                                            <span class="tooltip top" data-tipso="<?= Html::encode($answer->description) ?>">?</span>
                                                         <?php endif; ?>
                                                     </div>
                                                 <?php endif; ?>
