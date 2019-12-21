@@ -145,7 +145,7 @@ class MediaController extends Controller
       /*********************************************
        * Change this line to set the upload folder *
        *********************************************/
-      $imageFolder = "upload/";
+      $imageFolder = "content/" ;
 
       reset ($_FILES);
       $temp = current($_FILES);
@@ -184,13 +184,17 @@ class MediaController extends Controller
         }
 
         // Accept upload if there was no origin, or if it is an accepted origin
-        $filetowrite = $imageFolder . str_replace(['/','\\'], '_', time().'_'.$temp['name']);
-        move_uploaded_file($temp['tmp_name'], $filetowrite);
+        $filetowrite = $imageFolder . DIRECTORY_SEPARATOR . Yii::$app->security->generateRandomString() . '.' . $extension;
+
+        $stream = fopen($temp['tmp_name'], 'r+');
+        Yii::$app->publicStorage->writeStream($filetowrite, $stream);
+        fclose($stream);
+        //move_uploaded_file($temp['tmp_name'], $filetowrite);
 
         // Respond to the successful upload with JSON.
         // Use a location key to specify the path to the saved image resource.
         // { location : '/your/uploaded/image/file'}
-        return json_encode(array('location' => '/'.$filetowrite));
+        return json_encode(array('location' => Yii::$app->publicStorage->getPublicUrl($filetowrite)));
 
       } else
       {
