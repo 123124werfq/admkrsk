@@ -186,16 +186,14 @@ class CollectionQuery extends \yii\mongodb\Query
     {
         $output = [];
 
-        foreach ($this->getArray() as $key => $record)
+        foreach ($this->getArray() as $id_record => $record)
         {
             foreach ($record as $rkey => $value)
             {
                 if (is_array($values))
-                {
-                    implode(glue, pieces)
-                }
+                    $output[$id_record][$rkey] = implode('<br/>', $value);
                 else
-                    $output[$record['id_record']] = $emptyRow;
+                    $output[$id_record][$rkey] = $value;
             }
 
         }

@@ -54,7 +54,7 @@ class CollectionWidget extends \yii\base\Widget
         if (empty($model) || empty($this->columns))
             return '';
 
-        $query = $model->getDataQueryByOptions($this->columns);
+        $query = $model->getDataQueryByOptions(array_merge($this->columns),$this->search);
 
         // страница
         $p = (int)Yii::$app->request->get('p',1);
@@ -94,13 +94,18 @@ class CollectionWidget extends \yii\base\Widget
 
         $search = [];
 
-        if (!empty($this->search) && is_array($this->search))
+        /*if (!empty($this->search) && is_array($this->search))
         {
+            foreach ($allrows as $key => $value) {
+                # code...
+            }
+
             foreach ($this->search as $key => $column)
             {
+
                 if ($search)
             }
-        }
+        }*/
 
         // переворачиваем колонки на алиас
         $columnsByAlias = [];
@@ -126,6 +131,8 @@ class CollectionWidget extends \yii\base\Widget
                 'page'=>$this->page,
             ]);
         }
+
+        $allrows = array_slice($allrows, ($p-1)*20, 20);
 
         return $this->render('collection/'.$this->template,[
         	'model'=>$model,

@@ -126,7 +126,8 @@ class CollectionRecordController extends Controller
                     if (empty($model[$col_alias]))
                         return '';
 
-                    $ids = json_decode($model[$col_alias],true);
+                    //$ids = json_decode($model[$col_alias],true);
+                    $ids = $model[$col_alias];
 
                     $medias = Media::find()->where(['id_media'=>$ids])->all();
 
@@ -146,7 +147,8 @@ class CollectionRecordController extends Controller
                     if (empty($model[$col_alias]))
                         return '';
 
-                    $ids = json_decode($model[$col_alias],true);
+                    //$ids = json_decode($model[$col_alias],true);
+                    $ids = $model[$col_alias];
 
                     $medias = Media::find()->where(['id_media'=>$ids])->all();
 

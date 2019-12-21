@@ -10,9 +10,9 @@
 		<tbody>
 			<?php foreach ($allrows as $key => $row){?>
 				<tr>
-				<?php foreach ($row as $tkey => $td) {
-					echo "<td>$td</td>";
-				}?>
+				<?php foreach ($columns as $key => $column) {?>
+					<td><?=$row[$column->alias]??''?></td>
+				<?php }?>
 				</tr>
 			<?php }?>
 		</tbody>

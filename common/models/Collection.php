@@ -258,7 +258,7 @@ class Collection extends \yii\db\ActiveRecord
         return $query;
     }
 
-    public function getDataQueryByOptions($options)
+    public function getDataQueryByOptions($options,array $search_columns=[])
     {
         if (!empty($this->id_parent_collection))
             $id_collection = $this->id_parent_collection;
@@ -276,6 +276,10 @@ class Collection extends \yii\db\ActiveRecord
         {
             foreach ($options['columns'] as $key => $col)
                 $id_cols[] = $col['id_column'];
+
+            if (!empty($search_columns))
+                foreach ($search_columns as $key => $col)
+                    $id_cols[] = $col['id_column'];
 
             $query->select($id_cols);
         }
