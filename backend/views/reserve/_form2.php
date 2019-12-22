@@ -19,7 +19,9 @@ use common\models\HrProfile;
 <div class="ibox">
     <div class="ibox-content">
 
-        <?php $form = ActiveForm::begin(); ?>
+        <?php $form = ActiveForm::begin([
+            'enableClientValidation' => false,
+        ]); ?>
 
         <?= $form->field($model, 'title')->textInput() ?>
 
@@ -54,12 +56,34 @@ use common\models\HrProfile;
             ->dropDownList(ArrayHelper::map(HrExpert::find()->where(['state' => 1])->all(),'id_expert','name'));
         ?>
 
+
+        <?php
+            $expertsSelected = [];
+
+            foreach ($model->experts as $expert)
+            {
+                $expertsSelected[$expert->id_expert] = ['Selected' => true];
+            }
+
+        ?>
+
         <?=
             $form->field($model, 'experts[]')
                 ->dropDownList(ArrayHelper::map(HrExpert::find()->where(['state' => 1])->all(),'id_expert','name'),
                     [
                         'multiple'=>'multiple',
+                        'options' => $expertsSelected
                     ]);
+        ?>
+
+        <?php
+            $profilesSelected = [];
+
+            foreach ($model->profiles as $profile)
+            {
+                $profilesSelected[$profile->id_profile] = ['Selected' => true];
+            }
+
         ?>
 
         <?=
@@ -67,8 +91,22 @@ use common\models\HrProfile;
                 ->dropDownList(ArrayHelper::map(HrProfile::find()->where(['reserve_date' => null])->all(),'id_profile','name'),
                     [
                         'multiple'=>'multiple',
+                        'options' => $profilesSelected
                     ]);
         ?>
+
+        <?=
+        $form->field($model, 'state')
+            ->dropDownList(
+                [
+                    \common\models\HrContest::STATE_NOT_STARTED => 'Не начато' ,
+                    \common\models\HrContest::STATE_STARTED => 'Текущее',
+                    \common\models\HrContest::STATE_CLOSED => 'Подводятся итоги',
+                    \common\models\HrContest::STATE_FINISHED => 'Итоги подведены'
+                ]);
+        ?>
+
+        <?= $form->field($model, 'notification')->textarea(['rows' => 6, 'class'=>'redactor']) ?>
 
 
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

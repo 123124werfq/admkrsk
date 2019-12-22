@@ -70,6 +70,16 @@ use common\models\HrProfile;
                     ]);
         ?>
 
+        <?=
+        $form->field($model, 'state')
+            ->dropDownList(
+                [
+                    \common\models\HrContest::STATE_NOT_STARTED => 'Не начато' ,
+                    \common\models\HrContest::STATE_STARTED => 'Текущее',
+                    \common\models\HrContest::STATE_CLOSED => 'Подводятся итоги',
+                    \common\models\HrContest::STATE_FINISHED => 'Итоги подведены'
+                ]);
+        ?>
 
 
         <?= $form->field($model, 'notification')->textarea(['rows' => 6, 'class'=>'redactor']) ?>

@@ -77,6 +77,10 @@ class ReserveController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
 //            $model->createAction(Action::ACTION_UPDATE);
+
+
+            // ToDo: изменить список экспертов и резервистов
+
             return $this->redirect('/reserve/contest');
         }
 
@@ -199,6 +203,32 @@ class ReserveController extends Controller
             throw new NotFoundHttpException('Ошибка чтения данных');
 
         return $this->redirect('/collection-record/update?id='.$profile->id_record);
+    }
+
+    public function actionStop($id)
+    {
+        $contest = HrContest::findOne($id);
+
+        if (empty($contest))
+            throw new NotFoundHttpException('Ошибка чтения данных');
+
+        $contest->state = HrContest::STATE_CLOSED;
+        $contest->end = time()-60;
+
+        $contest->updateAttributes(['state', 'end']);
+
+        return $this->redirect('/reserve/contest');
+
+    }
+
+    public function actionDynamic($id = 0)
+    {
+        if(!id)
+            $contest = HrContest::active();
+        else
+            $contest = HrContest::findOne($id);
+
+        
     }
 
 

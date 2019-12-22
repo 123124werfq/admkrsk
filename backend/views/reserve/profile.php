@@ -91,7 +91,7 @@ if (Yii::$app->user->can('admin.service')) {
             */
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {edtable} {ban} {archive} ',
+                'template' => '{view} {editable} {ban} {archive} ',
                 'buttons' => [
                     'archive' => function($url, $model, $key) {
                         $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-floppy-disk"]);

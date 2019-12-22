@@ -49,8 +49,8 @@ class HrContest extends \yii\db\ActiveRecord
     {
         return [
             [['id_user', 'begin', 'end', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
-            [['id_user', 'begin', 'end', 'state', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
-            [['title'], 'string'],
+            [['id_user', 'begin', 'end', 'state', 'notification_sent','created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['title', 'notification'], 'string'],
         ];
     }
 
@@ -67,6 +67,7 @@ class HrContest extends \yii\db\ActiveRecord
             'end' => 'Дата завершения',
             'state' => 'Статус',
             'autostart' => 'Автоматическое начало голосования',
+            'notification' => 'Сообщение экспертам',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
@@ -89,6 +90,17 @@ class HrContest extends \yii\db\ActiveRecord
         ];
     }
 
+    public function beforeValidate()
+    {
+        if (!empty($this->begin) && !is_numeric($this->begin))
+            $this->begin = strtotime($this->begin);
+
+        if (!empty($this->end) && !is_numeric($this->end))
+            $this->end = strtotime($this->end);
+
+        return parent::beforeValidate();
+    }
+
     public function getPositions()
     {
         return $this->hasMany(HrProfilePositions::class, ['id_profile' => 'id_profile']);
@@ -109,16 +121,38 @@ class HrContest extends \yii\db\ActiveRecord
         return $this->hasMany(HrResult::class, ['id_contest' => 'id_contest']);
     }
 
-
-    public function getStatename()
+    public function getStatename($button = false)
     {
-        switch ($this->state){
-            case HrContest::STATE_STARTED: return 'Текущее';
-            case HrContest::STATE_CLOSED: return 'Подводятся итоги';
-            case HrContest::STATE_FINISHED: return 'Итоги подведены';
-        }
+        if(!$button) {
 
-        return 'Не начато';
+            switch ($this->state) {
+                case HrContest::STATE_STARTED:
+                    return 'Текущее';
+                case HrContest::STATE_CLOSED:
+                    return 'Подводятся итоги';
+                case HrContest::STATE_FINISHED:
+                    return 'Итоги подведены';
+            }
+
+            return 'Не начато';
+
+        } else {
+            switch ($this->state) {
+                case HrContest::STATE_STARTED:
+                    return '<span class="badge badge-danger">Текущее</span>';
+                case HrContest::STATE_CLOSED:
+                    return '<span class="badge badge-warning">Подводятся итоги</span>';
+                case HrProfile::STATE_HIRED:
+                    return '<span class="badge badge-info">Итоги подведены</span>';
+            }
+            return '<span class="badge badge-secondary">Не начато</span>';
+
+        }
+    }
+
+    static public function active()
+    {
+        return HrContest::find()->where(['state' => HrContest::STATE_STARTED])->orderBy(['start DESC'])->one();
     }
 
 }

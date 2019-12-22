@@ -22,6 +22,9 @@ if (Yii::$app->user->can('admin.service')) {
     $this->params['button-block'][] = Html::a('Добавить', ['create'], ['class' => 'btn btn-success']);
 }
 */
+
+$this->params['button-block'][] = Html::a('Добавить', ['create'], ['class' => 'btn btn-success']);
+
 ?>
 
 <div class="service-index">
@@ -33,16 +36,22 @@ if (Yii::$app->user->can('admin.service')) {
             'id_contest:integer:ID',
             'title',
             [
-                'label' => 'Начало',
+                'label' => 'Период',
+                'format' => 'html',
                 'value' => function($model){
-                    return date("d-m-Y H:i", $model->begin);
+                    $info = '';
+
+                    if($model->end < time())  $info = "<br>Время голосования истекло";
+
+                    return date("d-m-Y H:i", $model->begin) . " - " . date("d-m-Y H:i", $model->end) . $info;
                 }
             ],
             [
-                'label' => 'Окончание',
+                'label'=> 'Статус',
+                'format' => 'html',
                 'value' => function($model){
-                    return date("d-m-Y H:i", $model->end);
-                }
+                    return $model->getStatename(true);
+                },
             ],
             [
                 'label' => 'Претенденты',
@@ -50,7 +59,7 @@ if (Yii::$app->user->can('admin.service')) {
                 'value' => function($model){
                     $pretenders = [];
                     foreach ($model->profiles as $profile) {
-                        $pretenders[] = $profile->name;
+                        $pretenders[] = "<a href='/reserve/editable?id={$profile->id_profile}' target='_blank'>".$profile->name."</a>";
                     }
                     return implode('<br>', $pretenders);
                 }
