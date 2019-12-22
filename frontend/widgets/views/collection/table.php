@@ -3,15 +3,15 @@
 	use yii\widgets\Pjax;
 ?>
 <?php if (!empty($search_columns)){?>
-	<div class="search-table">
+	<form class="search-table" data-hash="<?=$unique_hash?>" action="" >
 	<?php foreach ($search_columns as $key => $column)
 	{
 		if ($column['type']==0)
-			echo Html::dropDownList('search_column['.$column['column']->id_column.']','',$column['values'],['class'=>'form-control','prompt'=>$column['column']->name]);
+			echo Html::dropDownList('search_column['.$unique_hash.']['.$column['column']->id_column.']','',$column['values'],['class'=>'form-control','prompt'=>$column['column']->name]);
 		else
-			echo Html::textInput('search_column['.$column['column']->id_column.']','',['class'=>'form-control','placeholder'=>$column['column']->name,'max-lenght'=>255]);
+			echo Html::textInput('search_column['.$unique_hash.']['.$column['column']->id_column.']','',['class'=>'form-control','placeholder'=>$column['column']->name,'max-lenght'=>255]);
 	 }?>
-	</div>
+	 </form>
 <?php }?>
 <?php Pjax::begin([
 	'id' => $unique_hash,

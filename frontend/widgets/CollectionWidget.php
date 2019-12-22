@@ -54,6 +54,8 @@ class CollectionWidget extends \yii\base\Widget
         if (empty($model) || empty($this->columns))
             return '';
 
+        $unique_hash = $this->id_collection.md5(serialize($this->columns));
+
         $query = $model->getDataQueryByOptions($this->columns);
 
         // страница
@@ -73,6 +75,20 @@ class CollectionWidget extends \yii\base\Widget
                     $search_columns[$column_search['id_column']]['values'] = [];
                 }
             }
+
+
+        if (!empty($_GET['search_column'][$unique_hash]))
+        {
+            $search = $_GET['search_column'][$unique_hash];
+            if (is_array($search))
+            {
+                foreach ($search as $id_col => $search_col)
+                {
+                    if (isset($search_columns[$id_col]) && $search_col!=='' && $search_col!==NULL)
+                        $query->where(['col'.$id_col=>$search_col]);
+                }
+            }
+        }
 
         // массив сортировки
         $orderBy = [];
@@ -161,8 +177,6 @@ class CollectionWidget extends \yii\base\Widget
         }
 
         $allrows = array_slice($allrows, ($p-1)*20, 20);
-
-        $unique_hash = $this->id_collection.md5(serialize($this->columns));
 
         return $this->render('collection/'.$this->template,[
         	'model'=>$model,

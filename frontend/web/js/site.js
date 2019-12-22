@@ -48,6 +48,16 @@ function addInput(block)
 
 $(document).ready(function() {
 
+    $(".search-table select, .search-table input").change(function(){
+        var $form = $(this).closest('form');
+        $.pjax({
+            container: '#'+$form.data('hash'),
+            data: $form.serialize(),
+            timeout:10000,
+            //dataType: 'application/json'
+        });
+    });
+
     $("#Complaint_id_firm").change(function(){
 
         $.ajax({
