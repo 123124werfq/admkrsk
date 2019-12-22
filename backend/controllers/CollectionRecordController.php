@@ -123,7 +123,7 @@ class CollectionRecordController extends Controller
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
                 $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
 
-                    if (empty($model[$col_alias]))
+                    if (empty($model[$col_alias]) || !is_array($model[$col_alias]))
                         return '';
 
                     //$ids = json_decode($model[$col_alias],true);
@@ -144,7 +144,7 @@ class CollectionRecordController extends Controller
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
                 $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
 
-                    if (empty($model[$col_alias]))
+                    if (empty($model[$col_alias]) || !is_array($model[$col_alias]))
                         return '';
 
                     //$ids = json_decode($model[$col_alias],true);

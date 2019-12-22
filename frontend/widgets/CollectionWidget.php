@@ -36,8 +36,8 @@ class CollectionWidget extends \yii\base\Widget
             if (!empty($this->attributes['sort']))
                 $this->sort = (int)$this->attributes['sort'];
 
-            if (!empty($this->attributes['search']))
-                $this->search = (int)$this->attributes['search'];
+            /*if (!empty($this->attributes['search']))
+                $this->search = (int)$this->attributes['search'];*/
 
             if (!empty($this->attributes['dir']))
                 $this->dir = (int)$this->attributes['dir'];
@@ -54,13 +54,25 @@ class CollectionWidget extends \yii\base\Widget
         if (empty($model) || empty($this->columns))
             return '';
 
-        $query = $model->getDataQueryByOptions(array_merge($this->columns),$this->search);
+        $query = $model->getDataQueryByOptions($this->columns);
 
         // страница
         $p = (int)Yii::$app->request->get('p',1);
 
         // колонки коллекции
         $columns = $query->columns;
+
+        $search_columns = [];
+        if (!empty($this->columns['search']))
+            foreach ($this->columns['search'] as $key => $column_search)
+            {
+                if (isset($columns[$column_search['id_column']]))
+                {
+                    $search_columns[$column_search['id_column']]['column'] = $columns[$column_search['id_column']];
+                    $search_columns[$column_search['id_column']]['type'] = $column_search['type'];
+                    $search_columns[$column_search['id_column']]['values'] = [];
+                }
+            }
 
         // массив сортировки
         $orderBy = [];
@@ -92,20 +104,24 @@ class CollectionWidget extends \yii\base\Widget
 
         $allrows = $query->getArray();
 
-        $search = [];
-
-        /*if (!empty($this->search) && is_array($this->search))
+        if (!empty($search_columns))
         {
-            foreach ($allrows as $key => $value) {
-                # code...
-            }
-
-            foreach ($this->search as $key => $column)
+            foreach ($allrows as $rkey => $row)
             {
+                foreach ($search_columns as $key => $search_column)
+                {
+                    if ($search_column->type == 1)
+                        continue;
 
-                if ($search)
+                    $alias = $search_column['column']->alias;
+
+                    if (!empty($row[$alias]) && (is_string($row[$alias]) ||is_number($row[$alias])))
+                    {
+                        $search_columns[$key]['values'][$row[$alias]] = $row[$alias];
+                    }
+                }
             }
-        }*/
+        }
 
         // переворачиваем колонки на алиас
         $columnsByAlias = [];
@@ -139,6 +155,7 @@ class CollectionWidget extends \yii\base\Widget
             'pagination'=>$pagination,
             'columns'=>$columnsByAlias,
             'allrows'=>$allrows,
+            'search_columns'=>$search_columns,
             'page'=>$this->page,
         ]);
     }

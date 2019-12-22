@@ -17,6 +17,8 @@ use Yii;
  */
 class CollectionColumn extends \yii\db\ActiveRecord
 {
+    //public $values = []; // array of values for dropdown search
+
     const TYPE_INPUT = 1;
     const TYPE_INTEGER = 10;
     const TYPE_DATE = 11;

@@ -277,8 +277,8 @@ class Collection extends \yii\db\ActiveRecord
             foreach ($options['columns'] as $key => $col)
                 $id_cols[] = $col['id_column'];
 
-            if (!empty($search_columns))
-                foreach ($search_columns as $key => $col)
+            if (!empty($options['search']))
+                foreach ($options['search'] as $key => $col)
                     $id_cols[] = $col['id_column'];
 
             $query->select($id_cols);
