@@ -6,7 +6,7 @@
 		if ($column['type']==0)
 			echo Html::dropDownList('search_column['.$column['column']->id_column.']','',$column['values'],['class'=>'form-control','prompt'=>$column['column']->name]);
 		else
-			echo Html::textInput('search_column['.$column->id_column.']','',['class'=>'form-control','placeholder'=>$column->name,'max-lenght'=>255]);
+			echo Html::textInput('search_column['.$column['column']->id_column.']','',['class'=>'form-control','placeholder'=>$column['column']->name,'max-lenght'=>255]);
 	 }?>
 	</div>
 <?php }?>
