@@ -1,4 +1,7 @@
-<?php use yii\helpers\Html;?>
+<?php 
+	use yii\helpers\Html;
+	use yii\widgets\Pjax;
+?>
 <?php if (!empty($search_columns)){?>
 	<div class="search-table">
 	<?php foreach ($search_columns as $key => $column)
@@ -10,6 +13,10 @@
 	 }?>
 	</div>
 <?php }?>
+<?php Pjax::begin([
+	'id' => $unique_hash,
+	//'enablePushState' => false,
+]) ?>
 <div class="table-responsive">
 	<table>
 		<thead>
@@ -33,3 +40,4 @@
 	    'pagination' => $pagination,
 	]);?>
 </div>
+<?php Pjax::end(); ?>

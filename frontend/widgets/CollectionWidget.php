@@ -93,9 +93,21 @@ class CollectionWidget extends \yii\base\Widget
         if (!empty($orderBy))
             $query->orderBy($orderBy);
 
+        $url = parse_url(Yii::$app->request->url);
+
+        if (!empty($url['query']))
+        {
+            parse_str($url['query'],$url_query); 
+            unset($url_query['p']);
+            unset($url_query['_pjax']);
+            $url = $url['path'].http_build_query($url_query);
+        }
+        else 
+            $url = Yii::$app->request->url;
+
         $pagination = new Pagination([
             'totalCount' => $query->count(),
-            'route'=>str_replace('?p='.$p,'',Yii::$app->request->url),
+            'route'=>$url,
             'pageParam'=>'p'
         ]);
 
@@ -150,6 +162,8 @@ class CollectionWidget extends \yii\base\Widget
 
         $allrows = array_slice($allrows, ($p-1)*20, 20);
 
+        $unique_hash = $this->id_collection.md5(serialize($this->columns));
+
         return $this->render('collection/'.$this->template,[
         	'model'=>$model,
             'pagination'=>$pagination,
@@ -157,6 +171,7 @@ class CollectionWidget extends \yii\base\Widget
             'allrows'=>$allrows,
             'search_columns'=>$search_columns,
             'page'=>$this->page,
+            'unique_hash'=>$unique_hash,
         ]);
     }
 }

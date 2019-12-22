@@ -22,8 +22,8 @@
     opacity: 0;
 }
 
-.search-table {display: flex; justify-content: space-between;}
-.search-table input, .search-table select {margin: 0px 5px;}
+.search-table {display: flex; justify-content: space-between; flex-wrap: wrap;}
+.search-table input, .search-table select {padding: 10px!important; width: 33%!important;}
 
 .header-search{padding: 10px; border: none; border-radius: 5px; width: 100%;}
 
