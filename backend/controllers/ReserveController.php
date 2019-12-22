@@ -161,6 +161,45 @@ class ReserveController extends Controller
         ]);
     }
 
+    public function actionBan($id)
+    {
+        $profile = HrProfile::findOne($id);
+
+        if (empty($profile))
+            throw new NotFoundHttpException('Ошибка чтения данных');
+
+        if($profile->state == HrProfile::STATE_ACTIVE)
+            $profile->state = HrProfile::STATE_BANNED;
+        else if($profile->state == HrProfile::STATE_BANNED)
+            $profile->state = HrProfile::STATE_ACTIVE;
+
+        $profile->updateAttributes(['state']);
+
+        $this->redirect('/reserve/profile');
+    }
+
+    public function actionArchive($id)
+    {
+        $profile = HrProfile::findOne($id);
+
+        if (empty($profile))
+            throw new NotFoundHttpException('Ошибка чтения данных');
+
+        $profile->state = HrProfile::STATE_ARCHIVED;
+
+        $profile->updateAttributes(['state']);
+
+    }
+
+    public function actionEditable($id)
+    {
+        $profile = HrProfile::findOne($id);
+
+        if (empty($profile))
+            throw new NotFoundHttpException('Ошибка чтения данных');
+
+        return $this->redirect('/collection-record/update?id='.$profile->id_record);
+    }
 
 
 }

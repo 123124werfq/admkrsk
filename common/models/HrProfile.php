@@ -170,16 +170,39 @@ class HrProfile extends \yii\db\ActiveRecord
         return $result;
     }
 
-    public function getStatename()
+    public function getStatename($button = false)
     {
-        switch ($this->state){
-            case HrProfile::STATE_ACTIVE: return 'Активно';
-            case HrProfile::STATE_RESERVED: return 'В кадровом резерве';
-            case HrProfile::STATE_HIRED: return 'Принят на должность';
-            case HrProfile::STATE_BANNED: return 'Заблокирован к участию';
-            case HrProfile::STATE_ARCHIVED: return 'В архиве';
+        if(!$button) {
+            switch ($this->state) {
+                case HrProfile::STATE_ACTIVE:
+                    return 'Активно';
+                case HrProfile::STATE_RESERVED:
+                    return 'В кадровом резерве';
+                case HrProfile::STATE_HIRED:
+                    return 'Принят на должность';
+                case HrProfile::STATE_BANNED:
+                    return 'Заблокирован к участию';
+                case HrProfile::STATE_ARCHIVED:
+                    return 'В архиве';
+            }
+            return 'Активно';
         }
-        return 'Активно';
+        else {
+            switch ($this->state) {
+                case HrProfile::STATE_ACTIVE:
+                    return '<span class="badge badge-primary">Активно</span>';
+                case HrProfile::STATE_RESERVED:
+                    return '<span class="badge badge-warning">В кадровом резерве</span>';
+                case HrProfile::STATE_HIRED:
+                    return '<span class="badge badge-info">Принят на должность</span>';
+                case HrProfile::STATE_BANNED:
+                    return '<span class="badge badge-danger">Заблокирован к участию</span>';
+                case HrProfile::STATE_ARCHIVED:
+                    return '<span class="badge badge-secondary">В архиве</span>';
+            }
+            return '<span class="badge badge-primary">Активно</span>';
+
+        }
     }
 
 
