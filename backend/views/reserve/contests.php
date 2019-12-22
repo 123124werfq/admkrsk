@@ -9,7 +9,7 @@ use yii\grid\GridView;
 
 $archive = Yii::$app->request->get('archive');
 
-$this->title = 'Конкурсы';
+$this->title = 'Голосования';
 $this->params['breadcrumbs'][] = $this->title;
 
 /*
@@ -79,7 +79,7 @@ $this->params['button-block'][] = Html::a('Добавить', ['create'], ['clas
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{edit} {stop}',
+                'template' => '{dynamic} {edit} {stop}',
                 'buttons' => [
                     'stop' => function($url, $model, $key) {
                         $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-stop"]);
@@ -97,7 +97,14 @@ $this->params['button-block'][] = Html::a('Добавить', ['create'], ['clas
                             'data-pjax' => '0',
                         ]);
                     },
-
+                    'dynamic' => function($url, $model, $key) {
+                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-list-alt"]);
+                        return Html::a($icon, $url, [
+                            'title' => 'Результаты',
+                            'aria-label' => 'Результаты',
+                            'data-pjax' => '0',
+                        ]);
+                    },
                 ],
                 'contentOptions'=>['class'=>'button-column'],
             ],

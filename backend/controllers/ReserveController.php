@@ -6,6 +6,7 @@ use common\models\CollectionRecord;
 use common\models\HrContest;
 use common\models\HrExpert;
 use common\models\HrProfile;
+use common\models\HrVote;
 use Yii;
 
 use yii\data\ActiveDataProvider;
@@ -223,12 +224,20 @@ class ReserveController extends Controller
 
     public function actionDynamic($id = 0)
     {
-        if(!id)
+        $votes = [];
+        if(!$id)
             $contest = HrContest::active();
         else
             $contest = HrContest::findOne($id);
 
-        
+        if($contest)
+            $votes = HrVote::find()->where(['id_contest' => $contest->id_contest])->all();
+
+        return $this->render('dynamic', [
+            'data' => $contest,
+            'votes' => $votes
+        ]);
+
     }
 
 

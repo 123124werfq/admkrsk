@@ -152,7 +152,7 @@ class HrContest extends \yii\db\ActiveRecord
 
     static public function active()
     {
-        return HrContest::find()->where(['state' => HrContest::STATE_STARTED])->orderBy(['start DESC'])->one();
+        return HrContest::find()->where(['state' => HrContest::STATE_STARTED])->orderBy('state DESC')->one();
     }
 
 }
