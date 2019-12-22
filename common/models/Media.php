@@ -90,6 +90,11 @@ class Media extends \yii\db\ActiveRecord
         ];
     }
 
+    public function isImage()
+    {
+        return (!empty($this->width));
+    }
+
     public function getImageAttributes($file,$post=array())
     {
         $filename = $file;

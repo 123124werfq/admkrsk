@@ -153,18 +153,22 @@ class FormDynamic extends DynamicModel
                         {
                             foreach ($this->$attribute as $key => $file)
                             {
-                                $media = new Media;
-                                $media->getImageAttributes($file['file_path'],$file);
+                                if (empty($file['id_media']))
+                                {
+                                    $media = new Media;
+                                    $media->getImageAttributes($file['file_path'],$file);
 
-                                if ($media->save())
-                                    $media->saveFile();
+                                    if ($media->save())
+                                        $media->saveFile();
 
-                                $data[$index][] = $media->id_media;
+                                    $data[$index][] = $media->id_media;
+                                }
+                                else 
+                                    $data[$index][] = (int)$file['id_media'];
                             }
                         }
 
                         $data[$index] = $data[$index];
-                        //$data[$index] = json_encode($data[$index]);
 
                         break;
                     default:

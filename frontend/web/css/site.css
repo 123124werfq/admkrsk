@@ -200,15 +200,17 @@ table.vote thead td{
 
 .content table tbody td {padding: 11px 8px!important;}
 
-#personnel_form_layout td, .personnel_block_index, .personnel_block_header, #personnel_form_layout .personnel_form_field_value input, #personnel_form_layout select, #personnel_form_layout textarea, .ui-menu .ui-menu-item a {
+#personnel_form_layout td, .personnel_block_subheader,.personnel_block_index, .personnel_block_header, #personnel_form_layout .personnel_form_field_value input, #personnel_form_layout select, #personnel_form_layout textarea, .ui-menu .ui-menu-item a {
     font-size: 10pt;
     font-family: Trebuchet MS, Tahoma, Arial, sans-serif;
     vertical-align: top;
 }
 
+/*.personnel_block_header, .personnel_block_subheader {width: 200px;}*/
+
 .personnel_block_index {padding-top: 5px;}
 
-.personnel_block_header, .personnel_block_content {
+.personnel_block_header, .personnel_block_content,.personnel_block_subheader  {
     padding: 8px!important;
 }
 

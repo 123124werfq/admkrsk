@@ -122,6 +122,17 @@ JS;
 				if (!empty($options['maxFiles']))
 					$dataOptions[] = 'data-maxfiles="'.$options['maxFiles'].'"';
 
+				$file_uploaded = '';
+
+				$id_medias = $model->$clearAttribute;
+
+				if (!empty($id_medias))
+				{
+					$medias = \common\models\Media::find()->where(['id_media'=>$id_medias])->all();
+					foreach ($medias as $mkey => $media)
+						$file_uploaded .= $this->render('_file',['media'=>$media,'attribute'=>$attribute,'index'=>$mkey]);
+				}
+
 				echo'
 				<div data-input="'.$input->id_input.'" class="fileupload" '.implode(' ', $dataOptions).'>
 	                <div class="fileupload_dropzone">
@@ -134,7 +145,7 @@ JS;
 	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — '.(!empty($options['filesize'])?$options['filesize']:'10').' Мб</p>
 	                    </div>
 	                </div>
-	                <div class="fileupload_list"></div>
+	                <div class="fileupload_list">'.$file_uploaded.'</div>
 	            </div>';
 				break;
 			case CollectionColumn::TYPE_IMAGE:
@@ -145,6 +156,18 @@ JS;
 
 				if (!empty($options['maxFiles']))
 					$dataOptions[] = 'data-maxFiles="'.$options['maxFiles'].'"';
+
+				$id_medias = $model->$clearAttribute;
+
+				$file_uploaded = '';
+
+				if (!empty($id_medias))
+				{
+					$medias = \common\models\Media::find()->where(['id_media'=>$id_medias])->all();
+
+					foreach ($medias as $mkey => $media)
+						$file_uploaded .= $this->render('_file',['media'=>$media,'attribute'=>$attribute,'index'=>$mkey]);
+				}
 
 				echo'
 				<div data-input="'.$input->id_input.'" class="fileupload" '.implode(' ', $dataOptions).' >
@@ -158,7 +181,7 @@ JS;
 	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — '.(!empty($options['filesize'])?$options['filesize']:'10').' Мб</p>
 	                    </div>
 	                </div>
-	                <div class="fileupload_list"></div>
+	                <div class="fileupload_list">'.$file_uploaded.'</div>
 	            </div>';
 				break;
 			case CollectionColumn::TYPE_RADIO:

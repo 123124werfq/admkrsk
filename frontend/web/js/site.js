@@ -338,7 +338,7 @@ $(document).ready(function() {
 
     $(".fileupload").each(function(){
         var id_input = $(this).data('input');
-        var new_index = 0;
+        var new_index = $(this).find('.fileupload_item').length+1;
         var maxFiles = $(this).data('maxfiles');
         var acceptedFiles = $(this).data('acceptedfiles');
 
