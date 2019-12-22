@@ -23,6 +23,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
     public $data;
 
     public $loadData = [];
+    public $loadDataAlias = [];
 
     /**
      * {@inheritdoc}
@@ -60,6 +61,14 @@ class CollectionRecord extends \yii\db\ActiveRecord
             'deleted_at' => 'Deleted At',
             'deleted_by' => 'Deleted By',
         ];
+    }
+
+    public function __get($name)
+    {
+       if (isset($this->loadDataAlias[$name]))
+          return $this->loadDataAlias[$name];
+
+       return parent::__get($name);
     }
 
     public function getLineValue()
@@ -215,7 +224,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
         $output = [];
         foreach ($this->collection->columns as $key => $column)
         {
-                 
+
         }
     }*/
 
@@ -233,7 +242,14 @@ class CollectionRecord extends \yii\db\ActiveRecord
         $record = $record->getArray();
 
         if (!empty($record))
-            $this->loadData = $record = array_shift($record);
+        {
+            $record = array_shift($record);
+
+            foreach ($columns as $key => $column)
+                $this->loadDataAlias[$column['alias']] = $record[$column->id_column];
+
+            $this->loadData = $record;
+        }
         else
             return [];
 
@@ -249,12 +265,12 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
         if (!empty($keyAsAlias))
         {
-            $aliased = [];
+            /*$aliased = [];
 
             foreach ($columns as $key => $column)
-                $aliased[$column['alias']] = $record[$column->id_column];
+                $aliased[$column['alias']] = $record[$column->id_column];*/
 
-            return $aliased;
+            return $this->loadDataAlias;
         }
         else
             return $record;
