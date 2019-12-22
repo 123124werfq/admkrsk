@@ -21,6 +21,11 @@ use Yii;
  */
 class HrProfilePositions extends \yii\db\ActiveRecord
 {
+
+    const STATE_OPEN = 0;
+    const STATE_RESERVED = 1;
+    const STATE_HIRED = 2;
+
     /**
      * {@inheritdoc}
      */

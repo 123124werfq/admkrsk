@@ -6,6 +6,9 @@ use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use common\behaviors\AccessControlBehavior;
+use common\components\softdelete\SoftDeleteTrait;
+use common\modules\log\behaviors\LogBehavior;
+
 
 
 
@@ -26,6 +29,15 @@ use common\behaviors\AccessControlBehavior;
  */
 class HrProfile extends \yii\db\ActiveRecord
 {
+
+    use SoftDeleteTrait;
+
+    const STATE_ACTIVE = 0;
+    const STATE_RESERVED = 1;
+    const STATE_HIRED = 2;
+    const STATE_BANNED = 3;
+    const STATE_ARCHIVED = 99;
+
     /**
      * {@inheritdoc}
      */
@@ -71,6 +83,7 @@ class HrProfile extends \yii\db\ActiveRecord
         return [
             'ts' => TimestampBehavior::class,
             'ba' => BlameableBehavior::class,
+            'log' => LogBehavior::class
             /*
             'ac' => [
                 'class' => AccessControlBehavior::class,
@@ -99,6 +112,7 @@ class HrProfile extends \yii\db\ActiveRecord
                 $profilePosition = new HrProfilePositions;
                 $profilePosition->id_profile = $this->id_profile;
                 $profilePosition->id_record_position = $id_pos;
+                $profilePosition->state = HrProfilePositions::STATE_OPEN;
                 $profilePosition->save();
             }
         }
@@ -140,5 +154,33 @@ class HrProfile extends \yii\db\ActiveRecord
     {
         return $this->user->getUsername();
     }
+
+    public function canUseInContest()
+    {
+        $result = false;
+
+        if($this->state == HrProfile::STATE_ARCHIVED || $this->state == HrProfile::STATE_BANNED)
+            return false;
+
+        foreach ($this->positions as $pos){
+            if($pos->state == 0 || is_null($pos->state))
+                $result = true;
+        }
+
+        return $result;
+    }
+
+    public function getStatename()
+    {
+        switch ($this->state){
+            case HrProfile::STATE_ACTIVE: return 'Активно';
+            case HrProfile::STATE_RESERVED: return 'В кадровом резерве';
+            case HrProfile::STATE_HIRED: return 'Принят на должность';
+            case HrProfile::STATE_BANNED: return 'Заблокирован к участию';
+            case HrProfile::STATE_ARCHIVED: return 'В архиве';
+        }
+        return 'Активно';
+    }
+
 
 }
