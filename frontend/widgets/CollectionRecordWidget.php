@@ -7,14 +7,27 @@ use common\models\Collection;
 class CollectionRecordWidget extends \yii\base\Widget
 {
     public $collectionRecord;
-    public $renderTemplate = 0;
+    public $renderTemplate = false;
+    public $templateAsElement = false;
 
     public function run()
     {
-        $columns = $this->collectionRecord->collection->columns;
+    	$template = '';
 
-        return $this->render(($this->renderTemplate && !empty($this->collectionRecord->collection->template))?'collection/_template':'collection/_record',[
-        	'template'=>$this->renderTemplate?$this->collectionRecord->collection->template:'',
+    	if ($this->renderTemplate)
+    	{
+    		if ($this->templateAsElement)
+    			$template = $this->collectionRecord->collection->template_element;
+    		else
+    			$template = $this->collectionRecord->collection->template;
+
+        	$columns = $this->collectionRecord->collection->getColumns()->indexBy('alias')->all();
+    	}
+        else
+        	$columns = $this->collectionRecord->collection->columns;
+
+        return $this->render($this->renderTemplate?'collection/_template':'collection/_record',[
+        	'template'=>$template,
         	'Record'=>$this->collectionRecord->getData($this->renderTemplate),
             'columns'=>$columns,
         ]);

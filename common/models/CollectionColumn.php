@@ -208,6 +208,11 @@ class CollectionColumn extends \yii\db\ActiveRecord
         return $labels[$type];
     }
 
+    public function isRelation()
+    {
+        return ($this->type == self::TYPE_COLLECTIONS || $this->type == self::TYPE_COLLECTION);
+    }
+
     public function afterSave($insert, $changedAttributes)
     {
         if (!$insert && !empty($changedAttributes['type']))

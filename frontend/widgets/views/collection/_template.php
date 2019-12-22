@@ -1,4 +1,7 @@
 <?php
+    use \common\models\CollectionColumn;
+    use \common\models\CollectionRecord;
+
     preg_match_all ("/{(.+?)}/is", $template, $matches);
 
     if (!empty($matches[1]))
@@ -8,7 +11,22 @@
             if (isset($Record[$alias]))
             {
                 if (isset($columns[$alias]))
-                    $replace = $columns[$alias]->getValueByType($Record[$alias]);
+                {
+                    if ($columns[$alias]->isRelation())
+                    {
+                        $replace = '';
+                        foreach ($Record[$alias] as $id_subrecord => $subrecord)
+                        {
+                            $replace .= frontend\widgets\CollectionRecordWidget::widget([
+                                'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
+                                'renderTemplate'=>true,
+                                'templateAsElement'=>true,
+                            ]);
+                        }
+                    }
+                    else
+                        $replace = $columns[$alias]->getValueByType($Record[$alias]);
+                }
                 else
                     $replace = $Record[$alias];
             }
@@ -23,4 +41,5 @@
         }
     }
 ?>
+
 <?=str_replace('\n', '', $template)?>
