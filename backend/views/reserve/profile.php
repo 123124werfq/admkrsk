@@ -7,7 +7,9 @@ use yii\grid\GridView;
 /* @var $searchModel backend\models\search\ServiceSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$archive = Yii::$app->request->get('archive');
+//$archive = Yii::$app->request->get('archive');
+
+
 
 $this->title = 'Анкеты кандидатов в кадровый резерв';
 $this->params['breadcrumbs'][] = $this->title;
@@ -50,8 +52,9 @@ if (Yii::$app->user->can('admin.service')) {
             ],
             [
                 'label'=> 'Статус',
+                'format' => 'html',
                 'value' => function($model){
-                    return $model->statename;
+                    return $model->getStatename(true);
                 },
             ],
             [
@@ -88,7 +91,35 @@ if (Yii::$app->user->can('admin.service')) {
             */
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} ' . ($archive ? '{undelete}' : '{delete}'),
+                'template' => '{view} {edtable} {ban} {archive} ',
+                'buttons' => [
+                    'archive' => function($url, $model, $key) {
+                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-floppy-disk"]);
+                        return Html::a($icon, $url, [
+                            'disabled' => true,
+                            'title' => 'Восстановить',
+                            'aria-label' => 'Восстановить',
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                    'editable' => function($url, $model, $key) {
+                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-pencil"]);
+                        return Html::a($icon, $url, [
+                            'target' => '_blank',
+                            'title' => 'Редактировать',
+                            'aria-label' => 'Редактировать',
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                    'ban' => function($url, $model, $key) {
+                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-ban-circle"]);
+                        return Html::a($icon, $url, [
+                            'title' => 'Заблокировать',
+                            'aria-label' => 'Заблокировать',
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                ],
                 'contentOptions'=>['class'=>'button-column']
             ]
         ],
