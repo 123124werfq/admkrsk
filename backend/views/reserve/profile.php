@@ -49,6 +49,12 @@ if (Yii::$app->user->can('admin.service')) {
                 },
             ],
             [
+                'label'=> 'Статус',
+                'value' => function($model){
+                    return $model->statename;
+                },
+            ],
+            [
                 'label'=> 'Целевые должности',
                 'format' => 'html',
                 'value' => function($model){
@@ -70,12 +76,6 @@ if (Yii::$app->user->can('admin.service')) {
                     return $model->reserve_date?date("d-m-Y H:i", $model->reserve_date):"не включен";
                 },
             ],
-            [
-                'label'=> 'Статус',
-                'value' => function($model){
-                    return $model->state;
-                },
-            ],
             /*
             'old:boolean:Устарела',
             [
@@ -85,22 +85,12 @@ if (Yii::$app->user->can('admin.service')) {
                     return ($model->online)?'Онлайн':'Оффлайн';
                 },
             ],
+            */
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {update} ' . ($archive ? '{undelete}' : '{delete}'),
-                'buttons' => [
-                    'undelete' => function($url, $model, $key) {
-                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-floppy-disk"]);
-                        return Html::a($icon, $url, [
-                            'title' => 'Восстановить',
-                            'aria-label' => 'Восстановить',
-                            'data-pjax' => '0',
-                        ]);
-                    },
-                ],
+                'template' => '{view} ' . ($archive ? '{undelete}' : '{delete}'),
                 'contentOptions'=>['class'=>'button-column']
-            ],
-            */
+            ]
         ],
         'tableOptions'=>[
             'emptyCell' => '',

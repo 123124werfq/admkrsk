@@ -2,7 +2,7 @@
     use \common\models\CollectionRecord;
     use \common\models\CollectionColumn;
 ?>
-<table width="100%">
+<table width="100%"  class="table table-striped">
 <?php
     foreach ($columns as $column){
 ?>

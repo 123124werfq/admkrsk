@@ -2,8 +2,10 @@
 
 namespace backend\controllers;
 
+use common\models\CollectionRecord;
 use common\models\HrContest;
 use common\models\HrExpert;
+use common\models\HrProfile;
 use Yii;
 
 use yii\data\ActiveDataProvider;
@@ -21,6 +23,8 @@ use backend\models\search\ContestSearch;
 use backend\models\search\ExpertSearch;
 use backend\models\forms\ExpertForm;
 use backend\models\forms\ContestForm;
+
+use common\models\CollectionColumn;
 
 class ReserveController extends Controller
 {
@@ -127,6 +131,35 @@ class ReserveController extends Controller
 
     }
 
+    public function actionView($id)
+    {
+        $profile = HrProfile::findOne($id);
+
+        $record = CollectionRecord::findOne($profile->id_record);
+
+        if (empty($record))
+            throw new NotFoundHttpException('Ошибка чтения данных');
+
+        $insertedData = $record->getData();
+
+        $columns = CollectionColumn::find()->where(['id_collection' => $record->id_collection])->indexBy('id_column')->orderBy('ord')->all();
+
+        foreach ($insertedData as $rkey => $ritem)
+        {
+            $formFields[$columns[$rkey]->alias] = ['value' => empty($ritem)?"[не заполнено]":$ritem, 'name' => $columns[$rkey]->name, 'ord' => $columns[$rkey]->ord];
+        }
+
+        usort($formFields, function($a, $b){return ($a['ord']<$b["ord"])?-1:1;});
+
+        $attachments = $record->getAllMedias();
+
+        return $this->render('viewprofile', [
+            'model' => $profile,
+            'record' => $record,
+            'formFields' => $formFields,
+            'attachments' => $attachments
+        ]);
+    }
 
 
 
