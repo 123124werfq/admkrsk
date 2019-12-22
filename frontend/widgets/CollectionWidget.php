@@ -110,12 +110,12 @@ class CollectionWidget extends \yii\base\Widget
             {
                 foreach ($search_columns as $key => $search_column)
                 {
-                    if ($search_column->type == 1)
+                    if ($search_column['type'] == 1)
                         continue;
 
                     $alias = $search_column['column']->alias;
 
-                    if (!empty($row[$alias]) && (is_string($row[$alias]) ||is_number($row[$alias])))
+                    if (!empty($row[$alias]) && (is_string($row[$alias]) || is_numeric($row[$alias])))
                     {
                         $search_columns[$key]['values'][$row[$alias]] = $row[$alias];
                     }
