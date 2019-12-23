@@ -345,6 +345,10 @@ $(document).ready(function() {
             $('#top-search').submit();
     });
 
+    $(".dz-remove").click(function(){
+        $(this).closest('.fileupload_item').remove();
+        return false;
+    });
 
     $(".fileupload").each(function(){
         var id_input = $(this).data('input');

@@ -306,6 +306,19 @@ class CollectionColumn extends \yii\db\ActiveRecord
             case self::TYPE_DATETIME:
                 return date('d.m.Y H:i',$value);
                 break;
+            case self::TYPE_IMAGE:
+                if (is_array($value) || is_numeric($value))
+                {
+                    $medias = Media::find()->where(['id_media'=>$value])->all();
+
+                    foreach ($medias as $mkey => $media)
+                        $file_uploaded = $media->showThumb(['w'=>200,'h'=>200]);
+
+                    if (!empty($file_uploaded))
+                        return '<img src="'.$file_uploaded.'" />';
+                }
+
+                break;
             default:
                 if (is_array($value))
                     return implode('<br>', $value);
@@ -313,6 +326,8 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 return $value;
                 break;
         }
+
+        return '';
     }
 
     /**
