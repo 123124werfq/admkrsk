@@ -290,7 +290,7 @@ class CollectionController extends Controller
         {
             $newColumn = new CollectionColumn;
             $newColumn->name = $form->column_name;
-            $newColumn->alias = $form->column_name;
+            $newColumn->alias = $form->alias;
             $newColumn->id_collection = $id;
             $newColumn->type = $form->type;
 
