@@ -30,7 +30,16 @@
 			<?php foreach ($allrows as $key => $row){?>
 				<tr>
 				<?php foreach ($columns as $key => $column) {?>
-					<td><?=$row[$column->alias]??''?></td>
+					<td><?php
+						if (isset($row[$column->alias]))
+						{
+							if ($row[$column->alias])
+								echo implode('<br>', $row[$column->alias])
+							else
+								echo $row[$column->alias];
+
+						}?>
+					</td>
 				<?php }?>
 				</tr>
 			<?php }?>
