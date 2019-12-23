@@ -85,7 +85,7 @@ class CollectionWidget extends \yii\base\Widget
                 foreach ($search as $id_col => $search_col)
                 {
                     if (isset($search_columns[$id_col]) && $search_col!=='' && $search_col!==NULL)
-                        $query->where(['col'.$id_col=>(is_numeric($search_col))?(float)$search_col:$search_col]);
+                        $query->andWhere(['col'.$id_col=>(is_numeric($search_col))?(float)$search_col:$search_col]);
                 }
             }
         }
