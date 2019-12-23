@@ -1,4 +1,4 @@
-<?php 
+<?php
 	use yii\helpers\Html;
 	use yii\widgets\Pjax;
 ?>
@@ -35,9 +35,9 @@
 				</tr>
 			<?php }?>
 		</tbody>
-</table>
-	<?=\yii\widgets\LinkPager::widget([
-	    'pagination' => $pagination,
-	]);?>
+	</table>
 </div>
+<?=\yii\widgets\LinkPager::widget([
+    'pagination' => $pagination,
+]);?>
 <?php Pjax::end(); ?>
