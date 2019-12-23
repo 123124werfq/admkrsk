@@ -34,7 +34,7 @@
 						if (isset($row[$column->alias]))
 						{
 							if ($row[$column->alias])
-								echo implode('<br>', $row[$column->alias])
+								echo implode('<br>', $row[$column->alias]);
 							else
 								echo $row[$column->alias];
 
