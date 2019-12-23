@@ -85,7 +85,7 @@ class CollectionWidget extends \yii\base\Widget
                 foreach ($search as $id_col => $search_col)
                 {
                     if (isset($search_columns[$id_col]) && $search_col!=='' && $search_col!==NULL)
-                        $query->where(['col'.$id_col=>$search_col]);
+                        $query->where(['col'.$id_col=>(is_numeric($search_col)?(float)$search_col:$search_col]);
                 }
             }
         }
@@ -113,12 +113,12 @@ class CollectionWidget extends \yii\base\Widget
 
         if (!empty($url['query']))
         {
-            parse_str($url['query'],$url_query); 
+            parse_str($url['query'],$url_query);
             unset($url_query['p']);
             unset($url_query['_pjax']);
-            $url = $url['path'].http_build_query($url_query);
+            $url = $url['path'].'?'.http_build_query($url_query);
         }
-        else 
+        else
             $url = Yii::$app->request->url;
 
         $pagination = new Pagination([
