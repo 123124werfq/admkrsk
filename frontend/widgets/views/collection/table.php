@@ -33,7 +33,7 @@
 					<td><?php
 						if (isset($row[$column->alias]))
 						{
-							if ($row[$column->alias])
+							if (is_array($row[$column->alias]))
 								echo implode('<br>', $row[$column->alias]);
 							else
 								echo $row[$column->alias];
