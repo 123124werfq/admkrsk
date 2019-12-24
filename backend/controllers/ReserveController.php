@@ -29,6 +29,7 @@ use common\models\CollectionColumn;
 
 class ReserveController extends Controller
 {
+
     public function actionIndex()
     {
         return $this->render('index');
@@ -79,8 +80,23 @@ class ReserveController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
 //            $model->createAction(Action::ACTION_UPDATE);
 
+            $sql = "DELETE FROM hrl_contest_expert WHERE id_contest = {$model->id_contest}";
+            Yii::$app->db->createCommand($sql)->execute();
 
-            // ToDo: изменить список экспертов и резервистов
+            foreach ($_POST['HrContest']['experts'] as $id_expert)
+            {
+                $sql = "INSERT INTO hrl_contest_expert (id_contest, id_expert) VALUES ({$model->id_contest}, {$id_expert})";
+                Yii::$app->db->createCommand($sql)->execute();
+            }
+
+            $sql = "DELETE FROM hrl_contest_profile WHERE id_contest = {$model->id_contest}";
+            Yii::$app->db->createCommand($sql)->execute();
+
+            foreach ($_POST['HrContest']['profiles'] as $id_profile)
+            {
+                $sql = "INSERT INTO hrl_contest_profile (id_contest, id_profile) VALUES ({$model->id_contest}, {$id_profile})";
+                Yii::$app->db->createCommand($sql)->execute();
+            }
 
             return $this->redirect('/reserve/contest');
         }
@@ -173,6 +189,9 @@ class ReserveController extends Controller
         if (empty($profile))
             throw new NotFoundHttpException('Ошибка чтения данных');
 
+        if($profile->isBusy())
+            return $this->redirect('/reserve/profile');
+
         if($profile->state == HrProfile::STATE_ACTIVE)
             $profile->state = HrProfile::STATE_BANNED;
         else if($profile->state == HrProfile::STATE_BANNED)
@@ -180,7 +199,7 @@ class ReserveController extends Controller
 
         $profile->updateAttributes(['state']);
 
-        $this->redirect('/reserve/profile');
+        return $this->redirect('/reserve/profile');
     }
 
     public function actionArchive($id)
@@ -225,6 +244,7 @@ class ReserveController extends Controller
     public function actionDynamic($id = 0)
     {
         $votes = [];
+
         if(!$id)
             $contest = HrContest::active();
         else
@@ -233,6 +253,11 @@ class ReserveController extends Controller
         if($contest)
             $votes = HrVote::find()->where(['id_contest' => $contest->id_contest])->all();
 
+        if(isset($_POST))
+        {
+            print_r($_POST); die();
+        }
+
         return $this->render('dynamic', [
             'data' => $contest,
             'votes' => $votes
@@ -240,5 +265,26 @@ class ReserveController extends Controller
 
     }
 
+    public function actionArchived()
+    {
+        $searchModel = new ProfileSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('profile', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionReserved()
+    {
+        $searchModel = new ProfileSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('profile', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
 
 }
