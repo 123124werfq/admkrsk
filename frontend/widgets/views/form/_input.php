@@ -128,6 +128,9 @@ JS;
 
 				if (!empty($id_medias))
 				{
+					if (is_string($id_medias))
+						$id_medias = json_decode($id_medias,true);
+
 					$medias = \common\models\Media::find()->where(['id_media'=>$id_medias])->all();
 					foreach ($medias as $mkey => $media)
 						$file_uploaded .= $this->render('_file',['media'=>$media,'attribute'=>$attribute,'index'=>$mkey]);
@@ -163,6 +166,9 @@ JS;
 
 				if (!empty($id_medias))
 				{
+					if (is_string($id_medias))
+						$id_medias = json_decode($id_medias,true);
+
 					$medias = \common\models\Media::find()->where(['id_media'=>$id_medias])->all();
 
 					foreach ($medias as $mkey => $media)

@@ -48,6 +48,26 @@ function addInput(block)
 
 $(document).ready(function() {
 
+    var curpage = 0;
+    $(".col-2-third .load-more").click(function(){
+
+        curpage++;
+
+        $.ajax({
+            type: "GET",
+            dataType: "html",
+            url: "",
+            data: {p:curpage}
+        }).done(function(data){
+            if (data=='')
+                $(".col-2-third .load-more").hide();
+            else
+                $(".press-list").append(data);
+        });
+
+        return false;
+    });
+
     $(".search-table select, .search-table input").change(function(){
         var $form = $(this).closest('form');
         $.pjax({
