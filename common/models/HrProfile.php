@@ -104,7 +104,7 @@ class HrProfile extends \yii\db\ActiveRecord
             else
                 unset($positions[$pos->id_record_position]);
         }
-var_dump($positions); die();
+
         foreach($positions as $id_pos=>$label)
         {
             $posRecord = CollectionRecord::findOne($id_pos);
@@ -114,6 +114,8 @@ var_dump($positions); die();
                 $profilePosition->id_record_position = $id_pos;
                 $profilePosition->state = HrProfilePositions::STATE_OPEN;
                 $profilePosition->save();
+
+                var_dump($profilePosition->errors); die();
             }
         }
 
