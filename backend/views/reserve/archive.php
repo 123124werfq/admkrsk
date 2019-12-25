@@ -11,7 +11,7 @@ use yii\grid\GridView;
 
 
 
-$this->title = 'Анкеты кандидатов в кадровый резерв';
+$this->title = 'Архив анкет кандидатов в кадровый резерв';
 $this->params['breadcrumbs'][] = $this->title;
 
 /*
@@ -61,9 +61,9 @@ if (Yii::$app->user->can('admin.service')) {
                 'label'=> 'Дата актуальности',
                 'format' => 'html',
                 'value' => function($model){
-                        $badge = empty($model->updated_at)?"<span class='badge badge-danger'>Новая</span>":"";
+                    $badge = empty($model->updated_at)?"<span class='badge badge-danger'>Новая</span>":"";
 
-                        return $badge. date("d-m-Y H:i", $model->updated_at?$model->updated_at:$model->created_at);
+                    return $badge. date("d-m-Y H:i", $model->updated_at?$model->updated_at:$model->created_at);
                 },
             ],
             [

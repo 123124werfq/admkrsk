@@ -142,7 +142,7 @@ class HrContest extends \yii\db\ActiveRecord
                     return '<span class="badge badge-danger">Текущее</span>';
                 case HrContest::STATE_CLOSED:
                     return '<span class="badge badge-warning">Подводятся итоги</span>';
-                case HrProfile::STATE_HIRED:
+                case HrContest::STATE_FINISHED:
                     return '<span class="badge badge-info">Итоги подведены</span>';
             }
             return '<span class="badge badge-secondary">Не начато</span>';

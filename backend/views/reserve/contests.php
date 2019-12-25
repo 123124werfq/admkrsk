@@ -82,6 +82,8 @@ $this->params['button-block'][] = Html::a('Добавить', ['create'], ['clas
                 'template' => '{dynamic} {edit} {stop}',
                 'buttons' => [
                     'stop' => function($url, $model, $key) {
+                        if($model->state == \common\models\HrContest::STATE_FINISHED) return '';
+
                         $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-stop"]);
                         return Html::a($icon, $url, [
                             'title' => 'Остановить',

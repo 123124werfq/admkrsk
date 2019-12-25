@@ -6,6 +6,9 @@ use common\models\CollectionRecord;
 use common\models\HrContest;
 use common\models\HrExpert;
 use common\models\HrProfile;
+use common\models\HrProfilePositions;
+use common\models\HrReserve;
+use common\models\HrResult;
 use common\models\HrVote;
 use Yii;
 
@@ -149,7 +152,30 @@ class ReserveController extends Controller
 
     public function actionList()
     {
+        $query = HrReserve::find();
 
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'sort'=> ['defaultOrder' => ['contest_date'=>SORT_DESC]]
+        ]);
+
+        return $this->render('list', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionArchived()
+    {
+        $query = HrProfile::find()->where(['state' => HrProfile::STATE_ARCHIVED]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'sort'=> ['defaultOrder' => ['id_profile'=>SORT_DESC]]
+        ]);
+
+        return $this->render('archive', [
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     public function actionView($id)
@@ -253,9 +279,56 @@ class ReserveController extends Controller
         if($contest)
             $votes = HrVote::find()->where(['id_contest' => $contest->id_contest])->all();
 
-        if(isset($_POST))
+        if(!empty($_POST['results']))
         {
-            print_r($_POST); die();
+//            print_r($_POST); die();
+            foreach ($_POST['results'] as $id_profile => $resultVotes)
+            {
+                foreach ($resultVotes as $idProfilePosition => $result)
+                {
+                    $profilePosition = HrProfilePositions::findOne($idProfilePosition);
+
+                    $posResult = HrResult::find()->where(['id_profile' => $id_profile, 'id_contest' => $contest->id_contest, 'id_record' => $profilePosition->id_record_position])->one();
+
+                    if(!$posResult)
+                    {
+                        $posResult = new HrResult;
+                        $posResult->id_profile = $id_profile;
+                        $posResult->id_contest = $contest->id_contest;
+                        $posResult->id_record = $profilePosition->id_record_position;
+                        $posResult->save();
+                    }
+
+                    $posResult->result = $result;
+                    $posResult->updateAttributes(['result']);
+
+                    // включаем в резерв
+                    if($result == 1)
+                    {
+                        $reserveItem = HrReserve::find()->where(['id_profile' => $id_profile, 'id_result' => $posResult->id_result])->one();
+
+                        if(!$reserveItem)
+                        {
+                            $reserveItem = new HrReserve;
+                            $reserveItem->id_profile = $id_profile;
+                            $reserveItem->id_result = $posResult->id_result;
+                            $reserveItem->id_record_position = $profilePosition->id_record_position;
+                            $reserveItem->contest_date = $contest->end;
+                            $reserveItem->save();
+                        }
+
+                        $profileItem = HrProfile::findOne($id_profile);
+                        $profileItem->reserve_date = $contest->end;
+                        $profileItem->state = HrProfile::STATE_RESERVED;
+                        $profileItem->updateAttributes(['reserve_date', 'state']);
+                    }
+
+                    $profilePosition->id_result = $posResult->id_result;
+                    $profilePosition->updateAttributes(['id_result']);
+                }
+            }
+            $contest->state = HrContest::STATE_FINISHED;
+            $contest->updateAttributes(['state']);
         }
 
         return $this->render('dynamic', [
@@ -265,6 +338,18 @@ class ReserveController extends Controller
 
     }
 
+
+    public function actionUnreserve($id)
+    {
+        $reserveItem = HrReserve::findOne($id);
+
+        if($reserveItem)
+            $reserveItem->delete();
+
+        return $this->redirect('/reserve/list');
+    }
+
+    /*
     public function actionArchived()
     {
         $searchModel = new ProfileSearch();
@@ -286,5 +371,7 @@ class ReserveController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
+    */
+
 
 }

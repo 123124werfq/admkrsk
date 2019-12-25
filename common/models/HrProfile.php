@@ -125,6 +125,12 @@ class HrProfile extends \yii\db\ActiveRecord
         return $this->hasOne(User::class, ['id' => 'id_user']);
     }
 
+    public function getReserved()
+    {
+        return $this->hasMany(HrReserve::class, ['id_profile' => 'id_profile']);
+    }
+
+
     public function getPositions()
     {
         return $this->hasMany(HrProfilePositions::class, ['id_profile' => 'id_profile']);

@@ -37,6 +37,10 @@ if (Yii::$app->user->can('admin.service')) {
 <?php } else {?>
     <p>Период проведения: <?= date('d-m-Y H:i', $data->begin)?> - <?= date('d-m-Y H:i', $data->end)?></p>
 
+    <?php if($data->state == \common\models\HrContest::STATE_FINISHED ){?>
+        <h2>ИТОГИ ПОДВЕДЕНЫ</h2>
+    <?php } ?>
+
     <form actio="" method="POST">
         <?= Html::hiddenInput(\Yii::$app->getRequest()->csrfParam, \Yii::$app->getRequest()->getCsrfToken(), []);?>
     <table class="table table-striped vote">
@@ -128,13 +132,20 @@ if (Yii::$app->user->can('admin.service')) {
                         else if($result>0)
                             $final = 'включить';
                         else
-                            $final = '';
+                            $final = 'спорная';
+
+
+                        // если голосование уже завершено, то будут реальные результаты. подгрузим их напрямую
+                        $rp = \common\models\HrProfilePositions::findOne($posid);
+                        $fixedResult = \common\models\HrResult::find()->where(['id_contest' =>  $data->id_contest,'id_profile' => $profile->id_profile, 'id_record' => $rp->id_record_position])->one();
+
+                        $ref = $fixedResult?$fixedResult->result:0;
 
                         ?>
                         <select name="results[<?=$profile->id_profile?>][<?=$posid?>]">
                             <option value="0"></option>
-                            <option value="-1">отказать</option>
-                            <option value="1">включить</option>
+                            <option value="-1" <?=($ref==-1)?'selected':''?>>отказать</option>
+                            <option value="1" <?=($ref==1)?'selected':''?>>включить</option>
                         </select>&nbsp;<?=$final?><br>
                     <?php }?>
                 </td>

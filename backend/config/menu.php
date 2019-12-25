@@ -179,7 +179,7 @@ return [
                 'title' => 'Резерв',
                 'roles' => ['backend.form'],
             ],
-            'reserve/archive' => [
+            'reserve/archived' => [
                 'title' => 'Архив',
                 'roles' => ['backend.form'],
             ],
