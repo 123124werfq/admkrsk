@@ -38,6 +38,7 @@ if (Yii::$app->user->can('admin.service')) {
     <p>Период проведения: <?= date('d-m-Y H:i', $data->begin)?> - <?= date('d-m-Y H:i', $data->end)?></p>
 
     <form actio="" method="POST">
+        <?= Html::hiddenInput(\Yii::$app->getRequest()->csrfParam, \Yii::$app->getRequest()->getCsrfToken(), []);?>
     <table class="table table-striped vote">
         <thead>
         <tr>
@@ -92,6 +93,7 @@ if (Yii::$app->user->can('admin.service')) {
                             $positionTotal[$profile->id_profile][$position->id_profile_position] = 0;
 
                         $result = false;
+                        $comment = '';
                         foreach ($votes as $vote)
                             if ($vote->id_expert == $expert->id_expert && $vote->id_profile == $profile->id_profile && $vote->id_record == $position->id_profile_position) {
                                 $result = $vote->value;
@@ -133,8 +135,7 @@ if (Yii::$app->user->can('admin.service')) {
                             <option value="0"></option>
                             <option value="-1">отказать</option>
                             <option value="1">включить</option>
-                        </select>
-                        <?=$final?><br>
+                        </select>&nbsp;<?=$final?><br>
                     <?php }?>
                 </td>
             </tr>

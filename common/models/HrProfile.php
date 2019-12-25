@@ -205,5 +205,14 @@ class HrProfile extends \yii\db\ActiveRecord
         }
     }
 
+    public function isBusy()
+    {
+        foreach ($this->contests as $contest)
+        {
+            if($contest->state == HrContest::STATE_STARTED || $contest->state == HrContest::STATE_CLOSED)
+                return true;
+        }
+        return false;
+    }
 
 }

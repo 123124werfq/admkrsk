@@ -302,9 +302,8 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
         if (!empty($this->loadData[$id_column]))
         {
-            $ids = json_decode($this->loadData[$id_column],true);
-
-            $medias = Media::find()->where(['id_media'=>$ids])->all();
+            //$ids = json_decode($this->loadData[$id_column],true);
+            $medias = Media::find()->where(['id_media'=>$this->loadData[$id_column]])->all();
 
             if (!empty($medias))
                 return ($firstElement)?array_shift($medias):$medias;

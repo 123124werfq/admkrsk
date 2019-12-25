@@ -31,6 +31,11 @@ if (Yii::$app->user->can('admin.service')) {
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
+        'rowOptions' => function($model){
+            if($model->isBusy()){
+                return ['class' => 'warning'];
+            }
+        },
         'columns' => [
             'id_profile:integer:ID',
             [
@@ -45,9 +50,20 @@ if (Yii::$app->user->can('admin.service')) {
                 },
             ],
             [
-                'label'=> 'Дата обновления информации',
+                'label'=> 'Дата создания',
+                'format' => 'html',
                 'value' => function($model){
-                        return date("d-m-Y H:i", $model->updated_at?$model->updated_at:$model->created_at);
+
+                    return date("d-m-Y H:i", $model->created_at);
+                },
+            ],
+            [
+                'label'=> 'Дата актуальности',
+                'format' => 'html',
+                'value' => function($model){
+                        $badge = empty($model->updated_at)?"<span class='badge badge-danger'>Новая</span>":"";
+
+                        return $badge. date("d-m-Y H:i", $model->updated_at?$model->updated_at:$model->created_at);
                 },
             ],
             [

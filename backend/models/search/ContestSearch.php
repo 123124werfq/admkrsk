@@ -44,6 +44,7 @@ class ContestSearch extends HrContest
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=> ['defaultOrder' => ['id_contest'=>SORT_DESC]]
         ]);
 
         $this->load($params);
