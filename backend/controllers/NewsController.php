@@ -153,7 +153,7 @@ class NewsController extends Controller
                     'updated_at:date',
                     'views',
                     'viewsYear',
-                'views'], 
+                'views'],
                 'headers' => [
                     'title' => 'Название',
                     'fullurl' => 'Ссылка',
@@ -163,7 +163,7 @@ class NewsController extends Controller
                     'updated_at'=> 'Отредактировано',
                     'views'=>'Просмотры всего',
                     'viewsYear'=>'Просмотры за год',
-                ], 
+                ],
             ]);
 
             Yii::$app->end();
@@ -197,7 +197,7 @@ class NewsController extends Controller
     public function actionCreate()
     {
         $model = new News();
-        $model->state = 1;
+        $model->main = $model->state = 1;
         $model->id_page = Yii::$app->request->get('id_page',null);
         $model->id_user = Yii::$app->user->id;
         $model->date_publish = time();
@@ -212,7 +212,7 @@ class NewsController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
-            // убираем подсветку 
+            // убираем подсветку
             if ($model->highlight)
                 Yii::$app->db->createCommand()->update('db_news',['highlight'=>0],['highlight'=>1,'id_page'=>$model->id_page])->execute();
 
@@ -249,7 +249,7 @@ class NewsController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
-            // убираем подсветку 
+            // убираем подсветку
             if ($model->highlight)
                 Yii::$app->db->createCommand()->update('db_news',['highlight'=>0],['highlight'=>1,'id_page'=>$model->id_page])->execute();
 
