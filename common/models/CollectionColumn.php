@@ -310,7 +310,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 if (is_array($value) || is_numeric($value))
                 {
                     $medias = Media::find()->where(['id_media'=>$value])->all();
-
+n
                     foreach ($medias as $mkey => $media)
                         $file_uploaded = $media->showThumb(['w'=>200,'h'=>200]);
 
