@@ -284,6 +284,11 @@ class ReserveController extends Controller
 //            print_r($_POST); die();
             foreach ($_POST['results'] as $id_profile => $resultVotes)
             {
+                $profileItem = HrProfile::findOne($id_profile);
+                $profileItem->reserve_date = null;
+                $profileItem->state = HrProfile::STATE_ACTIVE;
+                $profileItem->updateAttributes(['reserve_date', 'state']);
+
                 foreach ($resultVotes as $idProfilePosition => $result)
                 {
                     $profilePosition = HrProfilePositions::findOne($idProfilePosition);
@@ -317,7 +322,6 @@ class ReserveController extends Controller
                             $reserveItem->save();
                         }
 
-                        $profileItem = HrProfile::findOne($id_profile);
                         $profileItem->reserve_date = $contest->end;
                         $profileItem->state = HrProfile::STATE_RESERVED;
                         $profileItem->updateAttributes(['reserve_date', 'state']);
