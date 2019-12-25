@@ -138,7 +138,7 @@ class ReserveController extends \yii\web\Controller
 
         if (!empty(Yii::$app->request->post()))
         {
-            var_dump(Yii::$app->request->post());
+            //var_dump(Yii::$app->request->post());
 
             $positions =  Yii::$app->request->post('position');
 
