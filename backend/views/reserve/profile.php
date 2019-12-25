@@ -61,7 +61,7 @@ if (Yii::$app->user->can('admin.service')) {
                 'label'=> 'Дата актуальности',
                 'format' => 'html',
                 'value' => function($model){
-                        $badge = empty($model->updated_at)?"<span class='badge badge-danger'>Новая</span>":"";
+                        $badge = ($model->updated_at == $model->created_at)?"<span class='badge badge-danger'>Новая</span>":"";
 
                         return $badge. date("d-m-Y H:i", $model->updated_at?$model->updated_at:$model->created_at);
                 },
