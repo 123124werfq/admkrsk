@@ -138,7 +138,7 @@ class News extends \yii\db\ActiveRecord
             }
 
             if (!empty($exist))
-                Yii::$app->db->delete('dbl_news_page',['id_news'=>$this->id_news,'id_page'=>$exist])->execute();
+                Yii::$app->db->createCommand()->delete('dbl_news_page',['id_news'=>$this->id_news,'id_page'=>$exist])->execute();
         }
 
         parent::afterSave($insert, $changedAttributes);
