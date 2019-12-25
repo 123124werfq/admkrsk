@@ -32,8 +32,6 @@ class NewsWidget extends \yii\base\Widget
                 $news = News::find()
                         ->where(['state'=>1,'id_page'=>$page->id_page])
                         ->andWhere('id_news <> '.$wide->id_news)
-
-
                         ->orderBy('date_publish DESC')
                         ->limit(6)
                         ->all();
