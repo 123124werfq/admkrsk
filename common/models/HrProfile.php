@@ -112,10 +112,8 @@ class HrProfile extends \yii\db\ActiveRecord
                 $profilePosition = new HrProfilePositions;
                 $profilePosition->id_profile = $this->id_profile;
                 $profilePosition->id_record_position = $id_pos;
-                $profilePosition->state = HrProfilePositions::STATE_OPEN;
+                $profilePosition->state = (string)HrProfilePositions::STATE_OPEN;
                 $profilePosition->save();
-
-                var_dump($profilePosition->errors); die();
             }
         }
 
