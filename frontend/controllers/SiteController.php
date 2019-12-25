@@ -597,4 +597,17 @@ class SiteController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+    public function actionFakelogin2()
+    {
+        if (true || YII_ENV_DEV) {
+            $user = User::findOne(2406);
+
+            Yii::$app->user->login($user, 3600*24*7);
+
+            $this->redirect("/");
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
 }
