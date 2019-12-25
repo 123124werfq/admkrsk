@@ -74,6 +74,7 @@ $this->params['button-block'][] = Html::a('Добавить', ['create'], ['clas
                             $positions[] = $position->positionName;
                     }
                     $positions = array_unique($positions);
+                    sort(&$positions);
                     return implode('<br>', $positions);
                 }
             ],
