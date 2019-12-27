@@ -353,6 +353,31 @@ class ReserveController extends Controller
         return $this->redirect('/reserve/list');
     }
 
+    public function actionSpreadsheet($id)
+    {
+        $votes = [];
+        $contest = HrContest::findOne($id);
+
+        if($contest)
+            $votes = HrVote::find()->where(['id_contest' => $contest->id_contest])->all();
+        else
+            Yii::$app->end();
+
+        header('Content-type: application/excel');
+        header('Content-Disposition: attachment; filename=Итоги голосования '.date('d-m-Y H:i', $contest->begin).' - '. date('d-m-Y H:i', $contest->end) .'.xls');
+
+        $body =  $this->renderPartial('dynamic_excel', [
+            'data' => $contest,
+            'votes' => $votes
+        ]);
+
+        //echo iconv( "utf-8", "windows-1251",$body);
+        echo $body;
+
+        Yii::$app->end();
+    }
+
+
     /*
     public function actionArchived()
     {

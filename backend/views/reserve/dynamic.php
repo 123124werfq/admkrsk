@@ -26,11 +26,13 @@ if (Yii::$app->user->can('admin.service')) {
     $this->params['button-block'][] = Html::a('Добавить', ['create'], ['class' => 'btn btn-success']);
 }
 */
+if($data)
+    $this->params['button-block'][] = Html::a('Скачать таблицу', ['spreadsheet','id'=>$data->id_contest], ['class' => 'btn btn-success']);
 
 
 ?>
 
-<div class="service-index">
+<div class="service-index" style="overflow-x: scroll">
 
 <?php if(!$data){ ?>
     <h3>Ни одного голосования в данный момент не проводится</h3>
@@ -52,15 +54,15 @@ if (Yii::$app->user->can('admin.service')) {
             <td>
                 ФИО кандидата
             </td>
-            <td>
+            <td style="min-width: 500px;">
                 Группы должностей
             </td>
             <?php foreach($data->experts as $expert){?>
-                <td>
+                <td style="min-width: 100px;">
                     <?=$expert->name?>
                 </td>
             <?php } ?>
-            <td>
+            <td style="min-width: 200px;">
                 Итого
             </td>
         </tr>
