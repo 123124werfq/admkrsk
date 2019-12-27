@@ -203,7 +203,6 @@ class FormController extends Controller
 
     public function actionMakeDoc($id_record)
     {
-        
         $record = \common\models\CollectionRecord::findOne($id_record);
         $export_path = $record->collection->form->makeDoc($record);
 
@@ -216,7 +215,7 @@ class FormController extends Controller
         header('Content-Length: ' . filesize($export_path));
 
         readfile($export_path);
-    } 
+    }
 
     /**
      * Creates a new Form model.

@@ -186,7 +186,9 @@ class Collection extends \yii\db\ActiveRecord
         $output = [];
 
         foreach ($data as $key => $row)
+        {
             $output[$key] = implode(' ', $row);
+        }
 
         return $output;
     }
