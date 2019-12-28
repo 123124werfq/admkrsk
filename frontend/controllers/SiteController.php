@@ -628,7 +628,7 @@ class SiteController extends Controller
             'certPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
             'redirectUrl' => 'https://t1.admkrsk.ru/site/signin',
             'portalUrl' => 'https://esia.gosuslugi.ru/',
-            'scope' => ['fullname', 'birthdate'],
+            'scope' => ['fullname', 'birthdate', 'mobile', 'contacts', 'snils', 'inn', 'id_doc', 'birthplace', 'medical_doc', 'residence_doc', 'email', 'usr_org', 'usr_avt'],
         ]);
         $esia = new \Esia\OpenId($config);
         $esia->setSigner(new \Esia\Signer\CliSignerPKCS7(
@@ -660,7 +660,7 @@ class SiteController extends Controller
             'certPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
             'redirectUrl' => 'https://t1.admkrsk.ru/site/signin',
             'portalUrl' => 'https://esia.gosuslugi.ru/',
-            'scope' => ['fullname', 'birthdate'],
+            'scope' => ['fullname', 'birthdate', 'mobile', 'contacts', 'snils', 'inn', 'id_doc', 'birthplace', 'medical_doc', 'residence_doc', 'email', 'usr_org', 'usr_avt'],
         ]);
         $esia = new \Esia\OpenId($config);
         $esia->setSigner(new \Esia\Signer\CliSignerPKCS7(
@@ -673,9 +673,9 @@ class SiteController extends Controller
         $token = $esia->getToken($_REQUEST['code']);
 
         $personInfo = $esia->getPersonInfo();
-        $addressInfo = $esia->getAddressInfo();
-        $contactInfo = $esia->getContactInfo();
-        $documentInfo = $esia->getDocInfo();
+        //$addressInfo = $esia->getAddressInfo();
+        //$contactInfo = $esia->getContactInfo();
+        //$documentInfo = $esia->getDocInfo();
 
         var_dump($token);
         var_dump($personInfo);
