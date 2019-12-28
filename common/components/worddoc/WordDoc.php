@@ -4,6 +4,8 @@ namespace common\components\worddoc;
 use Yii;
 use PhpOffice\PhpWord\TemplateProcessor;
 use common\models\CollectionColumn;
+use common\models\CollectionRecord;
+
 
 class WordDoc
 {
@@ -67,10 +69,34 @@ class WordDoc
                         $template->setValue($alias."_".($tkey+1)."#$i", $td);
                 }
             }
-            else if (isset($stringData[$alias.'_file']) && $columns[$alias]->type==CollectionColumn::TYPE_IMAGE) 
+            else if (isset($stringData[$alias.'_file']) && $columns[$alias]->type==CollectionColumn::TYPE_IMAGE)
             {
                 $template->setImageValue($alias.'_image', $stringData[$alias.'_file']);
                 $template->setValue($alias, $value);
+            }
+            elseif (isset($columns[$alias]) && $columns[$alias]->type==CollectionColumn::TYPE_COLLECTIONS)
+            {
+                if (empty($value))
+                    $template->deleteBlock($alias);
+                else
+                {
+                    $records = CollectionRecord::find()->where(['id_record'=>array_keys($value)])->all();
+
+                    if (empty($records))
+                        $template->deleteBlock($alias);
+                    else
+                    {
+                        $rcolumns = $records[0]->collection->columns;
+
+                        $records_string = [];
+                        foreach ($records as $rkey => $record)
+                        {
+                            $records_string[] = WordDoc::convertDataToString($record->getData(true),$rcolumns);
+                        }
+
+                        $template->cloneBlock($alias, 0, true, false, $records_string);
+                    }
+                }
             }
             else
                 $template->setValue($alias, $value);
@@ -103,6 +129,8 @@ class WordDoc
                 if (!empty($model))
                     $string_output[$col_alias] = $model->name;
             }
+            else if ($col->type==CollectionColumn::TYPE_COLLECTIONS)
+                $string_output[$col->alias] = $data[$col_alias];
             else if ($col->type==CollectionColumn::TYPE_SERVICETARGET)
             {
                 $model = \common\models\ServiceTarget::findOne($data[$col_alias]);

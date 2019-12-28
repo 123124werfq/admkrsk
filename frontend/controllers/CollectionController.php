@@ -52,6 +52,26 @@ class CollectionController extends \yii\web\Controller
         return ['results' => $results];
     }
 
+    public function actionWord($id_record)
+    {
+        $record = \common\models\CollectionRecord::findOne($id_record);
+
+        if (empty($record))
+            throw new NotFoundHttpException('The requested page does not exist.');
+
+        $export_path = $record->collection->form->makeDoc($record);
+
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="word_template.docx"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($export_path));
+
+        readfile($export_path);
+    }
+
     protected function findModel($id)
     {
         if (($model = Collection::findOneWithDeleted($id)) !== null) {

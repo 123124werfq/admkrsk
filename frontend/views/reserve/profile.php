@@ -63,6 +63,11 @@ use common\models\CollectionColumn;
         <div class="row">
             <div class="col-2-third">
                 <hr class="hr hr__md"/>
+                <?php
+                    if (!empty($collectionRecord->collection->form->template)){
+                        echo '<a href="/collection/word?id_record='.$collectionRecord->id_record.'">Скачать word</a>';
+                    }
+                ?>
                 <?php echo frontend\widgets\CollectionRecordWidget::widget([
                     'collectionRecord'=>$collectionRecord,
                     'renderTemplate'=>true,
