@@ -638,7 +638,11 @@ class SiteController extends Controller
             Yii::getAlias('@runtime')
         ));
 
-        echo $esia->buildUrl();
+        $url = $esia->buildUrl();
+
+        echo "<a href=$url>логин через ESIA</a>";
+
+        echo urlencode($url);
         Yii::$app->end();
     }
 
