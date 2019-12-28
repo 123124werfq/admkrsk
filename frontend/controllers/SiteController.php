@@ -610,4 +610,41 @@ class SiteController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+
+    public function actionEsiatest()
+    {
+        //var_dump(Yii::getAlias('@app'). '/assets/admkrsk.pem'); die();
+
+        if(!file_exists(Yii::getAlias('@app'). '/assets/admkrsk.pem')){
+            echo "no cert";
+            die();
+        }
+
+
+        $config = new \Esia\Config([
+            'clientId' => '236403241',
+            'privateKeyPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
+            'certPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
+            'redirectUrl' => 'https://t1.admkrsk.ru/site/signin',
+            'portalUrl' => 'https://esia.gosuslugi.ru/',
+            'scope' => ['fullname', 'birthdate'],
+        ]);
+        $esia = new \Esia\OpenId($config);
+        $esia->setSigner(new \Esia\Signer\CliSignerPKCS7(
+            Yii::getAlias('@app'). '/assets/admkrsk.pem',
+            Yii::getAlias('@app'). '/assets/admkrsk.pem',
+            'T%52gs]CPJ',
+            Yii::getAlias('@runtime')
+        ));
+
+        echo $esia->buildUrl();
+        Yii::$app->end();
+    }
+
+
+    public function actionSignin()
+    {
+        var_dump($_REQUEST); die();
+    }
 }
