@@ -186,9 +186,7 @@ class Collection extends \yii\db\ActiveRecord
         $output = [];
 
         foreach ($data as $key => $row)
-        {
             $output[$key] = implode(' ', $row);
-        }
 
         return $output;
     }
@@ -361,8 +359,24 @@ class Collection extends \yii\db\ActiveRecord
         ]];
     }
 
+    public function createColumn($attributes)
+    {
+        $newColumn = new CollectionColumn;
+        $newColumn->name = $attributes['name'];
+        $newColumn->alias = $attributes['alias'];
+        $newColumn->id_collection = $this->id_collection;
+        $newColumn->type = $attributes['type'];
+
+        if ($newColumn->save())
+        {
+            return $newColumn;
+        }
+
+        return false;
+    }
+
     // DEPRECATED
-    public function createForm()
+    /*public function createForm()
     {
         $transaction = Yii::$app->db->beginTransaction();
 
@@ -416,7 +430,5 @@ class Collection extends \yii\db\ActiveRecord
             $transaction->rollBack();
             throw $e;
         }
-    }
-
-
+    }*/
 }
