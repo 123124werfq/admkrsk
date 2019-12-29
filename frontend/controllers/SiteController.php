@@ -703,10 +703,46 @@ class SiteController extends Controller
 
         $oid = $esia->getConfig()->getOid();
 
+        $user = User::findByOid($oid);
+        if($user) {
+            $esiauser = EsiaUser::findOne($user->id_esia_user);
+
+            if($esiauser)
+                $esiauser->actualize($esia);
+
+            $login = Yii::$app->user->login($user);
+            Yii::$app->user->identity->createAction(Action::ACTION_LOGIN_ESIA);
+
+            return $login;
+        }
+
+        $user = new User();
+        $user->email = $oid.'@esia.ru';
+        $user->username = $personInfo['firstName'].' '.$personInfo['lastName'];
+        $user->setPassword($personInfo['eTag']);
+        $user->generateAuthKey();
+        $user->status = User::STATUS_ACTIVE;
+
+        $esiauser = new EsiaUser();
+
+        if($esiauser->actualize($esia))
+            $user->id_esia_user = $esiauser->id_esia_user;
+
+        if(!$user->save()) {
+            throw new yii\web\ServerErrorHttpException('Внутренняя ошибка сервера');
+        }
+
+        Yii::$app->user->login($user);
+        Yii::$app->user->identity->createAction(Action::ACTION_SIGNUP_ESIA);
+
+        return $this->redirect('/');
+
+        /*
         var_dump($token);
         var_dump($personInfo);
 
         echo "<br><br>".$oid;
         Yii::$app->end();
+        */
     }
 }

@@ -152,7 +152,32 @@ class EsiaUser extends \yii\db\ActiveRecord
         return [];
     }
 
-    public function actualize($client)
+    public function actualize($esia)
+    {
+        $personInfo = $esia->getPersonInfo();
+
+        $this->fullname = $personInfo['firstName'].' '.$personInfo['lastName'];
+        $this->first_name = $personInfo['firstName'];
+        $this->middle_name = $personInfo['middleName']??null;
+        $this->last_name = $personInfo['lastName']??null;
+        $this->birthdate = $personInfo['birthDate']??null;
+        $this->birthplace = $personInfo['birthPlace']??null;
+        $this->trusted = (string)($personInfo['trusted']??null);
+        $this->snils = $personInfo['snils']??null;
+        $this->inn = $personInfo['inn']??null;
+
+        if($this->save())
+            return true;
+        else {
+            var_dump($this->errors);
+            die();
+        }
+
+        return false;
+
+    }
+
+    public function actualize_old($client)
     {
         $attributes = $client->getUserAttributes();
         $oid = $attributes['oid'];
