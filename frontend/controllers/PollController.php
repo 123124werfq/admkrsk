@@ -4,13 +4,19 @@ namespace frontend\controllers;
 
 use common\models\Page;
 use common\models\Poll;
+use common\models\Question;
 use frontend\models\PollForm;
+use frontend\models\VoteForm;
 use frontend\models\search\PollSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
 
 class PollController extends \yii\web\Controller
 {
+    /**
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionIndex()
     {
         $searchModel = new PollSearch();
@@ -29,6 +35,10 @@ class PollController extends \yii\web\Controller
         ]);
     }
 
+    /**
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionArchive()
     {
         $searchModel = new PollSearch(['archive' => true]);
@@ -47,28 +57,39 @@ class PollController extends \yii\web\Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
+     * @throws \yii\web\ServerErrorHttpException
+     */
     public function actionView($id)
     {
-    	$model = Poll::findOne($id);
+        $poll = Poll::findOne($id);
 
-    	if (empty($model)) {
-    		throw new NotFoundHttpException('The requested page does not exist.');
-        }
-
-        if (($page = Page::findOne(['alias' => $model->isExpired() ? 'poll-archive' : 'poll-list-active'])) === null) {
+        if (empty($poll)) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-    	$form = new PollForm(['id_poll' => $model->id_poll]);
-
-    	if ($form->load(Yii::$app->request->post()) && $form->save()) {
-    	    $this->redirect(['view', 'id' => $model->id_poll]);
+        if (($page = Page::findOne(['alias' => $poll->isExpired() ? 'poll-archive' : 'poll-list-active'])) === null) {
+            throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        $model->createAction();
+        $pollForm = new PollForm($poll);
 
-        return $this->render('view',[
-        	'model'=>$model,
+        if (Yii::$app->request->isPost) {
+            $pollForm->load(Yii::$app->request->post());
+
+            if ($pollForm->save()) {
+                $this->redirect(['view', 'id' => $poll->id_poll]);
+            }
+        }
+
+        $poll->createAction();
+
+        return $this->render('view', [
+            'pollForm' => $pollForm,
+            'poll' => $poll,
             'page' => $page,
         ]);
     }

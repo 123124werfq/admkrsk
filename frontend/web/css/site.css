@@ -193,3 +193,12 @@ table.vote thead{
 table.vote thead td{
     padding: 10px;
 }
+
+.content .boxed.has-error {
+    border: 1px solid #a94442;
+}
+
+.polls__question-error {
+    margin-bottom: 16px;
+    color: #a94442;
+}
