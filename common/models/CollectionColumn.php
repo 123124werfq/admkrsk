@@ -17,6 +17,8 @@ use Yii;
  */
 class CollectionColumn extends \yii\db\ActiveRecord
 {
+    //public $values = []; // array of values for dropdown search
+
     const TYPE_INPUT = 1;
     const TYPE_INTEGER = 10;
     const TYPE_DATE = 11;
@@ -206,6 +208,11 @@ class CollectionColumn extends \yii\db\ActiveRecord
         return $labels[$type];
     }
 
+    public function isRelation()
+    {
+        return ($this->type == self::TYPE_COLLECTIONS || $this->type == self::TYPE_COLLECTION);
+    }
+
     public function afterSave($insert, $changedAttributes)
     {
         if (!$insert && !empty($changedAttributes['type']))
@@ -299,6 +306,19 @@ class CollectionColumn extends \yii\db\ActiveRecord
             case self::TYPE_DATETIME:
                 return date('d.m.Y H:i',$value);
                 break;
+            case self::TYPE_IMAGE:
+                if (is_array($value) || is_numeric($value))
+                {
+                    $medias = Media::find()->where(['id_media'=>$value])->all();
+
+                    foreach ($medias as $mkey => $media)
+                        $file_uploaded = $media->showThumb(['w'=>200,'h'=>200]);
+
+                    if (!empty($file_uploaded))
+                        return '<img src="'.$file_uploaded.'" />';
+                }
+
+                break;
             default:
                 if (is_array($value))
                     return implode('<br>', $value);
@@ -306,6 +326,8 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 return $value;
                 break;
         }
+
+        return '';
     }
 
     /**

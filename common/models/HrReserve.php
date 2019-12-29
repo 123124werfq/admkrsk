@@ -10,29 +10,29 @@ use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
 
 /**
- * This is the model class for table "hr_contest_result".
+ * This is the model class for table "hr_reserve".
  *
- * @property int $id_result
- * @property int $id_contest
- * @property int $id_profile
- * @property int $id_record
- * @property int $result
- * @property string $comment
- * @property int $created_at
- * @property int $created_by
- * @property int $updated_at
- * @property int $updated_by
- * @property int $deleted_at
- * @property int $deleted_by
+ * @property int $id_reserve
+ * @property int|null $id_profile
+ * @property int|null $id_record_position
+ * @property int|null $id_result
+ * @property int|null $contest_date
+ * @property int|null $state
+ * @property int|null $created_at
+ * @property int|null $created_by
+ * @property int|null $updated_at
+ * @property int|null $updated_by
+ * @property int|null $deleted_at
+ * @property int|null $deleted_by
  */
-class HrResult extends \yii\db\ActiveRecord
+class HrReserve extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'hr_contest_result';
+        return 'hr_reserve';
     }
 
     /**
@@ -41,9 +41,8 @@ class HrResult extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_contest', 'id_profile', 'id_record', 'result', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
-            [['id_contest', 'id_profile', 'id_record', 'result', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
-            [['comment'], 'string'],
+            [['id_profile', 'id_record_position', 'id_result', 'contest_date', 'state', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
+            [['id_profile', 'id_record_position', 'id_result', 'contest_date', 'state', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
         ];
     }
 
@@ -53,12 +52,12 @@ class HrResult extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_result' => 'Id Result',
-            'id_contest' => 'Id Contest',
+            'id_reserve' => 'Id Reserve',
             'id_profile' => 'Id Profile',
-            'id_record' => 'Id Record',
-            'result' => 'Result',
-            'comment' => 'Comment',
+            'id_record_position' => 'Id Record Position',
+            'id_result' => 'Id Result',
+            'contest_date' => 'Contest Date',
+            'state' => 'State',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
@@ -83,13 +82,20 @@ class HrResult extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getProfile()
+    {
+        return $this->hasOne(HrProfile::class, ['id_profile' => 'id_profile']);
+    }
+
+
     public function getPositionName()
     {
-        $res = CollectionRecord::findOne($this->id_record);
+        $res = CollectionRecord::findOne($this->id_record_position);
         if(!$res)
             return false;
         $fields = $res->getData(true);
 
         return array_shift($fields);
     }
+
 }

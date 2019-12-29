@@ -164,7 +164,11 @@ return [
                 'roles' => ['backend.form'],
             ],
             'reserve/contest' => [
-                'title' => 'Конкурсы',
+                'title' => 'Голосования',
+                'roles' => ['backend.form'],
+            ],
+            'reserve/dynamic' => [
+                'title' => 'Ход голосования',
                 'roles' => ['backend.form'],
             ],
             'reserve/experts' => [
@@ -173,6 +177,10 @@ return [
             ],
             'reserve/list' => [
                 'title' => 'Резерв',
+                'roles' => ['backend.form'],
+            ],
+            'reserve/archived' => [
+                'title' => 'Архив',
                 'roles' => ['backend.form'],
             ],
         ],

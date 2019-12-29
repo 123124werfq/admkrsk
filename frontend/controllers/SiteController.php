@@ -108,8 +108,32 @@ class SiteController extends Controller
         } else {
             $model->password = '';
 
+            // получаем УРЛ для входа через ЕСИА
+            if(!file_exists(Yii::getAlias('@app'). '/assets/admkrsk.pem')){
+                return $this->goBack();
+            }
+
+            $config = new \Esia\Config([
+                'clientId' => '236403241',
+                'privateKeyPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
+                'certPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
+                'redirectUrl' => 'https://t1.admkrsk.ru/site/signin',
+                'portalUrl' => 'https://esia.gosuslugi.ru/',
+                'scope' => ['fullname', 'birthdate', 'mobile', 'contacts', 'snils', 'inn', 'id_doc', 'birthplace', 'medical_doc', 'residence_doc', 'email', 'usr_org', 'usr_avt'],
+            ]);
+            $esia = new \Esia\OpenId($config);
+            $esia->setSigner(new \Esia\Signer\CliSignerPKCS7(
+                Yii::getAlias('@app'). '/assets/admkrsk.pem',
+                Yii::getAlias('@app'). '/assets/admkrsk.pem',
+                'T%52gs]CPJ',
+                Yii::getAlias('@runtime')
+            ));
+
+            $url = $esia->buildUrl();
+
             return $this->render('login', [
                 'model' => $model,
+                'esiaurl' => $url
             ]);
         }
     }
@@ -596,5 +620,129 @@ class SiteController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionFakelogin2()
+    {
+        if (true || YII_ENV_DEV) {
+            $user = User::findOne(2406);
+
+            Yii::$app->user->login($user, 3600*24*7);
+
+            $this->redirect("/");
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+
+    public function actionEsiatest()
+    {
+        //var_dump(Yii::getAlias('@app'). '/assets/admkrsk.pem'); die();
+
+        if(!file_exists(Yii::getAlias('@app'). '/assets/admkrsk.pem')){
+            echo "no cert";
+            die();
+        }
+
+
+        $config = new \Esia\Config([
+            'clientId' => '236403241',
+            'privateKeyPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
+            'certPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
+            'redirectUrl' => 'https://t1.admkrsk.ru/site/signin',
+            'portalUrl' => 'https://esia.gosuslugi.ru/',
+            'scope' => ['fullname', 'birthdate', 'mobile', 'contacts', 'snils', 'inn', 'id_doc', 'birthplace', 'medical_doc', 'residence_doc', 'email', 'usr_org', 'usr_avt'],
+        ]);
+        $esia = new \Esia\OpenId($config);
+        $esia->setSigner(new \Esia\Signer\CliSignerPKCS7(
+            Yii::getAlias('@app'). '/assets/admkrsk.pem',
+            Yii::getAlias('@app'). '/assets/admkrsk.pem',
+            'T%52gs]CPJ',
+            Yii::getAlias('@runtime')
+        ));
+
+        $url = $esia->buildUrl();
+
+        echo "<a href=$url>логин через ESIA</a>";
+
+        echo urlencode($url);
+        Yii::$app->end();
+    }
+
+
+    public function actionSignin()
+    {
+        if(!isset($_REQUEST['code'])) {
+            var_dump($_REQUEST);
+            die();
+        }
+
+        $config = new \Esia\Config([
+            'clientId' => '236403241',
+            'privateKeyPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
+            'certPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
+            'redirectUrl' => 'https://t1.admkrsk.ru/site/signin',
+            'portalUrl' => 'https://esia.gosuslugi.ru/',
+            'scope' => ['fullname', 'birthdate', 'mobile', 'contacts', 'snils', 'inn', 'id_doc', 'birthplace', 'medical_doc', 'residence_doc', 'email', 'usr_org', 'usr_avt'],
+        ]);
+        $esia = new \Esia\OpenId($config);
+        $esia->setSigner(new \Esia\Signer\CliSignerPKCS7(
+            Yii::getAlias('@app'). '/assets/admkrsk.pem',
+            Yii::getAlias('@app'). '/assets/admkrsk.pem',
+            'T%52gs]CPJ',
+            Yii::getAlias('@runtime')
+        ));
+
+        $token = $esia->getToken($_REQUEST['code']);
+
+        $personInfo = $esia->getPersonInfo();
+        //$addressInfo = $esia->getAddressInfo();
+        //$contactInfo = $esia->getContactInfo();
+        //$documentInfo = $esia->getDocInfo();
+
+        $oid = $esia->getConfig()->getOid();
+
+        $user = User::findByOid($oid);
+        if($user) {
+            $esiauser = EsiaUser::findOne($user->id_esia_user);
+
+            if($esiauser)
+                $esiauser->actualize($esia);
+
+            $login = Yii::$app->user->login($user);
+            Yii::$app->user->identity->createAction(Action::ACTION_LOGIN_ESIA);
+
+            return $login;
+        }
+
+        $user = new User();
+        $user->email = $oid.'@esia.ru';
+        $user->username = $personInfo['firstName'].' '.$personInfo['lastName'];
+        $user->setPassword($personInfo['eTag']);
+        $user->generateAuthKey();
+        $user->status = User::STATUS_ACTIVE;
+
+        $esiauser = new EsiaUser();
+
+        if($esiauser->actualize($esia))
+            $user->id_esia_user = $esiauser->id_esia_user;
+
+        if(!$user->save()) {
+            throw new yii\web\ServerErrorHttpException('Внутренняя ошибка сервера');
+        }
+
+        Yii::$app->user->login($user);
+        Yii::$app->user->identity->createAction(Action::ACTION_SIGNUP_ESIA);
+
+        return $this->redirect('/');
+
+        /*
+        var_dump($token);
+        var_dump($personInfo);
+
+        echo "<br><br>".$oid;
+        Yii::$app->end();
+        */
     }
 }

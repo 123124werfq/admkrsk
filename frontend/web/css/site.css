@@ -22,6 +22,9 @@
     opacity: 0;
 }
 
+.search-table {display: flex; flex-wrap: wrap;}
+.search-table input, .search-table select {padding: 10px!important; width: 33%!important; margin-right: 5px;}
+
 .header-search{padding: 10px; border: none; border-radius: 5px; width: 100%;}
 
 .select2-container--krajee .select2-selection {background: #F4F7FB!important; border: 0px!important; box-shadow: none!important;
@@ -201,4 +204,26 @@ table.vote thead td{
 .polls__question-error {
     margin-bottom: 16px;
     color: #a94442;
+}
+
+.content table tbody td {padding: 11px 8px!important;}
+
+#personnel_form_layout td, .personnel_block_subheader,.personnel_block_index, .personnel_block_header, #personnel_form_layout .personnel_form_field_value input, #personnel_form_layout select, #personnel_form_layout textarea, .ui-menu .ui-menu-item a {
+    font-size: 10pt;
+    font-family: Trebuchet MS, Tahoma, Arial, sans-serif;
+    vertical-align: top;
+}
+
+/*.personnel_block_header, .personnel_block_subheader {width: 200px;}*/
+
+.personnel_block_index {padding-top: 5px;}
+
+.personnel_block_header, .personnel_block_content,.personnel_block_subheader  {
+    padding: 8px!important;
+}
+
+.personnel_block_content{
+    border-bottom: 1px solid #b8babd;
+    font-weight: bold!important;
+    font-style: italic;
 }

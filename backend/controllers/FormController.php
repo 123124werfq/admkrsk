@@ -57,7 +57,7 @@ class FormController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['create','create-service','copy'],
+                        'actions' => ['create','create-service','copy','make-doc'],
                         'roles' => ['backend.form.create'],
                         'roleParams' => [
                             'class' => Form::class,
@@ -198,6 +198,23 @@ class FormController extends Controller
             'model' => $model,
             'rows' => $rows,
         ]);
+    }
+
+
+    public function actionMakeDoc($id_record)
+    {
+        $record = \common\models\CollectionRecord::findOne($id_record);
+        $export_path = $record->collection->form->makeDoc($record);
+
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="word_template.docx"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($export_path));
+
+        readfile($export_path);
     }
 
     /**

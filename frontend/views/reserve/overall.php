@@ -77,7 +77,7 @@
                                                         echo '<span class="badge secondary">нет оценки</span>';
                                                         break;
                                                     case -1:
-                                                        echo '<span class="badge badge-danger">не включать</span>';
+                                                        echo '<span class="badge badge-danger">отказать</span>';
                                                         break;
                                                     case 1:
                                                         echo '<span class="badge badge-success">включить</span>';
@@ -92,8 +92,16 @@
 
                                         ?>
                                     <td>
-                                        <?php foreach ($positionTotal[$profile->id_profile] as $posid => $result){ ?>
-                                            <?=$result?><br>
+                                        <?php foreach ($positionTotal[$profile->id_profile] as $posid => $result){
+                                            if($result<0)
+                                                $final = '<span class="badge badge-danger">отказать</span>';
+                                            else if($result>0)
+                                                $final = '<span class="badge badge-success">включить</span>';
+                                            else
+                                                $final = '<span class="badge secondary">нет оценки</span>';
+
+                                            ?>
+                                            <?=$final?><br>
                                         <?php }?>
                                     </td>
                                 </tr>

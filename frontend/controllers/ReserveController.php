@@ -74,9 +74,7 @@ class ReserveController extends \yii\web\Controller
 
     public function actionVote($id=null)
     {
-        $now = time();
-        //$contest = HrContest::find()->where("\"begin\"<$now AND \"end\">$now")->one();
-        $contest = HrContest::find()->one();
+        $contest = HrContest::active();
 
         if(!$contest)
             throw new BadRequestHttpException();
@@ -108,9 +106,7 @@ class ReserveController extends \yii\web\Controller
 
     public function actionProfile($id)
     {
-        $now = time();
-        //$contest = HrContest::find()->where("\"begin\"<$now AND \"end\">$now")->one();
-        $contest = HrContest::find()->one();
+        $contest = HrContest::active();
 
         if(!$contest)
             throw new BadRequestHttpException();
@@ -142,7 +138,7 @@ class ReserveController extends \yii\web\Controller
 
         if (!empty(Yii::$app->request->post()))
         {
-            var_dump(Yii::$app->request->post());
+            //var_dump(Yii::$app->request->post());
 
             $positions =  Yii::$app->request->post('position');
 
@@ -209,6 +205,15 @@ class ReserveController extends \yii\web\Controller
 
         if(!$contest)
             throw new BadRequestHttpException();
+
+        $expert = HrExpert::findOne(['id_user' => Yii::$app->user->id]);
+
+        if(!$expert)
+            throw new BadRequestHttpException();
+
+        if($contest->id_user != $expert->id_expert)
+            throw new BadRequestHttpException();
+
 
         $votes = HrVote::find()->where(['id_contest' => $contest->id_contest])->all();
 

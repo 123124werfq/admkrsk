@@ -278,6 +278,60 @@ class CollectionController extends Controller
         else print_r($newCollection->errors);
     }*/
 
+    public function actionConverType($id)
+    {
+        set_time_limit(0);
+
+        $form = new CollectionConvertForm;
+
+        $collection = $this->findModel($id);
+        $columns = $collection->getColumns()->indexBy('alias')->all();;
+
+        if (!empty($_POST['type']))
+        {
+            switch ($_POST['type']) {
+                case 'coords':
+
+                    if (isset($columns['X']) && $columns['Y'])
+                    {
+                        $newColumn = $collection->createColumn([
+                            'name'  => 'Координаты',
+                            'alias' => 'map_coords',
+                            'type'  => CollectionColumn::TYPE_MAP,
+                        ]);
+
+                        if ($newColumn)
+                        {
+                            // добавляем инпут в форму
+                            $newColumn->collection->form->createInput([
+                                'type'=>$newColumn->type,
+                                'name'=> $newColumn->name,
+                                'label'=> $newColumn->name,
+                                'fieldname'=> $newColumn->alias,
+                                'id_column'=> $newColumn->id_column,
+                            ]);
+
+                            $alldata = $collection->getData([],true);
+
+                            foreach ($alldata as $key => $data)
+                            {
+                                $record = CollectionRecord::findOne($data['id_record']);
+                                $record->data = [$newColumn->id_column=>[$data['X'],$data['Y']];
+                                $record->update();
+                            }
+                        }
+                    }
+
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+        }
+
+        return $this->render('convert');
+    }
+
     public function actionAssign($id)
     {
         set_time_limit(0);
@@ -290,7 +344,7 @@ class CollectionController extends Controller
         {
             $newColumn = new CollectionColumn;
             $newColumn->name = $form->column_name;
-            $newColumn->alias = $form->column_name;
+            $newColumn->alias = $form->alias;
             $newColumn->id_collection = $id;
             $newColumn->type = $form->type;
 

@@ -258,7 +258,7 @@ class Collection extends \yii\db\ActiveRecord
         return $query;
     }
 
-    public function getDataQueryByOptions($options)
+    public function getDataQueryByOptions($options,array $search_columns=[])
     {
         if (!empty($this->id_parent_collection))
             $id_collection = $this->id_parent_collection;
@@ -276,6 +276,10 @@ class Collection extends \yii\db\ActiveRecord
         {
             foreach ($options['columns'] as $key => $col)
                 $id_cols[] = $col['id_column'];
+
+            if (!empty($options['search']))
+                foreach ($options['search'] as $key => $col)
+                    $id_cols[] = $col['id_column'];
 
             $query->select($id_cols);
         }
@@ -355,8 +359,24 @@ class Collection extends \yii\db\ActiveRecord
         ]];
     }
 
+    public function createColumn($attributes)
+    {
+        $newColumn = new CollectionColumn;
+        $newColumn->name = $attributes['name'];
+        $newColumn->alias = $attributes['alias'];
+        $newColumn->id_collection = $this->id_collection;
+        $newColumn->type = $attributes['type'];
+
+        if ($newColumn->save())
+        {
+            return $newColumn;
+        }
+
+        return false;
+    }
+
     // DEPRECATED
-    public function createForm()
+    /*public function createForm()
     {
         $transaction = Yii::$app->db->beginTransaction();
 
@@ -410,7 +430,5 @@ class Collection extends \yii\db\ActiveRecord
             $transaction->rollBack();
             throw $e;
         }
-    }
-
-
+    }*/
 }

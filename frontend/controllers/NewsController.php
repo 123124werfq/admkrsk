@@ -60,14 +60,25 @@ class NewsController extends \yii\web\Controller
         if (!empty($rubrics))
             $rubrics = CollectionRecord::find()->where(['id_record'=>$rubrics])->all();
 
-        $pagination = new Pagination(['totalCount' => $news->count(), 'pageSize'=>20]);
+        //$pagination = new Pagination(['totalCount' => $news->count(), 'pageSize'=>20]);
 
         $totalCount = $news->count();
 
-        $news = $news->offset($pagination->offset)
-            ->limit($pagination->limit)
+        $news = $news
+            //->offset($pagination->offset)
+            ->limit(20)//$pagination->limit
+            ->offset((int)Yii::$app->request->get('p',0)*20)
             ->orderBy('date_publish DESC')
             ->all();
+
+        if (Yii::$app->request->isAjax)
+        {
+            $output = '';
+            foreach ($news as $key => $data)
+                $output .= $this->renderPartial('_news',['data'=>$data]);
+
+            return $output;
+        }
 
         return $this->render('index',[
             'page'=>$page,

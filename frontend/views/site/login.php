@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 		<td>
     					<div class="row mt-3 mb-4">
     						<div class="col-fourth">
-                                <?= Html::a('Войти', ['site/auth', 'authclient' => 'esia'], ['class' => 'btn btn__block btn__border']) ?>
+                                <a class="btn btn__block btn__border" href="<?=$esiaurl?>">Войти</a>
     						</div>
     					</div>
     				</td>
@@ -94,5 +94,5 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php ActiveForm::end(); ?>
             </div>
         </div>
-    </div>
+    </div-->
 </div>

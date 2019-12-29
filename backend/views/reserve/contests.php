@@ -9,7 +9,7 @@ use yii\grid\GridView;
 
 $archive = Yii::$app->request->get('archive');
 
-$this->title = 'Конкурсы';
+$this->title = 'Голосования';
 $this->params['breadcrumbs'][] = $this->title;
 
 /*
@@ -22,6 +22,9 @@ if (Yii::$app->user->can('admin.service')) {
     $this->params['button-block'][] = Html::a('Добавить', ['create'], ['class' => 'btn btn-success']);
 }
 */
+
+$this->params['button-block'][] = Html::a('Добавить', ['create'], ['class' => 'btn btn-success']);
+
 ?>
 
 <div class="service-index">
@@ -33,16 +36,22 @@ if (Yii::$app->user->can('admin.service')) {
             'id_contest:integer:ID',
             'title',
             [
-                'label' => 'Начало',
+                'label' => 'Период',
+                'format' => 'html',
                 'value' => function($model){
-                    return date("d-m-Y H:i", $model->begin);
+                    $info = '';
+
+                    if($model->end < time())  $info = "<br>Время голосования истекло";
+
+                    return date("d-m-Y H:i", $model->begin) . " - " . date("d-m-Y H:i", $model->end) . $info;
                 }
             ],
             [
-                'label' => 'Окончание',
+                'label'=> 'Статус',
+                'format' => 'html',
                 'value' => function($model){
-                    return date("d-m-Y H:i", $model->end);
-                }
+                    return $model->getStatename(true);
+                },
             ],
             [
                 'label' => 'Претенденты',
@@ -50,7 +59,7 @@ if (Yii::$app->user->can('admin.service')) {
                 'value' => function($model){
                     $pretenders = [];
                     foreach ($model->profiles as $profile) {
-                        $pretenders[] = $profile->name;
+                        $pretenders[] = "<a href='/reserve/editable?id={$profile->id_profile}' target='_blank'>".$profile->name."</a>";
                     }
                     return implode('<br>', $pretenders);
                 }
@@ -65,14 +74,17 @@ if (Yii::$app->user->can('admin.service')) {
                             $positions[] = $position->positionName;
                     }
                     $positions = array_unique($positions);
+                    sort($positions);
                     return implode('<br>', $positions);
                 }
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{edit} {stop}',
+                'template' => '{dynamic} {edit} {stop}',
                 'buttons' => [
                     'stop' => function($url, $model, $key) {
+                        if($model->state == \common\models\HrContest::STATE_FINISHED) return '';
+
                         $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-stop"]);
                         return Html::a($icon, $url, [
                             'title' => 'Остановить',
@@ -88,7 +100,14 @@ if (Yii::$app->user->can('admin.service')) {
                             'data-pjax' => '0',
                         ]);
                     },
-
+                    'dynamic' => function($url, $model, $key) {
+                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-list-alt"]);
+                        return Html::a($icon, $url, [
+                            'title' => 'Результаты',
+                            'aria-label' => 'Результаты',
+                            'data-pjax' => '0',
+                        ]);
+                    },
                 ],
                 'contentOptions'=>['class'=>'button-column'],
             ],

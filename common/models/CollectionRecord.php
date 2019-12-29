@@ -23,6 +23,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
     public $data;
 
     public $loadData = [];
+    public $loadDataAlias = [];
 
     /**
      * {@inheritdoc}
@@ -60,6 +61,14 @@ class CollectionRecord extends \yii\db\ActiveRecord
             'deleted_at' => 'Deleted At',
             'deleted_by' => 'Deleted By',
         ];
+    }
+
+    public function __get($name)
+    {
+       if (isset($this->loadDataAlias[$name]))
+          return $this->loadDataAlias[$name];
+
+       return parent::__get($name);
     }
 
     public function getLineValue()
@@ -208,17 +217,6 @@ class CollectionRecord extends \yii\db\ActiveRecord
         }
     }
 
-    /*public function getConvertData()
-    {
-        $record = $this->getData();
-
-        $output = [];
-        foreach ($this->collection->columns as $key => $column)
-        {
-                 
-        }
-    }*/
-
     public function getData($keyAsAlias=false,$id_columns=[])
     {
         if ($this->isNewRecord)
@@ -233,7 +231,14 @@ class CollectionRecord extends \yii\db\ActiveRecord
         $record = $record->getArray();
 
         if (!empty($record))
-            $this->loadData = $record = array_shift($record);
+        {
+            $record = array_shift($record);
+
+            foreach ($columns as $key => $column)
+                $this->loadDataAlias[$column['alias']] = $record[$column->id_column];
+
+            $this->loadData = $record;
+        }
         else
             return [];
 
@@ -249,12 +254,12 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
         if (!empty($keyAsAlias))
         {
-            $aliased = [];
+            /*$aliased = [];
 
             foreach ($columns as $key => $column)
-                $aliased[$column['alias']] = $record[$column->id_column];
+                $aliased[$column['alias']] = $record[$column->id_column];*/
 
-            return $aliased;
+            return $this->loadDataAlias;
         }
         else
             return $record;
@@ -286,9 +291,8 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
         if (!empty($this->loadData[$id_column]))
         {
-            $ids = json_decode($this->loadData[$id_column],true);
-
-            $medias = Media::find()->where(['id_media'=>$ids])->all();
+            //$ids = json_decode($this->loadData[$id_column],true);
+            $medias = Media::find()->where(['id_media'=>$this->loadData[$id_column]])->all();
 
             if (!empty($medias))
                 return ($firstElement)?array_shift($medias):$medias;

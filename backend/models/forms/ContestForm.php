@@ -19,12 +19,13 @@ class ContestForm extends Model
     public $moderator;
     public $profiles;
     public $notification;
+    public $state;
 
     public function rules()
     {
         return [
             [['id'], 'integer'],
-            [['name', 'date_start', 'date_end', 'experts', 'profiles', 'moderators'], 'required'],
+            [['name', 'date_start', 'date_end', 'experts', 'profiles', 'moderators', 'state'], 'required'],
             [['notification'], 'string']
 
         ];

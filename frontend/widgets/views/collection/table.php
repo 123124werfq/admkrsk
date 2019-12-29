@@ -1,3 +1,22 @@
+<?php
+	use yii\helpers\Html;
+	use yii\widgets\Pjax;
+?>
+<?php if (!empty($search_columns)){?>
+	<form class="search-table" data-hash="<?=$unique_hash?>" action="" >
+	<?php foreach ($search_columns as $key => $column)
+	{
+		if ($column['type']==0)
+			echo Html::dropDownList('search_column['.$unique_hash.']['.$column['column']->id_column.']','',$column['values'],['class'=>'form-control','prompt'=>$column['column']->name]);
+		else
+			echo Html::textInput('search_column['.$unique_hash.']['.$column['column']->id_column.']','',['class'=>'form-control','placeholder'=>$column['column']->name,'max-lenght'=>255]);
+	 }?>
+	 </form>
+<?php }?>
+<?php Pjax::begin([
+	'id' => $unique_hash,
+	//'enablePushState' => false,
+]) ?>
 <div class="table-responsive">
 	<table>
 		<thead>
@@ -10,14 +29,24 @@
 		<tbody>
 			<?php foreach ($allrows as $key => $row){?>
 				<tr>
-				<?php foreach ($row as $tkey => $td) {
-					echo "<td>$td</td>";
-				}?>
+				<?php foreach ($columns as $key => $column) {?>
+					<td><?php
+						if (isset($row[$column->alias]))
+						{
+							if (is_array($row[$column->alias]))
+								echo implode('<br>', $row[$column->alias]);
+							else
+								echo $row[$column->alias];
+
+						}?>
+					</td>
+				<?php }?>
 				</tr>
 			<?php }?>
 		</tbody>
-</table>
-	<?=\yii\widgets\LinkPager::widget([
-	    'pagination' => $pagination,
-	]);?>
+	</table>
 </div>
+<?=\yii\widgets\LinkPager::widget([
+    'pagination' => $pagination,
+]);?>
+<?php Pjax::end(); ?>

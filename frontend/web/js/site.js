@@ -48,6 +48,36 @@ function addInput(block)
 
 $(document).ready(function() {
 
+    var curpage = 0;
+    $(".col-2-third .load-more").click(function(){
+
+        curpage++;
+
+        $.ajax({
+            type: "GET",
+            dataType: "html",
+            url: "",
+            data: {p:curpage}
+        }).done(function(data){
+            if (data=='')
+                $(".col-2-third .load-more").hide();
+            else
+                $(".press-list").append(data);
+        });
+
+        return false;
+    });
+
+    $(".search-table select, .search-table input").change(function(){
+        var $form = $(this).closest('form');
+        $.pjax({
+            container: '#'+$form.data('hash'),
+            data: $form.serialize(),
+            timeout:10000,
+            //dataType: 'application/json'
+        });
+    });
+
     $("#Complaint_id_firm").change(function(){
 
         $.ajax({
@@ -335,10 +365,14 @@ $(document).ready(function() {
             $('#top-search').submit();
     });
 
+    $(".dz-remove").click(function(){
+        $(this).closest('.fileupload_item').remove();
+        return false;
+    });
 
     $(".fileupload").each(function(){
         var id_input = $(this).data('input');
-        var new_index = 0;
+        var new_index = $(this).find('.fileupload_item').length+1;
         var maxFiles = $(this).data('maxfiles');
         var acceptedFiles = $(this).data('acceptedfiles');
 

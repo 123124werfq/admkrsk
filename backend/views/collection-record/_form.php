@@ -25,7 +25,7 @@ use yii\widgets\ActiveForm;
 $script = <<< JS
 $(".fileupload").each(function(){
     var id_input = $(this).data('input');
-    var new_index = 0;
+    var new_index = $(this).find('.fileupload_item').length+1;
 
     var uploader = $(this).find('.fileupload_dropzone').dropzone({
         addRemoveLinks: true,
@@ -54,6 +54,9 @@ $(".fileupload").each(function(){
                 response = JSON.parse(response);
                 $(file.previewElement).append(
                     '<input type="hidden" name="FormDynamic[input'+id_input+']['+new_index+'][file_path]" value="'+response.file+'"/>'
+                );
+                $(file.previewElement).append(
+                    '<input type="hidden" name="FormDynamic[input'+id_input+']['+new_index+'][filename]" value="'+response.filename+'"/>'
                 );
                 
                 if ($(file.previewElement).find('.fileupload_preview-type img').attr('src')==undefined)
