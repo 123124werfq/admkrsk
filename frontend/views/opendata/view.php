@@ -88,6 +88,12 @@ $lastDataStructureUrl = $model->lastData->structure->url;
                                 <td>Описание структуры набора открытых данных</td>
                                 <td><?= Html::a($lastDataStructureUrl, $lastDataStructureUrl) ?></td>
                             </tr>
+                            <?php if ($model->collection && !$model->collection->is_authenticate && $model->collection->alias): ?>
+                                <tr>
+                                    <td>Доступ к набору через REST API</td>
+                                    <td><?= Html::a($model->collection->apiUrl, $model->collection->apiUrl) ?></td>
+                                </tr>
+                            <?php endif; ?>
                             <tr>
                                 <td>Дата первой публикации набора данных</td>
                                 <td><?= Yii::$app->formatter->asDate($model->firstData->created_at) ?></td>

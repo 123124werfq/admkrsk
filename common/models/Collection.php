@@ -13,6 +13,7 @@ use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "db_collection".
@@ -396,6 +397,11 @@ class Collection extends \yii\db\ActiveRecord
         }
 
         return false;
+    }
+
+    public function getApiUrl()
+    {
+        return Url::to(['/api/collection/index', 'alias' => $this->alias], true);
     }
 
     // DEPRECATED

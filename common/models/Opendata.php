@@ -233,10 +233,10 @@ class Opendata extends \yii\db\ActiveRecord
 
         if (Yii::$app->publicStorage->has($this->path)) {
             $url = Yii::$app->publicStorage->getPublicUrl($this->path);
-        }
 
-        if (Yii::$app->request->userIP != '127.0.0.1') {
-            return str_replace('127.0.0.1:9000', 'storage.admkrsk.ru', $url);
+            if (strpos($url, '127.0.0.1:9000') !== false) {
+                return str_replace('127.0.0.1:9000', 'storage.admkrsk.ru', $url);
+            }
         }
 
         return $url;
@@ -247,17 +247,13 @@ class Opendata extends \yii\db\ActiveRecord
      */
     public function getMetadata()
     {
-        $url = null;
+        $metadata = null;
 
         if (Yii::$app->publicStorage->has($this->path)) {
-            $url = Yii::$app->publicStorage->getMetadata($this->path);
+            $metadata = Yii::$app->publicStorage->getMetadata($this->path);
         }
 
-        if (Yii::$app->request->userIP != '127.0.0.1') {
-            return str_replace('127.0.0.1:9000', 'storage.admkrsk.ru', $url);
-        }
-
-        return $url;
+        return $metadata;
     }
 
     /**
@@ -269,10 +265,10 @@ class Opendata extends \yii\db\ActiveRecord
 
         if (Yii::$app->publicStorage->has(self::OPENDATA_LIST_PATH)) {
             $url = Yii::$app->publicStorage->getPublicUrl(self::OPENDATA_LIST_PATH);
-        }
 
-        if (Yii::$app->request->userIP != '127.0.0.1') {
-            return str_replace('127.0.0.1:9000', 'storage.admkrsk.ru', $url);
+            if (strpos($url, '127.0.0.1:9000') !== false) {
+                return str_replace('127.0.0.1:9000', 'storage.admkrsk.ru', $url);
+            }
         }
 
         return $url;
@@ -283,17 +279,13 @@ class Opendata extends \yii\db\ActiveRecord
      */
     public static function getListMetadata()
     {
-        $url = null;
+        $metadata = null;
 
         if (Yii::$app->publicStorage->has(self::OPENDATA_LIST_PATH)) {
-            $url = Yii::$app->publicStorage->getMetadata(self::OPENDATA_LIST_PATH);
+            $metadata = Yii::$app->publicStorage->getMetadata(self::OPENDATA_LIST_PATH);
         }
 
-        if (Yii::$app->request->userIP != '127.0.0.1') {
-            return str_replace('127.0.0.1:9000', 'storage.admkrsk.ru', $url);
-        }
-
-        return $url;
+        return $metadata;
     }
 
     /**
@@ -381,6 +373,7 @@ class Opendata extends \yii\db\ActiveRecord
 
     /**
      * @return boolean
+     * @throws \Exception
      */
     public function export()
     {
@@ -395,6 +388,7 @@ class Opendata extends \yii\db\ActiveRecord
                 return true;
             } catch (\Exception $e) {
                 $transaction->rollBack();
+                throw $e;
             }
         }
 
