@@ -38,6 +38,7 @@
                                             data-id="'+value.id_collection+'" \
                                             data-template="'+value.template+'" \
                                             data-group="'+value.group+'" \
+                                            data-pagesize="'+value.pagesize+'" \
                                             data-sort="'+value.sort+'" \
                                             data-dir="'+value.dir+'">Список #'+value.id_collection+'.</collection>');
                 }

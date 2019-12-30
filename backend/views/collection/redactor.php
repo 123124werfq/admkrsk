@@ -68,7 +68,9 @@ else
 ?>
     <?=$form->field($model, 'template_view')->dropDownList(['table'=>'Таблицей','template'=>'Шаблоном'])->hint('Если не заполнен шаблон вывода элемента, то выведятся все данные из колонок отображения в виде списка');?>
 
-    <?=$form->field($model, 'id_parent_collection')->hiddenInput();?>
+    <?=$form->field($model, 'pagesize')->textInput(['type'=>'number','step'=>1,'min'=>1]);?>
+
+    <?=$form->field($model, 'id_parent_collection',['template'=>'{input}'])->hiddenInput();?>
 
     <?=$form->field($model, 'id_group')->dropDownList($columns,['prompt'=>'Выберите колонку для группировки']);?>
 
