@@ -108,8 +108,32 @@ class SiteController extends Controller
         } else {
             $model->password = '';
 
+            // получаем УРЛ для входа через ЕСИА
+            if(!file_exists(Yii::getAlias('@app'). '/assets/admkrsk.pem')){
+                return $this->goBack();
+            }
+
+            $config = new \Esia\Config([
+                'clientId' => '236403241',
+                'privateKeyPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
+                'certPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
+                'redirectUrl' => 'https://t1.admkrsk.ru/site/signin',
+                'portalUrl' => 'https://esia.gosuslugi.ru/',
+                'scope' => ['fullname', 'birthdate', 'mobile', 'contacts', 'snils', 'inn', 'id_doc', 'birthplace', 'medical_doc', 'residence_doc', 'email', 'usr_org', 'usr_avt'],
+            ]);
+            $esia = new \Esia\OpenId($config);
+            $esia->setSigner(new \Esia\Signer\CliSignerPKCS7(
+                Yii::getAlias('@app'). '/assets/admkrsk.pem',
+                Yii::getAlias('@app'). '/assets/admkrsk.pem',
+                'T%52gs]CPJ',
+                Yii::getAlias('@runtime')
+            ));
+
+            $url = $esia->buildUrl();
+
             return $this->render('login', [
                 'model' => $model,
+                'esiaurl' => $url
             ]);
         }
     }
@@ -677,8 +701,48 @@ class SiteController extends Controller
         //$contactInfo = $esia->getContactInfo();
         //$documentInfo = $esia->getDocInfo();
 
+        $oid = $esia->getConfig()->getOid();
+
+        $user = User::findByOid($oid);
+        if($user) {
+            $esiauser = EsiaUser::findOne($user->id_esia_user);
+
+            if($esiauser)
+                $esiauser->actualize($esia);
+
+            $login = Yii::$app->user->login($user);
+            Yii::$app->user->identity->createAction(Action::ACTION_LOGIN_ESIA);
+
+            return $login;
+        }
+
+        $user = new User();
+        $user->email = $oid.'@esia.ru';
+        $user->username = $personInfo['firstName'].' '.$personInfo['lastName'];
+        $user->setPassword($personInfo['eTag']);
+        $user->generateAuthKey();
+        $user->status = User::STATUS_ACTIVE;
+
+        $esiauser = new EsiaUser();
+
+        if($esiauser->actualize($esia))
+            $user->id_esia_user = $esiauser->id_esia_user;
+
+        if(!$user->save()) {
+            throw new yii\web\ServerErrorHttpException('Внутренняя ошибка сервера');
+        }
+
+        Yii::$app->user->login($user);
+        Yii::$app->user->identity->createAction(Action::ACTION_SIGNUP_ESIA);
+
+        return $this->redirect('/');
+
+        /*
         var_dump($token);
         var_dump($personInfo);
+
+        echo "<br><br>".$oid;
         Yii::$app->end();
+        */
     }
 }

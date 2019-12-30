@@ -11,6 +11,7 @@ use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\web\Cookie;
 
 /**
  * This is the model class for table "{{%db_poll}}".
@@ -32,6 +33,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $deleted_by
  * @property string $statusName
  * @property array $access_user_ids
+ * @property string $cookieName
  *
  * @property Question[] $questions
  * @property Vote[] $votes
@@ -204,7 +206,7 @@ class Poll extends \yii\db\ActiveRecord
     {
         return $this->getVotes()
             ->where(['ip' => Yii::$app->request->getUserIP()])
-            ->exists();
+            ->exists() || $this->getCookie();
     }
 
     public function isExpired()
@@ -235,10 +237,32 @@ class Poll extends \yii\db\ActiveRecord
 
     public static function getIdRandomActivePool()
     {
+        /* @var Poll $poll */
         if (($poll = self::find()->andWhere(['<', 'date_end', time()])->orderBy('random()')->one()) === null) {
             return false;
         }
 
         return $poll->id_poll;
+    }
+
+    public function getCookieName()
+    {
+        $name = 'poll.' . $this->id_poll;
+
+        return md5($name);
+    }
+
+    public function setCookie()
+    {
+        Yii::$app->response->cookies->add(new Cookie([
+            'name' => $this->cookieName,
+            'value' => true,
+            'expire' => strtotime('+1 year'),
+        ]));
+    }
+
+    public function getCookie()
+    {
+        return Yii::$app->request->cookies->getValue($this->cookieName, false);
     }
 }
