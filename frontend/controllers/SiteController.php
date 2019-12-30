@@ -714,7 +714,8 @@ class SiteController extends Controller
             $login = Yii::$app->user->login($user);
             Yii::$app->user->identity->createAction(Action::ACTION_LOGIN_ESIA);
 
-            return $login;
+            return $this->goHome();
+            //return $login;
         }
 
         $user = new User();
