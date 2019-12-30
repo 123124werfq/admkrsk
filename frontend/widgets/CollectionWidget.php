@@ -198,6 +198,7 @@ class CollectionWidget extends \yii\base\Widget
             'search_columns'=>$search_columns,
             'page'=>$this->page,
             'unique_hash'=>$unique_hash,
+            'pagesize'=>$this->pagesize,
         ]);
     }
 }
