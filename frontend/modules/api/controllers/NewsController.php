@@ -2,7 +2,7 @@
 
 namespace frontend\modules\api\controllers;
 
-use frontend\modules\api\base\Controller;
+use yii\rest\Controller;
 use frontend\modules\api\models\News;
 use frontend\modules\api\models\search\NewsSearch;
 use Yii;
@@ -49,6 +49,6 @@ class NewsController extends Controller
             return $model;
         }
 
-        throw new NotFoundHttpException();
+        throw new NotFoundHttpException('Страница не найдена.');
     }
 }

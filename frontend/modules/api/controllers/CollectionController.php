@@ -19,14 +19,17 @@ class CollectionController extends Controller
      * @param $alias
      * @return mixed
      * @throws NotFoundHttpException
+     * @throws \yii\web\UnauthorizedHttpException
      */
     public function actionIndex($alias)
     {
-        if (!Collection::find()->where(['alias' => $alias])->exists()) {
-            throw new NotFoundHttpException();
+        $collection = $this->findCollectionModel($alias);
+
+        if ($collection->is_authenticate) {
+            $this->checkAccess();
         }
 
-        $searchModel = new CollectionSearch(['alias' => $alias]);
+        $searchModel = new CollectionSearch(['alias' => $collection->alias]);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $dataProvider;
@@ -34,13 +37,21 @@ class CollectionController extends Controller
 
     /**
      * Displays a single Collection model.
+     * @param $alias
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \yii\web\UnauthorizedHttpException
      */
     public function actionView($alias, $id)
     {
-        return $this->findModel($id);
+        $record = $this->findCollectionRecordModel($id);
+
+        if ($record->collection->is_authenticate) {
+            $this->checkAccess();
+        }
+
+        return $record;
     }
 
     /**
@@ -50,12 +61,28 @@ class CollectionController extends Controller
      * @return CollectionRecord the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findCollectionRecordModel($id)
     {
         if (($model = CollectionRecord::findOne($id)) !== null) {
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('Страница не найдена.');
+    }
+
+    /**
+     * Finds the Collection model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $alias
+     * @return Collection the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findCollectionModel($alias)
+    {
+        if (($model = Collection::findOne(['alias' => $alias])) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('Страница не найдена.');
     }
 }

@@ -17,6 +17,8 @@ use yii\mongodb\Query;
  * @property int $updated_by
  * @property int $deleted_at
  * @property int $deleted_by
+ *
+ * @property Collection $collection
  */
 class CollectionRecord extends \yii\db\ActiveRecord
 {
