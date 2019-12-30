@@ -1,11 +1,15 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\components\ApiErrorHandler;
 use common\models\Action;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
+use yii\base\Exception;
 use yii\base\InvalidArgumentException;
+use yii\base\UserException;
+use yii\filters\ContentNegotiator;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -18,9 +22,13 @@ use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 use common\models\User;
 use common\models\EsiaUser;
+use yii\web\ErrorAction;
+use yii\web\ErrorHandler;
+use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 
 use common\models\Workflow;
+use yii\web\Response;
 
 /**
  * Site controller
@@ -64,9 +72,6 @@ class SiteController extends Controller
     public function actions()
     {
         return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
@@ -77,6 +82,36 @@ class SiteController extends Controller
             ],
 
         ];
+    }
+
+    /**
+     * Displays homepage.
+     *
+     * @return mixed
+     */
+    public function actionError()
+    {
+        $route = explode('/', Yii::$app->requestedRoute);
+
+        if ($route[0] == 'api') {
+            $this->attachBehavior('contentNegotiator', [
+                'class' => ContentNegotiator::className(),
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                    'application/xml' => Response::FORMAT_XML,
+                ],
+            ]);
+            $this->negotiate();
+
+            if (($exception = Yii::$app->getErrorHandler()->exception) === null) {
+                $exception = new NotFoundHttpException(Yii::t('yii', 'Page not found.'));
+            }
+
+            $errorHandler = new ApiErrorHandler();
+            $errorHandler->handleException($exception);
+        }
+
+        return (new ErrorAction('error', $this))->run();
     }
 
     /**

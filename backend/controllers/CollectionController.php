@@ -316,7 +316,7 @@ class CollectionController extends Controller
                             foreach ($alldata as $key => $data)
                             {
                                 $record = CollectionRecord::findOne($data['id_record']);
-                                $record->data = [$newColumn->id_column=>[$data['X'],$data['Y']];
+                                $record->data = [$newColumn->id_column=>[$data['X'],$data['Y']]];
                                 $record->update();
                             }
                         }

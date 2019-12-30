@@ -9,12 +9,10 @@ use yii\web\UnauthorizedHttpException;
 class Controller extends \yii\rest\Controller
 {
     /**
-     * @param $action
-     * @return bool
+     * @return void
      * @throws UnauthorizedHttpException
-     * @throws \yii\web\BadRequestHttpException
      */
-    public function beforeAction($action)
+    public function checkAccess(): void
     {
         $authHeader = null;
 
@@ -35,7 +33,5 @@ class Controller extends \yii\rest\Controller
         if (!isset($authHeader) || !$query->exists()) {
             throw new UnauthorizedHttpException('Your request was made with invalid credentials.');
         }
-
-        return parent::beforeAction($action);
     }
 }

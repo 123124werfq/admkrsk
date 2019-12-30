@@ -37,6 +37,7 @@ use yii\helpers\ArrayHelper;
  * @property string $template
  * @property string $template_element
  * @property array $access_user_ids
+ * @property bool $is_authenticate
  *
  * @property CollectionColumn[] $columns
  */
@@ -74,12 +75,18 @@ class Collection extends \yii\db\ActiveRecord
             [['alias'], 'unique'],
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
-            [['id_parent_collection','id_group','id_column_order','order_direction'], 'integer'],
-            [['filter', 'options','label'], 'safe'],
-            [['template','template_element','template_view'], 'string'],
+            [['id_parent_collection', 'id_group', 'id_column_order', 'order_direction'], 'integer'],
+            [['is_authenticate'], 'boolean'],
+            [['is_authenticate'], 'default', 'value' => true],
+            [['filter', 'options', 'label'], 'safe'],
+            [['template', 'template_element', 'template_view'], 'string'],
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
-            ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
+            [
+                'access_user_group_ids',
+                'each',
+                'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']
+            ],
         ];
     }
 
@@ -99,9 +106,10 @@ class Collection extends \yii\db\ActiveRecord
             'template' => 'Шаблон для страницы',
             'template_view' => 'Вывод в разделе',
             'template_element' => 'Шаблон для элемента',
-            'id_group'=>'Поле для группировки',
-            'id_column_order'=>'Сортировать по',
-            'order_direction'=>'Направление сортировки',
+            'id_group' => 'Поле для группировки',
+            'id_column_order' => 'Сортировать по',
+            'order_direction' => 'Направление сортировки',
+            'is_authenticate' => 'Авторизация (API)',
             'created_at' => 'Создана',
             'created_by' => 'Кем создана',
             'updated_at' => 'Изменено',
@@ -142,8 +150,9 @@ class Collection extends \yii\db\ActiveRecord
         $model->id_collection = $this->id_collection;
         $model->data = $data;
 
-        if ($model->save())
+        if ($model->save()) {
             return $model;
+        }
 
         return false;
     }
@@ -168,61 +177,65 @@ class Collection extends \yii\db\ActiveRecord
      */
     public function getColumns()
     {
-        if (empty($this->id_parent_collection))
+        if (empty($this->id_parent_collection)) {
             return $this->hasMany(CollectionColumn::class, ['id_collection' => 'id_collection'])->orderBy('ord ASC');
-        else
-            return $this->hasMany(CollectionColumn::class, ['id_collection' => 'id_parent_collection'])->orderBy('ord ASC');
+        } else {
+            return $this->hasMany(CollectionColumn::class,
+                ['id_collection' => 'id_parent_collection'])->orderBy('ord ASC');
+        }
     }
 
-    public function getArray($id_column=null)
+    public function getArray($id_column = null)
     {
-        if (!empty($id_column))
+        if (!empty($id_column)) {
             $label = [$id_column];
-        else
-            $label = (!empty($this->label))?$this->label:[];
+        } else {
+            $label = (!empty($this->label)) ? $this->label : [];
+        }
 
         $data = $this->getData($label);
 
         $output = [];
 
-        foreach ($data as $key => $row)
+        foreach ($data as $key => $row) {
             $output[$key] = implode(' ', $row);
+        }
 
         return $output;
     }
 
     public static function getArrayByAlias($alias)
     {
-        $collection = Collection::find()->where(['alias'=>$alias])->one();
+        $collection = Collection::find()->where(['alias' => $alias])->one();
 
-        if (empty($collection))
+        if (empty($collection)) {
             return [];
+        }
 
         return $collection->getArray();
     }
 
-    public function getData($id_columns=[], $keyAsAlias=false)
+    public function getData($id_columns = [], $keyAsAlias = false)
     {
-        if (!empty($this->id_parent_collection))
+        if (!empty($this->id_parent_collection)) {
             $id_collection = $this->id_parent_collection;
-        else
+        } else {
             $id_collection = $this->id_collection;
+        }
 
         $query = \common\components\collection\CollectionQuery::getQuery($id_collection);
 
-        if (!empty($this->options))
-        {
-            $options = json_decode($this->options,true);
+        if (!empty($this->options)) {
+            $options = json_decode($this->options, true);
 
-            if (!empty($options['filters']))
-            {
-                foreach ($options['filters'] as $key => $filter)
-                {
-                    $where = [$filter['operator'],$filter['id_column'],$filter['value']];
-                    if ($key==0)
+            if (!empty($options['filters'])) {
+                foreach ($options['filters'] as $key => $filter) {
+                    $where = [$filter['operator'], $filter['id_column'], $filter['value']];
+                    if ($key == 0) {
                         $query->where($where);
-                    else
+                    } else {
                         $query->andWhere($where);
+                    }
                 }
             }
         }
@@ -234,22 +247,20 @@ class Collection extends \yii\db\ActiveRecord
 
     public function getDataQuery()
     {
-        if (!empty($this->id_parent_collection))
+        if (!empty($this->id_parent_collection)) {
             $id_collection = $this->id_parent_collection;
-        else
+        } else {
             $id_collection = $this->id_collection;
+        }
 
         $query = \common\components\collection\CollectionQuery::getQuery($id_collection)->select();
 
-        if (!empty($this->options))
-        {
-            $options = json_decode($this->options,true);
+        if (!empty($this->options)) {
+            $options = json_decode($this->options, true);
 
-            if (!empty($options['filters']))
-            {
-                foreach ($options['filters'] as $key => $filter)
-                {
-                    $where = [$filter['operator'],$filter['id_column'],$filter['value']];
+            if (!empty($options['filters'])) {
+                foreach ($options['filters'] as $key => $filter) {
+                    $where = [$filter['operator'], $filter['id_column'], $filter['value']];
                     $query->andWhere($where);
                 }
             }
@@ -258,42 +269,49 @@ class Collection extends \yii\db\ActiveRecord
         return $query;
     }
 
-    public function getDataQueryByOptions($options,array $search_columns=[])
+    public function getDataQueryByOptions($options, array $search_columns = [])
     {
-        if (!empty($this->id_parent_collection))
+        if (!empty($this->id_parent_collection)) {
             $id_collection = $this->id_parent_collection;
-        else
+        } else {
             $id_collection = $this->id_collection;
+        }
 
         $query = \common\components\collection\CollectionQuery::getQuery($id_collection);
 
-        if (!is_array($options))
-            $options = json_decode($this->options,true);
+        if (!is_array($options)) {
+            $options = json_decode($this->options, true);
+        }
 
         $id_cols = [];
 
-        if (!empty($options['columns']))
-        {
-            foreach ($options['columns'] as $key => $col)
+        if (!empty($options['columns'])) {
+            foreach ($options['columns'] as $key => $col) {
                 $id_cols[] = $col['id_column'];
+            }
 
-            if (!empty($options['search']))
-                foreach ($options['search'] as $key => $col)
+            if (!empty($options['search'])) {
+                foreach ($options['search'] as $key => $col) {
                     $id_cols[] = $col['id_column'];
+                }
+            }
 
             $query->select($id_cols);
-        }
-        else
+        } else {
             $query->select();
+        }
 
-        if (!empty($this->id_parent_collection))
-            $options = json_decode($this->options,true);
+        if (!empty($this->id_parent_collection)) {
+            $options = json_decode($this->options, true);
+        }
 
-        if (!empty($options['filters']))
-        {
-            foreach ($options['filters'] as $key => $filter)
-            {
-                $where = [$filter['operator'],'col'.$filter['id_column'],(is_numeric($filter['value']))?(float)$filter['value']:$filter['value']];
+        if (!empty($options['filters'])) {
+            foreach ($options['filters'] as $key => $filter) {
+                $where = [
+                    $filter['operator'],
+                    'col' . $filter['id_column'],
+                    (is_numeric($filter['value'])) ? (float)$filter['value'] : $filter['value']
+                ];
                 $query->andWhere($where);
             }
         }
@@ -308,28 +326,29 @@ class Collection extends \yii\db\ActiveRecord
 
     public function getViewFilters()
     {
-        $options = json_decode($this->options,true);
+        $options = json_decode($this->options, true);
 
-        if (isset($options['filters']))
+        if (isset($options['filters'])) {
             return $options['filters'];
+        }
 
         return [];
     }
 
     public function getViewColumns()
     {
-        $options = json_decode($this->options,true);
+        $options = json_decode($this->options, true);
 
-        if (isset($options['columns']))
+        if (isset($options['columns'])) {
             return $options['columns'];
+        }
 
         $options = [];
 
-        foreach ($this->parent->columns as $key => $column)
-        {
+        foreach ($this->parent->columns as $key => $column) {
             $options[] = [
-                'id_column'=>$column->id_column,
-                'value'=>'',
+                'id_column' => $column->id_column,
+                'value' => '',
             ];
         }
 
@@ -338,10 +357,11 @@ class Collection extends \yii\db\ActiveRecord
 
     public function getSearchColumns()
     {
-        $options = json_decode($this->options,true);
+        $options = json_decode($this->options, true);
 
-        if (isset($options['search']))
+        if (isset($options['search'])) {
             return $options['search'];
+        }
 
         /*$options = [];
 
@@ -353,10 +373,12 @@ class Collection extends \yii\db\ActiveRecord
             ];
         }*/
 
-        return [[
-            'id_column'=>'',
-            'type'=>0,
-        ]];
+        return [
+            [
+                'id_column' => '',
+                'type' => 0,
+            ]
+        ];
     }
 
     public function createColumn($attributes)
@@ -367,8 +389,7 @@ class Collection extends \yii\db\ActiveRecord
         $newColumn->id_collection = $this->id_collection;
         $newColumn->type = $attributes['type'];
 
-        if ($newColumn->save())
-        {
+        if ($newColumn->save()) {
             return $newColumn;
         }
 
