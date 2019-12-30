@@ -13,7 +13,7 @@ class CollectionWidget extends \yii\base\Widget
     public $columns = []; // колонки для отображения
     public $search = []; // колонки для сортировки
 
-    public $limit = 20; // записей на страницу
+    public $pagesize = 20; // записей на страницу
 
     public $template = 'table'; // шаблон отображения
 
@@ -41,6 +41,9 @@ class CollectionWidget extends \yii\base\Widget
 
             if (!empty($this->attributes['dir']))
                 $this->dir = (int)$this->attributes['dir'];
+
+            if (!empty($this->attributes['pagesize']))
+                $this->pagesize = (int)$this->attributes['pagesize'];
 
             if (!empty($this->attributes['group']))
                 $this->group = (int)$this->attributes['group'];
@@ -176,7 +179,7 @@ class CollectionWidget extends \yii\base\Widget
             ]);
         }
 
-        $allrows = array_slice($allrows, ($p-1)*20, 20);
+        $allrows = array_slice($allrows, ($p-1)*$this->pagesize, $this->pagesize);
 
         return $this->render('collection/'.$this->template,[
         	'model'=>$model,

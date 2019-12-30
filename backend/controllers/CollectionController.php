@@ -556,7 +556,7 @@ class CollectionController extends Controller
     {
         $this->layout = 'clear';
 
-        $model = new Collection();
+        $model = new Collection;
         $model->name = 'temp';
         //$model->id_parent_collection = Yii::$app->request->post('id_collection');
 
@@ -571,6 +571,7 @@ class CollectionController extends Controller
                 $json['group'] = $model->id_group;
                 $json['sort'] = $model->id_column_order;
                 $json['dir'] = $model->order_direction;
+                $json['pagesize'] = $model->pagesize;
 
                 return json_encode($json);
             }
