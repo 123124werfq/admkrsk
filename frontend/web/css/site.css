@@ -22,8 +22,14 @@
     opacity: 0;
 }
 
+
 .search-table {display: flex; flex-wrap: wrap;}
 .search-table input, .search-table select {padding: 10px!important; width: 33%!important; margin-right: 5px;}
+.search-table select.pagesize {
+    width: 75px!important;
+    align-self: flex-end;
+    margin-left: auto;
+}
 
 .header-search{padding: 10px; border: none; border-radius: 5px; width: 100%;}
 

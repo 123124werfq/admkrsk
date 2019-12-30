@@ -114,6 +114,14 @@ class CollectionWidget extends \yii\base\Widget
 
         $url = parse_url(Yii::$app->request->url);
 
+        if (!empty($_GET['ps']))
+        {
+            $ps = (int)$_GET['ps'];
+
+            if ($ps>0 && $ps<=50)
+                $this->pagesize = $ps;
+        }
+
         if (!empty($url['query']))
         {
             parse_str($url['query'],$url_query);
@@ -127,6 +135,7 @@ class CollectionWidget extends \yii\base\Widget
         $pagination = new Pagination([
             'totalCount' => $query->count(),
             'route'=>$url,
+            'pagesize'=>$this->pagesize,
             'pageParam'=>'p'
         ]);
 
