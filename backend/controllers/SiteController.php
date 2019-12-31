@@ -1,8 +1,10 @@
 <?php
+
 namespace backend\controllers;
 
 use common\models\Action;
 use Yii;
+use yii\base\Exception;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -10,7 +12,6 @@ use common\models\LoginForm;
 use common\models\AdUser;
 use yii\web\Cookie;
 use yii\web\Response;
-
 
 /**
  * Site controller
@@ -96,6 +97,7 @@ class SiteController extends Controller
      * Login action.
      *
      * @return string
+     * @throws Exception
      */
     public function actionLogin()
     {
@@ -107,10 +109,10 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            Yii::$app->user->identity->createAction(Action::ACTION_LOGIN);
+            Yii::$app->user->identity->logUserAction(Action::ACTION_LOGIN);
             return $this->goBack();
-        } else if($model->load(Yii::$app->request->post()) && AdUser::adlogin($model->username, $model->password)) {
-            Yii::$app->user->identity->createAction(Action::ACTION_LOGIN_AD);
+        } else if ($model->load(Yii::$app->request->post()) && AdUser::login($model->username, $model->password)) {
+            Yii::$app->user->identity->logUserAction(Action::ACTION_LOGIN_AD);
             return $this->goBack();
         } else {
             $model->password = '';
@@ -129,28 +131,33 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
         return $this->goHome();
     }
 
-     public function actionReord()
+    /**
+     * @throws Exception
+     */
+    public function actionRecord()
     {
-        $pos        = (int)$_POST['pos']+1;
-        $id_model   = (int)$_POST['id'];
-        $pk_model   = $_POST['pk'];
-        $table      = $_POST['table'];
-        $where      = (isset($_POST['where']))?$_POST['where']:'';
+        $pos = intval(Yii::$app->request->post('pos')) + 1;
+        $modelId = intval(Yii::$app->request->post('id'));
+        $modelPk = Yii::$app->request->post('pk');
+        $table = Yii::$app->request->post('table');
 
-        $sql = "SELECT ord FROM $table WHERE `$pk_model` = '$id_model'".((!empty($where))?" AND $where":'');
-        $current_ord = (int)Yii::$app->db->createCommand($sql)->queryScalar();
+        $where = Yii::$app->request->post('where');
+        $where = !empty($where) ? $where : '';
+        $additionalWhere = (!empty($where) ? " AND $where" : '');
 
-        $sql = "UPDATE $table SET ord = ord-1 WHERE ord > $current_ord".((!empty($where))?" AND $where":'');
+        $sql = "SELECT ord FROM $table WHERE `$modelPk` = '$modelId'" . $additionalWhere;
+        $currentOrd = (int)Yii::$app->db->createCommand($sql)->queryScalar();
+
+        $sql = "UPDATE $table SET ord = ord-1 WHERE ord > $currentOrd" . $additionalWhere;
         Yii::$app->db->createCommand($sql)->execute();
 
-        $sql = "UPDATE $table SET ord = ord+1 WHERE ord >= $pos".((!empty($where))?" AND $where":'');
+        $sql = "UPDATE $table SET ord = ord+1 WHERE ord >= $pos" . $additionalWhere;
         Yii::$app->db->createCommand($sql)->execute();
 
-        $sql = "UPDATE $table SET ord = $pos WHERE `$pk_model` = '$id_model'".((!empty($where))?" AND $where":'');
+        $sql = "UPDATE $table SET ord = $pos WHERE `$modelPk` = '$modelId'" . $additionalWhere;
         Yii::$app->db->createCommand($sql)->execute();
     }
 }

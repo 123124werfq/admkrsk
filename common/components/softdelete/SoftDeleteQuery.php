@@ -2,9 +2,11 @@
 
 namespace common\components\softdelete;
 
+use yii\db\ActiveQuery;
+use yii\db\Query;
 use yii\db\QueryBuilder;
 
-class SoftDeleteQuery extends \yii\db\ActiveQuery
+class SoftDeleteQuery extends ActiveQuery
 {
     const ALL = 0;
     const ACTIVE = 1;
@@ -22,7 +24,7 @@ class SoftDeleteQuery extends \yii\db\ActiveQuery
 
     /**
      * @param QueryBuilder $builder
-     * @return $this|\yii\db\Query
+     * @return $this|Query
      */
     public function prepare($builder)
     {

@@ -201,11 +201,17 @@ class ServiceController extends \yii\web\Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @param null $page
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionView($id,$page=null)
     {
     	$model = $this->findModel($id);
 
-        $model->createAction();
+        $model->logUserAction();
 
         return $this->render('view',[
         	'service'=>$model,
@@ -215,20 +221,27 @@ class ServiceController extends \yii\web\Controller
 
     public function actionCategory($id_firm)
     {
-        $query = ServiceAppealForm::find()->with('category as category')->select(['id_category','id_firm','category.lineValue as category_name'])->where(['id_firm'=>$id_firm])->groupBy('id_category');
-
-        $results = [];
-        foreach ($query->asArray()->all() as $category)
-        {
-            $results[] = [
-                'id' => $category['id_category'],
-                'text' => $category['category_name'],
-            ];
-        }
-
-        return ['results' => $results];
+        //todo doesn't exist class ServiceAppealForm
+//        //$query = ServiceAppealForm::find()->with('category as category')->select(['id_category','id_firm','category.lineValue as category_name'])->where(['id_firm'=>$id_firm])->groupBy('id_category');
+//
+//        $results = [];
+//        foreach ($query->asArray()->all() as $category)
+//        {
+//            $results[] = [
+//                'id' => $category['id_category'],
+//                'text' => $category['category_name'],
+//            ];
+//        }
+//
+//        return ['results' => $results];
     }
 
+    /**
+     * @param $id_form
+     * @param null $page
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionCreate($id_form,$page=null)
     {
         $inputs = [];

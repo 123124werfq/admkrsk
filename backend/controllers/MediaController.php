@@ -2,10 +2,15 @@
 
 namespace backend\controllers;
 
+use Throwable;
 use Yii;
 use common\models\Media;
 use backend\models\search\Media as MediaSearch;
+use yii\base\Exception;
+use yii\base\ExitException;
+use yii\db\StaleObjectException;
 use yii\web\Controller;
+use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -108,6 +113,8 @@ class MediaController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws Throwable
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -135,6 +142,12 @@ class MediaController extends Controller
         return json_encode($result);
     }
 
+    /**
+     * @return false|string
+     * @throws HttpException
+     * @throws Exception
+     * @throws ExitException
+     */
     public function actionTinymce()
     {
         /***************************************************
@@ -203,10 +216,9 @@ class MediaController extends Controller
 
         } else {
             // Notify editor that the upload failed
-            header("HTTP/1.1 500 Server Error");
+            throw new HttpException(500, 'Server Error');
         }
-
-        Yii::$app->end();
+        return Yii::$app->end();
     }
 
     /**

@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\base\Exception;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "auth_ad_user".
@@ -17,9 +19,18 @@ use Yii;
  * @property string $sam_acc_name
  * @property string $sam_acc_type
  * @property string $sn
+ * @property string $company
  * @property string $street_address
  * @property string $telephone_number
  * @property string $title
+ * @property string $description
+ * @property string $displayname
+ * @property string $fax
+ * @property string $email
+ * @property string $department
+ * @property string $office
+ * @property string $phone
+ * @property string $city
  * @property string $principal
  * @property string $thumbnail
  * @property string $homepage
@@ -31,9 +42,8 @@ use Yii;
  * @property int $deleted_at
  * @property int $deleted_by
  */
-class AdUser extends \yii\db\ActiveRecord
+class AdUser extends ActiveRecord
 {
-
     /**
      * {@inheritdoc}
      */
@@ -102,11 +112,10 @@ class AdUser extends \yii\db\ActiveRecord
     }
 
 
-    private function createInfo($un)
+    private function createInfo($login)
     {
-        $ldapObject = \Yii::$app->ad->search()->findBy('sAMAccountname', $un);
-
-        $this->sn = $un;
+        $ldapObject = \Yii::$app->ad->search()->findBy('sAMAccountname', $login);
+        $this->sn = $login;
         $this->name = $ldapObject['name'][0];
         $this->city = $ldapObject['city'][0];
         $this->company = $ldapObject['company'][0];
@@ -119,60 +128,62 @@ class AdUser extends \yii\db\ActiveRecord
         $this->office = $ldapObject['office'][0];
         $this->phone = $ldapObject['office'][0];
         $this->sid = implode(unpack('C*', $ldapObject['objectsid'][0]));
-
         $this->updated_at = time();
 
-        if(!$this->save(false))
+        if (!$this->save(false))
             return false;
-
         return $this->id_ad_user;
     }
 
-    static public function adlogin($login, $password)
+    /**
+     * @param $login
+     * @param $password
+     * @return bool
+     * @throws Exception
+     */
+    public static function login($login, $password)
     {
         $host = '10.24.0.7'; // вынести в настройки
         $mydap = ldap_connect($host);
 
-        if(!$mydap)
+        if (!$mydap)
             return false;
 
-        ldap_set_option($mydap,LDAP_OPT_PROTOCOL_VERSION,3);
-        $bindRes = @ldap_bind($mydap,$login,$password);
+        ldap_set_option($mydap, LDAP_OPT_PROTOCOL_VERSION, 3);
+        $bindRes = @ldap_bind($mydap, $login, $password);
 
-        if(!$bindRes)
+        if (!$bindRes)
             return false;
 
         // если логин прошел, то ищем пользака в базе, если нет - создаём
         $login = str_replace('@admkrsk.ru', '', $login);
-        $localuser = User::findByUsername($login );
+        $localUser = User::findByUsername($login);
 
-        $aduser = AdUser::find()->where(['sn' => $login])->one();
-        if($aduser)
-            $id_ad_user = $aduser->createInfo($login);
+        $userByUsername = AdUser::find()->where(['sn' => $login])->one();
+        if ($userByUsername)
+            $externalUserId = $userByUsername->createInfo($login);
 
-        if($localuser)
-            return Yii::$app->user->login($localuser,3600 * 24 * 30);
+        if ($localUser)
+            return Yii::$app->user->login($localUser, 3600 * 24 * 30);
 
-        if(!$aduser) {
-            $aduser = new AdUser();
-            $id_ad_user = $aduser->createInfo($login);
+        if (!$userByUsername) {
+            $userByUsername = new AdUser();
+            $externalUserId = $userByUsername->createInfo($login);
         }
 
         $user = new User();
-        $user->email = $login.'@admkrsk.ru';
-        $user->username = $aduser->sn;
-        $user->setPassword($aduser->sid);
+        $user->email = $login . '@admkrsk.ru';
+        $user->username = $userByUsername->sn;
+        $user->setPassword($userByUsername->sid);
         $user->generateAuthKey();
         $user->status = User::STATUS_ACTIVE;
-        $user->id_ad_user = $id_ad_user;
+        $user->id_ad_user = $externalUserId;
 
         //$aduser->id_user = $user->id;
 
-        if($user->save())
-            return Yii::$app->user->login($user,3600 * 24 * 30);
-        else
-            return false;
-
+        if ($user->save()) {
+            return Yii::$app->user->login($user, 3600 * 24 * 30);
+        }
+        return false;
     }
-
 }

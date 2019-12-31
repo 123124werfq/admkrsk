@@ -9,11 +9,14 @@ use common\modules\log\models\Log;
 use Yii;
 use common\models\Poll;
 use backend\models\search\PollSearch;
+use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 use yii2tech\spreadsheet\Spreadsheet;
 
 /**
@@ -255,7 +258,7 @@ class PollController extends Controller
     /**
      * @param $id
      * @throws NotFoundHttpException
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function actionExport($id)
     {
@@ -311,6 +314,7 @@ class PollController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -329,7 +333,7 @@ class PollController extends Controller
         $model = new Poll();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_CREATE);
+            $model->logUserAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_poll]);
         }
 
@@ -344,6 +348,7 @@ class PollController extends Controller
      * @param integer $id_poll
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionCreateQuestion($id_poll)
     {
@@ -351,7 +356,7 @@ class PollController extends Controller
         $model = new Question(['id_poll' => $poll->id_poll]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_CREATE);
+            $model->logUserAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_poll]);
         }
 
@@ -367,13 +372,14 @@ class PollController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_UPDATE);
+            $model->logUserAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id_poll]);
         }
 
@@ -394,7 +400,7 @@ class PollController extends Controller
         $model = $this->findModelQuestion($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_UPDATE);
+            $model->logUserAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id_poll]);
         }
 
@@ -410,14 +416,14 @@ class PollController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
 
         if ($model->delete()) {
-            $model->createAction(Action::ACTION_DELETE);
+            $model->logUserAction(Action::ACTION_DELETE);
         }
 
         return $this->redirect(['index']);
@@ -425,15 +431,16 @@ class PollController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
         $model = $this->findModel($id);
 
         if ($model->restore()) {
-            $model->createAction(Action::ACTION_UNDELETE);
+            $model->logUserAction(Action::ACTION_UNDELETE);
         }
 
         return $this->redirect(['index', 'archive' => 1]);
@@ -446,14 +453,14 @@ class PollController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDeleteQuestion($id)
     {
         $model = $this->findModelQuestion($id);
 
         if ($model->delete()) {
-            $model->createAction(Action::ACTION_DELETE);
+            $model->logUserAction(Action::ACTION_DELETE);
         }
 
         return $this->redirect(['view', 'id' => $model->id_poll]);
@@ -465,6 +472,7 @@ class PollController extends Controller
      * @param integer $id
      * @return Poll the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

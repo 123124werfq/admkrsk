@@ -5,11 +5,15 @@ namespace frontend\controllers;
 use common\models\Opendata;
 use common\models\Page;
 use frontend\models\search\OpendataSearch;
-use Yii;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-class OpendataController extends \yii\web\Controller
+class OpendataController extends Controller
 {
+    /**
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionIndex()
     {
         $searchModel = new OpendataSearch();
@@ -26,6 +30,11 @@ class OpendataController extends \yii\web\Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionView($id)
     {
         $model = Opendata::findOne(['identifier' => $id]);
@@ -39,7 +48,7 @@ class OpendataController extends \yii\web\Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        $model->createAction();
+        $model->logUserAction();
 
         return $this->render('view',[
             'model'=>$model,

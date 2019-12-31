@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\Action;
 use common\modules\log\models\Log;
+use Exception;
 use Yii;
 use common\models\Form;
 use common\models\FormRow;
@@ -11,13 +12,14 @@ use common\models\FormElement;
 use common\models\FormInput;
 use common\models\Collection;
 use common\models\CollectionColumn;
-
-
 use backend\models\search\FormSearch;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * FormController implements the CRUD actions for Form model.
@@ -177,6 +179,7 @@ class FormController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -239,7 +242,7 @@ class FormController extends Controller
                 $model->updateAttributes(['id_collection']);
             }
 
-            $model->createAction(Action::ACTION_CREATE);
+            $model->logUserAction(Action::ACTION_CREATE);
 
             return $this->redirect(['view', 'id' => $model->id_form]);
         }
@@ -275,6 +278,12 @@ class FormController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @return Response
+     * @throws InvalidConfigException
+     * @throws NotFoundHttpException
+     */
     public function actionCopy($id)
     {
         $form = $this->findModel($id);
@@ -381,13 +390,21 @@ class FormController extends Controller
                 return $this->redirect(['view', 'id'=>$copyForm->id_form]);
             }
         }
-        catch (\Exception $e)
+        catch (Exception $e)
         {
             $transaction->rollBack();
             throw $e;
         }
     }
 
+    /**
+     * @param $id_form
+     * @param $id_row
+     * @param $parentForm
+     * @param string $prefix
+     * @param null $element
+     * @throws Exception
+     */
     protected function assignForm($id_form, $id_row, $parentForm, $prefix='', $element=null)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -481,13 +498,18 @@ class FormController extends Controller
 
             $transaction->commit();
         }
-        catch (\Exception $e)
+        catch (Exception $e)
         {
             $transaction->rollBack();
             throw $e;
         }
     }
 
+    /**
+     * @param $id_row
+     * @return string
+     * @throws InvalidConfigException
+     */
     public function actionAssignForm($id_row)
     {
         $insertRow = FormRow::findOne($id_row);
@@ -521,7 +543,12 @@ class FormController extends Controller
         ]);
     }
 
-
+    /**
+     * @param $id_form
+     * @return string|Response
+     * @throws InvalidConfigException
+     * @throws NotFoundHttpException
+     */
     public function actionCreateRow($id_form)
     {
         $form = $this->findModel($id_form);
@@ -580,15 +607,16 @@ class FormController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
         $model = $this->findModel($id);
 
         if ($model->restore()) {
-            $model->createAction(Action::ACTION_UNDELETE);
+            $model->logUserAction(Action::ACTION_UNDELETE);
         }
 
         return $this->redirect(['index', 'archive' => 1]);
@@ -600,13 +628,14 @@ class FormController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_UPDATE);
+            $model->logUserAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id_form]);
         }
 
@@ -642,7 +671,7 @@ class FormController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -657,7 +686,7 @@ class FormController extends Controller
             if (!empty($collection))
                 $collection->delete();
 
-            $model->createAction(Action::ACTION_DELETE);
+            $model->logUserAction(Action::ACTION_DELETE);
         }
 
         return $this->redirect(['index']);
@@ -669,6 +698,7 @@ class FormController extends Controller
      * @param integer $id
      * @return Form the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

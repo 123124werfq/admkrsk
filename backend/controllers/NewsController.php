@@ -4,14 +4,20 @@ namespace backend\controllers;
 
 use common\models\Action;
 use common\modules\log\models\Log;
+use moonland\phpexcel\Excel;
 use Yii;
 use common\models\News;
 use common\models\Page;
 use backend\models\search\NewsSearch;
+use yii\base\ExitException;
+use yii\base\InvalidConfigException;
+use yii\db\Exception;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * NewsController implements the CRUD actions for News model.
@@ -121,6 +127,7 @@ class NewsController extends Controller
     /**
      * Lists all News models.
      * @return mixed
+     * @throws ExitException
      */
     public function actionIndex($id_page,$export=0)
     {
@@ -135,7 +142,7 @@ class NewsController extends Controller
             header('Content-Type: text/xlsx; charset=utf-8');
             header('Content-Disposition: attachment; filename=Выгрузка новостей '.$page->title.'.xlsx');
 
-            \moonland\phpexcel\Excel::widget([
+            Excel::widget([
                 'models' => $dataProvider->query->all(),
                 'mode' => 'export',
                 'columns' => [
@@ -181,6 +188,7 @@ class NewsController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id
 )    {
@@ -193,6 +201,7 @@ class NewsController extends Controller
      * Creates a new News model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
+     * @throws Exception
      */
     public function actionCreate()
     {
@@ -218,7 +227,7 @@ class NewsController extends Controller
 
             if ($model->save())
             {
-                $model->createAction(Action::ACTION_CREATE);
+                $model->logUserAction(Action::ACTION_CREATE);
 
                 return $this->redirect(['index', 'id_page' => $model->id_page]);
             }
@@ -236,6 +245,8 @@ class NewsController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws Exception
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -255,7 +266,7 @@ class NewsController extends Controller
 
             if ($model->save())
             {
-                $model->createAction(Action::ACTION_UPDATE);
+                $model->logUserAction(Action::ACTION_UPDATE);
                 return $this->redirect(['index', 'id_page' => $model->id_page]);
             }
         }
@@ -272,14 +283,14 @@ class NewsController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
 
         if ($model->delete()) {
-            $model->createAction(Action::ACTION_DELETE);
+            $model->logUserAction(Action::ACTION_DELETE);
         }
 
         return $this->redirect(['index', 'id_page' => $model->id_page]);
@@ -287,15 +298,16 @@ class NewsController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
         $model = $this->findModel($id);
 
         if ($model->restore()) {
-            $model->createAction(Action::ACTION_UNDELETE);
+            $model->logUserAction(Action::ACTION_UNDELETE);
         }
 
         return $this->redirect(['index', 'id_page' => $model->id_page, 'archive' => 1]);
@@ -307,6 +319,7 @@ class NewsController extends Controller
      * @param integer $id
      * @return News the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

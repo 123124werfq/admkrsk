@@ -4,6 +4,7 @@ namespace backend\modules\log\actions;
 
 use backend\modules\log\models\search\LogSearch;
 use Yii;
+use yii\web\NotFoundHttpException;
 
 class IndexAction extends HistoryAction
 {
@@ -15,7 +16,7 @@ class IndexAction extends HistoryAction
     /**
      * @param int $id
      * @return string
-     * @throws \yii\web\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public function run($id)
     {

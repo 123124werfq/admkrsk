@@ -6,8 +6,8 @@ use common\models\Action;
 use Yii;
 use common\models\Block;
 use common\models\BlockVar;
-
 use yii\data\ActiveDataProvider;
+use yii\db\StaleObjectException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -70,7 +70,7 @@ class BlockController extends Controller
         $model = new Block();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_CREATE);
+            $model->logUserAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_block]);
         }
 
@@ -122,7 +122,7 @@ class BlockController extends Controller
                     print_r($varModel->errors);
             }
 
-            $model->createAction(Action::ACTION_UPDATE);
+            $model->logUserAction(Action::ACTION_UPDATE);
 
             return $this->redirect(['page/layout', 'id' => $model->id_page]);
         }
@@ -139,7 +139,7 @@ class BlockController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -147,7 +147,7 @@ class BlockController extends Controller
         $id_page = $model->id_page;
 
         if ($model->delete()) {
-            $model->createAction(Action::ACTION_DELETE);
+            $model->logUserAction(Action::ACTION_DELETE);
         }
 
         return $this->redirect(['/page/layout','id'=>$id_page]);

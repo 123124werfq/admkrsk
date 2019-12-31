@@ -11,6 +11,7 @@ use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "cnt_page".
@@ -33,7 +34,7 @@ use yii\db\ActiveQuery;
  * @property array $access_user_ids
  * @property Block[] $blocks
  */
-class Page extends \yii\db\ActiveRecord
+class Page extends ActiveRecord
 {
     use MetaTrait;
     use ActionTrait;

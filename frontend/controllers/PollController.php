@@ -4,14 +4,14 @@ namespace frontend\controllers;
 
 use common\models\Page;
 use common\models\Poll;
-use common\models\Question;
 use frontend\models\PollForm;
-use frontend\models\VoteForm;
 use frontend\models\search\PollSearch;
 use Yii;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\ServerErrorHttpException;
 
-class PollController extends \yii\web\Controller
+class PollController extends Controller
 {
     /**
      * @return string
@@ -26,7 +26,7 @@ class PollController extends \yii\web\Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        $page->createAction();
+        $page->logUserAction();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -48,7 +48,7 @@ class PollController extends \yii\web\Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        $page->createAction();
+        $page->logUserAction();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -61,7 +61,7 @@ class PollController extends \yii\web\Controller
      * @param $id
      * @return string
      * @throws NotFoundHttpException
-     * @throws \yii\web\ServerErrorHttpException
+     * @throws ServerErrorHttpException
      */
     public function actionView($id)
     {
@@ -85,7 +85,7 @@ class PollController extends \yii\web\Controller
             }
         }
 
-        $poll->createAction();
+        $poll->logUserAction();
 
         return $this->render('view', [
             'pollForm' => $pollForm,

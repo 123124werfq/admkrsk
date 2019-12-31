@@ -3,9 +3,7 @@
 namespace backend\controllers;
 
 use backend\models\forms\UserGroupForm;
-use backend\models\forms\UserGroupRevokeForm;
 use common\models\Action;
-use common\models\User;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\UserGroup;
@@ -219,7 +217,7 @@ class UserGroupController extends Controller
         $model = new UserGroup();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_CREATE);
+            $model->logUserAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_user_group]);
         }
 
@@ -240,7 +238,7 @@ class UserGroupController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_UPDATE);
+            $model->logUserAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id_user_group]);
         }
 
@@ -263,7 +261,7 @@ class UserGroupController extends Controller
         $model = $this->findModel($id);
 
         if ($model->delete()) {
-            $model->createAction(Action::ACTION_DELETE);
+            $model->logUserAction(Action::ACTION_DELETE);
         }
 
         return $this->redirect(['index']);

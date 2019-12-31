@@ -7,11 +7,13 @@ use common\models\AuthEntity;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\ServiceRubric;
-use yii\data\ActiveDataProvider;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * ServiceRubricController implements the CRUD actions for ServiceRubric model.
@@ -121,6 +123,7 @@ class ServiceRubricController extends Controller
     /**
      * Lists all ServiceRubric models.
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
@@ -146,6 +149,7 @@ class ServiceRubricController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -164,7 +168,7 @@ class ServiceRubricController extends Controller
         $model = new ServiceRubric();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_CREATE);
+            $model->logUserAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_rub]);
         }
 
@@ -179,13 +183,14 @@ class ServiceRubricController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_UPDATE);
+            $model->logUserAction(Action::ACTION_UPDATE);
 
             if (!Yii::$app->request->isAjax)
                 return $this->redirect(['view', 'id' => $model->id_rub]);
@@ -205,14 +210,14 @@ class ServiceRubricController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
 
         if ($model->delete()) {
-            $model->createAction(Action::ACTION_DELETE);
+            $model->logUserAction(Action::ACTION_DELETE);
         }
 
         return $this->redirect(['index']);
@@ -220,15 +225,16 @@ class ServiceRubricController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
         $model = $this->findModel($id);
 
         if ($model->restore()) {
-            $model->createAction(Action::ACTION_UNDELETE);
+            $model->logUserAction(Action::ACTION_UNDELETE);
         }
 
         return $this->redirect(['index', 'archive' => 1]);
@@ -240,6 +246,7 @@ class ServiceRubricController extends Controller
      * @param integer $id
      * @return ServiceRubric the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

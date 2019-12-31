@@ -6,10 +6,13 @@ use common\models\Action;
 use Yii;
 use common\models\Subregion;
 use backend\models\search\SubregionSearch;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException as NotFoundHttpExceptionAlias;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * SubregionController implements the CRUD actions for Subregion model.
@@ -69,6 +72,7 @@ class SubregionController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpExceptionAlias if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -87,7 +91,7 @@ class SubregionController extends Controller
         $model = new Subregion(['is_manual' => true]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_CREATE);
+            $model->logUserAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_subregion]);
         }
 
@@ -102,13 +106,14 @@ class SubregionController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpExceptionAlias if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_UPDATE);
+            $model->logUserAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id_subregion]);
         }
 
@@ -124,14 +129,14 @@ class SubregionController extends Controller
      * @return mixed
      * @throws NotFoundHttpExceptionAlias if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
 
         if ($model->delete()) {
-            $model->createAction(Action::ACTION_DELETE);
+            $model->logUserAction(Action::ACTION_DELETE);
         }
 
         return $this->redirect(['index']);
@@ -139,15 +144,16 @@ class SubregionController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
         $model = $this->findModel($id);
 
         if ($model->restore()) {
-            $model->createAction(Action::ACTION_UNDELETE);
+            $model->logUserAction(Action::ACTION_UNDELETE);
         }
 
         return $this->redirect(['index', 'archive' => 1]);
@@ -159,6 +165,7 @@ class SubregionController extends Controller
      * @param integer $id
      * @return Subregion the loaded model
      * @throws NotFoundHttpExceptionAlias if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

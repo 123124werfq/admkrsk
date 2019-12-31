@@ -3,19 +3,21 @@
 namespace backend\modules\log\actions;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\web\NotFoundHttpException;
 
 class RestoreAction extends HistoryAction
 {
     /**
      * @param int $id
      * @return string
-     * @throws \yii\web\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public function run($id)
     {
         $model = $this->findModel($id);
 
-        /* @var $parentModel \yii\db\ActiveRecord */
+        /* @var ActiveRecord $parentModel */
         $parentModel = !empty($parent) ? $model->entity->{$parent['relation']} : null;
 
         if ($model->restore()) {

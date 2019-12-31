@@ -28,6 +28,7 @@ trait SoftDeleteTrait
 
     /**
      * @return object|SoftDeleteQuery|SoftDeleteTrait
+     * @throws InvalidConfigException
      */
     public static function find()
     {
@@ -39,6 +40,7 @@ trait SoftDeleteTrait
 
     /**
      * @return object|SoftDeleteQuery|SoftDeleteTrait
+     * @throws InvalidConfigException
      */
     public static function findDeleted()
     {
@@ -50,6 +52,7 @@ trait SoftDeleteTrait
 
     /**
      * @return object|SoftDeleteQuery|SoftDeleteTrait
+     * @throws InvalidConfigException
      */
     public static function findWithDeleted()
     {
@@ -62,6 +65,7 @@ trait SoftDeleteTrait
     /**
      * @param mixed $condition
      * @return null|static|object|SoftDeleteQuery|SoftDeleteTrait
+     * @throws InvalidConfigException
      */
     public static function findOneDeleted($condition)
     {
@@ -71,6 +75,7 @@ trait SoftDeleteTrait
     /**
      * @param mixed $condition
      * @return null|static|object|SoftDeleteQuery|SoftDeleteTrait
+     * @throws InvalidConfigException
      */
     public static function findOneWithDeleted($condition)
     {
@@ -80,6 +85,7 @@ trait SoftDeleteTrait
     /**
      * @param mixed $condition
      * @return static[]|object[]|SoftDeleteQuery[]|SoftDeleteTrait[]
+     * @throws InvalidConfigException
      */
     public static function findAllDeleted($condition)
     {
@@ -89,6 +95,7 @@ trait SoftDeleteTrait
     /**
      * @param mixed $condition
      * @return static[]|object[]|SoftDeleteQuery[]|SoftDeleteTrait[]
+     * @throws InvalidConfigException
      */
     public static function findAllWithDeleted($condition)
     {

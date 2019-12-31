@@ -7,11 +7,14 @@ use common\models\AuthEntity;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\Vars;
+use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * VarsController implements the CRUD actions for Vars model.
@@ -118,6 +121,7 @@ class VarsController extends Controller
     /**
      * Lists all Vars models.
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
@@ -145,6 +149,7 @@ class VarsController extends Controller
      * @param string $id
      * @return mixed
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -163,7 +168,7 @@ class VarsController extends Controller
         $model = new Vars();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_CREATE);
+            $model->logUserAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_var]);
         } else {
             return $this->render('create', [
@@ -178,13 +183,14 @@ class VarsController extends Controller
      * @param string $id
      * @return mixed
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_UPDATE);
+            $model->logUserAction(Action::ACTION_UPDATE);
 
             Yii::$app->cache->delete("var_".$model->alias);
 
@@ -203,14 +209,14 @@ class VarsController extends Controller
      * @return mixed
      * @throws NotFoundHttpException
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
 
         if ($model->delete()) {
-            $model->createAction(Action::ACTION_DELETE);
+            $model->logUserAction(Action::ACTION_DELETE);
         }
 
         return $this->redirect(['index']);
@@ -218,15 +224,16 @@ class VarsController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
         $model = $this->findModel($id);
 
         if ($model->restore()) {
-            $model->createAction(Action::ACTION_UNDELETE);
+            $model->logUserAction(Action::ACTION_UNDELETE);
         }
 
         return $this->redirect(['index', 'archive' => 1]);
@@ -238,6 +245,7 @@ class VarsController extends Controller
      * @param string $id
      * @return Vars the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

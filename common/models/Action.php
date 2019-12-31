@@ -15,6 +15,7 @@ use yii\helpers\StringHelper;
 
 /**
  * This is the model class for table "action".
+ * log actions of users.
  *
  * @property int $id
  * @property string $model
@@ -104,31 +105,32 @@ class Action extends ActiveRecord
     }
 
     /**
+     * Log user action.
+     *
      * @param ActiveRecord|null $model
      * @param string $action
      * @return bool
      */
-    public static function create($model, $action)
+    public static function logAction($model, $action)
     {
         if ($model) {
-            $act = new Action();
-
+            $actionModel = new Action();
             if (Yii::$app->user->identity && in_array($action, [Action::ACTION_LOGIN, Action::ACTION_LOGOUT])) {
-                $act->model = User::class;
-                $act->model_id = Yii::$app->user->identity->id;
+                $actionModel->model = User::class;
+                $actionModel->model_id = Yii::$app->user->identity->id;
             } else {
-                $act->model = get_class($model);
-                $act->model_id = $model->primaryKey;
+                $actionModel->model = get_class($model);
+                $actionModel->model_id = $model->primaryKey;
             }
-
-            $act->action = $action;
-
-            return $act->save();
+            $actionModel->action = $action;
+            return $actionModel->save();
         }
-
         return false;
     }
 
+    /**
+     * @return string
+     */
     public function getSummary()
     {
         $summary = '';

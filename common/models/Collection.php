@@ -3,16 +3,15 @@
 namespace common\models;
 
 use common\behaviors\AccessControlBehavior;
+use common\components\collection\CollectionQuery;
 use common\components\softdelete\SoftDeleteTrait;
-use common\components\yiinput\RelationBehavior;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
-use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
-use yii\helpers\ArrayHelper;
+use yii\db\ActiveRecord;
 use yii\helpers\Url;
 
 /**
@@ -42,7 +41,7 @@ use yii\helpers\Url;
  *
  * @property CollectionColumn[] $columns
  */
-class Collection extends \yii\db\ActiveRecord
+class Collection extends ActiveRecord
 {
     use MetaTrait;
     use ActionTrait;
@@ -52,6 +51,9 @@ class Collection extends \yii\db\ActiveRecord
     const VERBOSE_NAME_PLURAL = 'Списки';
     const TITLE_ATTRIBUTE = 'name';
 
+    /**
+     * User ids having access for edit that collection
+     */
     public $access_user_ids;
     public $access_user_group_ids;
 
@@ -77,9 +79,9 @@ class Collection extends \yii\db\ActiveRecord
             [['alias'], 'unique'],
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
-            [['id_parent_collection','id_group','id_column_order','order_direction','pagesize'], 'integer'],
-            [['filter', 'options','label'], 'safe'],
-            [['template','template_element','template_view'], 'string'],
+            [['id_parent_collection', 'id_group', 'id_column_order', 'order_direction', 'pagesize'], 'integer'],
+            [['filter', 'options', 'label'], 'safe'],
+            [['template', 'template_element', 'template_view'], 'string'],
             [['is_authenticate'], 'boolean'],
             [['is_authenticate'], 'default', 'value' => true],
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
@@ -108,11 +110,11 @@ class Collection extends \yii\db\ActiveRecord
             'template' => 'Шаблон для страницы',
             'template_view' => 'Вывод в разделе',
             'template_element' => 'Шаблон для элемента',
-            'id_group'=>'Поле для группировки',
-            'id_column_order'=>'Сортировать по',
-            'order_direction'=>'Направление сортировки',
+            'id_group' => 'Поле для группировки',
+            'id_column_order' => 'Сортировать по',
+            'order_direction' => 'Направление сортировки',
             'is_authenticate' => 'Авторизация (API)',
-            'pagesize'=>'Элементов на страницу',
+            'pagesize' => 'Элементов на страницу',
             'created_at' => 'Создана',
             'created_by' => 'Кем создана',
             'updated_at' => 'Изменено',
@@ -130,7 +132,7 @@ class Collection extends \yii\db\ActiveRecord
         return [
             'ts' => TimestampBehavior::class,
             'ba' => BlameableBehavior::class,
-            'log' => LogBehavior::class,
+//            'log' => LogBehavior::class,
             'ac' => [
                 'class' => AccessControlBehavior::class,
                 'permission' => 'backend.collection',
@@ -226,7 +228,7 @@ class Collection extends \yii\db\ActiveRecord
             $id_collection = $this->id_collection;
         }
 
-        $query = \common\components\collection\CollectionQuery::getQuery($id_collection);
+        $query = CollectionQuery::getQuery($id_collection);
 
         if (!empty($this->options)) {
             $options = json_decode($this->options, true);
@@ -256,7 +258,7 @@ class Collection extends \yii\db\ActiveRecord
             $id_collection = $this->id_collection;
         }
 
-        $query = \common\components\collection\CollectionQuery::getQuery($id_collection)->select();
+        $query = CollectionQuery::getQuery($id_collection)->select();
 
         if (!empty($this->options)) {
             $options = json_decode($this->options, true);
@@ -280,7 +282,7 @@ class Collection extends \yii\db\ActiveRecord
             $id_collection = $this->id_collection;
         }
 
-        $query = \common\components\collection\CollectionQuery::getQuery($id_collection);
+        $query = CollectionQuery::getQuery($id_collection);
 
         if (!is_array($options)) {
             $options = json_decode($this->options, true);
