@@ -2,17 +2,17 @@
 
 namespace common\traits;
 
-
 use common\models\Action;
+use common\models\Statistic;
+use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
  * @method ActiveQuery hasMany($class, array $link)
  * @method ActiveQuery onCondition()
- * @property Action[] $actions
- * @property Action[] $viewActions
- * @property Action[] $viewYearActions
+ * @property Statistic[] $viewActions
+ * @property Statistic[] $viewYearActions
  * @property int $views
  * @property int $viewsYear
  */
@@ -21,28 +21,20 @@ trait ActionTrait
     /**
      * @return ActiveQuery
      */
-    public function getActions()
+    public function getViewActions()
     {
-        return $this->hasMany(Action::class, ['model_id' => self::primaryKey()[0]])
+        return $this->hasMany(Statistic::class, ['model_id' => self::primaryKey()[0]])
             ->onCondition(['model' => self::class]);
     }
 
     /**
      * @return ActiveQuery
-     */
-    public function getViewActions()
-    {
-        return $this->getActions()
-            ->andOnCondition(['action' => Action::ACTION_VIEW]);
-    }
-
-    /**
-     * @return ActiveQuery
+     * @throws \yii\base\InvalidConfigException
      */
     public function getViewYearActions()
     {
         return $this->getViewActions()
-            ->andOnCondition(['>=', 'created_at', mktime(0, 0, 0, 1, 1)]);
+            ->andOnCondition(['year' => (int) Yii::$app->formatter->asDate(time(), 'Y')]);
     }
 
     /**
@@ -50,17 +42,20 @@ trait ActionTrait
      */
     public function getViews()
     {
-        return $this->getViewActions()
-            ->count();
+        return (int)  $this->getViewActions()
+            ->select('views')
+            ->scalar();
     }
 
     /**
      * @return int
+     * @throws \yii\base\InvalidConfigException
      */
     public function getViewsYear()
     {
-        return $this->getViewYearActions()
-            ->count();
+        return (int) $this->getViewYearActions()
+            ->select('views')
+            ->scalar();
     }
 
     /**
