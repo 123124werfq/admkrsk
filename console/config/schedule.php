@@ -9,3 +9,5 @@
 
 $schedule->exec('php yii opendata')->dailyAt('02:00'); // 9:00 крск
 $schedule->exec('php yii import/institution')->dailyAt('02:00'); // 9:00 крск
+
+$schedule->exec('php yii statistic')->everyNMinutes(15); // каждые 15 минут
