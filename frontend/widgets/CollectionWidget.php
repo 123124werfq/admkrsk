@@ -188,7 +188,7 @@ class CollectionWidget extends \yii\base\Widget
             ]);
         }
 
-        $allrows = array_slice($allrows, ($p-1)*$this->pagesize, $this->pagesize);
+        $allrows = array_slice($allrows, ($p-1)*$this->pagesize, $this->pagesize,true);
 
         return $this->render('collection/'.$this->template,[
         	'model'=>$model,
