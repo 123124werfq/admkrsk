@@ -45,7 +45,6 @@ class Page extends \yii\db\ActiveRecord
 
     public $access_user_ids;
     public $access_user_group_ids;
-
     public $existUrl;
 
     /**
@@ -179,12 +178,6 @@ class Page extends \yii\db\ActiveRecord
         if (isset($changedAttributes['id_parent']) || $insert)
             $this->createPath();
 
-        /*if (empty($this->path))
-        {
-            $this->path = $this->id_page;
-            $this->updateAttributes(['path']);
-        }*/
-
         parent::afterSave($insert, $changedAttributes);
     }
 
@@ -194,8 +187,6 @@ class Page extends \yii\db\ActiveRecord
 
         return parent::beforeValidate();
     }
-
-
 
     /**
      * {@inheritdoc}

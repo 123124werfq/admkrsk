@@ -39,7 +39,8 @@
         "yiisoft/yii2-queue": "^2.3",
         "omnilight/yii2-scheduling": "*",
         "2amigos/yii2-taggable-behavior": "~1.0",
-        "phpoffice/phpword": "^0.17.0"
+        "phpoffice/phpword": "^0.17.0",
+        "twig/twig": "^3.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
