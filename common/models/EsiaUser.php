@@ -171,7 +171,6 @@ class EsiaUser extends \yii\db\ActiveRecord
         $contactInfo = $esia->getContactInfo();
         $documentInfo = $esia->getDocInfo();
 
-/*
         echo "<br>персональная информация<br>";
         var_dump($personInfo);
         echo "<br>адрес<br>";
@@ -181,7 +180,7 @@ class EsiaUser extends \yii\db\ActiveRecord
         echo "<br>документы<br>";
         var_dump($documentInfo);
         die();
-*/
+
         if($this->save())
             return true;
         else {
