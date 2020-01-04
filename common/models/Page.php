@@ -238,6 +238,14 @@ class Page extends \yii\db\ActiveRecord
     /**
      * @return ActiveQuery
      */
+    public function getBlocksLayout()
+    {
+        return $this->hasMany(Block::class, ['id_page' => 'id_page_layoyt'])->orderBy('ord ASC');
+    }
+
+    /**
+     * @return ActiveQuery
+     */
     public function getParent()
     {
         return $this->hasOne(Page::class, ['id_page' => 'id_parent']);

@@ -5,24 +5,22 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model common\models\Page */
 
-$this->title = 'Шаблон раздела:' . $model->pageTitle;
+$this->title = 'Шаблон страницы:' . $model->pageTitle;
 $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->pageTitle, 'url' => ['view', 'id' => $model->id_page]];
 $this->params['breadcrumbs'][] = 'Шаблон';
-
 $this->render('_head',['model'=>$model]);
 
 ?>
-
 <div class="row">
     <div class="col-md-8">
         <div class="tabs-container">
             <ul class="nav nav-tabs" role="tablist">
                 <li><?=Html::a('Информация', ['view', 'id' => $model->id_page], ['class' => 'nav-link'])?></li>
-                <li>
+                <li class="active">
                     <?=Html::a('Шаблон страницы', ['template', 'id' => $model->id_page], ['class' => 'nav-link'])?>
                 </li>
-                <li class="active">
+                <li>
                     <?=Html::a('Шаблон раздела', ['layout', 'id' => $model->id_page], ['class' => 'nav-link'])?>
                 </li>
             </ul>
@@ -40,7 +38,6 @@ $this->render('_head',['model'=>$model]);
                             </div>
                         </div>
                         <?php ActiveForm::end(); ?>
-
                         <div id="blocks" class="blocks" data-order-url="/block/order">
                             <?php foreach ($blocks as $key => $block) {?>
                                 <?=$this->render('/block/_view',['data'=>$block])?>

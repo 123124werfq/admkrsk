@@ -32,7 +32,7 @@ class PageController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['layout'],
+                        'actions' => ['layout','template'],
                         'roles' => ['backend.page.layout'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
@@ -185,7 +185,7 @@ class PageController extends Controller
         return ['results' => $results];
     }
 
-    public function actionLayout($id)
+    public function actionTemplate($id)
     {
         $page = $this->findModel($id);
         $block = new Block;
@@ -198,11 +198,32 @@ class PageController extends Controller
 
             if ($block->save())
                 $this->refresh();
-
             //return $this->renderPartial('/block/_view',['data'=>$model]);
         }
 
-        return $this->render('layout',[
+        return $this->render('template',[
+            'model'=>$page,
+            'block'=>$block,
+            'blocks'=>$blocks,
+        ]);
+    }
+
+    public function actionLayout($id)
+    {
+        $page = $this->findModel($id);
+        $block = new Block;
+        $block->id_page_layout = $id;
+        $blocks = $page->blocksLayout;
+
+        if ($block->load(Yii::$app->request->post()) && $block->validate())
+        {
+            $block->ord = $page->getBlocks()->count()-1;
+
+            if ($block->save())
+                $this->refresh();
+        }
+
+        return $this->render('template',[
             'model'=>$page,
             'block'=>$block,
             'blocks'=>$blocks,
@@ -251,7 +272,7 @@ class PageController extends Controller
                     'updated_at:date',
                     'views',
                     'viewsYear',
-                ], 
+                ],
                 'headers' => [
                     'title' => 'Название',
                     'fullurl' => 'Ссылка',
@@ -259,7 +280,7 @@ class PageController extends Controller
                     'updated_at'=> 'Отредактировано',
                     'views'=>'Просмотры всего',
                     'viewsYear'=>'Просмотры за год',
-                ], 
+                ],
             ]);
 
             Yii::$app->end();
