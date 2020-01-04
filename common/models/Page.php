@@ -5,6 +5,8 @@ namespace common\models;
 use common\behaviors\AccessControlBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
+use paulzi\nestedsets\NestedSetsBehavior;
+use paulzi\nestedsets\NestedSetsQueryTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
@@ -35,6 +37,7 @@ use yii\db\ActiveQuery;
  */
 class Page extends \yii\db\ActiveRecord
 {
+    use NestedSetsQueryTrait;
     use MetaTrait;
     use ActionTrait;
     use SoftDeleteTrait;
@@ -46,6 +49,7 @@ class Page extends \yii\db\ActiveRecord
     public $access_user_ids;
     public $access_user_group_ids;
     public $existUrl;
+    //public $treeAttribute = null;
 
     /**
      * {@inheritdoc}
@@ -196,6 +200,13 @@ class Page extends \yii\db\ActiveRecord
         return parent::beforeValidate();
     }
 
+    public function transactions()
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -208,6 +219,10 @@ class Page extends \yii\db\ActiveRecord
             'ac' => [
                 'class' => AccessControlBehavior::class,
                 'permission' => 'backend.page',
+            ],
+            'tree'=>[
+                'class' => NestedSetsBehavior::class,
+                'treeAttribute' => null
             ],
             'multiupload' => [
                 'class' => \common\components\multifile\MultiUploadBehavior::class,
@@ -246,10 +261,10 @@ class Page extends \yii\db\ActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getParent()
+    /*public function getParent()
     {
         return $this->hasOne(Page::class, ['id_page' => 'id_parent']);
-    }
+    }*/
 
     /**
      * @return ActiveQuery
