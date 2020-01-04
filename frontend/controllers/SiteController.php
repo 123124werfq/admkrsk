@@ -713,9 +713,9 @@ class SiteController extends Controller
     public function actionSignin()
     {
         if(!isset($_REQUEST['code'])) {
-            return $this->goHome();
-            //var_dump($_REQUEST);
-            //die();
+            //return $this->goHome();
+            var_dump($_REQUEST);
+            die();
         }
 
         $esia = User::openId();
