@@ -14,9 +14,9 @@ class M200104111030Nestedset extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('cnt_page', 'lft', $this->integer());
-        $this->addColumn('cnt_page', 'rgt', $this->integer());
-        $this->addColumn('cnt_page', 'depth', $this->integer());
+        $this->addColumn('cnt_page', 'lft', $this->integer()->notNull());
+        $this->addColumn('cnt_page', 'rgt', $this->integer()->notNull());
+        $this->addColumn('cnt_page', 'depth', $this->integer()->notNull());
 
         $this->createIndex('lft', 'cnt_page', ['lft', 'rgt']);
         $this->createIndex('rgt', 'cnt_page', ['rgt']);
