@@ -180,9 +180,21 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
+        if(Yii::$app->user->isGuest)
+            return $this->goHome();
+
+        $user = User::findOne(Yii::$app->user->id);
         Yii::$app->user->logout();
 
-        return $this->goHome();
+        if(!empty($user->id_esia_user))
+        {
+            $esia = User::openId();
+            $logoutUrl = $esia->buildLogoutUrl(Yii::$app->homeUrl);
+
+            $this->redirect($logoutUrl);
+        }
+
+        Yii::$app->end();
     }
 
     /**
