@@ -60,9 +60,10 @@ use common\models\Page;
 <?= $form->field($model, 'seo_keywords')->textInput(['maxlength' => true]) ?>
 
 <div class="row">
-    <div class="col-sm-4"><?= $form->field($model, 'active')->checkBox() ?></div>
-    <div class="col-sm-4"><?= $form->field($model, 'hidemenu')->checkBox() ?></div>
-    <div class="col-sm-4"><?= $form->field($model, 'noguest')->checkBox() ?></div>
+    <div class="col-sm-3"><?= $form->field($model, 'active')->checkBox() ?></div>
+    <div class="col-sm-3"><?= $form->field($model, 'hidemenu')->checkBox() ?></div>
+    <div class="col-sm-3"><?= $form->field($model, 'is_partition')->checkBox() ?></div>
+    <div class="col-sm-3"><?= $form->field($model, 'noguest')->checkBox() ?></div>
 </div>
 
 <h3>Файлы внизу страницы</h3>

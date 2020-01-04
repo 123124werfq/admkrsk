@@ -16,6 +16,7 @@
 </form>
 <?php Pjax::begin([
 	'id' => $unique_hash,
+	'timeout'=>5000
 	//'enablePushState' => false,
 ]) ?>
 <div class="table-responsive">

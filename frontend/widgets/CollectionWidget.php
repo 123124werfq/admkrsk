@@ -126,8 +126,10 @@ class CollectionWidget extends \yii\base\Widget
         {
             parse_str($url['query'],$url_query);
             unset($url_query['p']);
+            unset($url_query['ps']);
             unset($url_query['_pjax']);
-            $url = $url['path'].'?'.http_build_query($url_query);
+
+            $url = $url['path'].http_build_query($url_query);
         }
         else
             $url = Yii::$app->request->url;
@@ -136,7 +138,8 @@ class CollectionWidget extends \yii\base\Widget
             'totalCount' => $query->count(),
             'route'=>$url,
             'pagesize'=>$this->pagesize,
-            'pageParam'=>'p'
+            'pageParam'=>'p',
+            'pageSizeParam'=>'ps',
         ]);
 
         //$query->offset(($p-1)*$pagination->limit)->limit($pagination->limit);
