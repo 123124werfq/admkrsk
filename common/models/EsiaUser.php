@@ -180,7 +180,7 @@ class EsiaUser extends \yii\db\ActiveRecord
         var_dump($contactInfo);
         echo "<br>документы<br>";
         var_dump($documentInfo);
-        
+        die();
 
         if($this->save())
             return true;
