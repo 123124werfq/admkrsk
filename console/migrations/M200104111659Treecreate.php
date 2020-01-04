@@ -37,7 +37,7 @@ class M200104111659Treecreate extends Migration
         $root->updateAttributes(['lft','rgt','depth']);
 
         $pages = Page::find()->where('id_parent = 0 AND id_page <> '.$root->id_page)->orderBy('ord')->all();
-
+        echo "string";
         foreach ($pages as $key => $page0)
         {
             if (!$page0->appendTo($root)->save())
