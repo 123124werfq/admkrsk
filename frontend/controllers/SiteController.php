@@ -148,15 +148,7 @@ class SiteController extends Controller
                 return $this->goBack();
             }
 
-            $config = new \Esia\Config([
-                'clientId' => '236403241',
-                'privateKeyPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
-                'certPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
-                'redirectUrl' => 'https://t1.admkrsk.ru/site/signin',
-                'portalUrl' => 'https://esia.gosuslugi.ru/',
-                'scope' => ['fullname', 'birthdate', 'mobile', 'contacts', 'snils', 'inn', 'id_doc', 'birthplace', 'medical_doc', 'residence_doc', 'email', 'usr_org', 'usr_avt'],
-            ]);
-            $esia = new \Esia\OpenId($config);
+            $esia = User::openId();
             $esia->setSigner(new \Esia\Signer\CliSignerPKCS7(
                 Yii::getAlias('@app'). '/assets/admkrsk.pem',
                 Yii::getAlias('@app'). '/assets/admkrsk.pem',
@@ -726,15 +718,7 @@ class SiteController extends Controller
             //die();
         }
 
-        $config = new \Esia\Config([
-            'clientId' => '236403241',
-            'privateKeyPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
-            'certPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
-            'redirectUrl' => 'https://t1.admkrsk.ru/site/signin',
-            'portalUrl' => 'https://esia.gosuslugi.ru/',
-            'scope' => ['fullname', 'birthdate', 'mobile', 'contacts', 'snils', 'inn', 'id_doc', 'birthplace', 'medical_doc', 'residence_doc', 'email', 'usr_org', 'usr_avt'],
-        ]);
-        $esia = new \Esia\OpenId($config);
+        $esia = User::openId();
         $esia->setSigner(new \Esia\Signer\CliSignerPKCS7(
             Yii::getAlias('@app'). '/assets/admkrsk.pem',
             Yii::getAlias('@app'). '/assets/admkrsk.pem',
