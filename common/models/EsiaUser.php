@@ -166,6 +166,22 @@ class EsiaUser extends \yii\db\ActiveRecord
         $this->snils = $personInfo['snils']??null;
         $this->inn = $personInfo['inn']??null;
 
+
+        $addressInfo = $esia->getAddressInfo();
+        $contactInfo = $esia->getContactInfo();
+        $documentInfo = $esia->getDocInfo();
+
+
+        echo "<br>персональная информация<br>";
+        var_dump($personInfo);
+        echo "<br>адрес<br>";
+        var_dump($addressInfo);
+        echo "<br>контакты<br>";
+        var_dump($contactInfo);
+        echo "<br>документы<br>";
+        var_dump($documentInfo);
+        
+
         if($this->save())
             return true;
         else {
