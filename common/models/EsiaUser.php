@@ -185,7 +185,7 @@ class EsiaUser extends \yii\db\ActiveRecord
                         $this->email = $cinfo['value'];
                         break;
                 case 'MBT':
-                    $this->email = $cinfo['mobile'];
+                    $this->email = $cinfo['value'];
                     break;
             }
         }
