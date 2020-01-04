@@ -217,6 +217,10 @@ return [
                 'title' => 'Открытые данные',
                 'roles' => ['backend.opendata'],
             ],
+            'statistic' => [
+                'title' => 'Статистика',
+                'roles' => ['backend.statistic']
+            ],
             'integrations' => [
                 'title' => 'Интеграции',
                 'roles' => ['backend.service']

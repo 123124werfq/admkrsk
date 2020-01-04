@@ -1093,6 +1093,18 @@ class RbacController extends Controller
 
 
 
+            $backendStatisticIndex = $auth->createPermission('backend.statistic.index');
+            $backendStatisticIndex->description = 'Статистика';
+            $backendStatisticIndex->ruleName = $entityRule->name;
+            $auth->add($backendStatisticIndex);
+
+            $backendManageStatistic = $auth->createPermission('backend.statistic');
+            $backendManageStatistic->description = 'Статистика';
+            $auth->add($backendManageStatistic);
+            $auth->addChild($backendManageStatistic, $backendStatisticIndex);
+
+
+
             $backendUserList = $auth->createPermission('backend.user.list');
             $backendUserList->description = 'Поиск пользователей';
             $auth->add($backendUserList);
@@ -1471,6 +1483,14 @@ class RbacController extends Controller
 
 
 
+            $backendStatistic = $auth->createRole('admin.statistic');
+            $backendStatistic->description = 'Статистика';
+            $auth->add($backendStatistic);
+            $auth->addChild($backendStatistic, $backendManage);
+            $auth->addChild($backendStatistic, $backendManageStatistic);
+
+
+
             $backendUser = $auth->createRole('admin.user');
             $backendUser->description = 'Редактор пользователей';
             $auth->add($backendUser);
@@ -1525,6 +1545,7 @@ class RbacController extends Controller
             $auth->addChild($admin, $backendService);
             $auth->addChild($admin, $backendServiceSituation);
             $auth->addChild($admin, $backendServiceRubric);
+            $auth->addChild($admin, $backendStatistic);
             $auth->addChild($admin, $backendUser);
             $auth->addChild($admin, $backendUserGroup);
             $auth->addChild($admin, $backendUserRole);

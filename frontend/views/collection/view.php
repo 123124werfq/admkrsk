@@ -1,12 +1,3 @@
-<?php
-/* @var common\models\Page $page */
-
-/**
- * @param string $tag
- * @return array
- */
-
-?>
 <div class="main">
     <div class="container">
         <div class="row">
@@ -18,7 +9,14 @@
             <div class="col-2-third order-xs-1">
             	<div class="content searchable">
                     <?php
-                        preg_match_all ("/{(.+?)}/is", $template, $matches);
+                        //$row['link'] = '/collection?id='.$id_record.'&id_page='.$id_page;
+
+                        $loader = new \Twig\Loader\ArrayLoader([
+                            'index' => $template,
+                        ]);
+                        $twig = new \Twig\Environment($loader);
+
+                        /*preg_match_all ("/{(.+?)}/is", $template, $matches);
 
                         if (!empty($matches[1]))
                         {
@@ -36,9 +34,9 @@
 
                                 $template = str_replace('{'.$alias.'}', $replace , $template);
                             }
-                        }
+                        }*/
                     ?>
-                    <?=str_replace('\n', '', $template)?>
+                    <?=str_replace('\n', '', $twig->render('index', $data))?>
             	</div>
             </div>
             <div class="col-third order-xs-0">

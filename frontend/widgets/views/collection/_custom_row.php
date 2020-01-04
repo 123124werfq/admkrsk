@@ -1,7 +1,14 @@
 <?php
-	preg_match_all ("/{(.+?)}/is", $template, $matches);
+	//preg_match_all ("/{(.+?)}/is", $template, $matches);
 
-	if (!empty($matches[1]))
+	$row['link'] = '/collection?id='.$id_record.'&id_page='.$id_page;
+
+	$loader = new \Twig\Loader\ArrayLoader([
+	    'index' => $template,
+	]);
+	$twig = new \Twig\Environment($loader);
+
+	/*if (!empty($matches[1]))
 	{
 		foreach ($matches[1] as $key => $alias)
 		{
@@ -22,8 +29,8 @@
 		}
 
 		$template = str_replace('{link}', '/collection?id='.$id_record.'&id_page='.$id_page,$template);
-	}
+	}*/
 ?>
 <div class="collection-element">
-	<?=$template?>
+	<?=$twig->render('index', $row);?>
 </div>
