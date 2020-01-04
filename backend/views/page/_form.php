@@ -15,10 +15,11 @@ use common\models\Page;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<?php $form = ActiveForm::begin(); ?>
+<?php $form = ActiveForm::begin();
+?>
 
 <?= $form->field($model, 'id_parent')->widget(Select2::class, [
-    'data' => $model->id_parent ? [$model->id_parent=>$model->parent->title]:[],
+    'data' => (!empty($model->id_parent))?[$model->id_parent=>$model->parent->title]:[],
     'pluginOptions' => [
         'multiple' => false,
         'allowClear' => true,
@@ -30,7 +31,13 @@ use common\models\Page;
             'data' => new JsExpression('function(params) { return {q:params.term}; }')
         ],
     ],
+    'options'=>[
+        'prompt'=>'Выберите родителя'
+    ]
 ]) ?>
+
+<?= $form->field($model, 'created_at')->textInput(['type'=>'date','value'=>(!empty($model->created_at))?date('Y-m-d', $model->created_at):'']) ?>
+
 
 <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 

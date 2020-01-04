@@ -71,6 +71,8 @@ class Page extends \yii\db\ActiveRecord
             [['alias'], 'unique'],
             [['title', 'alias', 'seo_title', 'seo_description', 'seo_keywords'], 'string', 'max' => 255],
 
+            [['created_at'],'safe'],
+
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
             ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
@@ -184,6 +186,10 @@ class Page extends \yii\db\ActiveRecord
     public function beforeValidate()
     {
         $this->content = str_replace(['&lt;','&gt;','&quote;'], ['<','>','"'], $this->content);
+
+        // удалить после релиза , нужно для заполняторов
+        if (!empty($this->created_at) && !is_numeric($this->created_at))
+            $this->created_at = strtotime($this->created_at);
 
         return parent::beforeValidate();
     }
