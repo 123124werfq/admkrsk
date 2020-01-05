@@ -111,7 +111,7 @@ class Action extends ActiveRecord
      * @param string $action
      * @return bool
      */
-    public static function logAction($model, $action)
+    public static function create($model, $action)
     {
         if ($model) {
             $actionModel = new Action();

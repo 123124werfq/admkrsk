@@ -2,21 +2,18 @@
 
 namespace backend\controllers;
 
-use common\models\Action;
 use Yii;
-use common\models\District;
-use backend\models\search\DistrictSearch;
-use yii\base\InvalidConfigException;
+use common\models\Notify;
+use common\models\NotifySearch;
 use yii\db\StaleObjectException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\web\Response;
 
 /**
- * DistrictController implements the CRUD actions for District model.
+ * NotifyController implements the CRUD actions for Notify model.
  */
-class DistrictController extends Controller
+class NotifyController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -33,31 +30,13 @@ class DistrictController extends Controller
         ];
     }
 
-    public function actions()
-    {
-        return [
-            'history' => [
-                'class' => 'backend\modules\log\actions\IndexAction',
-                'modelClass' => District::class,
-            ],
-            'log' => [
-                'class' => 'backend\modules\log\actions\LogAction',
-                'modelClass' => District::class,
-            ],
-            'restore' => [
-                'class' => 'backend\modules\log\actions\RestoreAction',
-                'modelClass' => District::class,
-            ],
-        ];
-    }
-
     /**
-     * Lists all District models.
+     * Lists all Notify models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new DistrictSearch();
+        $searchModel = new NotifySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -67,11 +46,10 @@ class DistrictController extends Controller
     }
 
     /**
-     * Displays a single District model.
+     * Displays a single Notify model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
-     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -81,17 +59,16 @@ class DistrictController extends Controller
     }
 
     /**
-     * Creates a new District model.
+     * Creates a new Notify model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new District(['is_manual' => true]);
+        $model = new Notify();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_CREATE);
-            return $this->redirect(['view', 'id' => $model->id_district]);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
@@ -100,29 +77,26 @@ class DistrictController extends Controller
     }
 
     /**
-     * Updates an existing District model.
+     * Updates an existing Notify model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
-     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_UPDATE);
-            return $this->redirect(['view', 'id' => $model->id_district]);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
-
         return $this->render('update', [
             'model' => $model,
         ]);
     }
 
     /**
-     * Deletes an existing District model.
+     * Deletes an existing Notify model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -132,43 +106,21 @@ class DistrictController extends Controller
      */
     public function actionDelete($id)
     {
-        $model = $this->findModel($id);
-
-        if ($model->delete()) {
-            $model->createAction(Action::ACTION_DELETE);
-        }
+        $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
 
     /**
-     * @param $id
-     * @return Response
-     * @throws NotFoundHttpException
-     * @throws InvalidConfigException
-     */
-    public function actionUndelete($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->restore()) {
-            $model->createAction(Action::ACTION_UNDELETE);
-        }
-
-        return $this->redirect(['index', 'archive' => 1]);
-    }
-
-    /**
-     * Finds the District model based on its primary key value.
+     * Finds the Notify model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return District the loaded model
+     * @return Notify the loaded model
      * @throws NotFoundHttpException if the model cannot be found
-     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {
-        if (($model = District::findOneWithDeleted($id)) !== null) {
+        if (($model = Notify::findOne($id)) !== null) {
             return $model;
         }
 

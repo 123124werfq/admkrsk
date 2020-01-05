@@ -109,10 +109,10 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            Yii::$app->user->identity->logUserAction(Action::ACTION_LOGIN);
+            Yii::$app->user->identity->createAction(Action::ACTION_LOGIN);
             return $this->goBack();
-        } else if ($model->load(Yii::$app->request->post()) && AdUser::login($model->username, $model->password)) {
-            Yii::$app->user->identity->logUserAction(Action::ACTION_LOGIN_AD);
+        } else if ($model->load(Yii::$app->request->post()) && AdUser::adlogin($model->username, $model->password)) {
+            Yii::$app->user->identity->createAction(Action::ACTION_LOGIN_AD);
             return $this->goBack();
         } else {
             $model->password = '';

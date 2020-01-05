@@ -26,7 +26,7 @@ class PollController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        $page->logUserAction();
+        $page->createAction();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -48,7 +48,7 @@ class PollController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        $page->logUserAction();
+        $page->createAction();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -85,7 +85,7 @@ class PollController extends Controller
             }
         }
 
-        $poll->logUserAction();
+        $poll->createAction();
 
         return $this->render('view', [
             'pollForm' => $pollForm,

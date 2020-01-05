@@ -48,7 +48,7 @@ class OpendataController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        $model->logUserAction();
+        $model->createAction();
 
         return $this->render('view',[
             'model'=>$model,

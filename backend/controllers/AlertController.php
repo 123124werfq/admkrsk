@@ -160,7 +160,7 @@ class AlertController extends Controller
         $model->date_begin = time();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->logUserAction(Action::ACTION_CREATE);
+            $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['index', 'id' => $model->id_alert]);
         }
 
@@ -182,7 +182,7 @@ class AlertController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->logUserAction(Action::ACTION_UPDATE);
+            $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['index', 'id' => $model->id_alert]);
         }
 
@@ -205,7 +205,7 @@ class AlertController extends Controller
         $model = $this->findModel($id);
 
         if ($model->delete()) {
-            $model->logUserAction(Action::ACTION_DELETE);
+            $model->createAction(Action::ACTION_DELETE);
         }
 
         return $this->redirect(['index']);
@@ -222,7 +222,7 @@ class AlertController extends Controller
         $model = $this->findModel($id);
 
         if ($model->restore()) {
-            $model->logUserAction(Action::ACTION_UNDELETE);
+            $model->createAction(Action::ACTION_UNDELETE);
         }
 
         return $this->redirect(['index', 'archive' => 1]);

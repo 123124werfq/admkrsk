@@ -67,9 +67,9 @@ trait ActionTrait
      * @param string $action
      * @return bool
      */
-    public function logUserAction($action = Action::ACTION_VIEW)
+    public function createAction($action = Action::ACTION_VIEW)
     {
         /** @var ActiveRecord $this */
-        return Action::logAction($this, $action);
+        return Action::create($this, $action);
     }
 }

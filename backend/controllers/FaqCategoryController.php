@@ -217,7 +217,7 @@ class FaqCategoryController extends Controller
         $model = new FaqCategory();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->logUserAction(Action::ACTION_CREATE);
+            $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_faq_category]);
         }
 
@@ -239,7 +239,7 @@ class FaqCategoryController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->logUserAction(Action::ACTION_UPDATE);
+            $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id_faq_category]);
         }
 
@@ -262,7 +262,7 @@ class FaqCategoryController extends Controller
         $model = $this->findModel($id);
 
         if ($model->delete()) {
-            $model->logUserAction(Action::ACTION_DELETE);
+            $model->createAction(Action::ACTION_DELETE);
         }
 
         return $this->redirect(['index']);
@@ -279,7 +279,7 @@ class FaqCategoryController extends Controller
         $model = $this->findModel($id);
 
         if ($model->restore()) {
-            $model->logUserAction(Action::ACTION_UNDELETE);
+            $model->createAction(Action::ACTION_UNDELETE);
         }
 
         return $this->redirect(['index', 'archive' => 1]);

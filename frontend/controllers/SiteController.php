@@ -11,6 +11,7 @@ use frontend\components\ApiErrorHandler;
 use common\models\Action;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
+use PhpOffice\PhpWord\IOFactory;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\filters\ContentNegotiator;
@@ -28,7 +29,6 @@ use common\models\User;
 use common\models\EsiaUser;
 use yii\web\ErrorAction;
 use yii\web\NotFoundHttpException;
-
 use common\models\Workflow;
 use yii\web\Response;
 
@@ -103,7 +103,7 @@ class SiteController extends Controller
                     'application/xml' => Response::FORMAT_XML,
                 ],
             ]);
-           // $this->negotiate();
+            $this->negotiate();
 
             if (($exception = Yii::$app->getErrorHandler()->exception) === null) {
                 $exception = new NotFoundHttpException(Yii::t('yii', 'Page not found.'));
@@ -142,7 +142,7 @@ class SiteController extends Controller
         $model = new LoginForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            Yii::$app->user->identity->logUserAction(Action::ACTION_LOGIN);
+            Yii::$app->user->identity->createAction(Action::ACTION_LOGIN);
             return $this->goBack();
         } else {
             $model->password = '';
@@ -238,7 +238,7 @@ class SiteController extends Controller
 
         $blocks = $page->blocks;
 
-         // $page->logUserAction();
+        $page->createAction();
 
         return $this->render((empty($blocks))?'page':'blocks',[
             'page'=>$page
@@ -386,7 +386,7 @@ class SiteController extends Controller
                 $esiauser->actualize($client);
 
             $login = Yii::$app->user->login($user);
-            Yii::$app->user->identity->logUserAction(Action::ACTION_LOGIN_ESIA);
+            Yii::$app->user->identity->createAction(Action::ACTION_LOGIN_ESIA);
 
             return $login;
         }
@@ -414,7 +414,7 @@ class SiteController extends Controller
         }
 
         Yii::$app->user->login($user);
-        Yii::$app->user->identity->logUserAction(Action::ACTION_SIGNUP_ESIA);
+        Yii::$app->user->identity->createAction(Action::ACTION_SIGNUP_ESIA);
 
         return $this->redirect('/');
     }
@@ -636,7 +636,7 @@ class SiteController extends Controller
         $myTextElement = $section3->addText('"Believe you can and you\'re halfway there." (Theodor Roosevelt)');
         $myTextElement->setFontStyle($fontStyle);
 
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+        $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
         $objWriter->save('../runtime/helloWorld.docx');
     }
 
@@ -752,7 +752,7 @@ class SiteController extends Controller
                 $esiauser->actualize($esia);
 
             $login = Yii::$app->user->login($user);
-            Yii::$app->user->identity->logUserAction(Action::ACTION_LOGIN_ESIA);
+            Yii::$app->user->identity->createAction(Action::ACTION_LOGIN_ESIA);
 
             return $this->goHome();
             //return $login;
@@ -775,7 +775,7 @@ class SiteController extends Controller
         }
 
         Yii::$app->user->login($user);
-        Yii::$app->user->identity->logUserAction(Action::ACTION_SIGNUP_ESIA);
+        Yii::$app->user->identity->createAction(Action::ACTION_SIGNUP_ESIA);
 
         return $this->redirect('/');
 

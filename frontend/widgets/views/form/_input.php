@@ -13,9 +13,7 @@ use yii\web\JsExpression;
 /** @var FormElement $element */
 $styles = $element->getStyles();
 
-$options = [];
-//todo
-//$options = $input->options;
+$options = $input->options;
 $clear = [];
 
 if (!empty($options))

@@ -141,7 +141,7 @@ class AdUser extends ActiveRecord
      * @return bool
      * @throws Exception
      */
-    public static function login($login, $password)
+    public static function adlogin($login, $password)
     {
         $host = '10.24.0.7'; // вынести в настройки
         $mydap = ldap_connect($host);

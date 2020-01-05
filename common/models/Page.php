@@ -3,6 +3,8 @@
 namespace common\models;
 
 use common\behaviors\AccessControlBehavior;
+use common\behaviors\MailNotifyBehaviour;
+use common\components\multifile\MultiUploadBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
@@ -44,6 +46,13 @@ class Page extends ActiveRecord
     const VERBOSE_NAME_PLURAL = 'Страницы';
     const TITLE_ATTRIBUTE = 'title';
 
+    /**
+     * Is need to notify the administrator
+     *
+     * @var boolean
+     */
+    public $is_admin_notify;
+
     public $access_user_ids;
     public $access_user_group_ids;
 
@@ -68,6 +77,7 @@ class Page extends ActiveRecord
             ['id_parent', 'filter', 'filter' => function($value) {
                 return (int) $value;
             }],
+            [['is_admin_notify'], 'boolean'],
             [['title', 'alias'], 'required'],
             [['content','path'], 'string'],
             [['alias'], 'unique'],
@@ -211,8 +221,14 @@ class Page extends ActiveRecord
                 'class' => AccessControlBehavior::class,
                 'permission' => 'backend.page',
             ],
+            'afterUpdateMailNotify' => [
+                'class' => MailNotifyBehaviour::class,
+                'userIds' => 'access_user_ids',
+                'isAdminNotify' => 'is_admin_notify',
+                'linkToEntity' => 'page/view',
+            ],
             'multiupload' => [
-                'class' => \common\components\multifile\MultiUploadBehavior::class,
+                'class' => MultiUploadBehavior::class,
                 'relations'=>
                 [
                     'medias'=>[

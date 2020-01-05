@@ -597,8 +597,8 @@ class CollectionController extends Controller
     {
         $model = new Collection();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-//            $model->createForm();
-            $model->logUserAction(Action::ACTION_CREATE);
+            $model->createForm();
+            $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['form/view', 'id' => $model->id_form]);
         }
 
@@ -831,7 +831,7 @@ class CollectionController extends Controller
 
                                 Yii::$app->session->setFlash('success', 'Данные импортированы');
 
-                                //$collection->createForm();
+                                $collection->createForm();
 
                                 unlink($model->filepath);
 
@@ -883,7 +883,7 @@ class CollectionController extends Controller
         $model = $this->findModel($id);
 
         if ($model->delete()) {
-            $model->logUserAction(Action::ACTION_DELETE);
+            $model->createAction(Action::ACTION_DELETE);
         }
 
         return $this->redirect(['index']);
@@ -900,7 +900,7 @@ class CollectionController extends Controller
         $model = $this->findModel($id);
 
         if ($model->restore()) {
-            $model->logUserAction(Action::ACTION_UNDELETE);
+            $model->createAction(Action::ACTION_UNDELETE);
         }
 
         return $this->redirect(['index', 'archive' => 1]);

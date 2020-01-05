@@ -7,19 +7,16 @@ use common\models\Form;
 use common\models\Workflow;
 use common\models\Integration;
 use common\models\Collection;
-use common\models\CollectionRecord;
 use common\models\ServiceAppeal;
 use common\models\ServiceAppealState;
 use common\models\ServiceRubric;
-use common\models\ServiceSituation;
-use common\models\ServiceComplaintForm;
 use common\models\FormDynamic;
-
 use Yii;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\AccessControl;
 
-class ServiceController extends \yii\web\Controller
+class ServiceController extends Controller
 {
     public function behaviors()
     {
@@ -211,7 +208,7 @@ class ServiceController extends \yii\web\Controller
     {
     	$model = $this->findModel($id);
 
-        $model->logUserAction();
+        $model->createAction();
 
         return $this->render('view',[
         	'service'=>$model,
@@ -221,19 +218,18 @@ class ServiceController extends \yii\web\Controller
 
     public function actionCategory($id_firm)
     {
-        //todo doesn't exist class ServiceAppealForm
-//        //$query = ServiceAppealForm::find()->with('category as category')->select(['id_category','id_firm','category.lineValue as category_name'])->where(['id_firm'=>$id_firm])->groupBy('id_category');
-//
-//        $results = [];
-//        foreach ($query->asArray()->all() as $category)
-//        {
-//            $results[] = [
-//                'id' => $category['id_category'],
-//                'text' => $category['category_name'],
-//            ];
-//        }
-//
-//        return ['results' => $results];
+        $query = ServiceAppealForm::find()->with('category as category')->select(['id_category','id_firm','category.lineValue as category_name'])->where(['id_firm'=>$id_firm])->groupBy('id_category');
+
+        $results = [];
+        foreach ($query->asArray()->all() as $category)
+        {
+            $results[] = [
+                'id' => $category['id_category'],
+                'text' => $category['category_name'],
+            ];
+        }
+
+        return ['results' => $results];
     }
 
     /**

@@ -109,7 +109,7 @@ class NewsController extends Controller
         else
             $similar_news = News::find()->where(['id_page'=>$model->id_page])->andWhere('id_news <> '.$id)->limit(3)->all();
 
-        $model->logUserAction();
+        $model->createAction();
 
         return $this->render('view',[
         	'model'=>$model,

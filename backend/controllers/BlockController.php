@@ -70,7 +70,7 @@ class BlockController extends Controller
         $model = new Block();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->logUserAction(Action::ACTION_CREATE);
+            $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_block]);
         }
 
@@ -122,7 +122,7 @@ class BlockController extends Controller
                     print_r($varModel->errors);
             }
 
-            $model->logUserAction(Action::ACTION_UPDATE);
+            $model->createAction(Action::ACTION_UPDATE);
 
             return $this->redirect(['page/layout', 'id' => $model->id_page]);
         }
@@ -147,7 +147,7 @@ class BlockController extends Controller
         $id_page = $model->id_page;
 
         if ($model->delete()) {
-            $model->logUserAction(Action::ACTION_DELETE);
+            $model->createAction(Action::ACTION_DELETE);
         }
 
         return $this->redirect(['/page/layout','id'=>$id_page]);

@@ -2,6 +2,7 @@
 
 use backend\widgets\UserAccessControl;
 use backend\widgets\UserGroupAccessControl;
+use common\models\MailNotifyManager;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
@@ -55,6 +56,14 @@ use common\models\Collection;
     <hr>
 
     <h3>Доступ</h3>
+
+    <?php if (Yii::$app->user->can('admin.collection')): ?>
+        <?= $form->field($model, 'is_admin_notify')->checkbox(
+            [
+                'checked' => MailNotifyManager::isAdminNotify($model->primaryKey, get_class($model)),
+                'label' => 'Уведомлять админа об изменении списка?'])
+        ?>
+    <?php endif; ?>
 
     <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>
 

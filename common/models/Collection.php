@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\behaviors\AccessControlBehavior;
+use common\behaviors\MailNotifyBehaviour;
 use common\components\collection\CollectionQuery;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
@@ -51,6 +52,14 @@ class Collection extends ActiveRecord
     const VERBOSE_NAME_PLURAL = 'Списки';
     const TITLE_ATTRIBUTE = 'name';
 
+
+    /**
+     * Is need to notify the administrator
+     *
+     * @var boolean
+     */
+    public $is_admin_notify;
+
     /**
      * User ids having access for edit that collection
      */
@@ -83,6 +92,7 @@ class Collection extends ActiveRecord
             [['filter', 'options', 'label'], 'safe'],
             [['template', 'template_element', 'template_view'], 'string'],
             [['is_authenticate'], 'boolean'],
+            [['is_admin_notify'], 'boolean'],
             [['is_authenticate'], 'default', 'value' => true],
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
@@ -132,20 +142,17 @@ class Collection extends ActiveRecord
         return [
             'ts' => TimestampBehavior::class,
             'ba' => BlameableBehavior::class,
-//            'log' => LogBehavior::class,
+            'log' => LogBehavior::class,
             'ac' => [
                 'class' => AccessControlBehavior::class,
                 'permission' => 'backend.collection',
             ],
-//            'yiinput' => [
-//                'class' => RelationBehavior::class,
-//                'relations'=> [
-//                    'columns'=>[
-//                        'modelname'=> 'CollectionColumn',
-//                        'added'=>true,
-//                    ],
-//                ]
-//            ]
+            'afterUpdateMailNotify' => [
+                'class' => MailNotifyBehaviour::class,
+                'userIds' => 'access_user_ids',
+                'isAdminNotify' => 'is_admin_notify',
+                'linkToEntity' => 'collection-record/view',
+            ],
         ];
     }
 

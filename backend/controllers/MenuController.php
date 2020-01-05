@@ -162,7 +162,7 @@ class MenuController extends Controller
         $model = new Menu();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->logUserAction(Action::ACTION_CREATE);
+            $model->createAction(Action::ACTION_CREATE);
             if ($model->type<>Menu::TYPE_LIST)
                 return $this->redirect(['menu-link/index', 'id' => $model->id_menu]);
             else
@@ -206,7 +206,7 @@ class MenuController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->logUserAction(Action::ACTION_UPDATE);
+            $model->createAction(Action::ACTION_UPDATE);
 
             if (!empty($model->id_page))
                 return $this->redirect(['page/view', 'id' => $model->id_page]);
@@ -236,7 +236,7 @@ class MenuController extends Controller
         $model = $this->findModel($id);
 
         if ($model->delete()) {
-            $model->logUserAction(Action::ACTION_DELETE);
+            $model->createAction(Action::ACTION_DELETE);
         }
 
         return $this->redirect(['index']);
@@ -253,7 +253,7 @@ class MenuController extends Controller
         $model = $this->findModel($id);
 
         if ($model->restore()) {
-            $model->logUserAction(Action::ACTION_UNDELETE);
+            $model->createAction(Action::ACTION_UNDELETE);
         }
 
         return $this->redirect(['index', 'archive' => 1]);

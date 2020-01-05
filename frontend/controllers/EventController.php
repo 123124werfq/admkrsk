@@ -34,7 +34,7 @@ class EventController extends Controller
         if (empty($page))
             throw new NotFoundHttpException('');
 
-        $page->logUserAction();
+        $page->createAction();
 
         return $this->render('index',[
             'page'=>$page,
