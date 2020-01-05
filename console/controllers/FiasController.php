@@ -6,12 +6,17 @@ use common\helpers\ProgressHelper;
 use common\models\City;
 use common\models\District;
 use common\models\FiasHouse;
+use common\models\FiasUpdateHistory;
 use common\models\House;
 use common\models\Region;
 use common\models\Street;
 use common\models\Subregion;
+use SoapClient;
 use Yii;
 use yii\console\Controller;
+use yii\db\Expression;
+use yii\helpers\ArrayHelper;
+use yii\helpers\FileHelper;
 
 class FiasController extends Controller
 {
@@ -122,6 +127,65 @@ class FiasController extends Controller
             /* @var House $house */
             $house->updateAttributes(['fullname' => $house->getFullName()]);
         }
+    }
+
+    public function actionUpdate()
+    {
+        $lastVersion = FiasUpdateHistory::find()->max('version');
+
+        $client = new SoapClient('https://fias.nalog.ru/WebServices/Public/DownloadService.asmx?WSDL');
+
+        $response = $client->GetAllDownloadFileInfo();
+        $updates = ArrayHelper::map($response->GetAllDownloadFileInfoResult->DownloadFileInfo, 'VersionId', function(\StdClass $object) use ($lastVersion) {
+            return [
+                'version' => $object->VersionId,
+                'text' => $object->TextVersion,
+                'file' => $lastVersion ? $object->FiasDeltaDbfUrl : $object->FiasCompleteDbfUrl,
+            ];
+        });
+
+        if ($lastVersion) {
+            foreach ($updates as $key => $update) {
+                if ($update['version'] <= $lastVersion) {
+                    unset($updates[$key]);
+                }
+            }
+        } else {
+            $updates = [array_pop($updates)];
+        }
+
+        foreach ($updates as $update) {
+            $this->fiasUpdate($update);
+        }
+    }
+
+    private function fiasUpdate($update)
+    {
+        $updateHistory = new FiasUpdateHistory($update);
+
+        FileHelper::createDirectory(Yii::getAlias('@runtime/fias_update'));
+
+        $filename = Yii::getAlias('@runtime/fias_update/' . basename($updateHistory->file));
+
+        $this->downloadFile($updateHistory->file, $filename);
+
+        $updateHistory->save();
+    }
+
+    /**
+     * @param string $url
+     * @param string $dest
+     */
+    public function downloadFile($url, $dest)
+    {
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_FILE => fopen($dest, 'w'),
+            CURLOPT_TIMEOUT => 28800,
+            CURLOPT_URL => $url
+        ]);
+        curl_exec($ch);
+        curl_close($ch);
     }
 
     public function actionTest()

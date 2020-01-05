@@ -12,7 +12,7 @@ class StatisticController extends Controller
 {
     public function actionIndex()
     {
-        $isNew = Statistic::find()->exists();
+        $isExists = Statistic::find()->exists();
 
         $query = Action::find()
             ->select([
@@ -38,7 +38,7 @@ class StatisticController extends Controller
             ->where([
                 'and',
                 ['action' => 'view'],
-                $isNew ? ['>=', 'created_at', mktime(0, 0 ,0, 1, 1)] : [],
+                $isExists ? ['>=', 'created_at', mktime(0, 0 ,0, 1, 1)] : [],
             ])
             ->groupBy(['model', 'model_id'])
             ->asArray();
