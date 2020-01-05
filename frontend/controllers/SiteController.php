@@ -178,7 +178,7 @@ class SiteController extends Controller
         $user = User::findOne(Yii::$app->user->id);
         Yii::$app->user->logout();
 
-        if(!empty($user->id_esia_user))
+        if (!empty($user->id_esia_user))
         {
             $esia = User::openId();
             $logoutUrl = $esia->buildLogoutUrl(Yii::$app->homeUrl);

@@ -110,10 +110,10 @@ return [
                 [
                     'class' => 'frontend\components\PravoUrlRule',
                 ],
-                [
+                /*[
                     'class' => 'frontend\components\NewyearUrlRule',
-                ],
-                '/' => 'site/page',
+                ],*/
+                //'/' => 'site/page',
                 'site/flush' => 'site/flush',
                 'service/search'=>'service/search',
                 '/press/events' => 'event/index',

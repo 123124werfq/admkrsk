@@ -44,6 +44,21 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
         $request = Yii::$app->request;
         $pathInfo = $request->getPathInfo();
 
+        // если обратились к корню то проверяем домены
+        if (empty($pathInfo))
+        {
+            $domain = \yii\helpers\Url::base(true);
+
+            $domains = Page::find()->where([
+                'is_partition' => true,
+                'active'=>1
+            ])->andWhere('partition_domain IS NOT NULL')
+            ->indexBy('partition_domain')->all();
+
+            if (!empty($domains[$domain]))
+                return ['site/page', ['page'=>$domains[$domain]]];
+        }
+
         $routes = Yii::$app->cache->getOrSet('routes', function () {
             return ControllerPage::find()->joinWith('page')->all();
         });
@@ -72,11 +87,10 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
         {
             /*if (strpos($route, '/collection')>0 && !empty($_GET['id']))
                 return ['collection/view',['id'=>$_GET['id'],'page'=>$pages[$route]]];*/
-
             return [$route,['page'=>$pages[$route]]];
         }
 
-        $alias = explode('/', $request->url);
+        $alias = explode('/', $pathInfo);
         $alias = array_pop($alias);
 
         if (strpos($alias, '?')>0)
