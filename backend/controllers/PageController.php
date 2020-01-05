@@ -368,7 +368,11 @@ class PageController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $model->old_parent = $model->id_parent = $model->parent->id_page;
+        
+        $model->id_parent = $old_parent = null;
+
+        if (!empty($model->parent->id_page))
+            $old_parent = $model->id_parent = $model->parent->id_page;
 
         //print_r(array_keys($model->parents()->indexBy('id_page')->all()));
 
@@ -376,7 +380,7 @@ class PageController extends Controller
         {
             $model->createAction(Action::ACTION_UPDATE);
 
-            if ($model->old_parent != $model->id_parent)
+            if ($old_parent != $model->id_parent)
             {
                 $parentPage = Page::findOne($model->id_parent);
 

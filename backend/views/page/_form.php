@@ -18,6 +18,7 @@ use common\models\Page;
 <?php $form = ActiveForm::begin();
 ?>
 
+<?php if ($model->alias!='/'){?>
 <?= $form->field($model, 'id_parent')->widget(Select2::class, [
     'data' => (!empty($model->id_parent))?[$model->id_parent=>$model->parent->title]:[],
     'pluginOptions' => [
@@ -35,6 +36,7 @@ use common\models\Page;
         'prompt'=>'Выберите родителя'
     ]
 ]) ?>
+<?php }?>
 
 <?= $form->field($model, 'created_at')->textInput(['type'=>'date','value'=>(!empty($model->created_at))?date('Y-m-d', $model->created_at):'']) ?>
 

@@ -20,7 +20,7 @@ class PravoUrlRule extends BaseObject implements UrlRuleInterface
         $hostInfo = $request->getHostInfo();
         $pathInfo = $request->getPathInfo();
 
-        if(!strpos($hostInfo, 'pravo.admkrsk') && !strpos($hostInfo, 't3.admkrsk'))
+        if (!strpos($hostInfo, 'pravo.admkrsk') && !strpos($hostInfo, 't3.admkrsk'))
             return false;
 
 //        \Yii::$app->response->redirect('/m/dashboard', 301);
@@ -31,7 +31,7 @@ class PravoUrlRule extends BaseObject implements UrlRuleInterface
         if (strpos($alias, '?')>0)
             $alias = substr($alias, 0, strpos($alias, '?'));
 
-        return ['pravo/index', [] ];
+        return ['pravo/index', []];
 
       //  return ['site/page', ['page'=>$page]];
     }

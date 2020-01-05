@@ -66,10 +66,13 @@ class Page extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_media', 'active', 'id_parent'], 'default', 'value' => null],
+            [['id_media', 'active'], 'default', 'value' => null],
             [['id_media', 'active', 'id_parent', 'noguest','hidemenu', 'old_parent'], 'integer'],
-            ['id_parent', 'filter', 'filter' => function($value) {
+            /*['id_parent', 'filter', 'filter' => function($value) {
                 return (int) $value;
+            }],*/
+            [['id_parent'], 'required', 'when' => function($model) {
+                return $model->alias != '/';
             }],
             [['title', 'alias'], 'required'],
             [['content','path'], 'string'],
@@ -121,9 +124,11 @@ class Page extends \yii\db\ActiveRecord
         if ($this->isNewRecord)
             return '';
 
+        if ($this->is_partition && !empty($this->partition_domain))
+            return $this->partition_domain;
+
         $pages = $this->parents()->select(['alias','partition_domain','is_partition'])->asArray()->all();
         $pages[] = $this;
-        unset($pages[0]);
 
         $domain = '';
         $url = [];
@@ -133,7 +138,8 @@ class Page extends \yii\db\ActiveRecord
             if (!empty($page['is_partition']) && !empty($page['partition_domain']))
                 $domain = $page['partition_domain'];
 
-            $url[] = $page['alias'];
+            if ($page['alias']!='/')
+                $url[] = $page['alias'];
         }
 
         if (empty($domain) && $absolute)

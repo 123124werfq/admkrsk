@@ -90,6 +90,9 @@ return [
                         ['verb' => ['GET', 'OPTIONS'], 'pattern' => 'news/<id:\d+>', 'route' => 'news/view'],
                     ],
                 ],
+                [
+                    'class' => 'frontend\components\LangUrlRule',
+                ],
                 'search/address'=>'search/address',
                 'collection'=>'collection/view',
                 'collection/word'=>'collection/word',
@@ -104,12 +107,9 @@ return [
                 'address/house'=>'address/house',
                 'book/available' => 'book/available',
                 'book/intervals' => 'book/intervals',
-                [
-                    'class' => 'frontend\components\LangUrlRule',
-                ],
-                [
+                /*[
                     'class' => 'frontend\components\PravoUrlRule',
-                ],
+                ],*/
                 /*[
                     'class' => 'frontend\components\NewyearUrlRule',
                 ],*/

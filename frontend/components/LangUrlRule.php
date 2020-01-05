@@ -17,7 +17,6 @@ class LangUrlRule extends BaseObject implements UrlRuleInterface
 
     public function parseRequest($manager, $request)
     {
-
         $request = Yii::$app->request;
         $pathInfo = $request->getPathInfo();
 
@@ -27,7 +26,6 @@ class LangUrlRule extends BaseObject implements UrlRuleInterface
             Yii::$app->language = 'en';
             setlocale(LC_ALL, 'en_EN');
         }
-
 
         return false;  // данное правило не применимо
     }

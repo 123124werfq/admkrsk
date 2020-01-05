@@ -14,24 +14,36 @@ use Yii;
 
 class NewsUrlRule extends BaseObject implements UrlRuleInterface
 {
-    public function createUrl($manager, $route, $params)
+    public $urls;
+
+    protected function getRoutes()
     {
-        $routes = Yii::$app->cache->getOrSet('routes', function () {
-            return ControllerPage::find()->joinWith('page')->all();
+        $this->urls = Yii::$app->cache->getOrSet('route_urls', function (){
+
+            $controllers =  ControllerPage::find()->joinWith('page')->all();
+
+            $urls = [];
+
+            foreach ($controllers as $key => $data)
+            {
+                $urls[$data->controller.'/index'] = $data->page->getUrl();
+
+                foreach (explode(',', $data->actions) as $akey => $action)
+                {
+                    if ($action!='index')
+                        $urls[$data->controller.'/'.$action] = $data->page->getUrl().'/'.$action;
+                }
+            }
+
+            return $urls;
         });
 
-        $urls = [];
+        return $this->urls;
+    }
 
-        foreach ($routes as $key => $data)
-        {
-            $urls[$data->controller.'/index'] = $data->page->getUrl();
-
-            foreach (explode(',', $data->actions) as $akey => $action)
-            {
-                if ($action!='index')
-                    $urls[$data->controller.'/'.$action] = $data->page->getUrl().'/'.$action;
-            }
-        }
+    public function createUrl($manager, $route, $params)
+    {
+        $urls = $this->getRoutes();
 
         if (isset($urls[$route]))
             return $urls[$route].((!empty($params))?'?'.http_build_query($params):'');
@@ -43,12 +55,11 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
     {
         $request = Yii::$app->request;
         $pathInfo = $request->getPathInfo();
+        $domain = \yii\helpers\Url::base(true);
 
         // если обратились к корню то проверяем домены
         if (empty($pathInfo))
         {
-            $domain = \yii\helpers\Url::base(true);
-
             $domains = Page::find()->where([
                 'is_partition' => true,
                 'active'=>1
@@ -59,7 +70,7 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
                 return ['site/page', ['page'=>$domains[$domain]]];
         }
 
-        $routes = Yii::$app->cache->getOrSet('routes', function () {
+        $routes = Yii::$app->cache->getOrSet('routes', function (){
             return ControllerPage::find()->joinWith('page')->all();
         });
 
@@ -77,18 +88,14 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
             {
                 if ($action!='index' && !empty($action))
                 {
-                    $urls[$route->controller.'/'.$action] = substr($route->page->getUrl(),1).'/'.$action;
+                    $urls[$route->controller.'/'.$action] = $route->page->getUrl().'/'.$action;
                     $pages[$route->controller.'/'.$action] = $route->page;
                 }
             }
         }
 
-        if ($route = array_search($pathInfo, $urls))
-        {
-            /*if (strpos($route, '/collection')>0 && !empty($_GET['id']))
-                return ['collection/view',['id'=>$_GET['id'],'page'=>$pages[$route]]];*/
+        if ($route = array_search($domain.$pathInfo, $urls))
             return [$route,['page'=>$pages[$route]]];
-        }
 
         $alias = explode('/', $pathInfo);
         $alias = array_pop($alias);
@@ -96,7 +103,7 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
         if (strpos($alias, '?')>0)
             $alias = substr($alias, 0, strpos($alias, '?'));
 
-        $page = Page::find()->where(['alias'=>$alias])->one();
+        $page = Page::find()->where(['alias'=>$alias, 'active'=>1])->one();
 
         if (empty($page))
             return false;
