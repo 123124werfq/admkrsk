@@ -21,4 +21,9 @@ class PersonalController extends \yii\web\Controller
 
     }
 
+    public function actionUserProfile()
+    {
+
+    }
+
 }
