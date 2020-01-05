@@ -122,7 +122,7 @@ class Form extends \yii\db\ActiveRecord
     }
 
     // deprecated
-    public function createFromByCollection()
+    /*public function createFromByCollection()
     {
         foreach ($this->collection->columns as $key => $column)
         {
@@ -138,9 +138,6 @@ class Form extends \yii\db\ActiveRecord
                 $input->id_column = $column->id_column;
                 $input->label = $input->name = $column->name;
 
-                /*if ($column->type != CollectionColumn::TYPE_COLLECTION)
-                    $input->values = $column->variables;*/
-
                 if ($input->save())
                 {
                     $element = new FormElement;
@@ -151,7 +148,7 @@ class Form extends \yii\db\ActiveRecord
                 }
             }
         }
-    }
+    }*/
 
     public function createInput($attributes)
     {

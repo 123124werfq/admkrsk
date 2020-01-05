@@ -33,7 +33,7 @@ $this->render('_head',['model'=>$model]);
                         ]); ?>
                         <div class="row">
                             <div class="col-md-8">
-                                <?=$form->field($block, 'type', ['template' => "{input}"])->dropDownList($block->getTypesLabels()) ?>
+                                <?=$form->field($block, 'type', ['template' => "{input}"])->dropDownList($block->getTypesLabels(true)) ?>
                             </div>
                             <div class="col-md-2">
                                 <button type="submit" class="btn btn-primary">Добавить блок</button>

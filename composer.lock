@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7b94272b05a3280bca0e1c5df5d65a95",
+    "content-hash": "2f399654800bd8979e47606e09b5a189",
     "packages": [
         {
             "name": "2amigos/yii2-taggable-behavior",
@@ -1750,55 +1750,6 @@
                 "yii"
             ],
             "time": "2019-07-19T17:36:56+00:00"
-        },
-        {
-            "name": "paulzi/yii2-nested-sets",
-            "version": "v1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/paulzi/yii2-nested-sets.git",
-                "reference": "05b51d129295e10becf603777aa25cf555329f46"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/paulzi/yii2-nested-sets/zipball/05b51d129295e10becf603777aa25cf555329f46",
-                "reference": "05b51d129295e10becf603777aa25cf555329f46",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0",
-                "yiisoft/yii2": "~2.0.0"
-            },
-            "require-dev": {
-                "phpunit/dbunit": "~1.0",
-                "phpunit/phpunit": "~4.0"
-            },
-            "type": "yii2-extension",
-            "autoload": {
-                "psr-4": {
-                    "paulzi\\nestedsets\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Alexander Kochetov",
-                    "email": "creocoder@gmail.com"
-                },
-                {
-                    "name": "PaulZi",
-                    "email": "pavel.zimakoff@gmail.com"
-                }
-            ],
-            "description": "Nested Sets Behavior for Yii2",
-            "keywords": [
-                "nested sets",
-                "yii2"
-            ],
-            "time": "2018-07-31T13:38:08+00:00"
         },
         {
             "name": "pclzip/pclzip",
@@ -4419,6 +4370,55 @@
                 "serialize"
             ],
             "time": "2019-11-29T22:36:02+00:00"
+        },
+        {
+            "name": "paulzi/yii2-nested-sets",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paulzi/yii2-nested-sets.git",
+                "reference": "05b51d129295e10becf603777aa25cf555329f46"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paulzi/yii2-nested-sets/zipball/05b51d129295e10becf603777aa25cf555329f46",
+                "reference": "05b51d129295e10becf603777aa25cf555329f46",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "yiisoft/yii2": "~2.0.0"
+            },
+            "require-dev": {
+                "phpunit/dbunit": "~1.0",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "paulzi\\nestedsets\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Kochetov",
+                    "email": "creocoder@gmail.com"
+                },
+                {
+                    "name": "PaulZi",
+                    "email": "pavel.zimakoff@gmail.com"
+                }
+            ],
+            "description": "Nested Sets Behavior for Yii2",
+            "keywords": [
+                "nested sets",
+                "yii2"
+            ],
+            "time": "2018-07-31T13:38:08+00:00"
         },
         {
             "name": "phar-io/manifest",

@@ -27,9 +27,7 @@ $accessabilityMode =  (isset($_COOKIE['accessabilityMode']) && $_COOKIE['accessa
     <title><?= Html::encode($this->title) ?></title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <meta content="telephone=no" name="format-detection">
-    <!-- This make sence for mobile browsers. It means, that content has been optimized for mobile browsers -->
     <meta name="HandheldFriendly" content="true">
     <link href="<?= $bundle->baseUrl . '/css/accessability.css' ?>" rel="stylesheet accessability" type="text/css" <?=$accessabilityMode?'':'disabled'?> title="accessability">
 
@@ -43,10 +41,8 @@ $accessabilityMode =  (isset($_COOKIE['accessabilityMode']) && $_COOKIE['accessa
         <script src="<?= $bundle->baseUrl . '/js/html5shiv-3.7.2.min.js' ?>" type="text/javascript"></script>
         <meta content="no" http-equiv="imagetoolbar">
     <![endif]-->
-
     <?php $this->head() ?>
 </head>
-
 <body>
 <?php $this->beginBody() ?>
     <?= $this->render('_header', ['bundle' => $bundle])?>
@@ -73,9 +69,9 @@ $accessabilityMode =  (isset($_COOKIE['accessabilityMode']) && $_COOKIE['accessa
                 </filter>
             </svg>
         </div>
-        <?= Alert::widget() ?>
-        <?= $content ?>
-        <?= $this->render('_footer', ['bundle' => $bundle])?>
+        <?=Alert::widget()?>
+        <?=$content?>
+        <?=$this->render('_footer', ['bundle' => $bundle])?>
     </div>
 <?php $this->endBody() ?>
 </body>

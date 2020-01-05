@@ -217,13 +217,13 @@ class PageController extends Controller
 
         if ($block->load(Yii::$app->request->post()) && $block->validate())
         {
-            $block->ord = $page->getBlocks()->count()-1;
+            $block->ord = $page->getBlocksLayout()->count()-1;
 
             if ($block->save())
                 $this->refresh();
         }
 
-        return $this->render('template',[
+        return $this->render('layout',[
             'model'=>$page,
             'block'=>$block,
             'blocks'=>$blocks,
@@ -236,7 +236,8 @@ class PageController extends Controller
 
         $tree = [];
 
-        foreach ($pages as $key => $page) {
+        foreach ($pages as $key => $page)
+        {
             $tree[(int)$page->id_parent][$page->id_page] = $page;
         }
 
@@ -367,9 +368,22 @@ class PageController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->old_parent = $model->id_parent = $model->parent->id_page;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        //print_r(array_keys($model->parents()->indexBy('id_page')->all()));
+
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             $model->createAction(Action::ACTION_UPDATE);
+
+            if ($model->old_parent != $model->id_parent)
+            {
+                $parentPage = Page::findOne($model->id_parent);
+
+                if (!empty($parentPage))
+                    $model->appendTo($parentPage);
+            }
+
             return $this->redirect(['view', 'id' => $model->id_page]);
         }
 

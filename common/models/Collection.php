@@ -404,8 +404,7 @@ class Collection extends \yii\db\ActiveRecord
         return Url::to(['/api/collection/index', 'alias' => $this->alias], true);
     }
 
-    // DEPRECATED
-    /*public function createForm()
+    public function createForm()
     {
         $transaction = Yii::$app->db->beginTransaction();
 
@@ -459,5 +458,5 @@ class Collection extends \yii\db\ActiveRecord
             $transaction->rollBack();
             throw $e;
         }
-    }*/
+    }
 }
