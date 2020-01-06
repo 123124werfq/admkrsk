@@ -16,6 +16,33 @@ use yii\db\ActiveRecord;
 class MailNotifyManager extends ActiveRecord
 {
     /**
+     * @var int|array
+     */
+    public $usersNotify;
+
+    /**
+     * @var ActiveRecord
+     */
+    public $model;
+
+    /**
+     * Model attribute
+     *
+     * @var integer
+     */
+    public $timeRule;
+
+    /**
+     * @var string
+     */
+    private $modelClass;
+
+    /**
+     * @var int|string
+     */
+    private $modelId;
+
+    /**
      * Will admin receive notify
      *
      * @param string|int $entityId
@@ -43,33 +70,32 @@ class MailNotifyManager extends ActiveRecord
     /**
      * Get users which validated time rules.
      *
-     * @param int $entityId
-     * @param string $class
-     * @param array|int $newUsersIds
      * @return User[]|null
      */
-    public static function getUsersForSendNotify($entityId, $class, $newUsersIds)
+    public function getNotifyUsers()
     {
-        if (!$newUsersIds) {
+        $this->modelClass = get_class($this->model);
+        $this->modelId = $this->model->primaryKey;
+        if (!$this->usersNotify) {
             static::deleteAll([
-                'entity_id' => $entityId,
-                'class' => $class,
+                'entity_id' => $this->modelId,
+                'class' => $this->modelClass,
             ]);
             return null;
         }
-        $existUsersNotify = static::getUsersNotifyByEntityAndClass($entityId, $class);
+        $existUsersNotify = $this->getExistUsersNotify();
         if ($existUsersNotify) {
-            $normalizeUsersNotify = static::normalizeNotify($entityId, $class, $newUsersIds, $existUsersNotify);
+            $normalizeUsersNotify = $this->normalizeNotify($existUsersNotify);
             $validUsers = [];
             foreach ($normalizeUsersNotify as $user) {
-                if (static::isNeedNotifyUser($entityId, $class, $user)) {
+                if ($this->isNeedNotifyUser($user)) {
                     $validUsers[] = $user;
                 }
             }
             return $validUsers;
         } else {
-            static::factoryCreateUsersNotify($entityId, $class, $newUsersIds);
-            return static::getUsersNotifyByEntityAndClass($entityId, $class);
+            $this->factoryCreateUsersNotify();
+            return $this->getExistUsersNotify();
         }
     }
 
@@ -77,16 +103,13 @@ class MailNotifyManager extends ActiveRecord
      * Create user notification if not exist,
      * and delete old.
      *
-     * @param $entityId
-     * @param $class
-     * @param $newUsersIds
      * @param $usersNotify
      * @return User[]|null
      */
-    private static function normalizeNotify($entityId, $class, $newUsersIds, $usersNotify)
+    private function normalizeNotify($usersNotify)
     {
-        if (!is_array($newUsersIds)) {
-            $newUsersIds = [$newUsersIds];
+        if (!is_array($this->usersNotify)) {
+            $this->usersNotify = [$this->usersNotify];
         }
 
         $oldUsersIds = [];
@@ -94,32 +117,30 @@ class MailNotifyManager extends ActiveRecord
         foreach ($usersNotify as $userNotify) {
             $oldUsersIds[] = intval($userNotify->id);
         }
-        $deleteUsersIds = array_diff($oldUsersIds, $newUsersIds);
+        $deleteUsersIds = array_diff($oldUsersIds, $this->usersNotify);
         if ($deleteUsersIds) {
             static::deleteAll([
-                'entity_id' => $entityId,
-                'class' => $class,
+                'entity_id' => $this->modelId,
+                'class' => $this->modelClass,
                 'user_id' => $deleteUsersIds,
             ]);
         }
-        $createUsersIds = array_diff($newUsersIds, $oldUsersIds);
+        $createUsersIds = array_diff($this->usersNotify, $oldUsersIds);
         if ($createUsersIds) {
-            static::factoryCreateUsersNotify($entityId, $class, $createUsersIds);
+            $this->factoryCreateUsersNotify();
         }
-        return static::getUsersNotifyByEntityAndClass($entityId, $class);
+        return $this->getExistUsersNotify();
     }
 
     /**
-     * @param int $entityId
-     * @param string $class
      * @return User[]|null
      */
-    private static function getUsersNotifyByEntityAndClass($entityId, $class)
+    private function getExistUsersNotify()
     {
         $notifyUsersIds = static::find()->select('user_id')
             ->where([
-                'entity_id' => $entityId,
-                'class' => $class,
+                'entity_id' => $this->modelId,
+                'class' => $this->modelClass,
             ])
             ->asArray()
             ->column();
@@ -132,36 +153,33 @@ class MailNotifyManager extends ActiveRecord
     /**
      * Validated time rules
      *
-     * @param $entityId
-     * @param $class
      * @param User $user
      * @return bool
      */
-    private static function isNeedNotifyUser($entityId, $class, $user)
+    private function isNeedNotifyUser($user)
     {
-        if (static::isNotify($class, $user)) {
-            if (static::isRepeatNotify($entityId, $class, $user)) {
-                return true;
-            }
+        if ($this->isNotify($user)) {
+            return true;
         }
         return false;
     }
 
     /**
-     * Time rule  (2)
+     * Time rule
      *
-     * @param int $entityId
-     * @param string $class
      * @param User $user
      * @return bool
      */
-    private static function isRepeatNotify($entityId, $class, $user)
+    private function isNotify($user)
     {
+        if (!$this->timeRule || $this->timeRule === 0) {
+            return false;
+        }
         /** @var NotifyMessage $lastUserEntityMessage */
         $lastUserEntityMessage = NotifyMessage::find()
             ->where([
-                'entity_id' => $entityId,
-                'class' => $class,
+                'entity_id' => $this->modelId,
+                'class' => $this->modelClass,
                 'user_id' => $user->id,
             ])
             ->orderBy(['created_at' => SORT_DESC])
@@ -171,12 +189,11 @@ class MailNotifyManager extends ActiveRecord
         if (!$lastUserEntityMessage) {
             return true;
         }
-        /** @var Notify $notifyRuleByClass */
-        $notifyRuleByClass = Notify::getNotifyRuleByClass($class);
+        $notifyRuleByClass = static::mapTime($this->timeRule);
 
         $timeOfLastMessage = $lastUserEntityMessage->created_at;
         $currentTime = time();
-        $lastRepeatDate = strtotime("+ {$notifyRuleByClass->repeatNotifyTime}", $timeOfLastMessage);
+        $lastRepeatDate = strtotime("+ {$notifyRuleByClass}", $timeOfLastMessage);
 
         if ($currentTime > $timeOfLastMessage && $currentTime < $lastRepeatDate) {
             return false;
@@ -185,70 +202,46 @@ class MailNotifyManager extends ActiveRecord
     }
 
     /**
-     * Time rule  (1)
-     *
-     * @param string $class
-     * @param User $user
-     * @return bool
-     */
-    private static function isNotify($class, $user)
-    {
-        /** @var NotifyMessage $lastUserMessage */
-        $lastUserMessage = NotifyMessage::find()
-            ->where([
-                'class' => $class,
-                'user_id' => $user->id,
-            ])
-            ->orderBy(['created_at' => SORT_DESC])
-            ->limit(1)
-            ->one();
-
-        if (!$lastUserMessage) {
-            return true;
-        }
-        /** @var Notify $notifyRuleByClass */
-        $notifyRuleByClass = Notify::getNotifyRuleByClass($class);
-
-        $timeOfLastMessage = $lastUserMessage->created_at;
-        $currentTime = time();
-        $lastMainTime = strtotime("+ {$notifyRuleByClass->mainNotifyTime}", $timeOfLastMessage);
-
-        if ($currentTime > $timeOfLastMessage && $currentTime < $lastMainTime) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * Create users notify
-     *
-     * @param int $entityId
-     * @param string $class
-     * @param array $usersIds
      */
-    private static function factoryCreateUsersNotify($entityId, $class, $usersIds)
+    private function factoryCreateUsersNotify()
     {
-        if (!is_array($usersIds)) {
-            static::createUserNotify($entityId, $class, $usersIds);
+        if (!is_array($this->usersNotify)) {
+            $this->createUserNotify($this->usersNotify);
         } else {
-            foreach ($usersIds as $userId) {
-                static::createUserNotify($entityId, $class, $userId);
+            foreach ($this->usersNotify as $userId) {
+                $this->createUserNotify($userId);
             }
         }
     }
 
-    /**
-     * @param int $entityId
-     * @param string $class
-     * @param int $userId
-     */
-    private static function createUserNotify($entityId, $class, $userId)
+    private function createUserNotify($userId)
     {
         $notify = new static();
-        $notify->entity_id = $entityId;
-        $notify->class = $class;
+        $notify->entity_id = $this->modelId;
+        $notify->class = $this->modelClass;
         $notify->user_id = $userId;
         $notify->save();
+    }
+
+    /**
+     * Map receive time from frontend
+     *
+     * @param int $time
+     * @return string|null
+     */
+    private static function mapTime($time)
+    {
+        switch ($time) {
+            case 1:
+                return '30 minutes';
+            case 2:
+                return '1 hour';
+            case 3:
+                return '3 hour';
+            default:
+                return null;
+        }
     }
 
     /**

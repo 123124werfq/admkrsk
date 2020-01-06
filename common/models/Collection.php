@@ -39,6 +39,8 @@ use yii\helpers\Url;
  * @property string $template_element
  * @property array $access_user_ids
  * @property bool $is_authenticate
+ * @property int $notify_rule
+ * @property string $notify_message
  *
  * @property CollectionColumn[] $columns
  */
@@ -88,9 +90,9 @@ class Collection extends ActiveRecord
             [['alias'], 'unique'],
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
-            [['id_parent_collection', 'id_group', 'id_column_order', 'order_direction', 'pagesize'], 'integer'],
+            [['id_parent_collection', 'id_group', 'id_column_order', 'order_direction', 'pagesize', 'notify_rule'], 'integer'],
             [['filter', 'options', 'label'], 'safe'],
-            [['template', 'template_element', 'template_view'], 'string'],
+            [['template', 'template_element', 'template_view','notify_message'], 'string'],
             [['is_authenticate'], 'boolean'],
             [['is_admin_notify'], 'boolean'],
             [['is_authenticate'], 'default', 'value' => true],
@@ -151,7 +153,8 @@ class Collection extends ActiveRecord
                 'class' => MailNotifyBehaviour::class,
                 'userIds' => 'access_user_ids',
                 'isAdminNotify' => 'is_admin_notify',
-                'linkToEntity' => 'collection-record/view',
+                'timeRuleAttribute' => 'notify_rule',
+                'messageAttribute' => 'notify_message',
             ],
         ];
     }

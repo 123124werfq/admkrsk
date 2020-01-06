@@ -58,6 +58,16 @@ class MailNotifyBehaviour extends Behavior
     public $senderName = 'Администрация города Красноярска';
 
     /**
+     * @var int
+     */
+    public $timeRuleAttribute;
+
+    /**
+     * @var string
+     */
+    public $messageAttribute;
+
+    /**
      * @return array
      */
     public function events()
@@ -81,23 +91,24 @@ class MailNotifyBehaviour extends Behavior
         if ($isAdminNotify) {
             $userIds[] = Yii::$app->user->id;
         }
-        $usersNotify = MailNotifyManager::getUsersForSendNotify($this->owner->primaryKey, get_class($this->owner), $userIds);
+        $usersNotify = (new MailNotifyManager([
+            'model' => $this->owner,
+            'usersNotify' => $userIds,
+            'timeRule' => $this->owner{$this->timeRuleAttribute},
+        ]))->getNotifyUsers();
 
         if ($usersNotify) {
             /** @var Mailer $mailer */
             $mailer = Yii::$app->mailer;
             /** @var Message[] $messages */
             $messages = [];
-            /** @var Notify $templateMessage */
-            $templateMessage = Notify::getNotifyRuleByClass(get_class($this->owner));
+            $templateMessage = $this->owner{$this->messageAttribute};
             foreach ($usersNotify as $user) {
-                $this->recordMessage($user, $templateMessage->message);
+                $this->recordMessage($user, $templateMessage);
                 $messages[] = $mailer->compose(
                     ['html' => 'notifyUpdate-html'],
                     [
-                        'linkToEntity' => $this->linkToEntity,
-                        'entityId' => $this->owner->primaryKey,
-                        'message' => $templateMessage->message,
+                        'message' => $templateMessage,
                     ]
                 )
                     //todo configure swiftMailer->transport and params that send emails!

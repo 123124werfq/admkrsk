@@ -57,6 +57,20 @@ use common\models\Collection;
 
     <h3>Доступ</h3>
 
+    <p>Настройка уведомлений</p>
+    <?= $form->field($model, 'notify_rule')->radioList(
+        [
+            0 => 'Отключить уведомления',
+            1 => 'чем 30 минут',
+            2 => 'чем 1 час',
+            3 => 'чем 3 час',
+        ],
+        [
+            'separator' => '&nbsp;&nbsp;&nbsp;</br>',
+        ])->label('Получать уведомления не чаще') ?>
+
+    <?= $form->field($model, 'notify_message')->textarea()->label('Текст сообщения') ?>
+
     <?php if (Yii::$app->user->can('admin.collection')): ?>
         <?= $form->field($model, 'is_admin_notify')->checkbox(
             [

@@ -201,11 +201,6 @@ return [
                 'title' => 'Меню',
                 'roles' => ['backend.menu'],
             ],
-            'notify' => [
-                'title' => 'Уведомления',
-                //todo create and change permissions
-                'roles' => ['backend.application']
-            ],
             'alert' => [
                 'title' => 'Всплывающие сообщения',
                 'roles' => ['backend.alert'],

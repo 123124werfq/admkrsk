@@ -34,6 +34,8 @@ use yii\db\ActiveRecord;
  * @property int $deleted_at
  * @property int $deleted_by
  * @property array $access_user_ids
+ * @property int $notify_rule
+ * @property string $notify_message
  * @property Block[] $blocks
  */
 class Page extends ActiveRecord
@@ -73,13 +75,13 @@ class Page extends ActiveRecord
     {
         return [
             [['id_media', 'active', 'id_parent'], 'default', 'value' => null],
-            [['id_media', 'active', 'id_parent', 'noguest','hidemenu'], 'integer'],
-            ['id_parent', 'filter', 'filter' => function($value) {
-                return (int) $value;
+            [['id_media', 'active', 'id_parent', 'noguest', 'hidemenu','notify_rule'], 'integer'],
+            ['id_parent', 'filter', 'filter' => function ($value) {
+                return (int)$value;
             }],
             [['is_admin_notify'], 'boolean'],
             [['title', 'alias'], 'required'],
-            [['content','path'], 'string'],
+            [['content', 'path','notify_message'], 'string',],
             [['alias'], 'unique'],
             [['title', 'alias', 'seo_title', 'seo_description', 'seo_keywords'], 'string', 'max' => 255],
 
@@ -100,7 +102,7 @@ class Page extends ActiveRecord
             'title' => 'Название',
             'id_parent' => 'Родительские раздел',
             'alias' => 'URL',
-            'hidemenu'=> 'Скрыть в меню',
+            'hidemenu' => 'Скрыть в меню',
             'content' => 'Содержание',
             'seo_title' => 'Seo Заголовок',
             'seo_description' => 'Seo Описание',
@@ -116,7 +118,7 @@ class Page extends ActiveRecord
         ];
     }
 
-    public function getUrl($absolute=false)
+    public function getUrl($absolute = false)
     {
         if (!empty($this->existUrl))
             return $this->existUrl;
@@ -126,29 +128,25 @@ class Page extends ActiveRecord
 
         $path = explode('/', $this->path);
 
-        if (!empty($path))
-        {
+        if (!empty($path)) {
             foreach ($path as $key => $slug)
                 $path[$key] = (int)$slug;
 
-            $pages = Page::find()->where(['id_page'=>$path])->select(['alias','id_page'])->indexBy('id_page')->all();
+            $pages = Page::find()->where(['id_page' => $path])->select(['alias', 'id_page'])->indexBy('id_page')->all();
 
-            foreach ($path as $key => $slug)
-            {
+            foreach ($path as $key => $slug) {
                 if (!empty($pages[$slug]))
                     $path[$key] = $pages[$slug]->alias;
             }
 
-            $this->existUrl = (($absolute)?Yii::$app->params['frontendUrl']:'').'/'.implode('/', $path);
+            $this->existUrl = (($absolute) ? Yii::$app->params['frontendUrl'] : '') . '/' . implode('/', $path);
 
             return $this->existUrl;
-        }
-        else
-        {
-            if ($this->alias=='/' && $absolute)
+        } else {
+            if ($this->alias == '/' && $absolute)
                 $this->alias = '';
 
-            return (($absolute)?Yii::$app->params['frontendUrl']:'').'/'.$this->alias;
+            return (($absolute) ? Yii::$app->params['frontendUrl'] : '') . '/' . $this->alias;
         }
     }
 
@@ -164,7 +162,7 @@ class Page extends ActiveRecord
         if (empty($this->id_parent))
             $this->path = $this->id_page;
         else
-            $this->path = $this->parent->path.'/'.$this->id_page;
+            $this->path = $this->parent->path . '/' . $this->id_page;
 
         $this->updateAttributes(['path']);
 
@@ -177,8 +175,7 @@ class Page extends ActiveRecord
     {
         $page = Page::findOne($id);
 
-        if (!empty($page))
-        {
+        if (!empty($page)) {
             return $page->getUrl();
         }
 
@@ -201,11 +198,10 @@ class Page extends ActiveRecord
 
     public function beforeValidate()
     {
-        $this->content = str_replace(['&lt;','&gt;','&quote;'], ['<','>','"'], $this->content);
+        $this->content = str_replace(['&lt;', '&gt;', '&quote;'], ['<', '>', '"'], $this->content);
 
         return parent::beforeValidate();
     }
-
 
 
     /**
@@ -225,17 +221,18 @@ class Page extends ActiveRecord
                 'class' => MailNotifyBehaviour::class,
                 'userIds' => 'access_user_ids',
                 'isAdminNotify' => 'is_admin_notify',
-                'linkToEntity' => 'page/view',
+                'timeRuleAttribute' => 'notify_rule',
+                'messageAttribute' => 'notify_message',
             ],
             'multiupload' => [
                 'class' => MultiUploadBehavior::class,
-                'relations'=>
-                [
-                    'medias'=>[
-                        'model'=>'Media',
-                        'jtable'=>'dbl_page_media',
+                'relations' =>
+                    [
+                        'medias' => [
+                            'model' => 'Media',
+                            'jtable' => 'dbl_page_media',
+                        ],
                     ],
-                ],
             ],
         ];
     }
