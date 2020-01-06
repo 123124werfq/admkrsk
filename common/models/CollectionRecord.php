@@ -114,6 +114,8 @@ class CollectionRecord extends \yii\db\ActiveRecord
     {
         if (!empty($this->data))
         {
+            $columns = $this->collection->getColumns()->with(['input'])->all();
+
             if ($insert)
             {
                 unset($this->data['id_record']);
@@ -122,7 +124,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 $insertData = [];
                 $insertDataMongo = [];
 
-                foreach ($this->collection->getColumns()->with(['input'])->all() as $key => $column)
+                foreach ($columns as $key => $column)
                 {
                     if (isset($this->data[$column->id_column]))
                     {
@@ -169,7 +171,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
             {
                 $updateDataMongo = [];
 
-                foreach ($this->collection->columns as $key => $column)
+                foreach ($columns as $key => $column)
                 {
                     $updateData = null;
 
@@ -224,6 +226,10 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 $updateDataMongo['id_record'] = $this->id_record;
 
                 $collection->update(['id_record'=>$this->id_record],$updateDataMongo);
+            }
+
+            foreach ($columns as $key => $column) {
+                # code...
             }
         }
 

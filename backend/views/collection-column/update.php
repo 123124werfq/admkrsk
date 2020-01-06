@@ -8,10 +8,8 @@ use yii\helpers\Html;
 $this->title = 'Редактировать колонку: ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => $model->collection->name, 'url' => ['collection-column/index', 'id' => $model->id_collection]];
 ?>
-<div class="ibox">
-    <div class="ibox-content">
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-    </div>
-</div>
+
+
+<?= $this->render('_form', [
+    'model' => $model,
+]) ?>

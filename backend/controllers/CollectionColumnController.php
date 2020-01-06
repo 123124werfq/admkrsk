@@ -81,6 +81,7 @@ class CollectionColumnController extends Controller
     {
         $model = new CollectionColumn();
         $model->id_collection = $id;
+        $model->type = CollectionColumn::TYPE_CUSTOM;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index', 'id' => $model->id_collection]);

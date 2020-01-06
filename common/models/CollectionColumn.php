@@ -46,6 +46,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
     const TYPE_SUBREGION = 24;
     const TYPE_SERVICETARGET = 26;
     const TYPE_SERVICE = 27;
+    const TYPE_CUSTOM = 28;
 
     public static function getTypeOptions($type)
     {
@@ -200,12 +201,19 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
             self::TYPE_SERVICETARGET => "Цель муниципальной услуги",
             self::TYPE_SERVICE => "Услуги для обжалования",
+
+            self::TYPE_CUSTOM => 'Составная колонка',
         ];
 
         if (empty($type))
             return $labels;
 
         return $labels[$type];
+    }
+
+    public function isCustom()
+    {
+        return $this->type == self::TYPE_CUSTOM;
     }
 
     public function isRelation()
@@ -286,9 +294,10 @@ class CollectionColumn extends \yii\db\ActiveRecord
             [['id_collection', 'name', 'type', 'alias'], 'required'],
             [['id_collection', 'id_dictionary', 'type', 'show_column_admin', 'ord'], 'default', 'value' => null],
             [['id_collection', 'id_dictionary', 'type', 'show_column_admin', 'ord', 'protected'], 'integer'],
+            [['keep_relation'], 'boolean'],
             [['name','alias'], 'string', 'max' => 500],
             [['variables'], 'string'],
-            [['options'], 'safe'],
+            [['options','template'], 'safe'],
             [['type'], 'default', 'value' => self::TYPE_INPUT],
         ];
     }
@@ -342,6 +351,8 @@ class CollectionColumn extends \yii\db\ActiveRecord
             'type' => 'Тип',
             'alias' => 'Алиас',
             'options' => 'Настройки',
+            'keep_relation'=>'Сохранять связь',
+            'template'=>'Шаблон колонки',
             'show_column_admin' => 'Show Column Admin',
             'ord' => 'Ord',
         ];
