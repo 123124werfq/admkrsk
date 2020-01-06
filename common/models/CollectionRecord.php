@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 use yii\mongodb\Query;
 
 /**
@@ -65,6 +67,15 @@ class CollectionRecord extends \yii\db\ActiveRecord
         ];
     }
 
+    public function behaviors()
+    {
+        return [
+            'ts' => TimestampBehavior::class,
+            'ba' => BlameableBehavior::class,
+            //'log' => LogBehavior::class, пока не реализовано
+        ];
+    }
+
     public function __get($name)
     {
        if (isset($this->loadDataAlias[$name]))
@@ -101,8 +112,6 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
     public function afterSave($insert, $changedAttributes)
     {
-        parent::afterSave($insert, $changedAttributes);
-
         if (!empty($this->data))
         {
             if ($insert)
@@ -217,6 +226,8 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 $collection->update(['id_record'=>$this->id_record],$updateDataMongo);
             }
         }
+
+        parent::afterSave($insert, $changedAttributes);
     }
 
     public function getData($keyAsAlias=false,$id_columns=[])

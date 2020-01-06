@@ -135,15 +135,6 @@ class Collection extends \yii\db\ActiveRecord
                 'class' => AccessControlBehavior::class,
                 'permission' => 'backend.collection',
             ],
-//            'yiinput' => [
-//                'class' => RelationBehavior::class,
-//                'relations'=> [
-//                    'columns'=>[
-//                        'modelname'=> 'CollectionColumn',
-//                        'added'=>true,
-//                    ],
-//                ]
-//            ]
         ];
     }
 
