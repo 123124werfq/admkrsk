@@ -73,7 +73,7 @@ function parseAttributesFromTag($tag){
                 </ul>
                 <?php }?>
             	<p class="text-help">
-                    Дата публикации (изменения): <?=date('d.m.Y',$model->date_publish)?> (<?=date('d.m.Y',$model->updated_at)?>)<br>
+                    Дата публикации (изменения): <span class="publish-date"><?=date('d.m.Y',$model->date_publish)?></span> (<span class="update-date"><?=date('d.m.Y',$model->updated_at)?></span>)<br>
                     Просмотров за год (всего): <?=$model->viewsYear?> (<?=$model->views?>)
                 </p>
                 <div class="subscribe">

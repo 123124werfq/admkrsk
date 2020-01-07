@@ -360,7 +360,7 @@ $(document).ready(function() {
         $(el).attr('href', previewLink).attr('target', '_blank');
     });
 
-    $('#gosbar-search-go').click(function(){
+    $('#gosbar-search-go, #gosbar-search-go-btn').click(function(){
         if($('.header-search').val()!='')
             $('#top-search').submit();
     });
