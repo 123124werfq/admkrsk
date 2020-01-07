@@ -152,8 +152,10 @@ class MenuLinkController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $this->actionOrder();
 
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             if (Yii::$app->request->isAjax)
                 Yii::$app->end();
 
@@ -177,6 +179,14 @@ class MenuLinkController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionOrder()
+    {
+        $ords = Yii::$app->request->post('ords');
+
+        foreach ($ords as $key => $id)
+            Yii::$app->db->createCommand()->update('db_menu_link',['ord'=>$key],['id_link'=>$id])->execute();
     }
 
     /**
