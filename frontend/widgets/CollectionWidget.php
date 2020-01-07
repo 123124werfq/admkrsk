@@ -10,6 +10,7 @@ class CollectionWidget extends \yii\base\Widget
     public $attributes = [];
 
     public $id_collection;
+
     public $columns = []; // колонки для отображения
     public $search = []; // колонки для сортировки
 
@@ -20,6 +21,9 @@ class CollectionWidget extends \yii\base\Widget
     public $group; // группировка
     public $sort; // сортировка
     public $dir = SORT_ASC; // направление сортировки
+
+    public $show_row_num = false;
+    public $show_column_num = false;
 
     public $page;
 
@@ -41,6 +45,12 @@ class CollectionWidget extends \yii\base\Widget
 
             if (!empty($this->attributes['pagesize']))
                 $this->pagesize = (int)$this->attributes['pagesize'];
+
+            if (!empty($this->attributes['show_column_num']))
+                $this->show_column_num = (int)$this->attributes['show_column_num'];
+
+            if (!empty($this->attributes['show_row_num']))
+                $this->show_row_num = (int)$this->attributes['show_row_num'];
 
             if (!empty($this->attributes['group']))
                 $this->group = (int)$this->attributes['group'];
@@ -188,17 +198,24 @@ class CollectionWidget extends \yii\base\Widget
             ]);
         }
 
-        $allrows = array_slice($allrows, ($p-1)*$this->pagesize, $this->pagesize,true);
+        $offset = ($p-1)*$this->pagesize;
+        $allrows = array_slice($allrows, $offset, $this->pagesize,true);
 
         return $this->render('collection/'.$this->template,[
         	'model'=>$model,
-            'pagination'=>$pagination,
+            'unique_hash'=>$unique_hash,
+            'page'=>$this->page,
+
             'columns'=>$columnsByAlias,
             'allrows'=>$allrows,
             'search_columns'=>$search_columns,
-            'page'=>$this->page,
-            'unique_hash'=>$unique_hash,
+
             'pagesize'=>$this->pagesize,
+            'pagination'=>$pagination,
+            'offset'=>$offset,
+
+            'show_row_num'=>$this->show_row_num,
+            'show_column_num'=>$this->show_column_num,
         ]);
     }
 }

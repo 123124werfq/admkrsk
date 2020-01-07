@@ -70,6 +70,10 @@ else
 
     <?=$form->field($model, 'pagesize')->textInput(['type'=>'number','step'=>1,'min'=>1]);?>
 
+    <?=$form->field($model, 'show_row_num')->checkBox();?>
+
+    <?=$form->field($model, 'show_column_num')->checkBox();?>
+
     <?=$form->field($model, 'id_parent_collection',['template'=>'{input}'])->hiddenInput();?>
 
     <?=$form->field($model, 'id_group')->dropDownList($columns,['prompt'=>'Выберите колонку для группировки']);?>

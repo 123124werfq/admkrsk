@@ -1,6 +1,8 @@
 <?php
 	use yii\helpers\Html;
 	use yii\widgets\Pjax;
+
+	$i=1;
 ?>
 <form class="search-table" data-hash="<?=$unique_hash?>" action="" >
 	<?php if (!empty($search_columns)){?>
@@ -23,14 +25,32 @@
 	<table>
 		<thead>
 			<tr>
+				<?php if ($show_row_num){?>
+					<th width="10"></th>
+				<?php }?>
 			<?php foreach ($columns as $key => $column) {?>
 				<th><?=$column->name?></th>
 			<?php }?>
 			</tr>
+
+			<?php
+			if (!empty($show_column_num))
+			{
+				if ($show_row_num)
+					echo '<th width="10"></th>';
+
+				$colnum = 1;
+			 	foreach ($columns as $key => $column)
+			 		echo '<th class="colnum">'.($colnum++).'</th>';
+			}
+			?>
 		</thead>
 		<tbody>
 			<?php foreach ($allrows as $key => $row){?>
 				<tr>
+				<?php if ($show_row_num){?>
+					<td class="row_num" width="10"><?=$offset+$i++?></td>
+				<?php }?>
 				<?php foreach ($columns as $key => $column) {?>
 					<td><?php
 						if (isset($row[$column->alias]))
