@@ -246,14 +246,21 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
     protected function renderCustomValue($template,$data)
     {
-        $loader = new \Twig\Loader\ArrayLoader([
-            'template' => $template,
-        ]);
-        $twig = new \Twig\Environment($loader);
-        $value = $twig->render('template', $data);
+        $value = '';
 
-        unset($loader);
-        unset($twig);
+        try {
+            $loader = new \Twig\Loader\ArrayLoader([
+            'template' => $template,
+            ]);
+            $twig = new \Twig\Environment($loader);
+            $value = $twig->render('template', $data);
+
+            unset($loader);
+            unset($twig);
+        }
+        catch (Exception $e) {
+
+        }
 
         return $value;
     }
