@@ -15,7 +15,7 @@
                     <?php if(!empty($user->esiainfo->birthplace)){ ?>
                     <p><em>Место рождения:</em> <?=$user->esiainfo->birthplace?></p>
                     <?php } ?>
-                    <?php if(!empty($user->esiainfo->passport_serie)){ ?>
+                    <?php if(true || !empty($user->esiainfo->passport_serie)){ ?>
                     <p><em>Паспорт гражданина РФ:</em> <?=$user->esiainfo->passport_serie?> <?=$user->esiainfo->passport_number?>. Выдан <?=$user->esiainfo->passport_date?> <?=$user->esiainfo->passport_issuer?> код подразделения <?=$user->esiainfo->passport_issuer_id?></p>
                     <?php } ?>
 
