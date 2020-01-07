@@ -116,13 +116,16 @@ class CollectionRecord extends \yii\db\ActiveRecord
         {
             $columns = $this->collection->getColumns()->with(['input'])->all();
 
+            // коллекция монги
+            $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
+
             if ($insert)
             {
                 unset($this->data['id_record']);
 
                 // запись в postgree
                 $insertData = [];
-                $insertDataMongo = [];
+                $dataMongo = [];
 
                 foreach ($columns as $key => $column)
                 {
@@ -152,24 +155,20 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             foreach ($ids as $idskey => $id)
                                 $ids[$idskey] = (int)$id;
 
-                            $insertDataMongo['col'.$column->id_column] = $ids;
-                            $insertDataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);
+                            $dataMongo['col'.$column->id_column] = $ids;
+                            $dataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);
                         }
                         else
-                            $insertDataMongo['col'.$column->id_column] = (is_numeric($value)&& strpos($value, '.')==false)?(float)$value:$value;
+                            $dataMongo['col'.$column->id_column] = (is_numeric($value)&& strpos($value, '.')==false)?(float)$value:$value;
                     }
                 }
 
                 Yii::$app->db->createCommand()->batchInsert('db_collection_value',['id_column','id_record','value'],$insertData)->execute();
 
-                // запись в mongo
-                $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
-                $insertDataMongo['id_record'] = $this->id_record;
-                $collection->insert($insertDataMongo);
             }
             else
             {
-                $updateDataMongo = [];
+                $dataMongo = [];
 
                 foreach ($columns as $key => $column)
                 {
@@ -213,27 +212,50 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             foreach ($ids as $idskey => $id)
                                 $ids[$idskey] = (int)$id;
 
-                            $updateDataMongo['col'.$column->id_column] = $ids;
-                            $updateDataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);
+                            $dataMongo['col'.$column->id_column] = $ids;
+                            $dataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);
                         }
                         else
-                            $updateDataMongo['col'.$column->id_column] = (is_numeric($updateData) && strpos($updateData, '.')==false)?(float)$updateData:$updateData;
+                            $dataMongo['col'.$column->id_column] = (is_numeric($updateData) && strpos($updateData, '.')==false)?(float)$updateData:$updateData;
                     }
                 }
-
-                $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
-
-                $updateDataMongo['id_record'] = $this->id_record;
-
-                $collection->update(['id_record'=>$this->id_record],$updateDataMongo);
             }
 
-            foreach ($columns as $key => $column) {
-                # code...
+            // собираем кастомные колонки
+            foreach ($columns as $key => $column)
+            {
+                if ($column->isCustom())
+                {
+                    if (empty($recordData))
+                        $recordData = $this->getData(true);
+
+                    $dataMongo['col'.$column->id_column] = $this->renderCustomValue($column->template,$recordData);
+                }
             }
+
+            $dataMongo['id_record'] = $this->id_record;
+
+            if ($insert)
+                $collection->insert($dataMongo);
+            else
+                $collection->update(['id_record'=>$this->id_record],$dataMongo);
         }
 
         parent::afterSave($insert, $changedAttributes);
+    }
+
+    protected function renderCustomValue($template,$data)
+    {
+        $loader = new \Twig\Loader\ArrayLoader([
+            'template' => $template,
+        ]);
+        $twig = new \Twig\Environment($loader);
+        $value = $twig->render('template', $data);
+
+        unset($loader);
+        unset($twig);
+
+        return $value;
     }
 
     public function getData($keyAsAlias=false,$id_columns=[])
