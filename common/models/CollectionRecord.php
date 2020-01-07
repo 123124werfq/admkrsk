@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use common\modules\log\behaviors\LogBehavior;
 use yii\mongodb\Query;
 
 /**
@@ -43,8 +44,8 @@ class CollectionRecord extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_collection', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
-            [['id_collection', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['id_collection', 'ord'], 'default', 'value' => null],
+            [['id_collection', 'ord'], 'integer'],
             [['data'],'safe'],
         ];
     }
@@ -72,7 +73,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
         return [
             'ts' => TimestampBehavior::class,
             'ba' => BlameableBehavior::class,
-            //'log' => LogBehavior::class, пока не реализовано
+            'log' => LogBehavior::class,
         ];
     }
 

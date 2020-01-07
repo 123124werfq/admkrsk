@@ -185,7 +185,7 @@ class Page extends \yii\db\ActiveRecord
         return $this->getUrl(true);
     }
 
-    public function createPath()
+    /*public function createPath()
     {
         $oldpath = $this->path;
 
@@ -199,16 +199,14 @@ class Page extends \yii\db\ActiveRecord
         $sql = "UPDATE cnt_page SET path = REPLACE(path,'$oldpath','$this->path') WHERE path LIKE '$oldpath/%'";
         //Yii::$app->db->createCommand()->update('cnt_page','path = REPLACE(path,$oldpath)');
         Yii::$app->db->createCommand($sql)->execute();
-    }
+    }*/
 
     public static function getUrlByID($id)
     {
         $page = Page::findOne($id);
 
         if (!empty($page))
-        {
             return $page->getUrl();
-        }
 
         return false;
     }
@@ -224,6 +222,7 @@ class Page extends \yii\db\ActiveRecord
 
     public function beforeValidate()
     {
+        // концертирует данные от TinyMCE
         if (!empty($_POST))
             $this->content = str_replace(['&lt;','&gt;','&quote;'], ['<','>','"'], $this->content);
 
