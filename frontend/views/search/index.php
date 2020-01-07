@@ -4,7 +4,7 @@
             <div class="col-2-third">
                 <ol class="breadcrumbs">
                     <li class="breadcrumbs_item"><a href="/">Главная</a></li>
-                    <li class="breadcrumbs_item"><span>Пресс-центр</span></li>
+                    <li class="breadcrumbs_item"><span>Результаты поиска</span></li>
                 </ol>
             </div>
         </div>
