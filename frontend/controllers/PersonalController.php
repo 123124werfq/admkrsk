@@ -2,7 +2,9 @@
 
 namespace frontend\controllers;
 
+use Yii;
 use common\models\Smev;
+use common\models\User;
 
 class PersonalController extends \yii\web\Controller
 {
@@ -21,9 +23,11 @@ class PersonalController extends \yii\web\Controller
 
     }
 
-    public function actionUserProfile()
+    public function actionUserProfile($page = null)
     {
+        $user = User::findOne(Yii::$app->user->id);
 
+        return $this->render('profile', ['page' => $page, 'user' => $user]);
     }
 
 }
