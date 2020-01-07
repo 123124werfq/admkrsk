@@ -72,7 +72,10 @@
         <?php
             foreach ($result as $row)
             {
-                echo "<p><strong><a href='{$row['url']}'>{$row['header']}</a></strong> <small>".date("d.m.Y", $row['content_date'])."</small><br>...{$row['headline']}...</p><br>";
+                if(is_numeric($row['content_date']))
+                    echo "<p><strong><a href='{$row['url']}'>{$row['header']}</a></strong> / <small>".date("d.m.Y", $row['content_date'])."</small><br>...{$row['headline']}...</p>";
+                else
+                    echo "<p><strong><a href='{$row['url']}'>{$row['header']}</a></strong> / <small>".$row['content_date']."</small><br>...{$row['headline']}...</p>";
             }
 
         ?>
