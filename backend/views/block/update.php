@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model common\models\Block */
 
 $this->title = 'Редактировать блок: ' . $model->id_block;
-$this->params['breadcrumbs'][] = ['label' => $model->page->title, 'url' => ['page/layout','id' => $model->id_page]];
+$this->params['breadcrumbs'][] = ['label' => $model->page->title, 'url' => ['page/layout','id' => $model->id_page??$model->id_page_layout]];
 $this->params['breadcrumbs'][] = 'Редактировать';
 ?>
 <div class="block-update">

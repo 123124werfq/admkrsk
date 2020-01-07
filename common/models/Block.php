@@ -412,7 +412,10 @@ class Block extends \yii\db\ActiveRecord
 
     public function getPage()
     {
-        return $this->hasOne(Page::class, ['id_page' => 'id_page']);
+        if (!empty($this->id_page))
+            return $this->hasOne(Page::class, ['id_page' => 'id_page']);
+        else
+            return $this->hasOne(Page::class, ['id_page' => 'id_page_layout']);
     }
 
 }
