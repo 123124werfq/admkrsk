@@ -473,8 +473,8 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $config = new \Esia\Config([
             'clientId' => '236403241',
-            'privateKeyPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
-            'certPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
+            'privateKeyPath' => Yii::getAlias('@app'). '/assets/admkrsk-new.pem',
+            'certPath' => Yii::getAlias('@app'). '/assets/admkrsk-new.pem',
             'redirectUrl' => 'https://t1.admkrsk.ru/site/signin',
             'portalUrl' => 'https://esia.gosuslugi.ru/',
             'scope' => ['fullname', 'birthdate', 'mobile', 'contacts', 'snils', 'inn', 'id_doc', 'birthplace', 'medical_doc', 'residence_doc', 'email', 'usr_org', 'usr_avt'],
