@@ -46,6 +46,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
         return [
             [['id_collection', 'ord'], 'default', 'value' => null],
             [['id_collection', 'ord'], 'integer'],
+            [['data_hash'], 'string'],
             [['data'],'safe'],
         ];
     }
@@ -59,6 +60,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
             'id_record' => 'Id Record',
             'id_collection' => 'Список',
             'ord' => 'Ord',
+            'data_hash'=>'Хэш данных',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
@@ -115,7 +117,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
     {
         if (parent::beforeSave($insert) && !empty($this->data))
         {
-            $this->data_hash = md5($this->data_hash);
+            $this->data_hash = md5(json_encode($this->data));
 
             return true;
         }
@@ -125,7 +127,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
     public function afterSave($insert, $changedAttributes)
     {
-        if (!empty($this->data))
+        if (!empty($this->data) && (empty($changedAttributes['data_hash']) || $insert))
         {
             $columns = $this->collection->getColumns()->with(['input'])->all();
 
