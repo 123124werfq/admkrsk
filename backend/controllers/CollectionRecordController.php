@@ -348,6 +348,7 @@ class CollectionRecordController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->ord = time();
         $collection = $model->collection;
 
         $form = new FormDynamic($collection->form);
@@ -359,7 +360,9 @@ class CollectionRecordController extends Controller
             $model->data = $form->prepareData(true);
 
             if ($model->save())
+            {
                 return $this->redirect(['index', 'id' => $model->id_collection]);
+            }
         }
 
         if (Yii::$app->request->isAjax)

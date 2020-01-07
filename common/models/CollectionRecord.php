@@ -3,6 +3,9 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use common\modules\log\behaviors\LogBehavior;
 use yii\mongodb\Query;
 
 /**
@@ -41,8 +44,8 @@ class CollectionRecord extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_collection', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
-            [['id_collection', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['id_collection', 'ord'], 'default', 'value' => null],
+            [['id_collection', 'ord'], 'integer'],
             [['data'],'safe'],
         ];
     }
@@ -62,6 +65,15 @@ class CollectionRecord extends \yii\db\ActiveRecord
             'updated_by' => 'Updated By',
             'deleted_at' => 'Deleted At',
             'deleted_by' => 'Deleted By',
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            'ts' => TimestampBehavior::class,
+            'ba' => BlameableBehavior::class,
+            'log' => LogBehavior::class,
         ];
     }
 
@@ -101,19 +113,22 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
     public function afterSave($insert, $changedAttributes)
     {
-        parent::afterSave($insert, $changedAttributes);
-
         if (!empty($this->data))
         {
+            $columns = $this->collection->getColumns()->with(['input'])->all();
+
+            // коллекция монги
+            $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
+
             if ($insert)
             {
                 unset($this->data['id_record']);
 
                 // запись в postgree
                 $insertData = [];
-                $insertDataMongo = [];
+                $dataMongo = [];
 
-                foreach ($this->collection->getColumns()->with(['input'])->all() as $key => $column)
+                foreach ($columns as $key => $column)
                 {
                     if (isset($this->data[$column->id_column]))
                     {
@@ -141,26 +156,22 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             foreach ($ids as $idskey => $id)
                                 $ids[$idskey] = (int)$id;
 
-                            $insertDataMongo['col'.$column->id_column] = $ids;
-                            $insertDataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);
+                            $dataMongo['col'.$column->id_column] = $ids;
+                            $dataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);
                         }
                         else
-                            $insertDataMongo['col'.$column->id_column] = (is_numeric($value)&& strpos($value, '.')==false)?(float)$value:$value;
+                            $dataMongo['col'.$column->id_column] = (is_numeric($value)&& strpos($value, '.')==false)?(float)$value:$value;
                     }
                 }
 
                 Yii::$app->db->createCommand()->batchInsert('db_collection_value',['id_column','id_record','value'],$insertData)->execute();
 
-                // запись в mongo
-                $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
-                $insertDataMongo['id_record'] = $this->id_record;
-                $collection->insert($insertDataMongo);
             }
             else
             {
-                $updateDataMongo = [];
+                $dataMongo = [];
 
-                foreach ($this->collection->columns as $key => $column)
+                foreach ($columns as $key => $column)
                 {
                     $updateData = null;
 
@@ -202,22 +213,43 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             foreach ($ids as $idskey => $id)
                                 $ids[$idskey] = (int)$id;
 
-                            $updateDataMongo['col'.$column->id_column] = $ids;
-                            $updateDataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);
+                            $dataMongo['col'.$column->id_column] = $ids;
+                            $dataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);
                         }
                         else
-                            $updateDataMongo['col'.$column->id_column] = (is_numeric($updateData) && strpos($updateData, '.')==false)?(float)$updateData:$updateData;
+                            $dataMongo['col'.$column->id_column] = (is_numeric($updateData) && strpos($updateData, '.')==false)?(float)$updateData:$updateData;
                     }
                 }
-
-                $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
-
-                $updateDataMongo['id_record'] = $this->id_record;
-
-                $collection->update(['id_record'=>$this->id_record],$updateDataMongo);
             }
+
+            // собираем кастомные колонки
+            foreach ($columns as $key => $column)
+            {
+                if ($column->isCustom())
+                {
+                    if (empty($recordData))
+                        $recordData = $this->getData(true);
+
+                    $dataMongo['col'.$column->id_column] = CollectionColumn::renderCustomValue($column->template,$recordData);
+                }
+            }
+
+            $dataMongo['id_record'] = $this->id_record;
+
+            if ($insert)
+                $collection->insert($dataMongo);
+            else
+                $collection->update(['id_record'=>$this->id_record],$dataMongo);
         }
+
+        parent::afterSave($insert, $changedAttributes);
     }
+
+    /*public function updateCustomColumn($column)
+    {
+        $recordData = $this->getData(true);
+
+    }*/
 
     public function getData($keyAsAlias=false,$id_columns=[])
     {

@@ -5,6 +5,9 @@ namespace common\models;
 use common\behaviors\AccessControlBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
+
+use creocoder\nestedsets\NestedSetsBehavior;
+
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
@@ -43,9 +46,11 @@ class Page extends \yii\db\ActiveRecord
     const VERBOSE_NAME_PLURAL = 'Страницы';
     const TITLE_ATTRIBUTE = 'title';
 
+    public $old_parent; //$id_parent,
     public $access_user_ids;
     public $access_user_group_ids;
     public $existUrl;
+    //public $treeAttribute = null;
 
     /**
      * {@inheritdoc}
@@ -61,19 +66,21 @@ class Page extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_media', 'active', 'id_parent'], 'default', 'value' => null],
-            [['id_media', 'active', 'id_parent', 'noguest','hidemenu'], 'integer'],
-            ['id_parent', 'filter', 'filter' => function($value) {
+            [['id_media', 'active'], 'default', 'value' => null],
+            [['id_media', 'active', 'id_parent', 'noguest','hidemenu', 'old_parent'], 'integer'],
+            /*['id_parent', 'filter', 'filter' => function($value) {
                 return (int) $value;
+            }],*/
+            [['id_parent'], 'required', 'when' => function($model) {
+                return $model->alias != '/';
             }],
             [['title', 'alias'], 'required'],
             [['content','path'], 'string'],
             [['is_partition'], 'boolean'],
             [['alias'], 'unique'],
             [['title', 'alias', 'seo_title', 'seo_description', 'seo_keywords'], 'string', 'max' => 255],
-
+            [['partition_domain'], 'url', 'defaultScheme' => 'http'],
             [['created_at'],'safe'],
-
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
             ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
@@ -98,6 +105,7 @@ class Page extends \yii\db\ActiveRecord
             'noguest' => 'Доступно только авторизованным',
             'active' => 'Активный',
             'is_partition'=>'Это раздел',
+            'partition_domain'=>'Домен раздела',
             'hidemenu'=> 'Скрыть в меню',
             'created_at' => 'Создано',
             'created_by' => 'Создал',
@@ -116,7 +124,35 @@ class Page extends \yii\db\ActiveRecord
         if ($this->isNewRecord)
             return '';
 
-        $path = explode('/', $this->path);
+        if ($this->is_partition && !empty($this->partition_domain))
+            return $this->partition_domain;
+
+        $pages = $this->parents()->select(['alias','partition_domain','is_partition'])->asArray()->all();
+        $pages[] = $this;
+
+        $domain = '';
+        $url = [];
+
+        foreach ($pages as $key => $page)
+        {
+            if (!empty($page['is_partition']) && !empty($page['partition_domain']))
+                $domain = $page['partition_domain'];
+
+            if ($page['alias']!='/')
+                $url[] = $page['alias'];
+        }
+
+        if (empty($domain) && $absolute)
+            $domain = Yii::$app->params['frontendUrl'];
+
+        if (!empty($url))
+            $domain .= '/';
+
+        $this->existUrl = $domain.implode('/', $url);
+
+        return $this->existUrl;
+
+        /*$path = explode('/', $this->path);
 
         if (!empty($path))
         {
@@ -141,7 +177,7 @@ class Page extends \yii\db\ActiveRecord
                 $this->alias = '';
 
             return (($absolute)?Yii::$app->params['frontendUrl']:'').'/'.$this->alias;
-        }
+        }*/
     }
 
     public function getFullUrl()
@@ -149,7 +185,7 @@ class Page extends \yii\db\ActiveRecord
         return $this->getUrl(true);
     }
 
-    public function createPath()
+    /*public function createPath()
     {
         $oldpath = $this->path;
 
@@ -163,37 +199,45 @@ class Page extends \yii\db\ActiveRecord
         $sql = "UPDATE cnt_page SET path = REPLACE(path,'$oldpath','$this->path') WHERE path LIKE '$oldpath/%'";
         //Yii::$app->db->createCommand()->update('cnt_page','path = REPLACE(path,$oldpath)');
         Yii::$app->db->createCommand($sql)->execute();
-    }
+    }*/
 
     public static function getUrlByID($id)
     {
         $page = Page::findOne($id);
 
         if (!empty($page))
-        {
             return $page->getUrl();
-        }
 
         return false;
     }
 
-    public function afterSave($insert, $changedAttributes)
+    /*public function afterSave($insert, $changedAttributes)
     {
-        if (isset($changedAttributes['id_parent']) || $insert)
-            $this->createPath();
+        //if (isset($changedAttributes['id_parent']) || $insert)
+
+        //$this->createPath();
 
         parent::afterSave($insert, $changedAttributes);
-    }
+    }*/
 
     public function beforeValidate()
     {
-        $this->content = str_replace(['&lt;','&gt;','&quote;'], ['<','>','"'], $this->content);
+        // концертирует данные от TinyMCE
+        if (!empty($_POST))
+            $this->content = str_replace(['&lt;','&gt;','&quote;'], ['<','>','"'], $this->content);
 
         // удалить после релиза , нужно для заполняторов
         if (!empty($this->created_at) && !is_numeric($this->created_at))
             $this->created_at = strtotime($this->created_at);
 
         return parent::beforeValidate();
+    }
+
+    public function transactions()
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
+        ];
     }
 
     /**
@@ -209,6 +253,9 @@ class Page extends \yii\db\ActiveRecord
                 'class' => AccessControlBehavior::class,
                 'permission' => 'backend.page',
             ],
+            'tree'=>[
+                'class' => NestedSetsBehavior::className(),
+            ],
             'multiupload' => [
                 'class' => \common\components\multifile\MultiUploadBehavior::class,
                 'relations'=>
@@ -220,6 +267,11 @@ class Page extends \yii\db\ActiveRecord
                 ],
             ],
         ];
+    }
+
+    public static function find()
+    {
+        return new PageQuery(get_called_class());
     }
 
     public function getMedias()
@@ -240,7 +292,7 @@ class Page extends \yii\db\ActiveRecord
      */
     public function getBlocksLayout()
     {
-        return $this->hasMany(Block::class, ['id_page' => 'id_page_layoyt'])->orderBy('ord ASC');
+        return $this->hasMany(Block::class, ['id_page_layout' => 'id_page'])->orderBy('ord ASC');
     }
 
     /**
@@ -248,7 +300,8 @@ class Page extends \yii\db\ActiveRecord
      */
     public function getParent()
     {
-        return $this->hasOne(Page::class, ['id_page' => 'id_parent']);
+        return $this->parents(1)->one();
+        //return $this->hasOne(Page::class, ['id_page' => 'id_parent']);
     }
 
     /**
@@ -264,7 +317,8 @@ class Page extends \yii\db\ActiveRecord
      */
     public function getChilds()
     {
-        return $this->hasMany(Page::class, ['id_parent' => 'id_page'])->orderBy('ord ASC');
+        return $this->children(1);
+        //return $this->hasMany(Page::class, ['id_parent' => 'id_page'])->orderBy('ord ASC');
     }
 
     /*public function getSubMenu()
