@@ -172,9 +172,7 @@ class CollectionQuery extends \yii\mongodb\Query
                 // временное решение
                 if ($this->columns[$id_column]->type == CollectionColumn::TYPE_FILE_OLD)
                 {
-                    var_dump($value);
                     $value = json_decode($value,true);
-
 
                     if (!empty($value))
                         $value = $value[0];
