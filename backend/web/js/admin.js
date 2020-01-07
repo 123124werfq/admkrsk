@@ -466,7 +466,7 @@ jQuery(document).ready(function()
         };
 
         $.ajax({
-            url: '/menu/order',
+            url: '/menu-link/update?id='+ui.item.data('id'),
             type: 'post',
             data: data,
             success: function(data)
