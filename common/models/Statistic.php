@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\traits\MetaTrait;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "db_statistic".
@@ -36,19 +37,19 @@ class Statistic extends \yii\db\ActiveRecord
     {
         $query = self::find()
             ->andFilterWhere([
-                'model' => $action['model'],
-                'model_id' => $action['model_id'],
-                'year' => $action['year'],
+                'model' => $action['model'] ?? null,
+                'model_id' => $action['model_id'] ?? null,
+                'year' => $action['year'] ?? null,
             ]);
 
         if (($statistic = $query->one()) === null) {
             $statistic = new Statistic();
-            $statistic->model = $action['model'];
-            $statistic->model_id = $action['model_id'];
-            $statistic->year = $action['year'];
+            $statistic->model = $action['model'] ?? null;
+            $statistic->model_id = $action['model_id'] ?? null;
+            $statistic->year = $action['year'] ?? null;
         }
 
-        $statistic->views = $action['count'];
+        $statistic->views = $action['count'] ?? null;
 
         $statistic->save();
     }
@@ -79,6 +80,19 @@ class Statistic extends \yii\db\ActiveRecord
             'views' => 'Просмотры',
             'created_at' => 'Создано',
             'updated_at' => 'Обновлено',
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'ts' => [
+                'class' => TimestampBehavior::class,
+                'updatedAtAttribute' => false,
+            ],
         ];
     }
 }

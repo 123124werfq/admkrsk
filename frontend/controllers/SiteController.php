@@ -728,6 +728,8 @@ class SiteController extends Controller
 
         $token = $esia->getToken($_REQUEST['code']);
 
+        // блок для юзера - физика
+
         $personInfo = $esia->getPersonInfo();
         //$addressInfo = $esia->getAddressInfo();
         //$contactInfo = $esia->getContactInfo();
