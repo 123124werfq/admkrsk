@@ -13,24 +13,25 @@ $layout_header = $layout_footer = null;
 
 if (!empty($this->params['page']))
 {
+    $page = $this->params['page'];
     if ($page->is_partition && !empty($page->blocksLayout))
         $layout = $page;
     else
         $layout = $page->parents()
-            ->joinWith('blocksLayout as blocksLayout')
-            ->andWhere('is_partition IS NOT NULL AND blocksLayout.id_block IS NOT NULL')
+            ->joinWith('blocksLayout')
+            ->andWhere('is_partition IS NOT NULL AND db_block.id_block IS NOT NULL')
             ->orderBy('depth DESC')
             ->one();
 
     if (!empty($layout))
     {
-        $layout = $page->gatBlocksLayout()->indexBy('type')->all();
+        $layouts = $layout->getBlocksLayout()->indexBy('type')->all();
 
         if (!empty($layouts['header']))
-            $layout_header = $layouts['header'];
+            $layout_header = $layouts['header']->getBlockVars()->indexBy('alias')->all();
 
         if (!empty($layouts['footer']))
-            $layout_footer = $layouts['footer'];
+            $layout_footer = $layouts['footer']->getBlockVars()->indexBy('alias')->all();
     }
 }
 ?>

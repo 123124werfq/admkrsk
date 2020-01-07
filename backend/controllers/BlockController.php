@@ -124,7 +124,7 @@ class BlockController extends Controller
 
             $model->createAction(Action::ACTION_UPDATE);
 
-            if (!empty($model->id_page]))
+            if (!empty($model->id_page))
                 return $this->redirect(['page/template', 'id' => $model->id_page]);
             else
                 return $this->redirect(['page/layout', 'id' => $model->id_page_layout]);

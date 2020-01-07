@@ -10,10 +10,10 @@
                 <a href="https://www.admkrsk.ru/reception/Pages/request.aspx" class="btn btn__transparent"><?=Yii::t('site', 'Обратная связь')?></a>
             </div>
             <?php
-                if(Yii::$app->language == 'en')
-                    echo \frontend\widgets\MenuWidget::widget(['template'=>'footer_menu','alias'=>'en_footer_menu']);
-                elseif (strpos(Yii::$app->request->url, 'new-year2019') || strpos(Yii::$app->request->hostInfo, 'newyear.'))
-                    {   }// nY-menu
+                if (!empty($footer['menu']->value))
+                    echo \frontend\widgets\MenuWidget::widget([
+                            'template'=>'footer_menu',
+                            'id_menu'=>$footer['menu']->value]);
                 else
                     echo frontend\widgets\MenuWidget::widget(['alias'=>'footer_menu','template'=>'footer_menu']);
             ?>

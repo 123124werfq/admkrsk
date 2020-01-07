@@ -7,12 +7,6 @@ use common\models\User;
 
 if (!Yii::$app->user->isGuest)
     $user = Yii::$app->user->identity;
-
-if (!empty(Yii::$app->params['layout_header']))
-    $header = Yii::$app->params['layout_header'];
-
-if (!empty(Yii::$app->params['layout_footer']))
-    $footer = Yii::$app->params['layout_footer'];
 ?>
 <!-- панель слабовидящих -->
 <div class="faceTuneBlock">
@@ -177,10 +171,10 @@ if (!empty(Yii::$app->params['layout_footer']))
     <div class="sitemap">
         <div class="container">
             <?php
-            if (!empty($header['menu_dropdown']->value))
+            if (!empty($header['dropdown_menu']->value))
                 echo \frontend\widgets\MenuWidget::widget([
                             'template'=>'subheader_menu',
-                            'id_menu'=>$header['menu_dropdown']->value
+                            'id_menu'=>$header['dropdown_menu']->value
                         ]);
             else
                 echo \frontend\widgets\MenuWidget::widget(['alias'=>'subheader_menu','template'=>'subheader_menu']);
