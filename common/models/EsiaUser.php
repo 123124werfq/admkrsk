@@ -193,7 +193,7 @@ class EsiaUser extends \yii\db\ActiveRecord
         $documentInfo = $esia->getDocInfo();
         foreach ($documentInfo as $dinfo)
         {
-            switch ($cinfo['type']){
+            switch ($dinfo['type']){
                 case 'RF_PASSPORT':
                     $this->passport_serie = $dinfo['series'];
                     $this->passport_number = $dinfo['number'];
