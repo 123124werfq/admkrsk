@@ -83,7 +83,21 @@ class CollectionColumnController extends Controller
         $model->id_collection = $id;
         $model->type = CollectionColumn::TYPE_CUSTOM;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
+            if ($model->isCustom() && !empty($model->template))
+            {
+                $collection = $model->collection;
+                $mongoCollection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
+
+                $collection->getData();
+
+                foreach ($records as $key => $data)
+                {
+                    $dataMongo['col'.$column->id_column] = CollectionColumn::renderCustomValue($model->template,$data);
+                }
+            }
+
             return $this->redirect(['index', 'id' => $model->id_collection]);
         }
 

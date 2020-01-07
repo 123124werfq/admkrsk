@@ -229,7 +229,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     if (empty($recordData))
                         $recordData = $this->getData(true);
 
-                    $dataMongo['col'.$column->id_column] = $this->renderCustomValue($column->template,$recordData);
+                    $dataMongo['col'.$column->id_column] = CollectionColumn::renderCustomValue($column->template,$recordData);
                 }
             }
 
@@ -244,26 +244,11 @@ class CollectionRecord extends \yii\db\ActiveRecord
         parent::afterSave($insert, $changedAttributes);
     }
 
-    protected function renderCustomValue($template,$data)
+    /*public function updateCustomColumn($column)
     {
-        $value = '';
+        $recordData = $this->getData(true);
 
-        try {
-            $loader = new \Twig\Loader\ArrayLoader([
-            'template' => $template,
-            ]);
-            $twig = new \Twig\Environment($loader);
-            $value = $twig->render('template', $data);
-
-            unset($loader);
-            unset($twig);
-        }
-        catch (Exception $e) {
-
-        }
-
-        return $value;
-    }
+    }*/
 
     public function getData($keyAsAlias=false,$id_columns=[])
     {

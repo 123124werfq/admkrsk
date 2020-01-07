@@ -221,6 +221,27 @@ class CollectionColumn extends \yii\db\ActiveRecord
         return ($this->type == self::TYPE_COLLECTIONS || $this->type == self::TYPE_COLLECTION);
     }
 
+    public static function renderCustomValue($template,$data)
+    {
+        $value = '';
+
+        try {
+            $loader = new \Twig\Loader\ArrayLoader([
+            'template' => $template,
+            ]);
+            $twig = new \Twig\Environment($loader);
+            $value = $twig->render('template', $data);
+
+            unset($loader);
+            unset($twig);
+        }
+        catch (Exception $e) {
+
+        }
+
+        return $value;
+    }
+
     public function afterSave($insert, $changedAttributes)
     {
         if (!$insert && !empty($changedAttributes['type']))
