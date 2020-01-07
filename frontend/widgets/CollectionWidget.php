@@ -36,9 +36,6 @@ class CollectionWidget extends \yii\base\Widget
             if (!empty($this->attributes['sort']))
                 $this->sort = (int)$this->attributes['sort'];
 
-            /*if (!empty($this->attributes['search']))
-                $this->search = (int)$this->attributes['search'];*/
-
             if (!empty($this->attributes['dir']))
                 $this->dir = (int)$this->attributes['dir'];
 

@@ -47,6 +47,8 @@ class CollectionColumn extends \yii\db\ActiveRecord
     const TYPE_SERVICETARGET = 26;
     const TYPE_SERVICE = 27;
 
+    const TYPE_FILE_OLD = 29;
+
     public static function getTypeOptions($type)
     {
         $options = [
@@ -183,6 +185,8 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_MAP => "Координаты",
 
             self::TYPE_FILE => "Файл",
+            self::TYPE_FILE_OLD => "Файл (старый формат для импорта)",
+
             self::TYPE_IMAGE => "Изображение",
 
             self::TYPE_COLLECTION => "Данные из списка",
