@@ -156,7 +156,7 @@ class EsiaUser extends \yii\db\ActiveRecord
     {
         $personInfo = $esia->getPersonInfo();
 
-        $this->fullname = $personInfo['firstName'].' '.$personInfo['lastName'];
+        $this->fullname = $personInfo['lastName'].' '.$personInfo['firstName'].' '.$personInfo['middleName'];
         $this->first_name = $personInfo['firstName'];
         $this->middle_name = $personInfo['middleName']??null;
         $this->last_name = $personInfo['lastName']??null;
