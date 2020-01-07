@@ -123,7 +123,7 @@ class MenuLink extends \yii\db\ActiveRecord
 
     public function getChilds()
     {
-        return $this->hasMany(MenuLink::className(), ['id_parent' => 'id_link']);
+        return $this->hasMany(MenuLink::className(), ['id_parent' => 'id_link'])->orderBy('ord ASC');
     }
 
     public function getParent()
