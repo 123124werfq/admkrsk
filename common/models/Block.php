@@ -33,7 +33,7 @@ class Block extends \yii\db\ActiveRecord
                     'name'=>'Меню',
                     'type'=>BlockVar::TYPE_MENU,
                 ],
-                'dropdown'=>[
+                'dropdown_menu'=>[
                     'name'=>'Разворачивающееся меню',
                     'type'=>BlockVar::TYPE_MENU,
                 ],

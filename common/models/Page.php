@@ -151,33 +151,6 @@ class Page extends \yii\db\ActiveRecord
         $this->existUrl = $domain.implode('/', $url);
 
         return $this->existUrl;
-
-        /*$path = explode('/', $this->path);
-
-        if (!empty($path))
-        {
-            foreach ($path as $key => $slug)
-                $path[$key] = (int)$slug;
-
-            $pages = Page::find()->where(['id_page'=>$path])->select(['alias','id_page'])->indexBy('id_page')->all();
-
-            foreach ($path as $key => $slug)
-            {
-                if (!empty($pages[$slug]))
-                    $path[$key] = $pages[$slug]->alias;
-            }
-
-            $this->existUrl = (($absolute)?Yii::$app->params['frontendUrl']:'').'/'.implode('/', $path);
-
-            return $this->existUrl;
-        }
-        else
-        {
-            if ($this->alias=='/' && $absolute)
-                $this->alias = '';
-
-            return (($absolute)?Yii::$app->params['frontendUrl']:'').'/'.$this->alias;
-        }*/
     }
 
     public function getFullUrl()

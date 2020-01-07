@@ -111,6 +111,18 @@ class CollectionRecord extends \yii\db\ActiveRecord
         return $mongoLabels;
     }
 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert) && !empty($this->data))
+        {
+            $this->data_hash = md5($this->data_hash);
+
+            return true;
+        }
+        else
+            return false;
+    }
+
     public function afterSave($insert, $changedAttributes)
     {
         if (!empty($this->data))

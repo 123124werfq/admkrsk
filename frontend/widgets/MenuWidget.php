@@ -7,6 +7,7 @@ use common\models\Menu;
 class MenuWidget extends \yii\base\Widget
 {
 	public $alias;
+    public $id_menu;
     public $block;
     public $page;
 	public $template = false;
@@ -14,9 +15,9 @@ class MenuWidget extends \yii\base\Widget
     public function run()
     {
         if (!empty($this->alias))
-        {
     	   $menu = Menu::find()->where(['alias'=>$this->alias])->one();
-        }
+        elseif (!empty($this->id_menu))
+            $menu = Menu::find()->where(['id_menu'=>$this->id_menu])->one();
         elseif (!empty($this->block))
         {
             $blockVars = $this->block->getBlockVars()->indexBy('alias')->all();

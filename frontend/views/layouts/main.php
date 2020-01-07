@@ -5,7 +5,34 @@ use common\widgets\Alert;
 
 $bundle = AppAsset::register($this);
 
-$accessabilityMode =  (isset($_COOKIE['accessabilityMode']) && $_COOKIE['accessabilityMode']=='true')?true:false;
+$accessabilityMode = (isset($_COOKIE['accessabilityMode']) && $_COOKIE['accessabilityMode']=='true')?true:false;
+
+//var_dump($this->context);
+
+$layout_header = $layout_footer = null;
+
+if (!empty($this->params['page']))
+{
+    if ($page->is_partition && !empty($page->blocksLayout))
+        $layout = $page;
+    else
+        $layout = $page->parents()
+            ->joinWith('blocksLayout as blocksLayout')
+            ->andWhere('is_partition IS NOT NULL AND blocksLayout.id_block IS NOT NULL')
+            ->orderBy('depth DESC')
+            ->one();
+
+    if (!empty($layout))
+    {
+        $layout = $page->gatBlocksLayout()->indexBy('type')->all();
+
+        if (!empty($layouts['header']))
+            $layout_header = $layouts['header'];
+
+        if (!empty($layouts['footer']))
+            $layout_footer = $layouts['footer'];
+    }
+}
 ?>
 <?php $this->beginPage() ?>
 <!doctype html>
@@ -45,7 +72,7 @@ $accessabilityMode =  (isset($_COOKIE['accessabilityMode']) && $_COOKIE['accessa
 </head>
 <body>
 <?php $this->beginBody() ?>
-    <?= $this->render('_header', ['bundle' => $bundle])?>
+    <?= $this->render('_header', ['bundle' => $bundle,'header'=>$layout_header])?>
     <div class="page">
         <div class="svg-hidden">
             <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
@@ -71,7 +98,7 @@ $accessabilityMode =  (isset($_COOKIE['accessabilityMode']) && $_COOKIE['accessa
         </div>
         <?=Alert::widget()?>
         <?=$content?>
-        <?=$this->render('_footer', ['bundle' => $bundle])?>
+        <?=$this->render('_footer', ['bundle' => $bundle,'footer'=>$layout_footer])?>
     </div>
 <?php $this->endBody() ?>
 </body>

@@ -5,10 +5,14 @@ use yii\helpers\Url;
 
 use common\models\User;
 
-if(!Yii::$app->user->isGuest){
-    $user = User::findOne(Yii::$app->user->id);
-}
+if (!Yii::$app->user->isGuest)
+    $user = Yii::$app->user->identity;
 
+if (!empty(Yii::$app->params['layout_header']))
+    $header = Yii::$app->params['layout_header'];
+
+if (!empty(Yii::$app->params['layout_footer']))
+    $footer = Yii::$app->params['layout_footer'];
 ?>
 <!-- панель слабовидящих -->
 <div class="faceTuneBlock">
@@ -145,12 +149,19 @@ if(!Yii::$app->user->isGuest){
             <h1 class="accessability-title"><?=Yii::t('site', 'Администрация города Красноярск')?></h1>
             <div class="header_menu">
                 <?php
-                if(Yii::$app->language == 'en')
-                    echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'en_header_menu']);
-                elseif (strpos(Yii::$app->request->url, 'new-year2019') || strpos(Yii::$app->request->hostInfo, 'newyear.'))
-                    echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'new_year_menu_header']);
-                else
-                    echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'header_menu']);
+                    /*if(Yii::$app->language == 'en')
+                        echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'en_header_menu']);
+                    elseif (strpos(Yii::$app->request->url, 'new-year2019') || strpos(Yii::$app->request->hostInfo, 'newyear.'))
+                        echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'new_year_menu_header']);
+                    else*/
+
+                    if (!empty($header['menu']->value))
+                        echo \frontend\widgets\MenuWidget::widget([
+                            'template'=>'header_menu',
+                            'id_menu'=>$header['menu']->value
+                        ]);
+                    else
+                        echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'header_menu']);
                 ?>
                 <button class="header-menu_link header-menu_search search-toggle">
                     <span class="material-icons">search</span>
@@ -166,12 +177,19 @@ if(!Yii::$app->user->isGuest){
     <div class="sitemap">
         <div class="container">
             <?php
-            if(Yii::$app->language == 'en')
+            if (!empty($header['menu_dropdown']->value))
+                echo \frontend\widgets\MenuWidget::widget([
+                            'template'=>'subheader_menu',
+                            'id_menu'=>$header['menu_dropdown']->value
+                        ]);
+            else
+                echo \frontend\widgets\MenuWidget::widget(['alias'=>'subheader_menu','template'=>'subheader_menu']);
+            /*if(Yii::$app->language == 'en')
                 echo \frontend\widgets\MenuWidget::widget(['alias'=>'subheader_menu_en','template'=>'subheader_menu']);
             elseif (strpos(Yii::$app->request->url, 'new-year2019') || strpos(Yii::$app->request->hostInfo, 'newyear.'))
                 echo \frontend\widgets\MenuWidget::widget(['alias'=>'subheader_menu_ny','template'=>'subheader_menu']);
-            else
-                echo \frontend\widgets\MenuWidget::widget(['alias'=>'subheader_menu','template'=>'subheader_menu']);
+            else*/
+
             ?>
         </div>
     </div>

@@ -78,6 +78,29 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
         return false;
     }
 
+    /*protected function makeLayout($page)
+    {
+        if ($page->is_partition && !empty($page->blocksLayout))
+            $layout = $page;
+        else
+            $layout = $page->parents()
+                ->joinWith('blocksLayout as blocksLayout')
+                ->andWhere('is_partition IS NOT NULL AND blocksLayout.id_block IS NOT NULL')
+                ->orderBy('depth DESC')
+                ->one();
+
+        if (!empty($layout))
+        {
+            $layout = $page->gatBlocksLayout()->indexBy('type')->all();
+
+            if (!empty($layouts['header']))
+                Yii::$app->params['layout_header'] = $layouts['header'];
+
+            if (!empty($layouts['footer']))
+                Yii::$app->params['layout_footer'] = $layouts['footer'];
+        }
+    }*/
+
     public function parseRequest($manager, $request)
     {
         $request = Yii::$app->request;
@@ -104,7 +127,10 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
                 ->one();
 
             if (!empty($domainPage))
+            {
+                //$this->makeLayout($domainPage);
                 return ['site/page', ['page'=>$domainPage]];
+            }
         }
 
         /*$urls = [];
@@ -129,7 +155,10 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
 
         // ищем из резервированных
         if ($route = $this->findRouteByURL($domain.$pathInfo))
+        {
+            //$this->makeLayout($route['page']);
             return [$route['route'], ['page'=>$route['page']]];
+        }
 
         // вычленяем последний кусок от урла
         $alias = explode('/', $pathInfo);
@@ -141,6 +170,9 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
         $page = Page::find()->where(['alias'=>$alias, 'active'=>1])->one();
         if (empty($page))
             return false;
+
+        // ставим хейдер и футер
+        //$this->makeLayout($page);
 
         if ($page->noguest && Yii::$app->user->isGuest)
             return ['site/login',[]];
