@@ -354,7 +354,7 @@ class PageController extends Controller
 
         if (!empty($id_parent))
         {
-            $model->fid_parent = $id_parent;
+            $model->id_parent = $id_parent;
             $parent = $this->findModel($id_parent);
             $model->populateRelation('parent',$parent);
         }
@@ -364,9 +364,7 @@ class PageController extends Controller
             $model->createAction(Action::ACTION_CREATE);
 
             $parentPage = Page::findOne($model->id_parent);
-
-            if (!empty($parentPage))
-                $model->appendTo($parentPage);
+            $model->appendTo($parentPage);
 
             $model->appendTo($parentPage);
 
