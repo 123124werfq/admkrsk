@@ -249,10 +249,10 @@ class PageController extends Controller
 
     public function actionPartition($id=null)
     {
-        if (!empty($id))
+        /*if (!empty($id))
             $this->findModel($id);
         else
-
+            Page::*/
     }
 
     /**
