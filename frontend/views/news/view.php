@@ -1,6 +1,5 @@
 <?php
 /* @var common\models\News $model */
-
 use yii\helpers\Html;
 
 $this->params['page'] = $page;
@@ -18,7 +17,6 @@ function parseAttributesFromTag($tag){
 
     return $result;
 }
-
 ?>
 <div class="main">
     <div class="container">
@@ -108,7 +106,9 @@ function parseAttributesFromTag($tag){
                         <?php if (!empty($data->id_rub)){?>
                         <li class="press_info-item press_info-item__place"><a href="?id_rub=<?=$data->id_rub?>"><?=$data->rub->getLineValue()?></a></li>
                         <?php }?>
-                        <li class="press_info-item"><?=strftime('%d %B %Y, %H:%M', $data->date_publish)?></li>
+                        <li class="press_info-item">
+                            <?=Yii::$app->formatter->asDatetime($data->date_publish,'d MMMM yyyy HH:mm')?>
+                        </li>
                     </ul>
                 </div>
             <?php }?>
