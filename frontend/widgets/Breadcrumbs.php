@@ -14,6 +14,8 @@ class Breadcrumbs extends \yii\base\Widget
             return false;
 
         $pages = $this->page->parents()->all();
+        array_shift($pages);
+
         $pages[] = $this->page;
 
         $output[] = '<li class="breadcrumbs_item"><a href="/">Главная</a></li>';
