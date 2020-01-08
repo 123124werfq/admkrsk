@@ -1,4 +1,6 @@
 <?php
+    $this->params['page'] = $page;
+
     $attributes = [
         'reestr_number',
         'fullname',

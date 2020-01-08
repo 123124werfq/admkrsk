@@ -5,7 +5,6 @@
  * @param string $tag
  * @return array
  */
-
 $this->params['page'] = $page;
 
 function parseAttributesFromTag($tag){

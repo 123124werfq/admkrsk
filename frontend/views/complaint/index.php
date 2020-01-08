@@ -3,10 +3,7 @@
     use yii\helpers\Html;
     use common\models\Collection;
 
-/**
- * @param string $tag
- * @return array
- */
+    $this->params['page'] = $page;
 ?>
 <div class="main">
     <div class="container">

@@ -11,6 +11,7 @@ use common\models\Question;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+$this->params['page'] = $page;
 ?>
 <div class="main">
     <div class="container">

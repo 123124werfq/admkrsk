@@ -1,5 +1,7 @@
 <?php
     use yii\grid\GridView;
+
+    $this->params['page'] = $page;
 ?>
 <div class="main">
     <div class="container">

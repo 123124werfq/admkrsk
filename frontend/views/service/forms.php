@@ -1,3 +1,6 @@
+<?php
+    $this->params['page'] = $page;
+?>
 <div class="main">
     <div class="container">
         <div class="row">

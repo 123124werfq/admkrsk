@@ -2,6 +2,8 @@
 /* @var common\models\News $model */
 
 use yii\helpers\Html;
+
+$this->params['page'] = $page;
 function parseAttributesFromTag($tag){
     $pattern = '/(\w+)=[\'"]([^\'"]*)/';
 
@@ -16,6 +18,7 @@ function parseAttributesFromTag($tag){
 
     return $result;
 }
+
 ?>
 <div class="main">
     <div class="container">
