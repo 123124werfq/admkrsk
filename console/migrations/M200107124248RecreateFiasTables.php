@@ -38,7 +38,7 @@ class M200107124248RecreateFiasTables extends Migration
             'sextcode' => $this->string(3),
             'plancode' => $this->string(4),
             'cadnum' => $this->string(100),
-            'divtype' => $this->string(1),
+            'divtype' => $this->integer(),
             'offname' => $this->string(120),
             'postalcode' => $this->string(6),
             'ifnsfl' => $this->string(4),
@@ -67,6 +67,7 @@ class M200107124248RecreateFiasTables extends Migration
         ]);
 
         $this->createTable('fias_house', [
+            'id' => $this->primaryKey(),
             'postalcode' => $this->string(6),
             'ifnsfl' => $this->string(4),
             'terrifnsfl' => $this->string(4),
@@ -75,6 +76,7 @@ class M200107124248RecreateFiasTables extends Migration
             'okato' => $this->string(11),
             'oktmo' => $this->string(11),
             'updatedate' => $this->dateTime(),
+            'cadnum' => $this->string(100),
             'housenum' => $this->string(20),
             'eststatus' => $this->integer(),
             'buildnum' => $this->string(10),
@@ -88,6 +90,7 @@ class M200107124248RecreateFiasTables extends Migration
             'statstatus' => $this->integer(),
             'normdoc' => $this->string(36),
             'counter' => $this->integer(),
+            'divtype' => $this->integer(),
         ]);
     }
 

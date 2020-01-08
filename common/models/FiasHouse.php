@@ -72,8 +72,8 @@ class FiasHouse extends \yii\db\ActiveRecord
             [['okato', 'oktmo'], 'string', 'max' => 11],
             [['postalcode'], 'string', 'max' => 6],
             [['cadnum'], 'string', 'max' => 100],
-            [['houseguid'], 'unique'],
-            [['aoguid'], 'exist', 'skipOnError' => true, 'targetClass' => FiasAddrObj::class, 'targetAttribute' => ['aoguid' => 'aoguid']],
+//            [['houseguid'], 'unique'],
+//            [['aoguid'], 'exist', 'skipOnError' => true, 'targetClass' => FiasAddrObj::class, 'targetAttribute' => ['aoguid' => 'aoguid']],
         ];
     }
 

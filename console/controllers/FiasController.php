@@ -39,89 +39,7 @@ class FiasController extends Controller
     {
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            $query = FiasHouse::find()->andWhere(['divtype' => 0]);
-
-            $count = 0;
-            $fiasHouseCount = $query->count();
-
-            Region::deleteAll(['is_manual' => false]);
-            Subregion::deleteAll(['is_manual' => false]);
-            City::deleteAll(['is_manual' => false]);
-            District::deleteAll(['is_manual' => false]);
-            Street::deleteAll(['is_manual' => false]);
-            House::deleteAll(['is_manual' => false]);
-
-            ProgressHelper::startProgress($count, $fiasHouseCount, "Обновление адресов: ");
-
-            /* @var FiasHouse $fiasHouse */
-            foreach ($query->each() as $fiasHouse) {
-                $region = $subregion = $city = $district = $street = null;
-
-                if (($street = Street::findOne(['aoguid' => $fiasHouse->aoguid])) === null) {
-                    $street = new Street([
-                        'aoguid' => $fiasHouse->aoguid,
-                        'name' => $fiasHouse->addrObj->addressName,
-                    ]);
-                    $street->save();
-                }
-
-                if (($districtName = District::getDistrictNameByOKATO($fiasHouse->okato)) !== null) {
-                    if (($district = District::findOne(['name' => $districtName])) === null) {
-                        $district = new District(['name' => $districtName]);
-                        $district->save();
-                    }
-                }
-
-                foreach ($fiasHouse->addrObj->parents as $parent) {
-                    if ($parent->aolevel == 1) {
-                        if (($region = Region::findOne(['aoguid' => $parent->aoguid])) === null) {
-                            $region = new Region([
-                                'aoguid' => $parent->aoguid,
-                                'name' => $parent->addressName,
-                            ]);
-                            $region->save();
-                        }
-                    } elseif ($parent->aolevel == 3) {
-                        if (($subregion = Subregion::findOne(['aoguid' => $parent->aoguid])) === null) {
-                            $subregion = new Subregion([
-                                'aoguid' => $parent->aoguid,
-                                'name' => $parent->addressName,
-                            ]);
-                            $subregion->save();
-                        }
-                    } else {
-                        if (($city = City::findOne(['aoguid' => $parent->aoguid])) === null) {
-                            $city = new City([
-                                'aoguid' => $parent->aoguid,
-                                'name' => $parent->addressName,
-                            ]);
-                            $city->save();
-                        }
-                    }
-                }
-
-                /** @var Region $region */
-                /** @var Subregion $subregion */
-                /** @var City $city */
-                $address = new House([
-                    'id_region' => $region ? $region->id_region : null,
-                    'id_subregion' => $subregion ? $subregion->id_subregion : null,
-                    'id_city' => $city ? $city->id_city : null,
-                    'id_district' => $district ? $district->id_district : null,
-                    'id_street' => $street ? $street->id_street : null,
-                    'houseguid' => $fiasHouse->houseguid,
-                    'postalcode' => $fiasHouse->postalcode,
-                    'name' => $fiasHouse->houseName,
-                ]);
-                $address->updateAttributes(['fullname' => $address->getFullName()]);
-
-                if ($address->save()) {
-                    $count++;
-                }
-
-                ProgressHelper::updateProgress($count, $fiasHouseCount);
-            }
-            ProgressHelper::endProgress("100% ($count/$count) Done." . PHP_EOL);
+            $this->updateAddresses();
 
             $transaction->commit();
 
@@ -189,7 +107,7 @@ class FiasController extends Controller
      * @param FiasUpdateHistory $updateHistory
      * @return string
      */
-    public function downloadFile($updateHistory)
+    private function downloadFile($updateHistory)
     {
         $filename = Yii::getAlias('@runtime/fias_update/' . $updateHistory->version . '_' . basename($updateHistory->file));
 
@@ -238,6 +156,11 @@ class FiasController extends Controller
         return $path;
     }
 
+    /**
+     * @param $filename
+     * @return int
+     * @throws \yii\db\Exception
+     */
     private function importDbf($filename)
     {
         if (!$db = @dbase_open($filename, 0)) {
@@ -268,19 +191,26 @@ class FiasController extends Controller
 
         $transaction = Yii::$app->db->beginTransaction();
 
-        $j = 0;
+        $houseGuids = [];
+        $count = $j = 0;
         for ($i = 1; $i <= $rowsCount; $i++) {
             $row = dbase_get_record_with_names($db, $i);
 
-            if ($modelClass == FiasAddrobj::class && $this->region && intval($row['REGIONCODE']) != intval($this->region)) {
-                continue;
+            switch ($modelClass) {
+                case FiasAddrObj::class:
+                    $condition = ['aoguid' => $row['AOGUID']];
+                    break;
+                case FiasHouse::class:
+                    $condition = ['houseguid' => $row['HOUSEGUID']];
+                    $houseGuids[] = $row['HOUSEGUID'];
+                    break;
+                default:
+                    break;
             }
 
-            if ($j == 0) {
-                $transaction = Yii::$app->db->beginTransaction();
+            if (!$model = $modelClass::findOne($condition)) {
+                $model = new $modelClass;
             }
-
-            $model = new $modelClass;
 
             foreach ($row as $key => $value) {
                 if ($key == 'deleted') {
@@ -292,19 +222,125 @@ class FiasController extends Controller
             }
 
             if (!$model->save()) {
+                echo get_class($model) . PHP_EOL;
                 print_r($model->errors);
+                print_r($model->attributes);
+                print_r($row);
             }
+
             $j++;
+            $count++;
 
             if ($j == 1000) {
+                if ($houseGuids) {
+                    $this->updateAddresses(['houseguid' => $houseGuids]);
+                }
                 $transaction->commit();
                 $j = 0;
-                $this->stdout("Обработано $i из $rowsCount записей\n");
+                $houseGuids = [];
+                $this->stdout("Обработано $count из $rowsCount записей\n");
+                $transaction = Yii::$app->db->beginTransaction();
             }
         }
 
         if ($j != 0) {
+            if ($houseGuids) {
+                $this->updateAddresses(['houseguid' => $houseGuids]);
+            }
             $transaction->commit();
+            $this->stdout("Обработано $count из $rowsCount записей\n");
         }
+    }
+
+    /**
+     * @param array $condition
+     */
+    private function updateAddresses($condition = [])
+    {
+        $query = FiasHouse::find()
+            ->andWhere(['divtype' => 0])
+            ->andWhere($condition);
+
+        $count = 0;
+        $fiasHouseCount = $query->count();
+
+        Region::deleteAll(['is_manual' => false]);
+        Subregion::deleteAll(['is_manual' => false]);
+        City::deleteAll(['is_manual' => false]);
+        District::deleteAll(['is_manual' => false]);
+        Street::deleteAll(['is_manual' => false]);
+        House::deleteAll(['is_manual' => false]);
+
+        ProgressHelper::startProgress($count, $fiasHouseCount, "Обновление адресов: ");
+
+        /* @var FiasHouse $fiasHouse */
+        foreach ($query->each() as $fiasHouse) {
+            $region = $subregion = $city = $district = $street = null;
+
+            if (($street = Street::findOne(['aoguid' => $fiasHouse->aoguid])) === null) {
+                $street = new Street([
+                    'aoguid' => $fiasHouse->aoguid,
+                    'name' => $fiasHouse->addrObj->addressName,
+                ]);
+                $street->save();
+            }
+
+            if (($districtName = District::getDistrictNameByOKATO($fiasHouse->okato)) !== null) {
+                if (($district = District::findOne(['name' => $districtName])) === null) {
+                    $district = new District(['name' => $districtName]);
+                    $district->save();
+                }
+            }
+
+            foreach ($fiasHouse->addrObj->parents as $parent) {
+                if ($parent->aolevel == 1) {
+                    if (($region = Region::findOne(['aoguid' => $parent->aoguid])) === null) {
+                        $region = new Region([
+                            'aoguid' => $parent->aoguid,
+                            'name' => $parent->addressName,
+                        ]);
+                        $region->save();
+                    }
+                } elseif ($parent->aolevel == 3) {
+                    if (($subregion = Subregion::findOne(['aoguid' => $parent->aoguid])) === null) {
+                        $subregion = new Subregion([
+                            'aoguid' => $parent->aoguid,
+                            'name' => $parent->addressName,
+                        ]);
+                        $subregion->save();
+                    }
+                } else {
+                    if (($city = City::findOne(['aoguid' => $parent->aoguid])) === null) {
+                        $city = new City([
+                            'aoguid' => $parent->aoguid,
+                            'name' => $parent->addressName,
+                        ]);
+                        $city->save();
+                    }
+                }
+            }
+
+            /** @var Region $region */
+            /** @var Subregion $subregion */
+            /** @var City $city */
+            $address = new House([
+                'id_region' => $region ? $region->id_region : null,
+                'id_subregion' => $subregion ? $subregion->id_subregion : null,
+                'id_city' => $city ? $city->id_city : null,
+                'id_district' => $district ? $district->id_district : null,
+                'id_street' => $street ? $street->id_street : null,
+                'houseguid' => $fiasHouse->houseguid,
+                'postalcode' => $fiasHouse->postalcode,
+                'name' => $fiasHouse->houseName,
+            ]);
+            $address->updateAttributes(['fullname' => $address->getFullName()]);
+
+            if ($address->save()) {
+                $count++;
+            }
+
+            ProgressHelper::updateProgress($count, $fiasHouseCount);
+        }
+        ProgressHelper::endProgress("100% ($count/$count) Done." . PHP_EOL);
     }
 }
