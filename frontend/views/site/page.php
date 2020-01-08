@@ -29,6 +29,12 @@ function parseAttributesFromTag($tag)
                     <?= frontend\widgets\Breadcrumbs::widget(['page' => $page]) ?>
                 </div>
             </div>
+            <div>
+                <?php if (Yii::$app->user->can('admin')):  ?>
+                <!-- todo поскольку у вас 2 входных точки, то я не могу использовать относительный Url пропишите абсолютный url сами -->
+                <a href="http://ADMIN.URL/page/update?id=<?= $page->id_page ?>">Редактировать страницу</a>
+                <?php endif; ?>
+            </div>
             <div class="row">
                 <div class="col-2-third order-xs-1">
                     <div class="content searchable">
