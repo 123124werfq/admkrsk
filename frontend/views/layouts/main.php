@@ -14,6 +14,7 @@ $layout_header = $layout_footer = null;
 if (!empty($this->params['page']))
 {
     $page = $this->params['page'];
+
     if ($page->is_partition && !empty($page->blocksLayout))
         $layout = $page;
     else
@@ -33,6 +34,8 @@ if (!empty($this->params['page']))
         if (!empty($layouts['footer']))
             $layout_footer = $layouts['footer']->getBlockVars()->indexBy('alias')->all();
     }
+
+    var_dump($layout_header);
 }
 ?>
 <?php $this->beginPage() ?>
