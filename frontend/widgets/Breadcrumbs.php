@@ -25,13 +25,13 @@ class Breadcrumbs extends \yii\base\Widget
         {
             $path .= '/'.$page->alias;
 
-            if ($page->is_partition && !empty($page->domain))
+            if ($page->is_partition && !empty($page->partition_domain))
             {
-                $url = $domain = $page->domain;
+                $url = $partition_domain = $page->partition_domain;
                 $output = [];
             }
             else
-                $url = $domain.$path;
+                $url = $partition_domain.$path;
 
             if ($page->active == 1)
                 $output[] = '<li class="breadcrumbs_item"><a href="'.$url.'">'.$page->title.'</a></li>';

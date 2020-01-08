@@ -34,8 +34,6 @@ if (!empty($this->params['page']))
         if (!empty($layouts['footer']))
             $layout_footer = $layouts['footer']->getBlockVars()->indexBy('alias')->all();
     }
-
-    var_dump($layout_header);
 }
 ?>
 <?php $this->beginPage() ?>
