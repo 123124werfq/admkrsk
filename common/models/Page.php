@@ -96,7 +96,7 @@ class Page extends \yii\db\ActiveRecord
             'id_page' => '#',
             'id_media' => 'Id Media',
             'title' => 'Название',
-            'id_parent' => 'Родительские раздел',
+            'id_parent' => 'Родительская страница',
             'alias' => 'URL',
             'content' => 'Содержание',
             'seo_title' => 'Seo Заголовок',

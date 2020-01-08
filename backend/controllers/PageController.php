@@ -351,16 +351,27 @@ class PageController extends Controller
     public function actionCreate($id_parent=null)
     {
         $model = new Page();
-        $model->id_parent = $id_parent;
+
+        if (!empty($id_parent))
+        {
+            $model->fid_parent = $id_parent;
+            $parent = $this->findModel($id_parent);
+            $model->populateRelation('parent',$parent);
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save())
         {
             $model->createAction(Action::ACTION_CREATE);
 
+            $parentPage = Page::findOne($model->id_parent);
+
+            if (!empty($parentPage))
+                $model->appendTo($parentPage);
+
+            $model->appendTo($parentPage);
+
             if (!empty($model->id_parent) && !empty($model->parent->menu))
-            {
                 $model->parent->menu->addLink($model);
-            }
 
             return $this->redirect(['view', 'id' => ($id_parent)?$id_parent:$model->id_page]);
         }

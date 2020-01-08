@@ -18,10 +18,11 @@ class Breadcrumbs extends \yii\base\Widget
 
         $pages[] = $this->page;
 
-        $output[] = '<li class="breadcrumbs_item"><a href="/">Главная</a></li>';
+        $homeTitle = (Yii::$app->language == 'en')?'Home':'Главная';
+
+        $output[] = '<li class="breadcrumbs_item"><a href="/">'.$homeTitle.'</a></li>';
 
         $partition_domain = $path = '';
-
 
         foreach ($pages as $key => $page)
         {

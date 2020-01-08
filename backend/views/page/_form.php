@@ -20,7 +20,7 @@ use common\models\Page;
 
 <?php if ($model->alias!='/'){?>
 <?= $form->field($model, 'id_parent')->widget(Select2::class, [
-    'data' => (!empty($model->id_parent))?[$model->id_parent=>$model->parent->title]:[],
+    'data' => (!empty($model->parent))?[$model->id_parent=>$model->parent->title]:[],
     'pluginOptions' => [
         'multiple' => false,
         'allowClear' => true,
