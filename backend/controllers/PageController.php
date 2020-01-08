@@ -351,6 +351,7 @@ class PageController extends Controller
     public function actionCreate($id_parent=null)
     {
         $model = new Page();
+        $model->created_at = time();
 
         if (!empty($id_parent))
         {
@@ -364,8 +365,6 @@ class PageController extends Controller
             $model->createAction(Action::ACTION_CREATE);
 
             $parentPage = Page::findOne($model->id_parent);
-            $model->appendTo($parentPage);
-
             $model->appendTo($parentPage);
 
             if (!empty($model->id_parent) && !empty($model->parent->menu))
