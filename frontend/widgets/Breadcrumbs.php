@@ -20,9 +20,9 @@ class Breadcrumbs extends \yii\base\Widget
 
         $output[] = '<li class="breadcrumbs_item"><a href="/">Главная</a></li>';
 
-        $path = '';
+        $partition_domain = $path = '';
 
-        $domain = '';
+
         foreach ($pages as $key => $page)
         {
             $path .= '/'.$page->alias;
