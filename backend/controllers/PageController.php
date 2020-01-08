@@ -153,7 +153,7 @@ class PageController extends Controller
      * @param string $q
      * @return mixed
      */
-    public function actionList($q)
+    public function actionList($q,$partition=0)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -170,17 +170,19 @@ class PageController extends Controller
             $query->andWhere(['ilike', 'title', $q]);
         }
 
+        if (!empty($partition))
+            $query->andWhere(['is_partition' => true]);
+
         if (!empty($_GET['news']))
             $query->andWhere('id_page IN (SELECT id_page FROM db_news)');
 
         $results = [];
-        foreach ($query->limit(10)->all() as $page) {
 
+        foreach ($query->limit(10)->all() as $page)
             $results[] = [
                 'id' => $page->id_page,
                 'text' => $page->title,
             ];
-        }
 
         return ['results' => $results];
     }
@@ -243,6 +245,16 @@ class PageController extends Controller
 
         return $this->render('tree',['tree'=>$tree]);
     }
+
+
+    public function actionPartition($id=null)
+    {
+        if (!empty($id))
+            $this->findModel($id);
+        else
+
+    }
+
     /**
      * Lists all Page models.
      * @return mixed
@@ -368,7 +380,7 @@ class PageController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        
+
         $model->id_parent = $old_parent = null;
 
         if (!empty($model->parent->id_page))

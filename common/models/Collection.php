@@ -63,6 +63,10 @@ class Collection extends \yii\db\ActiveRecord
     public $show_row_num;
     public $show_column_num;
 
+    public $id_partitions = [];
+
+    public $id_page;
+
     /**
      * {@inheritdoc}
      */
@@ -140,6 +144,16 @@ class Collection extends \yii\db\ActiveRecord
                 'class' => AccessControlBehavior::class,
                 'permission' => 'backend.collection',
             ],
+            'yiinput' => [
+                'class' => RelationBehavior::class,
+                'relations'=> [
+                    'partitions'=>[
+                        'modelname'=>'Page',
+                        'jtable'=>'dbl_collection_page',
+                        'added'=>false,
+                    ],
+                ]
+            ]
         ];
     }
 
@@ -159,6 +173,11 @@ class Collection extends \yii\db\ActiveRecord
     public function getForm()
     {
         return $this->hasOne(Form::class, ['id_form' => 'id_form']);
+    }
+
+    public function getPartitions()
+    {
+        return $this->hasMany(Page::class, ['id_page' => 'id_page'])->viaTable('dbl_collection_page',['id_collection'=>'id_collection']);
     }
 
     public function getParent()
