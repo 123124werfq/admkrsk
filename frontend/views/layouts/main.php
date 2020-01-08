@@ -20,7 +20,7 @@ if (!empty($this->params['page']))
     else
         $layout = $page->parents()
             ->joinWith('blocksLayout')
-            ->andWhere('is_partition IS NOT NULL AND db_block.id_block IS NOT NULL')
+            ->andWhere('is_partition = TRUE AND db_block.id_block IS NOT NULL')
             ->orderBy('depth DESC')
             ->one();
 
