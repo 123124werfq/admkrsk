@@ -36,7 +36,7 @@ function parseAttributesFromTag($tag){
                     	</ul>
                     </li>
                     <?php }?>
-                    <li class="press_info-item"><?=strftime('%d %B %Y, %H:%M', $model->date_publish)?></li>
+                    <li class="press_info-item"><?=Yii::$app->formatter->asDatetime($data->date_publish,'d MMMM yyyy HH:mm')?></li>
                 </ul>
                 <!--hr class="hr hr__large"-->
             	<div class="content searchable">
