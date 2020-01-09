@@ -56,34 +56,7 @@ use yii\web\JsExpression;
 
     <hr>
 
-    <h3>Доступ</h3>
-
-    <?php
-        $records = $model->getRecords('partitions');
-        $records = ArrayHelper::map($records, 'id_page', 'title');
-
-        echo Select2::widget([
-            'data' => $records,
-            'name'=>'Page[partitions][]id_page',
-            'pluginOptions' => [
-                'allowClear' => true,
-                'multiple' => true,
-                'ajax' => [
-                    'url' => '/page/list',
-                    'dataType' => 'json',
-                    'data' => new JsExpression('function(params) { return {q:params.term, partition:1}; }')
-                ],
-                'placeholder' => 'Выберите разделы',
-            ],
-            'value'=>array_keys($records),
-            'options' => [
-                'multiple' => true
-            ]
-        ]);
-        //->hint('Выберите разделы в которых можно использовать данный список');
-    ?>
-
-    <p>Настройка уведомлений</p>
+    <h3>Настройка уведомлений</h3>
     <?= $form->field($model, 'notify_rule')->radioList(
         [
             0 => 'Отключить уведомления',
@@ -104,6 +77,35 @@ use yii\web\JsExpression;
                 'label' => 'Уведомлять админа об изменении списка?'])
         ?>
     <?php endif; ?>
+
+    <hr>
+
+    <h3>Доступ</h3>
+
+    <?php
+    $records = $model->getRecords('partitions');
+    $records = ArrayHelper::map($records, 'id_page', 'title');
+
+    echo Select2::widget([
+        'data' => $records,
+        'name'=>'Page[partitions][]id_page',
+        'pluginOptions' => [
+            'allowClear' => true,
+            'multiple' => true,
+            'ajax' => [
+                'url' => '/page/list',
+                'dataType' => 'json',
+                'data' => new JsExpression('function(params) { return {q:params.term, partition:1}; }')
+            ],
+            'placeholder' => 'Выберите разделы',
+        ],
+        'value'=>array_keys($records),
+        'options' => [
+            'multiple' => true
+        ]
+    ]);
+    //->hint('Выберите разделы в которых можно использовать данный список');
+    ?>
 
     <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>
 
