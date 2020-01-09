@@ -8,6 +8,8 @@ use common\models\Poll;
 use yii\helpers\Html;
 use yii\widgets\LinkPager;
 use yii\widgets\ListView;
+
+$this->params['page'] = $page;
 ?>
 <div class="main">
     <div class="container">

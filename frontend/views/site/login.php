@@ -50,11 +50,14 @@ $this->params['breadcrumbs'][] = $this->title;
     			<table id="ctl00_PlaceHolderMain_signInControl" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;">
                 	<tbody><tr>
                 		<td>
-    					<div class="row mt-3 mb-4">
-    						<div class="col-fourth">
-                                <a class="btn btn__block btn__border" href="<?=$esiaurl?>">Войти</a>
-    						</div>
-    					</div>
+                        <div class="row mt-3 mb-4">
+                            <div class="col-fourth">
+                                <a href="https://esia.gosuslugi.ru/sia-web/rf/registration/lp/Index.spr" class="btn btn__block btn__border">Регистрация</a>
+                            </div>
+                            <div class="col-fourth ibutton2">
+                                <a class="btn btn__block btn__border" style="background: #8F1A1E !important; color: #FFF !important;" href="<?=$esiaurl?>">Войти</a>
+                            </div>
+                        </div>
     				</td>
                 	</tr>
                     </tbody>

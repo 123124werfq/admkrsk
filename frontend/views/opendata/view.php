@@ -6,6 +6,7 @@
 
 use yii\helpers\Html;
 
+$this->params['page'] = $page;
 $meta = $model->lastData->metadata;
 $metaUrl = $model->lastData->url;
 $lastDataUrl = $model->lastData->url;

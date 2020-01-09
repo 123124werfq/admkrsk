@@ -36,7 +36,7 @@ class PageController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['layout'],
+                        'actions' => ['layout','template'],
                         'roles' => ['backend.page.layout'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
@@ -158,7 +158,7 @@ class PageController extends Controller
      * @return mixed
      * @throws InvalidConfigException
      */
-    public function actionList($q)
+    public function actionList($q,$partition=0)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -175,22 +175,24 @@ class PageController extends Controller
             $query->andWhere(['ilike', 'title', $q]);
         }
 
+        if (!empty($partition))
+            $query->andWhere(['is_partition' => true]);
+
         if (!empty($_GET['news']))
             $query->andWhere('id_page IN (SELECT id_page FROM db_news)');
 
         $results = [];
-        foreach ($query->limit(10)->all() as $page) {
 
+        foreach ($query->limit(10)->all() as $page)
             $results[] = [
                 'id' => $page->id_page,
                 'text' => $page->title,
             ];
-        }
 
         return ['results' => $results];
     }
 
-    public function actionLayout($id)
+    public function actionTemplate($id)
     {
         $page = $this->findModel($id);
         $block = new Block;
@@ -203,8 +205,29 @@ class PageController extends Controller
 
             if ($block->save())
                 $this->refresh();
-
             //return $this->renderPartial('/block/_view',['data'=>$model]);
+        }
+
+        return $this->render('template',[
+            'model'=>$page,
+            'block'=>$block,
+            'blocks'=>$blocks,
+        ]);
+    }
+
+    public function actionLayout($id)
+    {
+        $page = $this->findModel($id);
+        $block = new Block;
+        $block->id_page_layout = $id;
+        $blocks = $page->blocksLayout;
+
+        if ($block->load(Yii::$app->request->post()) && $block->validate())
+        {
+            $block->ord = $page->getBlocksLayout()->count()-1;
+
+            if ($block->save())
+                $this->refresh();
         }
 
         return $this->render('layout',[
@@ -220,11 +243,22 @@ class PageController extends Controller
 
         $tree = [];
 
-        foreach ($pages as $key => $page) {
+        foreach ($pages as $key => $page)
+        {
             $tree[(int)$page->id_parent][$page->id_page] = $page;
         }
 
         return $this->render('tree',['tree'=>$tree]);
+    }
+
+
+
+    public function actionPartition($id=null)
+    {
+        /*if (!empty($id))
+            $this->findModel($id);
+        else
+            Page::*/
     }
 
     /**
@@ -258,7 +292,7 @@ class PageController extends Controller
                     'updated_at:date',
                     'views',
                     'viewsYear',
-                ], 
+                ],
                 'headers' => [
                     'title' => 'Название',
                     'fullurl' => 'Ссылка',
@@ -266,7 +300,7 @@ class PageController extends Controller
                     'updated_at'=> 'Отредактировано',
                     'views'=>'Просмотры всего',
                     'viewsYear'=>'Просмотры за год',
-                ], 
+                ],
             ]);
 
             Yii::$app->end();
@@ -325,18 +359,28 @@ class PageController extends Controller
     public function actionCreate($id_parent=null)
     {
         $model = new Page();
-        $model->id_parent = $id_parent;
+        $model->created_at = time();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save())
+        if (!empty($id_parent))
         {
-            $model->createAction(Action::ACTION_CREATE);
+            $model->id_parent = $id_parent;
+            $parent = $this->findModel($id_parent);
+            $model->populateRelation('parent',$parent);
+        }
 
-            if (!empty($model->id_parent) && !empty($model->parent->menu))
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            $parentPage = $this->findModel($model->id_parent);
+
+            if ($model->appendTo($parentPage))
             {
-                $model->parent->menu->addLink($model);
-            }
+                $model->createAction(Action::ACTION_CREATE);
 
-            return $this->redirect(['view', 'id' => ($id_parent)?$id_parent:$model->id_page]);
+                if (!empty($model->id_parent) && !empty($model->parent->menu))
+                    $model->parent->menu->addLink($model);
+
+                return $this->redirect(['view', 'id' => ($id_parent)?$id_parent:$model->id_page]);
+            }
         }
 
         return $this->render('create', [
@@ -356,8 +400,25 @@ class PageController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $model->id_parent = $old_parent = null;
+
+        if (!empty($model->parent->id_page))
+            $old_parent = $model->id_parent = $model->parent->id_page;
+
+        //print_r(array_keys($model->parents()->indexBy('id_page')->all()));
+
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             $model->createAction(Action::ACTION_UPDATE);
+
+            if ($old_parent != $model->id_parent)
+            {
+                $parentPage = Page::findOne($model->id_parent);
+
+                if (!empty($parentPage))
+                    $model->appendTo($parentPage);
+            }
+
             return $this->redirect(['view', 'id' => $model->id_page]);
         }
 

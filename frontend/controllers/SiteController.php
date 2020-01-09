@@ -152,18 +152,10 @@ class SiteController extends Controller
                 return $this->goBack();
             }
 
-            $config = new Config([
-                'clientId' => '236403241',
-                'privateKeyPath' => Yii::getAlias('@app') . '/assets/admkrsk.pem',
-                'certPath' => Yii::getAlias('@app') . '/assets/admkrsk.pem',
-                'redirectUrl' => 'https://t1.admkrsk.ru/site/signin',
-                'portalUrl' => 'https://esia.gosuslugi.ru/',
-                'scope' => ['fullname', 'birthdate', 'mobile', 'contacts', 'snils', 'inn', 'id_doc', 'birthplace', 'medical_doc', 'residence_doc', 'email', 'usr_org', 'usr_avt'],
-            ]);
-            $esia = new OpenId($config);
-            $esia->setSigner(new CliSignerPKCS7(
-                Yii::getAlias('@app') . '/assets/admkrsk.pem',
-                Yii::getAlias('@app') . '/assets/admkrsk.pem',
+            $esia = User::openId();
+            $esia->setSigner(new \Esia\Signer\CliSignerPKCS7(
+                Yii::getAlias('@app'). '/assets/admkrsk.pem',
+                Yii::getAlias('@app'). '/assets/admkrsk.pem',
                 'T%52gs]CPJ',
                 Yii::getAlias('@runtime')
             ));
@@ -184,9 +176,21 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
+        if(Yii::$app->user->isGuest)
+            return $this->goHome();
+
+        $user = User::findOne(Yii::$app->user->id);
         Yii::$app->user->logout();
 
-        return $this->goHome();
+        if (!empty($user->id_esia_user))
+        {
+            $esia = User::openId();
+            $logoutUrl = $esia->buildLogoutUrl(Yii::$app->homeUrl);
+
+            $this->redirect($logoutUrl);
+        }
+
+        Yii::$app->end();
     }
 
     /**
@@ -719,23 +723,17 @@ class SiteController extends Controller
             //die();
         }
 
-        $config = new Config([
-            'clientId' => '236403241',
-            'privateKeyPath' => Yii::getAlias('@app') . '/assets/admkrsk.pem',
-            'certPath' => Yii::getAlias('@app') . '/assets/admkrsk.pem',
-            'redirectUrl' => 'https://t1.admkrsk.ru/site/signin',
-            'portalUrl' => 'https://esia.gosuslugi.ru/',
-            'scope' => ['fullname', 'birthdate', 'mobile', 'contacts', 'snils', 'inn', 'id_doc', 'birthplace', 'medical_doc', 'residence_doc', 'email', 'usr_org', 'usr_avt'],
-        ]);
-        $esia = new OpenId($config);
-        $esia->setSigner(new CliSignerPKCS7(
-            Yii::getAlias('@app') . '/assets/admkrsk.pem',
-            Yii::getAlias('@app') . '/assets/admkrsk.pem',
+        $esia = User::openId();
+        $esia->setSigner(new \Esia\Signer\CliSignerPKCS7(
+            Yii::getAlias('@app'). '/assets/admkrsk.pem',
+            Yii::getAlias('@app'). '/assets/admkrsk.pem',
             'T%52gs]CPJ',
             Yii::getAlias('@runtime')
         ));
 
         $token = $esia->getToken($_REQUEST['code']);
+
+        // блок для юзера - физика
 
         $personInfo = $esia->getPersonInfo();
         //$addressInfo = $esia->getAddressInfo();

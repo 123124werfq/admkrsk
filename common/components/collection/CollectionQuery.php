@@ -169,6 +169,15 @@ class CollectionQuery extends \yii\mongodb\Query
                     $value = $combine_value;
                 }
 
+                // временное решение
+                if ($this->columns[$id_column]->type == CollectionColumn::TYPE_FILE_OLD)
+                {
+                    $value = json_decode($value,true);
+
+                    if (!empty($value))
+                        $value = $value[0];
+                }
+
                 if ($this->keyAsAlias && !empty($this->columns[$id_column]->alias))
                     $alias = $this->columns[$id_column]->alias;
                 else
@@ -195,7 +204,6 @@ class CollectionQuery extends \yii\mongodb\Query
                 else
                     $output[$id_record][$rkey] = $value;
             }
-
         }
 
         return $output;

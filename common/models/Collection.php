@@ -9,6 +9,7 @@ use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
+use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
@@ -73,6 +74,13 @@ class Collection extends ActiveRecord
     public $pagesize = 20;
     public $order_direction = SORT_DESC;
 
+    public $show_row_num;
+    public $show_column_num;
+
+    public $id_partitions = [];
+
+    public $id_page;
+
     /**
      * {@inheritdoc}
      */
@@ -90,6 +98,9 @@ class Collection extends ActiveRecord
             [['alias'], 'unique'],
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
+            [['id_parent_collection','id_group','id_column_order','order_direction','pagesize','show_row_num','show_column_num'], 'integer'],
+            [['filter', 'options','label'], 'safe'],
+            [['template','template_element','template_view'], 'string'],
             [['id_parent_collection', 'id_group', 'id_column_order', 'order_direction', 'pagesize', 'notify_rule'], 'integer'],
             [['filter', 'options', 'label'], 'safe'],
             [['template', 'template_element', 'template_view','notify_message'], 'string'],
@@ -126,6 +137,9 @@ class Collection extends ActiveRecord
             'id_column_order' => 'Сортировать по',
             'order_direction' => 'Направление сортировки',
             'is_authenticate' => 'Авторизация (API)',
+            'pagesize'=>'Элементов на страницу',
+            'show_column_num'=>'Показывать номер столбца',
+            'show_row_num'=>'Показывать номер строки',
             'pagesize' => 'Элементов на страницу',
             'created_at' => 'Создана',
             'created_by' => 'Кем создана',
@@ -156,6 +170,16 @@ class Collection extends ActiveRecord
                 'timeRuleAttribute' => 'notify_rule',
                 'messageAttribute' => 'notify_message',
             ],
+            'yiinput' => [
+                'class' => RelationBehavior::class,
+                'relations'=> [
+                    'partitions'=>[
+                        'modelname'=>'Page',
+                        'jtable'=>'dbl_collection_page',
+                        'added'=>false,
+                    ],
+                ]
+            ]
         ];
     }
 
@@ -175,6 +199,11 @@ class Collection extends ActiveRecord
     public function getForm()
     {
         return $this->hasOne(Form::class, ['id_form' => 'id_form']);
+    }
+
+    public function getPartitions()
+    {
+        return $this->hasMany(Page::class, ['id_page' => 'id_page'])->viaTable('dbl_collection_page',['id_collection'=>'id_collection']);
     }
 
     public function getParent()
@@ -416,8 +445,7 @@ class Collection extends ActiveRecord
         return Url::to(['/api/collection/index', 'alias' => $this->alias], true);
     }
 
-    // DEPRECATED
-    /*public function createForm()
+    public function createForm()
     {
         $transaction = Yii::$app->db->beginTransaction();
 
@@ -471,5 +499,5 @@ class Collection extends ActiveRecord
             $transaction->rollBack();
             throw $e;
         }
-    }*/
+    }
 }

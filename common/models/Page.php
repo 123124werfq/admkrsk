@@ -7,6 +7,7 @@ use common\behaviors\MailNotifyBehaviour;
 use common\components\multifile\MultiUploadBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
+use creocoder\nestedsets\NestedSetsBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
@@ -55,10 +56,11 @@ class Page extends ActiveRecord
      */
     public $is_admin_notify;
 
+    public $old_parent; //$id_parent,
     public $access_user_ids;
     public $access_user_group_ids;
-
     public $existUrl;
+    //public $treeAttribute = null;
 
     /**
      * {@inheritdoc}
@@ -74,6 +76,13 @@ class Page extends ActiveRecord
     public function rules()
     {
         return [
+            [['id_media', 'active'], 'default', 'value' => null],
+            [['id_media', 'active', 'id_parent', 'noguest','hidemenu', 'old_parent'], 'integer'],
+            /*['id_parent', 'filter', 'filter' => function($value) {
+                return (int) $value;
+            }],*/
+            [['id_parent'], 'required', 'when' => function($model) {
+                return $model->alias != '/';
             [['id_media', 'active', 'id_parent'], 'default', 'value' => null],
             [['id_media', 'active', 'id_parent', 'noguest', 'hidemenu','notify_rule'], 'integer'],
             ['id_parent', 'filter', 'filter' => function ($value) {
@@ -82,9 +91,12 @@ class Page extends ActiveRecord
             [['is_admin_notify'], 'boolean'],
             [['title', 'alias'], 'required'],
             [['content', 'path','notify_message'], 'string',],
+            [['content','path'], 'string'],
+            [['is_partition'], 'boolean'],
             [['alias'], 'unique'],
             [['title', 'alias', 'seo_title', 'seo_description', 'seo_keywords'], 'string', 'max' => 255],
-
+            [['partition_domain'], 'url', 'defaultScheme' => 'http'],
+            [['created_at'],'safe'],
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
             ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
@@ -100,7 +112,7 @@ class Page extends ActiveRecord
             'id_page' => '#',
             'id_media' => 'Id Media',
             'title' => 'Название',
-            'id_parent' => 'Родительские раздел',
+            'id_parent' => 'Родительская страница',
             'alias' => 'URL',
             'hidemenu' => 'Скрыть в меню',
             'content' => 'Содержание',
@@ -109,6 +121,9 @@ class Page extends ActiveRecord
             'seo_keywords' => 'Ключевые слова',
             'noguest' => 'Доступно только авторизованным',
             'active' => 'Активный',
+            'is_partition'=>'Это раздел',
+            'partition_domain'=>'Домен раздела',
+            'hidemenu'=> 'Скрыть в меню',
             'created_at' => 'Создано',
             'created_by' => 'Создал',
             'updated_at' => 'Обновлено',
@@ -126,28 +141,33 @@ class Page extends ActiveRecord
         if ($this->isNewRecord)
             return '';
 
-        $path = explode('/', $this->path);
+        if ($this->is_partition && !empty($this->partition_domain))
+            return $this->partition_domain;
 
-        if (!empty($path)) {
-            foreach ($path as $key => $slug)
-                $path[$key] = (int)$slug;
+        $pages = $this->parents()->select(['alias','partition_domain','is_partition'])->asArray()->all();
+        $pages[] = $this;
 
-            $pages = Page::find()->where(['id_page' => $path])->select(['alias', 'id_page'])->indexBy('id_page')->all();
+        $domain = '';
+        $url = [];
 
-            foreach ($path as $key => $slug) {
-                if (!empty($pages[$slug]))
-                    $path[$key] = $pages[$slug]->alias;
-            }
+        foreach ($pages as $key => $page)
+        {
+            if (!empty($page['is_partition']) && !empty($page['partition_domain']))
+                $domain = $page['partition_domain'];
 
-            $this->existUrl = (($absolute) ? Yii::$app->params['frontendUrl'] : '') . '/' . implode('/', $path);
-
-            return $this->existUrl;
-        } else {
-            if ($this->alias == '/' && $absolute)
-                $this->alias = '';
-
-            return (($absolute) ? Yii::$app->params['frontendUrl'] : '') . '/' . $this->alias;
+            if ($page['alias']!='/')
+                $url[] = $page['alias'];
         }
+
+        if (empty($domain) && $absolute)
+            $domain = Yii::$app->params['frontendUrl'];
+
+        if (!empty($url))
+            $domain .= '/';
+
+        $this->existUrl = $domain.implode('/', $url);
+
+        return $this->existUrl;
     }
 
     public function getFullUrl()
@@ -155,21 +175,21 @@ class Page extends ActiveRecord
         return $this->getUrl(true);
     }
 
-    public function createPath()
+    /*public function createPath()
     {
         $oldpath = $this->path;
 
         if (empty($this->id_parent))
             $this->path = $this->id_page;
         else
-            $this->path = $this->parent->path . '/' . $this->id_page;
+            $this->path = $this->parent->path.'/'.$this->id_page;
 
         $this->updateAttributes(['path']);
 
         $sql = "UPDATE cnt_page SET path = REPLACE(path,'$oldpath','$this->path') WHERE path LIKE '$oldpath/%'";
         //Yii::$app->db->createCommand()->update('cnt_page','path = REPLACE(path,$oldpath)');
         Yii::$app->db->createCommand($sql)->execute();
-    }
+    }*/
 
     public static function getUrlByID($id)
     {
@@ -182,27 +202,34 @@ class Page extends ActiveRecord
         return false;
     }
 
-    public function afterSave($insert, $changedAttributes)
+    /*public function afterSave($insert, $changedAttributes)
     {
-        if (isset($changedAttributes['id_parent']) || $insert)
-            $this->createPath();
+        //if (isset($changedAttributes['id_parent']) || $insert)
 
-        /*if (empty($this->path))
-        {
-            $this->path = $this->id_page;
-            $this->updateAttributes(['path']);
-        }*/
+        //$this->createPath();
 
         parent::afterSave($insert, $changedAttributes);
-    }
+    }*/
 
     public function beforeValidate()
     {
-        $this->content = str_replace(['&lt;', '&gt;', '&quote;'], ['<', '>', '"'], $this->content);
+        // концертирует данные от TinyMCE
+        if (!empty($_POST))
+            $this->content = str_replace(['&lt;','&gt;','&quote;'], ['<','>','"'], $this->content);
+
+        // удалить после релиза , нужно для заполняторов
+        if (!empty($this->created_at) && !is_numeric($this->created_at))
+            $this->created_at = strtotime($this->created_at);
 
         return parent::beforeValidate();
     }
 
+    public function transactions()
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
+        ];
+    }
 
     /**
      * {@inheritdoc}
@@ -224,6 +251,9 @@ class Page extends ActiveRecord
                 'timeRuleAttribute' => 'notify_rule',
                 'messageAttribute' => 'notify_message',
             ],
+            'tree'=>[
+                'class' => NestedSetsBehavior::className(),
+            ],
             'multiupload' => [
                 'class' => MultiUploadBehavior::class,
                 'relations' =>
@@ -235,6 +265,11 @@ class Page extends ActiveRecord
                     ],
             ],
         ];
+    }
+
+    public static function find()
+    {
+        return new PageQuery(get_called_class());
     }
 
     public function getMedias()
@@ -253,9 +288,18 @@ class Page extends ActiveRecord
     /**
      * @return ActiveQuery
      */
+    public function getBlocksLayout()
+    {
+        return $this->hasMany(Block::class, ['id_page_layout' => 'id_page'])->orderBy('ord ASC');
+    }
+
+    /**
+     * @return ActiveQuery
+     */
     public function getParent()
     {
-        return $this->hasOne(Page::class, ['id_page' => 'id_parent']);
+        return $this->parents(1)->one();
+        //return $this->hasOne(Page::class, ['id_page' => 'id_parent']);
     }
 
     /**
@@ -271,7 +315,8 @@ class Page extends ActiveRecord
      */
     public function getChilds()
     {
-        return $this->hasMany(Page::class, ['id_parent' => 'id_page'])->orderBy('ord ASC');
+        return $this->children(1);
+        //return $this->hasMany(Page::class, ['id_parent' => 'id_page'])->orderBy('ord ASC');
     }
 
     /*public function getSubMenu()

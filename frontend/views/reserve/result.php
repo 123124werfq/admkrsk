@@ -5,7 +5,7 @@
  * @param string $tag
  * @return array
  */
-
+    $this->params['page'] = $page;
 ?>
     <div class="main">
         <div class="container">
@@ -31,21 +31,7 @@
 
             <hr class="hr hr__md"/>
 
-            <div class="row">
-                <div class="col-2-third">
-                    <p class="text-help">
-                        Дата публикации (изменения): <?=date('d.m.Y',$page->created_at)?> (<?=date('d.m.Y',$page->updated_at)?>)<br>
-                        Просмотров за год (всего): <?=$page->viewsYear?> (<?=$page->views?>)
-                    </p>
-                    <div class="subscribe">
-                        <div class="subscribe_left">
-                            Поделиться:
-                            <div class="ya-share2 subscribe_share" data-services="vkontakte,facebook,odnoklassniki"></div>
-                        </div>
-                        <div class="subscribe_right"><a class="btn-link" onclick="print()"><i class="material-icons subscribe_print">print</i> Распечатать</a></div>
-                    </div>
-                </div>
-            </div>
+            <?= $this->render('//site/_pagestat', ['data' => $page])?>
         </div>
     </div>
 

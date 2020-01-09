@@ -139,6 +139,22 @@ class CollectionRecordController extends Controller
                     return implode('', $output);
                 };
             }
+            else if ($col->type==CollectionColumn::TYPE_FILE_OLD)
+            {
+                $dataProviderColumns[$col_alias]['format'] = 'raw';
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
+
+                    if (empty($model[$col_alias]))
+                        return '';
+
+                    $array = json_decode($model[$col_alias],true);
+
+                    if (!empty($array))
+                        return $output[] = '<a href="'.$array[0].'" download>'.$array[0].'</a>';
+                    else
+                        return $model[$col_alias];
+                };
+            }
             else if ($col->type==CollectionColumn::TYPE_IMAGE)
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
@@ -332,6 +348,7 @@ class CollectionRecordController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->ord = time();
         $collection = $model->collection;
 
         $form = new FormDynamic($collection->form);
@@ -343,7 +360,9 @@ class CollectionRecordController extends Controller
             $model->data = $form->prepareData(true);
 
             if ($model->save())
+            {
                 return $this->redirect(['index', 'id' => $model->id_collection]);
+            }
         }
 
         if (Yii::$app->request->isAjax)

@@ -19,8 +19,11 @@ $this->render('_head',['model'=>$model]);
         <div class="tabs-container">
             <ul class="nav nav-tabs" role="tablist">
                 <li><?=Html::a('Информация', ['view', 'id' => $model->id_page], ['class' => 'nav-link'])?></li>
+                <li>
+                    <?=Html::a('Шаблон страницы', ['template', 'id' => $model->id_page], ['class' => 'nav-link'])?>
+                </li>
                 <li class="active">
-                    <?=Html::a('Шаблон', ['layout', 'id' => $model->id_page], ['class' => 'nav-link'])?>
+                    <?=Html::a('Шаблон раздела', ['layout', 'id' => $model->id_page], ['class' => 'nav-link'])?>
                 </li>
             </ul>
             <div class="tab-content">
@@ -30,7 +33,7 @@ $this->render('_head',['model'=>$model]);
                         ]); ?>
                         <div class="row">
                             <div class="col-md-8">
-                                <?=$form->field($block, 'type', ['template' => "{input}"])->dropDownList($block->getTypesLabels()) ?>
+                                <?=$form->field($block, 'type', ['template' => "{input}"])->dropDownList($block->getTypesLabels(true)) ?>
                             </div>
                             <div class="col-md-2">
                                 <button type="submit" class="btn btn-primary">Добавить блок</button>

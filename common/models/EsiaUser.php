@@ -156,7 +156,7 @@ class EsiaUser extends \yii\db\ActiveRecord
     {
         $personInfo = $esia->getPersonInfo();
 
-        $this->fullname = $personInfo['firstName'].' '.$personInfo['lastName'];
+        $this->fullname = $personInfo['lastName'].' '.$personInfo['firstName'].' '.$personInfo['middleName'];
         $this->first_name = $personInfo['firstName'];
         $this->middle_name = $personInfo['middleName']??null;
         $this->last_name = $personInfo['lastName']??null;
@@ -165,6 +165,45 @@ class EsiaUser extends \yii\db\ActiveRecord
         $this->trusted = (string)($personInfo['trusted']??null);
         $this->snils = $personInfo['snils']??null;
         $this->inn = $personInfo['inn']??null;
+
+        $addressInfo = $esia->getAddressInfo();
+        if(isset($addressInfo[0]))
+        {
+            $addrString = $addressInfo[0]['addressStr']??'';
+            $flat = $addressInfo[0]['flat']??'';
+            $house = $addressInfo[0]['house']??'';
+            $zipode = $addressInfo[0]['zipCode']??'';
+
+            $this->register_addr = $zipode . ', ' . $addrString . ', ' . $house . ', ' . $flat;
+        }
+
+        $contactInfo = $esia->getContactInfo();
+        foreach ($contactInfo as $cinfo)
+        {
+            switch ($cinfo['type']){
+                case 'EML':
+                        $this->email = $cinfo['value'];
+                        break;
+                case 'MBT':
+                        $this->mobile = $cinfo['value'];
+                        break;
+            }
+        }
+
+        $documentInfo = $esia->getDocInfo();
+        foreach ($documentInfo as $dinfo)
+        {
+            switch ($dinfo['type']){
+                case 'RF_PASSPORT':
+                    $this->passport_serie = $dinfo['series'];
+                    $this->passport_number = $dinfo['number'];
+                    $this->passport_date = $dinfo['issueDate'];
+                    $this->passport_issuer = $dinfo['issuedBy'];
+                    $this->passport_issuer_id = $dinfo['issueId'];
+                    break;
+            }
+        }
+
 
         if($this->save())
             return true;

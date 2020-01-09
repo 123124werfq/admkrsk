@@ -16,7 +16,7 @@ if (Yii::$app->user->can('admin.menu')) {
 }
 ?>
 <div class="row">
-    <div class="col-sm-7">
+    <div class="col-sm-7 level2">
         <ul data-id="null" class="menu-container"  data-model="MenuLink">
         <?php foreach ($records as $key => $parent)
         {

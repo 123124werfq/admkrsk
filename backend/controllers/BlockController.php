@@ -103,16 +103,16 @@ class BlockController extends Controller
             foreach (Yii::$app->request->post('BlockVar') as $key => $post)
             {
                 $varModel = BlockVar::find()->where(['id_block'=>$id,'alias'=>$key])->one();
-                
+
                 if (empty($varModel))
                 {
-                    $varModel = new BlockVar;    
+                    $varModel = new BlockVar;
                     $varModel->id_block = $id;
                     $varModel->alias = $key;
                     $varModel->type = $model->blocks[$model->type]['vars'][$key]['type'];
                     $varModel->name = $model->blocks[$model->type]['vars'][$key]['name'];
                 }
-                
+
                 $varModel->value = $post['value'];
 
                 if ($varModel->type == BlockVar::TYPE_MEDIAS)
@@ -124,7 +124,10 @@ class BlockController extends Controller
 
             $model->createAction(Action::ACTION_UPDATE);
 
-            return $this->redirect(['page/layout', 'id' => $model->id_page]);
+            if (!empty($model->id_page))
+                return $this->redirect(['page/template', 'id' => $model->id_page]);
+            else
+                return $this->redirect(['page/layout', 'id' => $model->id_page_layout]);
         }
 
         return $this->render('update', [

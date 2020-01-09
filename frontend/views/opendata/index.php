@@ -8,6 +8,7 @@
 use common\models\Opendata;
 use yii\helpers\Html;
 
+$this->params['page'] = $page;
 $list = Opendata::getListMetadata();
 $listUrl = Opendata::getListUrl();
 ?>

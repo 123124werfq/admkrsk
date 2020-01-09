@@ -10,6 +10,7 @@ class CollectionWidget extends \yii\base\Widget
     public $attributes = [];
 
     public $id_collection;
+
     public $columns = []; // колонки для отображения
     public $search = []; // колонки для сортировки
 
@@ -20,6 +21,9 @@ class CollectionWidget extends \yii\base\Widget
     public $group; // группировка
     public $sort; // сортировка
     public $dir = SORT_ASC; // направление сортировки
+
+    public $show_row_num = false;
+    public $show_column_num = false;
 
     public $page;
 
@@ -36,14 +40,17 @@ class CollectionWidget extends \yii\base\Widget
             if (!empty($this->attributes['sort']))
                 $this->sort = (int)$this->attributes['sort'];
 
-            /*if (!empty($this->attributes['search']))
-                $this->search = (int)$this->attributes['search'];*/
-
             if (!empty($this->attributes['dir']))
                 $this->dir = (int)$this->attributes['dir'];
 
             if (!empty($this->attributes['pagesize']))
                 $this->pagesize = (int)$this->attributes['pagesize'];
+
+            if (!empty($this->attributes['show_column_num']))
+                $this->show_column_num = (int)$this->attributes['show_column_num'];
+
+            if (!empty($this->attributes['show_row_num']))
+                $this->show_row_num = (int)$this->attributes['show_row_num'];
 
             if (!empty($this->attributes['group']))
                 $this->group = (int)$this->attributes['group'];
@@ -126,8 +133,10 @@ class CollectionWidget extends \yii\base\Widget
         {
             parse_str($url['query'],$url_query);
             unset($url_query['p']);
+            unset($url_query['ps']);
             unset($url_query['_pjax']);
-            $url = $url['path'].'?'.http_build_query($url_query);
+
+            $url = $url['path'].http_build_query($url_query);
         }
         else
             $url = Yii::$app->request->url;
@@ -136,7 +145,8 @@ class CollectionWidget extends \yii\base\Widget
             'totalCount' => $query->count(),
             'route'=>$url,
             'pagesize'=>$this->pagesize,
-            'pageParam'=>'p'
+            'pageParam'=>'p',
+            'pageSizeParam'=>'ps',
         ]);
 
         //$query->offset(($p-1)*$pagination->limit)->limit($pagination->limit);
@@ -188,17 +198,24 @@ class CollectionWidget extends \yii\base\Widget
             ]);
         }
 
-        $allrows = array_slice($allrows, ($p-1)*$this->pagesize, $this->pagesize);
+        $offset = ($p-1)*$this->pagesize;
+        $allrows = array_slice($allrows, $offset, $this->pagesize,true);
 
         return $this->render('collection/'.$this->template,[
         	'model'=>$model,
-            'pagination'=>$pagination,
+            'unique_hash'=>$unique_hash,
+            'page'=>$this->page,
+
             'columns'=>$columnsByAlias,
             'allrows'=>$allrows,
             'search_columns'=>$search_columns,
-            'page'=>$this->page,
-            'unique_hash'=>$unique_hash,
+
             'pagesize'=>$this->pagesize,
+            'pagination'=>$pagination,
+            'offset'=>$offset,
+
+            'show_row_num'=>$this->show_row_num,
+            'show_column_num'=>$this->show_column_num,
         ]);
     }
 }

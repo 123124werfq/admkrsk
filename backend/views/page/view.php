@@ -22,7 +22,10 @@ $this->render('_head',['model'=>$model]);
             <ul class="nav nav-tabs" role="tablist">
                 <li class="active"><a class="nav-link" data-toggle="tab" href="#tab-1">Дочерние разделы</a></li>
                 <li>
-                    <?=Html::a('Шаблон', ['layout', 'id' => $model->id_page], ['class' => 'nav-link'])?>
+                    <?=Html::a('Шаблон', ['template', 'id' => $model->id_page], ['class' => 'nav-link'])?>
+                </li>
+                <li>
+                    <?=Html::a('Шаблон раздела', ['layout', 'id' => $model->id_page], ['class' => 'nav-link'])?>
                 </li>
                 <li>
                     <?=Html::a('Новости', ['news/index', 'id_page' => $model->id_page], ['class' => 'nav-link'])?>

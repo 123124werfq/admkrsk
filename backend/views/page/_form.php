@@ -14,10 +14,12 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<?php $form = ActiveForm::begin(); ?>
+<?php $form = ActiveForm::begin();
+?>
 
+<?php if ($model->alias!='/'){?>
 <?= $form->field($model, 'id_parent')->widget(Select2::class, [
-    'data' => $model->id_parent ? [$model->id_parent=>$model->parent->title]:[],
+    'data' => (!empty($model->parent))?[$model->id_parent=>$model->parent->title]:[],
     'pluginOptions' => [
         'multiple' => false,
         'allowClear' => true,
@@ -29,7 +31,14 @@ use yii\widgets\ActiveForm;
             'data' => new JsExpression('function(params) { return {q:params.term}; }')
         ],
     ],
+    'options'=>[
+        'prompt'=>'Выберите родителя'
+    ]
 ]) ?>
+<?php }?>
+
+<?= $form->field($model, 'created_at')->textInput(['type'=>'date','value'=>(!empty($model->created_at))?date('Y-m-d', $model->created_at):'']) ?>
+
 
 <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
@@ -57,6 +66,10 @@ use yii\widgets\ActiveForm;
     <div class="col-sm-4"><?= $form->field($model, 'noguest')->checkBox() ?></div>
 </div>
 
+<?= $form->field($model, 'is_partition')->checkBox()?>
+
+<?= $form->field($model, 'partition_domain')->textInput(['maxlength' => 255])->hint('Заполняется если это раздел. Все страницы данного раздела будут строится относительно этого домена. Вводить без "/" на конце') ?>
+
 <h3>Файлы внизу страницы</h3>
 
 <?= MultiFileWidget::widget([
@@ -68,9 +81,7 @@ use yii\widgets\ActiveForm;
 ]);?>
 
 <?php if (Yii::$app->user->can('admin.page')): ?>
-
     <hr>
-
     <h3>Доступ</h3>
 
     <p>Настройка уведомлений</p>
@@ -96,9 +107,7 @@ use yii\widgets\ActiveForm;
     <?php endif; ?>
 
     <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>
-
     <?= $form->field($model, 'access_user_group_ids')->label('Группы пользоватей')->widget(UserGroupAccessControl::class) ?>
-
 <?php endif; ?>
 
 <hr>

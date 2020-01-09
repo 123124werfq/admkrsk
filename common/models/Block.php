@@ -26,6 +26,30 @@ class Block extends \yii\db\ActiveRecord
     use ActionTrait;
 
     public $blocks = [
+        'header'=> [
+            'label'=>'Шапка сайта',
+            'vars'=>[
+                'menu'=>[
+                    'name'=>'Меню',
+                    'type'=>BlockVar::TYPE_MENU,
+                ],
+                'dropdown_menu'=>[
+                    'name'=>'Разворачивающееся меню',
+                    'type'=>BlockVar::TYPE_MENU,
+                ],
+            ],
+            'layout'=>true,
+        ],
+        'footer'=> [
+            'label'=>'Подвал сайта',
+            'vars'=>[
+                'menu'=>[
+                    'name'=>'Меню',
+                    'type'=>BlockVar::TYPE_MENU,
+                ],
+            ],
+            'layout'=>true,
+        ],
         'news'=> [
             'label'=>'Новостной блок',
             'widget'=>'frontend\widgets\NewsWidget',
@@ -293,9 +317,9 @@ class Block extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_page', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
+            [['id_page', 'id_page_layout', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
             [['state'], 'default', 'value' => 1],
-            [['id_page', 'state', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['id_page', 'id_page_layout', 'state', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
 
             [['code','type'], 'string'],
             [['widget'], 'string', 'max' => 255],
@@ -330,12 +354,17 @@ class Block extends \yii\db\ActiveRecord
         return $this->blocks[$this->type]['label'];
     }
 
-    public function getTypesLabels()
+    public function getTypesLabels($layout=false)
     {
         $types = [];
 
         foreach ($this->blocks as $key => $block)
-            $types[$key]=$block['label'];
+        {
+            if ($layout && !empty($block['layout']))
+                $types[$key] = $block['label'];
+            elseif (!$layout && empty($block['layout']))
+                $types[$key] = $block['label'];
+        }
 
         return $types;
     }
@@ -383,7 +412,10 @@ class Block extends \yii\db\ActiveRecord
 
     public function getPage()
     {
-        return $this->hasOne(Page::class, ['id_page' => 'id_page']);
+        if (!empty($this->id_page))
+            return $this->hasOne(Page::class, ['id_page' => 'id_page']);
+        else
+            return $this->hasOne(Page::class, ['id_page' => 'id_page_layout']);
     }
 
 }

@@ -5,8 +5,9 @@
  * @param string $tag
  * @return array
  */
-function parseAttributesFromTag($tag)
-{
+$this->params['page'] = $page;
+
+function parseAttributesFromTag($tag){
     $pattern = '/(\w+)=[\'"]([^\'"]*)/';
 
     preg_match_all($pattern, $tag, $matches, PREG_SET_ORDER);
@@ -83,6 +84,9 @@ function parseAttributesFromTag($tag)
 
             <hr class="hr hr__md"/>
 
+        <?= $this->render('//site/_pagestat', ['data' => $page])?>
+    </div>
+</div>
             <div class="row">
                 <div class="col-2-third">
                     <p class="text-help">

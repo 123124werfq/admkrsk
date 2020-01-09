@@ -1,4 +1,7 @@
 <?php
+
+$this->params['page'] = $page;
+
 function parseAttributesFromTag($tag){
     $pattern = '/(\w+)=[\'"]([^\'"]*)/';
 

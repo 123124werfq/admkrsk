@@ -13,26 +13,33 @@ class Breadcrumbs extends \yii\base\Widget
         if (empty($this->page))
             return false;
 
-        $path = explode('/', $this->page->path);
+        $pages = $this->page->parents()->all();
+        array_shift($pages);
 
-        $pages = Page::find()->where(['id_page'=>$path])->indexBy('id_page')->all();
+        $pages[] = $this->page;
 
-        $output = ' <ol class="breadcrumbs">
-                    <li class="breadcrumbs_item"><a href="/">Главная</a></li>';
+        $homeTitle = (Yii::$app->language == 'en')?'Home':'Главная';
 
-        $url = '';
+        $output[] = '<li class="breadcrumbs_item"><a href="/">'.$homeTitle.'</a></li>';
 
-        foreach ($path as $key => $data)
+        $partition_domain = $path = '';
+
+        foreach ($pages as $key => $page)
         {
-            if (!empty($pages[$data]))
+            $path .= '/'.$page->alias;
+
+            if ($page->is_partition && !empty($page->partition_domain))
             {
-                $url .= '/'.$pages[$data]->alias;
-
-                $output .= '<li class="breadcrumbs_item"><a href="'.$url.'">'.$pages[$data]->title.'</a></li>';
+                $url = $partition_domain = $page->partition_domain;
+                $output = [];
             }
-        }
-        $output .= '</ol>';
+            else
+                $url = $partition_domain.$path;
 
-        return $output;
+            if ($page->active == 1)
+                $output[] = '<li class="breadcrumbs_item"><a href="'.$url.'">'.$page->title.'</a></li>';
+        }
+
+        return '<ol class="breadcrumbs">'.implode('',$output).'</ol>';
     }
 }

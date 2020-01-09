@@ -1,4 +1,8 @@
-<?php use yii\helpers\Html;?>
+<?php
+    use yii\helpers\Html;
+
+    $this->params['page'] = $page;
+?>
 <div class="main">
     <div class="container">
         <?=frontend\widgets\Breadcrumbs::widget(['page'=>$page])?>

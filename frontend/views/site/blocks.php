@@ -1,4 +1,6 @@
 <?php
+$this->params['page'] = $page;
+
 foreach ($page->getBlocks()->where(['state'=>1])->all() as $key => $block)
 {
 	$widget = $block->getWidget();

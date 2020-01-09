@@ -1,4 +1,6 @@
 <?php
+/* @var $this yii\web\View */
+/* @var $dataProvider yii\data\ActiveDataProvider */
 
 use yii\helpers\Html;
 use yii\grid\GridView;
@@ -10,8 +12,8 @@ if (empty($dataProvider))
         'query' => \common\models\CollectionColumn::find()->where(['id_collection'=>$collection->id_collection]),
     ]);
 }
-/* @var $this yii\web\View */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+
+$this->params['button-block'][] = Html::a('Добавить', ['create', 'id' => $collection->id_collection], ['class' => 'btn btn-success']);
 
 $this->title = 'Столбцы';
 $this->params['breadcrumbs'][] = ['label' => $collection->name, 'url' => ['collection-record/index','id'=>$collection->id_collection]];

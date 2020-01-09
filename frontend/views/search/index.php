@@ -4,7 +4,7 @@
             <div class="col-2-third">
                 <ol class="breadcrumbs">
                     <li class="breadcrumbs_item"><a href="/">Главная</a></li>
-                    <li class="breadcrumbs_item"><span>Пресс-центр</span></li>
+                    <li class="breadcrumbs_item"><span>Результаты поиска</span></li>
                 </ol>
             </div>
         </div>
@@ -13,12 +13,12 @@
                 <h1>Поиск по сайту</h1>
             </div>
         </div>
-        <hr class="hr hr__large hr__mt">
+        <hr class="hr hr__large hr__mt" style="margin: 0px 0px 10px;">
 
-        <div class="search-section">
+        <div class="search-section" style="padding-bottom: 0px;">
             <div class="ya-site-form ya-site-form_bg_transparent ya-site-form_inited_yes" id="ya-site-form0">
                 <div class="ya-site-form__form">
-                    <table class="ya-site-form__wrap" cellspacing="0" cellpadding="0">
+                    <table class="ya-site-form__wrap" cellspacing="0" cellpadding="0" style="width: 80%">
                         <tbody>
                         <tr>
                             <td class="ya-site-form__search-wrap">
@@ -68,11 +68,14 @@
             </div>
         </div>
 
-        <div class="search-results">
+        <div class="search-results content">
         <?php
             foreach ($result as $row)
             {
-                echo "<p><strong><a href='{$row['url']}'>{$row['header']}</a></strong> <small>".date("d.m.Y", $row['content_date'])."</small><br>...{$row['headline']}...</p><br>";
+                if(is_numeric($row['content_date']))
+                    echo "<p><strong><a href='{$row['url']}'>{$row['header']}</a></strong> / <small>".date("d.m.Y", $row['content_date'])."</small><br>...{$row['headline']}...</p>";
+                else
+                    echo "<p><strong><a href='{$row['url']}'>{$row['header']}</a></strong><br>...{$row['headline']}...</p>";
             }
 
         ?>
