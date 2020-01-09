@@ -154,7 +154,7 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
         }*/
 
         // ищем из резервированных
-        if ($route = $this->findRouteByURL($domain.$pathInfo))
+        if ($route = $this->findRouteByURL($domain.'/'.$pathInfo))
         {
             //$this->makeLayout($route['page']);
             return [$route['route'], ['page'=>$route['page']]];
