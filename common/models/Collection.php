@@ -5,6 +5,7 @@ namespace common\models;
 use common\behaviors\AccessControlBehavior;
 use common\behaviors\MailNotifyBehaviour;
 use common\components\collection\CollectionQuery;
+use common\components\yiinput\RelationBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
