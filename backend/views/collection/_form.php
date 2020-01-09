@@ -2,6 +2,7 @@
 
 use backend\widgets\UserAccessControl;
 use backend\widgets\UserGroupAccessControl;
+use common\models\MailNotifyManager;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
@@ -81,6 +82,28 @@ use yii\web\JsExpression;
         ]);
         //->hint('Выберите разделы в которых можно использовать данный список');
     ?>
+
+    <p>Настройка уведомлений</p>
+    <?= $form->field($model, 'notify_rule')->radioList(
+        [
+            0 => 'Отключить уведомления',
+            1 => 'чем 30 минут',
+            2 => 'чем 1 час',
+            3 => 'чем 3 час',
+        ],
+        [
+            'separator' => '&nbsp;&nbsp;&nbsp;</br>',
+        ])->label('Получать уведомления не чаще') ?>
+
+    <?= $form->field($model, 'notify_message')->textarea()->label('Текст сообщения') ?>
+
+    <?php if (Yii::$app->user->can('admin.collection')): ?>
+        <?= $form->field($model, 'is_admin_notify')->checkbox(
+            [
+                'checked' => MailNotifyManager::isAdminNotify($model->primaryKey, get_class($model)),
+                'label' => 'Уведомлять админа об изменении списка?'])
+        ?>
+    <?php endif; ?>
 
     <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>
 

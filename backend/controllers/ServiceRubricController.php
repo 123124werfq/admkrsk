@@ -7,11 +7,13 @@ use common\models\AuthEntity;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\ServiceRubric;
-use yii\data\ActiveDataProvider;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * ServiceRubricController implements the CRUD actions for ServiceRubric model.
@@ -121,6 +123,7 @@ class ServiceRubricController extends Controller
     /**
      * Lists all ServiceRubric models.
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
@@ -146,6 +149,7 @@ class ServiceRubricController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -179,6 +183,7 @@ class ServiceRubricController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -205,7 +210,7 @@ class ServiceRubricController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -220,8 +225,9 @@ class ServiceRubricController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -240,6 +246,7 @@ class ServiceRubricController extends Controller
      * @param integer $id
      * @return ServiceRubric the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

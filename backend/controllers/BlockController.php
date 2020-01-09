@@ -6,8 +6,8 @@ use common\models\Action;
 use Yii;
 use common\models\Block;
 use common\models\BlockVar;
-
 use yii\data\ActiveDataProvider;
+use yii\db\StaleObjectException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -142,7 +142,7 @@ class BlockController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {

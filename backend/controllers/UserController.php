@@ -8,6 +8,7 @@ use common\modules\log\models\Log;
 use Yii;
 use common\models\User;
 use backend\models\search\UserSearch;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\validators\NumberValidator;
 use yii\web\Controller;
@@ -246,7 +247,7 @@ class UserController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
         {

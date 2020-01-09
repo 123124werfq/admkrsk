@@ -7,10 +7,13 @@ use common\modules\log\models\Log;
 use Yii;
 use common\models\Faq;
 use backend\models\search\FaqSearch;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * FaqController implements the CRUD actions for Faq model.
@@ -160,6 +163,7 @@ class FaqController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -193,6 +197,7 @@ class FaqController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -215,7 +220,7 @@ class FaqController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -230,8 +235,9 @@ class FaqController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -250,6 +256,7 @@ class FaqController extends Controller
      * @param integer $id
      * @return Faq the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

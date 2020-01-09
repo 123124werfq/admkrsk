@@ -1,5 +1,12 @@
 <?php
-    $this->registerJsFile('https://api-maps.yandex.ru/2.1/?lang=ru_RU',['position'=>\yii\web\View::POS_BEGIN]);
+
+use yii\web\View;
+
+/**
+ * @var string $cid
+ * @var string $fname
+ */
+    $this->registerJsFile('https://api-maps.yandex.ru/2.1/?lang=ru_RU',['position'=> View::POS_BEGIN]);
 ?>
 <script>
     ymaps.ready(init);
@@ -41,9 +48,9 @@
                         else {
                             myPlacemark<?=$cid?> = createPlacemark(coords);
                             myMap<?=$cid?>.geoObjects.add(myPlacemark<?=$cid?>);
-                            /*myPlacemark<?=$cid?>.events.add('dragend', function () {
-                                updateCoords(myPlacemark<?=$cid?>.geometry.getCoordinates());
-                            });*/
+                            //myPlacemark<?//=$cid?>//.events.add('dragend', function () {
+                            //    updateCoords(myPlacemark<?//=$cid?>//.geometry.getCoordinates());
+                            //});
                         }
 
                         updateCoords(myPlacemark<?=$cid?>.geometry.getCoordinates());

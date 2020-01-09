@@ -3,6 +3,8 @@
 namespace common\models;
 
 use common\behaviors\AccessControlBehavior;
+use common\behaviors\MailNotifyBehaviour;
+use common\components\multifile\MultiUploadBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
 
@@ -14,6 +16,7 @@ use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "cnt_page".
@@ -34,9 +37,11 @@ use yii\db\ActiveQuery;
  * @property int $deleted_at
  * @property int $deleted_by
  * @property array $access_user_ids
+ * @property int $notify_rule
+ * @property string $notify_message
  * @property Block[] $blocks
  */
-class Page extends \yii\db\ActiveRecord
+class Page extends ActiveRecord
 {
     use MetaTrait;
     use ActionTrait;
@@ -47,6 +52,13 @@ class Page extends \yii\db\ActiveRecord
     const TITLE_ATTRIBUTE = 'title';
 
     public $old_parent; //$id_parent,
+    /**
+     * Is need to notify the administrator
+     *
+     * @var boolean
+     */
+    public $is_admin_notify;
+
     public $access_user_ids;
     public $access_user_group_ids;
     public $existUrl;
@@ -66,17 +78,12 @@ class Page extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_media', 'active'], 'default', 'value' => null],
-            [['id_media', 'active', 'id_parent', 'noguest','hidemenu', 'old_parent'], 'integer'],
-            /*['id_parent', 'filter', 'filter' => function($value) {
-                return (int) $value;
-            }],*/
-            [['id_parent'], 'required', 'when' => function($model) {
-                return $model->alias != '/';
-            }],
+            [['id_media', 'active', 'id_parent'], 'default', 'value' => null],
+            [['id_media', 'active', 'id_parent', 'noguest', 'hidemenu','notify_rule'], 'integer'],
+            [['is_admin_notify'], 'boolean'],
             [['title', 'alias'], 'required'],
-            [['content','path'], 'string'],
             [['is_partition'], 'boolean'],
+            [['content', 'path','notify_message'], 'string'],
             [['alias'], 'unique'],
             [['title', 'alias', 'seo_title', 'seo_description', 'seo_keywords'], 'string', 'max' => 255],
             [['partition_domain'], 'url', 'defaultScheme' => 'http'],
@@ -98,6 +105,7 @@ class Page extends \yii\db\ActiveRecord
             'title' => 'Название',
             'id_parent' => 'Родительская страница',
             'alias' => 'URL',
+            'hidemenu' => 'Скрыть в меню',
             'content' => 'Содержание',
             'seo_title' => 'Seo Заголовок',
             'seo_description' => 'Seo Описание',
@@ -106,7 +114,6 @@ class Page extends \yii\db\ActiveRecord
             'active' => 'Активный',
             'is_partition'=>'Это раздел',
             'partition_domain'=>'Домен раздела',
-            'hidemenu'=> 'Скрыть в меню',
             'created_at' => 'Создано',
             'created_by' => 'Создал',
             'updated_at' => 'Обновлено',
@@ -116,7 +123,7 @@ class Page extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getUrl($absolute=false)
+    public function getUrl($absolute = false)
     {
         if (!empty($this->existUrl))
             return $this->existUrl;
@@ -165,7 +172,7 @@ class Page extends \yii\db\ActiveRecord
         if (empty($this->id_parent))
             $this->path = $this->id_page;
         else
-            $this->path = $this->parent->path.'/'.$this->id_page;
+            $this->path = $this->parent->path . '/' . $this->id_page;
 
         $this->updateAttributes(['path']);
 
@@ -195,7 +202,7 @@ class Page extends \yii\db\ActiveRecord
 
     public function beforeValidate()
     {
-        // концертирует данные от TinyMCE
+        // конвертирует данные от TinyMCE
         if (!empty($_POST))
             $this->content = str_replace(['&lt;','&gt;','&quote;'], ['<','>','"'], $this->content);
 
@@ -229,15 +236,22 @@ class Page extends \yii\db\ActiveRecord
             'tree'=>[
                 'class' => NestedSetsBehavior::className(),
             ],
+            'afterUpdateMailNotify' => [
+                'class' => MailNotifyBehaviour::class,
+                'userIds' => 'access_user_ids',
+                'isAdminNotify' => 'is_admin_notify',
+                'timeRuleAttribute' => 'notify_rule',
+                'messageAttribute' => 'notify_message',
+            ],
             'multiupload' => [
-                'class' => \common\components\multifile\MultiUploadBehavior::class,
-                'relations'=>
-                [
-                    'medias'=>[
-                        'model'=>'Media',
-                        'jtable'=>'dbl_page_media',
+                'class' => MultiUploadBehavior::class,
+                'relations' =>
+                    [
+                        'medias' => [
+                            'model' => 'Media',
+                            'jtable' => 'dbl_page_media',
+                        ],
                     ],
-                ],
             ],
         ];
     }
