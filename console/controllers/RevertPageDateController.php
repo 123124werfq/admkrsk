@@ -2,21 +2,33 @@
 
 namespace console\controllers;
 
+use Yii;
 use common\models\Page;
 use yii\console\Controller;
-
+define('ESC', 27);
 /**
  * This command revert old page
  * created and updated timestamp
  */
 class RevertPageDateController extends Controller
 {
+    private $cursorArray = array('/','-','\\','|','/','-','\\','|');
+
     public function actionIndex()
     {
+        $i = $count = 0;
         ini_set('memory_limit', '1048M');
         $csv = [];
-        if (($handle = fopen('/path/to/file', 'r')) !== false) {
+        $filePath = Yii::getAlias('@app'). '/assets/sitepages.csv';
+
+        echo "Reading: ";
+        printf( "%c7", ESC );
+
+        if (($handle = fopen($filePath, 'r')) !== false) {
             while (($data = fgetcsv($handle, 1000, ";")) !== false) {
+
+                printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
+
                 $csv[] = [
                     'title' => $data[0],
                     'relativeUrl' => $data[1],
@@ -28,11 +40,17 @@ class RevertPageDateController extends Controller
             fclose($handle);
         }
 
+        $count = 0;
+        echo "\nUpdating: ";
+        printf( "%c7", ESC );
+
         foreach ($csv as $item) {
             /** @var Page[] $query */
             $query = Page::find()->where([
                 'like', 'title', $item['title']
             ])->all();
+
+            printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
 
             if (count($query) > 1) {
                 $str = str_replace('.aspx', '', $item['relativeUrl']);
