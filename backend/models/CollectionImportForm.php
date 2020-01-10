@@ -17,6 +17,7 @@ class CollectionImportForm extends Model
     public $name;
     public $filepath;
     public $firstRowAsName = false;
+    public $columns = [];
 
     /**
      * @return array the validation rules.
@@ -26,6 +27,7 @@ class CollectionImportForm extends Model
         return [
             [['skip','firstRowAsName'],'integer'],
             [['sheet','filepath','name'],'string'],
+            [['columns'],'safe'],
             [['file'], 'file', 'skipOnEmpty' => false, 'extensions' => 'xls,csv,xlsx'],
         ];
     }

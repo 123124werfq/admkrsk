@@ -722,13 +722,18 @@ class CollectionController extends Controller
         ]);
     }
 
-    public function actionImport()
+    public function actionImport($id=null)
     {
         set_time_limit(0);
 
         $model = new CollectionImportForm;
         $model->load(Yii::$app->request->post());
         $model->file = UploadedFile::getInstance($model, 'file');
+
+        $existCollection = null;
+
+        if (!empty($id))
+            $existCollection = $this->findModel($id);
 
         if (!empty($model->file) || !empty($model->filepath))
         {
@@ -737,146 +742,160 @@ class CollectionController extends Controller
                 $model->filepath = '../../temp/import_test.'.$model->file->extension;
                 $model->file->saveAs($model->filepath);
             }
-            try {
 
-                $data = \moonland\phpexcel\Excel::import($model->filepath, [
-                    'setFirstRecordAsKeys' => false, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel.
-                    'setIndexSheetByName' => true, // set this if your excel data with multiple worksheet, the index of array will be set with the sheet name. If this not set, the index will use numeric.
-                    //'getOnlySheet' => 'Реестр собствеников', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
-                ]);
+            $data = \moonland\phpexcel\Excel::import($model->filepath, [
+                'setFirstRecordAsKeys' => false,
+                'setIndexSheetByName' => true,
+            ]);
 
-                if (!empty($data))
+            if (!empty($data))
+            {
+                if (isset($data[1]['A']))
+                    $data = ['Страница 1'=>$data];
+
+                if (!empty($model->sheet))
                 {
-                    if (isset($data[1]['A']))
-                        $data = ['Страница 1'=>$data];
+                    $columns = [];
+                    $keys = [];
+                    $records = [];
 
-                    if (!empty($model->sheet))
+                    $sheet_pos = array_search($model->sheet, array_keys($data));
+                    $post = $_POST['CollectionImportForm'][$sheet_pos];
+                    $model->load($_POST['CollectionImportForm'][$sheet_pos]);
+
+                    $model->skip = (int)$post['skip'];
+                    $model->keyrow = (int)$post['keyrow'];
+                    $model->firstRowAsName = $post['firstRowAsName'];
+
+                    foreach ($data[$model->sheet] as $rowkey => $row)
                     {
-                        $columns = [];
-                        $keys = [];
-                        $records = [];
-
-                        $sheet_pos = array_search($model->sheet, array_keys($data));
-
-                        $post = $_POST['CollectionImportForm'][$sheet_pos];
-
-                        $model->load($_POST['CollectionImportForm'][$sheet_pos]);
-
-                        $model->skip = (int)$post['skip'];
-                        $model->keyrow = (int)$post['keyrow'];
-                        $model->firstRowAsName = $post['firstRowAsName'];
-
-                        foreach ($data[$model->sheet] as $rowkey => $row)
+                        // устанавливаем алиасы
+                        if ($rowkey==$model->keyrow && $model->keyrow>0)
                         {
-                            if ($rowkey==$model->keyrow && $model->keyrow>0)
-                            {
-                                if (empty($columns))
-                                    $columns = $row;
-
-                                $keys = $row;
-                            }
-
-                            if (!empty($model->skip) && $rowkey<=$model->skip)
-                                continue;
-
-                            if ($rowkey==($model->skip+1) && $model->firstRowAsName)
-                            {
+                            if (empty($columns))
                                 $columns = $row;
-                                continue;
-                            }
 
-                            $records[] = $row;
+                            $keys = $row;
                         }
 
-                        if (!empty($records))
+                        // пропускаем
+                        if (!empty($model->skip) && $rowkey<=$model->skip)
+                            continue;
+
+                        // устанавливаем именя колонок по первой строке если выбрали
+                        if ($rowkey==($model->skip+1) && $model->firstRowAsName)
                         {
-                            $collection = new Collection();
-                            $collection->name = $model->name;
+                            $columns = $row;
+                            continue;
+                        }
 
-                            if ($collection->save())
+                        $records[] = $row;
+                    }
+
+                    // сохраняем названия колонок
+                    if (empty($columns))
+                        foreach ($records[1] as $rkey => $value)
+                            $columns[$rkey] = 'Колонка №'.($i++);
+
+                    if (empty($keys))
+                        foreach ($columns as $key => $column)
+                            $keys[] = strtolower(\common\components\helper\Helper::transFileName($column));
+
+                    if (!empty($_POST['import']))
+                    {
+                        try {
+                            if (!empty($records))
                             {
-                                // сохраняем названия колонок
-                                if (empty($columns))
+                                $collection = new Collection();
+                                $collection->name = $model->name;
+
+                                if ($collection->save())
                                 {
-                                    $i = 1;
-                                    foreach ($records[1] as $rkey => $value)
-                                        $columns[$rkey] = 'Колонка №'.($i++);
-                                }
+                                    $i = 0;
 
-                                $i = 0;
-
-                                foreach ($columns as $tdkey => $value)
-                                {
-                                    $column = new CollectionColumn;
-                                    $column->name = (!empty($value))?$value:'Колонка '.$tdkey;
-                                    $column->type = CollectionColumn::TYPE_INPUT;
-                                    $column->ord = $i;
-
-                                    if ($model->keyrow && !empty(trim($keys[$tdkey])))
-                                        $column->alias = $keys[$tdkey];
-                                    else
-                                        $column->alias = $column->name;
-
-                                    if (empty($column->alias))
-                                        $column->alias = 'column_'.$tdkey;
-
-                                    $column->alias = strtolower(\common\components\helper\Helper::transFileName($column->alias));
-
-                                    $column->id_collection = $collection->id_collection;
-
-                                    if ($column->save())
-                                        $columns[$tdkey] = $column;
-                                    else
+                                    foreach ($columns as $tdkey => $value)
                                     {
-                                        print_r($column->errors);
-                                        die();
+                                        $column = new CollectionColumn;
+                                        $column->name = (!empty($value))?$value:'Колонка '.$tdkey;
+                                        $column->type = CollectionColumn::TYPE_INPUT;
+                                        $column->ord = $i;
+
+                                        if ($model->keyrow && !empty(trim($keys[$tdkey])))
+                                            $column->alias = $keys[$tdkey];
+                                        else
+                                            $column->alias = $column->name;
+
+                                        if (empty($column->alias))
+                                            $column->alias = 'column_'.$tdkey;
+
+                                        $column->alias = strtolower(\common\components\helper\Helper::transFileName($column->alias));
+
+                                        $column->id_collection = $collection->id_collection;
+
+                                        if ($column->save())
+                                            $columns[$tdkey] = $column;
+                                        else
+                                        {
+                                            print_r($column->errors);
+                                            die();
+                                        }
+
+                                        $i++;
                                     }
 
-                                    $i++;
+                                    foreach ($records as $rkey => $row)
+                                    {
+                                        $collectionRecord = new CollectionRecord;
+                                        $collectionRecord->id_collection = $collection->id_collection;
+                                        $collectionRecord->ord = $rkey;
+
+                                        $insert = [];
+
+                                        foreach ($row as $tdkey => $value)
+                                            $insert[$columns[$tdkey]->id_column] = $value;
+
+                                        $collectionRecord->data = $insert;
+                                        $collectionRecord->save();
+                                    }
+
+                                    Yii::$app->session->setFlash('success', 'Данные импортированы');
+
+                                    $collection->createForm();
+
+                                    unlink($model->filepath);
+
+                                    return $this->redirect(['view', 'id' => $collection->id_collection]);
                                 }
-
-                                foreach ($records as $rkey => $row)
-                                {
-                                    $collectionRecord = new CollectionRecord;
-                                    $collectionRecord->id_collection = $collection->id_collection;
-                                    $collectionRecord->ord = $rkey;
-
-                                    $insert = [];
-
-                                    foreach ($row as $tdkey => $value)
-                                        $insert[$columns[$tdkey]->id_column] = $value;
-
-                                    $collectionRecord->data = $insert;
-                                    $collectionRecord->save();
-                                }
-
-                                Yii::$app->session->setFlash('success', 'Данные импортированы');
-
-                                $collection->createForm();
-
-                                unlink($model->filepath);
-
-                                return $this->redirect(['view', 'id' => $collection->id_collection]);
+                                else
+                                    print_r($collection->errors);
                             }
                             else
-                                print_r($collection->errors);
+                            {
+                                Yii::$app->session->setFlash('error', 'Нет данных для записи');
+                                $this->refresh();
+                            }
                         }
-                        else
+                        catch (Exception $e)
                         {
-                            Yii::$app->session->setFlash('error', 'Нет данных для записи');
-                            $this->refresh();
+                            $model->addError('file','Ошибка при чтении файла, ошибка формата данных');
                         }
                     }
                     else
-                        return $this->render('import',[
+                    {
+                        return $this->render('import_column',[
                             'model'=>$model,
-                            'table'=>$data
+                            'records'=>$records,
+                            'columns'=>$columns,
+                            'existCollection'=>$existCollection,
+                            'keys'=>$keys,
                         ]);
+                    }
                 }
-            }
-            catch (Exception $e)
-            {
-                $model->addError('file','Ошибка при чтении файла, ошибка формата данных');
+                else
+                    return $this->render('import',[
+                        'model'=>$model,
+                        'table'=>$data
+                    ]);
             }
         }
 
