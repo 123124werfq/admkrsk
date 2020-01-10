@@ -647,7 +647,12 @@ class SiteController extends Controller
     public function actionStest()
     {
         $ww = new Workflow;
+        echo "Test A:<br>";
         $ww->sendTest();
+        echo "<br>Test B:<br>";
+        $ww->sendTest1();
+        echo "<br>Test C:<br>";
+        $ww->sendTest2();
     }
 
     /**
