@@ -5,10 +5,10 @@ namespace frontend\controllers;
 use Yii;
 use common\models\News;
 use common\models\CollectionRecord;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\data\Pagination;
 
-class NewsController extends \yii\web\Controller
+class NewsController extends Controller
 {
     public function actionIndex($page=null)
     {

@@ -5,11 +5,13 @@ namespace backend\controllers;
 use common\models\Action;
 use Yii;
 use common\models\ServiceTarget;
-use yii\data\ActiveDataProvider;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use backend\models\search\ServiceTargetSearch;
+use yii\web\Response;
 
 /**
  * ServiceTargetController implements the CRUD actions for ServiceTarget model.
@@ -54,6 +56,7 @@ class ServiceTargetController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -88,6 +91,7 @@ class ServiceTargetController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -109,6 +113,8 @@ class ServiceTargetController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -124,8 +130,9 @@ class ServiceTargetController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -144,6 +151,7 @@ class ServiceTargetController extends Controller
      * @param integer $id
      * @return ServiceTarget the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

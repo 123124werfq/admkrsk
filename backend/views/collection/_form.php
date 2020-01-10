@@ -2,6 +2,7 @@
 
 use backend\widgets\UserAccessControl;
 use backend\widgets\UserGroupAccessControl;
+use common\models\MailNotifyManager;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
@@ -55,31 +56,55 @@ use yii\web\JsExpression;
 
     <hr>
 
+    <h3>Настройка уведомлений</h3>
+    <?= $form->field($model, 'notify_rule')->radioList(
+        [
+            0 => 'Отключить уведомления',
+            1 => 'чем 30 минут',
+            2 => 'чем 1 час',
+            3 => 'чем 3 час',
+        ],
+        [
+            'separator' => '&nbsp;&nbsp;&nbsp;</br>',
+        ])->label('Получать уведомления не чаще') ?>
+
+    <?= $form->field($model, 'notify_message')->textarea()->label('Текст сообщения') ?>
+
+    <?php if (Yii::$app->user->can('admin.collection')): ?>
+        <?= $form->field($model, 'is_admin_notify')->checkbox(
+            [
+                'checked' => MailNotifyManager::isAdminNotify($model->primaryKey, get_class($model)),
+                'label' => 'Уведомлять админа об изменении списка?'])
+        ?>
+    <?php endif; ?>
+
+    <hr>
+
     <h3>Доступ</h3>
 
     <?php
-        $records = $model->getRecords('partitions');
-        $records = ArrayHelper::map($records, 'id_page', 'title');
+    $records = $model->getRecords('partitions');
+    $records = ArrayHelper::map($records, 'id_page', 'title');
 
-        echo Select2::widget([
-            'data' => $records,
-            'name'=>'Page[partitions][]id_page',
-            'pluginOptions' => [
-                'allowClear' => true,
-                'multiple' => true,
-                'ajax' => [
-                    'url' => '/page/list',
-                    'dataType' => 'json',
-                    'data' => new JsExpression('function(params) { return {q:params.term, partition:1}; }')
-                ],
-                'placeholder' => 'Выберите разделы',
+    echo Select2::widget([
+        'data' => $records,
+        'name'=>'Page[partitions][]id_page',
+        'pluginOptions' => [
+            'allowClear' => true,
+            'multiple' => true,
+            'ajax' => [
+                'url' => '/page/list',
+                'dataType' => 'json',
+                'data' => new JsExpression('function(params) { return {q:params.term, partition:1}; }')
             ],
-            'value'=>array_keys($records),
-            'options' => [
-                'multiple' => true
-            ]
-        ]);
-        //->hint('Выберите разделы в которых можно использовать данный список');
+            'placeholder' => 'Выберите разделы',
+        ],
+        'value'=>array_keys($records),
+        'options' => [
+            'multiple' => true
+        ]
+    ]);
+    //->hint('Выберите разделы в которых можно использовать данный список');
     ?>
 
     <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>

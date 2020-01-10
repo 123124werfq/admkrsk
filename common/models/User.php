@@ -1,11 +1,14 @@
 <?php
 namespace common\models;
 
+use common\components\multifile\MultiUploadBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
+use \Exception;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
@@ -28,7 +31,6 @@ use yii\web\IdentityInterface;
  * @property string $statusName
  * @property string $pageTitle
  * @property string $breadcrumbsLabel
- *
  * @property EsiaUser $esiainfo
  * @property AdUser $adinfo
  * @property Media $media
@@ -69,7 +71,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             TimestampBehavior::class,
             'multiupload' => [
-                'class' => \common\components\multifile\MultiUploadBehavior::class,
+                'class' => MultiUploadBehavior::class,
                 'relations'=>
                 [
                     'media'=>[
@@ -123,6 +125,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * {@inheritdoc}
+     * @throws Exception
      */
     public function afterSave($insert, $changedAttributes)
     {
@@ -132,7 +135,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getUserUserGroups()
     {
@@ -140,7 +143,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getUserGroups()
     {
@@ -315,6 +318,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Назначение прав
+     * @throws Exception
      */
     public function setAssignments()
     {
@@ -335,7 +339,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getEsiainfo()
     {
@@ -343,7 +347,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getAdinfo()
     {

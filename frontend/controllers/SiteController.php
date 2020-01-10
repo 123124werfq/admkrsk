@@ -1,14 +1,19 @@
 <?php
+
 namespace frontend\controllers;
 
+use Esia\Config;
+use Esia\Exceptions\InvalidConfigurationException;
+use Esia\OpenId;
+use Esia\Signer\CliSignerPKCS7;
+use Esia\Signer\Exceptions\SignFailException;
 use frontend\components\ApiErrorHandler;
 use common\models\Action;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
+use PhpOffice\PhpWord\IOFactory;
 use Yii;
-use yii\base\Exception;
 use yii\base\InvalidArgumentException;
-use yii\base\UserException;
 use yii\filters\ContentNegotiator;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -23,10 +28,7 @@ use frontend\models\ContactForm;
 use common\models\User;
 use common\models\EsiaUser;
 use yii\web\ErrorAction;
-use yii\web\ErrorHandler;
-use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
-
 use common\models\Workflow;
 use yii\web\Response;
 
@@ -128,6 +130,8 @@ class SiteController extends Controller
      * Logs in a user.
      *
      * @return mixed
+     * @throws InvalidConfigurationException
+     * @throws SignFailException
      */
     public function actionLogin()
     {
@@ -144,7 +148,7 @@ class SiteController extends Controller
             $model->password = '';
 
             // получаем УРЛ для входа через ЕСИА
-            if(!file_exists(Yii::getAlias('@app'). '/assets/admkrsk.pem')){
+            if (!file_exists(Yii::getAlias('@app') . '/assets/admkrsk.pem')) {
                 return $this->goBack();
             }
 
@@ -217,21 +221,20 @@ class SiteController extends Controller
      * @return string
      * @throws NotFoundHttpException
      */
-    public function actionPage($page=null)
+    public function actionPage($page = null)
     {
-        if (empty($page))
-        {
+        if (empty($page)) {
             $url = Yii::$app->request->url;
             $alias = explode('/', $url);
             $alias = array_pop($alias);
 
-            if (strpos($alias, '?')>0)
+            if (strpos($alias, '?') > 0)
                 $alias = substr($alias, 0, strpos($alias, '?'));
 
             if (empty($alias))
                 $alias = '/';
 
-            $page = Page::findOne(['alias'=>$alias]);
+            $page = Page::findOne(['alias' => $alias]);
         }
 
         if (empty($page))
@@ -332,8 +335,8 @@ class SiteController extends Controller
      * Verify email address
      *
      * @param string $token
-     * @throws BadRequestHttpException
      * @return yii\web\Response
+     * @throws BadRequestHttpException
      */
     public function actionVerifyEmail($token)
     {
@@ -374,15 +377,16 @@ class SiteController extends Controller
         ]);
     }
 
-    public function ssoCallback($client) {
+    public function ssoCallback($client)
+    {
         $attributes = $client->getUserAttributes();
         $oid = $attributes['oid'];
 
         $user = User::findByOid($oid);
-        if($user) {
+        if ($user) {
             $esiauser = EsiaUser::findOne($user->id_esia_user);
 
-            if($esiauser)
+            if ($esiauser)
                 $esiauser->actualize($client);
 
             $login = Yii::$app->user->login($user);
@@ -394,22 +398,22 @@ class SiteController extends Controller
         $personInfo = $client->getPersonInfo($oid);
 
         $user = new User();
-        $user->email = $oid.'@esia.ru';
-        $user->username = $personInfo['firstName'].' '.$personInfo['lastName'];
+        $user->email = $oid . '@esia.ru';
+        $user->username = $personInfo['firstName'] . ' ' . $personInfo['lastName'];
         $user->setPassword($personInfo['eTag']);
         $user->generateAuthKey();
         $user->status = User::STATUS_ACTIVE;
 
         $esiauser = new EsiaUser();
 
-        if($esiauser->actualize($client))
+        if ($esiauser->actualize($client))
             $user->id_esia_user = $esiauser->id_esia_user;
 
 //        $user->first_name = $personInfo['firstName'];
 //        $user->last_name = $personInfo['lastName'];
 //        $user->middle_name = $personInfo['middleName'];
 
-        if(!$user->save()) {
+        if (!$user->save()) {
             throw new yii\web\ServerErrorHttpException('Внутренняя ошибка сервера');
         }
 
@@ -424,7 +428,7 @@ class SiteController extends Controller
         $un = 'web_user';
         $ldapObject = \Yii::$app->ad->search()->findBy('sAMAccountname', $un);
         var_dump($ldapObject);
-        echo '<pre>' . print_r($ldapObject,true) . '</pre>';
+        echo '<pre>' . print_r($ldapObject, true) . '</pre>';
     }
 
     public function actionTestad1a()
@@ -440,7 +444,7 @@ class SiteController extends Controller
     public function actionTestad2()
     {
 
-        $ldaprdn  = 'web_user@admkrsk.ru';     // ldap rdn или dn
+        $ldaprdn = 'web_user@admkrsk.ru';     // ldap rdn или dn
         $ldappass = 'PaO5q#3ows';  // ассоциированный пароль
 
         // соединение с сервером
@@ -467,26 +471,26 @@ class SiteController extends Controller
         set_time_limit(30);
         error_reporting(E_ALL);
         ini_set('error_reporting', E_ALL);
-        ini_set('display_errors',1);
+        ini_set('display_errors', 1);
 
 // config
         $ldapserver = '10.24.0.7';
-        $ldapuser      = 'web_user@admkrsk.ru';
-        $ldappass     = 'PaO5q#3ows';
-        $ldaptree    = "DC=admkrsk,DC=ru";
+        $ldapuser = 'web_user@admkrsk.ru';
+        $ldappass = 'PaO5q#3ows';
+        $ldaptree = "DC=admkrsk,DC=ru";
 
 // connect
         $ldapconn = ldap_connect($ldapserver) or die("Could not connect to LDAP server.");
 
-        if($ldapconn) {
+        if ($ldapconn) {
             // binding to ldap server
-            $ldapbind = ldap_bind($ldapconn, $ldapuser, $ldappass) or die ("Error trying to bind: ".ldap_error($ldapconn));
+            $ldapbind = ldap_bind($ldapconn, $ldapuser, $ldappass) or die ("Error trying to bind: " . ldap_error($ldapconn));
             // verify binding
             if ($ldapbind) {
                 echo "LDAP bind successful...<br /><br />";
 
 
-                $result = ldap_search($ldapconn,$ldaptree, "(cn=*)") or die ("Error in search query: ".ldap_error($ldapconn));
+                $result = ldap_search($ldapconn, $ldaptree, "(cn=*)") or die ("Error in search query: " . ldap_error($ldapconn));
                 $data = ldap_get_entries($ldapconn, $result);
 
                 // SHOW ALL DATA
@@ -497,11 +501,11 @@ class SiteController extends Controller
 
                 // iterate over array and print data for each entry
                 echo '<h1>Show me the users</h1>';
-                for ($i=0; $i<$data["count"]; $i++) {
+                for ($i = 0; $i < $data["count"]; $i++) {
                     //echo "dn is: ". $data[$i]["dn"] ."<br />";
-                    echo "User: ". $data[$i]["cn"][0] ."<br />";
-                    if(isset($data[$i]["mail"][0])) {
-                        echo "Email: ". $data[$i]["mail"][0] ."<br /><br />";
+                    echo "User: " . $data[$i]["cn"][0] . "<br />";
+                    if (isset($data[$i]["mail"][0])) {
+                        echo "Email: " . $data[$i]["mail"][0] . "<br /><br />";
                     } else {
                         echo "Email: None<br /><br />";
                     }
@@ -522,30 +526,30 @@ class SiteController extends Controller
     {
         $person = "web_user";
         $dn = "DC=admkrsk,DC=ru";
-        $filter="(|(sn=$person*)(givenname=$person*))";
+        $filter = "(|(sn=$person*)(givenname=$person*))";
         $justthese = array("ou", "sn", "givenname", "mail");
 
         $ds = ldap_connect('10.24.0.7');
         ldap_bind($ds, 'web_user@admkrsk.ru', 'PaO5q#3ows');
 
-        $sr=ldap_search($ds, $dn, $filter, $justthese);
+        $sr = ldap_search($ds, $dn, $filter, $justthese);
 
         $info = ldap_get_entries($ds, $sr);
 
-        echo $info["count"]." записей возвращено\n";
+        echo $info["count"] . " записей возвращено\n";
     }
 
     public function actionTestad5()
     {
         $person = "web_user@admkrsk.ru";
         $dn = "DC=admkrsk,DC=ru";
-        $filter="(mail=$person)";
+        $filter = "(mail=$person)";
         $justthese = array("ou", "sn", "givenname", "mail");
 
         $ds = ldap_connect('10.24.0.7');
         ldap_bind($ds, 'web_user@admkrsk.ru', 'PaO5q#3ows');
 
-        $sr=ldap_search($ds, $dn, $filter, $justthese);
+        $sr = ldap_search($ds, $dn, $filter, $justthese);
 
         $info = ldap_get_entries($ds, $sr);
 
@@ -561,11 +565,11 @@ class SiteController extends Controller
             die("Couldn't initialize a cURL handle");
         }
 // set some cURL options
-        $ret = curl_setopt($ch, CURLOPT_URL,            "http://ya.ru");
-        $ret = curl_setopt($ch, CURLOPT_HEADER,         1);
+        $ret = curl_setopt($ch, CURLOPT_URL, "http://ya.ru");
+        $ret = curl_setopt($ch, CURLOPT_HEADER, 1);
         $ret = curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         $ret = curl_setopt($ch, CURLOPT_RETURNTRANSFER, 0);
-        $ret = curl_setopt($ch, CURLOPT_TIMEOUT,        30);
+        $ret = curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
 // execute
         $ret = curl_exec($ch);
@@ -636,13 +640,23 @@ class SiteController extends Controller
         $myTextElement = $section3->addText('"Believe you can and you\'re halfway there." (Theodor Roosevelt)');
         $myTextElement->setFontStyle($fontStyle);
 
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+        $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
         $objWriter->save('../runtime/helloWorld.docx');
     }
 
-    public function actionStest(){
+    public function actionStest()
+    {
         $ww = new Workflow;
+        $ww->sendTest1();
+        die();
+
+
+        echo "Test A:<br>";
         $ww->sendTest();
+        echo "<br>Test B:<br>";
+        $ww->sendTest1();
+        echo "<br>Test C:<br>";
+        $ww->sendTest2();
     }
 
     /**
@@ -653,7 +667,7 @@ class SiteController extends Controller
         if (true || YII_ENV_DEV) {
             $user = User::findOne(8);
 
-            Yii::$app->user->login($user, 3600*24*7);
+            Yii::$app->user->login($user, 3600 * 24 * 7);
 
             $this->redirect("/");
         } else {
@@ -666,7 +680,7 @@ class SiteController extends Controller
         if (true || YII_ENV_DEV) {
             $user = User::findOne(2406);
 
-            Yii::$app->user->login($user, 3600*24*7);
+            Yii::$app->user->login($user, 3600 * 24 * 7);
 
             $this->redirect("/");
         } else {
@@ -679,24 +693,24 @@ class SiteController extends Controller
     {
         //var_dump(Yii::getAlias('@app'). '/assets/admkrsk.pem'); die();
 
-        if(!file_exists(Yii::getAlias('@app'). '/assets/admkrsk.pem')){
+        if (!file_exists(Yii::getAlias('@app') . '/assets/admkrsk.pem')) {
             echo "no cert";
             die();
         }
 
 
-        $config = new \Esia\Config([
+        $config = new Config([
             'clientId' => '236403241',
-            'privateKeyPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
-            'certPath' => Yii::getAlias('@app'). '/assets/admkrsk.pem',
+            'privateKeyPath' => Yii::getAlias('@app') . '/assets/admkrsk.pem',
+            'certPath' => Yii::getAlias('@app') . '/assets/admkrsk.pem',
             'redirectUrl' => 'https://t1.admkrsk.ru/site/signin',
             'portalUrl' => 'https://esia.gosuslugi.ru/',
             'scope' => ['fullname', 'birthdate', 'mobile', 'contacts', 'snils', 'inn', 'id_doc', 'birthplace', 'medical_doc', 'residence_doc', 'email', 'usr_org', 'usr_avt'],
         ]);
-        $esia = new \Esia\OpenId($config);
-        $esia->setSigner(new \Esia\Signer\CliSignerPKCS7(
-            Yii::getAlias('@app'). '/assets/admkrsk.pem',
-            Yii::getAlias('@app'). '/assets/admkrsk.pem',
+        $esia = new OpenId($config);
+        $esia->setSigner(new CliSignerPKCS7(
+            Yii::getAlias('@app') . '/assets/admkrsk.pem',
+            Yii::getAlias('@app') . '/assets/admkrsk.pem',
             'T%52gs]CPJ',
             Yii::getAlias('@runtime')
         ));
@@ -712,7 +726,7 @@ class SiteController extends Controller
 
     public function actionSignin()
     {
-        if(!isset($_REQUEST['code'])) {
+        if (!isset($_REQUEST['code'])) {
             return $this->goHome();
             //var_dump($_REQUEST);
             //die();
@@ -738,10 +752,10 @@ class SiteController extends Controller
         $oid = $esia->getConfig()->getOid();
 
         $user = User::findByOid($oid);
-        if($user) {
+        if ($user) {
             $esiauser = EsiaUser::findOne($user->id_esia_user);
 
-            if($esiauser)
+            if ($esiauser)
                 $esiauser->actualize($esia);
 
             $login = Yii::$app->user->login($user);
@@ -752,18 +766,18 @@ class SiteController extends Controller
         }
 
         $user = new User();
-        $user->email = $oid.'@esia.ru';
-        $user->username = $personInfo['firstName'].' '.$personInfo['lastName'];
+        $user->email = $oid . '@esia.ru';
+        $user->username = $personInfo['firstName'] . ' ' . $personInfo['lastName'];
         $user->setPassword($personInfo['eTag']);
         $user->generateAuthKey();
         $user->status = User::STATUS_ACTIVE;
 
         $esiauser = new EsiaUser();
 
-        if($esiauser->actualize($esia))
+        if ($esiauser->actualize($esia))
             $user->id_esia_user = $esiauser->id_esia_user;
 
-        if(!$user->save()) {
+        if (!$user->save()) {
             throw new yii\web\ServerErrorHttpException('Внутренняя ошибка сервера');
         }
 

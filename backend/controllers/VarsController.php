@@ -7,11 +7,14 @@ use common\models\AuthEntity;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\Vars;
+use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * VarsController implements the CRUD actions for Vars model.
@@ -118,6 +121,7 @@ class VarsController extends Controller
     /**
      * Lists all Vars models.
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
@@ -145,6 +149,7 @@ class VarsController extends Controller
      * @param string $id
      * @return mixed
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -178,6 +183,7 @@ class VarsController extends Controller
      * @param string $id
      * @return mixed
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -203,7 +209,7 @@ class VarsController extends Controller
      * @return mixed
      * @throws NotFoundHttpException
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -218,8 +224,9 @@ class VarsController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -238,6 +245,7 @@ class VarsController extends Controller
      * @param string $id
      * @return Vars the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

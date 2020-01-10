@@ -1,17 +1,24 @@
 <?php
 
 namespace frontend\controllers;
-use common\models\Action;
+
 use common\models\Project;
 use common\models\Page;
 use common\models\District;
 use common\models\Collection;
+use yii\base\InvalidConfigException;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\data\Pagination;
 use Yii;
 
-class EventController extends \yii\web\Controller
+class EventController extends Controller
 {
+    /**
+     * @param null $page
+     * @return string
+     * @throws InvalidConfigException
+     * @throws NotFoundHttpException
+     */
     public function actionIndex($page=null)
     {
         $projects = Project::find();//->where('date_end >='.time().' OR date_end IS NULL')
@@ -35,6 +42,13 @@ class EventController extends \yii\web\Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @param $id_page
+     * @return string
+     * @throws NotFoundHttpException
+     * @throws InvalidConfigException
+     */
     public function actionProgram($id,$id_page)
     {
         $model = Collection::findOne($id);

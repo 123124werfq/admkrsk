@@ -7,6 +7,8 @@ use common\models\Country;
 use Yii;
 use common\models\House;
 use backend\models\search\HouseSearch;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\filters\VerbFilter;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -76,6 +78,7 @@ class AddressController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -109,6 +112,7 @@ class AddressController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -131,7 +135,7 @@ class AddressController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -148,6 +152,7 @@ class AddressController extends Controller
      * @param $id
      * @return \yii\web\Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -166,6 +171,7 @@ class AddressController extends Controller
      * @param integer $id
      * @return House the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {
@@ -179,6 +185,7 @@ class AddressController extends Controller
     /**
      * @param string $search
      * @return array
+     * @throws InvalidConfigException
      */
     public function actionCountry($search = '')
     {
@@ -205,6 +212,7 @@ class AddressController extends Controller
      * @param int $id_country
      * @param string $search
      * @return array
+     * @throws InvalidConfigException
      */
     public function actionRegion($id_country = null, $search = '')
     {
@@ -240,6 +248,7 @@ class AddressController extends Controller
      * @param int $id_region
      * @param string $search
      * @return array
+     * @throws InvalidConfigException
      */
     public function actionSubregion($id_region = null, $search = '')
     {
@@ -278,6 +287,7 @@ class AddressController extends Controller
      * @param string $search
      * @return array
      * @throws BadRequestHttpException
+     * @throws InvalidConfigException
      */
     public function actionCity($id_region = null, $id_subregion = null, $search = '')
     {
@@ -319,6 +329,7 @@ class AddressController extends Controller
      * @param int $id_city
      * @param string $search
      * @return array
+     * @throws InvalidConfigException
      */
     public function actionDistrict($id_city = null, $search = '')
     {
@@ -359,6 +370,7 @@ class AddressController extends Controller
      * @param int $id_city
      * @param string $search
      * @return array
+     * @throws InvalidConfigException
      */
     public function actionStreet($id_city, $search = '')
     {
@@ -392,6 +404,7 @@ class AddressController extends Controller
      * @param int $id_street
      * @param string $search
      * @return array
+     * @throws InvalidConfigException
      */
     public function actionHouse($id_street, $search = '')
     {

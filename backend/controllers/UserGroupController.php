@@ -3,9 +3,7 @@
 namespace backend\controllers;
 
 use backend\models\forms\UserGroupForm;
-use backend\models\forms\UserGroupRevokeForm;
 use common\models\Action;
-use common\models\User;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\UserGroup;
