@@ -23,30 +23,10 @@ class MenuAccessRule extends Rule
      */
     public function execute($user, $item, $params)
     {
-        if (Yii::$app->authManager->checkAccess($user, str_replace('menu', 'admin', $item->name))) {
-            return true;
-        }
+        $adminItem = str_replace('menu', 'admin', $item->name);
 
-        if (isset($params['class'])) {
-            if ($params['class'] == Collection::class) {
-                $accessQuery = AuthEntity::find()
-                    ->where([
-                        'id_user' => $user,
-                        'class' => $params['class'],
-                    ]);
-
-                if ($accessQuery->exists()) {
-                    return true;
-                }
-
-                $accessPartitionQuery = AuthEntity::find()
-                    ->where([
-                        'id_user' => $user,
-                        'class' => Page::class,
-                    ]);
-
-                return true;
-            }
+        if (isset($params['class']) && method_exists($params['class'], 'hasAccess')) {
+            return $params['class']::hasAccess();
         }
 
         return false;

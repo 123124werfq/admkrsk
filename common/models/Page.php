@@ -6,6 +6,7 @@ use common\behaviors\AccessControlBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
 
+use common\traits\AccessTrait;
 use creocoder\nestedsets\NestedSetsBehavior;
 
 use common\traits\ActionTrait;
@@ -35,12 +36,15 @@ use yii\db\ActiveQuery;
  * @property int $deleted_by
  * @property array $access_user_ids
  * @property Block[] $blocks
+ *
+ * @property Collection[] $collections
  */
 class Page extends \yii\db\ActiveRecord
 {
     use MetaTrait;
     use ActionTrait;
     use SoftDeleteTrait;
+    use AccessTrait;
 
     const VERBOSE_NAME = 'Страница';
     const VERBOSE_NAME_PLURAL = 'Страницы';
@@ -323,4 +327,45 @@ class Page extends \yii\db\ActiveRecord
 
         return $rightmenu;
     }*/
+
+    /**
+     * @return ActiveQuery
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getCollections()
+    {
+        return $this->hasMany(Collection::class, ['id_collection' => 'id_collection'])
+            ->viaTable('dbl_collection_page', ['id_page' => 'id_page']);
+    }
+
+    public static function hasAccess()
+    {
+        return !empty(self::getAccessPageIds());
+    }
+
+    /**
+     * @return array
+     */
+    public static function getAccessPageIds()
+    {
+        $pageIds = [];
+
+        $partitionQuery = Page::find()
+            ->andWhere([
+                'id_page' => self::getAccessIds(),
+                'is_partition' => true,
+            ]);
+
+        foreach ($partitionQuery->each() as $partition) {
+            /* @var Page $partition */
+            $pageIds[$partition->id_page] = $partition->id_page;
+
+            foreach ($partition->children()->each() as $childPartition) {
+                /* @var Page $childPartition */
+                $pageIds[$childPartition->id_page] = $childPartition->id_page;
+            }
+        }
+
+        return $pageIds;
+    }
 }

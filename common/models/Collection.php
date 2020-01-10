@@ -6,12 +6,14 @@ use common\behaviors\AccessControlBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\components\yiinput\RelationBehavior;
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\AccessTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
@@ -47,6 +49,7 @@ class Collection extends \yii\db\ActiveRecord
     use MetaTrait;
     use ActionTrait;
     use SoftDeleteTrait;
+    use AccessTrait;
 
     const VERBOSE_NAME = 'Список';
     const VERBOSE_NAME_PLURAL = 'Списки';
@@ -473,5 +476,23 @@ class Collection extends \yii\db\ActiveRecord
             $transaction->rollBack();
             throw $e;
         }
+    }
+
+    public static function hasAccess()
+    {
+        return !empty(self::getAccessCollectionIds());
+    }
+
+    public static function getAccessCollectionIds()
+    {
+        $userId = Yii::$app->user->identity->id;
+
+        $collectionIds = (new Query())
+            ->from('dbl_collection_page')
+            ->select('id_collection')
+            ->andWhere(['id_page' => Page::getAccessPageIds()])
+            ->column();
+
+        return array_unique(ArrayHelper::merge($collectionIds, self::getAccessIds()));
     }
 }
