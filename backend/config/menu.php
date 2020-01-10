@@ -1,5 +1,7 @@
 <?php
 
+use common\models\Collection;
+
 return [
     'address' => [
         'title' => 'Адреса',
@@ -58,7 +60,11 @@ return [
     'collection' => [
         'title' => 'Списки',
         'icon' => 'fa fa-bars',
-        'roles' => ['backend.collection'],
+        'roles' => [
+            'menu.collection' => [
+                'class' => Collection::class
+            ],
+        ],
     ],
     'form' => [
         'title' => 'Формы',

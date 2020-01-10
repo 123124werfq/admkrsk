@@ -9,7 +9,7 @@ use Yii;
 use yii\rbac\Item;
 use yii\rbac\Rule;
 
-class EntityRule extends Rule
+class EntityAccessRule extends Rule
 {
     public $name = 'EntityAccess';
 
