@@ -79,7 +79,7 @@ class Workflow extends Model
             $server_output = curl_exec($curl);
 
             print_r($server_output);
-            die();
+            //die();
 
             if(curl_exec($curl) === false)
             {
@@ -118,7 +118,7 @@ class Workflow extends Model
             $server_output = curl_exec($curl);
 
             print_r($server_output);
-            die();
+            //die();
 
             if(curl_exec($curl) === false)
             {
@@ -160,7 +160,7 @@ class Workflow extends Model
             $server_output = curl_exec($curl);
 
             print_r($server_output);
-            die();
+            //die();
 
             if(curl_exec($curl) === false)
             {
