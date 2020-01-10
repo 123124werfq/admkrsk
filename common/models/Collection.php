@@ -6,6 +6,7 @@ use common\behaviors\AccessControlBehavior;
 use common\behaviors\MailNotifyBehaviour;
 use common\components\collection\CollectionQuery;
 use common\components\softdelete\SoftDeleteTrait;
+use common\components\yiinput\RelationBehavior;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;

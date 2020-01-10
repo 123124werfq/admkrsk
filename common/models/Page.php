@@ -77,22 +77,17 @@ class Page extends ActiveRecord
     {
         return [
             [['id_media', 'active'], 'default', 'value' => null],
-            [['id_media', 'active', 'id_parent', 'noguest','hidemenu', 'old_parent'], 'integer'],
+            [['id_media', 'active', 'id_parent', 'noguest','hidemenu', 'old_parent','notify_rule'], 'integer'],
             /*['id_parent', 'filter', 'filter' => function($value) {
                 return (int) $value;
             }],*/
             [['id_parent'], 'required', 'when' => function($model) {
                 return $model->alias != '/';
-            [['id_media', 'active', 'id_parent'], 'default', 'value' => null],
-            [['id_media', 'active', 'id_parent', 'noguest', 'hidemenu','notify_rule'], 'integer'],
-            ['id_parent', 'filter', 'filter' => function ($value) {
-                return (int)$value;
             }],
-            [['is_admin_notify'], 'boolean'],
             [['title', 'alias'], 'required'],
-            [['content', 'path','notify_message'], 'string',],
-            [['content','path'], 'string'],
+            [['content','path','notify_message'], 'string'],
             [['is_partition'], 'boolean'],
+            [['is_admin_notify'], 'boolean'],
             [['alias'], 'unique'],
             [['title', 'alias', 'seo_title', 'seo_description', 'seo_keywords'], 'string', 'max' => 255],
             [['partition_domain'], 'url', 'defaultScheme' => 'http'],
@@ -114,7 +109,6 @@ class Page extends ActiveRecord
             'title' => 'Название',
             'id_parent' => 'Родительская страница',
             'alias' => 'URL',
-            'hidemenu' => 'Скрыть в меню',
             'content' => 'Содержание',
             'seo_title' => 'Seo Заголовок',
             'seo_description' => 'Seo Описание',
@@ -315,8 +309,7 @@ class Page extends ActiveRecord
      */
     public function getChilds()
     {
-        return $this->children(1);
-        //return $this->hasMany(Page::class, ['id_parent' => 'id_page'])->orderBy('ord ASC');
+        return $this->hasMany(Page::class, ['id_parent' => 'id_page'])->orderBy('ord ASC');
     }
 
     /*public function getSubMenu()

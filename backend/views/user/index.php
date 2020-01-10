@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="ibox">
     <div class="ibox-content">
         <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
-    </div>        
+    </div>
 </div>
 <div class="ibox">
     <div class="ibox-content">
@@ -32,18 +32,20 @@ $this->params['breadcrumbs'][] = $this->title;
                     'format' => 'raw',
                     'value' => function (User $model) {
                         $badge = "";
-                        if(!empty($model->id_ad_user)) {
+                        $desc = "";
+                        if (!empty($model->id_ad_user)) {
                             $desc = $model->getAdinfo()->one()->description;
-                            if(empty($desc))
+                            if (empty($desc)) {
                                 $desc = $model->getAdinfo()->one()->company;
-                            $badge = ' <span class="badge badge-warning">AD</span><br/><small>' . $desc . '</small>';
+                            }
+                            $badge .= ' <span class="badge badge-warning">AD</span>';
                         }
-                        else if(!empty($model->id_esia_user))
-                            $badge = ' <span class="badge badge-primary">ЕСИА</span>';
+                        if (!empty($model->id_esia_user)) {
+                            $badge .= ' <span class="badge badge-primary">ЕСИА</span>';
+                        }
+                        $badge .= '<br/><small>' . $desc . '</small>';
 
-
-
-                        return $model->getUsername().$badge;
+                        return $model->getUsername() . $badge;
                     },
                 ],
                 //'auth_key',

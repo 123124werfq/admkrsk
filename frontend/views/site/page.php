@@ -22,6 +22,12 @@ function parseAttributesFromTag($tag){
     return $result;
 }
 
+$user = Yii::$app->user->identity;
+$userActiveDirectory = null;
+if ($user) {
+    $userActiveDirectory = $user->activeDirectoryUser;
+}
+
 ?>
     <div class="main">
         <div class="container">
@@ -31,9 +37,13 @@ function parseAttributesFromTag($tag){
                 </div>
             </div>
             <div>
-                <?php if (Yii::$app->user->can('admin')):  ?>
-                <!-- todo поскольку у вас 2 входных точки, то я не могу использовать относительный Url пропишите абсолютный url сами -->
-                <a href="http://ADMIN.URL/page/update?id=<?= $page->id_page ?>">Редактировать страницу</a>
+                <?php if ($userActiveDirectory && $userActiveDirectory->can('backend.page')):  ?>
+                <a
+                        style="border-bottom: 1px solid black;
+                        border-bottom-style: dashed;"
+                        href="<?= Yii::$app->params['backendUrl'] ?>/page/update?id=<?= $page->id_page ?>">
+                    редактировать страницу
+                </a>
                 <?php endif; ?>
             </div>
             <div class="row">
