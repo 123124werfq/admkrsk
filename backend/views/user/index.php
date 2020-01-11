@@ -43,6 +43,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         if (!empty($model->id_esia_user)) {
                             $badge .= ' <span class="badge badge-primary">ЕСИА</span>';
                         }
+
+                        if(!empty($model->id_ad_user) && !empty($model->id_esia_user)) {
+                            $badge .= ' <em>связан с пользователем ' . $model->esiainfo->fullname . '</em>';
+                        }
+
                         $badge .= '<br/><small>' . $desc . '</small>';
 
                         return $model->getUsername() . $badge;
