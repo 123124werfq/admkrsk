@@ -7,9 +7,7 @@ use common\behaviors\MailNotifyBehaviour;
 use common\components\multifile\MultiUploadBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
-
 use creocoder\nestedsets\NestedSetsBehavior;
-
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
@@ -51,7 +49,6 @@ class Page extends ActiveRecord
     const VERBOSE_NAME_PLURAL = 'Страницы';
     const TITLE_ATTRIBUTE = 'title';
 
-    public $old_parent; //$id_parent,
     /**
      * Is need to notify the administrator
      *
@@ -59,6 +56,7 @@ class Page extends ActiveRecord
      */
     public $is_admin_notify;
 
+    public $old_parent; //$id_parent,
     public $access_user_ids;
     public $access_user_group_ids;
     public $existUrl;
@@ -172,7 +170,7 @@ class Page extends ActiveRecord
         if (empty($this->id_parent))
             $this->path = $this->id_page;
         else
-            $this->path = $this->parent->path . '/' . $this->id_page;
+            $this->path = $this->parent->path.'/'.$this->id_page;
 
         $this->updateAttributes(['path']);
 
@@ -185,8 +183,9 @@ class Page extends ActiveRecord
     {
         $page = Page::findOne($id);
 
-        if (!empty($page))
+        if (!empty($page)) {
             return $page->getUrl();
+        }
 
         return false;
     }
@@ -304,8 +303,7 @@ class Page extends ActiveRecord
      */
     public function getChilds()
     {
-        return $this->children(1);
-        //return $this->hasMany(Page::class, ['id_parent' => 'id_page'])->orderBy('ord ASC');
+        return $this->hasMany(Page::class, ['id_parent' => 'id_page'])->orderBy('ord ASC');
     }
 
     /*public function getSubMenu()

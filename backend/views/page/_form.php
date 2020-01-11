@@ -82,6 +82,7 @@ use yii\widgets\ActiveForm;
 
 <?php if (Yii::$app->user->can('admin.page')): ?>
     <hr>
+
     <h3>Настройка уведомлений</h3>
     <?= $form->field($model, 'notify_rule')->radioList(
         [

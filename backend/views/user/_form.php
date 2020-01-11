@@ -1,5 +1,6 @@
 <?php
 
+use backend\widgets\UserActiveDirectoryMapEsia;
 use common\models\User;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -35,6 +36,10 @@ $model->roles = $model ? ArrayHelper::getColumn(Yii::$app->authManager->getRoles
 	    'grouptype'=>1,
 	    'showPreview'=>true
 	]);?>
+
+    <?php if ($model->id_ad_user || empty($model->id_esia_user)): ?>
+        <?= $form->field($model, 'esia_user')->label('Связь с пользователем ЕСИА')->widget(UserActiveDirectoryMapEsia::class) ?>
+    <?php endif; ?>
 
 	<?= $form->field($model, 'roles[]')->hiddenInput() ?>
 

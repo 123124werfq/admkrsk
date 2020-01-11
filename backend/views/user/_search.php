@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\UserSearch */
+/* @var $model \backend\models\search\UserSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -16,16 +16,22 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     ]); ?>
 
-    <?php // $form->field($model, 'id') ?>
-    <div class="col-md-2">
-        <?= $form->field($model, 'username') ?>
-    </div>
-    <div class="col-md-2">
-        <?= $form->field($model, 'email') ?>
-    </div>
-    <div class="col-md-2">
-        <?= $form->field($model, 'source')->dropDownlist([0=>'Все',1=>'ЕСИА', 2=>'Active Directory']) ?>
-    </div>
+        <?php // $form->field($model, 'id') ?>
+        <div class="col-md-2">
+            <?= $form->field($model, 'username') ?>
+        </div>
+        <div class="col-md-2">
+            <?= $form->field($model, 'email') ?>
+        </div>
+        <div class="col-md-2">
+            <?= $form->field($model, 'source')->dropDownlist(
+                [
+                    0 => 'Все',
+                    1 => 'ЕСИА',
+                    2 => 'Active Directory',
+                    3 => 'ЕСИА - Active Directory'
+                ]) ?>
+        </div>
 
     <?php // $form->field($model, 'password_hash') ?>
 
