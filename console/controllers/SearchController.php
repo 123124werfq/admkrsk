@@ -50,7 +50,7 @@ class SearchController extends Controller
         $parseUrl = 'https://t1.admkrsk.ru/city/areas/center';
         try
         {
-            $doc->loadHTMLFile($parseUrl);
+            $doc->loadHTMLFile($parseUrl, LIBXML_NOWARNING);
         }
         catch (\Exception $e)
         {
