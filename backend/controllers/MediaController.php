@@ -206,7 +206,7 @@ class MediaController extends Controller
             $ip = Yii::$app->request->userIP;
 
             if ($ip != '127.0.0.1') {
-                $url = str_replace('127.0.0.1:9000', 'storage.admkrsk.ru', Yii::$app->publicStorage->getPublicUrl($filetowrite));
+                $url = str_replace('http://127.0.0.1:9000', 'https://storage.admkrsk.ru', Yii::$app->publicStorage->getPublicUrl($filetowrite));
             }
 
             // Respond to the successful upload with JSON.
