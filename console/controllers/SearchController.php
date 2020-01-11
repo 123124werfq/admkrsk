@@ -57,6 +57,8 @@ class SearchController extends Controller
             catch (\Exception $e)
             {
                 echo " - failed\n";
+                var_dump($e);
+                die();
                 continue;
             }
 
