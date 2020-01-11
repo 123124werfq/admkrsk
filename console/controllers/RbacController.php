@@ -39,6 +39,11 @@ class RbacController extends Controller
             $menuAccessRule = new MenuAccessRule();
             $auth->add($menuAccessRule);
 
+            $backendEntityAccess = $auth->createPermission('backend.entityAccess');
+            $backendEntityAccess->description = 'Доступ к сущностям';
+            $backendEntityAccess->ruleName = $entityAccessRule->name;
+            $auth->add($backendEntityAccess);
+
 
             $backendAddressIndex = $auth->createPermission('backend.address.index');
             $backendAddressIndex->description = 'Список адресов';
@@ -169,47 +174,38 @@ class RbacController extends Controller
 
             $backendCollectionImport = $auth->createPermission('backend.collection.import');
             $backendCollectionImport->description = 'Список коллекций';
-            $backendCollectionImport->ruleName = $entityAccessRule->name;
             $auth->add($backendCollectionImport);
 
             $backendCollectionIndex = $auth->createPermission('backend.collection.index');
             $backendCollectionIndex->description = 'Список коллекций';
-            $backendCollectionIndex->ruleName = $entityAccessRule->name;
             $auth->add($backendCollectionIndex);
 
             $backendCollectionView = $auth->createPermission('backend.collection.view');
             $backendCollectionView->description = 'Просмотр коллекций';
-            $backendCollectionView->ruleName = $entityAccessRule->name;
             $auth->add($backendCollectionView);
 
             $backendCollectionCreate = $auth->createPermission('backend.collection.create');
             $backendCollectionCreate->description = 'Создание коллекции';
-            $backendCollectionCreate->ruleName = $entityAccessRule->name;
             $auth->add($backendCollectionCreate);
 
             $backendCollectionUpdate = $auth->createPermission('backend.collection.update');
             $backendCollectionUpdate->description = 'Редактирование коллекции';
-            $backendCollectionUpdate->ruleName = $entityAccessRule->name;
             $auth->add($backendCollectionUpdate);
 
             $backendCollectionDelete = $auth->createPermission('backend.collection.delete');
             $backendCollectionDelete->description = 'Удаление коллекции';
-            $backendCollectionDelete->ruleName = $entityAccessRule->name;
             $auth->add($backendCollectionDelete);
 
             $backendCollectionLogIndex = $auth->createPermission('backend.collection.log.index');
             $backendCollectionLogIndex->description = 'Список изменений';
-            $backendCollectionLogIndex->ruleName = $entityAccessRule->name;
             $auth->add($backendCollectionLogIndex);
 
             $backendCollectionLogView = $auth->createPermission('backend.collection.log.view');
             $backendCollectionLogView->description = 'Просмотр изменений';
-            $backendCollectionLogView->ruleName = $entityAccessRule->name;
             $auth->add($backendCollectionLogView);
 
             $backendCollectionLogRestore = $auth->createPermission('backend.collection.log.restore');
             $backendCollectionLogRestore->description = 'Восстановление изменений';
-            $backendCollectionLogRestore->ruleName = $entityAccessRule->name;
             $auth->add($backendCollectionLogRestore);
 
             $backendManageCollection = $auth->createPermission('backend.collection');
@@ -1303,6 +1299,7 @@ class RbacController extends Controller
             $backendManage = $auth->createPermission('backend');
             $backendManage->description = 'Административная часть';
             $auth->add($backendManage);
+            $auth->addChild($backendManage, $backendEntityAccess);
 
 
             $user = $auth->createRole('user');
@@ -1793,8 +1790,10 @@ class RbacController extends Controller
             return $auth->getRole($value) ? true : false;
         }, 'error' => 'Неверная роль.']);
 
-        $auth->assign($auth->getRole($role), $user->id);
-        $auth->invalidateCache();
+        if (!$auth->checkAccess($user->id, $role)) {
+            $auth->assign($auth->getRole($role), $user->id);
+            $auth->invalidateCache();
+        }
 
         Console::output('Роль успешно добавлена.');
     }

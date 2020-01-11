@@ -37,6 +37,17 @@ trait AccessTrait
         return $hasAccessCacheKey;
     }
 
+    public static function hasEntityAccessCacheKey($entity_id)
+    {
+        static $hasAccessCacheKey;
+
+        if (!$hasAccessCacheKey) {
+            $hasAccessCacheKey = static::rbacCacheKey() . ".hasEntityAccess.$entity_id";
+        }
+
+        return $hasAccessCacheKey;
+    }
+
     public static function entityIdsCacheKey()
     {
         static $entityIdsCacheKey;
@@ -71,6 +82,33 @@ trait AccessTrait
         }
 
         return $hasAccess;
+    }
+
+    public static function hasEntityAccess($entity_id = null)
+    {
+        if (!Yii::$app->cache->exists(self::hasEntityAccessCacheKey($entity_id))) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $hasEntityAccess = true;
+            } elseif ($entity_id) {
+                $hasEntityAccess = in_array($entity_id, self::getAccessEntityIds());
+            } else {
+                $hasEntityAccess = !empty(self::getAccessEntityIds());
+            }
+
+            Yii::$app->cache->set(
+                self::hasEntityAccessCacheKey($entity_id),
+                $hasEntityAccess,
+                0,
+                new TagDependency(['tags' => User::rbacCacheTag()])
+            );
+        } else {
+            $hasEntityAccess = Yii::$app->cache->get(self::hasEntityAccessCacheKey($entity_id));
+        }
+
+        return $hasEntityAccess;
     }
 
     public static function getAccessEntityIds()

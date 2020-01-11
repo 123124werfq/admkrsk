@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\StringHelper;
 
 /**
  * This is the model class for table "{{%auth_entity}}".
@@ -75,16 +76,16 @@ class AuthEntity extends \yii\db\ActiveRecord
      */
     public static function getEntityIds($className)
     {
-        return self::find()->select('entity_id')->andWhere([
-            'or',
-            [
-                'class' => $className,
-                'id_user' => Yii::$app->user->id,
-            ],
-            [
-                'class' => $className,
-                'id_user_group' => Yii::$app->user->identity->groupIds,
-            ]
-        ])->column();
+        $basename = StringHelper::basename($className);
+        $classMethod = "getAccess{$basename}Ids";
+
+        $entityIds = [];
+        if (method_exists($className, $classMethod)) {
+            $entityIds = $className::$classMethod();
+        } elseif (method_exists($className, 'getAccessEntityIds')) {
+            $entityIds = $className::getAccessEntityIds();
+        }
+
+        return $entityIds;
     }
 }

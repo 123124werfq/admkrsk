@@ -295,6 +295,33 @@ class News extends \yii\db\ActiveRecord
         return $hasAccess;
     }
 
+    public static function hasEntityAccess($entity_id)
+    {
+        if (!Yii::$app->cache->exists(self::hasEntityAccessCacheKey($entity_id))) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $hasEntityAccess = true;
+            } elseif ($entity_id) {
+                $hasEntityAccess = in_array($entity_id, self::getAccessNewsIds());
+            } else {
+                $hasEntityAccess = !empty(self::getAccessNewsIds());
+            }
+
+            Yii::$app->cache->set(
+                self::hasEntityAccessCacheKey($entity_id),
+                $hasEntityAccess,
+                0,
+                new TagDependency(['tags' => User::rbacCacheTag()])
+            );
+        } else {
+            $hasEntityAccess = Yii::$app->cache->get(self::hasEntityAccessCacheKey($entity_id));
+        }
+
+        return $hasEntityAccess;
+    }
+
     public static function getAccessNewsIds()
     {
         if (!Yii::$app->cache->exists(self::entityIdsCacheKey())) {

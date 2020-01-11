@@ -48,7 +48,7 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['import'],
-                        'roles' => ['backend.collection.import'],
+                        'roles' => ['backend.collection.import', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Collection::class,
                         ],
@@ -56,7 +56,7 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index','redactor'],
-                        'roles' => ['backend.collection.index'],
+                        'roles' => ['backend.collection.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Collection::class,
                         ],
@@ -64,7 +64,7 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['get-collections'],
-                        'roles' => ['backend.collection.index'],
+                        'roles' => ['backend.collection.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Collection::class,
                         ],
@@ -72,7 +72,7 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.collection.view'],
+                        'roles' => ['backend.collection.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Collection::class,
@@ -81,7 +81,7 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create','record', 'create-view','copy','assign','record-list'],
-                        'roles' => ['backend.collection.create'],
+                        'roles' => ['backend.collection.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Collection::class,
                         ],
@@ -89,7 +89,7 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.collection.update'],
+                        'roles' => ['backend.collection.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Collection::class,
@@ -98,7 +98,7 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete', 'delete-record'],
-                        'roles' => ['backend.collection.delete'],
+                        'roles' => ['backend.collection.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Collection::class,
@@ -107,7 +107,7 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.collection.log.index'],
+                        'roles' => ['backend.collection.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Collection::class,
@@ -116,7 +116,7 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.collection.log.view'],
+                        'roles' => ['backend.collection.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -130,7 +130,7 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.collection.log.restore'],
+                        'roles' => ['backend.collection.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
