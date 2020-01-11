@@ -15,6 +15,23 @@ class SearchController extends Controller
 
     public function actionIndex()
     {
+        libxml_use_internal_errors(true);
+        $doc = new \DOMDocument();
+        libxml_clear_errors();
+
+        $parseUrl = 'https://t1.admkrsk.ru/city/areas/center';
+        try
+        {
+            $doc->loadHTMLFile($parseUrl);
+        }
+        catch (\Exception $e)
+        {
+            echo " - failed\n";
+            die();
+        }
+
+        die();
+
         /*
         $parseUrl = 'http://t1.admkrsk.ru/citytoday';
         libxml_use_internal_errors(true);
@@ -50,6 +67,7 @@ class SearchController extends Controller
             $doc = new \DOMDocument();
             libxml_clear_errors();
             echo $parseUrl;
+            $pageUrl = 'https://t1.admkrsk.ru/city/areas/center';
             try
             {
                 $doc->loadHTMLFile($parseUrl);
@@ -57,7 +75,6 @@ class SearchController extends Controller
             catch (\Exception $e)
             {
                 echo " - failed\n";
-                var_dump($e);
                 die();
                 continue;
             }
