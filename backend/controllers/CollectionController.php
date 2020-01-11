@@ -571,6 +571,7 @@ class CollectionController extends Controller
                 $json['dir'] = $model->order_direction;
                 $json['pagesize'] = $model->pagesize;
                 $json['show_row_num'] = $model->show_row_num;
+                $json['show_on_map'] = $model->show_on_map;
                 $json['show_column_num'] = $model->show_column_num;
 
                 return json_encode($json);

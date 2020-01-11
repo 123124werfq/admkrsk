@@ -74,6 +74,8 @@ else
 
     <?=$form->field($model, 'show_column_num')->checkBox();?>
 
+    <?=$form->field($model, 'show_on_map')->checkBox();?>
+
     <?=$form->field($model, 'id_parent_collection',['template'=>'{input}'])->hiddenInput();?>
 
     <?=$form->field($model, 'id_group')->dropDownList($columns,['prompt'=>'Выберите колонку для группировки']);?>
