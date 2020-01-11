@@ -48,7 +48,13 @@ class SearchController extends Controller
         libxml_clear_errors();
 
         $parseUrl = 'https://t1.admkrsk.ru/city/areas/center';
-        $strdom = file_get_contents($parseUrl);
+        $arrContextOptions=array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+        $strdom = file_get_contents($parseUrl, false, stream_context_create($arrContextOptions));
         var_dump($strdom);
         try
         {
