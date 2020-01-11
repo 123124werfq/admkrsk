@@ -49,11 +49,11 @@ function parseAttributesFromTag($tag){
                                 if (!empty($attributes['id'])) {
                                     $class = 'frontend\widgets\\' . ucwords($matches[1][$key]) . 'Widget';
 
-                                    $page->content = str_replace($match, $class::widget(['attributes' => $attributes, 'page' => $page]), $page->content);
+                                    $page->content = '<div class="widget-wrapper">'.str_replace($match, $class::widget(['attributes' => $attributes, 'page' => $page]), $page->content).'</div>';
                                 }
                             }
 
-                        echo $page->content;
+                            echo $page->content;
                         ?>
 
                         <?php if (!empty($page->medias)) { ?>

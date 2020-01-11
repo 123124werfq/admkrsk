@@ -305,7 +305,6 @@ class CollectionController extends Controller
         if (!empty(Yii::$app->request->post('type'))) {
             switch (Yii::$app->request->post('type')) {
                 case 'coords':
-
                     if (isset($columns['X']) && $columns['Y']) {
                         $newColumn = $collection->createColumn([
                             'name' => 'Координаты',
@@ -332,7 +331,6 @@ class CollectionController extends Controller
                             }
                         }
                     }
-
                     break;
                 default:
                     # code...

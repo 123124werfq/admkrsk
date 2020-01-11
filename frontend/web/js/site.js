@@ -49,6 +49,7 @@ function addInput(block)
 $(document).ready(function() {
 
     var curpage = 0;
+
     $(".col-2-third .load-more").click(function(){
 
         curpage++;
@@ -68,13 +69,37 @@ $(document).ready(function() {
         return false;
     });
 
+    if ($(".table-responsive").length>0)
+    {
+        $(".table-responsive").each(function(){
+            var $table_wrapper = $(this);
+
+            if (($table_wrapper.find('table').width()+200) > $table_wrapper.width())
+            {
+                $table_wrapper.closest('.widget-wrapper').prepend('<a href="javascript:" class="close-window">&times;</a>');
+                $table_wrapper.before('<a class="fullsize-table" href="javascript:">Показать на весь экран</a>');
+            }
+        });
+    }
+
+    $("body").delegate('.fullsize-table','click',function(){
+        var $link = $(this);
+
+        $link.closest('.widget-wrapper').addClass('full-screen');
+        return false;
+    });
+
+    $(".widget-wrapper").delegate('.close-window','click',function(){
+        $(this).parent().removeClass('full-screen');
+        return false;
+    });
+
     $(".search-table select, .search-table input").change(function(){
         var $form = $(this).closest('form');
         $.pjax({
             container: '#'+$form.data('hash'),
             data: $form.serialize(),
             timeout:10000,
-            //dataType: 'application/json'
         });
     });
 
