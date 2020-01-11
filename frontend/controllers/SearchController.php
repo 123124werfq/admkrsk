@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 use common\models\Address;
 use common\models\SearchSitemap;
+use yii\data\SqlDataProvider;
 use Yii;
 
 class SearchController extends \yii\web\Controller
@@ -25,12 +26,34 @@ class SearchController extends \yii\web\Controller
     public function actionIndex()
     {
         $query = Yii::$app->request->get('q');
+        $order = Yii::$app->request->get('ord', false);
 
         $result = [];
-        if(!empty($query))
-            $result = SearchSitemap::fulltext($query);
+        if(!empty($query)) {
+            $sqlQuery = SearchSitemap::fulltext($query, $order == 'date', true);
 
-        return $this->render('index', ['result' => $result, 'request' => htmlspecialchars($query)]);
+            $sqlCountQuery = str_replace("SELECT *", "SELECT COUNT(*)", $sqlQuery);
+
+            $count = Yii::$app->db->createCommand($sqlCountQuery)->queryScalar();
+
+            $provider = new SqlDataProvider([
+                'sql' => $sqlQuery,
+                'totalCount' => $count,
+                'pagination' => [
+                    'pageSize' => 10,
+                ],
+                'sort' => [
+                    'attributes' => [
+                        'title',
+                        'view_count',
+                        'created_at',
+                    ],
+                ],
+            ]);
+
+        }
+
+        return $this->render('index', ['provider' => $provider, 'request' => htmlspecialchars($query)]);
     }
 
 }

@@ -10,11 +10,62 @@ use yii\console\Controller;
 
 class SearchController extends Controller
 {
-    private $baseUrl = 'http://t1.admkrsk.ru';
+    private $baseUrl = 'https://t1.admkrsk.ru';
     private $docsUrl = '';
 
     public function actionIndex()
     {
+
+        function display_xml_error($error)
+        {
+            $return = str_repeat('-', $error->column) . "^\n";
+
+            switch ($error->level) {
+                case LIBXML_ERR_WARNING:
+                    $return .= "Warning $error->code: ";
+                    break;
+                case LIBXML_ERR_ERROR:
+                    $return .= "Error $error->code: ";
+                    break;
+                case LIBXML_ERR_FATAL:
+                    $return .= "Fatal Error $error->code: ";
+                    break;
+            }
+
+            $return .= trim($error->message) .
+                "\n  Line: $error->line" .
+                "\n  Column: $error->column";
+
+            if ($error->file) {
+                $return .= "\n  File: $error->file";
+            }
+
+            return "$return\n\n--------------------------------------------\n\n";
+        }
+
+        libxml_use_internal_errors(true);
+        $doc = new \DOMDocument();
+        libxml_clear_errors();
+
+        $parseUrl = 'https://t1.admkrsk.ru/city/areas/center';
+        try
+        {
+            $doc->loadHTMLFile($parseUrl, LIBXML_NOWARNING);
+        }
+        catch (\Exception $e)
+        {
+            echo " - failed\n";
+
+            $errors = libxml_get_errors();
+
+            foreach ($errors as $error) {
+                echo display_xml_error($error);
+            }
+            die();
+        }
+
+        die();
+
         /*
         $parseUrl = 'http://t1.admkrsk.ru/citytoday';
         libxml_use_internal_errors(true);
@@ -50,6 +101,7 @@ class SearchController extends Controller
             $doc = new \DOMDocument();
             libxml_clear_errors();
             echo $parseUrl;
+            $pageUrl = 'https://t1.admkrsk.ru/city/areas/center';
             try
             {
                 $doc->loadHTMLFile($parseUrl);
@@ -57,6 +109,7 @@ class SearchController extends Controller
             catch (\Exception $e)
             {
                 echo " - failed\n";
+                die();
                 continue;
             }
 
@@ -72,10 +125,11 @@ class SearchController extends Controller
             $dateContent = $xpath->query('//span[contains(@class,"publish-date")]');
             $dt = strtotime(strip_tags($doc->saveHTML($dateContent->item(0))));
 
+            $dateContent = $xpath->query('//span[contains(@class,"update-date")]');
+            $mt = strtotime(strip_tags($doc->saveHTML($dateContent->item(0))));
+
             $header = $xpath->query('//div[contains(@class,"searchable")]/h1');
             $h1 = strip_tags($doc->saveHTML($header->item(0)));
-
-
 
             if(!empty($cnt))
             {
@@ -83,6 +137,7 @@ class SearchController extends Controller
                 $searchitem->content = $cnt;
                 $searchitem->url = $parseUrl;
                 $searchitem->content_date = $dt;
+                $searchitem->modified_at = $mt;
                 $searchitem->header = $h1;
                 $searchitem->save(false);
             }
