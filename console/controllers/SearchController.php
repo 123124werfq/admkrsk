@@ -51,6 +51,7 @@ class SearchController extends Controller
         try
         {
             $strdom = file_get_contents($parseUrl);
+            var_dump($strdom);
             $doc->loadHTML($strdom);
             //$doc->loadHTMLFile($parseUrl, LIBXML_NOWARNING);
         }
