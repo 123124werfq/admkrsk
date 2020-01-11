@@ -103,6 +103,9 @@ class MailNotifyBehaviour extends Behavior
             /** @var Message[] $messages */
             $messages = [];
             $templateMessage = $this->owner{$this->messageAttribute};
+
+            $mailFrom = isset(Yii::$app->params['email'])?Yii::$app->params['email']:'noreply@admkrsk.ru';
+
             foreach ($usersNotify as $user) {
                 $this->recordMessage($user, $templateMessage);
                 $messages[] = $mailer->compose(
@@ -112,7 +115,7 @@ class MailNotifyBehaviour extends Behavior
                     ]
                 )
                     //todo configure swiftMailer->transport and params that send emails!
-                    ->setFrom([Yii::$app->params['email'] => $this->senderName])
+                    ->setFrom([$mailFrom => $this->senderName])
                     ->setTo($user->email)
                     ->setSubject($this->subject);
             }
