@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\models\CollectionRecord;
+use common\models\CollectionColumn;
 use common\models\Page;
 
 class CollectionController extends \yii\web\Controller
@@ -22,6 +23,35 @@ class CollectionController extends \yii\web\Controller
 			'page'=>$page,
 		]);
 	}
+
+    public function actionCoords($id,$id_column)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $collection = $this->findModel($id);
+        $columns = $collection->getColumns()->indexBy('id_column')->all();
+
+        if (empty($columns[$id_column]) || $columns[$id_column]->type!=CollectionColumn::TYPE_MAP)
+            return [];
+
+        $records = $stripos->getArray();
+
+        $points = [];
+        foreach ($records as $key => $data)
+        {
+            if (!empty($data[$id_column]) && is_array($data[$id_column]))
+            {
+                $points[] = [
+                    'x' => $data[$id_column][0],
+                    'y' => $data[$id_column][1],
+                    'icon' => '',
+                    'content' => 'Пробная метка'
+                ];
+            }
+        }
+
+        return $points;
+    }
 
 	public function actionRecordList($id,$q)
     {

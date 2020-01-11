@@ -76,11 +76,17 @@ $(document).ready(function() {
 
             if (($table_wrapper.find('table').width()+200) > $table_wrapper.width())
             {
-                $table_wrapper.closest('.widget-wrapper').prepend('<a href="javascript:" class="close-window">&times;</a>');
-                $table_wrapper.before('<a class="fullsize-table" href="javascript:">Показать на весь экран</a>');
+                $table_wrapper.closest('.widget-wrapper')
+                    .prepend('<a href="javascript:" class="close-window">&times;</a>')
+                    .find('.collection-controls')
+                    .append('<a class="fullsize-table" href="javascript:">На весь экран</a>');
             }
         });
     }
+
+    $("body").delegate('.showonmap','click',function(){
+        showMap($(this),$(this).data('hash'));
+    });
 
     $("body").delegate('.fullsize-table','click',function(){
         var $link = $(this);

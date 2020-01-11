@@ -77,6 +77,7 @@ class Collection extends ActiveRecord
 
     public $show_row_num;
     public $show_column_num;
+    public $show_on_map;
 
     public $id_partitions = [];
 
@@ -99,7 +100,7 @@ class Collection extends ActiveRecord
             [['alias'], 'unique'],
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
-            [['id_parent_collection','id_group','id_column_order','order_direction','pagesize','show_row_num','show_column_num', 'notify_rule'], 'integer'],
+            [['id_parent_collection','id_group','id_column_order','order_direction','pagesize','show_row_num','show_column_num', 'notify_rule', 'show_on_map'], 'integer'],
             [['filter', 'options','label'], 'safe'],
             [['template','template_element','template_view','notify_message'], 'string'],
             [['is_authenticate'], 'boolean'],
@@ -138,6 +139,7 @@ class Collection extends ActiveRecord
             'pagesize'=>'Элементов на страницу',
             'show_column_num'=>'Показывать номер столбца',
             'show_row_num'=>'Показывать номер строки',
+            'show_on_map'=>'Показать на карте',
             'created_at' => 'Создана',
             'created_by' => 'Кем создана',
             'updated_at' => 'Изменено',
@@ -222,7 +224,7 @@ class Collection extends ActiveRecord
             return $this->hasMany(CollectionColumn::class, ['id_collection' => 'id_collection'])->orderBy('ord ASC');
         } else {
             return $this->hasMany(CollectionColumn::class,
-                ['id_collection' => 'id_parent_collection'])->orderBy('ord ASC');
+                ['id_collection' => 'id_parent_collection'])->indexBy()->orderBy('ord ASC');
         }
     }
 

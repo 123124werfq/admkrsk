@@ -22,7 +22,12 @@
     opacity: 0;
 }
 
-.fullsize-table {margin-bottom: 10px; float: right; border-bottom: 0px;}
+.collection-controls {text-align: right; hidden;}
+.collection-controls a {margin-bottom: 10px; border-bottom: 0px; display: inline-block; margin-left: 10px;}
+
+.showonmap {margin-bottom: 10px;}
+.collection-map {display: none;}
+
 .close-window {
     display: none;
     position: absolute;
