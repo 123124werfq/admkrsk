@@ -37,8 +37,8 @@ $model->roles = $model ? ArrayHelper::getColumn(Yii::$app->authManager->getRoles
 	    'showPreview'=>true
 	]);?>
 
-    <?php if ($model->id_ad_user): ?>
-        <?= $form->field($model, 'esia_user')->label('Сопаставьте себе пользователя из ЕСИА')->widget(UserActiveDirectoryMapEsia::class) ?>
+    <?php if ($model->id_ad_user || empty($model->id_esia_user)): ?>
+        <?= $form->field($model, 'esia_user')->label('Связь с пользователем ЕСИА')->widget(UserActiveDirectoryMapEsia::class) ?>
     <?php endif; ?>
 
 	<?= $form->field($model, 'roles[]')->hiddenInput() ?>

@@ -24,7 +24,7 @@ class UserActiveDirectoryMapEsia extends Select2
             'maximumSelectionLength' => 1,
             'minimumInputLength' => 1,
             'ajax' => [
-                'url' => Url::toRoute(['/user/list']),
+                'url' => Url::toRoute(['/user/esialist']),
                 'dataType' => 'json',
                 'data' => new JsExpression('function(params) { return {q:params.term}; }')
             ],
