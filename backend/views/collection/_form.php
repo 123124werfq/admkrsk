@@ -57,6 +57,7 @@ use yii\web\JsExpression;
     <hr>
 
     <h3>Настройка уведомлений</h3>
+
     <?= $form->field($model, 'notify_rule')->radioList(
         [
             0 => 'Отключить уведомления',

@@ -153,7 +153,7 @@ class SiteController extends Controller
             }
 
             $esia = User::openId();
-            $esia->setSigner(new \Esia\Signer\CliSignerPKCS7(
+            $esia->setSigner(new CliSignerPKCS7(
                 Yii::getAlias('@app'). '/assets/admkrsk.pem',
                 Yii::getAlias('@app'). '/assets/admkrsk.pem',
                 'T%52gs]CPJ',
@@ -733,7 +733,7 @@ class SiteController extends Controller
         }
 
         $esia = User::openId();
-        $esia->setSigner(new \Esia\Signer\CliSignerPKCS7(
+        $esia->setSigner(new CliSignerPKCS7(
             Yii::getAlias('@app'). '/assets/admkrsk.pem',
             Yii::getAlias('@app'). '/assets/admkrsk.pem',
             'T%52gs]CPJ',

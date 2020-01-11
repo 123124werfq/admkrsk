@@ -708,7 +708,7 @@ class CollectionController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //  $model->logUserAction(Action::ACTION_UPDATE);
+            $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id_collection]);
         }
 
