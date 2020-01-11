@@ -195,7 +195,9 @@ class Media extends \yii\db\ActiveRecord
 
     public function getUrl()
     {
-        return $this->makePublic(Yii::$app->publicStorage->getPublicUrl($this->getFilePath()));
+        $url = str_replace('http://storage.admkrsk.ru', 'https://storage.admkrsk.ru', $this->makePublic(Yii::$app->publicStorage->getPublicUrl($this->getFilePath())));
+        
+        return $url;
     }
 
     public function getFilePath()
