@@ -10,7 +10,7 @@ use yii\console\Controller;
 
 class SearchController extends Controller
 {
-    private $baseUrl = 'http://t1.admkrsk.ru';
+    private $baseUrl = 'https://t1.admkrsk.ru';
     private $docsUrl = '';
 
     public function actionIndex()
