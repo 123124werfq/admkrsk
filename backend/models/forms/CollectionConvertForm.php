@@ -12,7 +12,7 @@ class CollectionConvertForm extends Model
     public function rules()
     {
         return [
-            [['id_collection','type'], 'required'],
+            [['type'], 'required'],
             [['id_collection'], 'integer'],
             [['type'], 'string'],
         ];

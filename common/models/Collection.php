@@ -224,7 +224,7 @@ class Collection extends ActiveRecord
             return $this->hasMany(CollectionColumn::class, ['id_collection' => 'id_collection'])->orderBy('ord ASC');
         } else {
             return $this->hasMany(CollectionColumn::class,
-                ['id_collection' => 'id_parent_collection'])->orderBy('ord ASC');
+                ['id_collection' => 'id_parent_collection'])->indexBy()->orderBy('ord ASC');
         }
     }
 

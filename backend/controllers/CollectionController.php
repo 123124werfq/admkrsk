@@ -85,7 +85,7 @@ class CollectionController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['create', 'record', 'create-view', 'copy', 'assign', 'record-list'],
+                        'actions' => ['create', 'record', 'create-view', 'copy', 'assign', 'convert-type', 'record-list'],
                         'roles' => ['backend.collection.create'],
                         'roleParams' => [
                             'class' => Collection::class,
@@ -293,7 +293,7 @@ class CollectionController extends Controller
      * @throws \Throwable
      * @throws StaleObjectException
      */
-    public function actionConverType($id)
+    public function actionConvertType($id)
     {
         set_time_limit(0);
 
@@ -302,17 +302,24 @@ class CollectionController extends Controller
         $collection = $this->findModel($id);
         $columns = $collection->getColumns()->indexBy('alias')->all();;
 
-        if (!empty(Yii::$app->request->post('type'))) {
-            switch (Yii::$app->request->post('type')) {
-                case 'coords':
-                    if (isset($columns['X']) && $columns['Y']) {
+        if ($form->load(Yii::$app->request->post()) && $form->validate())
+        {
+            switch ($form->type)
+            {
+                case CollectionColumn::TYPE_MAP:
+                    $x = Yii::$app->request->post('x');
+                    $y = Yii::$app->request->post('y');
+
+                    if (!empty($x) && !empty($y))
+                    {
                         $newColumn = $collection->createColumn([
                             'name' => 'Координаты',
                             'alias' => 'map_coords',
                             'type' => CollectionColumn::TYPE_MAP,
                         ]);
 
-                        if ($newColumn) {
+                        if ($newColumn)
+                        {
                             // добавляем инпут в форму
                             $newColumn->collection->form->createInput([
                                 'type' => $newColumn->type,
@@ -324,21 +331,32 @@ class CollectionController extends Controller
 
                             $alldata = $collection->getData([], true);
 
-                            foreach ($alldata as $key => $data) {
-                                $record = CollectionRecord::findOne($data['id_record']);
-                                $record->data = [$newColumn->id_column => [$data['X'], $data['Y']]];
+                            foreach ($alldata as $id_record => $data)
+                            {
+                                $record = CollectionRecord::findOne($id_record);
+                                $record->data = [$newColumn->id_column => [$data[$x], $data[$y]]];
                                 $record->update();
                             }
                         }
+                        else
+                            print_r($newColumn->errors);
                     }
+
                     break;
+
                 default:
                     # code...
                     break;
             }
+
+            return $this->refresh();
         }
 
-        return $this->render('convert');
+        return $this->render('convert/convert',[
+            'formConvert'=>$form,
+            'columns'=>$columns,
+            'model'=>$collection,
+        ]);
     }
 
     /**

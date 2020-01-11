@@ -342,7 +342,7 @@ class Helper
 
 		if (isset($get['v']))
 		{
-			return '<iframe width="438" height="267" src="http://www.youtube.com/embed/'.$get['v'].'" frameborder="0" allowfullscreen></iframe>';
+			return '<iframe width="438" height="267" src="//www.youtube.com/embed/'.$get['v'].'" frameborder="0" allowfullscreen></iframe>';
 		}
 
 		return '';
@@ -387,7 +387,7 @@ class Helper
 
 			if (isset($get['v']))
 			{
-				$file = file_get_contents("http://img.youtube.com/vi/{$get['v']}/0.jpg");
+				$file = file_get_contents("//img.youtube.com/vi/{$get['v']}/0.jpg");
 				$img = Yii::app()->params['upload'].$get['v'].'.jpg';
 				file_put_contents($img,$file);
 
