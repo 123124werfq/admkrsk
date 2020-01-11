@@ -48,10 +48,10 @@ class SearchController extends Controller
         libxml_clear_errors();
 
         $parseUrl = 'https://t1.admkrsk.ru/city/areas/center';
+        $strdom = file_get_contents($parseUrl);
+        var_dump($strdom);
         try
         {
-            $strdom = file_get_contents($parseUrl);
-            var_dump($strdom);
             $doc->loadHTML($strdom);
             //$doc->loadHTMLFile($parseUrl, LIBXML_NOWARNING);
         }
