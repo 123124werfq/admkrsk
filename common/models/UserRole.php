@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\traits\AccessTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
@@ -21,6 +22,7 @@ class UserRole extends \yii\db\ActiveRecord
 {
     use MetaTrait;
     use ActionTrait;
+    use AccessTrait;
 
     const VERBOSE_NAME = 'Роль пользователя';
     const VERBOSE_NAME_PLURAL = 'Роли пользователей';

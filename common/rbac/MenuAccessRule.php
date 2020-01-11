@@ -2,11 +2,6 @@
 
 namespace common\rbac;
 
-use common\models\AuthEntity;
-use common\models\Collection;
-use common\models\Page;
-use common\models\User;
-use common\models\UserGroup;
 use Yii;
 use yii\rbac\Item;
 use yii\rbac\Rule;
@@ -23,8 +18,6 @@ class MenuAccessRule extends Rule
      */
     public function execute($user, $item, $params)
     {
-        $adminItem = str_replace('menu', 'admin', $item->name);
-
         if (isset($params['class']) && method_exists($params['class'], 'hasAccess')) {
             return $params['class']::hasAccess();
         }

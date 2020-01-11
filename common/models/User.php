@@ -1,6 +1,7 @@
 <?php
 namespace common\models;
 
+use common\traits\AccessTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
@@ -8,6 +9,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
+use yii\helpers\StringHelper;
 use yii\web\IdentityInterface;
 
 /**
@@ -39,6 +41,7 @@ class User extends ActiveRecord implements IdentityInterface
 {
     use MetaTrait;
     use ActionTrait;
+    use AccessTrait;
 
     const VERBOSE_NAME = 'Пользователь';
     const VERBOSE_NAME_PLURAL = 'Пользователи';
@@ -483,4 +486,19 @@ class User extends ActiveRecord implements IdentityInterface
         return new \Esia\OpenId($config);
     }
 
+
+    public static function rbacCacheTag($userId = null)
+    {
+        static $rbacCacheKey;
+
+        if (!$userId) {
+            $userId = Yii::$app->user->identity->id;
+        }
+
+        if (!$rbacCacheKey) {
+            $rbacCacheKey = "rbac.$userId";
+        }
+
+        return $rbacCacheKey;
+    }
 }

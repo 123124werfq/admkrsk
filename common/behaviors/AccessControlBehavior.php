@@ -3,9 +3,11 @@
 namespace common\behaviors;
 
 use common\models\AuthEntity;
+use common\models\User;
 use Yii;
 use yii\base\Behavior;
 use yii\base\InvalidConfigException;
+use yii\caching\TagDependency;
 use yii\db\ActiveRecord;
 use yii\db\BaseActiveRecord;
 
@@ -51,6 +53,8 @@ class AccessControlBehavior extends Behavior
         $permission = Yii::$app->authManager->getPermission($this->permission);
 
         if ($this->owner->{$this->userAttribute} !== null || $this->owner->{$this->userGroupAttribute} !== null) {
+            $rbacInvalidateIds = [];
+
             $transaction = Yii::$app->db->beginTransaction();
             try {
                 $authEntities = AuthEntity::find()
@@ -76,9 +80,13 @@ class AccessControlBehavior extends Behavior
                     if (!$queryAuthEntity->exists()) {
                         if ($authEntity->id_user) {
                             Yii::$app->authManager->revoke($permission, $authEntity->id_user);
+
+                            $rbacInvalidateIds[$authEntity->id_user] = $authEntity->id_user;
                         } elseif ($authEntity->id_user_group) {
                             foreach ($authEntity->userGroup->users as $user) {
                                 Yii::$app->authManager->revoke($permission, $user->id);
+
+                                $rbacInvalidateIds[$user->id] = $user->id;
                             }
                         }
                     }
@@ -98,6 +106,8 @@ class AccessControlBehavior extends Behavior
 
                             if (!Yii::$app->authManager->checkAccess($authEntity->id_user, $permission->name)) {
                                 Yii::$app->authManager->assign($permission, $authEntity->id_user);
+
+                                $rbacInvalidateIds[$authEntity->id_user] = $authEntity->id_user;
                             }
                         }
                     }
@@ -116,6 +126,8 @@ class AccessControlBehavior extends Behavior
                             foreach ($authEntity->userGroup->users as $user) {
                                 if (!Yii::$app->authManager->checkAccess($user->id, $permission->name)) {
                                     Yii::$app->authManager->assign($permission, $user->id);
+
+                                    $rbacInvalidateIds[$user->id] = $user->id;
                                 }
                             }
 
@@ -131,6 +143,10 @@ class AccessControlBehavior extends Behavior
             } catch (\Throwable $e) {
                 $transaction->rollBack();
                 throw $e;
+            }
+
+            foreach ($rbacInvalidateIds as $rbacInvalidateId) {
+                TagDependency::invalidate(Yii::$app->cache, User::rbacCacheTag($rbacInvalidateId));
             }
         }
     }

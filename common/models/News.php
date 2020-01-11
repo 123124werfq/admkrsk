@@ -4,13 +4,17 @@ namespace common\models;
 use common\behaviors\AccessControlBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\AccessTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use dosamigos\taggable\Taggable;
+use yii\caching\TagDependency;
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
+use yii\helpers\StringHelper;
 
 /**
  * This is the model class for table "db_news".
@@ -47,6 +51,7 @@ class News extends \yii\db\ActiveRecord
     use MetaTrait;
     use ActionTrait;
     use SoftDeleteTrait;
+    use AccessTrait;
 
     const VERBOSE_NAME = 'Новость';
     const VERBOSE_NAME_PLURAL = 'Новости';
@@ -263,5 +268,60 @@ class News extends \yii\db\ActiveRecord
     public function getFullUrl()
     {
         return $this->getUrl(true);
+    }
+
+    public static function hasAccess()
+    {
+        if (!Yii::$app->cache->exists(self::hasAccessCacheKey())) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $hasAccess = true;
+            } else {
+                $hasAccess = !empty(self::getAccessNewsIds());
+            }
+
+            Yii::$app->cache->set(
+                self::hasAccessCacheKey(),
+                $hasAccess,
+                0,
+                new TagDependency(['tags' => User::rbacCacheTag()])
+            );
+        } else {
+            $hasAccess = Yii::$app->cache->get(self::hasAccessCacheKey());
+        }
+
+        return $hasAccess;
+    }
+
+    public static function getAccessNewsIds()
+    {
+        if (!Yii::$app->cache->exists(self::entityIdsCacheKey())) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $entityIds = null;
+            } else {
+                $entityIds = News::find()
+                    ->select('id_news')
+                    ->andFilterWhere(['id_page' => Page::getAccessPageIds()])
+                    ->column();
+
+                $entityIds = array_unique(ArrayHelper::merge($entityIds, self::getAccessEntityIds()));
+            }
+
+            Yii::$app->cache->set(
+                self::entityIdsCacheKey(),
+                $entityIds,
+                0,
+                new TagDependency(['tags' => User::rbacCacheTag()])
+            );
+        } else {
+            $entityIds = Yii::$app->cache->get(self::entityIdsCacheKey());
+        }
+
+        return $entityIds;
     }
 }

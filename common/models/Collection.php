@@ -12,9 +12,11 @@ use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\caching\TagDependency;
 use yii\db\ActiveQuery;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use yii\helpers\StringHelper;
 use yii\helpers\Url;
 
 /**
@@ -480,19 +482,57 @@ class Collection extends \yii\db\ActiveRecord
 
     public static function hasAccess()
     {
-        return !empty(self::getAccessCollectionIds());
+        if (!Yii::$app->cache->exists(self::hasAccessCacheKey())) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $hasAccess = true;
+            } else {
+                $hasAccess = !empty(self::getAccessCollectionIds());
+            }
+
+            Yii::$app->cache->set(
+                self::hasAccessCacheKey(),
+                $hasAccess,
+                0,
+                new TagDependency(['tags' => User::rbacCacheTag()])
+            );
+        } else {
+            $hasAccess = Yii::$app->cache->get(self::hasAccessCacheKey());
+        }
+
+        return $hasAccess;
     }
 
     public static function getAccessCollectionIds()
     {
-        $userId = Yii::$app->user->identity->id;
+        if (!Yii::$app->cache->exists(self::entityIdsCacheKey())) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
 
-        $collectionIds = (new Query())
-            ->from('dbl_collection_page')
-            ->select('id_collection')
-            ->andWhere(['id_page' => Page::getAccessPageIds()])
-            ->column();
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $entityIds = null;
+            } else {
+                $entityIds = (new Query())
+                    ->from('dbl_collection_page')
+                    ->select('id_collection')
+                    ->andFilterWhere(['id_page' => Page::getAccessPageIds()])
+                    ->column();
 
-        return array_unique(ArrayHelper::merge($collectionIds, self::getAccessIds()));
+                $entityIds = array_unique(ArrayHelper::merge($entityIds, self::getAccessEntityIds()));
+            }
+
+            Yii::$app->cache->set(
+                self::entityIdsCacheKey(),
+                $entityIds,
+                0,
+                new TagDependency(['tags' => User::rbacCacheTag()])
+            );
+        } else {
+            $entityIds = Yii::$app->cache->get(self::entityIdsCacheKey());
+        }
+
+        return $entityIds;
     }
 }

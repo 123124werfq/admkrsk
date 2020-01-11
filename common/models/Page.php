@@ -5,16 +5,16 @@ namespace common\models;
 use common\behaviors\AccessControlBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
-
 use common\traits\AccessTrait;
 use creocoder\nestedsets\NestedSetsBehavior;
-
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\caching\TagDependency;
 use yii\db\ActiveQuery;
+use yii\helpers\StringHelper;
 
 /**
  * This is the model class for table "cnt_page".
@@ -231,7 +231,7 @@ class Page extends \yii\db\ActiveRecord
                 'permission' => 'backend.page',
             ],
             'tree'=>[
-                'class' => NestedSetsBehavior::className(),
+                'class' => NestedSetsBehavior::class,
             ],
             'multiupload' => [
                 'class' => \common\components\multifile\MultiUploadBehavior::class,
@@ -340,7 +340,27 @@ class Page extends \yii\db\ActiveRecord
 
     public static function hasAccess()
     {
-        return !empty(self::getAccessPageIds());
+        if (!Yii::$app->cache->exists(self::hasAccessCacheKey())) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $hasAccess = true;
+            } else {
+                $hasAccess = !empty(self::getAccessPageIds());
+            }
+
+            Yii::$app->cache->set(
+                self::hasAccessCacheKey(),
+                $hasAccess,
+                0,
+                new TagDependency(['tags' => User::rbacCacheTag()])
+            );
+        } else {
+            $hasAccess = Yii::$app->cache->get(self::hasAccessCacheKey());
+        }
+
+        return $hasAccess;
     }
 
     /**
@@ -348,24 +368,40 @@ class Page extends \yii\db\ActiveRecord
      */
     public static function getAccessPageIds()
     {
-        $pageIds = [];
+        if (!Yii::$app->cache->exists(self::entityIdsCacheKey())) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
 
-        $partitionQuery = Page::find()
-            ->andWhere([
-                'id_page' => self::getAccessIds(),
-                'is_partition' => true,
-            ]);
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $entityIds = null;
+            } else {
+                $entityIds = [];
 
-        foreach ($partitionQuery->each() as $partition) {
-            /* @var Page $partition */
-            $pageIds[$partition->id_page] = $partition->id_page;
+                $partitionQuery = Page::find()
+                    ->andFilterWhere(['id_page' => self::getAccessEntityIds()])
+                    ->andWhere(['is_partition' => true]);
 
-            foreach ($partition->children()->each() as $childPartition) {
-                /* @var Page $childPartition */
-                $pageIds[$childPartition->id_page] = $childPartition->id_page;
+                foreach ($partitionQuery->each() as $partition) {
+                    /* @var Page $partition */
+                    $entityIds[$partition->id_page] = $partition->id_page;
+
+                    foreach ($partition->children()->each() as $childPartition) {
+                        /* @var Page $childPartition */
+                        $entityIds[$childPartition->id_page] = $childPartition->id_page;
+                    }
+                }
             }
+
+            Yii::$app->cache->set(
+                self::entityIdsCacheKey(),
+                $entityIds,
+                0,
+                new TagDependency(['tags' => User::rbacCacheTag()])
+            );
+        } else {
+            $entityIds = Yii::$app->cache->get(self::entityIdsCacheKey());
         }
 
-        return $pageIds;
+        return $entityIds;
     }
 }

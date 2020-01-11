@@ -1,59 +1,108 @@
 <?php
 
+use common\models\Address;
+use common\models\Alert;
+use common\models\Application;
 use common\models\Collection;
+use common\models\ControllerPage;
+use common\models\Faq;
+use common\models\FaqCategory;
+use common\models\Form;
+use common\models\FormInputType;
+use common\models\Gallery;
+use common\models\Menu;
+use common\models\News;
+use common\models\Opendata;
+use common\models\Page;
+use common\models\Poll;
+use common\models\Project;
+use common\models\Service;
+use common\models\ServiceRubric;
+use common\models\ServiceSituation;
+use common\models\Statistic;
+use common\models\User;
+use common\models\UserGroup;
+use common\models\UserRole;
+use common\models\Vars;
 
 return [
     'address' => [
         'title' => 'Адреса',
         'icon' => 'fa fa-map-marker',
-        'roles' => ['backend.address'],
+        'roles' => [
+            'menu.address' => ['class' => Address::class],
+        ],
         'submenu' => [
             'country' => [
                 'title' => 'Страны',
-                'roles' => ['backend.address'],
+                'roles' => [
+                    'menu.address' => ['class' => Address::class],
+                ],
             ],
             'region' => [
                 'title' => 'Регионы',
-                'roles' => ['backend.address'],
+                'roles' => [
+                    'menu.address' => ['class' => Address::class],
+                ],
             ],
             'subregion' => [
                 'title' => 'Районы',
-                'roles' => ['backend.address'],
+                'roles' => [
+                    'menu.address' => ['class' => Address::class],
+                ],
             ],
             'city' => [
                 'title' => 'Города',
-                'roles' => ['backend.address'],
+                'roles' => [
+                    'menu.address' => ['class' => Address::class],
+                ],
             ],
             'district' => [
                 'title' => 'Районы города',
-                'roles' => ['backend.address'],
+                'roles' => [
+                    'menu.address' => ['class' => Address::class],
+                ],
             ],
             'street' => [
                 'title' => 'Улицы',
-                'roles' => ['backend.address'],
+                'roles' => [
+                    'menu.address' => ['class' => Address::class],
+                ],
             ],
             'address' => [
                 'title' => 'Дома',
-                'roles' => ['backend.address'],
+                'roles' => [
+                    'menu.address' => ['class' => Address::class],
+                ],
             ],
         ],
     ],
     'user' => [
         'title' => 'Пользователи',
         'icon' => 'fa fa-user',
-        'roles' => ['backend.user', 'backend.userGroup', 'backend.userRole'],
+        'roles' => [
+            'menu.user' => ['class' => User::class],
+            'menu.userGroup' => ['class' => UserGroup::class],
+            'menu.userRole' => ['class' => UserRole::class],
+        ],
         'submenu' => [
             'user' => [
                 'title' => 'Пользователи',
-                'roles' => ['backend.user'],
+                'roles' => [
+                    'menu.user' => ['class' => User::class],
+                ],
             ],
             'user-group' => [
                 'title' => 'Группы',
-                'roles' => ['backend.userGroup'],
+                'roles' => [
+                    'menu.userGroup' => ['class' => UserGroup::class],
+                ],
             ],
             'user-role' => [
                 'title' => 'Роли',
-                'roles' => ['backend.userRole'],
+                'roles' => [
+                    'menu.userRole' => ['class' => UserRole::class],
+                ],
             ],
         ],
     ],
@@ -61,83 +110,116 @@ return [
         'title' => 'Списки',
         'icon' => 'fa fa-bars',
         'roles' => [
-            'menu.collection' => [
-                'class' => Collection::class
-            ],
+            'menu.collection' => ['class' => Collection::class],
         ],
     ],
     'form' => [
         'title' => 'Формы',
         'icon' => 'fa fa-inbox',
-        'roles' => ['backend.form', 'backend.formInputType'],
+        'roles' => [
+            'menu.form' => ['class' => Form::class],
+            'menu.formInputType' => ['class' => FormInputType::class],
+        ],
         'submenu' => [
             'form' => [
                 'title' => 'Формы',
-                'roles' => ['backend.form'],
+                'roles' => [
+                    'menu.form' => ['class' => Form::class],
+                ],
             ],
             'form?is_template=1' => [
                 'title' => 'Шаблоны форм',
-                'roles' => ['backend.form'],
+                'roles' => [
+                    'menu.form' => ['class' => Form::class],
+                ],
             ],
             'form-input-type' => [
                 'title' => 'Поведения полей',
-                'roles' => ['backend.formInputType'],
+                'roles' => [
+                    'menu.formInputType' => ['class' => FormInputType::class],
+                ],
             ],
         ],
     ],
     'news' => [
         'title' => 'Пресс-центр',
         'icon' => 'fa fa-newspaper-o',
-        'roles' => ['backend.news'],
+        'roles' => [
+            'menu.news' => ['class' => News::class],
+        ],
     ],
     'poll' => [
         'title' => 'Опросы',
         'icon' => 'fa fa-bar-chart-o',
-        'roles' => ['backend.poll'],
+        'roles' => [
+            'menu.poll' => ['class' => Poll::class],
+        ],
     ],
     'page' => [
         'title' => 'Разделы',
         'icon' => 'fa fa-sitemap',
-        'roles' => ['backend.page'],
+        'roles' => [
+            'menu.page' => ['class' => Page::class],
+        ],
     ],
     'gallery' => [
         'title' => 'Галереи',
         'icon' => 'fa fa-picture-o',
-        'roles' => ['backend.gallery'],
+        'roles' => [
+            'menu.gallery' => ['class' => Gallery::class],
+        ],
     ],
     'project' => [
         'title' => 'Проекты и события',
         'icon' => 'fa fa-bullhorn',
-        'roles' => ['backend.project'],
+        'roles' => [
+            'menu.project' => ['class' => Project::class],
+        ],
     ],
     'service' => [
         'title' => 'Муниципальные услуги',
         'icon' => 'fa fa-flash',
-        'roles' => ['backend.service', 'backend.serviceSituation', 'backend.serviceRubric'],
+        'roles' => [
+            'menu.service' => ['class' => Service::class],
+            'menu.serviceSituation' => ['class' => ServiceSituation::class],
+            'menu.serviceRubric' => ['class' => ServiceRubric::class],
+        ],
         'submenu' => [
             'service' => [
                 'title' => 'Услуги',
-                'roles' => ['backend.service'],
+                'roles' => [
+                    'menu.service' => ['class' => Service::class],
+                ]
             ],
             'service-situation' => [
                 'title' => 'Жизненные ситуации',
-                'roles' => ['backend.serviceSituation'],
+                'roles' => [
+                    'menu.serviceSituation' => ['class' => ServiceSituation::class],
+                ]
             ],
             'service-rubric' => [
                 'title' => 'Рубрикатор',
-                'roles' => ['backend.serviceRubric'],
+                'roles' => [
+                    'menu.serviceRubric' => ['class' => ServiceRubric::class],
+                ]
             ],
             'service-target' => [
                 'title' => 'Цели',
-                'roles' => ['backend.service'],
+                'roles' => [
+                    'menu.service' => ['class' => Service::class],
+                ]
             ],
             'service-complaint-form' => [
                 'title' => 'Связи обжалования',
-                'roles' => ['backend.service'],
+                'roles' => [
+                    'menu.service' => ['class' => Service::class],
+                ]
             ],
             'appeal' => [
                 'title' => 'Обращения',
-                'roles' => ['backend.service'],
+                'roles' => [
+                    'menu.service' => ['class' => Service::class],
+                ]
             ],
         ],
     ],
@@ -148,46 +230,67 @@ return [
     'faq' => [
         'title' => 'Вопросы и ответы',
         'icon' => 'fa fa-question-circle',
-        'roles' => ['backend.faq', 'backend.faqCategory'],
+        'roles' => [
+            'menu.faq' => ['class' => Faq::class],
+            'menu.faqCategory' => ['class' => FaqCategory::class],
+        ],
         'submenu' => [
             'faq' => [
                 'title' => 'Вопросы и ответы',
-                'roles' => ['backend.faq'],
+                'roles' => [
+                    'menu.faq' => ['class' => Faq::class],
+                ],
             ],
             'faq-category' => [
                 'title' => 'Категории',
-                'roles' => ['backend.faqCategory'],
+                'roles' => [
+                    'menu.faqCategory' => ['class' => FaqCategory::class],
+                ],
             ],
         ],
     ],
     'reserve' => [
         'title' => 'Кадровый резерв',
         'icon' => 'fa fa-address-book',
-        'roles' => ['backend.menu', 'backend.alert', 'backend.vars', 'backend.controllerPage', 'backend.form'],
+        'roles' => [
+            'menu.form' => ['class' => Form::class],
+        ],
         'submenu' => [
             'reserve/profile' => [
                 'title' => 'Анкеты',
-                'roles' => ['backend.form'],
+                'roles' => [
+                    'menu.form' => ['class' => Form::class],
+                ],
             ],
             'reserve/contest' => [
                 'title' => 'Голосования',
-                'roles' => ['backend.form'],
+                'roles' => [
+                    'menu.form' => ['class' => Form::class],
+                ],
             ],
             'reserve/dynamic' => [
                 'title' => 'Ход голосования',
-                'roles' => ['backend.form'],
+                'roles' => [
+                    'menu.form' => ['class' => Form::class],
+                ],
             ],
             'reserve/experts' => [
                 'title' => 'Эксперты',
-                'roles' => ['backend.form'],
+                'roles' => [
+                    'menu.form' => ['class' => Form::class],
+                ],
             ],
             'reserve/list' => [
                 'title' => 'Резерв',
-                'roles' => ['backend.form'],
+                'roles' => [
+                    'menu.form' => ['class' => Form::class],
+                ],
             ],
             'reserve/archived' => [
                 'title' => 'Архив',
-                'roles' => ['backend.form'],
+                'roles' => [
+                    'menu.form' => ['class' => Form::class],
+                ],
             ],
         ],
     ],
@@ -195,45 +298,63 @@ return [
         'title' => 'Система',
         'icon' => 'fa fa-gears',
         'roles' => [
-            'backend.menu',
-            'backend.alert',
-            'backend.vars',
-            'backend.controllerPage',
-            'backend.opendata',
-            'backend.application'
+            'menu.menu' => ['class' => Menu::class],
+            'menu.alert' => ['class' => Alert::class],
+            'menu.vars' => ['class' => Vars::class],
+            'menu.controllerPage' => ['class' => ControllerPage::class],
+            'menu.opendata' => ['class' => Opendata::class],
+            'menu.statistic' => ['class' => Statistic::class],
+            'menu.service' => ['class' => Service::class],
+            'menu.application' => ['class' => Application::class],
         ],
         'submenu' => [
             'menu' => [
                 'title' => 'Меню',
-                'roles' => ['backend.menu'],
+                'roles' => [
+                    'menu.menu' => ['class' => Menu::class],
+                ],
             ],
             'alert' => [
                 'title' => 'Всплывающие сообщения',
-                'roles' => ['backend.alert'],
+                'roles' => [
+                    'menu.alert' => ['class' => Alert::class],
+                ],
             ],
             'vars' => [
                 'title' => 'Переменные',
-                'roles' => ['backend.vars'],
+                'roles' => [
+                    'menu.vars' => ['class' => Vars::class],
+                ],
             ],
             'controller-page' => [
                 'title' => 'Резервированные пути',
-                'roles' => ['backend.controllerPage'],
+                'roles' => [
+                    'menu.controllerPage' => ['class' => ControllerPage::class],
+                ],
             ],
             'opendata' => [
                 'title' => 'Открытые данные',
-                'roles' => ['backend.opendata'],
+                'roles' => [
+                    'menu.opendata' => ['class' => Opendata::class],
+                ],
             ],
             'statistic' => [
                 'title' => 'Статистика',
-                'roles' => ['backend.statistic']
+                'roles' => [
+                    'menu.statistic' => ['class' => Statistic::class],
+                ]
             ],
             'integrations' => [
                 'title' => 'Интеграции',
-                'roles' => ['backend.service']
+                'roles' => [
+                    'menu.service' => ['class' => Service::class],
+                ]
             ],
             'application' => [
                 'title' => 'Приложения (API)',
-                'roles' => ['backend.application']
+                'roles' => [
+                    'menu.application' => ['class' => Application::class],
+                ]
             ],
         ],
     ],
