@@ -17,6 +17,8 @@ function showMap($link,block_id)
 {
     var map;
 
+    $('#map'+block_id).parent().addClass('open');
+
     ymaps.ready(
         function () {
 
@@ -32,7 +34,7 @@ function showMap($link,block_id)
             type: "GET",
             dataType: "html",
             url: "/collection/coords",
-            data: {id:$link.data('id'),id_column:$link.data('id_column')}
+            data: {id:$link.data('id'),id_column:$link.data('column')}
         }).done(function(data){
             updatePoints(map, data)
         });

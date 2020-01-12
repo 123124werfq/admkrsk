@@ -5,6 +5,9 @@ namespace frontend\controllers;
 use common\models\CollectionRecord;
 use common\models\CollectionColumn;
 use common\models\Page;
+use common\models\Collection;
+use yii\web\Response;
+use Yii;
 
 class CollectionController extends \yii\web\Controller
 {
@@ -34,7 +37,7 @@ class CollectionController extends \yii\web\Controller
         if (empty($columns[$id_column]) || $columns[$id_column]->type!=CollectionColumn::TYPE_MAP)
             return [];
 
-        $records = $stripos->getArray();
+        $records = $collection->getData();
 
         $points = [];
         foreach ($records as $key => $data)

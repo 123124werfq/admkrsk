@@ -22,11 +22,13 @@
     opacity: 0;
 }
 
-.collection-controls {text-align: right; hidden;}
+.collection-controls {text-align: right; }
 .collection-controls a {margin-bottom: 10px; border-bottom: 0px; display: inline-block; margin-left: 10px;}
 
 .showonmap {margin-bottom: 10px;}
-.collection-map {display: none;}
+.collection-map {display: none; margin-bottom: 20px;}
+.collection-map.open {display: block; height: 300px;}
+.collection-map.open > div {height: 300px;}
 
 .close-window {
     display: none;

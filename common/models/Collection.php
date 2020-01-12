@@ -240,9 +240,8 @@ class Collection extends ActiveRecord
 
         $output = [];
 
-        foreach ($data as $key => $row) {
+        foreach ($data as $key => $row)
             $output[$key] = implode(' ', $row);
-        }
 
         return $output;
     }
