@@ -2,6 +2,15 @@ function updatePoints(mapObject, pointsArray)
 {
     mapObject.geoObjects.removeAll();
 
+    let clusterer = new ymaps.Clusterer({
+            //preset: 'islands#invertedVioletClusterIcons',
+            groupByCoordinates: false,
+            clusterDisableClickZoom: true,
+            clusterHideIconOnBalloonOpen: false,
+            geoObjectHideIconOnBalloonOpen: false
+    }),
+        geoObjects = [];
+
     for (let counter = 0; counter < pointsArray.length; counter++)
     {
         let pointTemp  = new ymaps.Placemark([pointsArray[counter]['x'], pointsArray[counter]['y']], {
@@ -9,8 +18,14 @@ function updatePoints(mapObject, pointsArray)
             }, {
                 preset: pointsArray[counter]['icon']
             });
-        mapObject.geoObjects.add(pointTemp);
+        //mapObject.geoObjects.add(pointTemp);
+        geoObjects[counter] = pointTemp;
     }
+    clusterer.add(geoObjects);
+    mapObject.geoObjects.add(clusterer);
+    mapObject.setBounds(mapObject.geoObjects.getBounds());
+    mapObject.setZoom(mapObject.getZoom()-0.4);
+
 }
 
 function showMap($link,block_id)
@@ -33,7 +48,7 @@ function showMap($link,block_id)
 
         $.ajax({
             type: "GET",
-            dataType: "html",
+            dataType: "json",
             url: "/collection/coords",
             data: {id:$link.data('id'),id_column:$link.data('column')}
         }).done(function(data){
