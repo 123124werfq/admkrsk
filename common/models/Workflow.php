@@ -107,15 +107,14 @@ class Workflow extends Model
             curl_setopt($curl, CURLOPT_URL, $url);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
             curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $message);
-
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
             $headers = [
                 'SOAPAction:urn:#Operation_03_00_004FL',
                 //'SOAPAction:Operation_03_00_004FL',
                 'Content-Type: text/xml; charset=utf-8',
-                //'Content-Transfer-Encoding: binary'
+                'Content-Length: '.strlen($message),
+                'Content-Transfer-Encoding: text'
             ];
 
             curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
