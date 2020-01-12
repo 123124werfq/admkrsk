@@ -96,10 +96,30 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
             case CollectionColumn::TYPE_TEXTAREA:
                 echo $form->field($model, $attribute)->textArea($options);
                 break;
+            case CollectionColumn::TYPE_ADDRESSES:
+                echo $form->field($model, $attribute)->widget(Select2::class, [
+                    'data' => [],
+                    'pluginOptions' => [
+                        'multiple' => true,
+                        'minimumInputLength' => 1,
+                        'placeholder' => 'Выберите адрес',
+                        'ajax' => [
+                            'url' => '/search/address',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {q:params.term};}')
+                        ],
+                    ],
+                    'options' => [
+                        'multiple' => true,
+                        'value' => array_keys($value)
+                    ]
+                ]);
+                break;
+
             case CollectionColumn::TYPE_ADDRESS:
                 echo $form->field($model, $attribute)->textInput($options);
                 $script = <<< JS
-	$("#{$options['id']}").autocomplete({
+$("#{$options['id']}").autocomplete({
         'minLength':'2',
         'showAnim':'fold',
         'select': function(event, ui) {
