@@ -23,6 +23,9 @@ function updatePoints(mapObject, pointsArray)
     }
     clusterer.add(geoObjects);
     mapObject.geoObjects.add(clusterer);
+    mapObject.setBounds(mapObject.geoObjects.getBounds());
+    mapObject.setZoom(mapObject.getZoom()-0.4);
+
 }
 
 function showMap($link,block_id)
