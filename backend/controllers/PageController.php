@@ -33,7 +33,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['layout','template'],
-                        'roles' => ['backend.page.layout'],
+                        'roles' => ['backend.page.layout', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Page::class,
@@ -42,7 +42,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index', 'list', 'tree'],
-                        'roles' => ['backend.page.index'],
+                        'roles' => ['backend.page.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Page::class,
                         ],
@@ -50,7 +50,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.page.view'],
+                        'roles' => ['backend.page.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Page::class,
@@ -59,7 +59,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.page.create'],
+                        'roles' => ['backend.page.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Page::class,
                         ],
@@ -67,7 +67,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update','hide','order'],
-                        'roles' => ['backend.page.update'],
+                        'roles' => ['backend.page.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Page::class,
@@ -76,7 +76,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.page.delete'],
+                        'roles' => ['backend.page.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Page::class,
@@ -85,7 +85,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.page.log.index'],
+                        'roles' => ['backend.page.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Page::class,
@@ -94,7 +94,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.page.log.view'],
+                        'roles' => ['backend.page.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -108,7 +108,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.page.log.restore'],
+                        'roles' => ['backend.page.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {

@@ -8,6 +8,7 @@ use common\models\UserUserGroup;
 use Yii;
 use yii\caching\TagDependency;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 
 trait AccessTrait
@@ -63,7 +64,7 @@ trait AccessTrait
     {
         if (!Yii::$app->cache->exists(self::hasAccessCacheKey())) {
             $userId = Yii::$app->user->identity->id;
-            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+            $permissionName = 'admin.' . Inflector::variablize(StringHelper::basename(self::class));
 
             if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
                 $hasAccess = true;
@@ -88,7 +89,7 @@ trait AccessTrait
     {
         if (!Yii::$app->cache->exists(self::hasEntityAccessCacheKey($entity_id))) {
             $userId = Yii::$app->user->identity->id;
-            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+            $permissionName = 'admin.' . Inflector::variablize(StringHelper::basename(self::class));
 
             if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
                 $hasEntityAccess = true;
@@ -115,7 +116,7 @@ trait AccessTrait
     {
         if (!Yii::$app->cache->exists(self::entityIdsCacheKey())) {
             $userId = Yii::$app->user->identity->id;
-            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+            $permissionName = 'admin.' . Inflector::variablize(StringHelper::basename(self::class));
 
             if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
                 $entityIds = null;

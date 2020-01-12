@@ -30,7 +30,7 @@ class ControllerPageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.controllerPage.index'],
+                        'roles' => ['backend.controllerPage.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => ControllerPage::class,
                         ],
@@ -38,7 +38,7 @@ class ControllerPageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.controllerPage.view'],
+                        'roles' => ['backend.controllerPage.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ControllerPage::class,
@@ -47,7 +47,7 @@ class ControllerPageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.controllerPage.create'],
+                        'roles' => ['backend.controllerPage.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => ControllerPage::class,
                         ],
@@ -55,7 +55,7 @@ class ControllerPageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.controllerPage.update'],
+                        'roles' => ['backend.controllerPage.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ControllerPage::class,
@@ -64,7 +64,7 @@ class ControllerPageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.controllerPage.delete'],
+                        'roles' => ['backend.controllerPage.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ControllerPage::class,
@@ -73,7 +73,7 @@ class ControllerPageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.controllerPage.log.index'],
+                        'roles' => ['backend.controllerPage.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ControllerPage::class,
@@ -82,7 +82,7 @@ class ControllerPageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.controllerPage.log.view'],
+                        'roles' => ['backend.controllerPage.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -96,7 +96,7 @@ class ControllerPageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.controllerPage.log.restore'],
+                        'roles' => ['backend.controllerPage.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -131,7 +131,7 @@ class ControllerPageController extends Controller
         }
 
         if (!Yii::$app->user->can('admin.controllerPage')) {
-            $query->andWhere(['id' => AuthEntity::getEntityIds(ControllerPage::class)]);
+            $query->andFilterWhere(['id' => AuthEntity::getEntityIds(ControllerPage::class)]);
         }
 
         $dataProvider = new ActiveDataProvider([

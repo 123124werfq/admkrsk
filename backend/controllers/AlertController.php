@@ -29,7 +29,7 @@ class AlertController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.alert.index'],
+                        'roles' => ['backend.alert.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Alert::class,
                         ],
@@ -37,7 +37,7 @@ class AlertController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.alert.view'],
+                        'roles' => ['backend.alert.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Alert::class,
@@ -46,7 +46,7 @@ class AlertController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.alert.create'],
+                        'roles' => ['backend.alert.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Alert::class,
                         ],
@@ -54,7 +54,7 @@ class AlertController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.alert.update'],
+                        'roles' => ['backend.alert.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Alert::class,
@@ -63,7 +63,7 @@ class AlertController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.alert.delete'],
+                        'roles' => ['backend.alert.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Alert::class,
@@ -72,7 +72,7 @@ class AlertController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.alert.log.index'],
+                        'roles' => ['backend.alert.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Alert::class,
@@ -81,7 +81,7 @@ class AlertController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.alert.log.view'],
+                        'roles' => ['backend.alert.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -95,7 +95,7 @@ class AlertController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.alert.log.restore'],
+                        'roles' => ['backend.alert.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {

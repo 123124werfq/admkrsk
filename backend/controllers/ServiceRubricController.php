@@ -30,7 +30,7 @@ class ServiceRubricController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.serviceRubric.index'],
+                        'roles' => ['backend.serviceRubric.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => ServiceRubric::class,
                         ],
@@ -38,7 +38,7 @@ class ServiceRubricController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.serviceRubric.view'],
+                        'roles' => ['backend.serviceRubric.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ServiceRubric::class,
@@ -47,7 +47,7 @@ class ServiceRubricController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.serviceRubric.create'],
+                        'roles' => ['backend.serviceRubric.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => ServiceRubric::class,
                         ],
@@ -55,7 +55,7 @@ class ServiceRubricController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.serviceRubric.update'],
+                        'roles' => ['backend.serviceRubric.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ServiceRubric::class,
@@ -64,7 +64,7 @@ class ServiceRubricController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.serviceRubric.delete'],
+                        'roles' => ['backend.serviceRubric.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ServiceRubric::class,
@@ -73,7 +73,7 @@ class ServiceRubricController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.serviceRubric.log.index'],
+                        'roles' => ['backend.serviceRubric.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ServiceRubric::class,
@@ -82,7 +82,7 @@ class ServiceRubricController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.serviceRubric.log.view'],
+                        'roles' => ['backend.serviceRubric.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -96,7 +96,7 @@ class ServiceRubricController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.serviceRubric.log.restore'],
+                        'roles' => ['backend.serviceRubric.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -132,8 +132,8 @@ class ServiceRubricController extends Controller
 
         $recordsQuery = $query->where('id_parent IS NULL');
 
-        if (!Yii::$app->user->can('admin.opendata')) {
-            $recordsQuery->andWhere(['id_rub' => AuthEntity::getEntityIds(ServiceRubric::class)]);
+        if (!Yii::$app->user->can('admin.serviceRubric')) {
+            $recordsQuery->andFilterWhere(['id_rub' => AuthEntity::getEntityIds(ServiceRubric::class)]);
         }
 
         return $this->render('index', [

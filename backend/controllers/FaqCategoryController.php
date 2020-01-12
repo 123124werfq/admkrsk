@@ -36,7 +36,7 @@ class FaqCategoryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.faqCategory.index'],
+                        'roles' => ['backend.faqCategory.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => FaqCategory::class,
                         ],
@@ -44,7 +44,7 @@ class FaqCategoryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.faqCategory.view'],
+                        'roles' => ['backend.faqCategory.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => FaqCategory::class,
@@ -53,7 +53,7 @@ class FaqCategoryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.faqCategory.create'],
+                        'roles' => ['backend.faqCategory.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => FaqCategory::class,
                         ],
@@ -61,7 +61,7 @@ class FaqCategoryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.faqCategory.update'],
+                        'roles' => ['backend.faqCategory.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => FaqCategory::class,
@@ -70,7 +70,7 @@ class FaqCategoryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.faqCategory.delete'],
+                        'roles' => ['backend.faqCategory.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => FaqCategory::class,
@@ -79,7 +79,7 @@ class FaqCategoryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.faqCategory.log.index'],
+                        'roles' => ['backend.faqCategory.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => FaqCategory::class,
@@ -88,7 +88,7 @@ class FaqCategoryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.faqCategory.log.view'],
+                        'roles' => ['backend.faqCategory.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -102,7 +102,7 @@ class FaqCategoryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.faqCategory.log.restore'],
+                        'roles' => ['backend.faqCategory.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {

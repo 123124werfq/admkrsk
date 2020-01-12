@@ -29,7 +29,7 @@ class ServiceSituationController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.serviceSituation.index'],
+                        'roles' => ['backend.serviceSituation.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => ServiceSituation::class,
                         ],
@@ -37,7 +37,7 @@ class ServiceSituationController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.serviceSituation.view'],
+                        'roles' => ['backend.serviceSituation.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ServiceSituation::class,
@@ -46,7 +46,7 @@ class ServiceSituationController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.serviceSituation.create'],
+                        'roles' => ['backend.serviceSituation.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => ServiceSituation::class,
                         ],
@@ -54,7 +54,7 @@ class ServiceSituationController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.serviceSituation.update'],
+                        'roles' => ['backend.serviceSituation.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ServiceSituation::class,
@@ -63,7 +63,7 @@ class ServiceSituationController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.serviceSituation.delete'],
+                        'roles' => ['backend.serviceSituation.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ServiceSituation::class,
@@ -72,7 +72,7 @@ class ServiceSituationController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.serviceSituation.log.index'],
+                        'roles' => ['backend.serviceSituation.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ServiceSituation::class,
@@ -81,7 +81,7 @@ class ServiceSituationController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.serviceSituation.log.view'],
+                        'roles' => ['backend.serviceSituation.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -95,7 +95,7 @@ class ServiceSituationController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.serviceSituation.log.restore'],
+                        'roles' => ['backend.serviceSituation.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -132,7 +132,7 @@ class ServiceSituationController extends Controller
         $recordsQuery = $query->where('id_parent IS NULL');
 
         if (!Yii::$app->user->can('admin.serviceSituation')) {
-            $recordsQuery->andWhere(['id_situation' => AuthEntity::getEntityIds(ServiceSituation::class)]);
+            $recordsQuery->andFilterWhere(['id_situation' => AuthEntity::getEntityIds(ServiceSituation::class)]);
         }
 
         return $this->render('index', [

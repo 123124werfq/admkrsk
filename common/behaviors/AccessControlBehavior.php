@@ -145,9 +145,15 @@ class AccessControlBehavior extends Behavior
                 throw $e;
             }
 
+            $tags = [];
             foreach ($rbacInvalidateIds as $rbacInvalidateId) {
+                $tags[] = User::rbacCacheTag($rbacInvalidateId);
                 TagDependency::invalidate(Yii::$app->cache, User::rbacCacheTag($rbacInvalidateId));
             }
+            Yii::debug($tags);
+//            echo "<pre>";
+//            print_r($tags);
+//            die();
         }
     }
 }

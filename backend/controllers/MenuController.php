@@ -30,7 +30,7 @@ class MenuController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index','order'],
-                        'roles' => ['backend.menu.index'],
+                        'roles' => ['backend.menu.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Menu::class,
                         ],
@@ -38,7 +38,7 @@ class MenuController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.menu.view'],
+                        'roles' => ['backend.menu.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Menu::class,
@@ -47,7 +47,7 @@ class MenuController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.menu.create'],
+                        'roles' => ['backend.menu.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Menu::class,
                         ],
@@ -55,7 +55,7 @@ class MenuController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.menu.update'],
+                        'roles' => ['backend.menu.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Menu::class,
@@ -64,7 +64,7 @@ class MenuController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.menu.delete'],
+                        'roles' => ['backend.menu.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Menu::class,
@@ -73,7 +73,7 @@ class MenuController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.menu.log.index'],
+                        'roles' => ['backend.menu.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Menu::class,
@@ -82,7 +82,7 @@ class MenuController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.menu.log.view'],
+                        'roles' => ['backend.menu.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -96,7 +96,7 @@ class MenuController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.menu.log.restore'],
+                        'roles' => ['backend.menu.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {

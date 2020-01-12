@@ -29,7 +29,7 @@ class FormInputTypeController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.formInputType.index'],
+                        'roles' => ['backend.formInputType.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => FormInputType::class,
                         ],
@@ -37,7 +37,7 @@ class FormInputTypeController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.formInputType.view'],
+                        'roles' => ['backend.formInputType.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => FormInputType::class,
@@ -46,7 +46,7 @@ class FormInputTypeController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.formInputType.create'],
+                        'roles' => ['backend.formInputType.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => FormInputType::class,
                         ],
@@ -54,7 +54,7 @@ class FormInputTypeController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.formInputType.update'],
+                        'roles' => ['backend.formInputType.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => FormInputType::class,
@@ -63,7 +63,7 @@ class FormInputTypeController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.formInputType.delete'],
+                        'roles' => ['backend.formInputType.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => FormInputType::class,
@@ -72,7 +72,7 @@ class FormInputTypeController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.formInputType.log.index'],
+                        'roles' => ['backend.formInputType.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => FormInputType::class,
@@ -81,7 +81,7 @@ class FormInputTypeController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.formInputType.log.view'],
+                        'roles' => ['backend.formInputType.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -95,7 +95,7 @@ class FormInputTypeController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.formInputType.log.restore'],
+                        'roles' => ['backend.formInputType.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {

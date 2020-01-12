@@ -34,7 +34,7 @@ class ServiceController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index','make-doc'],
-                        'roles' => ['backend.service.index'],
+                        'roles' => ['backend.service.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Service::class,
                         ],
@@ -42,7 +42,7 @@ class ServiceController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.service.view'],
+                        'roles' => ['backend.service.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Service::class,
@@ -51,7 +51,7 @@ class ServiceController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.service.create'],
+                        'roles' => ['backend.service.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Service::class,
                         ],
@@ -59,7 +59,7 @@ class ServiceController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.service.update'],
+                        'roles' => ['backend.service.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Service::class,
@@ -68,7 +68,7 @@ class ServiceController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.service.delete'],
+                        'roles' => ['backend.service.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Service::class,
@@ -77,7 +77,7 @@ class ServiceController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.service.log.index'],
+                        'roles' => ['backend.service.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Service::class,
@@ -86,7 +86,7 @@ class ServiceController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.service.log.view'],
+                        'roles' => ['backend.service.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -100,7 +100,7 @@ class ServiceController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.service.log.restore'],
+                        'roles' => ['backend.service.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
