@@ -41,6 +41,7 @@
 
 <?=Html::activeHiddenInput($model, 'filepath')?>
 <?=Html::activeHiddenInput($model, 'name');?>
+<?=Html::activeHiddenInput($model, 'sheet');?>
 
 <div class="ibox m-t">
     <div class="ibox-content">
@@ -60,17 +61,17 @@
             </tr>
             <?php foreach ($columns as $key => $column) {?>
             <tr>
-                <td><?=Html::textInput('CollectionImportForm[columns][name]',$column,['class'=>'form-control','required'=>true])?></td>
-                <td><?=Html::textInput('CollectionImportForm[columns][alias]',$keys[$key],['class'=>'form-control','required'=>true])?></td>
-                <td><?=Html::dropDownList('CollectionImportForm[columns][type]','',$types,['class'=>'form-control','required'=>true])?></td>
+                <td><?=Html::textInput('CollectionImportForm[columns]['.$key.'][name]',$column,['class'=>'form-control','required'=>true])?></td>
+                <td><?=Html::textInput('CollectionImportForm[columns]['.$key.'][alias]',$keys[$key],['class'=>'form-control','required'=>true])?></td>
+                <td><?=Html::dropDownList('CollectionImportForm[columns]['.$key.'][type]','',$types,['class'=>'form-control','required'=>true])?></td>
                 <?php if (!empty($existCollection)){?>
-                    <td><?=Html::dropDownList('CollectionImportForm[columns][id_column]','',$types,['prompt'=>'выберите существующую колонку','class'=>'form-control','required'=>true])?></td>
+                    <td><?=Html::dropDownList('CollectionImportForm[columns]['.$key.'][id_column]','',$types,['prompt'=>'выберите существующую колонку','class'=>'form-control','required'=>true])?></td>
                 <?php }?>
             </tr>
             <?php }?>
         </table>
 
-        <?=Html::submitButton('Импортировать', ['class' => 'btn btn-primary','name'=>'import']) ?>
+        <?=Html::submitButton('Импортировать', ['class' => 'btn btn-primary','name'=>'import','value'=>1]) ?>
     </div>
 </div>
 

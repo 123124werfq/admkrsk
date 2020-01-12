@@ -33,6 +33,7 @@ class BlockVar extends \yii\db\ActiveRecord
     const TYPE_USER = 14;
     const TYPE_SELECT = 15;
     const TYPE_COLLECTION_RECORD = 16;
+    const TYPE_COLLECTIONS = 17;
 
     /**
      * {@inheritdoc}

@@ -772,49 +772,48 @@ class CollectionController extends Controller
                     $keys = [];
                     $records = [];
 
-                    $sheet_pos = array_search($model->sheet, array_keys($data));
-                    $post = $_POST['CollectionImportForm'][$sheet_pos];
-                    $model->load($_POST['CollectionImportForm'][$sheet_pos]);
+                    if (empty($_POST['import']))
+                    {
+                        $sheet_pos = array_search($model->sheet, array_keys($data));
 
-                    $model->skip = (int)$post['skip'];
-                    $model->keyrow = (int)$post['keyrow'];
-                    $model->firstRowAsName = $post['firstRowAsName'];
+                        $post = $_POST['CollectionImportForm'][$sheet_pos];
+                        $model->load($_POST['CollectionImportForm'][$sheet_pos]);
+
+                        $model->skip = (int)$post['skip'];
+                        $model->keyrow = (int)$post['keyrow'];
+                        $model->firstRowAsName = $post['firstRowAsName'];
                         $post = Yii::$app->request->post("CollectionImportForm.$sheet_pos");
+
                         $model->load($post);
+                    }
 
                     foreach ($data[$model->sheet] as $rowkey => $row)
                     {
-                        // устанавливаем алиасы
-                        if ($rowkey==$model->keyrow && $model->keyrow>0)
+                        if (empty($_POST['import']))
                         {
-                            if (empty($columns))
+                            // устанавливаем алиасы
+                            if ($rowkey==$model->keyrow && $model->keyrow>0)
+                            {
+                                if (empty($columns))
+                                    $columns = $row;
+
+                                $keys = $row;
+                            }
+
+                            // пропускаем
+                            if (!empty($model->skip) && $rowkey<=$model->skip)
+                                continue;
+
+                            // устанавливаем именя колонок по первой строке если выбрали
+                            if ($rowkey==($model->skip+1) && $model->firstRowAsName)
+                            {
                                 $columns = $row;
-
-                            $keys = $row;
-                        }
-
-                        // пропускаем
-                        if (!empty($model->skip) && $rowkey<=$model->skip)
-                            continue;
-
-                        // устанавливаем именя колонок по первой строке если выбрали
-                        if ($rowkey==($model->skip+1) && $model->firstRowAsName)
-                        {
-                            $columns = $row;
-                            continue;
+                                continue;
+                            }
                         }
 
                         $records[] = $row;
                     }
-
-                    // сохраняем названия колонок
-                    if (empty($columns))
-                        foreach ($records[1] as $rkey => $value)
-                            $columns[$rkey] = 'Колонка №'.($i++);
-
-                    if (empty($keys))
-                        foreach ($columns as $key => $column)
-                            $keys[] = strtolower(\common\components\helper\Helper::transFileName($column));
 
                     if (!empty($_POST['import']))
                     {
@@ -826,32 +825,34 @@ class CollectionController extends Controller
 
                                 if ($collection->save())
                                 {
+                                    $columns = [];
+
                                     $i = 0;
 
-                                    foreach ($columns as $tdkey => $value)
+                                    foreach ($model->columns as $tdkey => $column)
                                     {
-                                        $column = new CollectionColumn;
-                                        $column->name = (!empty($value))?$value:'Колонка '.$tdkey;
-                                        $column->type = CollectionColumn::TYPE_INPUT;
-                                        $column->ord = $i;
+                                        $columnModel = new CollectionColumn;
+                                        $columnModel->name = $column['name'];
+                                        $columnModel->type = $column['type'];//CollectionColumn::TYPE_INPUT;
+                                        $columnModel->alias = strtolower(\common\components\helper\Helper::transFileName($column['alias']));
+                                        $columnModel->ord = $i;
+                                        $columnModel->id_collection = $collection->id_collection;
 
-                                        if ($model->keyrow && !empty(trim($keys[$tdkey])))
-                                            $column->alias = $keys[$tdkey];
+                                        /*if ($model->keyrow && !empty(trim($keys[$tdkey])))
+                                            $columnModel->alias = $keys[$tdkey];
                                         else
-                                            $column->alias = $column->name;
+                                            $columnModel->alias = $columnModel->name;
 
-                                        if (empty($column->alias))
-                                            $column->alias = 'column_'.$tdkey;
+                                        if (empty($columnModel->alias))
+                                            $columnModel->alias = 'column_'.$tdkey;
 
-                                        $column->alias = strtolower(\common\components\helper\Helper::transFileName($column->alias));
+                                        $columnModel->alias = strtolower(\common\components\helper\Helper::transFileName($columnModel->alias));*/
 
-                                        $column->id_collection = $collection->id_collection;
-
-                                        if ($column->save())
-                                            $columns[$tdkey] = $column;
+                                        if ($columnModel->save())
+                                            $columns[$tdkey] = $columnModel;
                                         else
                                         {
-                                            print_r($column->errors);
+                                            print_r($columnModel->errors);
                                             die();
                                         }
 
@@ -867,7 +868,19 @@ class CollectionController extends Controller
                                         $insert = [];
 
                                         foreach ($row as $tdkey => $value)
-                                            $insert[$columns[$tdkey]->id_column] = $value;
+                                        {
+                                            switch ($columns[$tdkey]->type)
+                                            {
+                                                case CollectionColumn::TYPE_DATE:
+                                                case CollectionColumn::TYPE_DATETIME:
+                                                    $insert[$columns[$tdkey]->id_column] = strtotime($value);
+                                                    break;
+
+                                                default:
+                                                    $insert[$columns[$tdkey]->id_column] = $value;
+                                                    break;
+                                            }
+                                        }
 
                                         $collectionRecord->data = $insert;
                                         $collectionRecord->save();
@@ -896,7 +909,16 @@ class CollectionController extends Controller
                     }
                     else
                     {
-                        return $this->render('import_column',[
+                        // сохраняем названия колонок
+                        if (empty($columns))
+                            foreach ($records[1] as $rkey => $value)
+                                $columns[$rkey] = 'Колонка №'.($i++);
+
+                        if (empty($keys))
+                            foreach ($columns as $key => $column)
+                                $keys[$key] = strtolower(\common\components\helper\Helper::transFileName($column));
+
+                        return $this->render('import/import_column',[
                             'model'=>$model,
                             'records'=>$records,
                             'columns'=>$columns,
@@ -906,14 +928,14 @@ class CollectionController extends Controller
                     }
                 }
                 else
-                    return $this->render('import',[
+                    return $this->render('import/import',[
                         'model'=>$model,
                         'table'=>$data
                     ]);
             }
         }
 
-        return $this->render('import', [
+        return $this->render('import/import', [
             'model' => $model,
         ]);
     }
