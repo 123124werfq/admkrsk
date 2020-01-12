@@ -97,6 +97,11 @@ class Workflow extends Model
 
     public function sendTest1()
     {
+
+        $resp = file_get_contents($sendServiceURL);
+        var_dump($resp);
+        die();
+
         $url = $this->sendServiceURL;
         $message = $this->serviceTestTemplate2;
         echo $message;
