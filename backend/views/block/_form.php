@@ -54,7 +54,7 @@ use kartik\select2\Select2;
 
 				case $var::TYPE_COLLECTIONS:
 					echo $form->field($var, "[$ckey]value")->widget(Select2::class, [
-	                    'data' => ArrayHelper::map(Collection::find()->all(), 'id_collection', 'name'),
+	                    'data' => ArrayHelper::map(Collection::find()->andWhere('id_column_map IS NOT NULL')->all(), 'id_collection', 'name'),
 	                    'pluginOptions' => [
 	                        'allowClear' => true,
 	                        'placeholder' => 'Списки',
@@ -64,10 +64,9 @@ use kartik\select2\Select2;
 	                    	'multiple'=>true
 	                	]
                 	])->label(false);
-
+					break;
                 case $var::TYPE_COLLECTION_RECORD:
-
-                	if ($varOptions['multiple'] && !is_array($var->value))
+                	if (!empty($varOptions['multiple']) && !is_array($var->value))
                 		$var->value = json_decode($var->value,true);
                 	echo $form->field($var, "[$ckey]value")->widget(Select2::class, [
 	                    'data' => Collection::getArrayByAlias($varOptions['alias']),

@@ -18,14 +18,14 @@ class MapsWidget extends Widget
             if (empty($blockVars['collections']->value))
                 return false;
 
-            $ids = $blockVars['collections']->value;
+            $ids = json_decode($blockVars['collections']->value,true);
         }
 
         $collections = Collection::find()->where(['id_collection'=>$ids])->all();
 
-        return $this->render('block/maps',[
+        return $this->render('blocks/maps',[
             'collections' => $collections,
-            'page'=>$page
+            'page'=>$this->page
         ]);
     }
 }

@@ -24,7 +24,7 @@ class CollectionWidget extends \yii\base\Widget
 
     public $show_row_num = false;
     public $show_column_num = false;
-    public $show_on_map = 0; // id_column координат
+    public $show_on_map = 0; // отображать на карте
 
     public $page;
 
@@ -214,7 +214,7 @@ class CollectionWidget extends \yii\base\Widget
             'columns'=>$columnsByAlias,
             'allrows'=>$allrows,
             'search_columns'=>$search_columns,
-            'show_on_map'=>$this->show_on_map,
+            'show_on_map'=>($this->show_on_map && !empty($model->id_column_map))?1:0,
 
             'pagesize'=>$this->pagesize,
             'pagination'=>$pagination,

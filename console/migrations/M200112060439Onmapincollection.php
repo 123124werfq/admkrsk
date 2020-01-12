@@ -14,7 +14,7 @@ class M200112060439Onmapincollection extends Migration
      */
     public function safeUp()
     {
-
+        $this->addColumn('db_collection', 'id_column_map', $this->integer());
     }
 
     /**

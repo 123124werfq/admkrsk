@@ -28,17 +28,17 @@ function updatePoints(mapObject, pointsArray)
 
 }
 
-function showMap($link,block_id)
+function showMap(id_collection,block_id)
 {
     var map = false;
 
-    $('#map'+block_id).parent().addClass('open');
+    $('#'+block_id).parent().addClass('open');
 
     ymaps.ready(
         function () {
 
         if (!map)
-            map = new ymaps.Map('map'+block_id, {
+            map = new ymaps.Map(block_id, {
                 center: [56.010563, 92.852572],
                 zoom: 11,
                 controls: ['smallMapDefaultSet']
@@ -50,9 +50,21 @@ function showMap($link,block_id)
             type: "GET",
             dataType: "json",
             url: "/collection/coords",
-            data: {id:$link.data('id'),id_column:$link.data('column')}
+            data: {id:id_collection}
         }).done(function(data){
             updatePoints(map, data)
         });
     });
 }
+
+$(document).ready(function() {
+
+    if ($("#map-controls").length > 0)
+    {
+        $("#map-controls").change(function(){
+            showMap($(this).val(),'map-controls');
+        });
+
+        showMap($("#map-controls").val(),'map-container');
+    }
+});

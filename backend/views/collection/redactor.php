@@ -66,14 +66,11 @@ else
 {
     $columns = $model->parent->columns;
 
-    $columns_coords = [];
+    //$columns_coords = [];
     $columns_dropdown = [];
 
     foreach ($columns as $key => $column) {
         $columns_dropdown[$column->id_column] = $column->name;
-
-        if ($column->type == CollectionColumn::TYPE_MAP)
-            $columns_coords[$column->id_column] = $column->name;
     }
 
     $columns = $columns_dropdown;
@@ -88,7 +85,7 @@ else
 
     <?=$form->field($model, 'id_parent_collection',['template'=>'{input}'])->hiddenInput();?>
 
-    <?=$form->field($model, 'show_on_map')->dropDownList($columns_coords,['prompt'=>'Выберите колонку для отображения на карте']);?>
+    <?=$form->field($model, 'show_on_map')->checkBox();?>
 
     <?=$form->field($model, 'id_group')->dropDownList($columns,['prompt'=>'Выберите колонку для группировки']);?>
 

@@ -85,7 +85,7 @@ $(document).ready(function() {
     }
 
     $("body").delegate('.showonmap','click',function(){
-        showMap($(this),$(this).data('hash'));
+        showMap($(this).data('id'),'map'+$(this).data('hash'));
     });
 
     $("body").delegate('.fullsize-table','click',function(){
