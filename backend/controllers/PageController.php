@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\GridSetting;
 use common\modules\log\models\Log;
 use moonland\phpexcel\Excel;
 use Yii;
@@ -25,6 +26,8 @@ use yii\web\Response;
  */
 class PageController extends Controller
 {
+    const grid = 'page-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -271,6 +274,15 @@ class PageController extends Controller
         $searchModel = new PageSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
+
         if ($export)
         {
             header('Content-Type: text/xlsx; charset=utf-8');
@@ -309,6 +321,7 @@ class PageController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 

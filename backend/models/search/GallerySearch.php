@@ -4,7 +4,9 @@ namespace backend\models\search;
 
 use common\models\AuthEntity;
 use common\models\Gallery;
+use common\traits\ActiveRangeValidateTrait;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Gallery as GalleryModel;
@@ -14,14 +16,16 @@ use common\models\Gallery as GalleryModel;
  */
 class GallerySearch extends GalleryModel
 {
+    use ActiveRangeValidateTrait;
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id_gallery', 'id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
-            [['name'], 'safe'],
+            [['id_gallery', 'id_page', 'created_by', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['name', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -40,6 +44,7 @@ class GallerySearch extends GalleryModel
      * @param array $params
      *
      * @return ActiveDataProvider
+     * @throws InvalidConfigException
      */
     public function search($params)
     {
@@ -56,9 +61,15 @@ class GallerySearch extends GalleryModel
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => $params['pageSize'] ?? 10
+            ],
         ]);
 
         $this->load($params);
+
+        $this->handleNumberRange($this->created_at, $query, 'created_at');
+        $this->handleNumberRange($this->updated_at, $query, 'updated_at');
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
@@ -70,9 +81,7 @@ class GallerySearch extends GalleryModel
         $query->andFilterWhere([
             'id_gallery' => $this->id_gallery,
             'id_page' => $this->id_page,
-            'created_at' => $this->created_at,
             'created_by' => $this->created_by,
-            'updated_at' => $this->updated_at,
             'updated_by' => $this->updated_by,
             'deleted_at' => $this->deleted_at,
             'deleted_by' => $this->deleted_by,

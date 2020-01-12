@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\GridSetting;
 use common\modules\log\models\Log;
 use moonland\phpexcel\Excel;
 use Yii;
@@ -24,6 +25,8 @@ use yii\web\Response;
  */
 class NewsController extends Controller
 {
+    const grid = 'news-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -135,6 +138,15 @@ class NewsController extends Controller
         $searchModel->id_page = $id_page;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
+
         $page = Page::findOne($id_page);
 
         if ($export)
@@ -180,6 +192,7 @@ class NewsController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'page' => $page,
+            'customColumns' => $columns,
         ]);
     }
 
