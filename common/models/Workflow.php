@@ -98,7 +98,7 @@ class Workflow extends Model
     public function sendTest1()
     {
         $url = $this->sendServiceURL;
-        $message = iconv('utf-8','windows-1251',$this->serviceTestTemplate2);
+        $message = $this->serviceTestTemplate2;
         echo $message;
         echo "<br><br>";
         $this->error = '';
@@ -115,7 +115,7 @@ class Workflow extends Model
                 //'SOAPAction:urn:#Operation_03_00_004FL',
                 'SOAPAction:Operation_03_00_004FL',
                 'Cache-Control: no-cache',
-                'Content-Type: text/xml'
+                'Content-Type: text/xml; charset=utf-8'
             ];
 
             curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
