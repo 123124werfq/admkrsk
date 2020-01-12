@@ -15,20 +15,21 @@ function updatePoints(mapObject, pointsArray)
 
 function showMap($link,block_id)
 {
-    var map;
+    var map = false;
 
     $('#map'+block_id).parent().addClass('open');
 
     ymaps.ready(
         function () {
 
-        map = new ymaps.Map('map'+block_id, {
-            center: [56.010563, 92.852572],
-            zoom: 11,
-            controls: ['smallMapDefaultSet']
-        }, {
-            searchControlProvider: 'yandex#search'
-        });
+        if (!map)
+            map = new ymaps.Map('map'+block_id, {
+                center: [56.010563, 92.852572],
+                zoom: 11,
+                controls: ['smallMapDefaultSet']
+            }, {
+                searchControlProvider: 'yandex#search'
+            });
 
         $.ajax({
             type: "GET",
