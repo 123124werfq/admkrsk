@@ -11,7 +11,7 @@ use common\models\Collection;
 use common\models\CollectionRecord;
 use common\models\CollectionColumn;
 use backend\models\search\CollectionSearch;
-use backend\models\CollectionImportForm;
+use backend\models\forms\CollectionImportForm;
 use backend\models\forms\CollectionCombineForm;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
@@ -825,10 +825,24 @@ class CollectionController extends Controller
                     if (!empty($_POST['import']))
                     {
                         try {
+
                             if (!empty($records))
                             {
-                                $collection = new Collection();
-                                $collection->name = $model->name;
+                                if (!empty($existCollection))
+                                {
+                                    $collection = $existCollection;
+
+                                    if ($model->erase)
+                                    {
+                                        foreach ($collection->records as $rkey => $record)
+                                            $record->delete();
+                                    }
+                                }
+                                else 
+                                {
+                                    $collection = new Collection();
+                                    $collection->name = $model->name;
+                                }
 
                                 if ($collection->save())
                                 {
@@ -838,22 +852,23 @@ class CollectionController extends Controller
 
                                     foreach ($model->columns as $tdkey => $column)
                                     {
-                                        $columnModel = new CollectionColumn;
-                                        $columnModel->name = $column['name'];
-                                        $columnModel->type = $column['type'];//CollectionColumn::TYPE_INPUT;
-                                        $columnModel->alias = strtolower(\common\components\helper\Helper::transFileName($column['alias']));
-                                        $columnModel->ord = $i;
-                                        $columnModel->id_collection = $collection->id_collection;
+                                        if (!empty($column['id_column']))
+                                        {
+                                            if ($column['id_column']<0)
+                                                continue;
 
-                                        /*if ($model->keyrow && !empty(trim($keys[$tdkey])))
-                                            $columnModel->alias = $keys[$tdkey];
-                                        else
-                                            $columnModel->alias = $columnModel->name;
-
-                                        if (empty($columnModel->alias))
-                                            $columnModel->alias = 'column_'.$tdkey;
-
-                                        $columnModel->alias = strtolower(\common\components\helper\Helper::transFileName($columnModel->alias));*/
+                                            $columnModel = CollectionColumn::find()->where(['id_column'=>$column['id_column']])->one();
+                                        }
+                                        
+                                        if (empty($columnModel))
+                                        {
+                                            $columnModel = new CollectionColumn;
+                                            $columnModel->name = $column['name'];
+                                            $columnModel->type = $column['type'];//CollectionColumn::TYPE_INPUT;
+                                            $columnModel->alias = strtolower(\common\components\helper\Helper::transFileName($column['alias']));
+                                            $columnModel->ord = $i;
+                                            $columnModel->id_collection = $collection->id_collection;
+                                        }
 
                                         if ($columnModel->save())
                                             $columns[$tdkey] = $columnModel;
@@ -876,13 +891,15 @@ class CollectionController extends Controller
 
                                         foreach ($row as $tdkey => $value)
                                         {
+                                            if (!isset($columns[$tdkey]))
+                                                continue;
+
                                             switch ($columns[$tdkey]->type)
                                             {
                                                 case CollectionColumn::TYPE_DATE:
                                                 case CollectionColumn::TYPE_DATETIME:
                                                     $insert[$columns[$tdkey]->id_column] = strtotime($value);
                                                     break;
-
                                                 default:
                                                     $insert[$columns[$tdkey]->id_column] = $value;
                                                     break;

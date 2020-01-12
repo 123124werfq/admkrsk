@@ -211,7 +211,13 @@ class Collection extends ActiveRecord
         return $this->hasOne(Collection::class, ['id_collection' => 'id_parent_collection']);
     }
 
+    // deprecated ? MSD
     public function getItems()
+    {
+        return $this->hasMany(CollectionRecord::class, ['id_collection' => 'id_collection'])->orderBy('ord ASC');
+    }
+
+    public function getRecords()
     {
         return $this->hasMany(CollectionRecord::class, ['id_collection' => 'id_collection'])->orderBy('ord ASC');
     }

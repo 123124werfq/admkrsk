@@ -21,11 +21,15 @@
     foreach ($types as $key => $type)
         $types[$key] = CollectionColumn::getTypeLabel($key);
 
-    $existColumns = [];;
+    $existColumns = [];
+
     if (!empty($existCollection))
     {
-        $existColumns = $existCollection->getColumns()->where(['type'=>array_keys($types)])->all();
-        $existColumns = ArrayHelper::map($existColumns, 'id_column', 'name');
+        $existColumnsModels = $existCollection->getColumns()->where(['type'=>array_keys($types)])->all();
+        $existColumns = ArrayHelper::map($existColumnsModels, 'id_column', 'name');
+        $existColumns[-1] = 'Не импортировать';
+
+        //$existColumns[0] = 'Создать новую колонку';
     }
 ?>
 
@@ -64,8 +68,17 @@
                 <td><?=Html::textInput('CollectionImportForm[columns]['.$key.'][name]',$column,['class'=>'form-control','required'=>true])?></td>
                 <td><?=Html::textInput('CollectionImportForm[columns]['.$key.'][alias]',$keys[$key],['class'=>'form-control','required'=>true])?></td>
                 <td><?=Html::dropDownList('CollectionImportForm[columns]['.$key.'][type]','',$types,['class'=>'form-control','required'=>true])?></td>
-                <?php if (!empty($existCollection)){?>
-                    <td><?=Html::dropDownList('CollectionImportForm[columns]['.$key.'][id_column]','',$types,['prompt'=>'выберите существующую колонку','class'=>'form-control','required'=>true])?></td>
+                <?php if (!empty($existCollection)){
+                    $id_find_column = 0;
+                    foreach ($existColumnsModels as $ekey => $ecol) {
+                        if ($ecol->alias == $keys[$key])
+                        {
+                            $id_find_column = $ecol->id_column;
+                            break;
+                        }
+                    }
+                ?>
+                    <td><?=Html::dropDownList('CollectionImportForm[columns]['.$key.'][id_column]',$id_find_column,$existColumns,['prompt'=>'+ Новая колонка','class'=>'form-control'])?></td>
                 <?php }?>
             </tr>
             <?php }?>
