@@ -22,6 +22,24 @@
     opacity: 0;
 }
 
+.collection-controls {text-align: right; }
+.collection-controls a {margin-bottom: 10px; border-bottom: 0px; display: inline-block; margin-left: 10px;}
+
+.showonmap {margin-bottom: 10px;}
+.collection-map {display: none; margin-bottom: 20px;}
+.collection-map.open {display: block; height: 300px;}
+.collection-map.open > div {height: 300px;}
+
+.close-window {
+    display: none;
+    position: absolute;
+    right: 30px;
+    top: 18px;
+    font-size: 53px!important;
+}
+.widget-wrapper.full-screen {position: fixed;left: 0px; right: 0px; bottom: 0px; top: 0px; height: 100vh; overflow-y: hidden; z-index: 9999; background: #fff; padding: 40px 30px; height: 100vh;}
+.widget-wrapper.full-screen .close-window {display: block; font-size: 30px; color: #000; border-bottom: 0px!important;}
+
 .row_num {color: #aaa; font-size: 12px;}
 .colnum {text-align: center!important;}
 

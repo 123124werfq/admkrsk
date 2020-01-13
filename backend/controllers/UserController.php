@@ -8,6 +8,7 @@ use common\modules\log\models\Log;
 use Yii;
 use common\models\User;
 use backend\models\search\UserSearch;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\validators\NumberValidator;
 use yii\web\Controller;
@@ -31,7 +32,7 @@ class UserController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['list'],
+                        'actions' => ['list', 'esialist'],
                         'roles' => ['backend.user.list'],
                     ],
                     [
@@ -172,6 +173,44 @@ class UserController extends Controller
     }
 
     /**
+     * Search User models (ESIA users only)
+     * @param string $q
+     * @return mixed
+     */
+    public function actionEsialist($q)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $query = User::find()
+            ->where('id_esia_user IS NOT NULL')
+            ->joinWith('adinfo');
+
+        $q = trim($q);
+        if ((new NumberValidator(['integerOnly' => true]))->validate($q)) {
+            $query->andWhere(['id' => $q]);
+        } else {
+            $query->andWhere([
+                'or',
+                ['ilike', 'user.username', $q],
+                ['ilike', 'user.email', $q],
+                ['ilike', 'user.fullname', $q],
+                ['ilike', 'auth_ad_user.name', $q],
+            ]);
+        }
+
+        $results = [];
+        foreach ($query->limit(10)->all() as $user) {
+            /* @var User $user */
+            $results[] = [
+                'id' => $user->id,
+                'text' => $user->getUsername() . ' (' . $user->email . ')',
+            ];
+        }
+
+        return ['results' => $results];
+    }
+
+    /**
      * Lists all User models.
      * @return mixed
      */
@@ -246,7 +285,7 @@ class UserController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
         {

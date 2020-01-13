@@ -4,10 +4,14 @@ namespace backend\controllers;
 
 use common\models\Action;
 use common\modules\log\models\Log;
+use moonland\phpexcel\Excel;
 use Yii;
 use common\models\Page;
 use common\models\Block;
 use backend\models\search\PageSearch;
+use yii\base\ExitException;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\validators\NumberValidator;
 use yii\web\Controller;
@@ -152,6 +156,7 @@ class PageController extends Controller
      * Search Page models.
      * @param string $q
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionList($q,$partition=0)
     {
@@ -246,7 +251,6 @@ class PageController extends Controller
         return $this->render('tree',['tree'=>$tree]);
     }
 
-
     public function actionPartition($id=null)
     {
         /*if (!empty($id))
@@ -258,6 +262,7 @@ class PageController extends Controller
     /**
      * Lists all Page models.
      * @return mixed
+     * @throws ExitException
      */
     public function actionIndex($export=false)
     {
@@ -269,7 +274,7 @@ class PageController extends Controller
             header('Content-Type: text/xlsx; charset=utf-8');
             header('Content-Disposition: attachment; filename=Выгрузка разделы.xlsx');
 
-            \moonland\phpexcel\Excel::widget([
+            Excel::widget([
                 'models' => $dataProvider->query->all(),
                 'mode' => 'export',
                 'columns' => [
@@ -318,6 +323,7 @@ class PageController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -386,6 +392,7 @@ class PageController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -435,7 +442,7 @@ class PageController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -450,8 +457,9 @@ class PageController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -470,6 +478,7 @@ class PageController extends Controller
      * @param integer $id
      * @return Page the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

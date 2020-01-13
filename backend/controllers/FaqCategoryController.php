@@ -7,6 +7,8 @@ use common\modules\log\models\Log;
 use Yii;
 use common\models\FaqCategory;
 use backend\models\search\FaqCategorySearch;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\validators\NumberValidator;
 use yii\web\Controller;
@@ -146,6 +148,7 @@ class FaqCategoryController extends Controller
      * Search Collection models.
      * @param string $q
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionList($q)
     {
@@ -195,6 +198,7 @@ class FaqCategoryController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -228,6 +232,7 @@ class FaqCategoryController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -250,7 +255,7 @@ class FaqCategoryController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -265,8 +270,9 @@ class FaqCategoryController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -285,6 +291,7 @@ class FaqCategoryController extends Controller
      * @param integer $id
      * @return FaqCategory the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

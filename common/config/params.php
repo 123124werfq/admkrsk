@@ -5,6 +5,4 @@ return [
     'senderEmail' => 'noreply@example.com',
     'senderName' => 'Example.com mailer',
     'user.passwordResetTokenExpire' => 3600,
-    'frontendUrl'=>'http://admkrsk.loc',
-    'backendUrl'=>'http://admin.admkrsk.loc',
 ];

@@ -64,7 +64,16 @@ if (empty($search))
 }
 else
 {
-    $columns = ArrayHelper::map($model->parent->columns, 'id_column', 'name');
+    $columns = $model->parent->columns;
+
+    //$columns_coords = [];
+    $columns_dropdown = [];
+
+    foreach ($columns as $key => $column) {
+        $columns_dropdown[$column->id_column] = $column->name;
+    }
+
+    $columns = $columns_dropdown;
 ?>
     <?=$form->field($model, 'template_view')->dropDownList(['table'=>'Таблицей','template'=>'Шаблоном'])->hint('Если не заполнен шаблон вывода элемента, то выведятся все данные из колонок отображения в виде списка');?>
 
@@ -75,6 +84,8 @@ else
     <?=$form->field($model, 'show_column_num')->checkBox();?>
 
     <?=$form->field($model, 'id_parent_collection',['template'=>'{input}'])->hiddenInput();?>
+
+    <?=$form->field($model, 'show_on_map')->checkBox();?>
 
     <?=$form->field($model, 'id_group')->dropDownList($columns,['prompt'=>'Выберите колонку для группировки']);?>
 

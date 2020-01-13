@@ -13,12 +13,12 @@ use common\models\CollectionColumn;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'name')->textInput(['disabled' => $model->isCustom()]) ?>
+    <?= $form->field($model, 'name')->textInput(['disabled' => !$model->isCustom()]) ?>
 
     <?= $form->field($model, 'type')->dropDownList(CollectionColumn::getTypeLabel(),['class'=>'form-control column-type','disabled' => true])
     ?>
 
-    <?= $form->field($model, 'alias')->textInput(['disabled' => $model->isCustom()]) ?>
+    <?= $form->field($model, 'alias')->textInput(['disabled' => !$model->isCustom()]) ?>
 
 <?php if ($model->isCustom()){?>
 	<?= $form->field($model, 'keep_relation')->checkBox()->hint('В случае измеенния даных в записи источнике, колонка будет переформирована')?>

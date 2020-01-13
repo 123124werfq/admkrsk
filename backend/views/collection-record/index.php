@@ -31,6 +31,9 @@ $this->params['action-block'][] = Html::a('Создать копию', ['/collec
 
 $this->params['action-block'][] = Html::a('Связать данные', ['/collection/assign', 'id' => $model->id_collection]);
 
+$this->params['action-block'][] = Html::a('Конвертировать данные', ['/collection/convert-type', 'id' => $model->id_collection]);
+
+$this->params['action-block'][] = Html::a('Импортировать данные', ['/collection/import', 'id' => $model->id_collection]);
 ?>
 <div class="tabs-container">
     <ul class="nav nav-tabs" role="tablist">

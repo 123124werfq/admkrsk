@@ -2,20 +2,22 @@
 
 namespace backend\controllers;
 
-
+use common\components\worddoc\WordDoc;
+use common\models\ServiceAppeal;
 use Yii;
-
+use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
 use common\models\Service;
 use common\models\Form;
 use common\models\Action;
 use common\modules\log\models\Log;
 use backend\models\search\ServiceSearch;
+use yii\web\Response;
 
 /**
  * ServiceController implements the CRUD actions for Service model.
@@ -142,6 +144,7 @@ class ServiceController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -180,6 +183,7 @@ class ServiceController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -202,7 +206,7 @@ class ServiceController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -217,19 +221,17 @@ class ServiceController extends Controller
 
     public function actionMakeDoc()
     {
-        $appeal = \common\models\ServiceAppeal::findOne(6);
-
+        $appeal = ServiceAppeal::findOne(6);
         $data = $appeal->collectionRecord->getData(true);
-
         $form = $appeal->collectionRecord->collection->form;
-
-        \common\components\worddoc\WordDoc::makeDocByForm($form, $data, 'test2.docx');
+        WordDoc::makeDocByForm($form, $data, 'test2.docx');
     }
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -248,6 +250,7 @@ class ServiceController extends Controller
      * @param integer $id
      * @return Service the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

@@ -47,13 +47,26 @@ use kartik\select2\Select2;
 	            case $var::TYPE_CHECKBOX:
 	                echo Html::activeCheckBox($var,"[$ckey]value",['id'=>'Value_'.$ckey,'label'=>$var->name]);
 	                break;
+
 	            case $var::TYPE_COLLECTION:
                     echo Html::activeDropDownList($var,"[$ckey]value",ArrayHelper::map(Collection::find()->all(), 'id_collection', 'name'),['class'=>'form-control','Value_'.$ckey]);
                     break;
 
+				case $var::TYPE_COLLECTIONS:
+					echo $form->field($var, "[$ckey]value")->widget(Select2::class, [
+	                    'data' => ArrayHelper::map(Collection::find()->andWhere('id_column_map IS NOT NULL')->all(), 'id_collection', 'name'),
+	                    'pluginOptions' => [
+	                        'allowClear' => true,
+	                        'placeholder' => 'Списки',
+	                        'multiple'=>true
+	                    ],
+	                    'options'=>[
+	                    	'multiple'=>true
+	                	]
+                	])->label(false);
+					break;
                 case $var::TYPE_COLLECTION_RECORD:
-
-                	if ($varOptions['multiple'] && !is_array($var->value))
+                	if (!empty($varOptions['multiple']) && !is_array($var->value))
                 		$var->value = json_decode($var->value,true);
                 	echo $form->field($var, "[$ckey]value")->widget(Select2::class, [
 	                    'data' => Collection::getArrayByAlias($varOptions['alias']),

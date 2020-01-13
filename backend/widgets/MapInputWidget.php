@@ -1,9 +1,7 @@
 <?php
 namespace backend\widgets;
 
-use common\models\Page;
 use yii\base\Widget;
-use Yii;
 
 class MapInputWidget extends Widget
 {

@@ -3,7 +3,11 @@
 namespace frontend\controllers;
 
 use common\models\CollectionRecord;
+use common\models\CollectionColumn;
 use common\models\Page;
+use common\models\Collection;
+use yii\web\Response;
+use Yii;
 
 class CollectionController extends \yii\web\Controller
 {
@@ -22,6 +26,39 @@ class CollectionController extends \yii\web\Controller
 			'page'=>$page,
 		]);
 	}
+
+    public function actionCoords($id)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $collection = $this->findModel($id);
+
+        if (empty($collection->id_column_map))
+            return [];
+        /*$columns = $collection->getColumns()->indexBy('id_column')->all();
+
+        if (empty($columns[$id_column]) || $columns[$id_column]->type!=CollectionColumn::TYPE_MAP)
+            return [];*/
+
+        $records = $collection->getData();
+
+        $points = [];
+
+        foreach ($records as $key => $data)
+        {
+            if (!empty($data[$collection->id_column_map][0]) && is_array($data[$collection->id_column_map]))
+            {
+                $points[] = [
+                    'x' => $data[$collection->id_column_map][0],
+                    'y' => $data[$collection->id_column_map][1],
+                    'icon' => '',
+                    'content' => 'Пробная метка'
+                ];
+            }
+        }
+
+        return $points;
+    }
 
 	public function actionRecordList($id,$q)
     {
@@ -74,7 +111,7 @@ class CollectionController extends \yii\web\Controller
 
     protected function findModel($id)
     {
-        if (($model = Collection::findOneWithDeleted($id)) !== null) {
+        if (($model = Collection::findOneWithDeleted((int)$id)) !== null) {
             return $model;
         }
 
