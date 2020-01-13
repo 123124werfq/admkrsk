@@ -226,11 +226,14 @@ class Collection extends ActiveRecord
      */
     public function getColumns()
     {
-        if (empty($this->id_parent_collection)) {
+        if (empty($this->id_parent_collection))
+        {
             return $this->hasMany(CollectionColumn::class, ['id_collection' => 'id_collection'])->orderBy('ord ASC');
-        } else {
+        }
+        else
+        {
             return $this->hasMany(CollectionColumn::class,
-                ['id_collection' => 'id_parent_collection'])->indexBy()->orderBy('ord ASC');
+                ['id_collection' => 'id_parent_collection'])->orderBy('ord ASC');
         }
     }
 
