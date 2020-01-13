@@ -482,7 +482,9 @@ class Collection extends \yii\db\ActiveRecord
 
     public static function hasAccess()
     {
-        if (!Yii::$app->cache->exists(self::hasAccessCacheKey())) {
+        $cacheKey = self::hasAccessCacheKey();
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
             $userId = Yii::$app->user->identity->id;
             $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
 
@@ -493,13 +495,13 @@ class Collection extends \yii\db\ActiveRecord
             }
 
             Yii::$app->cache->set(
-                self::hasAccessCacheKey(),
+                $cacheKey,
                 $hasAccess,
                 0,
-                new TagDependency(['tags' => User::rbacCacheTag()])
+                User::rbacCacheTag()
             );
         } else {
-            $hasAccess = Yii::$app->cache->get(self::hasAccessCacheKey());
+            $hasAccess = Yii::$app->cache->get($cacheKey);
         }
 
         return $hasAccess;
@@ -507,7 +509,9 @@ class Collection extends \yii\db\ActiveRecord
 
     public static function hasEntityAccess($entity_id)
     {
-        if (!Yii::$app->cache->exists(self::hasEntityAccessCacheKey($entity_id))) {
+        $cacheKey = self::hasEntityAccessCacheKey($entity_id);
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
             $userId = Yii::$app->user->identity->id;
             $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
 
@@ -520,13 +524,13 @@ class Collection extends \yii\db\ActiveRecord
             }
 
             Yii::$app->cache->set(
-                self::hasEntityAccessCacheKey($entity_id),
+                $cacheKey,
                 $hasEntityAccess,
                 0,
-                new TagDependency(['tags' => User::rbacCacheTag()])
+                User::rbacCacheTag()
             );
         } else {
-            $hasEntityAccess = Yii::$app->cache->get(self::hasEntityAccessCacheKey($entity_id));
+            $hasEntityAccess = Yii::$app->cache->get($cacheKey);
         }
 
         return $hasEntityAccess;
@@ -534,30 +538,38 @@ class Collection extends \yii\db\ActiveRecord
 
     public static function getAccessCollectionIds()
     {
-        if (!Yii::$app->cache->exists(self::entityIdsCacheKey())) {
+        $cacheKey = self::entityIdsCacheKey();
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
             $userId = Yii::$app->user->identity->id;
             $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
 
             if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
                 $entityIds = null;
             } else {
-                $entityIds = (new Query())
+                $collectionQuery = (new Query())
                     ->from('dbl_collection_page')
-                    ->select('id_collection')
-                    ->andFilterWhere(['id_page' => Page::getAccessPageIds()])
-                    ->column();
+                    ->select('id_collection');
 
-                $entityIds = array_unique(ArrayHelper::merge($entityIds, self::getAccessEntityIds()));
+                $pageIds = Page::getAccessPageIds();
+
+                if (is_array($pageIds) && !empty($pageIds)) {
+                    $collectionQuery->andFilterWhere(['id_page' => $pageIds]);
+                } else {
+                    $collectionQuery->andWhere(['id_page' => $pageIds]);
+                }
+
+                $entityIds = array_unique(ArrayHelper::merge($collectionQuery->column(), self::getAccessEntityIds()));
             }
 
             Yii::$app->cache->set(
-                self::entityIdsCacheKey(),
+                $cacheKey,
                 $entityIds,
                 0,
-                new TagDependency(['tags' => User::rbacCacheTag()])
+                User::rbacCacheTag()
             );
         } else {
-            $entityIds = Yii::$app->cache->get(self::entityIdsCacheKey());
+            $entityIds = Yii::$app->cache->get($cacheKey);
         }
 
         return $entityIds;

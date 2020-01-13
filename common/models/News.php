@@ -272,7 +272,9 @@ class News extends \yii\db\ActiveRecord
 
     public static function hasAccess()
     {
-        if (!Yii::$app->cache->exists(self::hasAccessCacheKey())) {
+        $cacheKey = self::hasAccessCacheKey();
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
             $userId = Yii::$app->user->identity->id;
             $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
 
@@ -283,13 +285,13 @@ class News extends \yii\db\ActiveRecord
             }
 
             Yii::$app->cache->set(
-                self::hasAccessCacheKey(),
+                $cacheKey,
                 $hasAccess,
                 0,
-                new TagDependency(['tags' => User::rbacCacheTag()])
+                User::rbacCacheTag()
             );
         } else {
-            $hasAccess = Yii::$app->cache->get(self::hasAccessCacheKey());
+            $hasAccess = Yii::$app->cache->get($cacheKey);
         }
 
         return $hasAccess;
@@ -297,7 +299,9 @@ class News extends \yii\db\ActiveRecord
 
     public static function hasEntityAccess($entity_id)
     {
-        if (!Yii::$app->cache->exists(self::hasEntityAccessCacheKey($entity_id))) {
+        $cacheKey = self::hasEntityAccessCacheKey($entity_id);
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
             $userId = Yii::$app->user->identity->id;
             $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
 
@@ -310,13 +314,13 @@ class News extends \yii\db\ActiveRecord
             }
 
             Yii::$app->cache->set(
-                self::hasEntityAccessCacheKey($entity_id),
+                $cacheKey,
                 $hasEntityAccess,
                 0,
-                new TagDependency(['tags' => User::rbacCacheTag()])
+                User::rbacCacheTag()
             );
         } else {
-            $hasEntityAccess = Yii::$app->cache->get(self::hasEntityAccessCacheKey($entity_id));
+            $hasEntityAccess = Yii::$app->cache->get($cacheKey);
         }
 
         return $hasEntityAccess;
@@ -324,29 +328,37 @@ class News extends \yii\db\ActiveRecord
 
     public static function getAccessNewsIds()
     {
-        if (!Yii::$app->cache->exists(self::entityIdsCacheKey())) {
+        $cacheKey = self::entityIdsCacheKey();
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
             $userId = Yii::$app->user->identity->id;
             $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
 
             if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
                 $entityIds = null;
             } else {
-                $entityIds = News::find()
-                    ->select('id_news')
-                    ->andFilterWhere(['id_page' => Page::getAccessPageIds()])
-                    ->column();
+                $newsQuery = News::find()
+                    ->select('id_news');
 
-                $entityIds = array_unique(ArrayHelper::merge($entityIds, self::getAccessEntityIds()));
+                $pageIds = Page::getAccessPageIds();
+
+                if (is_array($pageIds) && !empty($pageIds)) {
+                    $newsQuery->andFilterWhere(['id_page' => $pageIds]);
+                } else {
+                    $newsQuery->andWhere(['id_page' => $pageIds]);
+                }
+
+                $entityIds = array_unique(ArrayHelper::merge($newsQuery->column(), self::getAccessEntityIds()));
             }
 
             Yii::$app->cache->set(
-                self::entityIdsCacheKey(),
+                $cacheKey,
                 $entityIds,
                 0,
-                new TagDependency(['tags' => User::rbacCacheTag()])
+                User::rbacCacheTag()
             );
         } else {
-            $entityIds = Yii::$app->cache->get(self::entityIdsCacheKey());
+            $entityIds = Yii::$app->cache->get($cacheKey);
         }
 
         return $entityIds;

@@ -1131,6 +1131,12 @@ class RbacController extends Controller
             $auth->add($user);
 
 
+            $backendMenuAddress = $auth->createPermission('menu.address');
+            $backendMenuAddress->description = 'Адреса';
+            $backendMenuAddress->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuAddress);
+            $auth->addChild($backendManage, $backendMenuAddress);
+
             $backendAddress = $auth->createRole('admin.address');
             $backendAddress->description = 'Редактор адресов';
             $auth->add($backendAddress);

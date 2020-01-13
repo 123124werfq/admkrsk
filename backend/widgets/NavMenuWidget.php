@@ -26,6 +26,12 @@ class NavMenuWidget extends Widget
                 foreach ($news_pages as $key => $page) {
                     $menu['news']['submenu']['news?id_page=' . $page->id_page] = [
                         'title' => $page->title,
+                        'roles' => [
+                            'backend.entityAccess' => [
+                                'entity_id' => $page->id_page,
+                                'class' => Page::class,
+                            ],
+                        ],
                     ];
                 }
             }

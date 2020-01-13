@@ -13,48 +13,42 @@ use yii\helpers\StringHelper;
 
 trait AccessTrait
 {
-    public static function rbacCacheKey()
+    public static function rbacCacheKey($userId = null)
     {
         static $rbacCacheKey;
 
         if (!$rbacCacheKey) {
-            $userCacheTag = User::rbacCacheTag();
-            $className = mb_strtolower(StringHelper::basename(self::class));
+            $userCacheTag = User::rbacCacheTag($userId);
+            $className = Inflector::variablize(StringHelper::basename(self::class));
 
-            $rbacCacheKey = "$userCacheTag.$className";
+            $rbacCacheKey = "{$userCacheTag->tags[1]}.$className";
         }
 
         return $rbacCacheKey;
     }
 
-    public static function hasAccessCacheKey()
+    public static function hasAccessCacheKey($userId = null)
     {
         static $hasAccessCacheKey;
 
         if (!$hasAccessCacheKey) {
-            $hasAccessCacheKey = static::rbacCacheKey() . ".hasAccess";
+            $hasAccessCacheKey = static::rbacCacheKey($userId) . ".hasAccess";
         }
 
         return $hasAccessCacheKey;
     }
 
-    public static function hasEntityAccessCacheKey($entity_id)
+    public static function hasEntityAccessCacheKey($entity_id, $userId = null)
     {
-        static $hasAccessCacheKey;
-
-        if (!$hasAccessCacheKey) {
-            $hasAccessCacheKey = static::rbacCacheKey() . ".hasEntityAccess.$entity_id";
-        }
-
-        return $hasAccessCacheKey;
+        return static::rbacCacheKey($userId) . ".hasEntityAccess.$entity_id";
     }
 
-    public static function entityIdsCacheKey()
+    public static function entityIdsCacheKey($userId = null)
     {
         static $entityIdsCacheKey;
 
         if (!$entityIdsCacheKey) {
-            $entityIdsCacheKey = static::rbacCacheKey() . ".entityIds";
+            $entityIdsCacheKey = static::rbacCacheKey($userId) . ".entityIds";
         }
 
         return $entityIdsCacheKey;
@@ -62,7 +56,9 @@ trait AccessTrait
 
     public static function hasAccess()
     {
-        if (!Yii::$app->cache->exists(self::hasAccessCacheKey())) {
+        $cacheKey = self::hasAccessCacheKey();
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
             $userId = Yii::$app->user->identity->id;
             $permissionName = 'admin.' . Inflector::variablize(StringHelper::basename(self::class));
 
@@ -73,13 +69,13 @@ trait AccessTrait
             }
 
             Yii::$app->cache->set(
-                self::hasAccessCacheKey(),
+                $cacheKey,
                 $hasAccess,
                 0,
-                new TagDependency(['tags' => User::rbacCacheTag()])
+                User::rbacCacheTag()
             );
         } else {
-            $hasAccess = Yii::$app->cache->get(self::hasAccessCacheKey());
+            $hasAccess = Yii::$app->cache->get($cacheKey);
         }
 
         return $hasAccess;
@@ -87,7 +83,9 @@ trait AccessTrait
 
     public static function hasEntityAccess($entity_id = null)
     {
-        if (!Yii::$app->cache->exists(self::hasEntityAccessCacheKey($entity_id))) {
+        $cacheKey = self::hasEntityAccessCacheKey($entity_id);
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
             $userId = Yii::$app->user->identity->id;
             $permissionName = 'admin.' . Inflector::variablize(StringHelper::basename(self::class));
 
@@ -100,13 +98,13 @@ trait AccessTrait
             }
 
             Yii::$app->cache->set(
-                self::hasEntityAccessCacheKey($entity_id),
+                $cacheKey,
                 $hasEntityAccess,
                 0,
-                new TagDependency(['tags' => User::rbacCacheTag()])
+                User::rbacCacheTag()
             );
         } else {
-            $hasEntityAccess = Yii::$app->cache->get(self::hasEntityAccessCacheKey($entity_id));
+            $hasEntityAccess = Yii::$app->cache->get($cacheKey);
         }
 
         return $hasEntityAccess;
@@ -114,7 +112,9 @@ trait AccessTrait
 
     public static function getAccessEntityIds()
     {
-        if (!Yii::$app->cache->exists(self::entityIdsCacheKey())) {
+        $cacheKey = self::entityIdsCacheKey();
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
             $userId = Yii::$app->user->identity->id;
             $permissionName = 'admin.' . Inflector::variablize(StringHelper::basename(self::class));
 
@@ -143,13 +143,13 @@ trait AccessTrait
             }
 
             Yii::$app->cache->set(
-                self::entityIdsCacheKey(),
+                $cacheKey,
                 $entityIds,
                 0,
-                new TagDependency(['tags' => User::rbacCacheTag()])
+                User::rbacCacheTag()
             );
         } else {
-            $entityIds = Yii::$app->cache->get(self::entityIdsCacheKey());
+            $entityIds = Yii::$app->cache->get($cacheKey);
         }
 
         return $entityIds;

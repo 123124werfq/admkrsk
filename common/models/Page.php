@@ -340,7 +340,9 @@ class Page extends \yii\db\ActiveRecord
 
     public static function hasAccess()
     {
-        if (!Yii::$app->cache->exists(self::hasAccessCacheKey())) {
+        $cacheKey = self::hasAccessCacheKey();
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
             $userId = Yii::$app->user->identity->id;
             $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
 
@@ -351,13 +353,13 @@ class Page extends \yii\db\ActiveRecord
             }
 
             Yii::$app->cache->set(
-                self::hasAccessCacheKey(),
+                $cacheKey,
                 $hasAccess,
                 0,
-                new TagDependency(['tags' => User::rbacCacheTag()])
+                User::rbacCacheTag()
             );
         } else {
-            $hasAccess = Yii::$app->cache->get(self::hasAccessCacheKey());
+            $hasAccess = Yii::$app->cache->get($cacheKey);
         }
 
         return $hasAccess;
@@ -365,7 +367,9 @@ class Page extends \yii\db\ActiveRecord
 
     public static function hasEntityAccess($entity_id)
     {
-        if (!Yii::$app->cache->exists(self::hasEntityAccessCacheKey($entity_id))) {
+        $cacheKey = self::hasEntityAccessCacheKey($entity_id);
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
             $userId = Yii::$app->user->identity->id;
             $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
 
@@ -378,13 +382,13 @@ class Page extends \yii\db\ActiveRecord
             }
 
             Yii::$app->cache->set(
-                self::hasEntityAccessCacheKey($entity_id),
+                $cacheKey,
                 $hasEntityAccess,
                 0,
-                new TagDependency(['tags' => User::rbacCacheTag()])
+                User::rbacCacheTag()
             );
         } else {
-            $hasEntityAccess = Yii::$app->cache->get(self::hasEntityAccessCacheKey($entity_id));
+            $hasEntityAccess = Yii::$app->cache->get($cacheKey);
         }
 
         return $hasEntityAccess;
@@ -395,7 +399,9 @@ class Page extends \yii\db\ActiveRecord
      */
     public static function getAccessPageIds()
     {
-        if (!Yii::$app->cache->exists(self::entityIdsCacheKey())) {
+        $cacheKey = self::entityIdsCacheKey();
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
             $userId = Yii::$app->user->identity->id;
             $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
 
@@ -404,29 +410,35 @@ class Page extends \yii\db\ActiveRecord
             } else {
                 $entityIds = [];
 
-                $partitionQuery = Page::find()
-                    ->andFilterWhere(['id_page' => self::getAccessEntityIds()])
-                    ->andWhere(['is_partition' => true]);
+                $pageQuery = Page::find();
 
-                foreach ($partitionQuery->each() as $partition) {
-                    /* @var Page $partition */
-                    $entityIds[$partition->id_page] = $partition->id_page;
+                $pageIds = self::getAccessEntityIds();
 
-                    foreach ($partition->children()->each() as $childPartition) {
-                        /* @var Page $childPartition */
-                        $entityIds[$childPartition->id_page] = $childPartition->id_page;
+                if (is_array($pageIds) && !empty($pageIds)) {
+                    $pageQuery->andFilterWhere(['id_page' => $pageIds]);
+                } else {
+                    $pageQuery->andWhere(['id_page' => $pageIds]);
+                }
+
+                foreach ($pageQuery->each() as $page) {
+                    /* @var Page $page */
+                    $entityIds[$page->id_page] = $page->id_page;
+
+                    foreach ($page->children()->each() as $childPage) {
+                        /* @var Page $childPage */
+                        $entityIds[$childPage->id_page] = $childPage->id_page;
                     }
                 }
             }
 
             Yii::$app->cache->set(
-                self::entityIdsCacheKey(),
+                $cacheKey,
                 $entityIds,
                 0,
-                new TagDependency(['tags' => User::rbacCacheTag()])
+                User::rbacCacheTag()
             );
         } else {
-            $entityIds = Yii::$app->cache->get(self::entityIdsCacheKey());
+            $entityIds = Yii::$app->cache->get($cacheKey);
         }
 
         return $entityIds;

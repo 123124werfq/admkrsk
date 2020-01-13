@@ -7,9 +7,12 @@ use common\traits\MetaTrait;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
+use yii\caching\Dependency;
+use yii\caching\TagDependency;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\StringHelper;
+use yii\redis\Cache;
 use yii\web\IdentityInterface;
 
 /**
@@ -489,16 +492,42 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function rbacCacheTag($userId = null)
     {
-        static $rbacCacheKey;
+        static $rbacCacheTag;
 
         if (!$userId) {
             $userId = Yii::$app->user->identity->id;
         }
 
-        if (!$rbacCacheKey) {
-            $rbacCacheKey = "rbac.$userId";
+        if (!$rbacCacheTag) {
+            $rbacCacheTag = new TagDependency(['tags' => ['rbac', "rbac.$userId"]]);
         }
 
-        return $rbacCacheKey;
+        return $rbacCacheTag;
+    }
+
+    public static function rbacCacheIsChanged($key)
+    {
+        /* @var Cache $cache */
+        $cache = Yii::$app->cache;
+
+        $key = $cache->buildKey($key);
+        $value = $cache->redis->executeCommand('GET', [$key]);
+        if ($value === false || $cache->serializer === false) {
+            return $value;
+        } elseif ($cache->serializer === null) {
+            $value = unserialize($value);
+        } else {
+            $value = call_user_func($cache->serializer[1], $value);
+        }
+        if (is_array($value) && !($value[1] instanceof Dependency && $value[1]->isChanged($cache))) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function rbacCacheInvalidate($userId = null)
+    {
+        TagDependency::invalidate(Yii::$app->cache, 'rbac' . ($userId ? ".$userId" : ''));
     }
 }
