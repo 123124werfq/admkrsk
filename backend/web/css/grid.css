@@ -8,12 +8,12 @@
 }
 
 #sortable {
+    overflow: auto;
     height: 130px !important;
     list-style-type: none;
     margin: 0;
     padding: 0;
     margin-bottom: 10px;
-    overflow: hidden;
 }
 
 .ui-state-default {

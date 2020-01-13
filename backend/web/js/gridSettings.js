@@ -25,7 +25,7 @@ $(function () {
 function getUserSettings() {
     let elems = document.getElementsByClassName('ui-state-default');
     let data = [];
-    for (let i = 0; i < elems.length; i++) {
+    for (let i = 1; i < elems.length; i++) {
         data.push(
             {
                 position: elems[i].offsetLeft,

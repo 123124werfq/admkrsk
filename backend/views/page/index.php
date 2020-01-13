@@ -48,9 +48,18 @@ $defaultColumns = [
             'class' => 'datepicker form-control',
         ],
     ],
-    //todo trait props
-    'viewsYear' => 'viewsYear:integer:За год',
-    'views' =>  'views:integer:Всего',
+    'viewsYear:prop' => [
+        'attribute' => 'viewsYear',
+        'label' => 'За год',
+        'format' => 'integer',
+
+    ],
+    'views:prop' => [
+        'attribute' => 'views',
+        'label' => 'Всего',
+        'format' => 'integer',
+
+    ],
 ];
 
 list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(

@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\Action;
 use common\models\AuthEntity;
+use common\models\GridSetting;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\Vars;
@@ -21,6 +22,8 @@ use yii\web\Response;
  */
 class VarsController extends Controller
 {
+    const grid = 'vars-grid';
+
     public function behaviors()
     {
         return [
@@ -137,10 +140,22 @@ class VarsController extends Controller
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => $params['pageSize'] ?? 10
+            ],
         ]);
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 

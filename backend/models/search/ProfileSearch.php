@@ -2,6 +2,7 @@
 
 namespace backend\models\search;
 
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\HrProfile;
@@ -17,6 +18,7 @@ class ProfileSearch extends HrProfile
     public function rules()
     {
         return [
+
         ];
     }
 
@@ -35,6 +37,7 @@ class ProfileSearch extends HrProfile
      * @param array $params
      *
      * @return ActiveDataProvider
+     * @throws InvalidConfigException
      */
     public function search($params)
     {
@@ -44,7 +47,10 @@ class ProfileSearch extends HrProfile
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['updated_at'=>SORT_DESC]]
+            'sort'=> ['defaultOrder' => ['updated_at'=>SORT_DESC]],
+            'pagination' => [
+                'pageSize' => $params['pageSize'] ?? 10
+            ],
         ]);
 
         $this->load($params);

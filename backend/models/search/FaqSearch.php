@@ -4,6 +4,7 @@ namespace backend\models\search;
 
 use common\models\AuthEntity;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Faq;
@@ -39,6 +40,7 @@ class FaqSearch extends Faq
      * @param array $params
      *
      * @return ActiveDataProvider
+     * @throws InvalidConfigException
      */
     public function search($params)
     {
@@ -55,6 +57,9 @@ class FaqSearch extends Faq
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => $params['pageSize'] ?? 10
+            ],
         ]);
 
         $this->load($params);

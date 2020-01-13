@@ -2,6 +2,7 @@
 
 namespace backend\models\search;
 
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\ServiceTarget;
@@ -37,6 +38,7 @@ class ServiceTargetSearch extends ServiceTarget
      * @param array $params
      *
      * @return ActiveDataProvider
+     * @throws InvalidConfigException
      */
     public function search($params)
     {
@@ -50,6 +52,9 @@ class ServiceTargetSearch extends ServiceTarget
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => $params['pageSize'] ?? 10
+            ],
         ]);
 
         $this->load($params);

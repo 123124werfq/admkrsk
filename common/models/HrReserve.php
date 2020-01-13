@@ -53,7 +53,7 @@ class HrReserve extends \yii\db\ActiveRecord
     {
         return [
             'id_reserve' => 'Id Reserve',
-            'id_profile' => 'Id Profile',
+            'id_profile' => 'Id Профиля',
             'id_record_position' => 'Id Record Position',
             'id_result' => 'Id Result',
             'contest_date' => 'Contest Date',

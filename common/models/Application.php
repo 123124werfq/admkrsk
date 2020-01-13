@@ -7,8 +7,10 @@ use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
+use yii\base\Exception;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "db_application".
@@ -24,7 +26,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $deleted_at
  * @property int $deleted_by
  */
-class Application extends \yii\db\ActiveRecord
+class Application extends ActiveRecord
 {
     use MetaTrait;
     use ActionTrait;
@@ -90,7 +92,7 @@ class Application extends \yii\db\ActiveRecord
 
     /**
      * @return bool
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public function beforeValidate()
     {

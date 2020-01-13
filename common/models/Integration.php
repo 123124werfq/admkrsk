@@ -62,7 +62,7 @@ class Integration extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_integration' => 'Id Integration',
+            'id_integration' => 'Id Интеграции',
             'system' => 'System',
             'direction' => 'Direction',
             'status' => 'Status',
