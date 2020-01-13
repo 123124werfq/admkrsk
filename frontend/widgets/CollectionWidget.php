@@ -218,6 +218,9 @@ class CollectionWidget extends \yii\base\Widget
             ]);
         }
 
+        var_dump($this->show_on_map);
+        var_dump($this->attributes);
+
         return $this->render('collection/'.$this->template,[
         	'model'=>$model,
             'id_collection'=>$this->id_collection,
