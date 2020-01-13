@@ -113,6 +113,11 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            if (!Yii::$app->user->identity->can('backend')) {
+                $backend = Yii::$app->authManager->getPermission('backend');
+                Yii::$app->authManager->assign($backend, Yii::$app->user->identity->id);
+            }
+
             Yii::$app->user->identity->createAction(Action::ACTION_LOGIN);
             return $this->goBack();
         } else if ($model->load(Yii::$app->request->post()) && AdUser::adlogin($model->username, $model->password)) {
