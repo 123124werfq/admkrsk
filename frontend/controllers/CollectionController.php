@@ -46,8 +46,6 @@ class CollectionController extends \yii\web\Controller
 
         $points = [];
 
-        var_dump($collection->label);
-
         foreach ($records as $key => $data)
         {
             if (!empty($data[$collection->id_column_map][0]) && is_array($data[$collection->id_column_map]))
