@@ -183,6 +183,9 @@ class CollectionWidget extends \yii\base\Widget
         foreach ($columns as $key => $col)
             $columnsByAlias[$col->alias] = $col;
 
+        $offset = ($p-1)*$this->pagesize;
+        $allrows = array_slice($allrows, $offset, $this->pagesize,true);
+
         if ($this->group)
         {
             $group_rows = [];
@@ -214,9 +217,6 @@ class CollectionWidget extends \yii\base\Widget
                 'show_column_num'=>$this->show_column_num,
             ]);
         }
-
-        $offset = ($p-1)*$this->pagesize;
-        $allrows = array_slice($allrows, $offset, $this->pagesize,true);
 
         return $this->render('collection/'.$this->template,[
         	'model'=>$model,
