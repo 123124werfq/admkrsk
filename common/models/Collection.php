@@ -314,7 +314,7 @@ class Collection extends ActiveRecord
             {
                 foreach ($options['filters'] as $key => $filter)
                 {
-                    $where = [$filter['operator'], 'col'.$filter['id_column'], (is_numeric($filter['value']))?(float)$filter['value']:$filter['value']];
+                    $where = [$filter['operator'], 'col'.$filter['id_column'],(is_numeric($filter['value']))?(float)$filter['value']:$filter['value']];
 
                     $query->andWhere($where);
                 }
