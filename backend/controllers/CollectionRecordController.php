@@ -8,8 +8,8 @@ use common\models\CollectionColumn;
 use common\models\Collection;
 use common\models\FormDynamic;
 use common\models\Media;
-
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -26,8 +26,86 @@ class CollectionRecordController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => ['backend.collection.view', 'backend.entityAccess'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => Collection::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['download-doc'],
+                        'roles' => ['backend.collection.view', 'backend.entityAccess'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($collectionRecord = $this->findModel(Yii::$app->request->get('id'))) !== null) {
+                                    return $collectionRecord->id_collection;
+                                }
+                                return null;
+                            },
+                            'class' => Collection::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['view'],
+                        'roles' => ['backend.collection.view', 'backend.entityAccess'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($collectionRecord = $this->findModel(Yii::$app->request->get('id'))) !== null) {
+                                    return $collectionRecord->id_collection;
+                                }
+                                return null;
+                            },
+                            'class' => Collection::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create'],
+                        'roles' => ['backend.collection.create', 'backend.entityAccess'],
+                        'roleParams' => [
+                            'class' => Collection::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['update'],
+                        'roles' => ['backend.collection.update', 'backend.entityAccess'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($collectionRecord = $this->findModel(Yii::$app->request->get('id'))) !== null) {
+                                    return $collectionRecord->id_collection;
+                                }
+                                return null;
+                            },
+                            'class' => Collection::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['delete'],
+                        'roles' => ['backend.collection.delete', 'backend.entityAccess'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($collectionRecord = $this->findModel(Yii::$app->request->get('id'))) !== null) {
+                                    return $collectionRecord->id_collection;
+                                }
+                                return null;
+                            },
+                            'class' => Collection::class,
+                        ],
+                    ],
+                ],
+            ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -37,7 +115,9 @@ class CollectionRecordController extends Controller
 
     /**
      * Lists all CollectionRecord models.
+     * @param $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionIndex($id)
     {

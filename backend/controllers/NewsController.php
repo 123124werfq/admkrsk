@@ -36,7 +36,7 @@ class NewsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.news.index'],
+                        'roles' => ['backend.news.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => News::class,
                         ],
@@ -44,7 +44,7 @@ class NewsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.news.view'],
+                        'roles' => ['backend.news.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => News::class,
@@ -53,7 +53,7 @@ class NewsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.news.create'],
+                        'roles' => ['backend.news.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => News::class,
                         ],
@@ -61,7 +61,7 @@ class NewsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.news.update'],
+                        'roles' => ['backend.news.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => News::class,
@@ -70,7 +70,7 @@ class NewsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.news.delete'],
+                        'roles' => ['backend.news.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => News::class,
@@ -79,7 +79,7 @@ class NewsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.news.log.index'],
+                        'roles' => ['backend.news.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => News::class,
@@ -88,7 +88,7 @@ class NewsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.news.log.view'],
+                        'roles' => ['backend.news.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -102,7 +102,7 @@ class NewsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.news.log.restore'],
+                        'roles' => ['backend.news.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {

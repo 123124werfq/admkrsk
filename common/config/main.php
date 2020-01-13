@@ -21,14 +21,16 @@ return [
             ],
         ],
         'cache' => [
-            'class' => 'yii\caching\FileCache',
-            //'class' => 'yii\redis\Cache',
+//            'class' => 'yii\caching\FileCache',
+            'class' => 'yii\redis\Cache',
+            'redis' => 'redisCache',
         ],
-        /*'session' => [
+        'session' => [
             'class' => 'yii\redis\Session',
-        ],*/
+        ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
+            'cache' => 'cache',
         ],
         'user' => [
             'identityClass' => 'common\models\User',

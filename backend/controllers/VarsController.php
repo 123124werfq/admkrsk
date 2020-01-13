@@ -30,7 +30,7 @@ class VarsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.vars.index'],
+                        'roles' => ['backend.vars.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Vars::class,
                         ],
@@ -38,7 +38,7 @@ class VarsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.vars.view'],
+                        'roles' => ['backend.vars.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Vars::class,
@@ -47,7 +47,7 @@ class VarsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.vars.create'],
+                        'roles' => ['backend.vars.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Vars::class,
                         ],
@@ -55,7 +55,7 @@ class VarsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.vars.update'],
+                        'roles' => ['backend.vars.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Vars::class,
@@ -64,7 +64,7 @@ class VarsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.vars.delete'],
+                        'roles' => ['backend.vars.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Vars::class,
@@ -73,7 +73,7 @@ class VarsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.vars.log.index'],
+                        'roles' => ['backend.vars.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Vars::class,
@@ -82,7 +82,7 @@ class VarsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.vars.log.view'],
+                        'roles' => ['backend.vars.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -96,7 +96,7 @@ class VarsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.vars.log.restore'],
+                        'roles' => ['backend.vars.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -132,7 +132,7 @@ class VarsController extends Controller
         }
 
         if (!Yii::$app->user->can('admin.vars')) {
-            $query->andWhere(['id_var' => AuthEntity::getEntityIds(Vars::class)]);
+            $query->andFilterWhere(['id_var' => AuthEntity::getEntityIds(Vars::class)]);
         }
 
         $dataProvider = new ActiveDataProvider([

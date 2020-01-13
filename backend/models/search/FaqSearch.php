@@ -50,7 +50,7 @@ class FaqSearch extends Faq
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.faq')) {
-            $query->andWhere(['id_faq' => AuthEntity::getEntityIds(Faq::class)]);
+            $query->andFilterWhere(['id_faq' => AuthEntity::getEntityIds(Faq::class)]);
         }
 
         $dataProvider = new ActiveDataProvider([

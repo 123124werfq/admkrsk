@@ -28,7 +28,7 @@ class UserRoleController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.userRole.index'],
+                        'roles' => ['backend.userRole.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => UserRole::class,
                         ],
@@ -36,7 +36,7 @@ class UserRoleController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.userRole.view'],
+                        'roles' => ['backend.userRole.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => UserRole::class,
@@ -45,7 +45,7 @@ class UserRoleController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['assign'],
-                        'roles' => ['backend.userRole.assign'],
+                        'roles' => ['backend.userRole.assign', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => UserRole::class,
@@ -54,7 +54,7 @@ class UserRoleController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['revoke'],
-                        'roles' => ['backend.userRole.revoke'],
+                        'roles' => ['backend.userRole.revoke', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => UserRole::class,
