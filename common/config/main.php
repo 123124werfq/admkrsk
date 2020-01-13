@@ -21,9 +21,9 @@ return [
             ],
         ],
         'cache' => [
-//            'class' => 'yii\caching\FileCache',
-            'class' => 'yii\redis\Cache',
-            'redis' => 'redisCache',
+            'class' => 'yii\caching\FileCache',
+/*            'class' => 'yii\redis\Cache',
+            'redis' => 'redisCache',*/
         ],
         'session' => [
             'class' => 'yii\redis\Session',
