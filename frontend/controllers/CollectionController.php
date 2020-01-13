@@ -59,8 +59,8 @@ class CollectionController extends \yii\web\Controller
                 }
 
                 $points[] = [
-                    'x' => $data[$collection->id_column_map][0],
-                    'y' => $data[$collection->id_column_map][1],
+                    'x' => str_replace(',', '.', $data[$collection->id_column_map][0]),
+                    'y' => str_replace(',', '.', $data[$collection->id_column_map][1]),
                     'icon' => '',
                     'content' => '<table>'.$content.'</table>'
                 ];
