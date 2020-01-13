@@ -78,6 +78,7 @@ return [
                 'class' => 'yii\web\UrlNormalizer',
             ],
             'rules' => [
+                'site/flush' => 'site/flush',
                 [
                     'class' => 'yii\web\GroupUrlRule',
                     'prefix' => 'api',
@@ -114,7 +115,6 @@ return [
                     'class' => 'frontend\components\NewyearUrlRule',
                 ],*/
                 //'/' => 'site/page',
-                'site/flush' => 'site/flush',
                 'service/search'=>'service/search',
                 '/press/events' => 'event/index',
                 'event/program' => 'event/program',

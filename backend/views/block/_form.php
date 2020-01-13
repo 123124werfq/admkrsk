@@ -53,8 +53,9 @@ use kartik\select2\Select2;
                     break;
 
 				case $var::TYPE_COLLECTIONS:
+					//->andWhere('id_column_map IS NOT NULL')->all()
 					echo $form->field($var, "[$ckey]value")->widget(Select2::class, [
-	                    'data' => ArrayHelper::map(Collection::find()->andWhere('id_column_map IS NOT NULL')->all(), 'id_collection', 'name'),
+	                    'data' => ArrayHelper::map(Collection::find(), 'id_collection', 'name'),
 	                    'pluginOptions' => [
 	                        'allowClear' => true,
 	                        'placeholder' => 'Списки',

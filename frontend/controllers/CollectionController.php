@@ -42,17 +42,28 @@ class CollectionController extends \yii\web\Controller
 
         $records = $collection->getData();
 
+        $columns = $collection->getColumns()->indexBy('id_column')->all();
+
         $points = [];
+
 
         foreach ($records as $key => $data)
         {
             if (!empty($data[$collection->id_column_map][0]) && is_array($data[$collection->id_column_map]))
             {
+
+                $content = '';
+
+                foreach ($collection->label as $key => $id_column) {
+                    if (!empty($data[$id_column]) && !empty($columns[$id_column]))
+                        $content .= '<tr><th>'.$columns[$id_column]->name.'</th><td>'.$data[$id_column].'</td></tr>';
+                }
+
                 $points[] = [
                     'x' => $data[$collection->id_column_map][0],
                     'y' => $data[$collection->id_column_map][1],
                     'icon' => '',
-                    'content' => 'Пробная метка'
+                    'content' => '<table></table>'
                 ];
             }
         }
