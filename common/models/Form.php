@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\behaviors\AccessControlBehavior;
+use common\components\yiinput\RelationBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\AccessTrait;
@@ -120,37 +121,18 @@ class Form extends \yii\db\ActiveRecord
                 ],
                 'cover'=>'template'
             ],
+            'yiinput' => [
+                'class' => RelationBehavior::class,
+                'relations'=> [
+                    'partitions'=>[
+                        'modelname'=>'Page',
+                        'jtable'=>'dbl_form_page',
+                        'added'=>false,
+                    ],
+                ]
+            ],
         ];
     }
-
-    // deprecated
-    /*public function createFromByCollection()
-    {
-        foreach ($this->collection->columns as $key => $column)
-        {
-            $row = new FormRow;
-            $row->id_form = $this->id_form;
-            $row->ord = $key;
-
-            if ($row->save())
-            {
-                $input = new FormInput;
-                $input->type = $column->type;
-                $input->id_form = $this->id_form;
-                $input->id_column = $column->id_column;
-                $input->label = $input->name = $column->name;
-
-                if ($input->save())
-                {
-                    $element = new FormElement;
-                    $element->id_row = $row->id_row;
-                    $element->id_input = $input->id_input;
-                    $element->ord = 0;
-                    $element->save();
-                }
-            }
-        }
-    }*/
 
     public function createInput($attributes)
     {
@@ -175,6 +157,30 @@ class Form extends \yii\db\ActiveRecord
         }
     }
 
+    public function makeDoc($collectionRecord, $addData=null)
+    {
+        if (empty($this->template) && empty($this->service->template))
+            return false;
+
+        if (!empty($this->template))
+            $media = $this->template;
+        else if (!empty($this->service->template))
+            $media = $this->service->template;
+
+        $url = $media->getUrl();
+
+        $data = $collectionRecord->getData(true);
+
+        $template = file_get_contents($url);
+        $root = Yii::getAlias('@app');
+
+        $template_path = $root.'/runtime/templates/template_'.$media->id_media.'_'.time().'.docx';
+        $template = file_put_contents($template_path,file_get_contents($url));
+
+        $export_path = \common\components\worddoc\WordDoc::makeDocByForm($this, $data, $template_path);
+
+        return $export_path;
+    }
 
     public function getCollection()
     {
@@ -201,40 +207,8 @@ class Form extends \yii\db\ActiveRecord
         return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_group']);
     }
 
-    public function makeDoc($collectionRecord, $addData=null)
+    public function getPartitions()
     {
-        if (empty($this->template) && empty($this->service->template))
-            return false;
-
-        if (!empty($this->template))
-            $media = $this->template;
-        else if (!empty($this->service->template))
-            $media = $this->service->template;
-
-        $url = $media->getUrl();
-
-        $data = $collectionRecord->getData(true);
-
-        $template = file_get_contents($url);
-        $root = Yii::getAlias('@app');
-
-        $template_path = $root.'/runtime/templates/template_'.$media->id_media.'_'.time().'.docx';
-        $template = file_put_contents($template_path,file_get_contents($url));
-
-        $export_path = \common\components\worddoc\WordDoc::makeDocByForm($this, $data, $template_path);
-
-        /*header('Content-Description: File Transfer');
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="'.$appeal->targer->number.' '.$appeal->created_at.'"');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($export_path));
-
-        readfile($export_path);
-        unlink($export_path);
-        */
-
-        return $export_path;
+        return $this->hasMany(Page::class, ['id_page' => 'id_page'])->viaTable('dbl_form_page',['id_form'=>'id_form']);
     }
 }

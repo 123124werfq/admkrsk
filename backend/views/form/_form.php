@@ -73,11 +73,39 @@ use yii\web\JsExpression;
     ]);?>
 
     <?php if (Yii::$app->user->can('admin.form')): ?>
-
         <hr>
+        
         <h3>Доступ</h3>
+
+        <?php
+            $records = $model->getRecords('partitions');
+            if (!empty($records[0]->id_page))
+                $records = ArrayHelper::map($records, 'id_page', 'title');
+            else 
+                $records = [];
+
+            echo Select2::widget([
+                'data' => $records,
+                'name'=>'Page[partitions][]id_page',
+                'pluginOptions' => [
+                    'allowClear' => true,
+                    'multiple' => true,
+                    'ajax' => [
+                        'url' => '/page/list',
+                        'dataType' => 'json',
+                        'data' => new JsExpression('function(params) { return {q:params.term, partition:1}; }')
+                    ],
+                    'placeholder' => 'Выберите разделы',
+                ],
+                'value'=>array_keys($records),
+                'options' => [
+                    'multiple' => true
+                ]
+            ]);
+        ?>
         <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>
         <?= $form->field($model, 'access_user_group_ids')->label('Группы пользоватей')->widget(UserGroupAccessControl::class) ?>
+
     <?php endif; ?>
 
     <hr>

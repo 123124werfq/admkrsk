@@ -14,6 +14,7 @@ class NavMenuWidget extends Widget
         $menu = require __DIR__ . '/../config/menu.php';
 
         $newsRoles = $menu['news']['roles'] ?? null;
+
         if (!empty($newsRoles) && Yii::$app->user->identity->can($newsRoles)) {
             $news_pages = Page::find()
                 ->andFilterWhere(['id_page' => Page::getAccessPageIds()])

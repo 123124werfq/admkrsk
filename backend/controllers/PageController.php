@@ -45,7 +45,7 @@ class PageController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'list', 'tree'],
+                        'actions' => ['index', 'list', 'tree', 'partition'],
                         'roles' => ['backend.page.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Page::class,
@@ -253,10 +253,20 @@ class PageController extends Controller
 
     public function actionPartition($id=null)
     {
-        /*if (!empty($id))
-            $this->findModel($id);
+        $parent = null;
+
+        if (!empty($id))
+        {
+            $parent = $this->findModel($id);
+            $partitions = $parent->children()->andWhere(['is_partition'=>1])->all();
+        }
         else
-            Page::*/
+            $partitions = Page::find()->where(['is_partition'=>1])->all();
+
+        return $this->render('partition/partition',[
+            'partitions'=>$partitions,
+            'parent'=>$parent,
+        ]);
     }
 
     /**
