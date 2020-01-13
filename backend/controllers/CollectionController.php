@@ -338,13 +338,12 @@ class CollectionController extends Controller
 
                             $alldata = $collection->getData([], true);
 
-                            var_dump($x);
-                            var_dump($alldata);
-
                             foreach ($alldata as $id_record => $data)
                             {
                                 $record = CollectionRecord::findOne($id_record);
                                 $record->data = [$newColumn->id_column => [$data[$x], $data[$y]]];
+
+                                var_dump($record->data);
                                 $record->update();
                             }
                         }
