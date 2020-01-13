@@ -123,7 +123,7 @@ class CollectionColumnController extends Controller
 
     protected function updateCustomValues($model)
     {
-        $collection = $column->collection;
+        $collection = $model->collection;
         $mongoCollection = Yii::$app->mongodb->getCollection('collection'.$collection->id_collection);
 
         $records = $collection->getData([],true);
