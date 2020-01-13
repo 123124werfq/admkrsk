@@ -236,6 +236,17 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 }
             }
 
+            $dataMongo['id_record'] = $this->id_record;
+
+            if ($insert)
+                $collection->insert($dataMongo);
+            else
+                $collection->update(['id_record'=>$this->id_record],$dataMongo);
+
+
+            // Это надо оптимизировать, перенесено под инсерт потомучто не работает при CREATE / MSD
+            $dataMongo = [];
+
             // собираем кастомные колонки
             foreach ($columns as $key => $column)
             {
@@ -248,11 +259,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 }
             }
 
-            $dataMongo['id_record'] = $this->id_record;
-
-            if ($insert)
-                $collection->insert($dataMongo);
-            else
+            if (!empty($dataMongo))
                 $collection->update(['id_record'=>$this->id_record],$dataMongo);
         }
 

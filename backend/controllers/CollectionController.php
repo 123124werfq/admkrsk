@@ -418,7 +418,8 @@ class CollectionController extends Controller
                                 $id_records_source = [];
                                 $textSearch = [];
 
-                                foreach ($array as $akey => $kdata) {
+                                foreach ($array as $akey => $kdata)
+                                {
                                     $id = key($kdata);
 
                                     foreach ($datas_source as $id_record_source => $sources) {
@@ -429,7 +430,8 @@ class CollectionController extends Controller
                                     }
                                 }
 
-                                if (!empty($id_records_source)) {
+                                if (!empty($id_records_source))
+                                {
                                     Yii::$app->db->createCommand()->insert('db_collection_value', [
                                         'id_record' => $id_record,
                                         'id_column' => $newColumn->id_column,
@@ -838,7 +840,7 @@ class CollectionController extends Controller
                                             $record->delete();
                                     }
                                 }
-                                else 
+                                else
                                 {
                                     $collection = new Collection();
                                     $collection->name = $model->name;
@@ -859,7 +861,7 @@ class CollectionController extends Controller
 
                                             $columnModel = CollectionColumn::find()->where(['id_column'=>$column['id_column']])->one();
                                         }
-                                        
+
                                         if (empty($columnModel))
                                         {
                                             $columnModel = new CollectionColumn;

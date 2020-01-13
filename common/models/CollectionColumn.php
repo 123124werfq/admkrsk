@@ -232,7 +232,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
         try {
             $loader = new \Twig\Loader\ArrayLoader([
-            'template' => $template,
+                'template' => $template,
             ]);
             $twig = new \Twig\Environment($loader);
             $value = $twig->render('template', $data);
