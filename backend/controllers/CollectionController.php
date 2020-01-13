@@ -342,8 +342,6 @@ class CollectionController extends Controller
                             {
                                 $record = CollectionRecord::findOne($id_record);
                                 $record->data = [$newColumn->id_column => [$data[$x], $data[$y]]];
-
-                                var_dump($record->data);
                                 $record->update();
                             }
                         }

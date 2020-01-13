@@ -238,11 +238,12 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
             $dataMongo['id_record'] = $this->id_record;
 
+            var_dump($dataMongo);
+
             if ($insert)
                 $collection->insert($dataMongo);
             else
                 $collection->update(['id_record'=>$this->id_record],$dataMongo);
-
 
             // Это надо оптимизировать, перенесено под инсерт потомучто не работает при CREATE / MSD
             $dataMongo = [];
