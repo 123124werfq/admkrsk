@@ -238,8 +238,6 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
             $dataMongo['id_record'] = $this->id_record;
 
-            var_dump($dataMongo);
-
             if ($insert)
                 $collection->insert($dataMongo);
             else
