@@ -46,6 +46,7 @@ class CollectionController extends \yii\web\Controller
 
         $points = [];
 
+        var_dump($collection->label);
 
         foreach ($records as $key => $data)
         {
