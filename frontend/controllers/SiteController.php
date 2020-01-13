@@ -148,14 +148,14 @@ class SiteController extends Controller
             $model->password = '';
 
             // получаем УРЛ для входа через ЕСИА
-            if (!file_exists(Yii::getAlias('@app') . '/assets/admkrsk.pem')) {
+            if (!file_exists(Yii::getAlias('@app') . '/assets/admkrsk-new.pem')) {
                 return $this->goBack();
             }
 
             $esia = User::openId();
             $esia->setSigner(new CliSignerPKCS7(
-                Yii::getAlias('@app'). '/assets/admkrsk.pem',
-                Yii::getAlias('@app'). '/assets/admkrsk.pem',
+                Yii::getAlias('@app'). '/assets/admkrsk-new.pem',
+                Yii::getAlias('@app'). '/assets/admkrsk-new.pem',
                 'T%52gs]CPJ',
                 Yii::getAlias('@runtime')
             ));
