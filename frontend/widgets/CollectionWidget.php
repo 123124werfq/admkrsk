@@ -207,7 +207,7 @@ class CollectionWidget extends \yii\base\Widget
                 'columns'=>$columnsByAlias,
                 'allrows'=>$allrows,
                 'search_columns'=>$search_columns,
-                'show_on_map'=>($this->show_on_map && !empty($model->id_column_map))?1:0,
+                'show_on_map'=>(!empty($this->show_on_map) && !empty($model->id_column_map))?1:0,
 
                 'pagesize'=>$this->pagesize,
                 'pagination'=>$pagination,
@@ -227,7 +227,7 @@ class CollectionWidget extends \yii\base\Widget
             'columns'=>$columnsByAlias,
             'allrows'=>$allrows,
             'search_columns'=>$search_columns,
-            'show_on_map'=>($this->show_on_map && !empty($model->id_column_map))?1:0,
+            'show_on_map'=>(!empty($this->show_on_map) && !empty($model->id_column_map))?1:0,
 
             'pagesize'=>$this->pagesize,
             'pagination'=>$pagination,
