@@ -127,7 +127,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
     public function afterSave($insert, $changedAttributes)
     {
-        if (!empty($this->data) && (empty($changedAttributes['data_hash']) || $insert))
+        if (!empty($this->data)) //&& (empty($changedAttributes['data_hash']) || $insert)
         {
             $columns = $this->collection->getColumns()->with(['input'])->all();
 
