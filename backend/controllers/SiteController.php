@@ -97,11 +97,7 @@ class SiteController extends Controller
      * Login action.
      *
      * @return string
-<<<<<<< HEAD
-     * @throws \Exception
-=======
      * @throws Exception
->>>>>>> develop
      */
     public function actionLogin()
     {
