@@ -6,7 +6,7 @@
 	{
 		$this->registerJsFile('https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=987cf952-38fd-46ee-b595-02977f1247ac',['depends'=>[\yii\web\JqueryAsset::className()],'position'=>\yii\web\View::POS_END]);
 
-		$this->registerJsFile('/js/onmap.js',['position'=>\yii\web\View::POS_END]);
+		$this->registerJsFile('/js/onmap.js',['depends'=>[\yii\web\JqueryAsset::className()],'position'=>\yii\web\View::POS_END]);
 	}
 
 	$i=1;
