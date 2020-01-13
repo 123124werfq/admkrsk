@@ -194,11 +194,24 @@ class CollectionWidget extends \yii\base\Widget
             }
 
             return $this->render('collection/group/'.$this->template,[
-                'model'=>$model,
-                'pagination'=>$pagination,
-                'columns'=>$columnsByAlias,
+
                 'groups'=>$group_rows,
+                'model'=>$model,
+                'id_collection'=>$this->id_collection,
+                'unique_hash'=>$unique_hash,
                 'page'=>$this->page,
+
+                'columns'=>$columnsByAlias,
+                'allrows'=>$allrows,
+                'search_columns'=>$search_columns,
+                'show_on_map'=>($this->show_on_map && !empty($model->id_column_map))?1:0,
+
+                'pagesize'=>$this->pagesize,
+                'pagination'=>$pagination,
+                'offset'=>$offset,
+
+                'show_row_num'=>$this->show_row_num,
+                'show_column_num'=>$this->show_column_num,
             ]);
         }
 
