@@ -854,6 +854,8 @@ class CollectionController extends Controller
 
                                     foreach ($model->columns as $tdkey => $column)
                                     {
+                                        $columnModel = null;
+
                                         if (!empty($column['id_column']))
                                         {
                                             if ($column['id_column']<0)
