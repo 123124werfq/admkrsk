@@ -836,7 +836,7 @@ class CollectionController extends Controller
 
                                     if ($model->erase)
                                     {
-                                        foreach ($collection->records as $rkey => $record)
+                                        foreach ($collection->items as $rkey => $record)
                                             $record->delete();
                                     }
                                 }
