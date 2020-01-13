@@ -306,12 +306,16 @@ class Collection extends ActiveRecord
 
         $query = CollectionQuery::getQuery($id_collection)->select();
 
-        if (!empty($this->options)) {
+        if (!empty($this->options))
+        {
             $options = json_decode($this->options, true);
 
-            if (!empty($options['filters'])) {
-                foreach ($options['filters'] as $key => $filter) {
-                    $where = [$filter['operator'], $filter['id_column'], $filter['value']];
+            if (!empty($options['filters']))
+            {
+                foreach ($options['filters'] as $key => $filter)
+                {
+                    $where = [$filter['operator'], 'col'.$filter['id_column'], (is_numeric($filter['value']))?(float)$filter['value']:$filter['value']];
+
                     $query->andWhere($where);
                 }
             }
