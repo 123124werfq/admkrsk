@@ -62,7 +62,7 @@ class CollectionController extends \yii\web\Controller
                     'x' => $data[$collection->id_column_map][0],
                     'y' => $data[$collection->id_column_map][1],
                     'icon' => '',
-                    'content' => '<table></table>'
+                    'content' => '<table>'.$content.'</table>'
                 ];
             }
         }
