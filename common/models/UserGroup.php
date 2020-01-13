@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\AccessTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
@@ -28,6 +29,7 @@ class UserGroup extends \yii\db\ActiveRecord
 {
     use MetaTrait;
     use ActionTrait;
+    use AccessTrait;
 
     const VERBOSE_NAME = 'Группа пользователей';
     const VERBOSE_NAME_PLURAL = 'Группы пользователей';

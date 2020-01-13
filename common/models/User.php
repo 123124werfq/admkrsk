@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\traits\AccessTrait;
 use common\components\multifile\MultiUploadBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
@@ -12,9 +13,12 @@ use \Exception;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
+use yii\caching\Dependency;
+use yii\caching\TagDependency;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
+use yii\redis\Cache;
 use yii\web\IdentityInterface;
 
 /**
@@ -48,6 +52,7 @@ class User extends ActiveRecord implements IdentityInterface
 {
     use MetaTrait;
     use ActionTrait;
+    use AccessTrait;
 
     const VERBOSE_NAME = 'Пользователь';
     const VERBOSE_NAME_PLURAL = 'Пользователи';
@@ -538,4 +543,45 @@ class User extends ActiveRecord implements IdentityInterface
         return new OpenId($config);
     }
 
+
+    public static function rbacCacheTag($userId = null)
+    {
+        static $rbacCacheTag;
+
+        if (!$userId) {
+            $userId = Yii::$app->user->identity->id;
+        }
+
+        if (!$rbacCacheTag) {
+            $rbacCacheTag = new TagDependency(['tags' => ['rbac', "rbac.$userId"]]);
+        }
+
+        return $rbacCacheTag;
+    }
+
+    public static function rbacCacheIsChanged($key)
+    {
+        /* @var Cache $cache */
+        $cache = Yii::$app->cache;
+
+        $key = $cache->buildKey($key);
+        $value = $cache->redis->executeCommand('GET', [$key]);
+        if ($value === false || $cache->serializer === false) {
+            return $value;
+        } elseif ($cache->serializer === null) {
+            $value = unserialize($value);
+        } else {
+            $value = call_user_func($cache->serializer[1], $value);
+        }
+        if (is_array($value) && !($value[1] instanceof Dependency && $value[1]->isChanged($cache))) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function rbacCacheInvalidate($userId = null)
+    {
+        TagDependency::invalidate(Yii::$app->cache, 'rbac' . ($userId ? ".$userId" : ''));
+    }
 }

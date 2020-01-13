@@ -36,7 +36,7 @@ class PollController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.poll.index'],
+                        'roles' => ['backend.poll.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Poll::class,
                         ],
@@ -44,7 +44,7 @@ class PollController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.poll.view'],
+                        'roles' => ['backend.poll.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Poll::class,
@@ -53,7 +53,7 @@ class PollController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['export'],
-                        'roles' => ['backend.poll.export'],
+                        'roles' => ['backend.poll.export', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Poll::class,
@@ -62,7 +62,7 @@ class PollController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.poll.create'],
+                        'roles' => ['backend.poll.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Poll::class,
                         ],
@@ -70,7 +70,7 @@ class PollController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create-question'],
-                        'roles' => ['backend.poll.questionCreate'],
+                        'roles' => ['backend.poll.questionCreate', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id_poll'),
                             'class' => Poll::class,
@@ -79,7 +79,7 @@ class PollController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.poll.update'],
+                        'roles' => ['backend.poll.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Poll::class,
@@ -88,7 +88,7 @@ class PollController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update-question'],
-                        'roles' => ['backend.poll.questionUpdate'],
+                        'roles' => ['backend.poll.questionUpdate', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($question = Question::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -102,7 +102,7 @@ class PollController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.poll.delete'],
+                        'roles' => ['backend.poll.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Poll::class,
@@ -111,7 +111,7 @@ class PollController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete-question'],
-                        'roles' => ['backend.poll.questionDelete'],
+                        'roles' => ['backend.poll.questionDelete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($question = Question::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -125,7 +125,7 @@ class PollController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.poll.log.index'],
+                        'roles' => ['backend.poll.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Poll::class,
@@ -134,7 +134,7 @@ class PollController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.poll.log.view'],
+                        'roles' => ['backend.poll.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -148,7 +148,7 @@ class PollController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.poll.log.restore'],
+                        'roles' => ['backend.poll.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -162,7 +162,7 @@ class PollController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history-question'],
-                        'roles' => ['backend.poll.log.index'],
+                        'roles' => ['backend.poll.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Question::class,
@@ -171,7 +171,7 @@ class PollController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log-question'],
-                        'roles' => ['backend.poll.log.view'],
+                        'roles' => ['backend.poll.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -185,7 +185,7 @@ class PollController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore-question'],
-                        'roles' => ['backend.poll.log.restore'],
+                        'roles' => ['backend.poll.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {

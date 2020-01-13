@@ -43,7 +43,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.form.index'],
+                        'roles' => ['backend.form.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Form::class,
                         ],
@@ -51,7 +51,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.form.view'],
+                        'roles' => ['backend.form.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Form::class,
@@ -60,7 +60,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create','create-service','copy','make-doc'],
-                        'roles' => ['backend.form.create'],
+                        'roles' => ['backend.form.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Form::class,
                         ],
@@ -68,7 +68,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create-row'],
-                        'roles' => ['backend.form.createRow'],
+                        'roles' => ['backend.form.createRow', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id_form'),
                             'class' => Form::class,
@@ -77,7 +77,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update-row', 'undelete', 'delete-row'],
-                        'roles' => ['backend.form.updateRow'],
+                        'roles' => ['backend.form.updateRow', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id_form'),
                             'class' => Form::class,
@@ -86,7 +86,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update','order','assign-form'],
-                        'roles' => ['backend.form.update'],
+                        'roles' => ['backend.form.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Form::class,
@@ -105,7 +105,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete'],
-                        'roles' => ['backend.form.delete'],
+                        'roles' => ['backend.form.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Form::class,
@@ -114,7 +114,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.form.log.index'],
+                        'roles' => ['backend.form.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Form::class,
@@ -123,7 +123,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.form.log.view'],
+                        'roles' => ['backend.form.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -137,7 +137,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.form.log.restore'],
+                        'roles' => ['backend.form.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {

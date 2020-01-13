@@ -54,7 +54,7 @@ class FormSearch extends Form
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.form')) {
-            $query->andWhere(['id_form' => AuthEntity::getEntityIds(Form::class)]);
+            $query->andFilterWhere(['id_form' => AuthEntity::getEntityIds(Form::class)]);
         }
 
         $dataProvider = new ActiveDataProvider([
