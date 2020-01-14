@@ -1,4 +1,7 @@
 <?php
+
+use common\components\sputnik\SputnikApi;
+
 return [
     'language'=>'ru-RU',
     'aliases' => [
@@ -8,6 +11,9 @@ return [
     'timeZone' => 'Asia/Krasnoyarsk',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
+        'sputnik' => [
+            'class' => SputnikApi::class,
+        ],
         'db' => [
             'schemaMap' => [
                 'pgsql' => [

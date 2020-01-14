@@ -79,9 +79,8 @@ class FiasAddrObj extends ActiveRecord
     {
         return [
             [['enddate', 'startdate', 'updatedate'], 'safe'],
-            [['divtype'], 'number'],
-            [['actstatus', 'aolevel', 'centstatus', 'currstatus', 'livestatus', 'operstatus'], 'default', 'value' => null],
-            [['actstatus', 'aolevel', 'centstatus', 'currstatus', 'livestatus', 'operstatus'], 'integer'],
+            [['actstatus', 'aolevel', 'centstatus', 'currstatus', 'livestatus', 'operstatus', 'divtype'], 'default', 'value' => null],
+            [['actstatus', 'aolevel', 'centstatus', 'currstatus', 'livestatus', 'operstatus', 'divtype'], 'integer'],
             [['aoguid'], 'required'],
             [['aoguid', 'aoid', 'nextid', 'normdoc', 'parentguid', 'previd'], 'string'],
             [['areacode', 'citycode', 'placecode', 'ctarcode', 'sextcode'], 'string', 'max' => 3],
@@ -96,7 +95,7 @@ class FiasAddrObj extends ActiveRecord
             [['shortname'], 'string', 'max' => 10],
             [['cadnum'], 'string', 'max' => 100],
             [['aoguid'], 'unique'],
-            [['parentguid'], 'exist', 'skipOnError' => true, 'targetClass' => FiasAddrObj::class, 'targetAttribute' => ['parentguid' => 'aoguid']],
+//            [['parentguid'], 'exist', 'skipOnError' => true, 'targetClass' => FiasAddrObj::class, 'targetAttribute' => ['parentguid' => 'aoguid']],
         ];
     }
 

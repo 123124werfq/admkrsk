@@ -75,6 +75,10 @@ return [
                     'menu.address' => ['class' => Address::class],
                 ],
             ],
+            'fias-update-history' => [
+                'title' => 'История обновлений',
+                'roles' => ['backend.address'],
+            ],
         ],
     ],
     'user' => [

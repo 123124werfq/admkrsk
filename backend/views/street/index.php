@@ -33,6 +33,7 @@ if (Yii::$app->user->can('admin.address')) {
                 'columns' => [
                     'id_street',
                     'name',
+                    'is_updatable:boolean',
 
                     [
                         'class' => 'yii\grid\ActionColumn',

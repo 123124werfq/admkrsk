@@ -91,10 +91,7 @@ class Statistic extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            'ts' => [
-                'class' => TimestampBehavior::class,
-                'updatedAtAttribute' => false,
-            ],
+            'ts' => TimestampBehavior::class,
         ];
     }
 }
