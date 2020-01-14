@@ -96,6 +96,18 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
             case CollectionColumn::TYPE_TEXTAREA:
                 echo $form->field($model, $attribute)->textArea($options);
                 break;
+            case CollectionColumn::TYPE_REPEAT:
+                /*echo '<div class="checkbox-group">
+                            <label class="checkbox checkbox__ib">
+                                ' . Html::checkBox('FormDynamic[' . $attribute . '][active]', (!empty($model->$clearAttribute)), $options) . '
+                                <span class="checkbox_label">' . ($input->label ?? $input->name) . '</span>
+                            </label>
+                        </div>';
+
+                echo $form->field($model, $attribute.'')->dropDownList($input->getArrayValues(), $options);
+
+                echo $form->field($model, $attribute)->textArea($options);*/
+                break;
             case CollectionColumn::TYPE_ADDRESSES:
                 echo $form->field($model, $attribute)->widget(Select2::class, [
                     'data' => [],

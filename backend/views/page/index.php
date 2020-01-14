@@ -15,17 +15,22 @@ use yii\grid\GridView;
 $archive = Yii::$app->request->get('archive');
 
 $this->title = $searchModel->breadcrumbsLabel;
-$this->params['breadcrumbs'][] = $this->title;
-GridAsset::register($this);
 
+if (!empty($partition ))
+    $this->params['breadcrumbs'][] = ['label' => $partition->title, 'url' => ['partition', 'id' => $partition->id_page]];
+
+$this->params['breadcrumbs'][] = $this->title;
+
+GridAsset::register($this);
 $defaultColumns = [
     'id_page' => 'id_page',
-    'title' => [
-        'attribute' => 'title',
+    'title' => 'title',
+    'alias' => [
+        'attribute' => 'alias',
         'format' => 'html',
         'value' => function ($model) {
             /**@var Page $model */
-            return $model->title . '<br><a target="_blank" href="' . $model->getUrl(true) . '">' . $model->getUrl() . '</a>';
+            return '<a target="_blank" href="' . $model->getUrl(true) . '">' . $model->getUrl() . '</a>';
         },
     ],
     'created_at' => [
@@ -99,11 +104,11 @@ $this->params['button-block'][] = Html::a('Экспорт XLS', ['', 'export' =>
 </div>
 
 <div class="page-index">
-    <div class="ibox">
+    <!--div class="ibox">
         <div class="ibox-content">
             <?= $this->render('_search', ['model' => $searchModel]); ?>
         </div>
-    </div>
+    </div-->
     <div class="ibox">
         <div class="ibox-content">
             <?= GridView::widget([

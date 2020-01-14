@@ -49,6 +49,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
     const TYPE_CUSTOM = 28;
     const TYPE_FILE_OLD = 29;
     const TYPE_ADDRESSES = 30;
+    const TYPE_REPEAT = 31;
 
     public static function getTypeOptions($type)
     {
@@ -104,6 +105,16 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'type'=>'richtext',
                 ],
             ],
+            self::TYPE_REPEAT => [
+                'begin'=>[
+                    'name'=>'Дата начала',
+                    'type'=>'column',
+                ],
+                'end'=>[
+                    'name'=>'Дата конца',
+                    'type'=>'column',
+                ],
+            ],
             self::TYPE_INTEGER => [
                 'min'=>[
                     'name'=>'Минимум',
@@ -142,7 +153,6 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'type'=>'input',
                 ],
             ],
-
             self::TYPE_IMAGE => [
                 'acceptedFiles'=>[
                     'name'=>'Допустимые расширения файлов',
@@ -207,6 +217,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_SERVICETARGET => "Цель муниципальной услуги",
             self::TYPE_SERVICE => "Услуги для обжалования",
 
+            self::TYPE_REPEAT => 'Повторяющаяся строка по дате',
             self::TYPE_CUSTOM => 'Составная колонка',
         ];
 

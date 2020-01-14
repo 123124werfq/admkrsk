@@ -8,7 +8,10 @@ use yii\helpers\Html;
 $this->render('/page/_head',['model'=>$model]);
 
 $this->title = 'Редактировать раздел: ' . $model->pageTitle;
-$this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
+if (empty($model->partition))
+    $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
+else 
+    $this->params['breadcrumbs'][] = ['label' => $model->partition->title, 'url' => ['partition','id'=>$model->partition->id_page]];
 $this->params['breadcrumbs'][] = ['label' => $model->pageTitle, 'url' => ['view', 'id' => $model->id_page]];
 $this->params['breadcrumbs'][] = 'Редактирование';
 ?>

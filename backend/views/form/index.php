@@ -95,8 +95,9 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
     </div>
 </div>
 
-<div class="form-index">
-    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
+<div class="ibox">
+    <div class="ibox-content">
+    <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -125,4 +126,5 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
             'id' => 'grid',
         ]
     ]); ?>
+    </div>
 </div>
