@@ -15,6 +15,8 @@ class M200107124248RecreateFiasTables extends Migration
      */
     public function safeUp()
     {
+        $this->dropForeignKey('fk-map_house-houseguid-fias_house-houseguid', 'map_house');
+
         if (in_array('fias_house', Yii::$app->db->schema->tableNames)) {
             $this->dropTable('fias_house');
         }
@@ -25,7 +27,7 @@ class M200107124248RecreateFiasTables extends Migration
 
         $this->createTable('fias_addrobj', [
             'id' => $this->primaryKey(),
-            'aoguid' => $this->string(36),
+            'aoguid' => 'uuid',
             'formalname' => $this->string(120),
             'regioncode' => $this->string(2),
             'autocode' => $this->string(1),
@@ -50,10 +52,10 @@ class M200107124248RecreateFiasTables extends Migration
             'updatedate' => $this->dateTime(),
             'shortname' => $this->string(10),
             'aolevel' => $this->integer(),
-            'parentguid' => $this->string(36),
-            'aoid' => $this->string(36),
-            'previd' => $this->string(36),
-            'nextid' => $this->string(36),
+            'parentguid' => 'uuid',
+            'aoid' => 'uuid',
+            'previd' => 'uuid',
+            'nextid' => 'uuid',
             'code' => $this->string(17),
             'plaincode' => $this->string(15),
             'actstatus' => $this->integer(),
@@ -63,7 +65,7 @@ class M200107124248RecreateFiasTables extends Migration
             'livestatus' => $this->integer(),
             'startdate' => $this->dateTime(),
             'enddate' => $this->dateTime(),
-            'normdoc' => $this->string(36),
+            'normdoc' => 'uuid',
         ]);
 
         $this->createTable('fias_house', [
@@ -82,16 +84,18 @@ class M200107124248RecreateFiasTables extends Migration
             'buildnum' => $this->string(10),
             'strucnum' => $this->string(10),
             'strstatus' => $this->integer(),
-            'houseid' => $this->string(36),
-            'houseguid' => $this->string(36),
-            'aoguid' => $this->string(36),
+            'houseid' => 'uuid',
+            'houseguid' => 'uuid',
+            'aoguid' => 'uuid',
             'startdate' => $this->dateTime(),
             'enddate' => $this->dateTime(),
             'statstatus' => $this->integer(),
-            'normdoc' => $this->string(36),
+            'normdoc' => 'uuid',
             'counter' => $this->integer(),
             'divtype' => $this->integer(),
         ]);
+
+        $this->addForeignKey('fk-map_house-houseguid-fias_house-houseguid', 'map_house', 'houseguid', 'fias_house', 'houseguid', 'CASCADE');
     }
 
     /**
