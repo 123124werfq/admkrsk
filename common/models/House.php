@@ -24,6 +24,7 @@ use Yii;
  * @property float $lon
  * @property string $fullname
  * @property bool $is_updatable
+ * @property int $sputnik_updated_at
  * @property int $update_at
  * @property int $created_by
  * @property int $updated_at
@@ -68,8 +69,8 @@ class House extends \yii\db\ActiveRecord
             [['postalcode', 'name', 'fullname'], 'string', 'max' => 255],
             [['is_updatable'], 'boolean'],
             [['lat', 'lon'], 'number'],
-            [['id_country', 'id_region', 'id_subregion', 'id_city', 'id_district', 'id_street'], 'default', 'value' => null],
-            [['id_country', 'id_region', 'id_subregion', 'id_city', 'id_district', 'id_street'], 'integer'],
+            [['id_country', 'id_region', 'id_subregion', 'id_city', 'id_district', 'id_street', 'sputnik_updated_at'], 'default', 'value' => null],
+            [['id_country', 'id_region', 'id_subregion', 'id_city', 'id_district', 'id_street', 'sputnik_updated_at'], 'integer'],
             [['id_country'], 'exist', 'targetClass' => Country::class, 'targetAttribute' => 'id_country'],
             [['id_region'], 'exist', 'targetClass' => Region::class, 'targetAttribute' => 'id_region'],
             [['id_subregion'], 'exist', 'targetClass' => Subregion::class, 'targetAttribute' => 'id_subregion'],
@@ -97,6 +98,7 @@ class House extends \yii\db\ActiveRecord
             'name' => 'Дом',
             'lat' => 'Широта',
             'lon' => 'Долгота',
+            'sputnik_updated_at' => 'Координаты обновлены',
             'fullname' => 'Полный адрес',
             'is_updatable' => 'Обновлять с ФИАС',
         ];
@@ -202,7 +204,13 @@ class House extends \yii\db\ActiveRecord
         $location = Yii::$app->sputnik->getLocation($this->fullname);
 
         if ($location) {
-            self::updateAttributes(['lat' => $location['lat'], 'lon' => $location['lon']]);
+            self::updateAttributes([
+                'lat' => $location['lat'],
+                'lon' => $location['lon'],
+                'sputnik_updated_at' => time(),
+            ]);
+        } else {
+            self::updateAttributes(['sputnik_updated_at' => time()]);
         }
     }
 }

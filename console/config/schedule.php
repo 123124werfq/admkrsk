@@ -8,6 +8,9 @@
 // * * * * * php /path/to/yii schedule/run >> /dev/null 2>&1
 
 $schedule->exec('php yii opendata')->dailyAt('02:00'); // 9:00 крск
+
 $schedule->exec('php yii import/institution')->dailyAt('02:00'); // 9:00 крск
 
 $schedule->exec('php yii statistic')->everyNMinutes(15); // каждые 15 минут
+
+$schedule->exec('php yii fias/update-location')->dailyAt('20:00'); // 3:00 крск

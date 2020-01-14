@@ -59,6 +59,18 @@ class FiasController extends Controller
         }
     }
 
+    public function actionUpdateLocation()
+    {
+        $houseQuery = House::find()
+            ->where(['sputnik_updated_at' => null])
+            ->limit(25000);
+
+        foreach ($houseQuery->each() as $house) {
+            /* @var House $house */
+            $house->updateLocation();
+        }
+    }
+
     public function actionUpdate()
     {
         $lastVersion = FiasUpdateHistory::find()->max('version');

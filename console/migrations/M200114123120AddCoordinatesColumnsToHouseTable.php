@@ -14,8 +14,9 @@ class M200114123120AddCoordinatesColumnsToHouseTable extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('map_house', 'lat', $this->decimal(15,12));
-        $this->addColumn('map_house', 'lon', $this->decimal(15,12));
+        $this->addColumn('map_house', 'lat', $this->decimal(18,15));
+        $this->addColumn('map_house', 'lon', $this->decimal(18,15));
+        $this->addColumn('map_house', 'sputnik_updated_at', $this->integer());
     }
 
     /**
@@ -25,6 +26,7 @@ class M200114123120AddCoordinatesColumnsToHouseTable extends Migration
     {
         $this->dropColumn('map_house', 'lat');
         $this->dropColumn('map_house', 'lon');
+        $this->dropColumn('map_house', 'sputnik_updated_at');
     }
 
     /*

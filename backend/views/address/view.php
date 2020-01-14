@@ -1,6 +1,5 @@
 <?php
 
-use backend\widgets\MapInputWidget;
 use common\models\House;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
@@ -53,8 +52,6 @@ if ($model->isDeleted()) {
                     ],
                 ],
             ]) ?>
-
-            <?php echo MapInputWidget::widget(['name' => 'location', 'index' => $model->id_house, 'value' => [0,0]]) ?>
 
         </div>
     </div>
