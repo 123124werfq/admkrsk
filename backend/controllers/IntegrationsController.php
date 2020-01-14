@@ -11,7 +11,7 @@ use yii\web\Controller;
 
 class IntegrationsController extends Controller
 {
-    const grid = ' integrations-grid';
+    const grid = 'integrations-grid';
 
     public function actionIndex()
     {
