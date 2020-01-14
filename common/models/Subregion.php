@@ -63,7 +63,7 @@ class Subregion extends \yii\db\ActiveRecord
             'id_subregion' => '#',
             'aoguid' => 'Aoguid',
             'name' => 'Район',
-            'is_updatable' => 'Обновлять с ФИАС',
+            'is_updatable' => 'Обновлять из ФИАС',
         ];
     }
 

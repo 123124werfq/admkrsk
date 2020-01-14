@@ -100,7 +100,7 @@ class House extends \yii\db\ActiveRecord
             'lon' => 'Долгота',
             'sputnik_updated_at' => 'Координаты обновлены',
             'fullname' => 'Полный адрес',
-            'is_updatable' => 'Обновлять с ФИАС',
+            'is_updatable' => 'Обновлять из ФИАС',
         ];
     }
 

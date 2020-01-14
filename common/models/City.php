@@ -63,7 +63,7 @@ class City extends \yii\db\ActiveRecord
             'id_city' => '#',
             'aoguid' => 'Aoguid',
             'name' => 'Город',
-            'is_updatable' => 'Обновлять с ФИАС',
+            'is_updatable' => 'Обновлять из ФИАС',
         ];
     }
 

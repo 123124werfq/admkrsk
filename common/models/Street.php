@@ -63,7 +63,7 @@ class Street extends \yii\db\ActiveRecord
             'id_street' => '#',
             'aoguid' => 'Aoguid',
             'name' => 'Улица',
-            'is_updatable' => 'Обновлять с ФИАС',
+            'is_updatable' => 'Обновлять из ФИАС',
         ];
     }
 

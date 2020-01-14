@@ -67,7 +67,7 @@ class District extends \yii\db\ActiveRecord
         return [
             'id_district' => '#',
             'name' => 'Район',
-            'is_updatable' => 'Обновлять с ФИАС',
+            'is_updatable' => 'Обновлять из ФИАС',
         ];
     }
 

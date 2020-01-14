@@ -63,7 +63,7 @@ class Region extends \yii\db\ActiveRecord
             'id_region' => '#',
             'aoguid' => 'Aoguid',
             'name' => 'Регион',
-            'is_updatable' => 'Обновлять с ФИАС',
+            'is_updatable' => 'Обновлять из ФИАС',
         ];
     }
 
