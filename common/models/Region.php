@@ -13,7 +13,7 @@ use Yii;
  * @property int $id_region
  * @property string $aoguid
  * @property string $name
- * @property bool $is_manual
+ * @property bool $is_updatable
  * @property int $update_at
  * @property int $created_by
  * @property int $updated_at
@@ -50,7 +50,7 @@ class Region extends \yii\db\ActiveRecord
         return [
             [['aoguid'], 'string'],
             [['name'], 'string', 'max' => 255],
-            [['is_manual'], 'boolean'],
+            [['is_updatable'], 'boolean'],
         ];
     }
 
@@ -63,7 +63,7 @@ class Region extends \yii\db\ActiveRecord
             'id_region' => '#',
             'aoguid' => 'Aoguid',
             'name' => 'Регион',
-            'is_manual' => 'Добавлен вручную',
+            'is_updatable' => 'Обновлять из ФИАС',
         ];
     }
 

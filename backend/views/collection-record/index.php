@@ -1,6 +1,7 @@
   <?php
 
-use yii\helpers\Html;
+  use common\jobs\InstitutionImportJob;
+  use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
 use yii\grid\GridView;
@@ -34,6 +35,17 @@ $this->params['action-block'][] = Html::a('Связать данные', ['/coll
 $this->params['action-block'][] = Html::a('Конвертировать данные', ['/collection/convert-type', 'id' => $model->id_collection]);
 
 $this->params['action-block'][] = Html::a('Импортировать данные', ['/collection/import', 'id' => $model->id_collection]);
+
+if ($model->alias == 'institution') {
+    $jobId = InstitutionImportJob::getJobId();
+
+    if (!$jobId || (!Yii::$app->queue->isWaiting($jobId) && !Yii::$app->queue->isReserved($jobId) && Yii::$app->queue->isDone($jobId))) {
+        $this->params['button-block'][] = Html::a('Обновить организации', ['institution-import'],
+            ['class' => 'btn btn-primary']);
+    } else {
+        $this->params['button-block'][] = Html::tag('span', 'Идет обновление..', ['class' => 'btn btn-warning']);
+    }
+}
 ?>
 <div class="tabs-container">
     <ul class="nav nav-tabs" role="tablist">

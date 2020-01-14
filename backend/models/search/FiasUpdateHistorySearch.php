@@ -4,12 +4,12 @@ namespace backend\models\search;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Region;
+use common\models\FiasUpdateHistory;
 
 /**
- * RegionSearch represents the model behind the search form of `common\models\Region`.
+ * FiasUpdateHistorySearch represents the model behind the search form of `common\models\FiasUpdateHistory`.
  */
-class RegionSearch extends Region
+class FiasUpdateHistorySearch extends FiasUpdateHistory
 {
     /**
      * {@inheritdoc}
@@ -17,9 +17,8 @@ class RegionSearch extends Region
     public function rules()
     {
         return [
-            [['id_region'], 'integer'],
-            [['is_updatable'], 'boolean'],
-            [['aoguid', 'name'], 'safe'],
+            [['id', 'version', 'created_at', 'updated_at'], 'integer'],
+            [['text', 'file'], 'safe'],
         ];
     }
 
@@ -41,12 +40,13 @@ class RegionSearch extends Region
      */
     public function search($params)
     {
-        $query = Region::find();
+        $query = FiasUpdateHistory::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
         ]);
 
         $this->load($params);
@@ -59,12 +59,14 @@ class RegionSearch extends Region
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id_region' => $this->id_region,
-            'is_updatable' => $this->is_updatable,
+            'id' => $this->id,
+            'version' => $this->version,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['ilike', 'aoguid', $this->aoguid])
-            ->andFilterWhere(['ilike', 'name', $this->name]);
+        $query->andFilterWhere(['ilike', 'text', $this->text])
+            ->andFilterWhere(['ilike', 'file', $this->file]);
 
         return $dataProvider;
     }

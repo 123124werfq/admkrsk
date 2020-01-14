@@ -63,9 +63,11 @@ RUN docker-php-ext-configure gd \
 # see http://stackoverflow.com/a/8154466/291573) for usage of `printf`
 RUN printf "\n" | pecl install \
         imagick \
+        dbase \
         mongodb && \
     docker-php-ext-enable \
         imagick \
+        dbase \
         mongodb
 
 # Environment settings
@@ -98,6 +100,17 @@ RUN composer global require --optimize-autoloader \
 # Install Yii framework bash autocompletion
 RUN curl -L https://raw.githubusercontent.com/yiisoft/yii2/master/contrib/completion/bash/yii \
         -o /etc/bash_completion.d/yii
+
+# Install other tools
+RUN apt-get update && \
+    apt-get -y install software-properties-common && \
+    apt-add-repository non-free && \
+    apt-get update && \
+    apt-get -y install \
+        unrar \
+    --no-install-recommends && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Working directory
 WORKDIR /src

@@ -42,6 +42,8 @@ if ($model->isDeleted()) {
                     'district.name',
                     'street.name',
                     'name',
+                    'lat',
+                    'lon',
                     [
                         'attribute' => 'fullname',
                         'value' => function (House $model) {
