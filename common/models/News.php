@@ -2,6 +2,7 @@
 
 namespace common\models;
 use common\behaviors\AccessControlBehavior;
+use common\components\multifile\MultiUploadBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\AccessTrait;
@@ -114,7 +115,7 @@ class News extends \yii\db\ActiveRecord
             'main' => 'На главную',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
-            'updated_at' => 'Updated At',
+            'updated_at' => 'Отредактировано',
             'updated_by' => 'Updated By',
             'deleted_at' => 'Deleted At',
             'deleted_by' => 'Deleted By',
@@ -164,7 +165,7 @@ class News extends \yii\db\ActiveRecord
             ],
             'taggable'=>['class' => Taggable::class],
             'multiupload' => [
-                'class' => \common\components\multifile\MultiUploadBehavior::class,
+                'class' => MultiUploadBehavior::class,
                 'relations'=>
                 [
                     'media'=>[

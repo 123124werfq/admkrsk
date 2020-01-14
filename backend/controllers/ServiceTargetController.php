@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\GridSetting;
 use Yii;
 use common\models\ServiceTarget;
 use yii\base\InvalidConfigException;
@@ -18,6 +19,8 @@ use yii\web\Response;
  */
 class ServiceTargetController extends Controller
 {
+    const grid = 'service-target-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -42,12 +45,21 @@ class ServiceTargetController extends Controller
         $searchModel = new ServiceTargetSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
         /*if (!empty($id))
             $query->where(['id_service'=>$id]);*/
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel'=>$searchModel,
+            'customColumns' => $columns,
         ]);
     }
 

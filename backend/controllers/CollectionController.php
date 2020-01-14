@@ -67,7 +67,7 @@ class CollectionController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'redactor'],
+                        'actions' => ['index', 'redactor', 'partition'],
                         'roles' => ['backend.collection.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Collection::class,

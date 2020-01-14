@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\GridSetting;
 use Yii;
 use common\models\ServiceComplaintForm;
 use backend\models\search\ServiceComplaintFormSearch;
@@ -13,8 +14,9 @@ use yii\filters\VerbFilter;
  * ServiceComplaintFormController implements the CRUD actions for ServiceComplaintForm model.
  */
 class ServiceComplaintFormController extends Controller
-
 {
+    const grid = 'service-complaint-form';
+
     /**
      * {@inheritdoc}
      */
@@ -38,10 +40,19 @@ class ServiceComplaintFormController extends Controller
     {
         $searchModel = new ServiceComplaintFormSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\GridSetting;
 use common\models\Question;
 use common\models\Vote;
 use common\modules\log\models\Log;
@@ -24,6 +25,8 @@ use yii2tech\spreadsheet\Spreadsheet;
  */
 class PollController extends Controller
 {
+    const grid = 'poll-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -303,9 +306,19 @@ class PollController extends Controller
         $searchModel = new PollSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 

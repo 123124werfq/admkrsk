@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\GridSetting;
 use common\modules\log\models\Log;
 use moonland\phpexcel\Excel;
 use Yii;
@@ -25,6 +26,8 @@ use yii\web\Response;
  */
 class PageController extends Controller
 {
+    const grid = 'page-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -45,7 +48,7 @@ class PageController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'list', 'tree'],
+                        'actions' => ['index', 'list', 'tree', 'partition'],
                         'roles' => ['backend.page.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Page::class,
@@ -253,10 +256,20 @@ class PageController extends Controller
 
     public function actionPartition($id=null)
     {
-        /*if (!empty($id))
-            $this->findModel($id);
+        $parent = null;
+
+        if (!empty($id))
+        {
+            $parent = $this->findModel($id);
+            $partitions = $parent->children()->andWhere(['is_partition'=>1])->all();
+        }
         else
-            Page::*/
+            $partitions = Page::find()->where(['is_partition'=>1])->all();
+
+        return $this->render('partition/partition',[
+            'partitions'=>$partitions,
+            'parent'=>$parent,
+        ]);
     }
 
     /**
@@ -268,6 +281,15 @@ class PageController extends Controller
     {
         $searchModel = new PageSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
 
         if ($export)
         {
@@ -307,6 +329,7 @@ class PageController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 

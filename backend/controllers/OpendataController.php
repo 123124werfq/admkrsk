@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\models\forms\OpendataUploadForm;
 use common\models\Action;
+use common\models\GridSetting;
 use common\models\OpendataData;
 use Yii;
 use common\models\Opendata;
@@ -22,6 +23,8 @@ use yii\web\UploadedFile;
  */
 class OpendataController extends Controller
 {
+    const grid = 'opendata-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -124,15 +127,25 @@ class OpendataController extends Controller
     /**
      * Lists all Opendata models.
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
         $searchModel = new OpendataSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 

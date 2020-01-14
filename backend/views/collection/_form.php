@@ -23,7 +23,7 @@ use yii\web\JsExpression;
 <?= $form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
 
 <?php if (Yii::$app->user->can('admin.collection')): ?>
-
+    
     <hr>
     <?= $form->field($model, 'template')->textInput(['class' => 'form-control redactor']) ?>
 
@@ -90,28 +90,30 @@ use yii\web\JsExpression;
     <h3>Доступ</h3>
 
     <?php
-    $records = $model->getRecords('partitions');
-    $records = ArrayHelper::map($records, 'id_page', 'title');
+        $records = $model->getRecords('partitions');
+            if (!empty($records[0]->id_page))
+                $records = ArrayHelper::map($records, 'id_page', 'title');
+            else 
+                $records = [];
 
-    echo Select2::widget([
-        'data' => $records,
-        'name'=>'Page[partitions][]id_page',
-        'pluginOptions' => [
-            'allowClear' => true,
-            'multiple' => true,
-            'ajax' => [
-                'url' => '/page/list',
-                'dataType' => 'json',
-                'data' => new JsExpression('function(params) { return {q:params.term, partition:1}; }')
+        echo Select2::widget([
+            'data' => $records,
+            'name'=>'Page[partitions][]id_page',
+            'pluginOptions' => [
+                'allowClear' => true,
+                'multiple' => true,
+                'ajax' => [
+                    'url' => '/page/list',
+                    'dataType' => 'json',
+                    'data' => new JsExpression('function(params) { return {q:params.term, partition:1}; }')
+                ],
+                'placeholder' => 'Выберите разделы',
             ],
-            'placeholder' => 'Выберите разделы',
-        ],
-        'value'=>array_keys($records),
-        'options' => [
-            'multiple' => true
-        ]
-    ]);
-    //->hint('Выберите разделы в которых можно использовать данный список');
+            'value'=>array_keys($records),
+            'options' => [
+                'multiple' => true
+            ]
+        ]);
     ?>
 
     <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>
