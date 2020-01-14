@@ -11,8 +11,9 @@ use common\models\Poll;
 use common\models\Question;
 use common\models\Vote;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\console\Controller;
-use yii\helpers\ArrayHelper;
+use yii\db\Exception;
 use yii\helpers\Html;
 use yii\helpers\FileHelper;
 use yii\helpers\Json;
@@ -21,8 +22,8 @@ class ImportController extends Controller
 {
     /**
      * Импорт голосований
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\db\Exception
+     * @throws InvalidConfigException
+     * @throws Exception
      */
     public function actionPoll()
     {

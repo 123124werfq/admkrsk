@@ -4,7 +4,7 @@
             <div class="col-2-third">
                 <ol class="breadcrumbs">
                     <li class="breadcrumbs_item"><a href="/">Главная</a></li>
-                    <li class="breadcrumbs_item"><span>Пресс-центр</span></li>
+                    <li class="breadcrumbs_item"><span>Результаты поиска</span></li>
                 </ol>
             </div>
         </div>
@@ -13,12 +13,12 @@
                 <h1>Поиск по сайту</h1>
             </div>
         </div>
-        <hr class="hr hr__large hr__mt">
+        <hr class="hr hr__large hr__mt" style="margin: 0px 0px 10px;">
 
-        <div class="search-section">
+        <div class="search-section" style="padding-bottom: 0px;">
             <div class="ya-site-form ya-site-form_bg_transparent ya-site-form_inited_yes" id="ya-site-form0">
                 <div class="ya-site-form__form">
-                    <table class="ya-site-form__wrap" cellspacing="0" cellpadding="0">
+                    <table class="ya-site-form__wrap" cellspacing="0" cellpadding="0" style="width: 100%">
                         <tbody>
                         <tr>
                             <td class="ya-site-form__search-wrap">
@@ -47,6 +47,13 @@
                                                     <td class="ya-site-form__search-input-layout-r">
                                                         <input class="ya-site-form__submit" type="submit" value="Найти">
                                                     </td>
+                                                    <td class="ya-site-form__search-input-layout-r" style="min-width: 200px; padding-left: 20px !important;">
+                                                        <?php
+                                                            $order = \Yii::$app->request->get('ord', false);
+                                                        ?>
+                                                        <input type="radio" name="ord" value=false <?=$order!='date'?'checked':''?>><label> по релевантности</label><br>
+                                                        <input type="radio" name="ord" value='date' <?=$order=='date'?'checked':''?>><label> по актуальности</label>
+                                                    </td>
                                                 </tr>
                                                 </tbody>
                                             </table>
@@ -68,13 +75,22 @@
             </div>
         </div>
 
-        <div class="search-results">
+        <div class="search-results content">
         <?php
+
+        echo \yii\widgets\ListView::widget([
+            'dataProvider' => $provider,
+            'itemView' => '_item',
+        ]);
+        /*
             foreach ($result as $row)
             {
-                echo "<p><strong><a href='{$row['url']}'>{$row['header']}</a></strong> <small>".date("d.m.Y", $row['content_date'])."</small><br>...{$row['headline']}...</p><br>";
+                if(is_numeric($row['content_date']))
+                    echo "<p><strong><a href='{$row['url']}'>{$row['header']}</a></strong> / <small>".date("d.m.Y", $row['content_date'])."</small><br>...{$row['headline']}...</p>";
+                else
+                    echo "<p><strong><a href='{$row['url']}'>{$row['header']}</a></strong><br>...{$row['headline']}...</p>";
             }
-
+        */
         ?>
         </div>
     </div>

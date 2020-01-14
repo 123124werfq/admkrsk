@@ -2,6 +2,9 @@
 	<table>
 		<thead>
 			<tr>
+			<?php if ($show_row_num){?>
+				<th></th>
+			<?php }?>
 			<?php foreach ($columns as $key => $column) {?>
 				<th><?=$column->name?></th>
 			<?php }?>
@@ -9,19 +12,22 @@
 		</thead>
 		<tbody>
 			<?php
+			$i = 1;
 			foreach ($groups as $group => $allrows)
 			{
 				if (!empty($group))
 					echo '<tr><td class="table-group" colspan="'.count($columns).'">'.$group.'</td></tr>';
 
-			foreach ($allrows as $key => $row){
-?>
+				foreach ($allrows as $key => $row){?>
 				<tr>
-				<?php foreach ($row as $tkey => $td){
-					echo "<td>$td</td>";
-				}?>
+					<?php if ($show_row_num){?>
+						<td><?=$offset+$i++?></td>
+					<?php }?>
+					<?php foreach ($row as $tkey => $td){
+						echo "<td>$td</td>";
+					}?>
 				</tr>
-		<?php }
+		<?php   }
 			}
 		?>
 		</tbody>

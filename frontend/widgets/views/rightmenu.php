@@ -7,13 +7,17 @@
 	if (empty($menu))
 	{
 		if (!empty($page->childs))
-			$submenu = $page->getChilds()->where(['hidemenu'=>0])->all();
+		{
+			$submenu = $page->getChilds()->andWhere(['hidemenu'=>0])->orderBy('ord ASC')->all();
+		}
 		else if (!empty($page->parent->menu))
+		{
 			$menu = $page->parent->menu;
+		}
 		else if (!empty($page->parent->childs))
 		{
 			$siblings = true;
-			$submenu = $page->parent->getChilds()->where(['hidemenu'=>0])->all();
+			$submenu = $page->parent->getChilds()->andWhere(['hidemenu'=>0])->orderBy('ord ASC')->all();
 		}
 	}
 ?>

@@ -3,21 +3,30 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\GridSetting;
 use common\modules\log\models\Log;
+use moonland\phpexcel\Excel;
 use Yii;
 use common\models\News;
 use common\models\Page;
 use backend\models\search\NewsSearch;
+use yii\base\ExitException;
+use yii\base\InvalidConfigException;
+use yii\db\Exception;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * NewsController implements the CRUD actions for News model.
  */
 class NewsController extends Controller
 {
+    const grid = 'news-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -30,7 +39,7 @@ class NewsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.news.index'],
+                        'roles' => ['backend.news.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => News::class,
                         ],
@@ -38,7 +47,7 @@ class NewsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.news.view'],
+                        'roles' => ['backend.news.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => News::class,
@@ -47,7 +56,7 @@ class NewsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.news.create'],
+                        'roles' => ['backend.news.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => News::class,
                         ],
@@ -55,7 +64,7 @@ class NewsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.news.update'],
+                        'roles' => ['backend.news.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => News::class,
@@ -64,7 +73,7 @@ class NewsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.news.delete'],
+                        'roles' => ['backend.news.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => News::class,
@@ -73,7 +82,7 @@ class NewsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.news.log.index'],
+                        'roles' => ['backend.news.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => News::class,
@@ -82,7 +91,7 @@ class NewsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.news.log.view'],
+                        'roles' => ['backend.news.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -96,7 +105,7 @@ class NewsController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.news.log.restore'],
+                        'roles' => ['backend.news.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -121,12 +130,22 @@ class NewsController extends Controller
     /**
      * Lists all News models.
      * @return mixed
+     * @throws ExitException
      */
     public function actionIndex($id_page,$export=0)
     {
         $searchModel = new NewsSearch();
         $searchModel->id_page = $id_page;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
 
         $page = Page::findOne($id_page);
 
@@ -135,7 +154,7 @@ class NewsController extends Controller
             header('Content-Type: text/xlsx; charset=utf-8');
             header('Content-Disposition: attachment; filename=Выгрузка новостей '.$page->title.'.xlsx');
 
-            \moonland\phpexcel\Excel::widget([
+            Excel::widget([
                 'models' => $dataProvider->query->all(),
                 'mode' => 'export',
                 'columns' => [
@@ -173,6 +192,7 @@ class NewsController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'page' => $page,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -181,6 +201,7 @@ class NewsController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id
 )    {
@@ -193,6 +214,7 @@ class NewsController extends Controller
      * Creates a new News model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
+     * @throws Exception
      */
     public function actionCreate()
     {
@@ -236,6 +258,8 @@ class NewsController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws Exception
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -272,7 +296,7 @@ class NewsController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -287,8 +311,9 @@ class NewsController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -307,6 +332,7 @@ class NewsController extends Controller
      * @param integer $id
      * @return News the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

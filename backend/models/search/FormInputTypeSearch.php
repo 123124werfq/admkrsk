@@ -4,6 +4,7 @@ namespace backend\models\search;
 
 use common\models\AuthEntity;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\FormInputType;
@@ -39,6 +40,7 @@ class FormInputTypeSearch extends FormInputType
      * @param array $params
      *
      * @return ActiveDataProvider
+     * @throws InvalidConfigException
      */
     public function search($params)
     {
@@ -50,7 +52,7 @@ class FormInputTypeSearch extends FormInputType
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.formInputType')) {
-            $query->andWhere(['id_type' => AuthEntity::getEntityIds(FormInputType::class)]);
+            $query->andFilterWhere(['id_type' => AuthEntity::getEntityIds(FormInputType::class)]);
         }
 
         $dataProvider = new ActiveDataProvider([

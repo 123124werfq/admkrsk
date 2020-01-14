@@ -10,6 +10,7 @@ class CollectionWidget extends \yii\base\Widget
     public $attributes = [];
 
     public $id_collection;
+
     public $columns = []; // колонки для отображения
     public $search = []; // колонки для сортировки
 
@@ -20,6 +21,10 @@ class CollectionWidget extends \yii\base\Widget
     public $group; // группировка
     public $sort; // сортировка
     public $dir = SORT_ASC; // направление сортировки
+
+    public $show_row_num = false;
+    public $show_column_num = false;
+    public $show_on_map = 0; // отображать на карте
 
     public $page;
 
@@ -36,14 +41,20 @@ class CollectionWidget extends \yii\base\Widget
             if (!empty($this->attributes['sort']))
                 $this->sort = (int)$this->attributes['sort'];
 
-            /*if (!empty($this->attributes['search']))
-                $this->search = (int)$this->attributes['search'];*/
-
             if (!empty($this->attributes['dir']))
                 $this->dir = (int)$this->attributes['dir'];
 
             if (!empty($this->attributes['pagesize']))
                 $this->pagesize = (int)$this->attributes['pagesize'];
+
+            if (!empty($this->attributes['show_column_num']))
+                $this->show_column_num = (int)$this->attributes['show_column_num'];
+
+            if (!empty($this->attributes['show_row_num']))
+                $this->show_row_num = (int)$this->attributes['show_row_num'];
+
+            if (!empty($this->attributes['show_on_map']))
+                $this->show_on_map = (int)$this->attributes['show_on_map'];
 
             if (!empty($this->attributes['group']))
                 $this->group = (int)$this->attributes['group'];
@@ -172,6 +183,9 @@ class CollectionWidget extends \yii\base\Widget
         foreach ($columns as $key => $col)
             $columnsByAlias[$col->alias] = $col;
 
+        $offset = ($p-1)*$this->pagesize;
+        $allrows = array_slice($allrows, $offset, $this->pagesize,true);
+
         if ($this->group)
         {
             $group_rows = [];
@@ -183,25 +197,44 @@ class CollectionWidget extends \yii\base\Widget
             }
 
             return $this->render('collection/group/'.$this->template,[
-                'model'=>$model,
-                'pagination'=>$pagination,
-                'columns'=>$columnsByAlias,
+
                 'groups'=>$group_rows,
+                'model'=>$model,
+                'id_collection'=>$this->id_collection,
+                'unique_hash'=>$unique_hash,
                 'page'=>$this->page,
+
+                'columns'=>$columnsByAlias,
+                'allrows'=>$allrows,
+                'search_columns'=>$search_columns,
+                'show_on_map'=>(!empty($this->show_on_map) && !empty($model->id_column_map))?1:0,
+
+                'pagesize'=>$this->pagesize,
+                'pagination'=>$pagination,
+                'offset'=>$offset,
+
+                'show_row_num'=>$this->show_row_num,
+                'show_column_num'=>$this->show_column_num,
             ]);
         }
 
-        $allrows = array_slice($allrows, ($p-1)*$this->pagesize, $this->pagesize,true);
-
         return $this->render('collection/'.$this->template,[
         	'model'=>$model,
-            'pagination'=>$pagination,
+            'id_collection'=>$this->id_collection,
+            'unique_hash'=>$unique_hash,
+            'page'=>$this->page,
+
             'columns'=>$columnsByAlias,
             'allrows'=>$allrows,
             'search_columns'=>$search_columns,
-            'page'=>$this->page,
-            'unique_hash'=>$unique_hash,
+            'show_on_map'=>(!empty($this->show_on_map) && !empty($model->id_column_map))?1:0,
+
             'pagesize'=>$this->pagesize,
+            'pagination'=>$pagination,
+            'offset'=>$offset,
+
+            'show_row_num'=>$this->show_row_num,
+            'show_column_num'=>$this->show_column_num,
         ]);
     }
 }

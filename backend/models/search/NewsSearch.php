@@ -3,7 +3,9 @@
 namespace backend\models\search;
 
 use common\models\AuthEntity;
+use common\traits\ActiveRangeValidateTrait;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\News;
@@ -13,17 +15,18 @@ use common\models\News;
  */
 class NewsSearch extends News
 {
+    use ActiveRangeValidateTrait;
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id_news', 'id_page', 'id_category', 'id_rub', 'id_media', 'date_publish', 'date_unpublish', 'state', 'main', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
-            [['title', 'description', 'content'], 'safe'],
+            [['id_news', 'id_page', 'id_category', 'id_rub', 'id_media', 'state', 'main', 'created_by', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['title', 'description', 'content','date_publish', 'date_unpublish', 'created_at', 'updated_at'], 'safe'],
         ];
     }
-
     /**
      * {@inheritdoc}
      */
@@ -39,6 +42,7 @@ class NewsSearch extends News
      * @param array $params
      *
      * @return ActiveDataProvider
+     * @throws InvalidConfigException
      */
     public function search($params)
     {
@@ -50,23 +54,28 @@ class NewsSearch extends News
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.news')) {
-            $query->andWhere(['id_news' => AuthEntity::getEntityIds(News::class)]);
+            $query->andFilterWhere(['id_news' => AuthEntity::getEntityIds(News::class)]);
         }
 
         $id_page = Yii::$app->request->get('id_page');
 
         if (!empty($id_page))
-            $query->andWhere(['id_page'=>$id_page]);
+            $query->andWhere(['id_page' => $id_page]);
 
-        if(!Yii::$app->request->get('sort'))
+        if (!Yii::$app->request->get('sort'))
             $query->orderBy('id_news DESC');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort' => ['defaultOrder'=>'id_news DESC']
+            'sort' => ['defaultOrder' => 'id_news DESC']
         ]);
 
         $this->load($params);
+
+        $this->handleDateRange($this->date_publish, $query, 'date_publish');
+        $this->handleDateRange($this->date_unpublish, $query, 'date_unpublish');
+        $this->handleDateRange($this->created_at, $query, 'created_at');
+        $this->handleDateRange($this->updated_at, $query, 'updated_at');
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
@@ -81,13 +90,9 @@ class NewsSearch extends News
             'id_category' => $this->id_category,
             'id_rub' => $this->id_rub,
             'id_media' => $this->id_media,
-            'date_publish' => $this->date_publish,
-            'date_unpublish' => $this->date_unpublish,
             'state' => $this->state,
             'main' => $this->main,
-            'created_at' => $this->created_at,
             'created_by' => $this->created_by,
-            'updated_at' => $this->updated_at,
             'updated_by' => $this->updated_by,
             'deleted_at' => $this->deleted_at,
             'deleted_by' => $this->deleted_by,

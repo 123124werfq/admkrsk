@@ -50,12 +50,17 @@ class UserSearch extends User
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.user')) {
-            $query->andWhere(['id' => AuthEntity::getEntityIds(User::class)]);
+            $query->andFilterWhere(['id' => AuthEntity::getEntityIds(User::class)]);
         }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['id'=>SORT_ASC]]
+            'sort' => [
+                'defaultOrder' => ['id' => SORT_ASC]
+            ],
+            'pagination' => [
+                'pageSize' => $params['pageSize'] ?? 10
+            ],
         ]);
 
         $this->load($params);
@@ -95,12 +100,18 @@ class UserSearch extends User
             ->orFilterWhere(['ilike', 'auth_ad_user.displayname', $this->username])
             ->orFilterWhere(['ilike', 'auth_ad_user.name', $this->username]);
 
-
-        if($this->source == 1)
+        if ($this->source == 1) {
             $query->andWhere('"user".id_esia_user IS NOT NULL');
-        else if($this->source == 2)
+            $query->andWhere('"user".id_ad_user IS NULL');
+        }
+        if ($this->source == 2) {
             $query->andWhere('"user".id_ad_user IS NOT NULL');
-
+            $query->andWhere('"user".id_esia_user IS NULL');
+        }
+        if ($this->source == 3) {
+            $query->andWhere('"user".id_ad_user IS NOT NULL');
+            $query->andWhere('"user".id_esia_user IS NOT NULL');
+        }
 
 
         return $dataProvider;

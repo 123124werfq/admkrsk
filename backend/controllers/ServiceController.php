@@ -2,26 +2,31 @@
 
 namespace backend\controllers;
 
-
+use common\components\worddoc\WordDoc;
+use common\models\GridSetting;
+use common\models\ServiceAppeal;
 use Yii;
-
+use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
 use common\models\Service;
 use common\models\Form;
 use common\models\Action;
 use common\modules\log\models\Log;
 use backend\models\search\ServiceSearch;
+use yii\web\Response;
 
 /**
  * ServiceController implements the CRUD actions for Service model.
  */
 class ServiceController extends Controller
 {
+    const grid = 'service-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -34,7 +39,7 @@ class ServiceController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index','make-doc'],
-                        'roles' => ['backend.service.index'],
+                        'roles' => ['backend.service.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Service::class,
                         ],
@@ -42,7 +47,7 @@ class ServiceController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.service.view'],
+                        'roles' => ['backend.service.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Service::class,
@@ -51,7 +56,7 @@ class ServiceController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.service.create'],
+                        'roles' => ['backend.service.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Service::class,
                         ],
@@ -59,7 +64,7 @@ class ServiceController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.service.update'],
+                        'roles' => ['backend.service.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Service::class,
@@ -68,7 +73,7 @@ class ServiceController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.service.delete'],
+                        'roles' => ['backend.service.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Service::class,
@@ -77,7 +82,7 @@ class ServiceController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.service.log.index'],
+                        'roles' => ['backend.service.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Service::class,
@@ -86,7 +91,7 @@ class ServiceController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.service.log.view'],
+                        'roles' => ['backend.service.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -100,7 +105,7 @@ class ServiceController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.service.log.restore'],
+                        'roles' => ['backend.service.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -125,15 +130,26 @@ class ServiceController extends Controller
     /**
      * Lists all Service models.
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
         $searchModel = new ServiceSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -142,6 +158,7 @@ class ServiceController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -180,6 +197,7 @@ class ServiceController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -202,7 +220,7 @@ class ServiceController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -217,19 +235,17 @@ class ServiceController extends Controller
 
     public function actionMakeDoc()
     {
-        $appeal = \common\models\ServiceAppeal::findOne(6);
-
+        $appeal = ServiceAppeal::findOne(6);
         $data = $appeal->collectionRecord->getData(true);
-
         $form = $appeal->collectionRecord->collection->form;
-
-        \common\components\worddoc\WordDoc::makeDocByForm($form, $data, 'test2.docx');
+        WordDoc::makeDocByForm($form, $data, 'test2.docx');
     }
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -248,6 +264,7 @@ class ServiceController extends Controller
      * @param integer $id
      * @return Service the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

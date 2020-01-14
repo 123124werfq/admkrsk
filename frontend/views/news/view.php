@@ -1,7 +1,8 @@
 <?php
 /* @var common\models\News $model */
-
 use yii\helpers\Html;
+
+$this->params['page'] = $page;
 function parseAttributesFromTag($tag){
     $pattern = '/(\w+)=[\'"]([^\'"]*)/';
 
@@ -33,7 +34,7 @@ function parseAttributesFromTag($tag){
                     	</ul>
                     </li>
                     <?php }?>
-                    <li class="press_info-item"><?=strftime('%d %B %Y, %H:%M', $model->date_publish)?></li>
+                    <li class="press_info-item"><?=Yii::$app->formatter->asDatetime($model->date_publish,'d MMMM yyyy HH:mm')?></li>
                 </ul>
                 <!--hr class="hr hr__large"-->
             	<div class="content searchable">
@@ -73,15 +74,15 @@ function parseAttributesFromTag($tag){
                 </ul>
                 <?php }?>
             	<p class="text-help">
-                    Дата публикации (изменения): <?=date('d.m.Y',$model->date_publish)?> (<?=date('d.m.Y',$model->updated_at)?>)<br>
-                    Просмотров за год (всего): <?=$model->viewsYear?> (<?=$model->views?>)
+                    <?=Yii::t('site', 'Дата публикации (изменения)')?>: <span class="publish-date"><?=date('d.m.Y',$model->date_publish)?></span> (<span class="update-date"><?=date('d.m.Y',$model->updated_at)?></span>)<br>
+                    <?=Yii::t('site', 'Просмотров за год (всего)')?>: <?=$model->viewsYear?> (<?=$model->views?>)
                 </p>
                 <div class="subscribe">
                     <div class="subscribe_left">
-                        Поделиться:
+                        <?=Yii::t('site', 'Поделиться')?>:
                         <div class="ya-share2 subscribe_share" data-services="vkontakte,facebook,odnoklassniki"></div>
                     </div>
-                    <div class="subscribe_right"><a class="btn-link" onclick="print()"><i class="material-icons subscribe_print">print</i> Распечатать</a></div>
+                    <div class="subscribe_right"><a class="btn-link" onclick="print()"><i class="material-icons subscribe_print">print</i> <?=Yii::t('site', 'Распечатать')?></a></div>
                 </div>
 			</div>
 		</div>
@@ -91,7 +92,7 @@ function parseAttributesFromTag($tag){
 <?php if (!empty($similar_news)){?>
 <div class="section-additional">
 	<div class="container">
-		<h2>Похожие новости</h2>
+		<h2><?=Yii::t('site', 'Похожие новости')?></h2>
 		<div class="events-list">
             <?php foreach ($similar_news as $key => $data) {?>
                 <div class="events-item">
@@ -105,7 +106,9 @@ function parseAttributesFromTag($tag){
                         <?php if (!empty($data->id_rub)){?>
                         <li class="press_info-item press_info-item__place"><a href="?id_rub=<?=$data->id_rub?>"><?=$data->rub->getLineValue()?></a></li>
                         <?php }?>
-                        <li class="press_info-item"><?=strftime('%d %B %Y, %H:%M', $data->date_publish)?></li>
+                        <li class="press_info-item">
+                            <?=Yii::$app->formatter->asDatetime($data->date_publish,'d MMMM yyyy HH:mm')?>
+                        </li>
                     </ul>
                 </div>
             <?php }?>

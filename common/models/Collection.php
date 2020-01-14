@@ -3,16 +3,22 @@
 namespace common\models;
 
 use common\behaviors\AccessControlBehavior;
-use common\components\softdelete\SoftDeleteTrait;
+use common\behaviors\MailNotifyBehaviour;
+use common\components\collection\CollectionQuery;
 use common\components\yiinput\RelationBehavior;
+use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\AccessTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use yii\helpers\StringHelper;
+use yii\db\ActiveRecord;
 use yii\helpers\Url;
 
 /**
@@ -39,19 +45,33 @@ use yii\helpers\Url;
  * @property string $template_element
  * @property array $access_user_ids
  * @property bool $is_authenticate
+ * @property int $notify_rule
+ * @property string $notify_message
  *
  * @property CollectionColumn[] $columns
  */
-class Collection extends \yii\db\ActiveRecord
+class Collection extends ActiveRecord
 {
     use MetaTrait;
     use ActionTrait;
     use SoftDeleteTrait;
+    use AccessTrait;
 
     const VERBOSE_NAME = 'Список';
     const VERBOSE_NAME_PLURAL = 'Списки';
     const TITLE_ATTRIBUTE = 'name';
 
+
+    /**
+     * Is need to notify the administrator
+     *
+     * @var boolean
+     */
+    public $is_admin_notify;
+
+    /**
+     * User ids having access for edit that collection
+     */
     public $access_user_ids;
     public $access_user_group_ids;
 
@@ -59,6 +79,14 @@ class Collection extends \yii\db\ActiveRecord
     public $id_column_order = null;
     public $pagesize = 20;
     public $order_direction = SORT_DESC;
+
+    public $show_row_num;
+    public $show_column_num;
+    public $show_on_map;
+
+    public $id_partitions = [];
+
+    public $id_page;
 
     /**
      * {@inheritdoc}
@@ -77,10 +105,11 @@ class Collection extends \yii\db\ActiveRecord
             [['alias'], 'unique'],
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
-            [['id_parent_collection','id_group','id_column_order','order_direction','pagesize'], 'integer'],
+            [['id_parent_collection','id_group','id_column_order','order_direction','pagesize','show_row_num','show_column_num', 'notify_rule', 'show_on_map', 'id_column_map'], 'integer'],
             [['filter', 'options','label'], 'safe'],
-            [['template','template_element','template_view'], 'string'],
+            [['template','template_element','template_view','notify_message'], 'string'],
             [['is_authenticate'], 'boolean'],
+            [['is_admin_notify'], 'boolean'],
             [['is_authenticate'], 'default', 'value' => true],
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
@@ -108,11 +137,15 @@ class Collection extends \yii\db\ActiveRecord
             'template' => 'Шаблон для страницы',
             'template_view' => 'Вывод в разделе',
             'template_element' => 'Шаблон для элемента',
-            'id_group'=>'Поле для группировки',
-            'id_column_order'=>'Сортировать по',
-            'order_direction'=>'Направление сортировки',
+            'id_group' => 'Поле для группировки',
+            'id_column_order' => 'Сортировать по',
+            'order_direction' => 'Направление сортировки',
             'is_authenticate' => 'Авторизация (API)',
             'pagesize'=>'Элементов на страницу',
+            'show_column_num'=>'Показывать номер столбца',
+            'show_row_num'=>'Показывать номер строки',
+            'show_on_map'=>'Показать на карте',
+            'id_column_map'=>'Колонка координат для показа на карте',
             'created_at' => 'Создана',
             'created_by' => 'Кем создана',
             'updated_at' => 'Изменено',
@@ -135,15 +168,23 @@ class Collection extends \yii\db\ActiveRecord
                 'class' => AccessControlBehavior::class,
                 'permission' => 'backend.collection',
             ],
-//            'yiinput' => [
-//                'class' => RelationBehavior::class,
-//                'relations'=> [
-//                    'columns'=>[
-//                        'modelname'=> 'CollectionColumn',
-//                        'added'=>true,
-//                    ],
-//                ]
-//            ]
+            'yiinput' => [
+                'class' => RelationBehavior::class,
+                'relations'=> [
+                    'partitions'=>[
+                        'modelname'=>'Page',
+                        'jtable'=>'dbl_collection_page',
+                        'added'=>false,
+                    ],
+                ]
+            ],
+            'afterUpdateMailNotify' => [
+                'class' => MailNotifyBehaviour::class,
+                'userIds' => 'access_user_ids',
+                'isAdminNotify' => 'is_admin_notify',
+                'timeRuleAttribute' => 'notify_rule',
+                'messageAttribute' => 'notify_message',
+            ],
         ];
     }
 
@@ -165,6 +206,11 @@ class Collection extends \yii\db\ActiveRecord
         return $this->hasOne(Form::class, ['id_form' => 'id_form']);
     }
 
+    public function getPartitions()
+    {
+        return $this->hasMany(Page::class, ['id_page' => 'id_page'])->viaTable('dbl_collection_page',['id_collection'=>'id_collection']);
+    }
+
     public function getParent()
     {
         return $this->hasOne(Collection::class, ['id_collection' => 'id_parent_collection']);
@@ -180,9 +226,12 @@ class Collection extends \yii\db\ActiveRecord
      */
     public function getColumns()
     {
-        if (empty($this->id_parent_collection)) {
+        if (empty($this->id_parent_collection))
+        {
             return $this->hasMany(CollectionColumn::class, ['id_collection' => 'id_collection'])->orderBy('ord ASC');
-        } else {
+        }
+        else
+        {
             return $this->hasMany(CollectionColumn::class,
                 ['id_collection' => 'id_parent_collection'])->orderBy('ord ASC');
         }
@@ -200,9 +249,8 @@ class Collection extends \yii\db\ActiveRecord
 
         $output = [];
 
-        foreach ($data as $key => $row) {
+        foreach ($data as $key => $row)
             $output[$key] = implode(' ', $row);
-        }
 
         return $output;
     }
@@ -226,7 +274,7 @@ class Collection extends \yii\db\ActiveRecord
             $id_collection = $this->id_collection;
         }
 
-        $query = \common\components\collection\CollectionQuery::getQuery($id_collection);
+        $query = CollectionQuery::getQuery($id_collection);
 
         if (!empty($this->options)) {
             $options = json_decode($this->options, true);
@@ -256,14 +304,18 @@ class Collection extends \yii\db\ActiveRecord
             $id_collection = $this->id_collection;
         }
 
-        $query = \common\components\collection\CollectionQuery::getQuery($id_collection)->select();
+        $query = CollectionQuery::getQuery($id_collection)->select();
 
-        if (!empty($this->options)) {
+        if (!empty($this->options))
+        {
             $options = json_decode($this->options, true);
 
-            if (!empty($options['filters'])) {
-                foreach ($options['filters'] as $key => $filter) {
-                    $where = [$filter['operator'], $filter['id_column'], $filter['value']];
+            if (!empty($options['filters']))
+            {
+                foreach ($options['filters'] as $key => $filter)
+                {
+                    $where = [$filter['operator'], 'col'.$filter['id_column'],(is_numeric($filter['value']))?(float)$filter['value']:$filter['value']];
+
                     $query->andWhere($where);
                 }
             }
@@ -280,7 +332,7 @@ class Collection extends \yii\db\ActiveRecord
             $id_collection = $this->id_collection;
         }
 
-        $query = \common\components\collection\CollectionQuery::getQuery($id_collection);
+        $query = CollectionQuery::getQuery($id_collection);
 
         if (!is_array($options)) {
             $options = json_decode($this->options, true);
@@ -404,8 +456,7 @@ class Collection extends \yii\db\ActiveRecord
         return Url::to(['/api/collection/index', 'alias' => $this->alias], true);
     }
 
-    // DEPRECATED
-    /*public function createForm()
+    public function createForm()
     {
         $transaction = Yii::$app->db->beginTransaction();
 
@@ -459,5 +510,100 @@ class Collection extends \yii\db\ActiveRecord
             $transaction->rollBack();
             throw $e;
         }
-    }*/
+    }
+
+    public static function hasAccess()
+    {
+        $cacheKey = self::hasAccessCacheKey();
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $hasAccess = true;
+            } else {
+                $hasAccess = !empty(self::getAccessCollectionIds());
+            }
+
+            Yii::$app->cache->set(
+                $cacheKey,
+                $hasAccess,
+                0,
+                User::rbacCacheTag()
+            );
+        } else {
+            $hasAccess = Yii::$app->cache->get($cacheKey);
+        }
+
+        return $hasAccess;
+    }
+
+    public static function hasEntityAccess($entity_id)
+    {
+        $cacheKey = self::hasEntityAccessCacheKey($entity_id);
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $hasEntityAccess = true;
+            } elseif ($entity_id) {
+                $hasEntityAccess = in_array($entity_id, self::getAccessCollectionIds());
+            } else {
+                $hasEntityAccess = !empty(self::getAccessCollectionIds());
+            }
+
+            Yii::$app->cache->set(
+                $cacheKey,
+                $hasEntityAccess,
+                0,
+                User::rbacCacheTag()
+            );
+        } else {
+            $hasEntityAccess = Yii::$app->cache->get($cacheKey);
+        }
+
+        return $hasEntityAccess;
+    }
+
+    public static function getAccessCollectionIds()
+    {
+        $cacheKey = self::entityIdsCacheKey();
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $entityIds = null;
+            } else {
+                $collectionQuery = (new Query())
+                    ->from('dbl_collection_page')
+                    ->select('id_collection');
+
+                $pageIds = Page::getAccessPageIds();
+
+                if (is_array($pageIds) && !empty($pageIds)) {
+                    $collectionQuery->andFilterWhere(['id_page' => $pageIds]);
+                } else {
+                    $collectionQuery->andWhere(['id_page' => $pageIds]);
+                }
+
+                $entityIds = array_unique(ArrayHelper::merge($collectionQuery->column(), self::getAccessEntityIds()));
+            }
+
+            Yii::$app->cache->set(
+                $cacheKey,
+                $entityIds,
+                0,
+                User::rbacCacheTag()
+            );
+        } else {
+            $entityIds = Yii::$app->cache->get($cacheKey);
+        }
+
+        return $entityIds;
+    }
 }

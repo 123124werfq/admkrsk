@@ -3,14 +3,20 @@
 namespace common\models;
 
 use common\behaviors\AccessControlBehavior;
+use common\behaviors\MailNotifyBehaviour;
+use common\components\multifile\MultiUploadBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\AccessTrait;
+use creocoder\nestedsets\NestedSetsBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
+use yii\helpers\StringHelper;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "cnt_page".
@@ -31,21 +37,35 @@ use yii\db\ActiveQuery;
  * @property int $deleted_at
  * @property int $deleted_by
  * @property array $access_user_ids
+ * @property int $notify_rule
+ * @property string $notify_message
  * @property Block[] $blocks
+ *
+ * @property Collection[] $collections
  */
-class Page extends \yii\db\ActiveRecord
+class Page extends ActiveRecord
 {
     use MetaTrait;
     use ActionTrait;
     use SoftDeleteTrait;
+    use AccessTrait;
 
     const VERBOSE_NAME = 'Страница';
     const VERBOSE_NAME_PLURAL = 'Страницы';
     const TITLE_ATTRIBUTE = 'title';
 
+    /**
+     * Is need to notify the administrator
+     *
+     * @var boolean
+     */
+    public $is_admin_notify;
+
+    public $old_parent; //$id_parent,
     public $access_user_ids;
     public $access_user_group_ids;
     public $existUrl;
+    //public $treeAttribute = null;
 
     /**
      * {@inheritdoc}
@@ -62,18 +82,15 @@ class Page extends \yii\db\ActiveRecord
     {
         return [
             [['id_media', 'active', 'id_parent'], 'default', 'value' => null],
-            [['id_media', 'active', 'id_parent', 'noguest','hidemenu'], 'integer'],
-            ['id_parent', 'filter', 'filter' => function($value) {
-                return (int) $value;
-            }],
+            [['id_media', 'active', 'id_parent', 'noguest', 'hidemenu','notify_rule'], 'integer'],
+            [['is_admin_notify'], 'boolean'],
             [['title', 'alias'], 'required'],
-            [['content','path'], 'string'],
             [['is_partition'], 'boolean'],
+            [['content', 'path','notify_message'], 'string'],
             [['alias'], 'unique'],
             [['title', 'alias', 'seo_title', 'seo_description', 'seo_keywords'], 'string', 'max' => 255],
-
+            [['partition_domain'], 'url', 'defaultScheme' => 'http'],
             [['created_at'],'safe'],
-
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
             ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
@@ -89,8 +106,9 @@ class Page extends \yii\db\ActiveRecord
             'id_page' => '#',
             'id_media' => 'Id Media',
             'title' => 'Название',
-            'id_parent' => 'Родительские раздел',
+            'id_parent' => 'Родительская страница',
             'alias' => 'URL',
+            'hidemenu' => 'Скрыть в меню',
             'content' => 'Содержание',
             'seo_title' => 'Seo Заголовок',
             'seo_description' => 'Seo Описание',
@@ -98,7 +116,7 @@ class Page extends \yii\db\ActiveRecord
             'noguest' => 'Доступно только авторизованным',
             'active' => 'Активный',
             'is_partition'=>'Это раздел',
-            'hidemenu'=> 'Скрыть в меню',
+            'partition_domain'=>'Домен раздела',
             'created_at' => 'Создано',
             'created_by' => 'Создал',
             'updated_at' => 'Обновлено',
@@ -108,7 +126,7 @@ class Page extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getUrl($absolute=false)
+    public function getUrl($absolute = false)
     {
         if (!empty($this->existUrl))
             return $this->existUrl;
@@ -116,32 +134,33 @@ class Page extends \yii\db\ActiveRecord
         if ($this->isNewRecord)
             return '';
 
-        $path = explode('/', $this->path);
+        if ($this->is_partition && !empty($this->partition_domain))
+            return $this->partition_domain;
 
-        if (!empty($path))
+        $pages = $this->parents()->select(['alias','partition_domain','is_partition'])->asArray()->all();
+        $pages[] = $this;
+
+        $domain = '';
+        $url = [];
+
+        foreach ($pages as $key => $page)
         {
-            foreach ($path as $key => $slug)
-                $path[$key] = (int)$slug;
+            if (!empty($page['is_partition']) && !empty($page['partition_domain']))
+                $domain = $page['partition_domain'];
 
-            $pages = Page::find()->where(['id_page'=>$path])->select(['alias','id_page'])->indexBy('id_page')->all();
-
-            foreach ($path as $key => $slug)
-            {
-                if (!empty($pages[$slug]))
-                    $path[$key] = $pages[$slug]->alias;
-            }
-
-            $this->existUrl = (($absolute)?Yii::$app->params['frontendUrl']:'').'/'.implode('/', $path);
-
-            return $this->existUrl;
+            if ($page['alias']!='/')
+                $url[] = $page['alias'];
         }
-        else
-        {
-            if ($this->alias=='/' && $absolute)
-                $this->alias = '';
 
-            return (($absolute)?Yii::$app->params['frontendUrl']:'').'/'.$this->alias;
-        }
+        if (empty($domain) && $absolute)
+            $domain = Yii::$app->params['frontendUrl'];
+
+        if (!empty($url))
+            $domain .= '/';
+
+        $this->existUrl = $domain.implode('/', $url);
+
+        return $this->existUrl;
     }
 
     public function getFullUrl()
@@ -149,7 +168,7 @@ class Page extends \yii\db\ActiveRecord
         return $this->getUrl(true);
     }
 
-    public function createPath()
+    /*public function createPath()
     {
         $oldpath = $this->path;
 
@@ -163,37 +182,46 @@ class Page extends \yii\db\ActiveRecord
         $sql = "UPDATE cnt_page SET path = REPLACE(path,'$oldpath','$this->path') WHERE path LIKE '$oldpath/%'";
         //Yii::$app->db->createCommand()->update('cnt_page','path = REPLACE(path,$oldpath)');
         Yii::$app->db->createCommand($sql)->execute();
-    }
+    }*/
 
     public static function getUrlByID($id)
     {
         $page = Page::findOne($id);
 
-        if (!empty($page))
-        {
+        if (!empty($page)) {
             return $page->getUrl();
         }
 
         return false;
     }
 
-    public function afterSave($insert, $changedAttributes)
+    /*public function afterSave($insert, $changedAttributes)
     {
-        if (isset($changedAttributes['id_parent']) || $insert)
-            $this->createPath();
+        //if (isset($changedAttributes['id_parent']) || $insert)
+
+        //$this->createPath();
 
         parent::afterSave($insert, $changedAttributes);
-    }
+    }*/
 
     public function beforeValidate()
     {
-        $this->content = str_replace(['&lt;','&gt;','&quote;'], ['<','>','"'], $this->content);
+        // конвертирует данные от TinyMCE
+        if (!empty($_POST))
+            $this->content = str_replace(['&lt;','&gt;','&quote;'], ['<','>','"'], $this->content);
 
         // удалить после релиза , нужно для заполняторов
         if (!empty($this->created_at) && !is_numeric($this->created_at))
             $this->created_at = strtotime($this->created_at);
 
         return parent::beforeValidate();
+    }
+
+    public function transactions()
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
+        ];
     }
 
     /**
@@ -209,17 +237,32 @@ class Page extends \yii\db\ActiveRecord
                 'class' => AccessControlBehavior::class,
                 'permission' => 'backend.page',
             ],
+            'tree'=>[
+                'class' => NestedSetsBehavior::class,
+            ],
+            'afterUpdateMailNotify' => [
+                'class' => MailNotifyBehaviour::class,
+                'userIds' => 'access_user_ids',
+                'isAdminNotify' => 'is_admin_notify',
+                'timeRuleAttribute' => 'notify_rule',
+                'messageAttribute' => 'notify_message',
+            ],
             'multiupload' => [
-                'class' => \common\components\multifile\MultiUploadBehavior::class,
-                'relations'=>
-                [
-                    'medias'=>[
-                        'model'=>'Media',
-                        'jtable'=>'dbl_page_media',
+                'class' => MultiUploadBehavior::class,
+                'relations' =>
+                    [
+                        'medias' => [
+                            'model' => 'Media',
+                            'jtable' => 'dbl_page_media',
+                        ],
                     ],
-                ],
             ],
         ];
+    }
+
+    public static function find()
+    {
+        return new PageQuery(get_called_class());
     }
 
     public function getMedias()
@@ -240,7 +283,7 @@ class Page extends \yii\db\ActiveRecord
      */
     public function getBlocksLayout()
     {
-        return $this->hasMany(Block::class, ['id_page' => 'id_page_layoyt'])->orderBy('ord ASC');
+        return $this->hasMany(Block::class, ['id_page_layout' => 'id_page'])->orderBy('ord ASC');
     }
 
     /**
@@ -248,7 +291,8 @@ class Page extends \yii\db\ActiveRecord
      */
     public function getParent()
     {
-        return $this->hasOne(Page::class, ['id_page' => 'id_parent']);
+        return $this->parents(1)->one();
+        //return $this->hasOne(Page::class, ['id_page' => 'id_parent']);
     }
 
     /**
@@ -296,4 +340,120 @@ class Page extends \yii\db\ActiveRecord
 
         return $rightmenu;
     }*/
+
+    /**
+     * @return ActiveQuery
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getCollections()
+    {
+        return $this->hasMany(Collection::class, ['id_collection' => 'id_collection'])
+            ->viaTable('dbl_collection_page', ['id_page' => 'id_page']);
+    }
+
+    public static function hasAccess()
+    {
+        $cacheKey = self::hasAccessCacheKey();
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $hasAccess = true;
+            } else {
+                $hasAccess = !empty(self::getAccessPageIds());
+            }
+
+            Yii::$app->cache->set(
+                $cacheKey,
+                $hasAccess,
+                0,
+                User::rbacCacheTag()
+            );
+        } else {
+            $hasAccess = Yii::$app->cache->get($cacheKey);
+        }
+
+        return $hasAccess;
+    }
+
+    public static function hasEntityAccess($entity_id)
+    {
+        $cacheKey = self::hasEntityAccessCacheKey($entity_id);
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $hasEntityAccess = true;
+            } elseif ($entity_id) {
+                $hasEntityAccess = in_array($entity_id, self::getAccessPageIds());
+            } else {
+                $hasEntityAccess = !empty(self::getAccessPageIds());
+            }
+
+            Yii::$app->cache->set(
+                $cacheKey,
+                $hasEntityAccess,
+                0,
+                User::rbacCacheTag()
+            );
+        } else {
+            $hasEntityAccess = Yii::$app->cache->get($cacheKey);
+        }
+
+        return $hasEntityAccess;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getAccessPageIds()
+    {
+        $cacheKey = self::entityIdsCacheKey();
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $entityIds = null;
+            } else {
+                $entityIds = [];
+
+                $pageQuery = Page::find();
+
+                $pageIds = self::getAccessEntityIds();
+
+                if (is_array($pageIds) && !empty($pageIds)) {
+                    $pageQuery->andFilterWhere(['id_page' => $pageIds]);
+                } else {
+                    $pageQuery->andWhere(['id_page' => $pageIds]);
+                }
+
+                foreach ($pageQuery->each() as $page) {
+                    /* @var Page $page */
+                    $entityIds[$page->id_page] = $page->id_page;
+
+                    foreach ($page->children()->each() as $childPage) {
+                        /* @var Page $childPage */
+                        $entityIds[$childPage->id_page] = $childPage->id_page;
+                    }
+                }
+            }
+
+            Yii::$app->cache->set(
+                $cacheKey,
+                $entityIds,
+                0,
+                User::rbacCacheTag()
+            );
+        } else {
+            $entityIds = Yii::$app->cache->get($cacheKey);
+        }
+
+        return $entityIds;
+    }
 }

@@ -3,20 +3,26 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\GridSetting;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\Alert;
 use backend\models\search\AlertSearch;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * AlertController implements the CRUD actions for Alert model.
  */
 class AlertController extends Controller
 {
+    const grid = 'alert-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -29,7 +35,7 @@ class AlertController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.alert.index'],
+                        'roles' => ['backend.alert.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Alert::class,
                         ],
@@ -37,7 +43,7 @@ class AlertController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.alert.view'],
+                        'roles' => ['backend.alert.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Alert::class,
@@ -46,7 +52,7 @@ class AlertController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.alert.create'],
+                        'roles' => ['backend.alert.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Alert::class,
                         ],
@@ -54,7 +60,7 @@ class AlertController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.alert.update'],
+                        'roles' => ['backend.alert.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Alert::class,
@@ -63,7 +69,7 @@ class AlertController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.alert.delete'],
+                        'roles' => ['backend.alert.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Alert::class,
@@ -72,7 +78,7 @@ class AlertController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.alert.log.index'],
+                        'roles' => ['backend.alert.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Alert::class,
@@ -81,7 +87,7 @@ class AlertController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.alert.log.view'],
+                        'roles' => ['backend.alert.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -95,7 +101,7 @@ class AlertController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.alert.log.restore'],
+                        'roles' => ['backend.alert.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -120,15 +126,25 @@ class AlertController extends Controller
     /**
      * Lists all Alert models.
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
         $searchModel = new AlertSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -137,6 +153,7 @@ class AlertController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -171,6 +188,7 @@ class AlertController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -193,7 +211,7 @@ class AlertController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -208,8 +226,9 @@ class AlertController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -228,6 +247,7 @@ class AlertController extends Controller
      * @param integer $id
      * @return Alert the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

@@ -1,8 +1,10 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use common\models\Collection;
+
 /* @var $this yii\web\View */
 /* @var $model backend\models\search\NewsSearch */
 /* @var $form yii\widgets\ActiveForm */
@@ -38,5 +40,11 @@ $rubs = (!empty($rubs))?$rubs->getArray():[];
     </div>
 
     <?php ActiveForm::end(); ?>
+
+        <div>
+            <a style="color: white" href="<?= Url::to(['', 'pageSize' => 10]) ?>"><button class="btn btn-primary">10</button></a>
+            <a style="color: white" href="<?= Url::to(['', 'pageSize' => 20]) ?>"><button class="btn btn-primary">20</button></a>
+            <a style="color: white" href="<?= Url::to(['', 'pageSize' => 40]) ?>"><button class="btn btn-primary">40</button></a>
+        </div>
 
 </div>

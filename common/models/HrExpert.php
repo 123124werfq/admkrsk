@@ -50,7 +50,7 @@ class HrExpert extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_expert' => 'Id Expert',
+            'id_expert' => 'Id эксперта',
             'id_user' => 'Id User',
             'state' => 'State',
             'comment' => 'Comment',

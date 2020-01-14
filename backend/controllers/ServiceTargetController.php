@@ -3,19 +3,24 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\GridSetting;
 use Yii;
 use common\models\ServiceTarget;
-use yii\data\ActiveDataProvider;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use backend\models\search\ServiceTargetSearch;
+use yii\web\Response;
 
 /**
  * ServiceTargetController implements the CRUD actions for ServiceTarget model.
  */
 class ServiceTargetController extends Controller
 {
+    const grid = 'service-target-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -40,12 +45,21 @@ class ServiceTargetController extends Controller
         $searchModel = new ServiceTargetSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
         /*if (!empty($id))
             $query->where(['id_service'=>$id]);*/
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel'=>$searchModel,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -54,6 +68,7 @@ class ServiceTargetController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -88,6 +103,7 @@ class ServiceTargetController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -109,6 +125,8 @@ class ServiceTargetController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -124,8 +142,9 @@ class ServiceTargetController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -144,6 +163,7 @@ class ServiceTargetController extends Controller
      * @param integer $id
      * @return ServiceTarget the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

@@ -3,20 +3,26 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\GridSetting;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\Project;
 use backend\models\search\ProjectSearch;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * ProjectController implements the CRUD actions for Project model.
  */
 class ProjectController extends Controller
 {
+    const grid = 'project-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -29,7 +35,7 @@ class ProjectController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.project.index'],
+                        'roles' => ['backend.project.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Project::class,
                         ],
@@ -37,7 +43,7 @@ class ProjectController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.project.view'],
+                        'roles' => ['backend.project.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Project::class,
@@ -46,7 +52,7 @@ class ProjectController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.project.create'],
+                        'roles' => ['backend.project.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Project::class,
                         ],
@@ -54,7 +60,7 @@ class ProjectController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.project.update'],
+                        'roles' => ['backend.project.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Project::class,
@@ -63,7 +69,7 @@ class ProjectController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.project.delete'],
+                        'roles' => ['backend.project.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Project::class,
@@ -72,7 +78,7 @@ class ProjectController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.project.log.index'],
+                        'roles' => ['backend.project.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Project::class,
@@ -81,7 +87,7 @@ class ProjectController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.project.log.view'],
+                        'roles' => ['backend.project.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -95,7 +101,7 @@ class ProjectController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.project.log.restore'],
+                        'roles' => ['backend.project.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -120,15 +126,26 @@ class ProjectController extends Controller
     /**
      * Lists all Project models.
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
         $searchModel = new ProjectSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -137,6 +154,7 @@ class ProjectController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -170,6 +188,7 @@ class ProjectController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -192,7 +211,7 @@ class ProjectController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -207,8 +226,9 @@ class ProjectController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -227,6 +247,7 @@ class ProjectController extends Controller
      * @param integer $id
      * @return Project the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

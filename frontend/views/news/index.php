@@ -1,5 +1,8 @@
 <?php
 	use yii\helpers\Html;
+
+	$this->params['page'] = $page;
+
 	$date = Html::encode(Yii::$app->request->get('date'));
 ?>
 <div class="main">

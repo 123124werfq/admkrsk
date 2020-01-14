@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\traits\AccessTrait;
 use common\traits\MetaTrait;
 use yii\behaviors\TimestampBehavior;
 
@@ -19,6 +20,7 @@ use yii\behaviors\TimestampBehavior;
 class Statistic extends \yii\db\ActiveRecord
 {
     use MetaTrait;
+    use AccessTrait;
 
     const VERBOSE_NAME_PLURAL = 'Статистика';
 

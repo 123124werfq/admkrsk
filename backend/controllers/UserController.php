@@ -4,10 +4,12 @@ namespace backend\controllers;
 
 use backend\models\search\ActionSearch;
 use common\models\Action;
+use common\models\GridSetting;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\User;
 use backend\models\search\UserSearch;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\validators\NumberValidator;
 use yii\web\Controller;
@@ -20,6 +22,8 @@ use yii\web\Response;
  */
 class UserController extends Controller
 {
+    const grid = 'user-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -31,13 +35,13 @@ class UserController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['list'],
+                        'actions' => ['list', 'esialist'],
                         'roles' => ['backend.user.list'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.user.index'],
+                        'roles' => ['backend.user.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => User::class,
                         ],
@@ -45,7 +49,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.user.view'],
+                        'roles' => ['backend.user.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => User::class,
@@ -54,7 +58,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.user.create'],
+                        'roles' => ['backend.user.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => User::class,
                         ],
@@ -62,7 +66,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.user.update'],
+                        'roles' => ['backend.user.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => User::class,
@@ -71,7 +75,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete'],
-                        'roles' => ['backend.user.delete'],
+                        'roles' => ['backend.user.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => User::class,
@@ -80,7 +84,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['action'],
-                        'roles' => ['backend.user.update'],
+                        'roles' => ['backend.user.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => User::class,
@@ -89,7 +93,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.user.log.index'],
+                        'roles' => ['backend.user.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => User::class,
@@ -98,7 +102,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.user.log.view'],
+                        'roles' => ['backend.user.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -112,7 +116,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.user.log.restore'],
+                        'roles' => ['backend.user.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -172,6 +176,44 @@ class UserController extends Controller
     }
 
     /**
+     * Search User models (ESIA users only)
+     * @param string $q
+     * @return mixed
+     */
+    public function actionEsialist($q)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $query = User::find()
+            ->where('id_esia_user IS NOT NULL')
+            ->joinWith('adinfo');
+
+        $q = trim($q);
+        if ((new NumberValidator(['integerOnly' => true]))->validate($q)) {
+            $query->andWhere(['id' => $q]);
+        } else {
+            $query->andWhere([
+                'or',
+                ['ilike', 'user.username', $q],
+                ['ilike', 'user.email', $q],
+                ['ilike', 'user.fullname', $q],
+                ['ilike', 'auth_ad_user.name', $q],
+            ]);
+        }
+
+        $results = [];
+        foreach ($query->limit(10)->all() as $user) {
+            /* @var User $user */
+            $results[] = [
+                'id' => $user->id,
+                'text' => $user->getUsername() . ' (' . $user->email . ')',
+            ];
+        }
+
+        return ['results' => $results];
+    }
+
+    /**
      * Lists all User models.
      * @return mixed
      */
@@ -179,10 +221,19 @@ class UserController extends Controller
     {
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -246,7 +297,7 @@ class UserController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
         {

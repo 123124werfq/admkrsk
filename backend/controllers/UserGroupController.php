@@ -3,9 +3,7 @@
 namespace backend\controllers;
 
 use backend\models\forms\UserGroupForm;
-use backend\models\forms\UserGroupRevokeForm;
 use common\models\Action;
-use common\models\User;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\UserGroup;
@@ -39,7 +37,7 @@ class UserGroupController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.userGroup.index'],
+                        'roles' => ['backend.userGroup.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => UserGroup::class,
                         ],
@@ -47,7 +45,7 @@ class UserGroupController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.userGroup.view'],
+                        'roles' => ['backend.userGroup.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => UserGroup::class,
@@ -56,7 +54,7 @@ class UserGroupController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.userGroup.create'],
+                        'roles' => ['backend.userGroup.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => UserGroup::class,
                         ],
@@ -64,7 +62,7 @@ class UserGroupController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.userGroup.update'],
+                        'roles' => ['backend.userGroup.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => UserGroup::class,
@@ -73,7 +71,7 @@ class UserGroupController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete'],
-                        'roles' => ['backend.userGroup.delete'],
+                        'roles' => ['backend.userGroup.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => UserGroup::class,
@@ -82,7 +80,7 @@ class UserGroupController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['assign'],
-                        'roles' => ['backend.userGroup.assign'],
+                        'roles' => ['backend.userGroup.assign', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => UserGroup::class,
@@ -91,7 +89,7 @@ class UserGroupController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['revoke'],
-                        'roles' => ['backend.userGroup.revoke'],
+                        'roles' => ['backend.userGroup.revoke', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => UserGroup::class,
@@ -100,7 +98,7 @@ class UserGroupController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.userGroup.log.index'],
+                        'roles' => ['backend.userGroup.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => UserGroup::class,
@@ -109,7 +107,7 @@ class UserGroupController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.userGroup.log.view'],
+                        'roles' => ['backend.userGroup.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -123,7 +121,7 @@ class UserGroupController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.userGroup.log.restore'],
+                        'roles' => ['backend.userGroup.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {

@@ -3,7 +3,9 @@
 namespace backend\models\search;
 
 use common\models\AuthEntity;
+use common\traits\ActiveRangeValidateTrait;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Project;
@@ -13,14 +15,16 @@ use common\models\Project;
  */
 class ProjectSearch extends Project
 {
+    use ActiveRangeValidateTrait;
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id_project', 'id_media', 'id_page', 'name', 'type', 'date_begin', 'date_end', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
-            [['url'], 'safe'],
+            [['id_project', 'id_media', 'id_page', 'name', 'date_begin', 'date_end', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['url','type'], 'safe'],
         ];
     }
 
@@ -39,6 +43,7 @@ class ProjectSearch extends Project
      * @param array $params
      *
      * @return ActiveDataProvider
+     * @throws InvalidConfigException
      */
     public function search($params)
     {
@@ -50,14 +55,19 @@ class ProjectSearch extends Project
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.project')) {
-            $query->andWhere(['id_project' => AuthEntity::getEntityIds(Project::class)]);
+            $query->andFilterWhere(['id_project' => AuthEntity::getEntityIds(Project::class)]);
         }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => $params['pageSize'] ?? 10
+            ],
         ]);
 
         $this->load($params);
+
+        $this->handleNumberRange($this->type,$query,'type');
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
@@ -71,7 +81,7 @@ class ProjectSearch extends Project
             'id_media' => $this->id_media,
             'id_page' => $this->id_page,
             'name' => $this->name,
-            'type' => $this->type,
+//            'type' => $this->type,
             'date_begin' => $this->date_begin,
             'date_end' => $this->date_end,
             'created_at' => $this->created_at,

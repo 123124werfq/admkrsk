@@ -56,7 +56,7 @@ use yii\db\ActiveRecord;
  * @property FiasAddrObj[] $addresses
  * @property FiasHouse[] $houses
  */
-class FiasAddrObj extends \yii\db\ActiveRecord
+class FiasAddrObj extends ActiveRecord
 {
     use MetaTrait;
 

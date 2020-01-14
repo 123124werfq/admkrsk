@@ -3,7 +3,8 @@
 namespace console\controllers;
 
 use common\models\User;
-use common\rbac\EntityRule;
+use common\rbac\EntityAccessRule;
+use common\rbac\MenuAccessRule;
 use kartik\select2\Select2Asset;
 use Yii;
 use yii\console\Controller;
@@ -31,18 +32,25 @@ class RbacController extends Controller
             $auth->removeAll();
 
 
+            $entityAccessRule = new EntityAccessRule();
+            $auth->add($entityAccessRule);
 
-            $entityRule = new EntityRule();
-            $auth->add($entityRule);
+
+            $menuAccessRule = new MenuAccessRule();
+            $auth->add($menuAccessRule);
+
+            $backendEntityAccess = $auth->createPermission('backend.entityAccess');
+            $backendEntityAccess->description = 'Доступ к сущностям';
+            $backendEntityAccess->ruleName = $entityAccessRule->name;
+            $auth->add($backendEntityAccess);
+
 
             $backendAddressIndex = $auth->createPermission('backend.address.index');
             $backendAddressIndex->description = 'Список адресов';
-            $backendAddressIndex->ruleName = $entityRule->name;
             $auth->add($backendAddressIndex);
 
             $backendAddressView = $auth->createPermission('backend.address.view');
             $backendAddressView->description = 'Просмотр адресов';
-            $backendAddressView->ruleName = $entityRule->name;
             $auth->add($backendAddressView);
 
             $backendManageAddress = $auth->createPermission('backend.address');
@@ -52,45 +60,36 @@ class RbacController extends Controller
             $auth->addChild($backendManageAddress, $backendAddressView);
 
 
-
             $backendApplicationIndex = $auth->createPermission('backend.application.index');
             $backendApplicationIndex->description = 'Список приложений';
-            $backendApplicationIndex->ruleName = $entityRule->name;
             $auth->add($backendApplicationIndex);
 
             $backendApplicationView = $auth->createPermission('backend.application.view');
             $backendApplicationView->description = 'Просмотр приложения';
-            $backendApplicationView->ruleName = $entityRule->name;
             $auth->add($backendApplicationView);
 
             $backendApplicationCreate = $auth->createPermission('backend.application.create');
             $backendApplicationCreate->description = 'Создание приложения';
-            $backendApplicationCreate->ruleName = $entityRule->name;
             $auth->add($backendApplicationCreate);
 
             $backendApplicationUpdate = $auth->createPermission('backend.application.update');
             $backendApplicationUpdate->description = 'Редактирование приложения';
-            $backendApplicationUpdate->ruleName = $entityRule->name;
             $auth->add($backendApplicationUpdate);
 
             $backendApplicationDelete = $auth->createPermission('backend.application.delete');
             $backendApplicationDelete->description = 'Удаление приложения';
-            $backendApplicationDelete->ruleName = $entityRule->name;
             $auth->add($backendApplicationDelete);
 
             $backendApplicationLogIndex = $auth->createPermission('backend.application.log.index');
             $backendApplicationLogIndex->description = 'Список изменений';
-            $backendApplicationLogIndex->ruleName = $entityRule->name;
             $auth->add($backendApplicationLogIndex);
 
             $backendApplicationLogView = $auth->createPermission('backend.application.log.view');
             $backendApplicationLogView->description = 'Просмотр изменений';
-            $backendApplicationLogView->ruleName = $entityRule->name;
             $auth->add($backendApplicationLogView);
 
             $backendApplicationLogRestore = $auth->createPermission('backend.application.log.restore');
             $backendApplicationLogRestore->description = 'Восстановление изменений';
-            $backendApplicationLogRestore->ruleName = $entityRule->name;
             $auth->add($backendApplicationLogRestore);
 
             $backendManageApplication = $auth->createPermission('backend.application');
@@ -106,45 +105,36 @@ class RbacController extends Controller
             $auth->addChild($backendManageApplication, $backendApplicationLogRestore);
 
 
-
             $backendAlertIndex = $auth->createPermission('backend.alert.index');
             $backendAlertIndex->description = 'Список всплывающих сообщений';
-            $backendAlertIndex->ruleName = $entityRule->name;
             $auth->add($backendAlertIndex);
 
             $backendAlertView = $auth->createPermission('backend.alert.view');
             $backendAlertView->description = 'Просмотр всплывающего сообщения';
-            $backendAlertView->ruleName = $entityRule->name;
             $auth->add($backendAlertView);
 
             $backendAlertCreate = $auth->createPermission('backend.alert.create');
             $backendAlertCreate->description = 'Создание всплывающего сообщения';
-            $backendAlertCreate->ruleName = $entityRule->name;
             $auth->add($backendAlertCreate);
 
             $backendAlertUpdate = $auth->createPermission('backend.alert.update');
             $backendAlertUpdate->description = 'Редактирование всплывающего сообщения';
-            $backendAlertUpdate->ruleName = $entityRule->name;
             $auth->add($backendAlertUpdate);
 
             $backendAlertDelete = $auth->createPermission('backend.alert.delete');
             $backendAlertDelete->description = 'Удаление всплывающего сообщения';
-            $backendAlertDelete->ruleName = $entityRule->name;
             $auth->add($backendAlertDelete);
 
             $backendAlertLogIndex = $auth->createPermission('backend.alert.log.index');
             $backendAlertLogIndex->description = 'Список изменений';
-            $backendAlertLogIndex->ruleName = $entityRule->name;
             $auth->add($backendAlertLogIndex);
 
             $backendAlertLogView = $auth->createPermission('backend.alert.log.view');
             $backendAlertLogView->description = 'Просмотр изменений';
-            $backendAlertLogView->ruleName = $entityRule->name;
             $auth->add($backendAlertLogView);
 
             $backendAlertLogRestore = $auth->createPermission('backend.alert.log.restore');
             $backendAlertLogRestore->description = 'Восстановление изменений';
-            $backendAlertLogRestore->ruleName = $entityRule->name;
             $auth->add($backendAlertLogRestore);
 
             $backendManageAlert = $auth->createPermission('backend.alert');
@@ -160,54 +150,44 @@ class RbacController extends Controller
             $auth->addChild($backendManageAlert, $backendAlertLogRestore);
 
 
-
             $backendCollectionList = $auth->createPermission('backend.collection.list');
             $backendCollectionList->description = 'Поиск коллекций';
             $auth->add($backendCollectionList);
 
             $backendCollectionImport = $auth->createPermission('backend.collection.import');
             $backendCollectionImport->description = 'Список коллекций';
-            $backendCollectionImport->ruleName = $entityRule->name;
             $auth->add($backendCollectionImport);
 
             $backendCollectionIndex = $auth->createPermission('backend.collection.index');
             $backendCollectionIndex->description = 'Список коллекций';
-            $backendCollectionIndex->ruleName = $entityRule->name;
             $auth->add($backendCollectionIndex);
 
             $backendCollectionView = $auth->createPermission('backend.collection.view');
             $backendCollectionView->description = 'Просмотр коллекций';
-            $backendCollectionView->ruleName = $entityRule->name;
             $auth->add($backendCollectionView);
 
             $backendCollectionCreate = $auth->createPermission('backend.collection.create');
             $backendCollectionCreate->description = 'Создание коллекции';
-            $backendCollectionCreate->ruleName = $entityRule->name;
             $auth->add($backendCollectionCreate);
 
             $backendCollectionUpdate = $auth->createPermission('backend.collection.update');
             $backendCollectionUpdate->description = 'Редактирование коллекции';
-            $backendCollectionUpdate->ruleName = $entityRule->name;
             $auth->add($backendCollectionUpdate);
 
             $backendCollectionDelete = $auth->createPermission('backend.collection.delete');
             $backendCollectionDelete->description = 'Удаление коллекции';
-            $backendCollectionDelete->ruleName = $entityRule->name;
             $auth->add($backendCollectionDelete);
 
             $backendCollectionLogIndex = $auth->createPermission('backend.collection.log.index');
             $backendCollectionLogIndex->description = 'Список изменений';
-            $backendCollectionLogIndex->ruleName = $entityRule->name;
             $auth->add($backendCollectionLogIndex);
 
             $backendCollectionLogView = $auth->createPermission('backend.collection.log.view');
             $backendCollectionLogView->description = 'Просмотр изменений';
-            $backendCollectionLogView->ruleName = $entityRule->name;
             $auth->add($backendCollectionLogView);
 
             $backendCollectionLogRestore = $auth->createPermission('backend.collection.log.restore');
             $backendCollectionLogRestore->description = 'Восстановление изменений';
-            $backendCollectionLogRestore->ruleName = $entityRule->name;
             $auth->add($backendCollectionLogRestore);
 
             $backendManageCollection = $auth->createPermission('backend.collection');
@@ -225,45 +205,36 @@ class RbacController extends Controller
             $auth->addChild($backendManageCollection, $backendCollectionLogRestore);
 
 
-
             $backendControllerPageIndex = $auth->createPermission('backend.controllerPage.index');
             $backendControllerPageIndex->description = 'Список резервированных путей';
-            $backendControllerPageIndex->ruleName = $entityRule->name;
             $auth->add($backendControllerPageIndex);
 
             $backendControllerPageView = $auth->createPermission('backend.controllerPage.view');
             $backendControllerPageView->description = 'Просмотр резервированного пути';
-            $backendControllerPageView->ruleName = $entityRule->name;
             $auth->add($backendControllerPageView);
 
             $backendControllerPageCreate = $auth->createPermission('backend.controllerPage.create');
             $backendControllerPageCreate->description = 'Создание резервированного пути';
-            $backendControllerPageCreate->ruleName = $entityRule->name;
             $auth->add($backendControllerPageCreate);
 
             $backendControllerPageUpdate = $auth->createPermission('backend.controllerPage.update');
             $backendControllerPageUpdate->description = 'Редактирование резервированного пути';
-            $backendControllerPageUpdate->ruleName = $entityRule->name;
             $auth->add($backendControllerPageUpdate);
 
             $backendControllerPageDelete = $auth->createPermission('backend.controllerPage.delete');
             $backendControllerPageDelete->description = 'Удаление резервированного пути';
-            $backendControllerPageDelete->ruleName = $entityRule->name;
             $auth->add($backendControllerPageDelete);
 
             $backendControllerPageLogIndex = $auth->createPermission('backend.controllerPage.log.index');
             $backendControllerPageLogIndex->description = 'Список изменений';
-            $backendControllerPageLogIndex->ruleName = $entityRule->name;
             $auth->add($backendControllerPageLogIndex);
 
             $backendControllerPageLogView = $auth->createPermission('backend.controllerPage.log.view');
             $backendControllerPageLogView->description = 'Просмотр изменений';
-            $backendControllerPageLogView->ruleName = $entityRule->name;
             $auth->add($backendControllerPageLogView);
 
             $backendControllerPageLogRestore = $auth->createPermission('backend.controllerPage.log.restore');
             $backendControllerPageLogRestore->description = 'Восстановление изменений';
-            $backendControllerPageLogRestore->ruleName = $entityRule->name;
             $auth->add($backendControllerPageLogRestore);
 
             $backendManageControllerPage = $auth->createPermission('backend.controllerPage');
@@ -279,45 +250,36 @@ class RbacController extends Controller
             $auth->addChild($backendManageControllerPage, $backendControllerPageLogRestore);
 
 
-
             $backendFaqIndex = $auth->createPermission('backend.faq.index');
             $backendFaqIndex->description = 'Список вопросов';
-            $backendFaqIndex->ruleName = $entityRule->name;
             $auth->add($backendFaqIndex);
 
             $backendFaqView = $auth->createPermission('backend.faq.view');
             $backendFaqView->description = 'Просмотр вопроса';
-            $backendFaqView->ruleName = $entityRule->name;
             $auth->add($backendFaqView);
 
             $backendFaqCreate = $auth->createPermission('backend.faq.create');
             $backendFaqCreate->description = 'Создание вопроса';
-            $backendFaqCreate->ruleName = $entityRule->name;
             $auth->add($backendFaqCreate);
 
             $backendFaqUpdate = $auth->createPermission('backend.faq.update');
             $backendFaqUpdate->description = 'Редактирование вопроса';
-            $backendFaqUpdate->ruleName = $entityRule->name;
             $auth->add($backendFaqUpdate);
 
             $backendFaqDelete = $auth->createPermission('backend.faq.delete');
             $backendFaqDelete->description = 'Удаление вопроса';
-            $backendFaqDelete->ruleName = $entityRule->name;
             $auth->add($backendFaqDelete);
 
             $backendFaqLogIndex = $auth->createPermission('backend.faq.log.index');
             $backendFaqLogIndex->description = 'Список изменений';
-            $backendFaqLogIndex->ruleName = $entityRule->name;
             $auth->add($backendFaqLogIndex);
 
             $backendFaqLogView = $auth->createPermission('backend.faq.log.view');
             $backendFaqLogView->description = 'Просмотр изменений';
-            $backendFaqLogView->ruleName = $entityRule->name;
             $auth->add($backendFaqLogView);
 
             $backendFaqLogRestore = $auth->createPermission('backend.faq.log.restore');
             $backendFaqLogRestore->description = 'Восстановление изменений';
-            $backendFaqLogRestore->ruleName = $entityRule->name;
             $auth->add($backendFaqLogRestore);
 
             $backendManageFaq = $auth->createPermission('backend.faq');
@@ -333,49 +295,40 @@ class RbacController extends Controller
             $auth->addChild($backendManageFaq, $backendFaqLogRestore);
 
 
-
             $backendFaqCategoryList = $auth->createPermission('backend.faqCategory.list');
             $backendFaqCategoryList->description = 'Поиск категорий';
             $auth->add($backendFaqCategoryList);
 
             $backendFaqCategoryIndex = $auth->createPermission('backend.faqCategory.index');
             $backendFaqCategoryIndex->description = 'Список категорий';
-            $backendFaqCategoryIndex->ruleName = $entityRule->name;
             $auth->add($backendFaqCategoryIndex);
 
             $backendFaqCategoryView = $auth->createPermission('backend.faqCategory.view');
             $backendFaqCategoryView->description = 'Просмотр категории';
-            $backendFaqCategoryView->ruleName = $entityRule->name;
             $auth->add($backendFaqCategoryView);
 
             $backendFaqCategoryCreate = $auth->createPermission('backend.faqCategory.create');
             $backendFaqCategoryCreate->description = 'Создание категории';
-            $backendFaqCategoryCreate->ruleName = $entityRule->name;
             $auth->add($backendFaqCategoryCreate);
 
             $backendFaqCategoryUpdate = $auth->createPermission('backend.faqCategory.update');
             $backendFaqCategoryUpdate->description = 'Редактирование категории';
-            $backendFaqCategoryUpdate->ruleName = $entityRule->name;
             $auth->add($backendFaqCategoryUpdate);
 
             $backendFaqCategoryDelete = $auth->createPermission('backend.faqCategory.delete');
             $backendFaqCategoryDelete->description = 'Удаление категории';
-            $backendFaqCategoryDelete->ruleName = $entityRule->name;
             $auth->add($backendFaqCategoryDelete);
 
             $backendFaqCategoryLogIndex = $auth->createPermission('backend.faqCategory.log.index');
             $backendFaqCategoryLogIndex->description = 'Список изменений';
-            $backendFaqCategoryLogIndex->ruleName = $entityRule->name;
             $auth->add($backendFaqCategoryLogIndex);
 
             $backendFaqCategoryLogView = $auth->createPermission('backend.faqCategory.log.view');
             $backendFaqCategoryLogView->description = 'Просмотр изменений';
-            $backendFaqCategoryLogView->ruleName = $entityRule->name;
             $auth->add($backendFaqCategoryLogView);
 
             $backendFaqCategoryLogRestore = $auth->createPermission('backend.faqCategory.log.restore');
             $backendFaqCategoryLogRestore->description = 'Восстановление изменений';
-            $backendFaqCategoryLogRestore->ruleName = $entityRule->name;
             $auth->add($backendFaqCategoryLogRestore);
 
             $backendManageFaqCategory = $auth->createPermission('backend.faqCategory');
@@ -392,35 +345,28 @@ class RbacController extends Controller
             $auth->addChild($backendManageFaqCategory, $backendFaqCategoryLogRestore);
 
 
-
             $backendFormIndex = $auth->createPermission('backend.form.index');
             $backendFormIndex->description = 'Список форм';
-            $backendFormIndex->ruleName = $entityRule->name;
             $auth->add($backendFormIndex);
 
             $backendFormView = $auth->createPermission('backend.form.view');
             $backendFormView->description = 'Просмотр формы';
-            $backendFormView->ruleName = $entityRule->name;
             $auth->add($backendFormView);
 
             $backendFormCreate = $auth->createPermission('backend.form.create');
             $backendFormCreate->description = 'Создание формы';
-            $backendFormCreate->ruleName = $entityRule->name;
             $auth->add($backendFormCreate);
 
             $backendFormCreateRow = $auth->createPermission('backend.form.createRow');
             $backendFormCreateRow->description = 'Создание поля формы';
-            $backendFormCreateRow->ruleName = $entityRule->name;
             $auth->add($backendFormCreateRow);
 
             $backendFormUpdateRow = $auth->createPermission('backend.form.updateRow');
             $backendFormUpdateRow->description = 'Редактирование поля формы';
-            $backendFormUpdateRow->ruleName = $entityRule->name;
             $auth->add($backendFormUpdateRow);
 
             $backendFormUpdate = $auth->createPermission('backend.form.update');
             $backendFormUpdate->description = 'Редактирование формы';
-            $backendFormUpdate->ruleName = $entityRule->name;
             $auth->add($backendFormUpdate);
 
             $backendFormGetForm = $auth->createPermission('backend.form.getForm');
@@ -433,22 +379,18 @@ class RbacController extends Controller
 
             $backendFormDelete = $auth->createPermission('backend.form.delete');
             $backendFormDelete->description = 'Удаление формы';
-            $backendFormDelete->ruleName = $entityRule->name;
             $auth->add($backendFormDelete);
 
             $backendFormLogIndex = $auth->createPermission('backend.form.log.index');
             $backendFormLogIndex->description = 'Список изменений';
-            $backendFormLogIndex->ruleName = $entityRule->name;
             $auth->add($backendFormLogIndex);
 
             $backendFormLogView = $auth->createPermission('backend.form.log.view');
             $backendFormLogView->description = 'Просмотр изменений';
-            $backendFormLogView->ruleName = $entityRule->name;
             $auth->add($backendFormLogView);
 
             $backendFormLogRestore = $auth->createPermission('backend.form.log.restore');
             $backendFormLogRestore->description = 'Восстановление изменений';
-            $backendFormLogRestore->ruleName = $entityRule->name;
             $auth->add($backendFormLogRestore);
 
             $backendManageForm = $auth->createPermission('backend.form');
@@ -468,45 +410,36 @@ class RbacController extends Controller
             $auth->addChild($backendManageForm, $backendFormLogRestore);
 
 
-
             $backendFormInputTypeIndex = $auth->createPermission('backend.formInputType.index');
             $backendFormInputTypeIndex->description = 'Список типов полей';
-            $backendFormInputTypeIndex->ruleName = $entityRule->name;
             $auth->add($backendFormInputTypeIndex);
 
             $backendFormInputTypeView = $auth->createPermission('backend.formInputType.view');
             $backendFormInputTypeView->description = 'Просмотр типа поля';
-            $backendFormInputTypeView->ruleName = $entityRule->name;
             $auth->add($backendFormInputTypeView);
 
             $backendFormInputTypeCreate = $auth->createPermission('backend.formInputType.create');
             $backendFormInputTypeCreate->description = 'Создание типа поля';
-            $backendFormInputTypeCreate->ruleName = $entityRule->name;
             $auth->add($backendFormInputTypeCreate);
 
             $backendFormInputTypeUpdate = $auth->createPermission('backend.formInputType.update');
             $backendFormInputTypeUpdate->description = 'Редактирование типа поля';
-            $backendFormInputTypeUpdate->ruleName = $entityRule->name;
             $auth->add($backendFormInputTypeUpdate);
 
             $backendFormInputTypeDelete = $auth->createPermission('backend.formInputType.delete');
             $backendFormInputTypeDelete->description = 'Удаление типа поля';
-            $backendFormInputTypeDelete->ruleName = $entityRule->name;
             $auth->add($backendFormInputTypeDelete);
 
             $backendFormInputTypeLogIndex = $auth->createPermission('backend.formInputType.log.index');
             $backendFormInputTypeLogIndex->description = 'Список изменений';
-            $backendFormInputTypeLogIndex->ruleName = $entityRule->name;
             $auth->add($backendFormInputTypeLogIndex);
 
             $backendFormInputTypeLogView = $auth->createPermission('backend.formInputType.log.view');
             $backendFormInputTypeLogView->description = 'Просмотр изменений';
-            $backendFormInputTypeLogView->ruleName = $entityRule->name;
             $auth->add($backendFormInputTypeLogView);
 
             $backendFormInputTypeLogRestore = $auth->createPermission('backend.formInputType.log.restore');
             $backendFormInputTypeLogRestore->description = 'Восстановление изменений';
-            $backendFormInputTypeLogRestore->ruleName = $entityRule->name;
             $auth->add($backendFormInputTypeLogRestore);
 
             $backendManageFormInputType = $auth->createPermission('backend.formInputType');
@@ -522,45 +455,36 @@ class RbacController extends Controller
             $auth->addChild($backendManageFormInputType, $backendFormInputTypeLogRestore);
 
 
-
             $backendGalleryIndex = $auth->createPermission('backend.gallery.index');
             $backendGalleryIndex->description = 'Список галерей';
-            $backendGalleryIndex->ruleName = $entityRule->name;
             $auth->add($backendGalleryIndex);
 
             $backendGalleryView = $auth->createPermission('backend.gallery.view');
             $backendGalleryView->description = 'Просмотр галереи';
-            $backendGalleryView->ruleName = $entityRule->name;
             $auth->add($backendGalleryView);
 
             $backendGalleryCreate = $auth->createPermission('backend.gallery.create');
             $backendGalleryCreate->description = 'Создание галереи';
-            $backendGalleryCreate->ruleName = $entityRule->name;
             $auth->add($backendGalleryCreate);
 
             $backendGalleryUpdate = $auth->createPermission('backend.gallery.update');
             $backendGalleryUpdate->description = 'Редактирование галереи';
-            $backendGalleryUpdate->ruleName = $entityRule->name;
             $auth->add($backendGalleryUpdate);
 
             $backendGalleryDelete = $auth->createPermission('backend.gallery.delete');
             $backendGalleryDelete->description = 'Удаление галереи';
-            $backendGalleryDelete->ruleName = $entityRule->name;
             $auth->add($backendGalleryDelete);
 
             $backendGalleryLogIndex = $auth->createPermission('backend.gallery.log.index');
             $backendGalleryLogIndex->description = 'Список изменений';
-            $backendGalleryLogIndex->ruleName = $entityRule->name;
             $auth->add($backendGalleryLogIndex);
 
             $backendGalleryLogView = $auth->createPermission('backend.gallery.log.view');
             $backendGalleryLogView->description = 'Просмотр изменений';
-            $backendGalleryLogView->ruleName = $entityRule->name;
             $auth->add($backendGalleryLogView);
 
             $backendGalleryLogRestore = $auth->createPermission('backend.gallery.log.restore');
             $backendGalleryLogRestore->description = 'Восстановление изменений';
-            $backendGalleryLogRestore->ruleName = $entityRule->name;
             $auth->add($backendGalleryLogRestore);
 
             $backendManageGallery = $auth->createPermission('backend.gallery');
@@ -576,45 +500,36 @@ class RbacController extends Controller
             $auth->addChild($backendManageGallery, $backendGalleryLogRestore);
 
 
-
             $backendMenuIndex = $auth->createPermission('backend.menu.index');
             $backendMenuIndex->description = 'Список меню';
-            $backendMenuIndex->ruleName = $entityRule->name;
             $auth->add($backendMenuIndex);
 
             $backendMenuView = $auth->createPermission('backend.menu.view');
             $backendMenuView->description = 'Просмотр меню';
-            $backendMenuView->ruleName = $entityRule->name;
             $auth->add($backendMenuView);
 
             $backendMenuCreate = $auth->createPermission('backend.menu.create');
             $backendMenuCreate->description = 'Создание меню';
-            $backendMenuCreate->ruleName = $entityRule->name;
             $auth->add($backendMenuCreate);
 
             $backendMenuUpdate = $auth->createPermission('backend.menu.update');
             $backendMenuUpdate->description = 'Редактирование меню';
-            $backendMenuUpdate->ruleName = $entityRule->name;
             $auth->add($backendMenuUpdate);
 
             $backendMenuDelete = $auth->createPermission('backend.menu.delete');
             $backendMenuDelete->description = 'Удаление меню';
-            $backendMenuDelete->ruleName = $entityRule->name;
             $auth->add($backendMenuDelete);
 
             $backendMenuLogIndex = $auth->createPermission('backend.menu.log.index');
             $backendMenuLogIndex->description = 'Список изменений';
-            $backendMenuLogIndex->ruleName = $entityRule->name;
             $auth->add($backendMenuLogIndex);
 
             $backendMenuLogView = $auth->createPermission('backend.menu.log.view');
             $backendMenuLogView->description = 'Просмотр изменений';
-            $backendMenuLogView->ruleName = $entityRule->name;
             $auth->add($backendMenuLogView);
 
             $backendMenuLogRestore = $auth->createPermission('backend.menu.log.restore');
             $backendMenuLogRestore->description = 'Восстановление изменений';
-            $backendMenuLogRestore->ruleName = $entityRule->name;
             $auth->add($backendMenuLogRestore);
 
             $backendManageMenu = $auth->createPermission('backend.menu');
@@ -630,45 +545,36 @@ class RbacController extends Controller
             $auth->addChild($backendManageMenu, $backendMenuLogRestore);
 
 
-
             $backendNewsIndex = $auth->createPermission('backend.news.index');
             $backendNewsIndex->description = 'Список новостей';
-            $backendNewsIndex->ruleName = $entityRule->name;
             $auth->add($backendNewsIndex);
 
             $backendNewsView = $auth->createPermission('backend.news.view');
             $backendNewsView->description = 'Просмотр новости';
-            $backendNewsView->ruleName = $entityRule->name;
             $auth->add($backendNewsView);
 
             $backendNewsCreate = $auth->createPermission('backend.news.create');
             $backendNewsCreate->description = 'Создание новости';
-            $backendNewsCreate->ruleName = $entityRule->name;
             $auth->add($backendNewsCreate);
 
             $backendNewsUpdate = $auth->createPermission('backend.news.update');
             $backendNewsUpdate->description = 'Редактирование новости';
-            $backendNewsUpdate->ruleName = $entityRule->name;
             $auth->add($backendNewsUpdate);
 
             $backendNewsDelete = $auth->createPermission('backend.news.delete');
             $backendNewsDelete->description = 'Удаление новости';
-            $backendNewsDelete->ruleName = $entityRule->name;
             $auth->add($backendNewsDelete);
 
             $backendNewsLogIndex = $auth->createPermission('backend.news.log.index');
             $backendNewsLogIndex->description = 'Список изменений';
-            $backendNewsLogIndex->ruleName = $entityRule->name;
             $auth->add($backendNewsLogIndex);
 
             $backendNewsLogView = $auth->createPermission('backend.news.log.view');
             $backendNewsLogView->description = 'Просмотр изменений';
-            $backendNewsLogView->ruleName = $entityRule->name;
             $auth->add($backendNewsLogView);
 
             $backendNewsLogRestore = $auth->createPermission('backend.news.log.restore');
             $backendNewsLogRestore->description = 'Восстановление изменений';
-            $backendNewsLogRestore->ruleName = $entityRule->name;
             $auth->add($backendNewsLogRestore);
 
             $backendManageNews = $auth->createPermission('backend.news');
@@ -684,45 +590,36 @@ class RbacController extends Controller
             $auth->addChild($backendManageNews, $backendNewsLogRestore);
 
 
-
             $backendOpendataIndex = $auth->createPermission('backend.opendata.index');
             $backendOpendataIndex->description = 'Список наборов';
-            $backendOpendataIndex->ruleName = $entityRule->name;
             $auth->add($backendOpendataIndex);
 
             $backendOpendataView = $auth->createPermission('backend.opendata.view');
             $backendOpendataView->description = 'Просмотр набора';
-            $backendOpendataView->ruleName = $entityRule->name;
             $auth->add($backendOpendataView);
 
             $backendOpendataCreate = $auth->createPermission('backend.opendata.create');
             $backendOpendataCreate->description = 'Создание набора';
-            $backendOpendataCreate->ruleName = $entityRule->name;
             $auth->add($backendOpendataCreate);
 
             $backendOpendataUpdate = $auth->createPermission('backend.opendata.update');
             $backendOpendataUpdate->description = 'Редактирование набора';
-            $backendOpendataUpdate->ruleName = $entityRule->name;
             $auth->add($backendOpendataUpdate);
 
             $backendOpendataDelete = $auth->createPermission('backend.opendata.delete');
             $backendOpendataDelete->description = 'Удаление набора';
-            $backendOpendataDelete->ruleName = $entityRule->name;
             $auth->add($backendOpendataDelete);
 
             $backendOpendataLogIndex = $auth->createPermission('backend.opendata.log.index');
             $backendOpendataLogIndex->description = 'Список изменений';
-            $backendOpendataLogIndex->ruleName = $entityRule->name;
             $auth->add($backendOpendataLogIndex);
 
             $backendOpendataLogView = $auth->createPermission('backend.opendata.log.view');
             $backendOpendataLogView->description = 'Просмотр изменений';
-            $backendOpendataLogView->ruleName = $entityRule->name;
             $auth->add($backendOpendataLogView);
 
             $backendOpendataLogRestore = $auth->createPermission('backend.opendata.log.restore');
             $backendOpendataLogRestore->description = 'Восстановление изменений';
-            $backendOpendataLogRestore->ruleName = $entityRule->name;
             $auth->add($backendOpendataLogRestore);
 
             $backendManageOpendata = $auth->createPermission('backend.opendata');
@@ -738,50 +635,40 @@ class RbacController extends Controller
             $auth->addChild($backendManageOpendata, $backendOpendataLogRestore);
 
 
-
             $backendPageLayoutIndex = $auth->createPermission('backend.page.layout');
             $backendPageLayoutIndex->description = 'Редактирование шаблона раздела';
-            $backendPageLayoutIndex->ruleName = $entityRule->name;
             $auth->add($backendPageLayoutIndex);
 
             $backendPageIndex = $auth->createPermission('backend.page.index');
             $backendPageIndex->description = 'Список разделов';
-            $backendPageIndex->ruleName = $entityRule->name;
             $auth->add($backendPageIndex);
 
             $backendPageView = $auth->createPermission('backend.page.view');
             $backendPageView->description = 'Просмотр раздела';
-            $backendPageView->ruleName = $entityRule->name;
             $auth->add($backendPageView);
 
             $backendPageCreate = $auth->createPermission('backend.page.create');
             $backendPageCreate->description = 'Создание раздела';
-            $backendPageCreate->ruleName = $entityRule->name;
             $auth->add($backendPageCreate);
 
             $backendPageUpdate = $auth->createPermission('backend.page.update');
             $backendPageUpdate->description = 'Редактирование раздела';
-            $backendPageUpdate->ruleName = $entityRule->name;
             $auth->add($backendPageUpdate);
 
             $backendPageDelete = $auth->createPermission('backend.page.delete');
             $backendPageDelete->description = 'Удаление раздела';
-            $backendPageDelete->ruleName = $entityRule->name;
             $auth->add($backendPageDelete);
 
             $backendPageLogIndex = $auth->createPermission('backend.page.log.index');
             $backendPageLogIndex->description = 'Список изменений';
-            $backendPageLogIndex->ruleName = $entityRule->name;
             $auth->add($backendPageLogIndex);
 
             $backendPageLogView = $auth->createPermission('backend.page.log.view');
             $backendPageLogView->description = 'Просмотр изменений';
-            $backendPageLogView->ruleName = $entityRule->name;
             $auth->add($backendPageLogView);
 
             $backendPageLogRestore = $auth->createPermission('backend.page.log.restore');
             $backendPageLogRestore->description = 'Восстановление изменений';
-            $backendPageLogRestore->ruleName = $entityRule->name;
             $auth->add($backendPageLogRestore);
 
             $backendManagePage = $auth->createPermission('backend.page');
@@ -798,65 +685,52 @@ class RbacController extends Controller
             $auth->addChild($backendManagePage, $backendPageLogRestore);
 
 
-
             $backendPollIndex = $auth->createPermission('backend.poll.index');
             $backendPollIndex->description = 'Список опросов';
-            $backendPollIndex->ruleName = $entityRule->name;
             $auth->add($backendPollIndex);
 
             $backendPollView = $auth->createPermission('backend.poll.view');
             $backendPollView->description = 'Просмотр опроса';
-            $backendPollView->ruleName = $entityRule->name;
             $auth->add($backendPollView);
 
             $backendPollExport = $auth->createPermission('backend.poll.export');
             $backendPollExport->description = 'Экспорт опроса';
-            $backendPollExport->ruleName = $entityRule->name;
             $auth->add($backendPollExport);
 
             $backendPollCreate = $auth->createPermission('backend.poll.create');
             $backendPollCreate->description = 'Создание опроса';
-            $backendPollCreate->ruleName = $entityRule->name;
             $auth->add($backendPollCreate);
 
             $backendPollQuestionCreate = $auth->createPermission('backend.poll.questionCreate');
             $backendPollQuestionCreate->description = 'Создание вопроса';
-            $backendPollQuestionCreate->ruleName = $entityRule->name;
             $auth->add($backendPollQuestionCreate);
 
             $backendPollUpdate = $auth->createPermission('backend.poll.update');
             $backendPollUpdate->description = 'Редактирование опроса';
-            $backendPollUpdate->ruleName = $entityRule->name;
             $auth->add($backendPollUpdate);
 
             $backendPollQuestionUpdate = $auth->createPermission('backend.poll.questionUpdate');
             $backendPollQuestionUpdate->description = 'Редактирование вопроса';
-            $backendPollQuestionUpdate->ruleName = $entityRule->name;
             $auth->add($backendPollQuestionUpdate);
 
             $backendPollDelete = $auth->createPermission('backend.poll.delete');
             $backendPollDelete->description = 'Удаление опроса';
-            $backendPollDelete->ruleName = $entityRule->name;
             $auth->add($backendPollDelete);
 
             $backendPollQuestionDelete = $auth->createPermission('backend.poll.questionDelete');
             $backendPollQuestionDelete->description = 'Удаление вопроса';
-            $backendPollQuestionDelete->ruleName = $entityRule->name;
             $auth->add($backendPollQuestionDelete);
 
             $backendPollLogIndex = $auth->createPermission('backend.poll.log.index');
             $backendPollLogIndex->description = 'Список изменений';
-            $backendPollLogIndex->ruleName = $entityRule->name;
             $auth->add($backendPollLogIndex);
 
             $backendPollLogView = $auth->createPermission('backend.poll.log.view');
             $backendPollLogView->description = 'Просмотр изменений';
-            $backendPollLogView->ruleName = $entityRule->name;
             $auth->add($backendPollLogView);
 
             $backendPollLogRestore = $auth->createPermission('backend.poll.log.restore');
             $backendPollLogRestore->description = 'Восстановление изменений';
-            $backendPollLogRestore->ruleName = $entityRule->name;
             $auth->add($backendPollLogRestore);
 
             $backendManagePoll = $auth->createPermission('backend.poll');
@@ -876,45 +750,36 @@ class RbacController extends Controller
             $auth->addChild($backendManagePoll, $backendPollLogRestore);
 
 
-
             $backendProjectIndex = $auth->createPermission('backend.project.index');
             $backendProjectIndex->description = 'Список проектов';
-            $backendProjectIndex->ruleName = $entityRule->name;
             $auth->add($backendProjectIndex);
 
             $backendProjectView = $auth->createPermission('backend.project.view');
             $backendProjectView->description = 'Просмотр проекта';
-            $backendProjectView->ruleName = $entityRule->name;
             $auth->add($backendProjectView);
 
             $backendProjectCreate = $auth->createPermission('backend.project.create');
             $backendProjectCreate->description = 'Создание проекта';
-            $backendProjectCreate->ruleName = $entityRule->name;
             $auth->add($backendProjectCreate);
 
             $backendProjectUpdate = $auth->createPermission('backend.project.update');
             $backendProjectUpdate->description = 'Редактирование проекта';
-            $backendProjectUpdate->ruleName = $entityRule->name;
             $auth->add($backendProjectUpdate);
 
             $backendProjectDelete = $auth->createPermission('backend.project.delete');
             $backendProjectDelete->description = 'Удаление проекта';
-            $backendProjectDelete->ruleName = $entityRule->name;
             $auth->add($backendProjectDelete);
 
             $backendProjectLogIndex = $auth->createPermission('backend.project.log.index');
             $backendProjectLogIndex->description = 'Список изменений';
-            $backendProjectLogIndex->ruleName = $entityRule->name;
             $auth->add($backendProjectLogIndex);
 
             $backendProjectLogView = $auth->createPermission('backend.project.log.view');
             $backendProjectLogView->description = 'Просмотр изменений';
-            $backendProjectLogView->ruleName = $entityRule->name;
             $auth->add($backendProjectLogView);
 
             $backendProjectLogRestore = $auth->createPermission('backend.project.log.restore');
             $backendProjectLogRestore->description = 'Восстановление изменений';
-            $backendProjectLogRestore->ruleName = $entityRule->name;
             $auth->add($backendProjectLogRestore);
 
             $backendManageProject = $auth->createPermission('backend.project');
@@ -930,45 +795,36 @@ class RbacController extends Controller
             $auth->addChild($backendManageProject, $backendProjectLogRestore);
 
 
-
             $backendServiceIndex = $auth->createPermission('backend.service.index');
             $backendServiceIndex->description = 'Список услуг';
-            $backendServiceIndex->ruleName = $entityRule->name;
             $auth->add($backendServiceIndex);
 
             $backendServiceView = $auth->createPermission('backend.service.view');
             $backendServiceView->description = 'Просмотр услуги';
-            $backendServiceView->ruleName = $entityRule->name;
             $auth->add($backendServiceView);
 
             $backendServiceCreate = $auth->createPermission('backend.service.create');
             $backendServiceCreate->description = 'Создание услуги';
-            $backendServiceCreate->ruleName = $entityRule->name;
             $auth->add($backendServiceCreate);
 
             $backendServiceUpdate = $auth->createPermission('backend.service.update');
             $backendServiceUpdate->description = 'Редактирование услуги';
-            $backendServiceUpdate->ruleName = $entityRule->name;
             $auth->add($backendServiceUpdate);
 
             $backendServiceDelete = $auth->createPermission('backend.service.delete');
             $backendServiceDelete->description = 'Удаление услуги';
-            $backendServiceDelete->ruleName = $entityRule->name;
             $auth->add($backendServiceDelete);
 
             $backendServiceLogIndex = $auth->createPermission('backend.service.log.index');
             $backendServiceLogIndex->description = 'Список изменений';
-            $backendServiceLogIndex->ruleName = $entityRule->name;
             $auth->add($backendServiceLogIndex);
 
             $backendServiceLogView = $auth->createPermission('backend.service.log.view');
             $backendServiceLogView->description = 'Просмотр изменений';
-            $backendServiceLogView->ruleName = $entityRule->name;
             $auth->add($backendServiceLogView);
 
             $backendServiceLogRestore = $auth->createPermission('backend.service.log.restore');
             $backendServiceLogRestore->description = 'Восстановление изменений';
-            $backendServiceLogRestore->ruleName = $entityRule->name;
             $auth->add($backendServiceLogRestore);
 
             $backendManageService = $auth->createPermission('backend.service');
@@ -984,45 +840,36 @@ class RbacController extends Controller
             $auth->addChild($backendManageService, $backendServiceLogRestore);
 
 
-
             $backendServiceSituationIndex = $auth->createPermission('backend.serviceSituation.index');
             $backendServiceSituationIndex->description = 'Список жизненных ситуаций';
-            $backendServiceSituationIndex->ruleName = $entityRule->name;
             $auth->add($backendServiceSituationIndex);
 
             $backendServiceSituationView = $auth->createPermission('backend.serviceSituation.view');
             $backendServiceSituationView->description = 'Просмотр жизненной ситуации';
-            $backendServiceSituationView->ruleName = $entityRule->name;
             $auth->add($backendServiceSituationView);
 
             $backendServiceSituationCreate = $auth->createPermission('backend.serviceSituation.create');
             $backendServiceSituationCreate->description = 'Создание жизненной ситуации';
-            $backendServiceSituationCreate->ruleName = $entityRule->name;
             $auth->add($backendServiceSituationCreate);
 
             $backendServiceSituationUpdate = $auth->createPermission('backend.serviceSituation.update');
             $backendServiceSituationUpdate->description = 'Редактирование жизненной ситуации';
-            $backendServiceSituationUpdate->ruleName = $entityRule->name;
             $auth->add($backendServiceSituationUpdate);
 
             $backendServiceSituationDelete = $auth->createPermission('backend.serviceSituation.delete');
             $backendServiceSituationDelete->description = 'Удаление жизненной ситуации';
-            $backendServiceSituationDelete->ruleName = $entityRule->name;
             $auth->add($backendServiceSituationDelete);
 
             $backendServiceSituationLogIndex = $auth->createPermission('backend.serviceSituation.log.index');
             $backendServiceSituationLogIndex->description = 'Список изменений';
-            $backendServiceSituationLogIndex->ruleName = $entityRule->name;
             $auth->add($backendServiceSituationLogIndex);
 
             $backendServiceSituationLogView = $auth->createPermission('backend.serviceSituation.log.view');
             $backendServiceSituationLogView->description = 'Просмотр изменений';
-            $backendServiceSituationLogView->ruleName = $entityRule->name;
             $auth->add($backendServiceSituationLogView);
 
             $backendServiceSituationLogRestore = $auth->createPermission('backend.serviceSituation.log.restore');
             $backendServiceSituationLogRestore->description = 'Восстановление изменений';
-            $backendServiceSituationLogRestore->ruleName = $entityRule->name;
             $auth->add($backendServiceSituationLogRestore);
 
             $backendManageServiceSituation = $auth->createPermission('backend.serviceSituation');
@@ -1038,45 +885,36 @@ class RbacController extends Controller
             $auth->addChild($backendManageServiceSituation, $backendServiceSituationLogRestore);
 
 
-
             $backendServiceRubricIndex = $auth->createPermission('backend.serviceRubric.index');
             $backendServiceRubricIndex->description = 'Список жизненных ситуаций';
-            $backendServiceRubricIndex->ruleName = $entityRule->name;
             $auth->add($backendServiceRubricIndex);
 
             $backendServiceRubricView = $auth->createPermission('backend.serviceRubric.view');
             $backendServiceRubricView->description = 'Просмотр жизненной ситуации';
-            $backendServiceRubricView->ruleName = $entityRule->name;
             $auth->add($backendServiceRubricView);
 
             $backendServiceRubricCreate = $auth->createPermission('backend.serviceRubric.create');
             $backendServiceRubricCreate->description = 'Создание жизненной ситуации';
-            $backendServiceRubricCreate->ruleName = $entityRule->name;
             $auth->add($backendServiceRubricCreate);
 
             $backendServiceRubricUpdate = $auth->createPermission('backend.serviceRubric.update');
             $backendServiceRubricUpdate->description = 'Редактирование жизненной ситуации';
-            $backendServiceRubricUpdate->ruleName = $entityRule->name;
             $auth->add($backendServiceRubricUpdate);
 
             $backendServiceRubricDelete = $auth->createPermission('backend.serviceRubric.delete');
             $backendServiceRubricDelete->description = 'Удаление жизненной ситуации';
-            $backendServiceRubricDelete->ruleName = $entityRule->name;
             $auth->add($backendServiceRubricDelete);
 
             $backendServiceRubricLogIndex = $auth->createPermission('backend.serviceRubric.log.index');
             $backendServiceRubricLogIndex->description = 'Список изменений';
-            $backendServiceRubricLogIndex->ruleName = $entityRule->name;
             $auth->add($backendServiceRubricLogIndex);
 
             $backendServiceRubricLogView = $auth->createPermission('backend.serviceRubric.log.view');
             $backendServiceRubricLogView->description = 'Просмотр изменений';
-            $backendServiceRubricLogView->ruleName = $entityRule->name;
             $auth->add($backendServiceRubricLogView);
 
             $backendServiceRubricLogRestore = $auth->createPermission('backend.serviceRubric.log.restore');
             $backendServiceRubricLogRestore->description = 'Восстановление изменений';
-            $backendServiceRubricLogRestore->ruleName = $entityRule->name;
             $auth->add($backendServiceRubricLogRestore);
 
             $backendManageServiceRubric = $auth->createPermission('backend.serviceRubric');
@@ -1092,10 +930,8 @@ class RbacController extends Controller
             $auth->addChild($backendManageServiceRubric, $backendServiceRubricLogRestore);
 
 
-
             $backendStatisticIndex = $auth->createPermission('backend.statistic.index');
             $backendStatisticIndex->description = 'Статистика';
-            $backendStatisticIndex->ruleName = $entityRule->name;
             $auth->add($backendStatisticIndex);
 
             $backendManageStatistic = $auth->createPermission('backend.statistic');
@@ -1104,49 +940,40 @@ class RbacController extends Controller
             $auth->addChild($backendManageStatistic, $backendStatisticIndex);
 
 
-
             $backendUserList = $auth->createPermission('backend.user.list');
             $backendUserList->description = 'Поиск пользователей';
             $auth->add($backendUserList);
 
             $backendUserIndex = $auth->createPermission('backend.user.index');
             $backendUserIndex->description = 'Список пользователей';
-            $backendUserIndex->ruleName = $entityRule->name;
             $auth->add($backendUserIndex);
 
             $backendUserView = $auth->createPermission('backend.user.view');
             $backendUserView->description = 'Просмотр пользователя';
-            $backendUserView->ruleName = $entityRule->name;
             $auth->add($backendUserView);
 
             $backendUserCreate = $auth->createPermission('backend.user.create');
             $backendUserCreate->description = 'Создание пользователя';
-            $backendUserCreate->ruleName = $entityRule->name;
             $auth->add($backendUserCreate);
 
             $backendUserUpdate = $auth->createPermission('backend.user.update');
             $backendUserUpdate->description = 'Редактирование пользователя';
-            $backendUserUpdate->ruleName = $entityRule->name;
             $auth->add($backendUserUpdate);
 
             $backendUserDelete = $auth->createPermission('backend.user.delete');
             $backendUserDelete->description = 'Удаление пользователя';
-            $backendUserDelete->ruleName = $entityRule->name;
             $auth->add($backendUserDelete);
 
             $backendUserLogIndex = $auth->createPermission('backend.user.log.index');
             $backendUserLogIndex->description = 'Список пользователей';
-            $backendUserLogIndex->ruleName = $entityRule->name;
             $auth->add($backendUserLogIndex);
 
             $backendUserLogView = $auth->createPermission('backend.user.log.view');
             $backendUserLogView->description = 'Просмотр изменений';
-            $backendUserLogView->ruleName = $entityRule->name;
             $auth->add($backendUserLogView);
 
             $backendUserLogRestore = $auth->createPermission('backend.user.log.restore');
             $backendUserLogRestore->description = 'Восстановление изменений';
-            $backendUserLogRestore->ruleName = $entityRule->name;
             $auth->add($backendUserLogRestore);
 
             $backendManageUser = $auth->createPermission('backend.user');
@@ -1163,59 +990,48 @@ class RbacController extends Controller
             $auth->addChild($backendManageUser, $backendUserLogRestore);
 
 
-
             $backendUserGroupList = $auth->createPermission('backend.userGroup.list');
             $backendUserGroupList->description = 'Поиск групп пользователей';
             $auth->add($backendUserGroupList);
 
             $backendUserGroupIndex = $auth->createPermission('backend.userGroup.index');
             $backendUserGroupIndex->description = 'Список групп пользователей';
-            $backendUserGroupIndex->ruleName = $entityRule->name;
             $auth->add($backendUserGroupIndex);
 
             $backendUserGroupView = $auth->createPermission('backend.userGroup.view');
             $backendUserGroupView->description = 'Просмотр группы пользователей';
-            $backendUserGroupView->ruleName = $entityRule->name;
             $auth->add($backendUserGroupView);
 
             $backendUserGroupCreate = $auth->createPermission('backend.userGroup.create');
             $backendUserGroupCreate->description = 'Создание группы пользователей';
-            $backendUserGroupCreate->ruleName = $entityRule->name;
             $auth->add($backendUserGroupCreate);
 
             $backendUserGroupUpdate = $auth->createPermission('backend.userGroup.update');
             $backendUserGroupUpdate->description = 'Редактирование группы пользователей';
-            $backendUserGroupUpdate->ruleName = $entityRule->name;
             $auth->add($backendUserGroupUpdate);
 
             $backendUserGroupDelete = $auth->createPermission('backend.userGroup.delete');
             $backendUserGroupDelete->description = 'Удаление группы пользователей';
-            $backendUserGroupDelete->ruleName = $entityRule->name;
             $auth->add($backendUserGroupDelete);
 
             $backendUserGroupAssign = $auth->createPermission('backend.userGroup.assign');
             $backendUserGroupAssign->description = 'Добавить пользователя в группу';
-            $backendUserGroupAssign->ruleName = $entityRule->name;
             $auth->add($backendUserGroupAssign);
 
             $backendUserGroupRevoke = $auth->createPermission('backend.userGroup.revoke');
             $backendUserGroupRevoke->description = 'Удалить пользователя из группы';
-            $backendUserGroupRevoke->ruleName = $entityRule->name;
             $auth->add($backendUserGroupRevoke);
 
             $backendUserGroupLogIndex = $auth->createPermission('backend.userGroup.log.index');
             $backendUserGroupLogIndex->description = 'Список пользователей';
-            $backendUserGroupLogIndex->ruleName = $entityRule->name;
             $auth->add($backendUserGroupLogIndex);
 
             $backendUserGroupLogView = $auth->createPermission('backend.userGroup.log.view');
             $backendUserGroupLogView->description = 'Просмотр изменений';
-            $backendUserGroupLogView->ruleName = $entityRule->name;
             $auth->add($backendUserGroupLogView);
 
             $backendUserGroupLogRestore = $auth->createPermission('backend.userGroup.log.restore');
             $backendUserGroupLogRestore->description = 'Восстановление изменений';
-            $backendUserGroupLogRestore->ruleName = $entityRule->name;
             $auth->add($backendUserGroupLogRestore);
 
             $backendManageUserGroup = $auth->createPermission('backend.userGroup');
@@ -1234,25 +1050,20 @@ class RbacController extends Controller
             $auth->addChild($backendManageUserGroup, $backendUserGroupLogRestore);
 
 
-
             $backendUserRoleIndex = $auth->createPermission('backend.userRole.index');
             $backendUserRoleIndex->description = 'Список ролей пользователей';
-            $backendUserRoleIndex->ruleName = $entityRule->name;
             $auth->add($backendUserRoleIndex);
 
             $backendUserRoleView = $auth->createPermission('backend.userRole.view');
             $backendUserRoleView->description = 'Просмотр роли пользователей';
-            $backendUserRoleView->ruleName = $entityRule->name;
             $auth->add($backendUserRoleView);
 
             $backendUserRoleAssign = $auth->createPermission('backend.userRole.assign');
             $backendUserRoleAssign->description = 'Добавить пользователю роль';
-            $backendUserRoleAssign->ruleName = $entityRule->name;
             $auth->add($backendUserRoleAssign);
 
             $backendUserRoleRevoke = $auth->createPermission('backend.userRole.revoke');
             $backendUserRoleRevoke->description = 'Удалить роль у пользователя';
-            $backendUserRoleRevoke->ruleName = $entityRule->name;
             $auth->add($backendUserRoleRevoke);
 
             $backendManageUserRole = $auth->createPermission('backend.userRole');
@@ -1264,45 +1075,36 @@ class RbacController extends Controller
             $auth->addChild($backendManageUserRole, $backendUserRoleRevoke);
 
 
-
             $backendVarsIndex = $auth->createPermission('backend.vars.index');
             $backendVarsIndex->description = 'Список переменных';
-            $backendVarsIndex->ruleName = $entityRule->name;
             $auth->add($backendVarsIndex);
 
             $backendVarsView = $auth->createPermission('backend.vars.view');
             $backendVarsView->description = 'Просмотр переменной';
-            $backendVarsView->ruleName = $entityRule->name;
             $auth->add($backendVarsView);
 
             $backendVarsCreate = $auth->createPermission('backend.vars.create');
             $backendVarsCreate->description = 'Создание переменной';
-            $backendVarsCreate->ruleName = $entityRule->name;
             $auth->add($backendVarsCreate);
 
             $backendVarsUpdate = $auth->createPermission('backend.vars.update');
             $backendVarsUpdate->description = 'Редактирование переменной';
-            $backendVarsUpdate->ruleName = $entityRule->name;
             $auth->add($backendVarsUpdate);
 
             $backendVarsDelete = $auth->createPermission('backend.vars.delete');
             $backendVarsDelete->description = 'Удаление переменной';
-            $backendVarsDelete->ruleName = $entityRule->name;
             $auth->add($backendVarsDelete);
 
             $backendVarsLogIndex = $auth->createPermission('backend.vars.log.index');
             $backendVarsLogIndex->description = 'Список переменных';
-            $backendVarsLogIndex->ruleName = $entityRule->name;
             $auth->add($backendVarsLogIndex);
 
             $backendVarsLogView = $auth->createPermission('backend.vars.log.view');
             $backendVarsLogView->description = 'Просмотр изменений';
-            $backendVarsLogView->ruleName = $entityRule->name;
             $auth->add($backendVarsLogView);
 
             $backendVarsLogRestore = $auth->createPermission('backend.vars.log.restore');
             $backendVarsLogRestore->description = 'Восстановление изменений';
-            $backendVarsLogRestore->ruleName = $entityRule->name;
             $auth->add($backendVarsLogRestore);
 
             $backendManageVars = $auth->createPermission('backend.vars');
@@ -1318,11 +1120,10 @@ class RbacController extends Controller
             $auth->addChild($backendManageVars, $backendVarsLogRestore);
 
 
-
             $backendManage = $auth->createPermission('backend');
             $backendManage->description = 'Административная часть';
             $auth->add($backendManage);
-
+            $auth->addChild($backendManage, $backendEntityAccess);
 
 
             $user = $auth->createRole('user');
@@ -1330,6 +1131,11 @@ class RbacController extends Controller
             $auth->add($user);
 
 
+            $backendMenuAddress = $auth->createPermission('menu.address');
+            $backendMenuAddress->description = 'Адреса';
+            $backendMenuAddress->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuAddress);
+            $auth->addChild($backendManage, $backendMenuAddress);
 
             $backendAddress = $auth->createRole('admin.address');
             $backendAddress->description = 'Редактор адресов';
@@ -1338,6 +1144,11 @@ class RbacController extends Controller
             $auth->addChild($backendAddress, $backendManageAddress);
 
 
+            $backendMenuApplication = $auth->createPermission('menu.application');
+            $backendMenuApplication->description = 'Приложения (API)';
+            $backendMenuApplication->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuApplication);
+            $auth->addChild($backendManage, $backendMenuApplication);
 
             $backendApplication = $auth->createRole('admin.application');
             $backendApplication->description = 'Редактор приложений';
@@ -1346,22 +1157,38 @@ class RbacController extends Controller
             $auth->addChild($backendApplication, $backendManageApplication);
 
 
+            $backendMenuAlert = $auth->createPermission('menu.alert');
+            $backendMenuAlert->description = 'Всплывающие сообщения';
+            $backendMenuAlert->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuAlert);
+            $auth->addChild($backendManage, $backendMenuAlert);
 
             $backendAlert = $auth->createRole('admin.alert');
-            $backendAlert->description = 'Редактор списков';
+            $backendAlert->description = 'Редактор всплывающих сообщений';
             $auth->add($backendAlert);
             $auth->addChild($backendAlert, $backendManage);
             $auth->addChild($backendAlert, $backendManageAlert);
 
 
+            $backendMenuCollection = $auth->createPermission('menu.collection');
+            $backendMenuCollection->description = 'Списки';
+            $backendMenuCollection->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuCollection);
+            $auth->addChild($backendManage, $backendMenuCollection);
 
             $backendCollection = $auth->createRole('admin.collection');
             $backendCollection->description = 'Редактор списков';
             $auth->add($backendCollection);
             $auth->addChild($backendCollection, $backendManage);
             $auth->addChild($backendCollection, $backendManageCollection);
+            $auth->addChild($backendCollection, $backendMenuCollection);
 
 
+            $backendMenuControllerPage = $auth->createPermission('menu.controllerPage');
+            $backendMenuControllerPage->description = 'Резервированные пути';
+            $backendMenuControllerPage->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuControllerPage);
+            $auth->addChild($backendManage, $backendMenuControllerPage);
 
             $backendControllerPage = $auth->createRole('admin.controllerPage');
             $backendControllerPage->description = 'Редактор резервированных путей';
@@ -1370,6 +1197,11 @@ class RbacController extends Controller
             $auth->addChild($backendControllerPage, $backendManageControllerPage);
 
 
+            $backendMenuFaq = $auth->createPermission('menu.faq');
+            $backendMenuFaq->description = 'Вопросы и ответы';
+            $backendMenuFaq->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuFaq);
+            $auth->addChild($backendManage, $backendMenuFaq);
 
             $backendFaq = $auth->createRole('admin.faq');
             $backendFaq->description = 'Редактор вопросов';
@@ -1378,6 +1210,11 @@ class RbacController extends Controller
             $auth->addChild($backendFaq, $backendManageFaq);
 
 
+            $backendMenuFaqCategory = $auth->createPermission('menu.faqCategory');
+            $backendMenuFaqCategory->description = 'Категории';
+            $backendMenuFaqCategory->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuFaqCategory);
+            $auth->addChild($backendManage, $backendMenuFaqCategory);
 
             $backendFaqCategory = $auth->createRole('admin.faqCategory');
             $backendFaqCategory->description = 'Редактор категорий вопросов';
@@ -1386,6 +1223,11 @@ class RbacController extends Controller
             $auth->addChild($backendFaqCategory, $backendManageFaqCategory);
 
 
+            $backendMenuForm = $auth->createPermission('menu.form');
+            $backendMenuForm->description = 'Формы';
+            $backendMenuForm->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuForm);
+            $auth->addChild($backendManage, $backendMenuForm);
 
             $backendForm = $auth->createRole('admin.form');
             $backendForm->description = 'Редактор форм';
@@ -1394,6 +1236,11 @@ class RbacController extends Controller
             $auth->addChild($backendForm, $backendManageForm);
 
 
+            $backendMenuFormInputType = $auth->createPermission('menu.formInputType');
+            $backendMenuFormInputType->description = 'Поведения полей';
+            $backendMenuFormInputType->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuFormInputType);
+            $auth->addChild($backendManage, $backendMenuFormInputType);
 
             $backendFormInputType = $auth->createRole('admin.formInputType');
             $backendFormInputType->description = 'Редактор типов форм';
@@ -1402,6 +1249,11 @@ class RbacController extends Controller
             $auth->addChild($backendFormInputType, $backendManageFormInputType);
 
 
+            $backendMenuGallery = $auth->createPermission('menu.gallery');
+            $backendMenuGallery->description = 'Галереи';
+            $backendMenuGallery->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuGallery);
+            $auth->addChild($backendManage, $backendMenuGallery);
 
             $backendGallery = $auth->createRole('admin.gallery');
             $backendGallery->description = 'Редактор галерей';
@@ -1410,6 +1262,11 @@ class RbacController extends Controller
             $auth->addChild($backendGallery, $backendManageGallery);
 
 
+            $backendMenuMenu = $auth->createPermission('menu.menu');
+            $backendMenuMenu->description = 'Меню';
+            $backendMenuMenu->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuMenu);
+            $auth->addChild($backendManage, $backendMenuMenu);
 
             $backendMenu = $auth->createRole('admin.menu');
             $backendMenu->description = 'Редактор меню';
@@ -1418,6 +1275,11 @@ class RbacController extends Controller
             $auth->addChild($backendMenu, $backendManageMenu);
 
 
+            $backendMenuNews = $auth->createPermission('menu.news');
+            $backendMenuNews->description = 'Новости';
+            $backendMenuNews->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuNews);
+            $auth->addChild($backendManage, $backendMenuNews);
 
             $backendNews = $auth->createRole('admin.news');
             $backendNews->description = 'Редактор новостей';
@@ -1426,6 +1288,11 @@ class RbacController extends Controller
             $auth->addChild($backendNews, $backendManageNews);
 
 
+            $backendMenuOpendata = $auth->createPermission('menu.opendata');
+            $backendMenuOpendata->description = 'Открытые данные';
+            $backendMenuOpendata->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuOpendata);
+            $auth->addChild($backendManage, $backendMenuOpendata);
 
             $backendOpendata = $auth->createRole('admin.opendata');
             $backendOpendata->description = 'Редактор открытых данных';
@@ -1434,6 +1301,11 @@ class RbacController extends Controller
             $auth->addChild($backendOpendata, $backendManageOpendata);
 
 
+            $backendMenuPage = $auth->createPermission('menu.page');
+            $backendMenuPage->description = 'Разделы';
+            $backendMenuPage->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuPage);
+            $auth->addChild($backendManage, $backendMenuPage);
 
             $backendPage = $auth->createRole('admin.page');
             $backendPage->description = 'Редактор разделов';
@@ -1442,6 +1314,11 @@ class RbacController extends Controller
             $auth->addChild($backendPage, $backendManagePage);
 
 
+            $backendMenuPoll = $auth->createPermission('menu.poll');
+            $backendMenuPoll->description = 'Опросы';
+            $backendMenuPoll->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuPoll);
+            $auth->addChild($backendManage, $backendMenuPoll);
 
             $backendPoll = $auth->createRole('admin.poll');
             $backendPoll->description = 'Редактор опросов';
@@ -1450,6 +1327,11 @@ class RbacController extends Controller
             $auth->addChild($backendPoll, $backendManagePoll);
 
 
+            $backendMenuProject = $auth->createPermission('menu.project');
+            $backendMenuProject->description = 'Проекты';
+            $backendMenuProject->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuProject);
+            $auth->addChild($backendManage, $backendMenuProject);
 
             $backendProject = $auth->createRole('admin.project');
             $backendProject->description = 'Редактор проектов и событий';
@@ -1458,6 +1340,11 @@ class RbacController extends Controller
             $auth->addChild($backendProject, $backendManageProject);
 
 
+            $backendMenuService = $auth->createPermission('menu.service');
+            $backendMenuService->description = 'Услуги';
+            $backendMenuService->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuService);
+            $auth->addChild($backendManage, $backendMenuService);
 
             $backendService = $auth->createRole('admin.service');
             $backendService->description = 'Редактор услуг';
@@ -1466,6 +1353,11 @@ class RbacController extends Controller
             $auth->addChild($backendService, $backendManageService);
 
 
+            $backendMenuServiceSituation = $auth->createPermission('menu.serviceSituation');
+            $backendMenuServiceSituation->description = 'Жизненные ситуации';
+            $backendMenuServiceSituation->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuServiceSituation);
+            $auth->addChild($backendManage, $backendMenuServiceSituation);
 
             $backendServiceSituation = $auth->createRole('admin.serviceSituation');
             $backendServiceSituation->description = 'Редактор жизненных ситуаций';
@@ -1474,6 +1366,11 @@ class RbacController extends Controller
             $auth->addChild($backendServiceSituation, $backendManageServiceSituation);
 
 
+            $backendMenuServiceRubric = $auth->createPermission('menu.serviceRubric');
+            $backendMenuServiceRubric->description = 'Рубрикатор';
+            $backendMenuServiceRubric->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuServiceRubric);
+            $auth->addChild($backendManage, $backendMenuServiceRubric);
 
             $backendServiceRubric = $auth->createRole('admin.serviceRubric');
             $backendServiceRubric->description = 'Редактор рубрик услуг';
@@ -1482,6 +1379,11 @@ class RbacController extends Controller
             $auth->addChild($backendServiceRubric, $backendManageServiceRubric);
 
 
+            $backendMenuStatistic = $auth->createPermission('menu.statistic');
+            $backendMenuStatistic->description = 'Статистика';
+            $backendMenuStatistic->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuStatistic);
+            $auth->addChild($backendManage, $backendMenuStatistic);
 
             $backendStatistic = $auth->createRole('admin.statistic');
             $backendStatistic->description = 'Статистика';
@@ -1490,6 +1392,11 @@ class RbacController extends Controller
             $auth->addChild($backendStatistic, $backendManageStatistic);
 
 
+            $backendMenuUser = $auth->createPermission('menu.user');
+            $backendMenuUser->description = 'Пользователи';
+            $backendMenuUser->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuUser);
+            $auth->addChild($backendManage, $backendMenuUser);
 
             $backendUser = $auth->createRole('admin.user');
             $backendUser->description = 'Редактор пользователей';
@@ -1498,6 +1405,11 @@ class RbacController extends Controller
             $auth->addChild($backendUser, $backendManageUser);
 
 
+            $backendMenuUserGroup = $auth->createPermission('menu.userGroup');
+            $backendMenuUserGroup->description = 'Группы';
+            $backendMenuUserGroup->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuUserGroup);
+            $auth->addChild($backendManage, $backendMenuUserGroup);
 
             $backendUserGroup = $auth->createRole('admin.userGroup');
             $backendUserGroup->description = 'Редактор групп пользователей';
@@ -1506,6 +1418,11 @@ class RbacController extends Controller
             $auth->addChild($backendUserGroup, $backendManageUserGroup);
 
 
+            $backendMenuUserRole = $auth->createPermission('menu.userRole');
+            $backendMenuUserRole->description = 'Роли';
+            $backendMenuUserRole->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuUserRole);
+            $auth->addChild($backendManage, $backendMenuUserRole);
 
             $backendUserRole = $auth->createRole('admin.userRole');
             $backendUserRole->description = 'Редактор ролей пользователей';
@@ -1514,13 +1431,17 @@ class RbacController extends Controller
             $auth->addChild($backendUserRole, $backendManageUserRole);
 
 
+            $backendMenuVars = $auth->createPermission('menu.vars');
+            $backendMenuVars->description = 'Переменные';
+            $backendMenuVars->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuVars);
+            $auth->addChild($backendManage, $backendMenuVars);
 
             $backendVars = $auth->createRole('admin.vars');
             $backendVars->description = 'Редактор переменных';
             $auth->add($backendVars);
             $auth->addChild($backendVars, $backendManage);
             $auth->addChild($backendVars, $backendManageVars);
-
 
 
             $admin = $auth->createRole('admin');
@@ -1552,13 +1473,11 @@ class RbacController extends Controller
             $auth->addChild($admin, $backendVars);
 
 
-
             $root = $auth->createRole('root');
             $root->description = 'Суперпользователь';
             $auth->add($root);
             $auth->addChild($root, $user);
             $auth->addChild($root, $admin);
-
 
 
             foreach ($assignments as $user_id => $roleNames) {
@@ -1590,7 +1509,7 @@ class RbacController extends Controller
     {
         $auth = Yii::$app->authManager;
 
-        $email = Console::prompt('Введите email: ', ['required' => true, 'validator' => function($value, &$error) {
+        $email = Console::prompt('Введите email: ', ['required' => true, 'validator' => function ($value, &$error) {
             if (!(new EmailValidator())->validate($value)) {
                 $error = 'Неверный email.';
                 return false;
@@ -1604,7 +1523,7 @@ class RbacController extends Controller
             return true;
         }, 'error' => 'Email не должен быть пустым.']);
 
-        $username = Console::prompt('Введите имя: ', ['required' => true, 'validator' => function($value, &$error) {
+        $username = Console::prompt('Введите имя: ', ['required' => true, 'validator' => function ($value, &$error) {
             if ((new ExistValidator(['targetClass' => User::class, 'targetAttribute' => 'username']))->validate($value)) {
                 $error = 'Пользователь с таким именем уже существует.';
                 return false;
@@ -1613,7 +1532,7 @@ class RbacController extends Controller
             return true;
         }, 'error' => 'Имя не должено быть пустым.']);
 
-        $password = Console::prompt('Введите пароль: ', ['required' => true, 'validator' => function($value, &$error) {
+        $password = Console::prompt('Введите пароль: ', ['required' => true, 'validator' => function ($value, &$error) {
             if (!(new StringValidator(['min' => 6]))->validate($value)) {
                 $error = 'Пароль должен быть больше 6 символов.';
                 return false;
@@ -1623,7 +1542,7 @@ class RbacController extends Controller
         }, 'error' => 'Пароль не должен быть пустым.']);
 
         /* @var Role|null $role */
-        $role = Console::prompt('Введите роль: ', ['required' => true, 'validator' => function($value) use ($auth) {
+        $role = Console::prompt('Введите роль: ', ['required' => true, 'validator' => function ($value) use ($auth) {
             return $auth->getRole($value) ? true : false;
         }, 'error' => 'Неверная роль.']);
 
@@ -1647,7 +1566,7 @@ class RbacController extends Controller
 
     public function actionChangePassword()
     {
-        $email = Console::prompt('Введите email: ', ['required' => true, 'validator' => function($value, &$error) {
+        $email = Console::prompt('Введите email: ', ['required' => true, 'validator' => function ($value, &$error) {
             if (!(new EmailValidator())->validate($value)) {
                 $error = 'Неверный email.';
                 return false;
@@ -1661,7 +1580,7 @@ class RbacController extends Controller
             return true;
         }, 'error' => 'Email не должен быть пустым.']);
 
-        $password = Console::prompt('Введите пароль: ', ['required' => true, 'validator' => function($value, &$error) {
+        $password = Console::prompt('Введите пароль: ', ['required' => true, 'validator' => function ($value, &$error) {
             if (!(new StringValidator(['min' => 6]))->validate($value)) {
                 $error = 'Пароль должен быть больше 6 символов.';
                 return false;
@@ -1688,7 +1607,7 @@ class RbacController extends Controller
     {
         $auth = Yii::$app->authManager;
 
-        $email = Console::prompt('Введите email: ', ['required' => true, 'validator' => function($value) {
+        $email = Console::prompt('Введите email: ', ['required' => true, 'validator' => function ($value) {
             return (new EmailValidator())->validate($value);
         }, 'error' => 'Неправильный email.']);
 
@@ -1697,12 +1616,14 @@ class RbacController extends Controller
             return false;
         }
 
-        $role = Console::prompt('Введите роль: ', ['required' => true, 'validator' => function($value) use ($auth) {
+        $role = Console::prompt('Введите роль: ', ['required' => true, 'validator' => function ($value) use ($auth) {
             return $auth->getRole($value) ? true : false;
         }, 'error' => 'Неверная роль.']);
 
-        $auth->assign($auth->getRole($role), $user->id);
-        $auth->invalidateCache();
+        if (!$auth->checkAccess($user->id, $role)) {
+            $auth->assign($auth->getRole($role), $user->id);
+            $auth->invalidateCache();
+        }
 
         Console::output('Роль успешно добавлена.');
     }

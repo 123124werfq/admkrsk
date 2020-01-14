@@ -46,6 +46,9 @@ class CollectionColumn extends \yii\db\ActiveRecord
     const TYPE_SUBREGION = 24;
     const TYPE_SERVICETARGET = 26;
     const TYPE_SERVICE = 27;
+    const TYPE_CUSTOM = 28;
+    const TYPE_FILE_OLD = 29;
+    const TYPE_ADDRESSES = 30;
 
     public static function getTypeOptions($type)
     {
@@ -183,6 +186,8 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_MAP => "Координаты",
 
             self::TYPE_FILE => "Файл",
+            self::TYPE_FILE_OLD => "Файл (старый формат для импорта)",
+
             self::TYPE_IMAGE => "Изображение",
 
             self::TYPE_COLLECTION => "Данные из списка",
@@ -191,6 +196,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_JSON => "Таблицы",
 
             self::TYPE_ADDRESS => "Адрес строкой",
+            self::TYPE_ADDRESSES => "Несколько адресов",
             self::TYPE_REGION => 'Регион',
             self::TYPE_SUBREGION => 'Область',
             self::TYPE_CITY => 'Город',
@@ -200,6 +206,8 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
             self::TYPE_SERVICETARGET => "Цель муниципальной услуги",
             self::TYPE_SERVICE => "Услуги для обжалования",
+
+            self::TYPE_CUSTOM => 'Составная колонка',
         ];
 
         if (empty($type))
@@ -208,9 +216,35 @@ class CollectionColumn extends \yii\db\ActiveRecord
         return $labels[$type];
     }
 
+    public function isCustom()
+    {
+        return $this->type == self::TYPE_CUSTOM;
+    }
+
     public function isRelation()
     {
         return ($this->type == self::TYPE_COLLECTIONS || $this->type == self::TYPE_COLLECTION);
+    }
+
+    public static function renderCustomValue($template,$data)
+    {
+        $value = '';
+
+        try {
+            $loader = new \Twig\Loader\ArrayLoader([
+                'template' => $template,
+            ]);
+            $twig = new \Twig\Environment($loader);
+            $value = $twig->render('template', $data);
+
+            unset($loader);
+            unset($twig);
+        }
+        catch (Exception $e) {
+
+        }
+
+        return $value;
     }
 
     public function afterSave($insert, $changedAttributes)
@@ -286,9 +320,10 @@ class CollectionColumn extends \yii\db\ActiveRecord
             [['id_collection', 'name', 'type', 'alias'], 'required'],
             [['id_collection', 'id_dictionary', 'type', 'show_column_admin', 'ord'], 'default', 'value' => null],
             [['id_collection', 'id_dictionary', 'type', 'show_column_admin', 'ord', 'protected'], 'integer'],
+            [['keep_relation'], 'boolean'],
             [['name','alias'], 'string', 'max' => 500],
             [['variables'], 'string'],
-            [['options'], 'safe'],
+            [['options','template'], 'safe'],
             [['type'], 'default', 'value' => self::TYPE_INPUT],
         ];
     }
@@ -342,6 +377,8 @@ class CollectionColumn extends \yii\db\ActiveRecord
             'type' => 'Тип',
             'alias' => 'Алиас',
             'options' => 'Настройки',
+            'keep_relation'=>'Сохранять связь',
+            'template'=>'Шаблон колонки',
             'show_column_admin' => 'Show Column Admin',
             'ord' => 'Ord',
         ];

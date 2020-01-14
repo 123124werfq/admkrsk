@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "service_appeal_form".
@@ -13,7 +13,7 @@ use Yii;
  * @property int|null $id_record_category
  * @property int|null $id_service
  */
-class ServiceComplaintForm extends \yii\db\ActiveRecord
+class ServiceComplaintForm extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -41,6 +41,7 @@ class ServiceComplaintForm extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+            'id_appeal' => '#',
             'id_form' => 'Форма',
             'id_record_firm' => 'Организация',
             'id_record_category' => 'Категория',

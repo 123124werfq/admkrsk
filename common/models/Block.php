@@ -26,6 +26,30 @@ class Block extends \yii\db\ActiveRecord
     use ActionTrait;
 
     public $blocks = [
+        'header'=> [
+            'label'=>'Шапка сайта',
+            'vars'=>[
+                'menu'=>[
+                    'name'=>'Меню',
+                    'type'=>BlockVar::TYPE_MENU,
+                ],
+                'dropdown_menu'=>[
+                    'name'=>'Разворачивающееся меню',
+                    'type'=>BlockVar::TYPE_MENU,
+                ],
+            ],
+            'layout'=>true,
+        ],
+        'footer'=> [
+            'label'=>'Подвал сайта',
+            'vars'=>[
+                'menu'=>[
+                    'name'=>'Меню',
+                    'type'=>BlockVar::TYPE_MENU,
+                ],
+            ],
+            'layout'=>true,
+        ],
         'news'=> [
             'label'=>'Новостной блок',
             'widget'=>'frontend\widgets\NewsWidget',
@@ -271,6 +295,16 @@ class Block extends \yii\db\ActiveRecord
                 ],
             ]
         ],
+        'map'=> [
+            'label'=>'Несколько списков на карте ',
+            'widget'=>'frontend\widgets\MapsWidget',
+            'vars'=>[
+                'collections'=>[
+                    'name'=>'Списки',
+                    'type'=>BlockVar::TYPE_COLLECTIONS,
+                ],
+            ]
+        ],
         'content'=> [
             'label'=>'Содержение',
         ],
@@ -330,12 +364,17 @@ class Block extends \yii\db\ActiveRecord
         return $this->blocks[$this->type]['label'];
     }
 
-    public function getTypesLabels()
+    public function getTypesLabels($layout=false)
     {
         $types = [];
 
         foreach ($this->blocks as $key => $block)
-            $types[$key]=$block['label'];
+        {
+            if ($layout && !empty($block['layout']))
+                $types[$key] = $block['label'];
+            elseif (!$layout && empty($block['layout']))
+                $types[$key] = $block['label'];
+        }
 
         return $types;
     }
@@ -383,7 +422,10 @@ class Block extends \yii\db\ActiveRecord
 
     public function getPage()
     {
-        return $this->hasOne(Page::class, ['id_page' => 'id_page']);
+        if (!empty($this->id_page))
+            return $this->hasOne(Page::class, ['id_page' => 'id_page']);
+        else
+            return $this->hasOne(Page::class, ['id_page' => 'id_page_layout']);
     }
 
 }

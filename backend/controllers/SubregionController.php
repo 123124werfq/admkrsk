@@ -6,10 +6,13 @@ use common\models\Action;
 use Yii;
 use common\models\Subregion;
 use backend\models\search\SubregionSearch;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException as NotFoundHttpExceptionAlias;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * SubregionController implements the CRUD actions for Subregion model.
@@ -69,6 +72,7 @@ class SubregionController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpExceptionAlias if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -102,6 +106,7 @@ class SubregionController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpExceptionAlias if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -124,7 +129,7 @@ class SubregionController extends Controller
      * @return mixed
      * @throws NotFoundHttpExceptionAlias if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -139,8 +144,9 @@ class SubregionController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -159,6 +165,7 @@ class SubregionController extends Controller
      * @param integer $id
      * @return Subregion the loaded model
      * @throws NotFoundHttpExceptionAlias if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

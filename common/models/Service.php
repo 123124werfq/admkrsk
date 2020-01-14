@@ -3,13 +3,16 @@
 namespace common\models;
 
 use common\behaviors\AccessControlBehavior;
+use common\components\multifile\MultiUploadBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\AccessTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 use yii\helpers\Url;
 
 /**
@@ -45,11 +48,12 @@ use yii\helpers\Url;
  * @property int $deleted_at
  * @property int $deleted_by
  */
-class Service extends \yii\db\ActiveRecord
+class Service extends ActiveRecord
 {
     use MetaTrait;
     use ActionTrait;
     use SoftDeleteTrait;
+    use AccessTrait;
 
     const VERBOSE_NAME = 'Муниципальная услуга';
     const VERBOSE_NAME_PLURAL = 'Муниципальные услуги';
@@ -153,7 +157,7 @@ class Service extends \yii\db\ActiveRecord
                 'permission' => 'backend.service',
             ],
             'multiupload' => [
-                'class' => \common\components\multifile\MultiUploadBehavior::class,
+                'class' => MultiUploadBehavior::class,
                 'relations'=>
                 [
                     'template'=>[

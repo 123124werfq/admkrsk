@@ -45,7 +45,6 @@ class RelationBehavior extends Behavior
     protected function getRelationByName($name)
     {
     	$relationQuery = 'get'.ucwords($name);
-
     	return $this->owner->$relationQuery();
     }
 

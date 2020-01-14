@@ -7,14 +7,16 @@ use yii\widgets\DetailView;
 /* @var $model common\models\News */
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'News', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Новости', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->params['action-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_news]);
 
 if ($model->isDeleted()) {
     $this->params['action-block'][] = Html::a('Восстановить', ['undelete', 'id' => $model->id_news]);
-} else {
+}
+else
+{
     $this->params['action-block'][] = Html::a('Удалить', ['delete', 'id' => $model->id_news], [
         'data' => [
             'confirm' => 'Вы уверены что хотите удалить этот элемент?',

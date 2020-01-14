@@ -3,7 +3,9 @@
 namespace backend\models\search;
 
 use common\models\AuthEntity;
+use common\traits\ActiveRangeValidateTrait;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Service;
@@ -39,6 +41,7 @@ class ServiceSearch extends Service
      * @param array $params
      *
      * @return ActiveDataProvider
+     * @throws InvalidConfigException
      */
     public function search($params)
     {
@@ -50,11 +53,14 @@ class ServiceSearch extends Service
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.service')) {
-            $query->andWhere(['id_service' => AuthEntity::getEntityIds(Service::class)]);
+            $query->andFilterWhere(['id_service' => AuthEntity::getEntityIds(Service::class)]);
         }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => $params['pageSize'] ?? 10
+            ],
         ]);
 
         $this->load($params);

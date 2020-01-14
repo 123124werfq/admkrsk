@@ -6,7 +6,7 @@ use common\models\ServiceTarget;
 use Yii;
 use common\models\AppealRequest;
 use backend\models\search\AppealSearch;
-use yii\data\ActiveDataProvider;
+use yii\db\StaleObjectException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -122,6 +122,10 @@ class AppealController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @throws NotFoundHttpException
+     */
     public function actionDoc($id)
     {
         $appeal = $this->findModel($id);
@@ -162,6 +166,8 @@ class AppealController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -174,7 +180,7 @@ class AppealController extends Controller
      * Finds the ServiceAppeal model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return ServiceAppeal the loaded model
+     * @return AppealRequest|null the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)

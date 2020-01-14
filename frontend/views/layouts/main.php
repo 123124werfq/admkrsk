@@ -5,7 +5,36 @@ use common\widgets\Alert;
 
 $bundle = AppAsset::register($this);
 
-$accessabilityMode =  (isset($_COOKIE['accessabilityMode']) && $_COOKIE['accessabilityMode']=='true')?true:false;
+$accessabilityMode = (isset($_COOKIE['accessabilityMode']) && $_COOKIE['accessabilityMode']=='true')?true:false;
+
+//var_dump($this->context);
+
+$layout_header = $layout_footer = null;
+
+if (!empty($this->params['page']))
+{
+    $page = $this->params['page'];
+
+    if ($page->is_partition && !empty($page->blocksLayout))
+        $layout = $page;
+    else
+        $layout = $page->parents()
+            ->joinWith('blocksLayout')
+            ->andWhere('is_partition = TRUE AND db_block.id_block IS NOT NULL')
+            ->orderBy('depth DESC')
+            ->one();
+
+    if (!empty($layout))
+    {
+        $layouts = $layout->getBlocksLayout()->indexBy('type')->all();
+
+        if (!empty($layouts['header']))
+            $layout_header = $layouts['header']->getBlockVars()->indexBy('alias')->all();
+
+        if (!empty($layouts['footer']))
+            $layout_footer = $layouts['footer']->getBlockVars()->indexBy('alias')->all();
+    }
+}
 ?>
 <?php $this->beginPage() ?>
 <!doctype html>
@@ -27,9 +56,7 @@ $accessabilityMode =  (isset($_COOKIE['accessabilityMode']) && $_COOKIE['accessa
     <title><?= Html::encode($this->title) ?></title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <meta content="telephone=no" name="format-detection">
-    <!-- This make sence for mobile browsers. It means, that content has been optimized for mobile browsers -->
     <meta name="HandheldFriendly" content="true">
     <link href="<?= $bundle->baseUrl . '/css/accessability.css' ?>" rel="stylesheet accessability" type="text/css" <?=$accessabilityMode?'':'disabled'?> title="accessability">
 
@@ -43,13 +70,11 @@ $accessabilityMode =  (isset($_COOKIE['accessabilityMode']) && $_COOKIE['accessa
         <script src="<?= $bundle->baseUrl . '/js/html5shiv-3.7.2.min.js' ?>" type="text/javascript"></script>
         <meta content="no" http-equiv="imagetoolbar">
     <![endif]-->
-
     <?php $this->head() ?>
 </head>
-
 <body>
 <?php $this->beginBody() ?>
-    <?= $this->render('_header', ['bundle' => $bundle])?>
+    <?= $this->render('_header', ['bundle' => $bundle,'header'=>$layout_header])?>
     <div class="page">
         <div class="svg-hidden">
             <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
@@ -73,9 +98,9 @@ $accessabilityMode =  (isset($_COOKIE['accessabilityMode']) && $_COOKIE['accessa
                 </filter>
             </svg>
         </div>
-        <?= Alert::widget() ?>
-        <?= $content ?>
-        <?= $this->render('_footer', ['bundle' => $bundle])?>
+        <?=Alert::widget()?>
+        <?=$content?>
+        <?=$this->render('_footer', ['bundle' => $bundle,'footer'=>$layout_footer])?>
     </div>
 <?php $this->endBody() ?>
 </body>

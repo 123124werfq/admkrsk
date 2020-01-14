@@ -3,21 +3,27 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\GridSetting;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\Menu;
 use common\models\Page;
 use backend\models\search\MenuSearch;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * MenuController implements the CRUD actions for Menu model.
  */
 class MenuController extends Controller
 {
+    const grid = 'menu-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -30,7 +36,7 @@ class MenuController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index','order'],
-                        'roles' => ['backend.menu.index'],
+                        'roles' => ['backend.menu.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Menu::class,
                         ],
@@ -38,7 +44,7 @@ class MenuController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.menu.view'],
+                        'roles' => ['backend.menu.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Menu::class,
@@ -47,7 +53,7 @@ class MenuController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.menu.create'],
+                        'roles' => ['backend.menu.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Menu::class,
                         ],
@@ -55,7 +61,7 @@ class MenuController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.menu.update'],
+                        'roles' => ['backend.menu.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Menu::class,
@@ -64,7 +70,7 @@ class MenuController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.menu.delete'],
+                        'roles' => ['backend.menu.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Menu::class,
@@ -73,7 +79,7 @@ class MenuController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.menu.log.index'],
+                        'roles' => ['backend.menu.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Menu::class,
@@ -82,7 +88,7 @@ class MenuController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.menu.log.view'],
+                        'roles' => ['backend.menu.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -96,7 +102,7 @@ class MenuController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.menu.log.restore'],
+                        'roles' => ['backend.menu.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -121,15 +127,25 @@ class MenuController extends Controller
     /**
      * Lists all Menu models.
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
         $searchModel = new MenuSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -138,10 +154,11 @@ class MenuController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
-        return $this->redirect(['menu-link/index','id'=>$id]);
+        return $this->redirect(['menu-link/index', 'id' => $id]);
 
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -159,7 +176,7 @@ class MenuController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_CREATE);
-            if ($model->type<>Menu::TYPE_LIST)
+            if ($model->type <> Menu::TYPE_LIST)
                 return $this->redirect(['menu-link/index', 'id' => $model->id_menu]);
             else
                 return $this->redirect(['index', 'id' => $model->id_menu]);
@@ -176,13 +193,13 @@ class MenuController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
-    public function actionUpdate($id=null,$id_page=null)
+    public function actionUpdate($id = null, $id_page = null)
     {
         if (!empty($id))
             $model = $this->findModel($id);
-        elseif (!empty($id_page))
-        {
+        elseif (!empty($id_page)) {
             $page = Page::findOne($id_page);
 
             if (empty($page))
@@ -190,11 +207,10 @@ class MenuController extends Controller
 
             if (!empty($page->menu))
                 $model = $page->menu;
-            else
-            {
+            else {
                 $model = new Menu();
-                $model->name = 'Меню раздела '.$page->id_page;
-                $model->alias = 'Menu_'.$page->id_page.'_'.time();
+                $model->name = 'Меню раздела ' . $page->id_page;
+                $model->alias = 'Menu_' . $page->id_page . '_' . time();
                 $model->type = Menu::TYPE_LIST;
                 $model->id_page = $id_page;
             }
@@ -206,7 +222,7 @@ class MenuController extends Controller
             if (!empty($model->id_page))
                 return $this->redirect(['page/view', 'id' => $model->id_page]);
 
-            if ($model->type<>Menu::TYPE_LIST)
+            if ($model->type <> Menu::TYPE_LIST)
                 return $this->redirect(['menu-link/index', 'id' => $model->id_menu]);
             else
                 return $this->redirect(['index', 'id' => $model->id_menu]);
@@ -224,7 +240,7 @@ class MenuController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -239,8 +255,9 @@ class MenuController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -259,6 +276,7 @@ class MenuController extends Controller
      * @param integer $id
      * @return Menu the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {
@@ -274,6 +292,6 @@ class MenuController extends Controller
         $ords = Yii::$app->request->post('ords');
 
         foreach ($ords as $key => $id)
-            Yii::$app->db->createCommand()->update('db_menu_link',['ord'=>$key],['id_link'=>$id])->execute();
+            Yii::$app->db->createCommand()->update('db_menu_link', ['ord' => $key], ['id_link' => $id])->execute();
     }
 }

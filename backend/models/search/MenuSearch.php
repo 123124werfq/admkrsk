@@ -4,6 +4,7 @@ namespace backend\models\search;
 
 use common\models\AuthEntity;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Menu;
@@ -39,6 +40,7 @@ class MenuSearch extends Menu
      * @param array $params
      *
      * @return ActiveDataProvider
+     * @throws InvalidConfigException
      */
     public function search($params)
     {
@@ -50,11 +52,14 @@ class MenuSearch extends Menu
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.menu')) {
-            $query->andWhere(['id_menu' => AuthEntity::getEntityIds(Menu::class)]);
+            $query->andFilterWhere(['id_menu' => AuthEntity::getEntityIds(Menu::class)]);
         }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => $params['pageSize'] ?? 10
+            ],
         ]);
 
         $this->load($params);

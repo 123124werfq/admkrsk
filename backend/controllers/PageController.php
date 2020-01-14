@@ -3,11 +3,16 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\GridSetting;
 use common\modules\log\models\Log;
+use moonland\phpexcel\Excel;
 use Yii;
 use common\models\Page;
 use common\models\Block;
 use backend\models\search\PageSearch;
+use yii\base\ExitException;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\validators\NumberValidator;
 use yii\web\Controller;
@@ -21,6 +26,8 @@ use yii\web\Response;
  */
 class PageController extends Controller
 {
+    const grid = 'page-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -33,7 +40,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['layout','template'],
-                        'roles' => ['backend.page.layout'],
+                        'roles' => ['backend.page.layout', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Page::class,
@@ -41,8 +48,8 @@ class PageController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'list', 'tree'],
-                        'roles' => ['backend.page.index'],
+                        'actions' => ['index', 'list', 'tree', 'partition'],
+                        'roles' => ['backend.page.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Page::class,
                         ],
@@ -50,7 +57,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.page.view'],
+                        'roles' => ['backend.page.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Page::class,
@@ -59,7 +66,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.page.create'],
+                        'roles' => ['backend.page.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Page::class,
                         ],
@@ -67,7 +74,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update','hide','order'],
-                        'roles' => ['backend.page.update'],
+                        'roles' => ['backend.page.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Page::class,
@@ -76,7 +83,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.page.delete'],
+                        'roles' => ['backend.page.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Page::class,
@@ -85,7 +92,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.page.log.index'],
+                        'roles' => ['backend.page.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Page::class,
@@ -94,7 +101,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.page.log.view'],
+                        'roles' => ['backend.page.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -108,7 +115,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.page.log.restore'],
+                        'roles' => ['backend.page.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -152,8 +159,9 @@ class PageController extends Controller
      * Search Page models.
      * @param string $q
      * @return mixed
+     * @throws InvalidConfigException
      */
-    public function actionList($q)
+    public function actionList($q,$partition=0)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -170,17 +178,19 @@ class PageController extends Controller
             $query->andWhere(['ilike', 'title', $q]);
         }
 
+        if (!empty($partition))
+            $query->andWhere(['is_partition' => true]);
+
         if (!empty($_GET['news']))
             $query->andWhere('id_page IN (SELECT id_page FROM db_news)');
 
         $results = [];
-        foreach ($query->limit(10)->all() as $page) {
 
+        foreach ($query->limit(10)->all() as $page)
             $results[] = [
                 'id' => $page->id_page,
                 'text' => $page->title,
             ];
-        }
 
         return ['results' => $results];
     }
@@ -217,13 +227,13 @@ class PageController extends Controller
 
         if ($block->load(Yii::$app->request->post()) && $block->validate())
         {
-            $block->ord = $page->getBlocks()->count()-1;
+            $block->ord = $page->getBlocksLayout()->count()-1;
 
             if ($block->save())
                 $this->refresh();
         }
 
-        return $this->render('template',[
+        return $this->render('layout',[
             'model'=>$page,
             'block'=>$block,
             'blocks'=>$blocks,
@@ -236,27 +246,57 @@ class PageController extends Controller
 
         $tree = [];
 
-        foreach ($pages as $key => $page) {
+        foreach ($pages as $key => $page)
+        {
             $tree[(int)$page->id_parent][$page->id_page] = $page;
         }
 
         return $this->render('tree',['tree'=>$tree]);
     }
+
+    public function actionPartition($id=null)
+    {
+        $parent = null;
+
+        if (!empty($id))
+        {
+            $parent = $this->findModel($id);
+            $partitions = $parent->children()->andWhere(['is_partition'=>1])->all();
+        }
+        else
+            $partitions = Page::find()->where(['is_partition'=>1])->all();
+
+        return $this->render('partition/partition',[
+            'partitions'=>$partitions,
+            'parent'=>$parent,
+        ]);
+    }
+
     /**
      * Lists all Page models.
      * @return mixed
+     * @throws ExitException
      */
     public function actionIndex($export=false)
     {
         $searchModel = new PageSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
+
         if ($export)
         {
             header('Content-Type: text/xlsx; charset=utf-8');
             header('Content-Disposition: attachment; filename=Выгрузка разделы.xlsx');
 
-            \moonland\phpexcel\Excel::widget([
+            Excel::widget([
                 'models' => $dataProvider->query->all(),
                 'mode' => 'export',
                 'columns' => [
@@ -289,6 +329,7 @@ class PageController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -305,6 +346,7 @@ class PageController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -338,18 +380,28 @@ class PageController extends Controller
     public function actionCreate($id_parent=null)
     {
         $model = new Page();
-        $model->id_parent = $id_parent;
+        $model->created_at = time();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save())
+        if (!empty($id_parent))
         {
-            $model->createAction(Action::ACTION_CREATE);
+            $model->id_parent = $id_parent;
+            $parent = $this->findModel($id_parent);
+            $model->populateRelation('parent',$parent);
+        }
 
-            if (!empty($model->id_parent) && !empty($model->parent->menu))
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            $parentPage = $this->findModel($model->id_parent);
+
+            if ($model->appendTo($parentPage))
             {
-                $model->parent->menu->addLink($model);
-            }
+                $model->createAction(Action::ACTION_CREATE);
 
-            return $this->redirect(['view', 'id' => ($id_parent)?$id_parent:$model->id_page]);
+                if (!empty($model->id_parent) && !empty($model->parent->menu))
+                    $model->parent->menu->addLink($model);
+
+                return $this->redirect(['view', 'id' => ($id_parent)?$id_parent:$model->id_page]);
+            }
         }
 
         return $this->render('create', [
@@ -363,13 +415,31 @@ class PageController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $model->id_parent = $old_parent = null;
+
+        if (!empty($model->parent->id_page))
+            $old_parent = $model->id_parent = $model->parent->id_page;
+
+        //print_r(array_keys($model->parents()->indexBy('id_page')->all()));
+
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             $model->createAction(Action::ACTION_UPDATE);
+
+            if ($old_parent != $model->id_parent)
+            {
+                $parentPage = Page::findOne($model->id_parent);
+
+                if (!empty($parentPage))
+                    $model->appendTo($parentPage);
+            }
+
             return $this->redirect(['view', 'id' => $model->id_page]);
         }
 
@@ -395,7 +465,7 @@ class PageController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -410,8 +480,9 @@ class PageController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -430,6 +501,7 @@ class PageController extends Controller
      * @param integer $id
      * @return Page the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

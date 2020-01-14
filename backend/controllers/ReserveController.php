@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\CollectionRecord;
+use common\models\GridSetting;
 use common\models\HrContest;
 use common\models\HrExpert;
 use common\models\HrProfile;
@@ -11,17 +12,9 @@ use common\models\HrReserve;
 use common\models\HrResult;
 use common\models\HrVote;
 use Yii;
-
 use yii\data\ActiveDataProvider;
-use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-
-use common\models\Service;
-use common\models\Form;
-use common\models\Action;
-use common\modules\log\models\Log;
 use backend\models\search\ProfileSearch;
 use backend\models\search\ContestSearch;
 use backend\models\search\ExpertSearch;
@@ -32,21 +25,34 @@ use common\models\CollectionColumn;
 
 class ReserveController extends Controller
 {
+    const gridProfile = 'profile-grid';
+    const gridContest = 'contest-grid';
+    const gridExperts = 'experts-grid';
+    const gridList = 'list-grid';
+    const gridArchive = 'archive-grid';
 
     public function actionIndex()
     {
         return $this->render('index');
     }
 
-
     public function actionProfile()
     {
         $searchModel = new ProfileSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $grid = GridSetting::findOne([
+            'class' => static::gridProfile,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
 
         return $this->render('profile', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -54,10 +60,19 @@ class ReserveController extends Controller
     {
         $searchModel = new ContestSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $grid = GridSetting::findOne([
+            'class' => static::gridContest,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
 
         return $this->render('contests', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -86,8 +101,7 @@ class ReserveController extends Controller
             $sql = "DELETE FROM hrl_contest_expert WHERE id_contest = {$model->id_contest}";
             Yii::$app->db->createCommand($sql)->execute();
 
-            foreach ($_POST['HrContest']['experts'] as $id_expert)
-            {
+            foreach ($_POST['HrContest']['experts'] as $id_expert) {
                 $sql = "INSERT INTO hrl_contest_expert (id_contest, id_expert) VALUES ({$model->id_contest}, {$id_expert})";
                 Yii::$app->db->createCommand($sql)->execute();
             }
@@ -95,8 +109,7 @@ class ReserveController extends Controller
             $sql = "DELETE FROM hrl_contest_profile WHERE id_contest = {$model->id_contest}";
             Yii::$app->db->createCommand($sql)->execute();
 
-            foreach ($_POST['HrContest']['profiles'] as $id_profile)
-            {
+            foreach ($_POST['HrContest']['profiles'] as $id_profile) {
                 $sql = "INSERT INTO hrl_contest_profile (id_contest, id_profile) VALUES ({$model->id_contest}, {$id_profile})";
                 Yii::$app->db->createCommand($sql)->execute();
             }
@@ -115,6 +128,14 @@ class ReserveController extends Controller
     {
         $searchModel = new ExpertSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $grid = GridSetting::findOne([
+            'class' => static::gridExperts,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
 
         $emodel = new HrExpert;
         $expertForm = new ExpertForm;
@@ -126,6 +147,7 @@ class ReserveController extends Controller
             'model' => $emodel,
             'expertForm' => $expertForm,
             'assign' => $assign,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -144,7 +166,7 @@ class ReserveController extends Controller
     {
         $expert = HrExpert::findOne((int)$_GET['id']);
 
-        if($expert)
+        if ($expert)
             $expert->delete();
 
         return $this->redirect('/reserve/experts');
@@ -156,11 +178,20 @@ class ReserveController extends Controller
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['contest_date'=>SORT_DESC]]
+            'sort' => ['defaultOrder' => ['contest_date' => SORT_DESC]]
         ]);
+        $grid = GridSetting::findOne([
+            'class' => static::gridList,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
 
         return $this->render('list', [
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -170,11 +201,20 @@ class ReserveController extends Controller
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['id_profile'=>SORT_DESC]]
+            'sort' => ['defaultOrder' => ['id_profile' => SORT_DESC]]
         ]);
+        $grid = GridSetting::findOne([
+            'class' => static::gridArchive,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
 
         return $this->render('archive', [
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -191,12 +231,13 @@ class ReserveController extends Controller
 
         $columns = CollectionColumn::find()->where(['id_collection' => $record->id_collection])->indexBy('id_column')->orderBy('ord')->all();
 
-        foreach ($insertedData as $rkey => $ritem)
-        {
-            $formFields[$columns[$rkey]->alias] = ['value' => empty($ritem)?"[не заполнено]":$ritem, 'name' => $columns[$rkey]->name, 'ord' => $columns[$rkey]->ord];
+        foreach ($insertedData as $rkey => $ritem) {
+            $formFields[$columns[$rkey]->alias] = ['value' => empty($ritem) ? "[не заполнено]" : $ritem, 'name' => $columns[$rkey]->name, 'ord' => $columns[$rkey]->ord];
         }
 
-        usort($formFields, function($a, $b){return ($a['ord']<$b["ord"])?-1:1;});
+        usort($formFields, function ($a, $b) {
+            return ($a['ord'] < $b["ord"]) ? -1 : 1;
+        });
 
         $attachments = $record->getAllMedias();
 
@@ -215,12 +256,12 @@ class ReserveController extends Controller
         if (empty($profile))
             throw new NotFoundHttpException('Ошибка чтения данных');
 
-        if($profile->isBusy())
+        if ($profile->isBusy())
             return $this->redirect('/reserve/profile');
 
-        if($profile->state == HrProfile::STATE_ACTIVE)
+        if ($profile->state == HrProfile::STATE_ACTIVE)
             $profile->state = HrProfile::STATE_BANNED;
-        else if($profile->state == HrProfile::STATE_BANNED)
+        else if ($profile->state == HrProfile::STATE_BANNED)
             $profile->state = HrProfile::STATE_ACTIVE;
 
         $profile->updateAttributes(['state']);
@@ -248,7 +289,7 @@ class ReserveController extends Controller
         if (empty($profile))
             throw new NotFoundHttpException('Ошибка чтения данных');
 
-        return $this->redirect('/collection-record/update?id='.$profile->id_record);
+        return $this->redirect('/collection-record/update?id=' . $profile->id_record);
     }
 
     public function actionStop($id)
@@ -259,7 +300,7 @@ class ReserveController extends Controller
             throw new NotFoundHttpException('Ошибка чтения данных');
 
         $contest->state = HrContest::STATE_CLOSED;
-        $contest->end = time()-60;
+        $contest->end = time() - 60;
 
         $contest->updateAttributes(['state', 'end']);
 
@@ -271,32 +312,28 @@ class ReserveController extends Controller
     {
         $votes = [];
 
-        if(!$id)
+        if (!$id)
             $contest = HrContest::active();
         else
             $contest = HrContest::findOne($id);
 
-        if($contest)
+        if ($contest)
             $votes = HrVote::find()->where(['id_contest' => $contest->id_contest])->all();
 
-        if(!empty($_POST['results']))
-        {
+        if (!empty($_POST['results'])) {
 //            print_r($_POST); die();
-            foreach ($_POST['results'] as $id_profile => $resultVotes)
-            {
+            foreach ($_POST['results'] as $id_profile => $resultVotes) {
                 $profileItem = HrProfile::findOne($id_profile);
                 $profileItem->reserve_date = null;
                 $profileItem->state = HrProfile::STATE_ACTIVE;
                 $profileItem->updateAttributes(['reserve_date', 'state']);
 
-                foreach ($resultVotes as $idProfilePosition => $result)
-                {
+                foreach ($resultVotes as $idProfilePosition => $result) {
                     $profilePosition = HrProfilePositions::findOne($idProfilePosition);
 
                     $posResult = HrResult::find()->where(['id_profile' => $id_profile, 'id_contest' => $contest->id_contest, 'id_record' => $profilePosition->id_record_position])->one();
 
-                    if(!$posResult)
-                    {
+                    if (!$posResult) {
                         $posResult = new HrResult;
                         $posResult->id_profile = $id_profile;
                         $posResult->id_contest = $contest->id_contest;
@@ -308,12 +345,10 @@ class ReserveController extends Controller
                     $posResult->updateAttributes(['result']);
 
                     // включаем в резерв
-                    if($result == 1)
-                    {
+                    if ($result == 1) {
                         $reserveItem = HrReserve::find()->where(['id_profile' => $id_profile, 'id_result' => $posResult->id_result])->one();
 
-                        if(!$reserveItem)
-                        {
+                        if (!$reserveItem) {
                             $reserveItem = new HrReserve;
                             $reserveItem->id_profile = $id_profile;
                             $reserveItem->id_result = $posResult->id_result;
@@ -347,7 +382,7 @@ class ReserveController extends Controller
     {
         $reserveItem = HrReserve::findOne($id);
 
-        if($reserveItem)
+        if ($reserveItem)
             $reserveItem->delete();
 
         return $this->redirect('/reserve/list');
@@ -358,15 +393,15 @@ class ReserveController extends Controller
         $votes = [];
         $contest = HrContest::findOne($id);
 
-        if($contest)
+        if ($contest)
             $votes = HrVote::find()->where(['id_contest' => $contest->id_contest])->all();
         else
             Yii::$app->end();
 
         header('Content-type: application/excel');
-        header('Content-Disposition: attachment; filename=Итоги голосования '.date('d-m-Y H:i', $contest->begin).' - '. date('d-m-Y H:i', $contest->end) .'.xls');
+        header('Content-Disposition: attachment; filename=Итоги голосования ' . date('d-m-Y H:i', $contest->begin) . ' - ' . date('d-m-Y H:i', $contest->end) . '.xls');
 
-        $body =  $this->renderPartial('dynamic_excel', [
+        $body = $this->renderPartial('dynamic_excel', [
             'data' => $contest,
             'votes' => $votes
         ]);

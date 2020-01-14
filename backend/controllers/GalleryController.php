@@ -3,20 +3,26 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\GridSetting;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\Gallery;
 use backend\models\search\GallerySearch;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * GalleryController implements the CRUD actions for Gallery model.
  */
 class GalleryController extends Controller
 {
+    const grid = 'gallery-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -29,7 +35,7 @@ class GalleryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index','get-gallery'],
-                        'roles' => ['backend.gallery.index'],
+                        'roles' => ['backend.gallery.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Gallery::class,
                         ],
@@ -37,7 +43,7 @@ class GalleryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.gallery.view'],
+                        'roles' => ['backend.gallery.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Gallery::class,
@@ -46,7 +52,7 @@ class GalleryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.gallery.create'],
+                        'roles' => ['backend.gallery.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Gallery::class,
                         ],
@@ -54,7 +60,7 @@ class GalleryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.gallery.update'],
+                        'roles' => ['backend.gallery.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Gallery::class,
@@ -63,7 +69,7 @@ class GalleryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.gallery.delete'],
+                        'roles' => ['backend.gallery.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Gallery::class,
@@ -72,7 +78,7 @@ class GalleryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.gallery.log.index'],
+                        'roles' => ['backend.gallery.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Gallery::class,
@@ -81,7 +87,7 @@ class GalleryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.gallery.log.view'],
+                        'roles' => ['backend.gallery.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -95,7 +101,7 @@ class GalleryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.gallery.log.restore'],
+                        'roles' => ['backend.gallery.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -120,15 +126,25 @@ class GalleryController extends Controller
     /**
      * Lists all Gallery models.
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
         $searchModel = new GallerySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -149,6 +165,7 @@ class GalleryController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -182,6 +199,7 @@ class GalleryController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -204,7 +222,7 @@ class GalleryController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -219,8 +237,9 @@ class GalleryController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -239,6 +258,7 @@ class GalleryController extends Controller
      * @param integer $id
      * @return Gallery the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

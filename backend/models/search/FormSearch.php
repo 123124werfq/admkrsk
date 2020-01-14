@@ -3,7 +3,9 @@
 namespace backend\models\search;
 
 use common\models\AuthEntity;
+use common\traits\ActiveRangeValidateTrait;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Form;
@@ -13,14 +15,17 @@ use common\models\Form;
  */
 class FormSearch extends Form
 {
+    use ActiveRangeValidateTrait;
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id_form', 'id_collection', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['id_form','id_collection', 'created_by', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['name'], 'safe'],
+            [['created_at', 'updated_at'], 'string'],
         ];
     }
 
@@ -39,6 +44,7 @@ class FormSearch extends Form
      * @param array $params
      *
      * @return ActiveDataProvider
+     * @throws InvalidConfigException
      */
     public function search($params)
     {
@@ -48,18 +54,23 @@ class FormSearch extends Form
             $query = Form::find();
 
         if (Yii::$app->request->get('is_template'))
-            $query->where(['is_template'=>1]);
+            $query->where(['is_template' => 1]);
         else
-            $query->where(['is_template'=>0]);
+            $query->where(['is_template' => 0]);
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.form')) {
-            $query->andWhere(['id_form' => AuthEntity::getEntityIds(Form::class)]);
+            $query->andFilterWhere(['id_form' => AuthEntity::getEntityIds(Form::class)]);
         }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['id_form'=>SORT_DESC]]
+            'sort' => [
+                'defaultOrder' => ['id_form' => SORT_DESC]
+            ],
+            'pagination' => [
+                'pageSize' => $params['pageSize'] ?? 10
+            ],
         ]);
 
         $this->load($params);
@@ -70,13 +81,14 @@ class FormSearch extends Form
             return $dataProvider;
         }
 
+        $this->handleDateRange($this->created_at, $query, 'created_at');
+        $this->handleDateRange($this->updated_at, $query, 'updated_at');
+
         // grid filtering conditions
         $query->andFilterWhere([
             'id_form' => $this->id_form,
             'id_collection' => $this->id_collection,
-            'created_at' => $this->created_at,
             'created_by' => $this->created_by,
-            'updated_at' => $this->updated_at,
             'updated_by' => $this->updated_by,
             'deleted_at' => $this->deleted_at,
             'deleted_by' => $this->deleted_by,

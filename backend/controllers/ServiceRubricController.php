@@ -7,11 +7,13 @@ use common\models\AuthEntity;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\ServiceRubric;
-use yii\data\ActiveDataProvider;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * ServiceRubricController implements the CRUD actions for ServiceRubric model.
@@ -30,7 +32,7 @@ class ServiceRubricController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.serviceRubric.index'],
+                        'roles' => ['backend.serviceRubric.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => ServiceRubric::class,
                         ],
@@ -38,7 +40,7 @@ class ServiceRubricController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.serviceRubric.view'],
+                        'roles' => ['backend.serviceRubric.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ServiceRubric::class,
@@ -47,7 +49,7 @@ class ServiceRubricController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.serviceRubric.create'],
+                        'roles' => ['backend.serviceRubric.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => ServiceRubric::class,
                         ],
@@ -55,7 +57,7 @@ class ServiceRubricController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.serviceRubric.update'],
+                        'roles' => ['backend.serviceRubric.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ServiceRubric::class,
@@ -64,7 +66,7 @@ class ServiceRubricController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.serviceRubric.delete'],
+                        'roles' => ['backend.serviceRubric.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ServiceRubric::class,
@@ -73,7 +75,7 @@ class ServiceRubricController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.serviceRubric.log.index'],
+                        'roles' => ['backend.serviceRubric.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ServiceRubric::class,
@@ -82,7 +84,7 @@ class ServiceRubricController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.serviceRubric.log.view'],
+                        'roles' => ['backend.serviceRubric.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -96,7 +98,7 @@ class ServiceRubricController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.serviceRubric.log.restore'],
+                        'roles' => ['backend.serviceRubric.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -121,6 +123,7 @@ class ServiceRubricController extends Controller
     /**
      * Lists all ServiceRubric models.
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
@@ -132,8 +135,8 @@ class ServiceRubricController extends Controller
 
         $recordsQuery = $query->where('id_parent IS NULL');
 
-        if (!Yii::$app->user->can('admin.opendata')) {
-            $recordsQuery->andWhere(['id_rub' => AuthEntity::getEntityIds(ServiceRubric::class)]);
+        if (!Yii::$app->user->can('admin.serviceRubric')) {
+            $recordsQuery->andFilterWhere(['id_rub' => AuthEntity::getEntityIds(ServiceRubric::class)]);
         }
 
         return $this->render('index', [
@@ -146,6 +149,7 @@ class ServiceRubricController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -179,6 +183,7 @@ class ServiceRubricController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -205,7 +210,7 @@ class ServiceRubricController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -220,8 +225,9 @@ class ServiceRubricController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -240,6 +246,7 @@ class ServiceRubricController extends Controller
      * @param integer $id
      * @return ServiceRubric the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

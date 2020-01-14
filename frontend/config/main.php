@@ -78,6 +78,7 @@ return [
                 'class' => 'yii\web\UrlNormalizer',
             ],
             'rules' => [
+                'site/flush' => 'site/flush',
                 [
                     'class' => 'yii\web\GroupUrlRule',
                     'prefix' => 'api',
@@ -89,6 +90,9 @@ return [
                         ['verb' => ['GET', 'OPTIONS'], 'pattern' => 'news', 'route' => 'news/index'],
                         ['verb' => ['GET', 'OPTIONS'], 'pattern' => 'news/<id:\d+>', 'route' => 'news/view'],
                     ],
+                ],
+                [
+                    'class' => 'frontend\components\LangUrlRule',
                 ],
                 'search/address'=>'search/address',
                 'collection'=>'collection/view',
@@ -104,17 +108,13 @@ return [
                 'address/house'=>'address/house',
                 'book/available' => 'book/available',
                 'book/intervals' => 'book/intervals',
-                [
-                    'class' => 'frontend\components\LangUrlRule',
-                ],
-                [
+                /*[
                     'class' => 'frontend\components\PravoUrlRule',
-                ],
-                [
+                ],*/
+                /*[
                     'class' => 'frontend\components\NewyearUrlRule',
-                ],
-                '/' => 'site/page',
-                'site/flush' => 'site/flush',
+                ],*/
+                //'/' => 'site/page',
                 'service/search'=>'service/search',
                 '/press/events' => 'event/index',
                 'event/program' => 'event/program',

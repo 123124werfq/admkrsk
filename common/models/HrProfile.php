@@ -64,7 +64,7 @@ class HrProfile extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_profile' => 'Id Profile',
+            'id_profile' => 'ID профиля',
             'id_user' => 'Id User',
             'id_record' => 'Id Record',
             'state' => 'State',

@@ -3,7 +3,9 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\GridSetting;
 use common\modules\log\models\Log;
+use Exception;
 use Yii;
 use common\models\Form;
 use common\models\FormRow;
@@ -11,19 +13,22 @@ use common\models\FormElement;
 use common\models\FormInput;
 use common\models\Collection;
 use common\models\CollectionColumn;
-
-
 use backend\models\search\FormSearch;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * FormController implements the CRUD actions for Form model.
  */
 class FormController extends Controller
 {
+    const grid = 'form-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -41,7 +46,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.form.index'],
+                        'roles' => ['backend.form.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Form::class,
                         ],
@@ -49,7 +54,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.form.view'],
+                        'roles' => ['backend.form.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Form::class,
@@ -58,7 +63,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create','create-service','copy','make-doc'],
-                        'roles' => ['backend.form.create'],
+                        'roles' => ['backend.form.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Form::class,
                         ],
@@ -66,7 +71,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create-row'],
-                        'roles' => ['backend.form.createRow'],
+                        'roles' => ['backend.form.createRow', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id_form'),
                             'class' => Form::class,
@@ -75,7 +80,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update-row', 'undelete', 'delete-row'],
-                        'roles' => ['backend.form.updateRow'],
+                        'roles' => ['backend.form.updateRow', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id_form'),
                             'class' => Form::class,
@@ -84,7 +89,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update','order','assign-form'],
-                        'roles' => ['backend.form.update'],
+                        'roles' => ['backend.form.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Form::class,
@@ -103,7 +108,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete'],
-                        'roles' => ['backend.form.delete'],
+                        'roles' => ['backend.form.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Form::class,
@@ -112,7 +117,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.form.log.index'],
+                        'roles' => ['backend.form.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Form::class,
@@ -121,7 +126,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.form.log.view'],
+                        'roles' => ['backend.form.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -135,7 +140,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.form.log.restore'],
+                        'roles' => ['backend.form.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -160,15 +165,25 @@ class FormController extends Controller
     /**
      * Lists all Form models.
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
         $searchModel = new FormSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -177,6 +192,7 @@ class FormController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -275,6 +291,12 @@ class FormController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @return Response
+     * @throws InvalidConfigException
+     * @throws NotFoundHttpException
+     */
     public function actionCopy($id)
     {
         $form = $this->findModel($id);
@@ -381,13 +403,21 @@ class FormController extends Controller
                 return $this->redirect(['view', 'id'=>$copyForm->id_form]);
             }
         }
-        catch (\Exception $e)
+        catch (Exception $e)
         {
             $transaction->rollBack();
             throw $e;
         }
     }
 
+    /**
+     * @param $id_form
+     * @param $id_row
+     * @param $parentForm
+     * @param string $prefix
+     * @param null $element
+     * @throws Exception
+     */
     protected function assignForm($id_form, $id_row, $parentForm, $prefix='', $element=null)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -481,13 +511,18 @@ class FormController extends Controller
 
             $transaction->commit();
         }
-        catch (\Exception $e)
+        catch (Exception $e)
         {
             $transaction->rollBack();
             throw $e;
         }
     }
 
+    /**
+     * @param $id_row
+     * @return string
+     * @throws InvalidConfigException
+     */
     public function actionAssignForm($id_row)
     {
         $insertRow = FormRow::findOne($id_row);
@@ -521,7 +556,12 @@ class FormController extends Controller
         ]);
     }
 
-
+    /**
+     * @param $id_form
+     * @return string|Response
+     * @throws InvalidConfigException
+     * @throws NotFoundHttpException
+     */
     public function actionCreateRow($id_form)
     {
         $form = $this->findModel($id_form);
@@ -580,8 +620,9 @@ class FormController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -600,6 +641,7 @@ class FormController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -642,7 +684,7 @@ class FormController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -669,6 +711,7 @@ class FormController extends Controller
      * @param integer $id
      * @return Form the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

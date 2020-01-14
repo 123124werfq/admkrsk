@@ -3,20 +3,26 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\GridSetting;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\FormInputType;
 use backend\models\search\FormInputTypeSearch;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * FormInputTypeController implements the CRUD actions for FormInputType model.
  */
 class FormInputTypeController extends Controller
 {
+    const grid = 'form-input-type-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -29,7 +35,7 @@ class FormInputTypeController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.formInputType.index'],
+                        'roles' => ['backend.formInputType.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => FormInputType::class,
                         ],
@@ -37,7 +43,7 @@ class FormInputTypeController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.formInputType.view'],
+                        'roles' => ['backend.formInputType.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => FormInputType::class,
@@ -46,7 +52,7 @@ class FormInputTypeController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.formInputType.create'],
+                        'roles' => ['backend.formInputType.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => FormInputType::class,
                         ],
@@ -54,7 +60,7 @@ class FormInputTypeController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.formInputType.update'],
+                        'roles' => ['backend.formInputType.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => FormInputType::class,
@@ -63,7 +69,7 @@ class FormInputTypeController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.formInputType.delete'],
+                        'roles' => ['backend.formInputType.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => FormInputType::class,
@@ -72,7 +78,7 @@ class FormInputTypeController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.formInputType.log.index'],
+                        'roles' => ['backend.formInputType.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => FormInputType::class,
@@ -81,7 +87,7 @@ class FormInputTypeController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.formInputType.log.view'],
+                        'roles' => ['backend.formInputType.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -95,7 +101,7 @@ class FormInputTypeController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.formInputType.log.restore'],
+                        'roles' => ['backend.formInputType.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -126,9 +132,19 @@ class FormInputTypeController extends Controller
         $searchModel = new FormInputTypeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -137,6 +153,7 @@ class FormInputTypeController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -170,6 +187,7 @@ class FormInputTypeController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -192,7 +210,7 @@ class FormInputTypeController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -207,8 +225,9 @@ class FormInputTypeController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -227,6 +246,7 @@ class FormInputTypeController extends Controller
      * @param integer $id
      * @return FormInputType the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

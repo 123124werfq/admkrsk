@@ -4,20 +4,26 @@ namespace backend\controllers;
 
 use common\models\Action;
 use common\models\AuthEntity;
+use common\models\GridSetting;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\ControllerPage;
+use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * ControllerPageController implements the CRUD actions for ControllerPage model.
  */
 class ControllerPageController extends Controller
 {
+    const grid = 'controller-page-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -30,7 +36,7 @@ class ControllerPageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.controllerPage.index'],
+                        'roles' => ['backend.controllerPage.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => ControllerPage::class,
                         ],
@@ -38,7 +44,7 @@ class ControllerPageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.controllerPage.view'],
+                        'roles' => ['backend.controllerPage.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ControllerPage::class,
@@ -47,7 +53,7 @@ class ControllerPageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.controllerPage.create'],
+                        'roles' => ['backend.controllerPage.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => ControllerPage::class,
                         ],
@@ -55,7 +61,7 @@ class ControllerPageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.controllerPage.update'],
+                        'roles' => ['backend.controllerPage.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ControllerPage::class,
@@ -64,7 +70,7 @@ class ControllerPageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.controllerPage.delete'],
+                        'roles' => ['backend.controllerPage.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ControllerPage::class,
@@ -73,7 +79,7 @@ class ControllerPageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.controllerPage.log.index'],
+                        'roles' => ['backend.controllerPage.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => ControllerPage::class,
@@ -82,7 +88,7 @@ class ControllerPageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.controllerPage.log.view'],
+                        'roles' => ['backend.controllerPage.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -96,7 +102,7 @@ class ControllerPageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.controllerPage.log.restore'],
+                        'roles' => ['backend.controllerPage.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -121,6 +127,7 @@ class ControllerPageController extends Controller
     /**
      * Lists all ControllerPage models.
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
@@ -131,15 +138,28 @@ class ControllerPageController extends Controller
         }
 
         if (!Yii::$app->user->can('admin.controllerPage')) {
-            $query->andWhere(['id' => AuthEntity::getEntityIds(ControllerPage::class)]);
+            $query->andFilterWhere(['id' => AuthEntity::getEntityIds(ControllerPage::class)]);
+        }
+
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
         }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => $params['pageSize'] ?? 10
+            ],
         ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -148,6 +168,7 @@ class ControllerPageController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -181,6 +202,7 @@ class ControllerPageController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -206,7 +228,7 @@ class ControllerPageController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -221,8 +243,9 @@ class ControllerPageController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -241,6 +264,7 @@ class ControllerPageController extends Controller
      * @param integer $id
      * @return ControllerPage the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

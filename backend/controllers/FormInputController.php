@@ -8,6 +8,8 @@ use common\models\FormElement;
 use common\models\FormRow;
 use common\models\CollectionColumn;
 use yii\data\ActiveDataProvider;
+use yii\db\Exception;
+use yii\db\StaleObjectException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -71,10 +73,12 @@ class FormInputController extends Controller
             return $this->renderAjax('_input',['values'=>$values]);
         }
     }
+
     /**
      * Creates a new FormInput model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
+     * @throws Exception
      */
     public function actionCreate($id_row)
     {
@@ -162,7 +166,7 @@ class FormInputController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $element->validate())
         {
-            if (!empty($_POST['submit']) && $model->save() && $element->save())
+            if (!empty(Yii::$app->request->post('submit')) && $model->save() && $element->save())
             {
                 if ($model->column->type != $model->type)
                 {
@@ -197,6 +201,8 @@ class FormInputController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {

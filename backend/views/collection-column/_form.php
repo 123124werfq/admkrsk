@@ -8,18 +8,36 @@ use common\models\CollectionColumn;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="collection-column-form">
+<div class="ibox">
+    <div class="ibox-content">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'name')->textInput(['disabled' => true]) ?>
+    <?= $form->field($model, 'name')->textInput(['disabled' => !$model->isCustom()]) ?>
 
     <?= $form->field($model, 'type')->dropDownList(CollectionColumn::getTypeLabel(),['class'=>'form-control column-type','disabled' => true])
     ?>
 
-    <?= $form->field($model, 'alias')->textInput(['disabled' => true]) ?>
+    <?= $form->field($model, 'alias')->textInput(['disabled' => !$model->isCustom()]) ?>
 
-    <?php
+<?php if ($model->isCustom()){?>
+	<?= $form->field($model, 'keep_relation')->checkBox()->hint('В случае измеенния даных в записи источнике, колонка будет переформирована')?>
+
+	<div class="row">
+		<div class="col-md-6">
+			<?= $form->field($model, 'template')->textArea(['rows'=>10])->hint('Поддерживается синтаксис шаблонизаторв TWIG')?>
+		</div>
+		<div class="col-md-6">
+		<table class="table">
+	        <?php foreach ($model->collection->columns as $key => $column) {
+	            echo '<tr><th width="100">' . ($column->alias ? $column->alias : 'column_' . $column->id_column) . '</th><td>' . $column->name . '</td></tr>';
+	        } ?>
+	    </table>
+	    </div>
+	</div>
+<?php }?>
+
+	<?php
     $data = $model->getOptionsData();
 
 	echo '<div class="row-flex">';
@@ -40,5 +58,5 @@ use common\models\CollectionColumn;
     <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
 
     <?php ActiveForm::end(); ?>
-
+    </div>
 </div>

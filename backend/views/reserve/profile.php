@@ -1,124 +1,130 @@
 <?php
 
+use backend\assets\GridAsset;
+use backend\controllers\ReserveController;
+use common\models\GridSetting;
+use common\models\HrProfile;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-/* @var $searchModel backend\models\search\ServiceSearch */
+/* @var $searchModel \backend\models\search\ProfileSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-
-//$archive = Yii::$app->request->get('archive');
-
-
+/* @var $customColumns array */
 
 $this->title = 'Анкеты кандидатов в кадровый резерв';
 $this->params['breadcrumbs'][] = $this->title;
+GridAsset::register($this);
 
-/*
-if (Yii::$app->user->can('admin.service')) {
-    if ($archive)
-        $this->params['action-block'][] = Html::a('Все записи', ['index'], ['class' => 'btn btn-default']);
-    else
-        $this->params['action-block'][] = Html::a('Архив', ['index', 'archive' => 1], ['class' => 'btn btn-default']);
+$defaultColumns = [
+    'id_profile' => 'id_profile:integer:ID',
+    'usr:prop' => [
+        'label' => 'Пользователь',
+        'format' => 'html',
+        'value' => function ($model) {
+            $username = $model->recordData['surname'] . " " . $model->recordData['name'] . " " . $model->recordData['parental_name'];
+            return "<a href='/user/view?id={$model->id_user}'>$username</a>";
+        },
+    ],
+    'date_create:prop' => [
+        'label' => 'Дата создания',
+        'format' => 'html',
+        'value' => function ($model) {
+            return date("d-m-Y H:i", $model->created_at);
+        },
+    ],
+    'actual_date:prop' => [
+        'label' => 'Дата актуальности',
+        'format' => 'html',
+        'value' => function ($model) {
+            $badge = ($model->updated_at == $model->created_at) ? "<span class='badge badge-danger'>Новая</span>" : "";
+            return $badge . date("d-m-Y H:i", $model->updated_at ? $model->updated_at : $model->created_at);
+        },
+    ],
+    'status:prop' => [
+        'label' => 'Статус',
+        'format' => 'html',
+        'value' => function ($model) {
+            return $model->getStatename(true);
+        },
+    ],
+    'target:prop' => [
+        'label' => 'Целевые должности',
+        'format' => 'html',
+        'value' => function ($model) {
+            $rps = [];
+            foreach ($model->reserved as $rp) {
+                $rps[] = $rp->id_record_position;
+            }
+            $output = [];
+            foreach ($model->positions as $pos) {
+                if (in_array($pos->id_record_position, $rps)) {
+                    $output[] = "<strike>" . $pos->positionName . "</strike>";
+                } else {
+                    $output[] = $pos->positionName;
+                }
+            }
+            sort($output);
+            return implode("<br>", $output);
+        },
+    ],
+    'date-in-reserve:prop' => [
+        'label' => 'Дата включения в кадровый резерв',
+        'value' => function ($model) {
+            return $model->reserve_date ? date("d-m-Y H:i", $model->reserve_date) : "не включен";
+        },
+    ],
+];
 
-    $this->params['button-block'][] = Html::a('Добавить', ['create'], ['class' => 'btn btn-success']);
-}
-*/
+list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
+    $defaultColumns,
+    $customColumns,
+    HrProfile::class
+);
+
 ?>
+
+<div id="accordion">
+    <h3 id="grid-setting">Настройки таблицы</h3>
+    <div id="sortable">
+        <?php foreach ($visibleColumns as $name => $isVisible): ?>
+            <div class="ui-state-default">
+                <input type="checkbox" <?= $isVisible ? 'checked' : null ?> />
+                <span><?= $name ?></span></div>
+        <?php endforeach; ?>
+        <div class="ibox">
+            <div style="
+            padding-top: 5px;
+            padding-left: 10px;">
+                <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary', 'id' => 'sb']) ?>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="service-index">
 
+    <div class="ibox">
+        <a style="color: white" href="<?= Url::to(['', 'pageSize' => 10]) ?>"><button class="btn btn-primary">10</button></a>
+        <a style="color: white" href="<?= Url::to(['', 'pageSize' => 20]) ?>"><button class="btn btn-primary">20</button></a>
+        <a style="color: white" href="<?= Url::to(['', 'pageSize' => 40]) ?>"><button class="btn btn-primary">40</button></a>
+    </div>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        //'filterModel' => $searchModel,
-        'rowOptions' => function($model){
-            if($model->isBusy()){
+//        'filterModel' => $searchModel,
+        'rowOptions' => function ($model) {
+            if ($model->isBusy()) {
                 return ['class' => 'warning'];
             }
         },
-        'columns' => [
-            'id_profile:integer:ID',
-            [
-                'label'=> 'Пользователь',
-                'format' => 'html',
-                'value' => function($model){
-
-                    $username = $model->recordData['surname'] . " " . $model->recordData['name'] . " " . $model->recordData['parental_name'];
-
-                    return "<a href='/user/view?id={$model->id_user}'>$username</a>";
-
-                },
-            ],
-            [
-                'label'=> 'Дата создания',
-                'format' => 'html',
-                'value' => function($model){
-
-                    return date("d-m-Y H:i", $model->created_at);
-                },
-            ],
-            [
-                'label'=> 'Дата актуальности',
-                'format' => 'html',
-                'value' => function($model){
-                        $badge = ($model->updated_at == $model->created_at)?"<span class='badge badge-danger'>Новая</span>":"";
-
-                        return $badge. date("d-m-Y H:i", $model->updated_at?$model->updated_at:$model->created_at);
-                },
-            ],
-            [
-                'label'=> 'Статус',
-                'format' => 'html',
-                'value' => function($model){
-                    return $model->getStatename(true);
-                },
-            ],
-            [
-                'label'=> 'Целевые должности',
-                'format' => 'html',
-                'value' => function($model){
-
-                    $rps = [];
-                    foreach ($model->reserved as $rp)
-                        $rps[] = $rp->id_record_position;
-
-                    $output = [];
-
-                    foreach ($model->positions as $pos)
-                    {
-                        if(in_array($pos->id_record_position,$rps))
-                            $output[] = "<strike>".$pos->positionName."</strike>";
-                        else
-                            $output[] = $pos->positionName;
-                    }
-
-                    sort($output);
-
-                    return implode("<br>", $output);
-
-                },
-            ],
-            [
-                'label'=> 'Дата включения в кадровый резерв',
-                'value' => function($model){
-                    return $model->reserve_date?date("d-m-Y H:i", $model->reserve_date):"не включен";
-                },
-            ],
-            /*
-            'old:boolean:Устарела',
-            [
-                'attribute'=>'online',
-                'label'=>"Форма",
-                'value' => function($model){
-                    return ($model->online)?'Онлайн':'Оффлайн';
-                },
-            ],
-            */
+        'columns' => array_merge(array_values($gridColumns), [
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view} {editable} {ban} {archive} ',
                 'buttons' => [
-                    'archive' => function($url, $model, $key) {
+                    'archive' => function ($url, $model, $key) {
                         $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-floppy-disk"]);
                         return Html::a($icon, $url, [
                             'disabled' => true,
@@ -127,7 +133,7 @@ if (Yii::$app->user->can('admin.service')) {
                             'data-pjax' => '0',
                         ]);
                     },
-                    'editable' => function($url, $model, $key) {
+                    'editable' => function ($url, $model, $key) {
                         $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-pencil"]);
                         return Html::a($icon, $url, [
                             'target' => '_blank',
@@ -136,7 +142,7 @@ if (Yii::$app->user->can('admin.service')) {
                             'data-pjax' => '0',
                         ]);
                     },
-                    'ban' => function($url, $model, $key) {
+                    'ban' => function ($url, $model, $key) {
                         $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-ban-circle"]);
                         return Html::a($icon, $url, [
                             'title' => 'Заблокировать',
@@ -145,12 +151,14 @@ if (Yii::$app->user->can('admin.service')) {
                         ]);
                     },
                 ],
-                'contentOptions'=>['class'=>'button-column']
+                'contentOptions' => ['class' => 'button-column']
             ]
-        ],
-        'tableOptions'=>[
+        ]),
+        'tableOptions' => [
             'emptyCell' => '',
-            'class' => 'table table-striped ids-style valign-middle table-hover'
+            'class' => 'table table-striped ids-style valign-middle table-hover',
+            'data-grid' => ReserveController::gridProfile,
+            'id' => 'grid',
         ]
     ]); ?>
 

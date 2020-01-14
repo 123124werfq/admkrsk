@@ -11,6 +11,7 @@ use common\models\Question;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+$this->params['page'] = $page;
 ?>
 <div class="main">
     <div class="container">
@@ -257,8 +258,8 @@ use yii\widgets\ActiveForm;
         <hr class="hr__md">
 
         <p class="text-help">
-            Дата публикации (изменения): <?= date('d.m.Y', $poll->created_at) ?> (<?= date('d.m.Y',
-                $poll->updated_at) ?>)<br>
+            Дата публикации (изменения): <span class="publish-date"><?= date('d.m.Y', $poll->created_at) ?></span> (<span class="update-date"><?= date('d.m.Y',
+                    $poll->updated_at) ?></span>)<br>
             Просмотров за год (всего): <?= $poll->viewsYear ?> (<?= $poll->views ?>)
         </p>
 

@@ -2,17 +2,22 @@
 
 namespace backend\controllers;
 
+use backend\models\forms\CollectionConvertForm;
 use common\models\Action;
 use common\modules\log\models\Log;
+use moonland\phpexcel\Excel;
 use Yii;
 use common\models\Collection;
 use common\models\CollectionRecord;
 use common\models\CollectionColumn;
-use common\models\Form;
 use backend\models\search\CollectionSearch;
-use backend\models\CollectionImportForm;
+use backend\models\forms\CollectionImportForm;
 use backend\models\forms\CollectionCombineForm;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\helpers\ArrayHelper;
+use yii\mongodb\Exception;
+use yii\db\Exception as DbException;
 use yii\validators\NumberValidator;
 use yii\web\Response;
 use yii\web\UploadedFile;
@@ -26,6 +31,13 @@ use yii\filters\VerbFilter;
  */
 class CollectionController extends Controller
 {
+    public function beforeAction($action)
+    {
+        $this->enableCsrfValidation = false;
+
+        return parent::beforeAction($action);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -48,15 +60,15 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['import'],
-                        'roles' => ['backend.collection.import'],
+                        'roles' => ['backend.collection.import', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Collection::class,
                         ],
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index','redactor'],
-                        'roles' => ['backend.collection.index'],
+                        'actions' => ['index', 'redactor', 'partition'],
+                        'roles' => ['backend.collection.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Collection::class,
                         ],
@@ -64,7 +76,7 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['get-collections'],
-                        'roles' => ['backend.collection.index'],
+                        'roles' => ['backend.collection.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Collection::class,
                         ],
@@ -72,7 +84,7 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.collection.view'],
+                        'roles' => ['backend.collection.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Collection::class,
@@ -80,8 +92,8 @@ class CollectionController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['create','record', 'create-view','copy','assign','record-list'],
-                        'roles' => ['backend.collection.create'],
+                        'actions' => ['create', 'record', 'create-view', 'copy', 'assign', 'convert-type', 'record-list'],
+                        'roles' => ['backend.collection.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Collection::class,
                         ],
@@ -89,7 +101,7 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.collection.update'],
+                        'roles' => ['backend.collection.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Collection::class,
@@ -98,7 +110,7 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete', 'delete-record'],
-                        'roles' => ['backend.collection.delete'],
+                        'roles' => ['backend.collection.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Collection::class,
@@ -107,7 +119,7 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.collection.log.index'],
+                        'roles' => ['backend.collection.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Collection::class,
@@ -116,7 +128,7 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.collection.log.view'],
+                        'roles' => ['backend.collection.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -130,7 +142,7 @@ class CollectionController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.collection.log.restore'],
+                        'roles' => ['backend.collection.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -174,6 +186,7 @@ class CollectionController extends Controller
      * Search Collection models.
      * @param string $q
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionList($q)
     {
@@ -187,9 +200,7 @@ class CollectionController extends Controller
                 ['id_collection' => $q],
                 ['ilike', 'name', $q],
             ]);
-        }
-        else
-        {
+        } else {
             $query->andWhere(['ilike', 'name', $q]);
         }
 
@@ -205,7 +216,15 @@ class CollectionController extends Controller
         return ['results' => $results];
     }
 
-    public function actionRecordList($id,$q,$id_column=null)
+    /**
+     * @param $id
+     * @param $q
+     * @param null $id_column
+     * @return array
+     * @throws NotFoundHttpException
+     * @throws InvalidConfigException
+     */
+    public function actionRecordList($id, $q, $id_column = null)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -215,18 +234,14 @@ class CollectionController extends Controller
         $i = 0;
         $results = [];
 
-        foreach ($collection as $key => $value)
-        {
-            if ($i>15)
+        foreach ($collection as $key => $value) {
+            if ($i > 15)
                 break;
-
-            if (stripos($value, $q))
-            {
+            if (stripos($value, $q)) {
                 $results[] = [
                     'id' => $key,
                     'text' => $value,
                 ];
-
                 $i++;
             }
         }
@@ -278,7 +293,14 @@ class CollectionController extends Controller
         else print_r($newCollection->errors);
     }*/
 
-    public function actionConverType($id)
+    /**
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws StaleObjectException
+     */
+    public function actionConvertType($id)
     {
         set_time_limit(0);
 
@@ -287,51 +309,71 @@ class CollectionController extends Controller
         $collection = $this->findModel($id);
         $columns = $collection->getColumns()->indexBy('alias')->all();;
 
-        if (!empty($_POST['type']))
+        if ($form->load(Yii::$app->request->post()) && $form->validate())
         {
-            switch ($_POST['type']) {
-                case 'coords':
+            switch ($form->type)
+            {
+                case CollectionColumn::TYPE_MAP:
+                    $x = Yii::$app->request->post('x');
+                    $y = Yii::$app->request->post('y');
 
-                    if (isset($columns['X']) && $columns['Y'])
+                    if (!empty($x) && !empty($y))
                     {
                         $newColumn = $collection->createColumn([
-                            'name'  => 'Координаты',
+                            'name' => 'Координаты',
                             'alias' => 'map_coords',
-                            'type'  => CollectionColumn::TYPE_MAP,
+                            'type' => CollectionColumn::TYPE_MAP,
                         ]);
 
                         if ($newColumn)
                         {
                             // добавляем инпут в форму
                             $newColumn->collection->form->createInput([
-                                'type'=>$newColumn->type,
-                                'name'=> $newColumn->name,
-                                'label'=> $newColumn->name,
-                                'fieldname'=> $newColumn->alias,
-                                'id_column'=> $newColumn->id_column,
+                                'type' => $newColumn->type,
+                                'name' => $newColumn->name,
+                                'label' => $newColumn->name,
+                                'fieldname' => $newColumn->alias,
+                                'id_column' => $newColumn->id_column,
                             ]);
 
-                            $alldata = $collection->getData([],true);
+                            $alldata = $collection->getData([], true);
 
-                            foreach ($alldata as $key => $data)
+                            foreach ($alldata as $id_record => $data)
                             {
-                                $record = CollectionRecord::findOne($data['id_record']);
-                                $record->data = [$newColumn->id_column=>[$data['X'],$data['Y']]];
+                                $record = CollectionRecord::findOne($id_record);
+                                $record->data = [$newColumn->id_column => [$data[$x], $data[$y]]];
                                 $record->update();
                             }
                         }
+                        else
+                            print_r($newColumn->errors);
                     }
 
                     break;
+
                 default:
                     # code...
                     break;
             }
+
+            return $this->refresh();
         }
 
-        return $this->render('convert');
+        return $this->render('convert/convert',[
+            'formConvert'=>$form,
+            'columns'=>$columns,
+            'model'=>$collection,
+        ]);
     }
 
+    /**
+     * @param $id
+     * @return string|Response
+     * @throws NotFoundHttpException
+     * @throws DbException
+     * @throws Exception
+     * @throws InvalidConfigException
+     */
     public function actionAssign($id)
     {
         set_time_limit(0);
@@ -340,45 +382,39 @@ class CollectionController extends Controller
         $form = new CollectionCombineForm;
         $form->id_collection = $collection->id_collection;
 
-        if ($form->load(Yii::$app->request->post()) && $form->validate())
-        {
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
             $newColumn = new CollectionColumn;
             $newColumn->name = $form->column_name;
             $newColumn->alias = $form->alias;
             $newColumn->id_collection = $id;
             $newColumn->type = $form->type;
 
-            if ($newColumn->save())
-            {
+            if ($newColumn->save()) {
                 $newColumn->collection->form->createInput([
-                    'type'=>$form->type,
-                    'name'=> $newColumn->name,
-                    'label'=> $newColumn->name,
-                    'fieldname'=> $newColumn->alias,
-                    'id_column'=> $newColumn->id_column,
-                    'id_collection_column'=>$form->id_collection_from_column_label,
-                    'id_collection'=>$form->id_collection_from,
+                    'type' => $form->type,
+                    'name' => $newColumn->name,
+                    'label' => $newColumn->name,
+                    'fieldname' => $newColumn->alias,
+                    'id_column' => $newColumn->id_column,
+                    'id_collection_column' => $form->id_collection_from_column_label,
+                    'id_collection' => $form->id_collection_from,
                 ]);
 
-                if ($form->type==CollectionColumn::TYPE_COLLECTIONS)
-                {
+                if ($form->type == CollectionColumn::TYPE_COLLECTIONS) {
                     $datas = $collection->getData();
                     $datas_source = Collection::findOne($form->id_collection_from)->getData();
 
-                    $collection = Yii::$app->mongodb->getCollection('collection'.$id);
+                    $collection = Yii::$app->mongodb->getCollection('collection' . $id);
 
-                    foreach ($datas as $id_record => $data)
-                    {
-                        if (!empty($data[$form->id_collection_column]))
-                        {
+                    foreach ($datas as $id_record => $data) {
+                        if (!empty($data[$form->id_collection_column])) {
                             $array = $data[$form->id_collection_column];
 
-                            $array = str_replace(['[',']',", ",'""'], ['{','}',":",'\"'], $array);
-                            $array = str_replace(['{{','}}','}:{'], ['[{','}]','},{'], $array);
-                            $array = json_decode($array,true);
+                            $array = str_replace(['[', ']', ", ", '""'], ['{', '}', ":", '\"'], $array);
+                            $array = str_replace(['{{', '}}', '}:{'], ['[{', '}]', '},{'], $array);
+                            $array = json_decode($array, true);
 
-                            if (!empty($array))
-                            {
+                            if (!empty($array)) {
                                 $id_records_source = [];
                                 $textSearch = [];
 
@@ -386,10 +422,8 @@ class CollectionController extends Controller
                                 {
                                     $id = key($kdata);
 
-                                    foreach ($datas_source as $id_record_source => $sources)
-                                    {
-                                        if ($sources[$form->id_collection_from_column] == $id)
-                                        {
+                                    foreach ($datas_source as $id_record_source => $sources) {
+                                        if ($sources[$form->id_collection_from_column] == $id) {
                                             $id_records_source[] = $id_record_source;
                                             $textSearch[] = $kdata[$id];
                                         }
@@ -398,68 +432,61 @@ class CollectionController extends Controller
 
                                 if (!empty($id_records_source))
                                 {
-                                    Yii::$app->db->createCommand()->insert('db_collection_value',[
-                                        'id_record'=>$id_record,
-                                        'id_column'=>$newColumn->id_column,
-                                        'value'=>json_encode($id_records_source)
+                                    Yii::$app->db->createCommand()->insert('db_collection_value', [
+                                        'id_record' => $id_record,
+                                        'id_column' => $newColumn->id_column,
+                                        'value' => json_encode($id_records_source)
                                     ])->execute();
 
                                     $update = [];
-                                    $update['col'.$newColumn->id_column] = $id_records_source;
-                                    $update['col'.$newColumn->id_column.'_search'] = implode(';', $textSearch);
-                                    $collection->update(['id_record'=>$id_record],$update);
+                                    $update['col' . $newColumn->id_column] = $id_records_source;
+                                    $update['col' . $newColumn->id_column . '_search'] = implode(';', $textSearch);
+                                    $collection->update(['id_record' => $id_record], $update);
                                 }
                             }
                         }
                     }
-                }
-                else
-                {
+                } else {
                     $datas = $collection->getData();
                     $datas_source = Collection::findOne($form->id_collection_from)->getData();
 
-                    $collection = Yii::$app->mongodb->getCollection('collection'.$id);
+                    $collection = Yii::$app->mongodb->getCollection('collection' . $id);
 
-                    foreach ($datas as $id_record => $data)
-                    {
-                        if (!empty($data[$form->id_collection_column]))
-                        {
+                    foreach ($datas as $id_record => $data) {
+                        if (!empty($data[$form->id_collection_column])) {
                             $id_link = $data[$form->id_collection_column];
                             $textSearch = $id_source = null;
 
-                            foreach ($datas_source as $id_record_source => $sources)
-                            {
-                                if ($sources[$form->id_collection_from_column] == $id_link)
-                                {
+                            foreach ($datas_source as $id_record_source => $sources) {
+                                if ($sources[$form->id_collection_from_column] == $id_link) {
                                     $id_source = $id_record_source;
                                     $textSearch = $sources[$form->id_collection_from_column_label];
                                 }
                             }
 
-                            if (!empty($id_source))
-                            {
-                                Yii::$app->db->createCommand()->insert('db_collection_value',[
-                                    'id_record'=>$id_record,
-                                    'id_column'=>$newColumn->id_column,
-                                    'value'=>json_encode([$id_source])
+                            if (!empty($id_source)) {
+                                Yii::$app->db->createCommand()->insert('db_collection_value', [
+                                    'id_record' => $id_record,
+                                    'id_column' => $newColumn->id_column,
+                                    'value' => json_encode([$id_source])
                                 ])->execute();
 
                                 $update = [];
-                                $update['col'.$newColumn->id_column] = [$id_source];
-                                $update['col'.$newColumn->id_column.'_search'] = $textSearch;
-                                $collection->update(['id_record'=>$id_record],$update);
+                                $update['col' . $newColumn->id_column] = [$id_source];
+                                $update['col' . $newColumn->id_column . '_search'] = $textSearch;
+                                $collection->update(['id_record' => $id_record], $update);
                             }
                         }
                     }
                 }
 
-                return $this->redirect(['view','id'=>$form->id_collection]);
+                return $this->redirect(['view', 'id' => $form->id_collection]);
             }
         }
 
-        return $this->render('assign',[
-            'formAssign'=>$form,
-            'model'=>$collection,
+        return $this->render('assign', [
+            'formAssign' => $form,
+            'model' => $collection,
         ]);
     }
 
@@ -471,9 +498,7 @@ class CollectionController extends Controller
     public function actionColumns($id)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
-
         $results = [];
-
         if (($collection = Collection::findOne($id)) !== null) {
             $results = ArrayHelper::map($collection->columns, 'id_column', 'name');
         }
@@ -484,10 +509,10 @@ class CollectionController extends Controller
     public function actionGetCollections()
     {
         $collections = Collection::find()->where('is_dictionary IS NULL')->all();
-
         $output = [];
-        foreach ($collections as $key => $data)
-            $output[] = ['text'=>$data->name,'value'=>(string)$data->id_collection];
+        foreach ($collections as $key => $data) {
+            $output[] = ['text' => $data->name, 'value' => (string)$data->id_collection];
+        }
 
         return json_encode($output);
     }
@@ -511,60 +536,60 @@ class CollectionController extends Controller
      * Displays a single Collection model.
      * @param integer $id
      * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        return $this->redirect(['collection-record/index','id'=>$id]);
+        return $this->redirect(['collection-record/index', 'id' => $id]);
     }
 
-    public function actionRecord($id,$id_record=null)
+    /**
+     * @param $id
+     * @param null $id_record
+     * @return string|Response
+     * @throws NotFoundHttpException
+     * @throws InvalidConfigException
+     */
+    public function actionRecord($id, $id_record = null)
     {
         $collection = $this->findModel($id);
 
-        if (!empty($id_record))
+        if (!empty($id_record)) {
             $collectionRecord = CollectionRecord::findOne($id_record);
-        elseif (!empty($_POST['CollectionRecord']['id_record']))
-            $collectionRecord = CollectionRecord::findOne($_POST['CollectionRecord']['id_record']);
-        else
-        {
+        } elseif (!empty(Yii::$app->request->post('CollectionRecord.id_record'))) {
+            $collectionRecord = CollectionRecord::findOne(Yii::$app->request->post('CollectionRecord.id_record'));
+        } else {
             $collectionRecord = new CollectionRecord;
             $collectionRecord->id_collection = $id;
-            $collectionRecord->ord = CollectionRecord::find()->where(['id_collection'=>$id])->count();
+            $collectionRecord->ord = CollectionRecord::find()->where(['id_collection' => $id])->count();
         }
 
-        if (!empty($_POST['CollectionRecord']))
-        {
-            $collectionRecord->data = $_POST['CollectionRecord'];
+        if (!empty(Yii::$app->request->post('CollectionRecord'))) {
+            $collectionRecord->data = Yii::$app->request->post('CollectionRecord');
 
-            if ($collectionRecord->save())
-            {
+            if ($collectionRecord->save()) {
 
             }
 
             return $this->redirect("/collection/view?id=$id");
         }
 
-        return $this->renderPartial('_form_record',[
-            'collection'=>$collection,
-            'model'=>$collectionRecord,
-            'data'=>$collectionRecord->getData()
+        return $this->renderPartial('_form_record', [
+            'collection' => $collection,
+            'model' => $collectionRecord,
+            'data' => $collectionRecord->getData()
         ]);
     }
 
     public function actionRedactor()
     {
         $this->layout = 'clear';
-
         $model = new Collection;
         $model->name = 'temp';
         //$model->id_parent_collection = Yii::$app->request->post('id_collection');
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate())
-        {
-            if (!empty($_POST['json']))
-            {
-                $json = $this->saveView($model,true);
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if (!empty(Yii::$app->request->post('json'))) {
+                $json = $this->saveView($model, true);
 
                 $json['id_collection'] = $model->id_parent_collection;
                 $json['template'] = $model->template_view;
@@ -572,17 +597,20 @@ class CollectionController extends Controller
                 $json['sort'] = $model->id_column_order;
                 $json['dir'] = $model->order_direction;
                 $json['pagesize'] = $model->pagesize;
+                $json['show_row_num'] = $model->show_row_num;
+                $json['show_on_map'] = $model->show_on_map;
+                $json['show_column_num'] = $model->show_column_num;
 
                 return json_encode($json);
             }
         }
 
         if (Yii::$app->request->isAjax)
-            return $this->renderAjax('redactor',[
+            return $this->renderAjax('redactor', [
                 'model' => $model,
             ]);
 
-        return $this->render('redactor',[
+        return $this->render('redactor', [
             'model' => $model,
         ]);
     }
@@ -596,13 +624,9 @@ class CollectionController extends Controller
     public function actionCreate()
     {
         $model = new Collection();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save())
-        {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createForm();
-
             $model->createAction(Action::ACTION_CREATE);
-
             return $this->redirect(['form/view', 'id' => $model->id_form]);
         }
 
@@ -616,10 +640,8 @@ class CollectionController extends Controller
         $model = new Collection();
         $model->id_parent_collection = $id;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save())
-        {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $this->saveView($model);
-
             return $this->redirect(['update', 'id' => $model->id_collection]);
         }
 
@@ -628,12 +650,14 @@ class CollectionController extends Controller
         ]);
     }
 
+    /**
+     * @param Collection $model
+     * @return string|Response
+     */
     public function actionUpdateView($model)
     {
-        if ($model->load(Yii::$app->request->post()) && $model->save())
-        {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $this->saveView($model);
-
             return $this->redirect(['update', 'id' => $model->id_collection]);
         }
 
@@ -642,29 +666,30 @@ class CollectionController extends Controller
         ]);
     }
 
-    protected function saveView($model,$return=false)
+    /**
+     * @param Collection $model
+     * @param bool $return
+     * @return array
+     */
+    protected function saveView($model, $return = false)
     {
         $options = [];
 
-        if (!empty($_POST['ViewColumns']))
-        {
+        if (!empty(Yii::$app->request->post('ViewColumns'))) {
             $options['columns'] = [];
 
-            foreach ($_POST['ViewColumns'] as $key => $data)
-            {
+            foreach (Yii::$app->request->post('ViewColumns') as $key => $data) {
                 $options['columns'][] = [
                     'id_column' => $data['id_column'],
-                    'value' => (!empty($data['value']))?$data['value']:''
+                    'value' => (!empty($data['value'])) ? $data['value'] : ''
                 ];
             }
         }
 
-        if (!empty($_POST['SearchColumns']))
-        {
+        if (!empty(Yii::$app->request->post('SearchColumns'))) {
             $options['search'] = [];
 
-            foreach ($_POST['SearchColumns'] as $key => $data)
-            {
+            foreach (Yii::$app->request->post('SearchColumns') as $key => $data) {
                 $options['search'][] = [
                     'id_column' => $data['id_column'],
                     'type' => $data['type'],
@@ -672,17 +697,15 @@ class CollectionController extends Controller
             }
         }
 
-        if (!empty($_POST['ViewFilters']))
-        {
+        if (!empty(Yii::$app->request->post('ViewFilters'))) {
             $options['filters'] = [];
 
-            foreach ($_POST['ViewFilters'] as $key => $data)
-            {
+            foreach (Yii::$app->request->post('ViewFilters') as $key => $data) {
                 if (!empty($data['id_column']))
                     $options['filters'][] = [
                         'id_column' => $data['id_column'],
                         'operator' => $data['operator'],
-                        'value' => (!empty($data['value']))?$data['value']:''
+                        'value' => (!empty($data['value'])) ? $data['value'] : ''
                     ];
             }
         }
@@ -700,18 +723,19 @@ class CollectionController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
+        /** @var Collection $model */
         $model = $this->findModel($id);
 
-        if (!empty($model->id_parent_collection))
+        if (!empty($model->id_parent_collection)) {
             return $this->actionUpdateView($model);
+        }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save())
-        {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_UPDATE);
-
             return $this->redirect(['view', 'id' => $model->id_collection]);
         }
 
@@ -720,13 +744,18 @@ class CollectionController extends Controller
         ]);
     }
 
-    public function actionImport()
+    public function actionImport($id=null)
     {
         set_time_limit(0);
 
         $model = new CollectionImportForm;
         $model->load(Yii::$app->request->post());
         $model->file = UploadedFile::getInstance($model, 'file');
+
+        $existCollection = null;
+
+        if (!empty($id))
+            $existCollection = $this->findModel($id);
 
         if (!empty($model->file) || !empty($model->filepath))
         {
@@ -735,37 +764,43 @@ class CollectionController extends Controller
                 $model->filepath = '../../temp/import_test.'.$model->file->extension;
                 $model->file->saveAs($model->filepath);
             }
-            try {
 
-                $data = \moonland\phpexcel\Excel::import($model->filepath, [
-                    'setFirstRecordAsKeys' => false, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel.
-                    'setIndexSheetByName' => true, // set this if your excel data with multiple worksheet, the index of array will be set with the sheet name. If this not set, the index will use numeric.
-                    //'getOnlySheet' => 'Реестр собствеников', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
-                ]);
+            $data = \moonland\phpexcel\Excel::import($model->filepath, [
+                'setFirstRecordAsKeys' => false,
+                'setIndexSheetByName' => true,
+            ]);
 
-                if (!empty($data))
+            if (!empty($data))
+            {
+                if (isset($data[1]['A']))
+                    $data = ['Страница 1'=>$data];
+
+                if (!empty($model->sheet))
                 {
-                    if (isset($data[1]['A']))
-                        $data = ['Страница 1'=>$data];
+                    $columns = [];
+                    $keys = [];
+                    $records = [];
 
-                    if (!empty($model->sheet))
+                    if (empty($_POST['import']))
                     {
-                        $columns = [];
-                        $keys = [];
-                        $records = [];
-
                         $sheet_pos = array_search($model->sheet, array_keys($data));
 
                         $post = $_POST['CollectionImportForm'][$sheet_pos];
-
                         $model->load($_POST['CollectionImportForm'][$sheet_pos]);
 
                         $model->skip = (int)$post['skip'];
                         $model->keyrow = (int)$post['keyrow'];
                         $model->firstRowAsName = $post['firstRowAsName'];
+                        $post = Yii::$app->request->post("CollectionImportForm.$sheet_pos");
 
-                        foreach ($data[$model->sheet] as $rowkey => $row)
+                        $model->load($post);
+                    }
+
+                    foreach ($data[$model->sheet] as $rowkey => $row)
+                    {
+                        if (empty($_POST['import']))
                         {
+                            // устанавливаем алиасы
                             if ($rowkey==$model->keyrow && $model->keyrow>0)
                             {
                                 if (empty($columns))
@@ -774,112 +809,162 @@ class CollectionController extends Controller
                                 $keys = $row;
                             }
 
+                            // пропускаем
                             if (!empty($model->skip) && $rowkey<=$model->skip)
                                 continue;
 
+                            // устанавливаем именя колонок по первой строке если выбрали
                             if ($rowkey==($model->skip+1) && $model->firstRowAsName)
                             {
                                 $columns = $row;
                                 continue;
                             }
-
-                            $records[] = $row;
                         }
 
-                        if (!empty($records))
-                        {
-                            $collection = new Collection();
-                            $collection->name = $model->name;
+                        $records[] = $row;
+                    }
 
-                            if ($collection->save())
+                    if (!empty($_POST['import']))
+                    {
+                        try {
+
+                            if (!empty($records))
                             {
-                                // сохраняем названия колонок
-                                if (empty($columns))
+                                if (!empty($existCollection))
                                 {
-                                    $i = 1;
-                                    foreach ($records[1] as $rkey => $value)
-                                        $columns[$rkey] = 'Колонка №'.($i++);
+                                    $collection = $existCollection;
+
+                                    if ($model->erase)
+                                    {
+                                        foreach ($collection->items as $rkey => $record)
+                                            $record->delete();
+                                    }
+                                }
+                                else
+                                {
+                                    $collection = new Collection();
+                                    $collection->name = $model->name;
                                 }
 
-                                $i = 0;
-
-                                foreach ($columns as $tdkey => $value)
+                                if ($collection->save())
                                 {
-                                    $column = new CollectionColumn;
-                                    $column->name = (!empty($value))?$value:'Колонка '.$tdkey;
-                                    $column->type = CollectionColumn::TYPE_INPUT;
-                                    $column->ord = $i;
+                                    $columns = [];
 
-                                    if ($model->keyrow && !empty(trim($keys[$tdkey])))
-                                        $column->alias = $keys[$tdkey];
-                                    else
-                                        $column->alias = $column->name;
+                                    $i = 0;
 
-                                    if (empty($column->alias))
-                                        $column->alias = 'column_'.$tdkey;
-
-                                    $column->alias = strtolower(\common\components\helper\Helper::transFileName($column->alias));
-
-                                    $column->id_collection = $collection->id_collection;
-
-                                    if ($column->save())
-                                        $columns[$tdkey] = $column;
-                                    else
+                                    foreach ($model->columns as $tdkey => $column)
                                     {
-                                        print_r($column->errors);
-                                        die();
+                                        $columnModel = null;
+
+                                        if (!empty($column['id_column']))
+                                        {
+                                            if ($column['id_column']<0)
+                                                continue;
+
+                                            $columnModel = CollectionColumn::find()->where(['id_column'=>$column['id_column']])->one();
+                                        }
+
+                                        if (empty($columnModel))
+                                        {
+                                            $columnModel = new CollectionColumn;
+                                            $columnModel->name = $column['name'];
+                                            $columnModel->type = $column['type'];//CollectionColumn::TYPE_INPUT;
+                                            $columnModel->alias = strtolower(\common\components\helper\Helper::transFileName($column['alias']));
+                                            $columnModel->ord = $i;
+                                            $columnModel->id_collection = $collection->id_collection;
+                                        }
+
+                                        if ($columnModel->save())
+                                            $columns[$tdkey] = $columnModel;
+                                        else
+                                        {
+                                            print_r($columnModel->errors);
+                                            die();
+                                        }
+
+                                        $i++;
                                     }
 
-                                    $i++;
+                                    foreach ($records as $rkey => $row)
+                                    {
+                                        $collectionRecord = new CollectionRecord;
+                                        $collectionRecord->id_collection = $collection->id_collection;
+                                        $collectionRecord->ord = $rkey;
+
+                                        $insert = [];
+
+                                        foreach ($row as $tdkey => $value)
+                                        {
+                                            if (!isset($columns[$tdkey]))
+                                                continue;
+
+                                            switch ($columns[$tdkey]->type)
+                                            {
+                                                case CollectionColumn::TYPE_DATE:
+                                                case CollectionColumn::TYPE_DATETIME:
+                                                    $insert[$columns[$tdkey]->id_column] = strtotime($value);
+                                                    break;
+                                                default:
+                                                    $insert[$columns[$tdkey]->id_column] = $value;
+                                                    break;
+                                            }
+                                        }
+
+                                        $collectionRecord->data = $insert;
+                                        $collectionRecord->save();
+                                    }
+
+                                    Yii::$app->session->setFlash('success', 'Данные импортированы');
+
+                                    $collection->createForm();
+
+                                    unlink($model->filepath);
+
+                                    return $this->redirect(['view', 'id' => $collection->id_collection]);
                                 }
-
-                                foreach ($records as $rkey => $row)
-                                {
-                                    $collectionRecord = new CollectionRecord;
-                                    $collectionRecord->id_collection = $collection->id_collection;
-                                    $collectionRecord->ord = $rkey;
-
-                                    $insert = [];
-
-                                    foreach ($row as $tdkey => $value)
-                                        $insert[$columns[$tdkey]->id_column] = $value;
-
-                                    $collectionRecord->data = $insert;
-                                    $collectionRecord->save();
-                                }
-
-                                Yii::$app->session->setFlash('success', 'Данные импортированы');
-
-                                $collection->createForm();
-
-                                unlink($model->filepath);
-
-                                return $this->redirect(['view', 'id' => $collection->id_collection]);
+                                else
+                                    print_r($collection->errors);
+                            } else
+                            {
+                                Yii::$app->session->setFlash('error', 'Нет данных для записи');
+                                $this->refresh();
                             }
-                            else
-                                print_r($collection->errors);
                         }
-                        else
+                        catch (Exception $e)
                         {
-                            Yii::$app->session->setFlash('error', 'Нет данных для записи');
-                            $this->refresh();
+                            $model->addError('file','Ошибка при чтении файла, ошибка формата данных');
                         }
                     }
                     else
-                        return $this->render('import',[
+                    {
+                        // сохраняем названия колонок
+                        if (empty($columns))
+                            foreach ($records[1] as $rkey => $value)
+                                $columns[$rkey] = 'Колонка №'.($i++);
+
+                        if (empty($keys))
+                            foreach ($columns as $key => $column)
+                                $keys[$key] = strtolower(\common\components\helper\Helper::transFileName($column));
+
+                        return $this->render('import/import_column',[
                             'model'=>$model,
-                            'table'=>$data
+                            'records'=>$records,
+                            'columns'=>$columns,
+                            'existCollection'=>$existCollection,
+                            'keys'=>$keys,
                         ]);
+                    }
                 }
-            }
-            catch (Exception $e)
-            {
-                $model->addError('file','Ошибка при чтении файла, ошибка формата данных');
+                else
+                    return $this->render('import/import',[
+                        'model'=>$model,
+                        'table'=>$data
+                    ]);
             }
         }
 
-        return $this->render('import',[
-            'model'=>$model,
+        return $this->render('import/import', [
+            'model' => $model,
         ]);
     }
 
@@ -891,7 +976,7 @@ class CollectionController extends Controller
         $id_collection = $model->id_collection;
         $model->delete();
 
-        return $this->redirect(['view','id'=>$id_collection]);
+        return $this->redirect(['view', 'id' => $id_collection]);
     }
 
     /**
@@ -901,7 +986,7 @@ class CollectionController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -916,8 +1001,9 @@ class CollectionController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -936,6 +1022,7 @@ class CollectionController extends Controller
      * @param integer $id
      * @return Collection the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

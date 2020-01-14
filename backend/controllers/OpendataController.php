@@ -4,14 +4,18 @@ namespace backend\controllers;
 
 use backend\models\forms\OpendataUploadForm;
 use common\models\Action;
+use common\models\GridSetting;
 use common\models\OpendataData;
 use Yii;
 use common\models\Opendata;
 use backend\models\search\OpendataSearch;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 /**
@@ -19,6 +23,8 @@ use yii\web\UploadedFile;
  */
 class OpendataController extends Controller
 {
+    const grid = 'opendata-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -31,7 +37,7 @@ class OpendataController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.opendata.index'],
+                        'roles' => ['backend.opendata.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Opendata::class,
                         ],
@@ -39,7 +45,7 @@ class OpendataController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.opendata.view'],
+                        'roles' => ['backend.opendata.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Opendata::class,
@@ -48,7 +54,7 @@ class OpendataController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.opendata.create'],
+                        'roles' => ['backend.opendata.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Opendata::class,
                         ],
@@ -56,7 +62,7 @@ class OpendataController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.opendata.update'],
+                        'roles' => ['backend.opendata.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Opendata::class,
@@ -65,7 +71,7 @@ class OpendataController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['upload'],
-                        'roles' => ['backend.opendata.update'],
+                        'roles' => ['backend.opendata.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Opendata::class,
@@ -74,7 +80,7 @@ class OpendataController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.opendata.delete'],
+                        'roles' => ['backend.opendata.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Opendata::class,
@@ -83,7 +89,7 @@ class OpendataController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete-data'],
-                        'roles' => ['backend.opendata.delete'],
+                        'roles' => ['backend.opendata.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function() {
                                 $data = OpendataData::findOne(Yii::$app->request->get('id'));
@@ -121,15 +127,25 @@ class OpendataController extends Controller
     /**
      * Lists all Opendata models.
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
         $searchModel = new OpendataSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 
@@ -138,6 +154,7 @@ class OpendataController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionView($id)
     {
@@ -171,6 +188,7 @@ class OpendataController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     public function actionUpdate($id)
     {
@@ -193,7 +211,7 @@ class OpendataController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -208,8 +226,9 @@ class OpendataController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUndelete($id)
     {
@@ -227,6 +246,7 @@ class OpendataController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUpload($id)
     {
@@ -258,7 +278,6 @@ class OpendataController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      */
     public function actionDeleteData($id)
     {
@@ -278,6 +297,7 @@ class OpendataController extends Controller
      * @param integer $id
      * @return Opendata the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws InvalidConfigException
      */
     protected function findModel($id)
     {

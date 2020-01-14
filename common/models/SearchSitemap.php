@@ -65,27 +65,28 @@ class SearchSitemap extends \yii\db\ActiveRecord
     }
 
 
-    static public function fulltext($query, $bydate = false)
+    static public function fulltext($query, $bydate = false, $getSql = false)
     {
         $query = strip_tags(addslashes($query));
 
-        if($bydate)
+        if(!$bydate)
             $sql = 'SELECT * FROM
                     (
-                    SELECT id_sitemap, header, url, content_date, ts_rank(to_tsvector("content"), plainto_tsquery(\''.$query.'\'))  as rank, ts_headline(content, keywords) as headline
+                    SELECT id_sitemap, header, url, content_date, modified_at, ts_rank(to_tsvector("content"), plainto_tsquery(\''.$query.'\'))  as rank, ts_headline(content, keywords) as headline
                     FROM search_sitemap, plainto_tsquery(\''.$query.'\') as keywords
                     WHERE to_tsvector("content") @@ plainto_tsquery(\''.$query.'\')
                     ORDER BY ts_rank(to_tsvector("content"), plainto_tsquery(\''.$query.'\')) DESC) t1
                     WHERE rank>0.01';
         else
             $sql = 'SELECT * FROM(
-                        SELECT id_sitemap, header, url, content_date, ts_rank(to_tsvector("content"), plainto_tsquery(\''.$query.'\')) as rank, ts_headline(content, keywords) as headline
+                        SELECT id_sitemap, header, url, content_date, modified_at, ts_rank(to_tsvector("content"), plainto_tsquery(\''.$query.'\')) as rank, ts_headline(content, keywords) as headline
                         FROM search_sitemap, plainto_tsquery(\''.$query.'\') as keywords
                         WHERE to_tsvector("content") @@ plainto_tsquery(\''.$query.'\')
-                        ORDER BY content_date DESC, ts_rank(to_tsvector("content"), plainto_tsquery(\''.$query.'\')) DESC) t1
+                        ORDER BY content_date DESC, modified_at DESC, ts_rank(to_tsvector("content"), plainto_tsquery(\''.$query.'\')) DESC) t1
                     WHERE rank>0.01';
 
-        //var_dump($sql);die();
+        if($getSql)
+            return $sql;
 
         $result = Yii::$app->db->createCommand($sql)->queryAll();
 

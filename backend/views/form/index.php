@@ -1,16 +1,22 @@
 <?php
 
+use backend\assets\GridAsset;
+use backend\controllers\FormController;
+use common\models\GridSetting;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use \common\models\Form;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\search\FormSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $customColumns array */
 
 $archive = Yii::$app->request->get('archive');
 
 $this->title = 'Формы';
 $this->params['breadcrumbs'][] = $this->title;
+GridAsset::register($this);
 
 if (Yii::$app->user->can('admin.form')) {
     if ($archive) {
@@ -20,42 +26,87 @@ if (Yii::$app->user->can('admin.form')) {
     }
     $this->params['button-block'][] = Html::a('Добавить', ['create'], ['class' => 'btn btn-success']);
 }
+
+$defaultColumns = [
+    'id_form' => 'id_form',
+    'name' => [
+        'attribute' => 'name',
+        'format' => 'html',
+        'value' => function ($model) {
+            $output = $model->name;
+            if (!empty($model->collection))
+                $output .= '<br>' . Html::a('Открыть список', ['collection/view', 'id' => $model->id_collection]);
+            return $output;
+        }
+    ],
+    'id_service' => [
+        'attribute' => 'id_service',
+        'format' => 'html',
+        'value' => function ($model) {
+            $output = '';
+            if (!empty($model->service))
+                $output = Html::a($model->service->reestr_number, ['service/view', 'id' => $model->id_service]);
+            return $output;
+        }
+    ],
+    'created_at' => [
+        'attribute' => 'created_at',
+        'format' => [
+            'date',
+            'php:Y-m-d'
+        ],
+        'filterInputOptions' => [
+            'class' => 'datepicker form-control',
+        ],
+    ],
+    'updated_at' => [
+        'attribute' => 'updated_at',
+        'format' => [
+            'date',
+            'php:Y-m-d'
+        ],
+        'filterInputOptions' => [
+            'class' => 'datepicker form-control',
+        ],
+    ],
+];
+
+list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
+    $defaultColumns,
+    $customColumns,
+    Form::class
+);
 ?>
+<div id="accordion">
+    <h3 id="grid-setting">Настройки таблицы</h3>
+    <div id="sortable">
+        <?php foreach ($visibleColumns as $name => $isVisible): ?>
+            <div class="ui-state-default">
+                <input type="checkbox" <?= $isVisible ? 'checked' : null ?> />
+                <span><?= $name ?></span></div>
+        <?php endforeach; ?>
+        <div class="ibox">
+            <div style="
+            padding-top: 5px;
+            padding-left: 10px;">
+                <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary', 'id' => 'sb']) ?>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="form-index">
     <?php echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        //'filterModel' => $searchModel,
-        'columns' => [
-            'id_form',
-            [
-                'attribute'=>'name',
-                'format'=>'html',
-                'value'=>function($model){
-                    $output = $model->name;
-                    if (!empty($model->collection))
-                        $output .='<br>'.Html::a('Открыть список', ['collection/view','id'=>$model->id_collection]);
-                    return $output;
-                }
-            ],
-            [
-                'attribute'=>'id_service',
-                'format'=>'html',
-                'value'=>function($model){
-                    $output = '';
-                    if (!empty($model->service))
-                        $output = Html::a($model->service->reestr_number, ['service/view','id'=>$model->id_service]);
-                    return $output;
-                }
-            ],
-            'created_at:date',
-            'updated_at:date',
+        'filterModel' => $searchModel,
+        'columns' => array_merge(array_values($gridColumns), [
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view} {update} ' . ($archive ? '{undelete}' : '{delete}'),
                 'buttons' => [
-                    'undelete' => function($url, $model, $key) {
+                    'undelete' => function ($url, $model, $key) {
                         $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-floppy-disk"]);
                         return Html::a($icon, $url, [
                             'title' => 'Восстановить',
@@ -64,12 +115,14 @@ if (Yii::$app->user->can('admin.form')) {
                         ]);
                     },
                 ],
-                'contentOptions'=>['class'=>'button-column']
+                'contentOptions' => ['class' => 'button-column']
             ],
-        ],
-        'tableOptions'=>[
-            'emptyCell '=>'',
-            'class'=>'table table-striped ids-style valign-middle table-hover'
+        ]),
+        'tableOptions' => [
+            'emptyCell ' => '',
+            'class' => 'table table-striped ids-style valign-middle table-hover',
+            'data-grid' => FormController::grid,
+            'id' => 'grid',
         ]
     ]); ?>
 </div>

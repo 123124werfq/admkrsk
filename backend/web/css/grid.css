@@ -1,0 +1,25 @@
+#grid-setting {
+    float: none;
+    width: 230px;
+}
+
+#accordion {
+    margin-bottom: 10px;
+}
+
+#sortable {
+    overflow: auto;
+    height: 130px !important;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+.ui-state-default {
+    margin: 10px;
+    padding: 5px;
+    width: 190px;
+    float: left;
+    font-size: 12px;
+}
