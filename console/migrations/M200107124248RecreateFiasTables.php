@@ -15,7 +15,7 @@ class M200107124248RecreateFiasTables extends Migration
      */
     public function safeUp()
     {
-        if (Yii::$app->db->getTableSchema('map_house')->foreignKeys['fk-map_house-houseguid-fias_house-houseguid']) {
+        if (isset(Yii::$app->db->getTableSchema('map_house')->foreignKeys['fk-map_house-houseguid-fias_house-houseguid'])) {
             $this->dropForeignKey('fk-map_house-houseguid-fias_house-houseguid', 'map_house');
         }
 
