@@ -91,7 +91,7 @@ class AddressController extends Controller
      */
     public function actionCreate()
     {
-        $model = new House(['is_manual' => true]);
+        $model = new House();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_CREATE);

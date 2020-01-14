@@ -83,7 +83,7 @@ class CityController extends Controller
      */
     public function actionCreate()
     {
-        $model = new City(['is_manual' => true]);
+        $model = new City();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_CREATE);

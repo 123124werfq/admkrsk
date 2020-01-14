@@ -16,9 +16,9 @@ class M200105103231CreateFiasUpdateHistoryTable extends Migration
     {
         $this->createTable('fias_update_history', [
             'id' => $this->primaryKey(),
-            'version' => $this->integer()->notNull(),
-            'text' => $this->string()->notNull(),
-            'file' => $this->string()->notNull(),
+            'version' => $this->integer(),
+            'text' => $this->string(),
+            'file' => $this->string(),
 //            'all_count' => $this->integer(),
 //            'manual_count' => $this->integer(),
 //            'insert_count' => $this->integer(),

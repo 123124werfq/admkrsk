@@ -13,6 +13,7 @@ use common\models\Region;
 use common\models\Street;
 use common\models\Subregion;
 use SoapClient;
+use SoapFault;
 use Yii;
 use yii\console\Controller;
 use yii\db\Connection;
@@ -64,7 +65,17 @@ class FiasController extends Controller
 
         $client = new SoapClient('https://fias.nalog.ru/WebServices/Public/DownloadService.asmx?WSDL');
 
-        $response = $client->GetAllDownloadFileInfo();
+        try {
+            $response = $client->GetAllDownloadFileInfo();
+        } catch (SoapFault $exception) {
+            $updateHistory = new FiasUpdateHistory(['text' => $exception->getMessage()]);
+            $updateHistory->save();
+            echo "<pre>";
+            print_r($updateHistory->errors);
+            die();
+            exit(0);
+        }
+
         $updates = ArrayHelper::map($response->GetAllDownloadFileInfoResult->DownloadFileInfo, 'VersionId', function (\StdClass $object) use ($lastVersion) {
             return [
                 'version' => $object->VersionId,

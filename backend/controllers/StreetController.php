@@ -83,7 +83,7 @@ class StreetController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Street(['is_manual' => true]);
+        $model = new Street();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_CREATE);

@@ -18,6 +18,7 @@ class SubregionSearch extends Subregion
     {
         return [
             [['id_subregion'], 'integer'],
+            [['is_updatable'], 'boolean'],
             [['aoguid', 'name'], 'safe'],
         ];
     }
@@ -59,6 +60,7 @@ class SubregionSearch extends Subregion
         // grid filtering conditions
         $query->andFilterWhere([
             'id_subregion' => $this->id_subregion,
+            'is_updatable' => $this->is_updatable,
         ]);
 
         $query->andFilterWhere(['ilike', 'aoguid', $this->aoguid])

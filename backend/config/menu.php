@@ -34,6 +34,10 @@ return [
                 'title' => 'Дома',
                 'roles' => ['backend.address'],
             ],
+            'fias-update-history' => [
+                'title' => 'История обновлений',
+                'roles' => ['backend.address'],
+            ],
         ],
     ],
     'user' => [

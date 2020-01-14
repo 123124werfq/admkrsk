@@ -31,7 +31,7 @@ class FiasUpdateHistory extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['version', 'text', 'file'], 'required'],
+            [['text'], 'required'],
             [['version'], 'integer'],
             [['text', 'file'], 'string', 'max' => 255],
         ];

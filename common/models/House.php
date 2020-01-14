@@ -21,7 +21,7 @@ use Yii;
  * @property string $id_street
  * @property string $name
  * @property string $fullname
- * @property bool $is_manual
+ * @property bool $is_updatable
  * @property int $update_at
  * @property int $created_by
  * @property int $updated_at
@@ -63,7 +63,7 @@ class House extends \yii\db\ActiveRecord
         return [
             [['houseguid'], 'string'],
             [['postalcode', 'name', 'fullname'], 'string', 'max' => 255],
-            [['is_manual'], 'boolean'],
+            [['is_updatable'], 'boolean'],
             [['id_country', 'id_region', 'id_subregion', 'id_city', 'id_district', 'id_street'], 'default', 'value' => null],
             [['id_country', 'id_region', 'id_subregion', 'id_city', 'id_district', 'id_street'], 'integer'],
             [['id_country'], 'exist', 'targetClass' => Country::class, 'targetAttribute' => 'id_country'],
@@ -92,7 +92,7 @@ class House extends \yii\db\ActiveRecord
             'id_street' => 'Улица',
             'name' => 'Дом',
             'fullname' => 'Полный адрес',
-            'is_manual' => 'Добавлен вручную',
+            'is_updatable' => 'Обновлять с ФИАС',
         ];
     }
 
