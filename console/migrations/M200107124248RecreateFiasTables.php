@@ -15,12 +15,12 @@ class M200107124248RecreateFiasTables extends Migration
      */
     public function safeUp()
     {
-        if (in_array('fias_addrobj', Yii::$app->db->schema->tableNames)) {
-            $this->dropTable('fias_addrobj');
-        }
-
         if (in_array('fias_house', Yii::$app->db->schema->tableNames)) {
             $this->dropTable('fias_house');
+        }
+
+        if (in_array('fias_addrobj', Yii::$app->db->schema->tableNames)) {
+            $this->dropTable('fias_addrobj');
         }
 
         $this->createTable('fias_addrobj', [
@@ -99,8 +99,8 @@ class M200107124248RecreateFiasTables extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('fias_addrobj');
         $this->dropTable('fias_house');
+        $this->dropTable('fias_addrobj');
     }
 
     /*
