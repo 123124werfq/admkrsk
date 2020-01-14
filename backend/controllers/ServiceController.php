@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\components\worddoc\WordDoc;
+use common\models\GridSetting;
 use common\models\ServiceAppeal;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -24,6 +25,8 @@ use yii\web\Response;
  */
 class ServiceController extends Controller
 {
+    const grid = 'service-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -127,15 +130,26 @@ class ServiceController extends Controller
     /**
      * Lists all Service models.
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
         $searchModel = new ServiceSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 

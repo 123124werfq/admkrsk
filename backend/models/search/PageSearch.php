@@ -3,7 +3,9 @@
 namespace backend\models\search;
 
 use common\models\AuthEntity;
+use common\traits\ActiveRangeValidateTrait;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Page;
@@ -13,14 +15,16 @@ use common\models\Page;
  */
 class PageSearch extends Page
 {
+    use ActiveRangeValidateTrait;
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id_page', 'id_media', 'active', 'created_at', 'created_by', 'updated_at', 'deleted_at', 'deleted_by'], 'integer'],
-            [['title', 'alias', 'content', 'seo_title', 'seo_description', 'seo_keywords'], 'safe'],
+            [['id_page', 'id_media', 'active', 'created_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['title', 'alias', 'content', 'seo_title', 'seo_description', 'seo_keywords','created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -39,6 +43,7 @@ class PageSearch extends Page
      * @param array $params
      *
      * @return ActiveDataProvider
+     * @throws InvalidConfigException
      */
     public function search($params)
     {
@@ -59,10 +64,16 @@ class PageSearch extends Page
                 'defaultOrder' => [
                     'id_page' => SORT_DESC
                 ]
-            ]
+            ],
+            'pagination' => [
+                'pageSize' => $params['pageSize'] ?? 10
+            ],
         ]);
 
         $this->load($params);
+
+        $this->handleDateRange($this->created_at,$query,'created_at');
+        $this->handleDateRange($this->updated_at,$query,'updated_at');
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
@@ -75,9 +86,7 @@ class PageSearch extends Page
             'id_page' => $this->id_page,
             'id_media' => $this->id_media,
             'active' => $this->active,
-            'created_at' => $this->created_at,
             'created_by' => $this->created_by,
-            'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
             'deleted_by' => $this->deleted_by,
         ]);

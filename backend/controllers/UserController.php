@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\models\search\ActionSearch;
 use common\models\Action;
+use common\models\GridSetting;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\User;
@@ -21,6 +22,8 @@ use yii\web\Response;
  */
 class UserController extends Controller
 {
+    const grid = 'user-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -218,10 +221,19 @@ class UserController extends Controller
     {
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 

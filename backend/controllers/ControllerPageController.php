@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\Action;
 use common\models\AuthEntity;
+use common\models\GridSetting;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\ControllerPage;
@@ -21,6 +22,8 @@ use yii\web\Response;
  */
 class ControllerPageController extends Controller
 {
+    const grid = 'controller-page-grid';
+
     /**
      * {@inheritdoc}
      */
@@ -138,12 +141,25 @@ class ControllerPageController extends Controller
             $query->andFilterWhere(['id' => AuthEntity::getEntityIds(ControllerPage::class)]);
         }
 
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => $params['pageSize'] ?? 10
+            ],
         ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
         ]);
     }
 

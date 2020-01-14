@@ -73,8 +73,8 @@ class ControllerPage extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'id_page' => 'Раздел',
-            'controller' => 'Controller',
-            'actions' => 'Actions',
+            'controller' => 'Контроллер',
+            'actions' => 'Действия',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',

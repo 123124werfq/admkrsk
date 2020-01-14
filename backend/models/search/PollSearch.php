@@ -3,7 +3,9 @@
 namespace backend\models\search;
 
 use common\models\AuthEntity;
+use common\traits\ActiveRangeValidateTrait;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Poll;
@@ -13,15 +15,18 @@ use common\models\Poll;
  */
 class PollSearch extends Poll
 {
+    use ActiveRangeValidateTrait;
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id_poll', 'status', 'date_start', 'date_end', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['id_poll', 'status', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['title', 'description', 'result'], 'safe'],
             [['is_anonymous', 'is_hidden'], 'boolean'],
+            [['date_start','date_end'],'string']
         ];
     }
 
@@ -40,6 +45,7 @@ class PollSearch extends Poll
      * @param array $params
      *
      * @return ActiveDataProvider
+     * @throws InvalidConfigException
      */
     public function search($params)
     {
@@ -56,9 +62,15 @@ class PollSearch extends Poll
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => $params['pageSize'] ?? 10
+            ],
         ]);
 
         $this->load($params);
+
+        $this->handleDateRange($this->date_start,$query,'date_start');
+        $this->handleDateRange($this->date_end,$query,'date_end');
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
@@ -72,8 +84,6 @@ class PollSearch extends Poll
             'status' => $this->status,
             'is_anonymous' => $this->is_anonymous,
             'is_hidden' => $this->is_hidden,
-            'date_start' => $this->date_start,
-            'date_end' => $this->date_end,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,
