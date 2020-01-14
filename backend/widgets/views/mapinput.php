@@ -7,7 +7,7 @@ use yii\web\View;
  * @var string $fname
  */
     //$this->registerJsFile('https://api-maps.yandex.ru/2.1/?lang=ru_RU',['position'=> View::POS_BEGIN]);
-    $this->registerJsFile('https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=987cf952-38fd-46ee-b595-02977f1247ac',['depends'=>[\yii\web\JqueryAsset::className()],'position'=>\yii\web\View::POS_END]);
+    $this->registerJsFile('https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=987cf952-38fd-46ee-b595-02977f1247ac',['position'=>\yii\web\View::POS_BEGIN]);
 ?>
 <script>
     ymaps.ready(init);
