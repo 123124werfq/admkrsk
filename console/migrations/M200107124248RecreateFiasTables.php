@@ -15,7 +15,9 @@ class M200107124248RecreateFiasTables extends Migration
      */
     public function safeUp()
     {
-        $this->dropForeignKey('fk-map_house-houseguid-fias_house-houseguid', 'map_house');
+        if (Yii::$app->db->getTableSchema('map_house')->foreignKeys['fk-map_house-houseguid-fias_house-houseguid']) {
+            $this->dropForeignKey('fk-map_house-houseguid-fias_house-houseguid', 'map_house');
+        }
 
         if (in_array('fias_house', Yii::$app->db->schema->tableNames)) {
             $this->dropTable('fias_house');
@@ -94,8 +96,6 @@ class M200107124248RecreateFiasTables extends Migration
             'counter' => $this->integer(),
             'divtype' => $this->integer(),
         ]);
-
-        $this->addForeignKey('fk-map_house-houseguid-fias_house-houseguid', 'map_house', 'houseguid', 'fias_house', 'houseguid', 'CASCADE');
     }
 
     /**
