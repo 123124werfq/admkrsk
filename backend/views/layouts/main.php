@@ -7,7 +7,7 @@ use backend\assets\AppAsset;
 use backend\widgets\NavMenuWidget;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\widgets\Breadcrumbs;
+use yii\web\View;use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
 
 $bundle = AppAsset::register($this);
@@ -31,9 +31,8 @@ $this->beginPage();
 </head>
 <body class="<?= Yii::$app->request->cookies->getValue('mininavbar', false) ? 'mini-navbar' : '' ?>" data-spy="scroll" data-target="#navbar">
 <?php
-    if ($flash = Yii::$app->session->getFlash('success'))
-    {
-        $script = "toastr.success('$flash', '');";
+    foreach (Yii::$app->session->getAllFlashes() as $type => $message) {
+        $script = "toastr.$type('$message', '');";
         $this->registerJs($script, yii\web\View::POS_END);
     }
 ?>
