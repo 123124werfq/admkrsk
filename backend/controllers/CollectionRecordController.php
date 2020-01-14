@@ -2,12 +2,15 @@
 
 namespace backend\controllers;
 
+use common\jobs\InstitutionImportJob;
+use common\models\District;
 use Yii;
 use common\models\CollectionRecord;
 use common\models\CollectionColumn;
 use common\models\Collection;
 use common\models\FormDynamic;
 use common\models\Media;
+use yii\base\Exception;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -29,6 +32,20 @@ class CollectionRecordController extends Controller
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['institution-import'],
+                        'roles' => ['backend.collection.update', 'backend.entityAccess'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($collection = Collection::findOne(['alias' => 'institution'])) !== null) {
+                                    return $collection->id_collection;
+                                }
+                                return null;
+                            },
+                            'class' => Collection::class,
+                        ],
+                    ],
                     [
                         'allow' => true,
                         'actions' => ['index'],
@@ -114,6 +131,27 @@ class CollectionRecordController extends Controller
     }
 
     /**
+     * @return mixed
+     * @throws Exception
+     */
+    public function actionInstitutionImport()
+    {
+        $jobId = InstitutionImportJob::getJobId();
+
+        if (!$jobId || (!Yii::$app->queue->isWaiting($jobId) && !Yii::$app->queue->isReserved($jobId) && Yii::$app->queue->isDone($jobId))) {
+            Yii::$app->session->setFlash('success', 'Запущено обновление организайций');
+
+            $jobId = Yii::$app->queue->push(new InstitutionImportJob());
+
+            InstitutionImportJob::saveJobId($jobId);
+        } else {
+            Yii::$app->session->setFlash('success', 'Обновление организайций уже выполняется');
+        }
+
+        $this->redirect(Yii::$app->request->referrer ?: '/');
+    }
+
+    /**
      * Lists all CollectionRecord models.
      * @param $id
      * @return mixed
@@ -190,7 +228,7 @@ class CollectionRecordController extends Controller
                     if (empty($model[$col_alias]))
                         return '';
 
-                    $district = \common\models\District::findOne($model[$col_alias]);
+                    $district = District::findOne($model[$col_alias]);
 
                     if (!empty($district))
                         return $district->name;

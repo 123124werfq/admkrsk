@@ -10,6 +10,9 @@ return [
     ],
     'timeZone' => 'Asia/Krasnoyarsk',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
+    'bootstrap' => [
+        'queue',
+    ],
     'components' => [
         'sputnik' => [
             'class' => SputnikApi::class,
@@ -27,12 +30,15 @@ return [
             ],
         ],
         'cache' => [
-//            'class' => 'yii\caching\FileCache',
             'class' => 'yii\redis\Cache',
             'redis' => 'redisCache',
         ],
         'session' => [
             'class' => 'yii\redis\Session',
+        ],
+        'queue' => [
+            'class' => 'yii\queue\redis\Queue',
+            'as log' => 'yii\queue\LogBehavior',
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',

@@ -20,6 +20,7 @@ class Yii extends \yii\BaseYii
  * @property \yii\db\Connection $logDb
  * @property \yii\mongodb\Connection $mongodb
  * @property \yii\redis\Connection $redis
+ * @property \yii\queue\redis\Queue $queue
  * @property \common\components\sputnik\SputnikApi $sputnik
  * @property \common\components\flysystem\AwsS3Filesystem $storage
  * @property \common\components\flysystem\AwsS3Filesystem $publicStorage
