@@ -97,8 +97,10 @@ class AddressController extends Controller
         $model = new House();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            if (!$model->sputnik_updated_at || !$model->lat || !$model->lon) {
-                $model->updateLocation();
+            if (!$model->lat || !$model->lon) {
+                if (!$model->sputnik_updated_at) {
+                    $model->updateLocation();
+                }
             }
             $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_house]);
@@ -121,16 +123,20 @@ class AddressController extends Controller
     {
         $model = $this->findModel($id);
 
-        if (!$model->sputnik_updated_at || !$model->lat || !$model->lon) {
-            $model->updateLocation();
-        }
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            if (!$model->sputnik_updated_at || !$model->lat || !$model->lon) {
-                $model->updateLocation();
+            if (!$model->lat || !$model->lon) {
+                if (!$model->sputnik_updated_at) {
+                    $model->updateLocation();
+                }
             }
             $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id_house]);
+        }
+
+        if (!$model->lat || !$model->lon) {
+            if (!$model->sputnik_updated_at) {
+                $model->updateLocation();
+            }
         }
 
         return $this->render('update', [
@@ -242,6 +248,12 @@ class AddressController extends Controller
 
         if ($is_active) {
             $query->andFilterWhere([Region::tableName() . '.is_active' => $is_active]);
+        } else {
+            $query->where([
+                'or',
+                [House::tableName() . '.id_country' => $id_country],
+                [House::tableName() . '.id_country' => null],
+            ]);
         }
 
         if ($search) {
@@ -284,6 +296,12 @@ class AddressController extends Controller
 
         if ($is_active) {
             $query->andFilterWhere([Subregion::tableName() . '.is_active' => $is_active]);
+        } else {
+            $query->where([
+                'or',
+                [House::tableName() . '.id_region' => $id_region],
+                [House::tableName() . '.id_region' => null],
+            ]);
         }
 
         if ($search) {
@@ -333,6 +351,19 @@ class AddressController extends Controller
 
         if ($is_active) {
             $query->andFilterWhere([City::tableName() . '.is_active' => $is_active]);
+        } else {
+            $query->where([
+                'or',
+                [
+                    House::tableName() . '.id_region' => $id_region,
+                    House::tableName() . '.id_subregion' => $id_subregion,
+                ],
+                [
+                    'or',
+                    [House::tableName() . '.id_region' => null],
+                    [House::tableName() . '.id_subregion' => null],
+                ],
+            ]);
         }
 
         if ($search) {
@@ -370,15 +401,21 @@ class AddressController extends Controller
         }
 
         $query->groupBy([
-            District::tableName() . '.id_district',
-            District::tableName() . '.name'
-        ])
+                District::tableName() . '.id_district',
+                District::tableName() . '.name'
+            ])
             ->orderBy([District::tableName() . '.name' => SORT_ASC])
             ->limit(20)
             ->asArray();
 
         if ($is_active) {
             $query->andFilterWhere([District::tableName() . '.is_active' => $is_active]);
+        } else {
+            $query->where([
+                'or',
+                [House::tableName() . '.id_city' => $id_city],
+                [House::tableName() . '.id_city' => null],
+            ]);
         }
 
         if ($search) {
@@ -418,6 +455,12 @@ class AddressController extends Controller
 
         if ($is_active) {
             $query->andFilterWhere([Street::tableName() . '.is_active' => $is_active]);
+        } else {
+            $query->where([
+                'or',
+                [House::tableName() . '.id_city' => $id_city],
+                [House::tableName() . '.id_city' => null],
+            ]);
         }
 
         if ($search) {

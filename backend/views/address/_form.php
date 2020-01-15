@@ -145,6 +145,7 @@ $this->registerJs("$('#lat{$model->id_house}').on('change', function() {
         ],
     ],
 ]) ?>
+
 <?= $form->field($model, 'id_district')->widget(Select2::class, [
     'data' => $model->id_district ? ArrayHelper::map([$model->district], 'id_district', 'name') : [],
     'pluginOptions' => [
@@ -162,6 +163,7 @@ $this->registerJs("$('#lat{$model->id_house}').on('change', function() {
         ],
     ],
 ]) ?>
+
 <?= $form->field($model, 'id_street')->widget(Select2::class, [
     'data' => $model->id_street ? ArrayHelper::map([$model->street], 'id_street', 'name') : [],
     'pluginOptions' => [
