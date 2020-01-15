@@ -18,7 +18,7 @@ class StreetSearch extends Street
     {
         return [
             [['id_street'], 'integer'],
-            [['is_updatable'], 'boolean'],
+            [['is_updatable', 'is_active'], 'boolean'],
             [['aoguid', 'name'], 'safe'],
         ];
     }
@@ -60,6 +60,7 @@ class StreetSearch extends Street
         // grid filtering conditions
         $query->andFilterWhere([
             'id_street' => $this->id_street,
+            'is_active' => $this->is_active,
             'is_updatable' => $this->is_updatable,
         ]);
 

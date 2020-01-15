@@ -24,6 +24,7 @@ use Yii;
  * @property float $lon
  * @property string $fullname
  * @property bool $is_updatable
+ * @property bool $is_active
  * @property int $sputnik_updated_at
  * @property int $update_at
  * @property int $created_by
@@ -67,7 +68,7 @@ class House extends \yii\db\ActiveRecord
         return [
             [['houseguid'], 'string'],
             [['postalcode', 'name', 'fullname'], 'string', 'max' => 255],
-            [['is_updatable'], 'boolean'],
+            [['is_updatable', 'is_active'], 'boolean'],
             [['lat', 'lon'], 'number'],
             [['id_country', 'id_region', 'id_subregion', 'id_city', 'id_district', 'id_street', 'sputnik_updated_at'], 'default', 'value' => null],
             [['id_country', 'id_region', 'id_subregion', 'id_city', 'id_district', 'id_street', 'sputnik_updated_at'], 'integer'],
@@ -101,6 +102,7 @@ class House extends \yii\db\ActiveRecord
             'sputnik_updated_at' => 'Координаты обновлены',
             'fullname' => 'Полный адрес',
             'is_updatable' => 'Обновлять из ФИАС',
+            'is_active' => 'Активный',
         ];
     }
 

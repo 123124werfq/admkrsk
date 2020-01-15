@@ -184,6 +184,8 @@ $this->registerJs("$('#lat{$model->id_house}').on('change', function() {
     <div class="widget-input-map" id="map"></div>
 </div>
 
+<?= $form->field($model, 'is_active')->checkbox() ?>
+
 <?= $form->field($model, 'is_updatable')->checkbox() ?>
 
 <hr>

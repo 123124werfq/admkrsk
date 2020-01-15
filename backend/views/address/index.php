@@ -45,6 +45,7 @@ if (Yii::$app->user->can('admin.address')) {
                             return $model->getFullName();
                         },
                     ],
+                    'is_active:boolean',
                     'is_updatable:boolean',
 
                     [

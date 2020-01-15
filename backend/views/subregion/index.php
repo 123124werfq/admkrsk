@@ -33,6 +33,7 @@ if (Yii::$app->user->can('admin.address')) {
                 'columns' => [
                     'id_subregion',
                     'name',
+                    'is_active:boolean',
                     'is_updatable:boolean',
 
                     [

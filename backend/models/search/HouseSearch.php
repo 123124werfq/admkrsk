@@ -18,7 +18,7 @@ class HouseSearch extends House
     {
         return [
             [['id_house'], 'integer'],
-            [['is_updatable'], 'boolean'],
+            [['is_updatable', 'is_active'], 'boolean'],
             [['name', 'fullname'], 'safe'],
         ];
     }
@@ -60,6 +60,7 @@ class HouseSearch extends House
         // grid filtering conditions
         $query->andFilterWhere([
             'id_house' => $this->id_house,
+            'is_active' => $this->is_active,
             'is_updatable' => $this->is_updatable,
         ]);
 
