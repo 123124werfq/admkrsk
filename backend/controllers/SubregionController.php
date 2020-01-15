@@ -88,7 +88,7 @@ class SubregionController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Subregion(['is_manual' => true]);
+        $model = new Subregion();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_CREATE);

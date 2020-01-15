@@ -17,7 +17,10 @@ $this->params['breadcrumbs'][] = ['label' => 'История', 'url' => [$parent
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->params['button-block'][] = Html::a('История', [$parentModel ? $parent['history'] : 'history', 'id' => $model->entity->primaryKey], ['class' => 'btn btn-default']);
-$this->params['button-block'][] = Html::a('Восстановить', [$parentModel ? $parent['restore'] : 'restore', 'id' => $model->primaryKey], ['class' => 'btn btn-primary']);
+$this->params['button-block'][] = Html::a('Восстановить', [$parentModel ? $parent['restore'] : 'restore', 'id' => $model->primaryKey], [
+    'class' => 'btn btn-primary',
+    'data-confirm' => 'Вы действительно хотите восстановить эти данные?',
+]);
 
 $attributes = [];
 foreach ($model->changeAttributes as $attribute => $value) {

@@ -87,7 +87,7 @@ class RegionController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Region(['is_manual' => true]);
+        $model = new Region();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_CREATE);

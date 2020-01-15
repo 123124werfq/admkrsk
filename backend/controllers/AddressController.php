@@ -94,9 +94,12 @@ class AddressController extends Controller
      */
     public function actionCreate()
     {
-        $model = new House(['is_manual' => true]);
+        $model = new House();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if (!$model->sputnik_updated_at || !$model->lat || !$model->lon) {
+                $model->updateLocation();
+            }
             $model->createAction(Action::ACTION_CREATE);
             return $this->redirect(['view', 'id' => $model->id_house]);
         }
@@ -118,7 +121,14 @@ class AddressController extends Controller
     {
         $model = $this->findModel($id);
 
+        if (!$model->sputnik_updated_at || !$model->lat || !$model->lon) {
+            $model->updateLocation();
+        }
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if (!$model->sputnik_updated_at || !$model->lat || !$model->lon) {
+                $model->updateLocation();
+            }
             $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id_house]);
         }

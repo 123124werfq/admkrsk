@@ -1,4 +1,7 @@
 <?php
+
+use common\components\sputnik\SputnikApi;
+
 return [
     'language'=>'ru-RU',
     'aliases' => [
@@ -7,7 +10,13 @@ return [
     ],
     'timeZone' => 'Asia/Krasnoyarsk',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
+    'bootstrap' => [
+        'queue',
+    ],
     'components' => [
+        'sputnik' => [
+            'class' => SputnikApi::class,
+        ],
         'db' => [
             'schemaMap' => [
                 'pgsql' => [
@@ -27,6 +36,10 @@ return [
         ],
         'session' => [
             'class' => 'yii\redis\Session',
+        ],
+        'queue' => [
+            'class' => 'yii\queue\redis\Queue',
+            'as log' => 'yii\queue\LogBehavior',
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
