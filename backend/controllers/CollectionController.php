@@ -351,6 +351,44 @@ class CollectionController extends Controller
 
                     break;
 
+                case CollectionColumn::TYPE_CHECKBOXES:
+                    
+                    $col = Yii::$app->request->post('column');
+
+                    if (!empty($col))
+                    {
+                        $newColumn = $collection->createColumn([
+                            'name' => 'Координаты',
+                            'alias' => 'map_coords',
+                            'type' => CollectionColumn::TYPE_MAP,
+                        ]);
+
+                        if ($newColumn)
+                        {
+                            // добавляем инпут в форму
+                            $newColumn->collection->form->createInput([
+                                'type' => $newColumn->type,
+                                'name' => $newColumn->name,
+                                'label' => $newColumn->name,
+                                'fieldname' => $newColumn->alias,
+                                'id_column' => $newColumn->id_column,
+                            ]);
+
+                            $alldata = $collection->getData([], true);
+
+                            foreach ($alldata as $id_record => $data)
+                            {
+                                $record = CollectionRecord::findOne($id_record);
+                                $record->data = [$newColumn->id_column => [$data[$x], $data[$y]]];
+                                $record->update();
+                            }
+                        }
+                        else
+                            print_r($newColumn->errors);
+                    }
+
+                    break;
+
                 default:
                     # code...
                     break;

@@ -256,20 +256,26 @@ class PageController extends Controller
 
     public function actionPartition($id=null)
     {
-        $parent = null;
+        $model = null;
 
         if (!empty($id))
         {
-            $parent = $this->findModel($id);
-            $partitions = $parent->children()->andWhere(['is_partition'=>1])->all();
+            $model = $this->findModel($id);
+            $partitions = $model->children()->andWhere(['is_partition'=>1])->all();
+
+            return $this->render('partition/partition',[
+                'partitions'=>$partitions,
+                'model'=>$model,
+            ]);
         }
         else
+        {
             $partitions = Page::find()->where(['is_partition'=>1])->all();
 
-        return $this->render('partition/partition',[
-            'partitions'=>$partitions,
-            'parent'=>$parent,
-        ]);
+            return $this->render('partition/all',[
+                'partitions'=>$partitions,
+            ]);
+        }
     }
 
     /**
@@ -277,7 +283,7 @@ class PageController extends Controller
      * @return mixed
      * @throws ExitException
      */
-    public function actionIndex($export=false)
+    public function actionIndex($id_partition=null,$export=false)
     {
         $searchModel = new PageSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -287,6 +293,7 @@ class PageController extends Controller
             'user_id' => Yii::$app->user->id,
         ]);
         $columns = null;
+        
         if ($grid) {
             $columns = json_decode($grid->settings, true);
         }
@@ -327,6 +334,7 @@ class PageController extends Controller
         }
 
         return $this->render('index', [
+            'partition'=>($id_partition)?$this->findModel($id_partition):null,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'customColumns' => $columns,

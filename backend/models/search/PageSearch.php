@@ -8,6 +8,8 @@ use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\web\NotFoundHttpException;
+
 use common\models\Page;
 
 /**
@@ -56,6 +58,18 @@ class PageSearch extends Page
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.page')) {
             $query->andFilterWhere(['id_page' => AuthEntity::getEntityIds(Page::class)]);
+        }
+
+        $id_partition = Yii::$app->request->get('id_partition',null);
+        
+        if (!empty($id_partition))
+        {
+            $partition = Page::findOne($id_partition);
+
+            if (empty($partition))
+                throw new NotFoundHttpException('The requested page does not exist.');
+
+            $query = $query->andWhere('lft > '.$partition->lft.' AND rgt <'.$partition->rgt);
         }
 
         $dataProvider = new ActiveDataProvider([

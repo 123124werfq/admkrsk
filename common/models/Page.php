@@ -168,21 +168,6 @@ class Page extends ActiveRecord
         return $this->getUrl(true);
     }
 
-    /*public function createPath()
-    {
-        $oldpath = $this->path;
-
-        if (empty($this->id_parent))
-            $this->path = $this->id_page;
-        else
-            $this->path = $this->parent->path.'/'.$this->id_page;
-
-        $this->updateAttributes(['path']);
-
-        $sql = "UPDATE cnt_page SET path = REPLACE(path,'$oldpath','$this->path') WHERE path LIKE '$oldpath/%'";
-        //Yii::$app->db->createCommand()->update('cnt_page','path = REPLACE(path,$oldpath)');
-        Yii::$app->db->createCommand($sql)->execute();
-    }*/
 
     public static function getUrlByID($id)
     {
@@ -195,14 +180,10 @@ class Page extends ActiveRecord
         return false;
     }
 
-    /*public function afterSave($insert, $changedAttributes)
+    public function getPartition()
     {
-        //if (isset($changedAttributes['id_parent']) || $insert)
-
-        //$this->createPath();
-
-        parent::afterSave($insert, $changedAttributes);
-    }*/
+        return $this->parents()->andWhere('is_partition = TRUE')->orderBy('lft DESC')->one();
+    }
 
     public function beforeValidate()
     {

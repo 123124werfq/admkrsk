@@ -1,8 +1,11 @@
 <?php
 	use common\models\CollectionColumn;
 	use yii\helpers\Html;
+	use yii\helpers\ArrayHelper;
 
 	$options = CollectionColumn::getTypeOptions($model->type);
+
+	$columns = [];
 
 	if (!empty($options))
 	{
@@ -21,6 +24,15 @@
 			{
 				case 'input':
 					echo Html::textInput("FormInput[options][$key]",$value,$inputOption);
+					break;
+				case 'column':
+					if (empty($columns))
+					{
+						$columns = $model->form->collection->getColumns()->select(['id_column','name'])->where(['type'=>[CollectionColumn::TYPE_DATE,CollectionColumn::TYPE_DATETIME]])->all();
+						$columns = ArrayHelper::map($columns,'id_column','name');
+					}
+
+					echo Html::dropDownList("FormInput[options][$key]",$value,$columns,$inputOption);
 					break;
 				case 'richtext':
 					$inputOption['class'] .= ' redactor';
