@@ -84,7 +84,9 @@ $this->registerJs("$('#lat{$model->id_house}').on('change', function() {
         'ajax' => [
             'url' => Url::toRoute(['/address/country']),
             'dataType' => 'json',
-            'data' => new JsExpression('function(params) { return {search:params.term}; }')
+            'data' => new JsExpression('function(params) { return {
+                    search:params.term
+                }; }')
         ],
     ],
 ]) ?>
@@ -100,7 +102,8 @@ $this->registerJs("$('#lat{$model->id_house}').on('change', function() {
             'dataType' => 'json',
             'data' => new JsExpression('function(params) { return {
                     search:params.term,
-                    id_country: $(\'#house-id_country\').val()
+                    id_country: $(\'#house-id_country\').val(),
+                    is_active: 0
                 }; }')
         ],
     ],
@@ -117,7 +120,8 @@ $this->registerJs("$('#lat{$model->id_house}').on('change', function() {
             'dataType' => 'json',
             'data' => new JsExpression('function(params) { return {
                     search:params.term,
-                    id_region: $(\'#house-id_region\').val()
+                    id_region: $(\'#house-id_region\').val(),
+                    is_active: 0
                 }; }')
         ],
     ],
@@ -135,7 +139,8 @@ $this->registerJs("$('#lat{$model->id_house}').on('change', function() {
             'data' => new JsExpression('function(params) { return {
                     search:params.term,
                     id_region: $(\'#house-id_region\').val(),
-                    id_subregion: $(\'#house-id_subregion\').val()
+                    id_subregion: $(\'#house-id_subregion\').val(),
+                    is_active: 0
                 }; }')
         ],
     ],
@@ -151,7 +156,8 @@ $this->registerJs("$('#lat{$model->id_house}').on('change', function() {
             'dataType' => 'json',
             'data' => new JsExpression('function(params) { return {
                     search:params.term,
-                    id_region: $(\'#house-id_region\').val()
+                    id_city: $(\'#house-id_city\').val(),
+                    is_active: 0
                 }; }')
         ],
     ],
@@ -168,7 +174,8 @@ $this->registerJs("$('#lat{$model->id_house}').on('change', function() {
             'data' => new JsExpression('function(params) { return {
                     search:params.term,
                     id_city: $(\'#house-id_city\').val(),
-                    id_district: $(\'#house-id_district\').val()
+                    id_district: $(\'#house-id_district\').val(),
+                    is_active: 0
                 }; }')
         ],
     ],
