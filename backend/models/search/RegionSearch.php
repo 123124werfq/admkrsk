@@ -18,7 +18,7 @@ class RegionSearch extends Region
     {
         return [
             [['id_region'], 'integer'],
-            [['is_updatable'], 'boolean'],
+            [['is_updatable', 'is_active'], 'boolean'],
             [['aoguid', 'name'], 'safe'],
         ];
     }
@@ -60,6 +60,7 @@ class RegionSearch extends Region
         // grid filtering conditions
         $query->andFilterWhere([
             'id_region' => $this->id_region,
+            'is_active' => $this->is_active,
             'is_updatable' => $this->is_updatable,
         ]);
 

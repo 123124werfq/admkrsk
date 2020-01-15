@@ -40,9 +40,9 @@ class Log extends \common\modules\log\models\Log
     public function restore()
     {
         if ($this->countChanges) {
-            $this->entity->setAttributes($this->data);
+            $this->entity->setAttributes($this->changeAttributes);
 
-            return $this->entity->save();
+            return $this->entity->save(false);
         }
 
         return false;

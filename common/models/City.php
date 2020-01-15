@@ -14,6 +14,7 @@ use Yii;
  * @property string $aoguid
  * @property string $name
  * @property bool $is_updatable
+ * @property bool $is_active
  * @property int $update_at
  * @property int $created_by
  * @property int $updated_at
@@ -50,7 +51,7 @@ class City extends \yii\db\ActiveRecord
         return [
             [['aoguid'], 'string'],
             [['name'], 'string', 'max' => 255],
-            [['is_updatable'], 'boolean'],
+            [['is_updatable', 'is_active'], 'boolean'],
         ];
     }
 
@@ -64,6 +65,7 @@ class City extends \yii\db\ActiveRecord
             'aoguid' => 'Aoguid',
             'name' => 'Город',
             'is_updatable' => 'Обновлять из ФИАС',
+            'is_active' => 'Активный',
         ];
     }
 

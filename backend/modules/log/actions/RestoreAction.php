@@ -26,8 +26,8 @@ class RestoreAction extends HistoryAction
             return $this->controller->redirect(['view', 'id' => $parentModel ? $parentModel->primaryKey : $model->entity->primaryKey]);
         }
 
-        Yii::$app->session->setFlash('danger', 'При восстановлении изменений произошла ошибка');
+        Yii::$app->session->setFlash('error', 'При восстановлении изменений произошла ошибка');
 
-        return $this->controller->refresh();
+        return $this->controller->redirect(Yii::$app->request->referrer);
     }
 }

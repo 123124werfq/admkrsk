@@ -18,7 +18,7 @@ class CitySearch extends City
     {
         return [
             [['id_city'], 'integer'],
-            [['is_updatable'], 'boolean'],
+            [['is_updatable', 'is_active'], 'boolean'],
             [['aoguid', 'name'], 'safe'],
         ];
     }
@@ -60,6 +60,7 @@ class CitySearch extends City
         // grid filtering conditions
         $query->andFilterWhere([
             'id_city' => $this->id_city,
+            'is_active' => $this->is_active,
             'is_updatable' => $this->is_updatable,
         ]);
 
