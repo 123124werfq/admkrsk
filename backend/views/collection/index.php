@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use \common\models\Box;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\search\CollectionSearch */
@@ -44,11 +46,17 @@ if (Yii::$app->user->can('admin.collection')) {
                     }
                 ],
                 'created_at:date',
+                [
+                    'attribute' => 'id_box',
+                    'value' => function ($model) {
+                        return (!empty($model->box))?$model->box->name:'';
+                    },
+                    'filter'    => ArrayHelper::map(Box::find()->all(),'id_box','name'),
+                ],
                 //'updated_at',
                 //'updated_by',
                 //'deleted_at',
                 //'deleted_by',
-
                 [
                     'class' => 'yii\grid\ActionColumn',
                     'contentOptions'=>['class'=>'button-column'],

@@ -7,6 +7,8 @@ use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use yii\web\JsExpression;
+use common\models\Box;
+
 /* @var $this yii\web\View */
 /* @var $model common\models\Form */
 /* @var $form yii\widgets\ActiveForm */
@@ -22,7 +24,7 @@ use yii\web\JsExpression;
         <div class="col-sm-6"><?= $form->field($model, 'state')->checkBox()?></div>
     </div>
 
-    <?= $form->field($model, 'id_group')->dropDownList(\common\models\Collection::getArrayByAlias('form_groups'))?>
+    <?= $form->field($model, 'id_box')->dropDownList(ArrayHelper::map(Box::find()->all(), 'id_box', 'name'),['prompt'=>'Выберите группу']) ?>
 
     <?= $form->field($model, "id_service")->widget(Select2::class, [
             'data' => ArrayHelper::map(\common\models\Service::find()->all(), 'id_service', 'reestr_number'),
@@ -74,14 +76,12 @@ use yii\web\JsExpression;
 
     <?php if (Yii::$app->user->can('admin.form')): ?>
         <hr>
-        
         <h3>Доступ</h3>
-
         <?php
             $records = $model->getRecords('partitions');
             if (!empty($records[0]->id_page))
                 $records = ArrayHelper::map($records, 'id_page', 'title');
-            else 
+            else
                 $records = [];
 
             echo Select2::widget([
