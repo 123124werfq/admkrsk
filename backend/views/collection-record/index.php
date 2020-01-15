@@ -1,13 +1,14 @@
-  <?php
+<?php
 
-  use common\jobs\InstitutionImportJob;
-  use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
+use backend\models\forms\InstitutionUpdateSettingForm;
+use common\jobs\InstitutionImportJob;
+use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
+/* @var InstitutionUpdateSettingForm $settingForm */
 /* @var $model common\models\Collection */
 
 $this->title = $model->pageTitle;
@@ -47,6 +48,29 @@ if ($model->alias == 'institution') {
     }
 }
 ?>
+<?php if ($model->alias == 'institution'): ?>
+    <div class="ibox">
+        <div class="ibox-title">
+            <h3>Настройки обновления</h3>
+        </div>
+        <div class="ibox-content">
+            <?php $form = ActiveForm::begin(); ?>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <?= $form->field($settingForm, 'schedule')->textInput() ?>
+                </div>
+            </div>
+
+            <hr>
+
+            <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']) ?>
+
+            <?php ActiveForm::end(); ?>
+        </div>
+    </div>
+<?php endif; ?>
+
 <div class="tabs-container">
     <ul class="nav nav-tabs" role="tablist">
         <li class="active">
