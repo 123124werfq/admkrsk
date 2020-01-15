@@ -23,7 +23,7 @@ class FormSearch extends Form
     public function rules()
     {
         return [
-            [['id_form','id_collection', 'created_by', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['id_form','id_collection','id_box', 'created_by', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['name'], 'safe'],
             [['created_at', 'updated_at'], 'string'],
         ];
@@ -88,6 +88,7 @@ class FormSearch extends Form
         $query->andFilterWhere([
             'id_form' => $this->id_form,
             'id_collection' => $this->id_collection,
+            'id_box' => $this->id_box,
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
             'deleted_at' => $this->deleted_at,

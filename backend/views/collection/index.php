@@ -44,6 +44,7 @@ if (Yii::$app->user->can('admin.collection')) {
                     }
                 ],
                 'created_at:date',
+                'group.name',
                 //'updated_at',
                 //'updated_by',
                 //'deleted_at',
