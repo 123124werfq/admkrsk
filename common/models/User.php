@@ -157,7 +157,7 @@ class User extends ActiveRecord implements IdentityInterface
             }
         }
 
-        if (!$this->esia_user) {
+        if (!$this->esia_user && $this->id_ad_user) {
             $this->id_esia_user = null;
         }
     }
