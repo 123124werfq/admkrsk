@@ -163,7 +163,7 @@ class FormDynamic extends DynamicModel
 
                                     $data[$index][] = $media->id_media;
                                 }
-                                else 
+                                else
                                     $data[$index][] = (int)$file['id_media'];
                             }
                         }
