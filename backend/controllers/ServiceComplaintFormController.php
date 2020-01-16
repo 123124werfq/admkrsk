@@ -92,7 +92,6 @@ class ServiceComplaintFormController extends Controller
             }
             return $this->redirect(['index', 'id' => $model->id_appeal]);
         }
-        }
 
         return $this->render('create', [
             'model' => $model,
