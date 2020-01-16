@@ -774,12 +774,15 @@ class SiteController extends Controller
 
         $esiauser = new EsiaUser();
 
-        if ($esiauser->actualize($esia))
+        if ($esiauser->actualize($esia)) {
+            var_dump($esiauser->id_esia_user);
             $user->id_esia_user = $esiauser->id_esia_user;
-
+        }
         if (!$user->save()) {
             throw new yii\web\ServerErrorHttpException('Внутренняя ошибка сервера');
         }
+
+        var_dump($user->id_esia_user); die();
 
         Yii::$app->user->login($user);
         Yii::$app->user->identity->createAction(Action::ACTION_SIGNUP_ESIA);
