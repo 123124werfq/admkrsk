@@ -86,7 +86,7 @@ class ServiceComplaintFormController extends Controller
                 {
                     $complain = new ServiceComplaintForm();
                     $complain->attribures = $model->attribures;
-                    $complain->id_service = $id_service
+                    $complain->id_service = $id_service;
                     $complain->save();
                 }
             }
