@@ -8,6 +8,8 @@ use yii\helpers\Html;
 /* @var $searchModel backend\models\search\HouseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
+$archive = Yii::$app->request->get('archive');
+
 $this->title = $searchModel->breadcrumbsLabel;
 $this->params['breadcrumbs'][] = $this->title;
 

@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\forms\InstitutionUpdateSettingForm;
 use common\jobs\InstitutionImportJob;
 use common\models\District;
 use Yii;
@@ -159,6 +160,17 @@ class CollectionRecordController extends Controller
      */
     public function actionIndex($id)
     {
+        $settingForm = new InstitutionUpdateSettingForm();
+
+        if ($settingForm->load(Yii::$app->request->post())) {
+            if ($settingForm->save()) {
+                Yii::$app->session->setFlash('success', 'Настройки успешно сохранены');
+                $this->refresh();
+            } else {
+                Yii::$app->session->setFlash('error', 'Произошла ошибка при сохранении настроек');
+            }
+        }
+
         $model = $this->findCollection($id);
         $query = $model->getDataQuery();
 
@@ -385,6 +397,7 @@ class CollectionRecordController extends Controller
         ];*/
 
         return $this->render('index', [
+            'settingForm' => $settingForm,
             'model' => $model,
             'columns' => $dataProviderColumns,
             'dataProvider' => $dataProvider,
