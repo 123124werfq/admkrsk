@@ -85,7 +85,7 @@ class ServiceComplaintFormController extends Controller
                 foreach ($model->id_services as $key => $id_service)
                 {
                     $complain = new ServiceComplaintForm();
-                    $complain->attribures = $model->attribures;
+                    $complain->attributes = $model->attributes;
                     $complain->id_service = $id_service;
                     $complain->save();
                 }
