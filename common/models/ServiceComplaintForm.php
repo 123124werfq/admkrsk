@@ -31,7 +31,9 @@ class ServiceComplaintForm extends ActiveRecord
     {
         return [
             [['id_form', 'id_record_firm', 'id_record_category', 'id_service'], 'default', 'value' => null],
-            [['id_form', 'id_record_firm', 'id_record_category', 'id_service'], 'required'],
+            [['id_form', 'id_record_firm', 'id_record_category'], 'required'],
+            [['id_service'], 'required', 'on' => 'update'],
+            [['id_services'], 'required', 'on' => 'create'],
             [['id_form', 'id_record_firm', 'id_record_category', 'id_service'], 'integer'],
             [['id_services'],'safe']
         ];
