@@ -19,7 +19,7 @@ use kartik\select2\Select2;
     <?php $form = ActiveForm::begin(); ?>
 
     <?=$form->field($model, 'id_form')->widget(Select2::class, [
-        'data' => ArrayHelper::map(\common\models\Form::find()->all(), 'id_form', 'name'),
+        'data' => ArrayHelper::map(\common\models\Form::find()->where(['is_template'=>0])->all(), 'id_form', 'name'),
         'pluginOptions' => [
             'allowClear' => true,
             'placeholder' => 'Выберите форму',
