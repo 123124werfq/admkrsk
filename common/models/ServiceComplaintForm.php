@@ -15,6 +15,7 @@ use yii\db\ActiveRecord;
  */
 class ServiceComplaintForm extends ActiveRecord
 {
+    public $id_services;
     /**
      * {@inheritdoc}
      */
@@ -32,6 +33,7 @@ class ServiceComplaintForm extends ActiveRecord
             [['id_form', 'id_record_firm', 'id_record_category', 'id_service'], 'default', 'value' => null],
             [['id_form', 'id_record_firm', 'id_record_category', 'id_service'], 'required'],
             [['id_form', 'id_record_firm', 'id_record_category', 'id_service'], 'integer'],
+            [['id_services'],'safe']
         ];
     }
 
@@ -46,6 +48,7 @@ class ServiceComplaintForm extends ActiveRecord
             'id_record_firm' => 'Организация',
             'id_record_category' => 'Категория',
             'id_service' => 'Услуга',
+            'id_services'=> 'Услуги',
         ];
     }
 

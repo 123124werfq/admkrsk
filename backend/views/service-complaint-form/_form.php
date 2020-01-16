@@ -42,14 +42,29 @@ use kartik\select2\Select2;
         ],
     ])?>
 
-    <?= $form->field($model, "id_service")->widget(Select2::class, [
-            'data' => ArrayHelper::map(\common\models\Service::find()->all(), 'id_service', 'reestr_number'),
-            'pluginOptions' => [
-                'allowClear' => true,
-                'placeholder' => 'Выберите услугу',
-            ],
-        ]);
-    ?>
+    <?php if (!$model->isNewRecord){?>
+        <?= $form->field($model, "id_service")->widget(Select2::class, [
+                'data' => ArrayHelper::map(\common\models\Service::find()->all(), 'id_service', 'reestr_number'),
+                'pluginOptions' => [
+                    'allowClear' => true,
+                    'placeholder' => 'Выберите услугу',
+                ],
+            ]);
+        ?>
+    <?php }else {?>
+        <?= $form->field($model, "id_services")->widget(Select2::class, [
+                'data' => ArrayHelper::map(\common\models\Service::find()->all(), 'id_service', 'reestr_number'),
+                'pluginOptions' => [
+                    'multiple' => true,
+                    'allowClear' => true,
+                    'placeholder' => 'Выберите услуги',
+                ],
+                'options'=>[
+                    'multiple' => true,
+                ]
+            ]);
+        ?>
+    <?php }?>
 
     <div class="form-group">
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

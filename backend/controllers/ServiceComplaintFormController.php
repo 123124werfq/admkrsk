@@ -78,8 +78,20 @@ class ServiceComplaintFormController extends Controller
     {
         $model = new ServiceComplaintForm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            if (is_array($model->id_services))
+            {
+                foreach ($model->id_services as $key => $id_service)
+                {
+                    $complain = new ServiceComplaintForm();
+                    $complain->attribures = $model->attribures;
+                    $complain->id_service = $id_service
+                    $complain->save();
+                }
+            }
             return $this->redirect(['index', 'id' => $model->id_appeal]);
+        }
         }
 
         return $this->render('create', [
