@@ -51,10 +51,22 @@ class FormInput extends \yii\db\ActiveRecord
             ['id_collection_column', 'required', 'when' => function($model) {
                 return (!empty($model->id_collection));
             }],
+            [['fieldname'], 'fieldnameUnique'],
             [['hint','label'], 'string'],
             [['options','values'],'safe'],
             [['name', 'fieldname','alias'], 'string', 'max' => 500],
         ];
+    }
+
+    /**
+     * проверка на уникальность алиаса инпута в рамках одной формы
+     */
+    public function fieldnameUnique()
+    {
+        $count = FormInput::find()->where(['fieldname'=$this->fieldname,'id_form'=>$this->id_form])->andWhere('id_input <> '.(int)$this->id_input)->count();
+
+        if ($count>0)
+            $this->addError('fieldname', 'Такой псевдоним уже существует');
     }
 
     /**

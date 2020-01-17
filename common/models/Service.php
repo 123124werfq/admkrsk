@@ -66,7 +66,6 @@ class Service extends ActiveRecord
     const TYPE_FIRM = 4;
 
     public $access_user_ids;
-    //public $id_target;
     public $access_user_group_ids;
 
     /**
@@ -106,7 +105,6 @@ class Service extends ActiveRecord
         return [
             'id_service' => 'ID',
             'id_rub' => 'Рубрика',
-            //'id_target'=> 'Цель',
             'reestr_number' => 'Реестровый номер услуги',
             'fullname' => 'Полное наименование',
             'name' => 'Название',
@@ -187,29 +185,8 @@ class Service extends ActiveRecord
                 'услуга учреждения'=>'услуга учреждения',
             ];
 
-        /*if ($attribute=='id_target')
-        {
-            $output = [];
-
-            foreach ($this->targets as $key => $target)
-                $output[$target->id_target] = $target->name;
-
-            return $output;
-        }*/
-
         return [];
     }
-
-    /*public function beforeSave($insert)
-    {
-        if (parent::beforeSave($insert))
-        {
-
-            return true;
-        }
-        else
-            return false;
-    }*/
 
     public function afterSave($insert, $changedAttributes)
     {
