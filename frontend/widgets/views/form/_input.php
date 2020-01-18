@@ -131,8 +131,148 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 break;
 
             case CollectionColumn::TYPE_ADDRESS:
-                echo $form->field($model, $attribute)->textInput($options);
-                $script = <<< JS
+
+
+                if (empty($model->$attribute))
+                    $model->$attribute = [
+                        'country'=>'',
+                        'id_countru'=>'',
+                        'region'=>'',
+                        'id_region'=>'',
+                        'region'=>'',
+                        'id_region'=>'',
+                        'subregion'=>'',
+                        'id_subregion'=>'',
+                        'city'=>'',
+                        'id_city'=>'',
+                        'district'=>'',
+                        'id_district'=>'',
+                        'street'=>'',
+                        'id_street'=>'',
+                        'house'=>'',
+                        'id_house'=>'',
+                        'house'=>'',
+                        'houseguid'=>'',
+                        'lat'=>'',
+                        'lon'=>''
+                    ];
+
+                echo '<div class="flex-wrap">';
+                echo '<div class="col-md-4">'.$form->field($model, $attribute.'[country]')->widget(Select2::class, [
+                    'data' => [],
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        'tags' => true,
+                        'minimumInputLength' => 0,
+                        'placeholder' => 'Страна',
+                        'ajax' => [
+                            'url' => '/address/country',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {search:params.term};}')
+                        ],
+                    ],
+                    'options' => [
+                        'id' => 'input-country' . $attribute
+                    ]
+                ]).'</div>';
+
+                echo '<div class="col-md-4">'.$form->field($model, $attribute.'[region]')->widget(Select2::class, [
+                    'data' => [],
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        'minimumInputLength' => 0,
+                        'tags'=> true,
+                        'placeholder' => 'Регион',
+                        'ajax' => [
+                            'url' => '/address/region',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_country:$("#input-country' . $attribute . '").val()};}')
+                        ],
+                    ],
+                    'options' => [
+                        'id' => 'input-region' . $attribute
+                    ]
+                ]).'</div>';
+
+                echo '<div class="col-md-4">'.$form->field($model, $attribute.'[city]')->widget(Select2::class, [
+                    'data' => [],
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        'minimumInputLength' => 0,
+                        'tags' => true,
+                        'placeholder' => 'Город',
+                        'ajax' => [
+                            'url' => '/address/city',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_region:$("#input-region' . $attribute . '").val(),id_subregion:$("#input-subregion' . $attribute . '").val()};}')
+                        ],
+                    ],
+                    'options' => [
+                        'id' => 'input-city'.$attribute
+                    ]
+                ]).'</div>';
+
+                echo '<div class="col-md-4">'.$form->field($model, $attribute.'[district]')->widget(Select2::class, [
+                    'data' => [],
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        'tags' => true,
+                        'placeholder' => 'Район города',
+                        'ajax' => [
+                            'url' => '/address/district',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {search:params.term};}')
+                        ],
+                    ],
+                    'options' => [
+                        'id' => 'input-district' . $attribute
+                    ]
+                ]).'</div>';
+
+                echo '<div class="col-md-4">'.$form->field($model, $attribute.'[street]')->widget(Select2::class, [
+                    'data' => [],
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        //'allowClear' => true,
+                        'minimumInputLength' => 0,
+                        'placeholder' => 'Улица',
+                        'tags' => true,
+                        'ajax' => [
+                            'url' => '/address/street',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:$("#input-city' . $attribute . '").val(),id_district:$("#input-district' . $attribute . '").val()};}')
+                        ],
+                    ],
+                    'options' => [
+                        'id' => 'input-street' . $attribute
+                    ]
+                ]).'</div>';
+
+                echo '<div class="col-md-4">'.$form->field($model, $attribute.'[house]')->widget(Select2::class, [
+                    'data' => [],
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        //'allowClear' => true,
+                        'tags' => true,
+                        'minimumInputLength' => 0,
+                        'placeholder' => 'Дом',
+                        'ajax' => [
+                            'url' => '/address/house',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_street:$("#input-street' . $attribute . '").val()};}')
+                        ],
+                    ],
+                    'pluginEvents' => [
+                        "select2:select" => "function(e) {
+                            if ($('#postalcode" . $attribute . "').length>0)
+                                $('#postalcode" . $attribute . "').val(e.params.data.postalcode);
+                        }",
+                    ]
+                ]).'</div>';
+
+                echo '</div>';
+
+                /*$script = <<< JS
 $("#{$options['id']}").autocomplete({
         'minLength':'2',
         'showAnim':'fold',
@@ -151,7 +291,7 @@ $("#{$options['id']}").autocomplete({
     })
     .data("autocomplete");
 JS;
-                $this->registerJs($script, yii\web\View::POS_END);
+                $this->registerJs($script, yii\web\View::POS_END);*/
                 break;
             case CollectionColumn::TYPE_FILE:
 
