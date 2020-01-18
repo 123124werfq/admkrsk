@@ -243,7 +243,6 @@ class Workflow extends Model
     {
         $url = $this->sendServiceURL;
 
-        /*
         $body = '';
 
         $soapBoundaryId = "c73c9ce8-6e02-40ce-9f68-064e18843428";
@@ -275,9 +274,27 @@ class Workflow extends Model
         // тут файл подключаем, если есть
 
         $body .= $boundarybytesEnd;
-        */
+
 
         $body = file_get_contents(Yii::getAlias('@app').'/assets/testrequest.txt');
+
+        $fp = fsockopen('10.24.0.201', 80, $errno, $errstr, 30);
+        if (!$fp) {
+            echo "$errstr ($errno)<br />\n";
+        } else {
+            $out = "POST /WSSiteRSA HTTP/1.1\r\n";
+            $out .= "Host: 10.24.0.201\r\n";
+            $out .= "Content-Length: ".strlen($body)."\r\n\r\n";
+            $out .= $body;
+            $out .= "Connection: Close\r\n\r\n";
+            fwrite($fp, $out);
+            while (!feof($fp)) {
+                echo fgets($fp, 128);
+            }
+            fclose($fp);
+        }
+
+        die();
 
         $headers = [
             'SOAPAction:urn:#Operation_03_00_004FL',
