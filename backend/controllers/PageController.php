@@ -195,6 +195,17 @@ class PageController extends Controller
         return ['results' => $results];
     }
 
+    public function actionGetPage()
+    {
+        $records = Page::find()->where('id_page IN (SELECT id_page FROM db_news)')->all();
+
+        $output = [];
+        foreach ($records as $key => $data)
+            $output[] = ['text'=>$data->title,'value'=>(string)$data->id_page];
+
+        return json_encode($output);
+    }
+
     public function actionTemplate($id)
     {
         $page = $this->findModel($id);
@@ -293,7 +304,7 @@ class PageController extends Controller
             'user_id' => Yii::$app->user->id,
         ]);
         $columns = null;
-        
+
         if ($grid) {
             $columns = json_decode($grid->settings, true);
         }
