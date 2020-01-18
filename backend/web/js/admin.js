@@ -38,16 +38,16 @@ function filePicker(callback, value, meta) {
 var tinymceConfig = {
     selector:'.redactor',
     plugins: [
-        'link image imagetools table autoresize collections gallery code paste media lists fullscreen stickytoolbar form hrreserve'
+        'link image imagetools table autoresize collections gallery code paste media lists fullscreen stickytoolbar form hrreserve news'
     ],
     menu: {
-        custom: { title: 'Плагины', items: 'form gallery collections hrreserve' }
+        custom: { title: 'Плагины', items: 'form gallery collections hrreserve pagenews' }
     },
     menubar: 'file edit view insert format tools table custom',
     contextmenu: "link image imagetools table spellchecker",
     toolbar: "code fullscreen | undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist blockquote | link image media",
     language: 'ru',
-    extended_valid_elements : "hrreserve,collection[data-id],gallery[data-id|data-limit|data-type],forms[data-id]",
+    extended_valid_elements : "pagenews,hrreserve,collection[data-id],gallery[data-id|data-limit|data-type],forms[data-id]",
     content_css : "/js/tinymce/admin.css",
     image_title: true,
     images_upload_url: '/media/tinymce',

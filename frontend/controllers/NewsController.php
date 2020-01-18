@@ -12,7 +12,7 @@ class NewsController extends Controller
 {
     public function actionIndex($page=null)
     {
-        $news = News::find();
+        $news = News::find()->where(['state'=>1]);
 
         $rubrics = (new \yii\db\Query())
                 ->select(['id_rub'])
