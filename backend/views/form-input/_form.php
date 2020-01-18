@@ -62,12 +62,7 @@ use yii\web\JsExpression;
         <?=$form->field($model, 'values')->textarea(['rows' => 6,'required'=>($model->type==CollectionColumn::TYPE_CHECKBOX)])->hint('Вводить через ;')?>
     <?php }?>
 
-    <?php if ($model->type == CollectionColumn::TYPE_SELECT
-           || $model->type == CollectionColumn::TYPE_RADIO
-           || $model->type == CollectionColumn::TYPE_CHECKBOXLIST
-           || $model->type == CollectionColumn::TYPE_COLLECTION
-           || $model->type == CollectionColumn::TYPE_COLLECTIONS
-       ){?>
+    <?php if ($model->supportCollectionSource()){?>
     <div class="row">
         <div class="col-md-6">
         <?=$form->field($model, 'id_collection')->widget(Select2::class, [

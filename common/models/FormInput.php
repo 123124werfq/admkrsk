@@ -111,10 +111,26 @@ class FormInput extends \yii\db\ActiveRecord
         ];
     }
 
+    public function supportCollectionSource()
+    {
+        if ($this->type == CollectionColumn::TYPE_SELECT
+           || $this->type == CollectionColumn::TYPE_RADIO
+           || $this->type == CollectionColumn::TYPE_CHECKBOXLIST
+           || $this->type == CollectionColumn::TYPE_COLLECTION
+           || $this->type == CollectionColumn::TYPE_COLLECTIONS)
+            return true;
+
+        return false;
+    }
+
     public function beforeValidate()
     {
         if ($this->type==CollectionColumn::TYPE_JSON)
             $this->values = json_encode($this->values);
+
+        //если сменили тип на неподдерживаемый коллекции
+        if (!$this->supportCollectionSource() && !empty($this->id_collection))
+            $this->id_collection = $this->id_collection_column = null;
 
         return parent::beforeValidate();
     }
