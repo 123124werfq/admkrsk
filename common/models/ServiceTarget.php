@@ -97,4 +97,9 @@ class ServiceTarget extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Service::class, ['id_service' => 'id_service']);
     }
+
+    public function getForm()
+    {
+        return $this->hasOne(Service::class, ['id_form' => 'id_form']);
+    }
 }

@@ -51,10 +51,22 @@ class FormInput extends \yii\db\ActiveRecord
             ['id_collection_column', 'required', 'when' => function($model) {
                 return (!empty($model->id_collection));
             }],
+            [['fieldname'], 'fieldnameUnique'],
             [['hint','label'], 'string'],
             [['options','values'],'safe'],
             [['name', 'fieldname','alias'], 'string', 'max' => 500],
         ];
+    }
+
+    /**
+     * проверка на уникальность алиаса инпута в рамках одной формы
+     */
+    public function fieldnameUnique()
+    {
+        $count = FormInput::find()->where(['fieldname'=$this->fieldname,'id_form'=>$this->id_form])->andWhere('id_input <> '.(int)$this->id_input)->count();
+
+        if ($count>0)
+            $this->addError('fieldname', 'Такой псевдоним уже существует');
     }
 
     /**
@@ -99,10 +111,26 @@ class FormInput extends \yii\db\ActiveRecord
         ];
     }
 
+    public function supportCollectionSource()
+    {
+        if ($this->type == CollectionColumn::TYPE_SELECT
+           || $this->type == CollectionColumn::TYPE_RADIO
+           || $this->type == CollectionColumn::TYPE_CHECKBOXLIST
+           || $this->type == CollectionColumn::TYPE_COLLECTION
+           || $this->type == CollectionColumn::TYPE_COLLECTIONS)
+            return true;
+
+        return false;
+    }
+
     public function beforeValidate()
     {
         if ($this->type==CollectionColumn::TYPE_JSON)
             $this->values = json_encode($this->values);
+
+        //если сменили тип на неподдерживаемый коллекции
+        if (!$this->supportCollectionSource() && !empty($this->id_collection))
+            $this->id_collection = $this->id_collection_column = null;
 
         return parent::beforeValidate();
     }
