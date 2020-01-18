@@ -55,9 +55,9 @@ class Form extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_collection','id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_group'], 'default', 'value' => null],
+            [['id_collection','id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_box'], 'default', 'value' => null],
             [['state'], 'default', 'value' => 1],
-            [['id_collection', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_page','id_group','state','is_template'], 'integer'],
+            [['id_collection', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_page','id_box','state','is_template'], 'integer'],
             [['alias'], 'unique'],
             [['name'], 'required'],
             [['message_success'], 'string'],
@@ -81,7 +81,7 @@ class Form extends \yii\db\ActiveRecord
             'alias' => 'Системное название формы',
             'name' => 'Название',
             'fullname' => 'Полное название',
-            'id_group' => 'Группа',
+            'id_box' => 'Группа',
             'state' => 'Включена',
             'message_success'=>'Сообщение при успешном отправлении',
             'id_page'=>'Переход на раздел при успешном отправлении',
@@ -202,9 +202,9 @@ class Form extends \yii\db\ActiveRecord
         return $this->hasOne(Media::class, ['id_media' => 'id_media_template']);
     }
 
-    public function getGroup()
+    public function getBox()
     {
-        return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_group']);
+        return $this->hasOne(Box::class, ['id_box' => 'id_box']);
     }
 
     public function getPartitions()

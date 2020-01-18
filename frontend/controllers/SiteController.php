@@ -647,16 +647,8 @@ class SiteController extends Controller
     public function actionStest()
     {
         $ww = new Workflow;
-        $ww->sendTest1();
+        $ww->sendMultipartTest();
         die();
-
-
-        echo "Test A:<br>";
-        $ww->sendTest();
-        echo "<br>Test B:<br>";
-        $ww->sendTest1();
-        echo "<br>Test C:<br>";
-        $ww->sendTest2();
     }
 
     /**
@@ -774,9 +766,9 @@ class SiteController extends Controller
 
         $esiauser = new EsiaUser();
 
-        if ($esiauser->actualize($esia))
+        if ($esiauser->actualize($esia)) {
             $user->id_esia_user = $esiauser->id_esia_user;
-
+        }
         if (!$user->save()) {
             throw new yii\web\ServerErrorHttpException('Внутренняя ошибка сервера');
         }
@@ -785,13 +777,5 @@ class SiteController extends Controller
         Yii::$app->user->identity->createAction(Action::ACTION_SIGNUP_ESIA);
 
         return $this->redirect('/');
-
-        /*
-        var_dump($token);
-        var_dump($personInfo);
-
-        echo "<br><br>".$oid;
-        Yii::$app->end();
-        */
     }
 }

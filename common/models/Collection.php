@@ -37,7 +37,7 @@ use yii\helpers\Url;
  * @property int $id_parent_collection
  * @property int $id_form
  * @property array $label
- * @property int $id_group
+ * @property int $id_box
  * @property int $system
  * @property array $filter
  * @property array $options
@@ -105,7 +105,7 @@ class Collection extends ActiveRecord
             [['alias'], 'unique'],
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
-            [['id_parent_collection','id_group','id_column_order','order_direction','pagesize','show_row_num','show_column_num', 'notify_rule', 'show_on_map', 'id_column_map'], 'integer'],
+            [['id_parent_collection','id_box','id_column_order','order_direction','pagesize','show_row_num','show_column_num', 'notify_rule', 'show_on_map', 'id_column_map'], 'integer'],
             [['filter', 'options','label'], 'safe'],
             [['template','template_element','template_view','notify_message'], 'string'],
             [['is_authenticate'], 'boolean'],
@@ -137,7 +137,7 @@ class Collection extends ActiveRecord
             'template' => 'Шаблон для страницы',
             'template_view' => 'Вывод в разделе',
             'template_element' => 'Шаблон для элемента',
-            'id_group' => 'Поле для группировки',
+            'id_box' => 'Группа',
             'id_column_order' => 'Сортировать по',
             'order_direction' => 'Направление сортировки',
             'is_authenticate' => 'Авторизация (API)',
@@ -376,7 +376,7 @@ class Collection extends ActiveRecord
 
     public function getGroup()
     {
-        return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_group']);
+        return $this->hasOne(Box::class, ['id_box' => 'id_box']);
     }
 
     public function getViewFilters()

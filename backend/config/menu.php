@@ -360,6 +360,12 @@ return [
                     'menu.application' => ['class' => Application::class],
                 ]
             ],
+            'box' => [
+                'title' => 'Группы',
+                'roles' => [
+                    'menu.vars' => ['class' => Vars::class], // надо подумать под какие права давать
+                ],
+            ],
         ],
     ],
 ];

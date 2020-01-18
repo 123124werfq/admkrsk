@@ -9,6 +9,7 @@ use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use common\models\CollectionColumn;
 use common\models\Collection;
+use common\models\Box;
 use yii\web\JsExpression;
 
 /* @var $this yii\web\View */
@@ -18,12 +19,12 @@ use yii\web\JsExpression;
 
 <?php $form = ActiveForm::begin(); ?>
 
-<?= $form->field($model, 'id_group')->dropDownList(Collection::getArrayByAlias('collection_group')) ?>
+<?= $form->field($model, 'id_box')->dropDownList(ArrayHelper::map(Box::find()->all(), 'id_box', 'name'),['prompt'=>'Выберите группу']) ?>
 
 <?= $form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
 
 <?php if (Yii::$app->user->can('admin.collection')): ?>
-    
+
     <hr>
     <?= $form->field($model, 'template')->textInput(['class' => 'form-control redactor']) ?>
 
@@ -93,7 +94,7 @@ use yii\web\JsExpression;
         $records = $model->getRecords('partitions');
             if (!empty($records[0]->id_page))
                 $records = ArrayHelper::map($records, 'id_page', 'title');
-            else 
+            else
                 $records = [];
 
         echo Select2::widget([

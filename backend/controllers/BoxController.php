@@ -2,21 +2,18 @@
 
 namespace backend\controllers;
 
-use common\models\GridSetting;
 use Yii;
-use common\models\ServiceComplaintForm;
-use backend\models\search\ServiceComplaintFormSearch;
+use common\models\Box;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ServiceComplaintFormController implements the CRUD actions for ServiceComplaintForm model.
+ * BoxController implements the CRUD actions for Box model.
  */
-class ServiceComplaintFormController extends Controller
+class BoxController extends Controller
 {
-    const grid = 'service-complaint-form';
-
     /**
      * {@inheritdoc}
      */
@@ -33,31 +30,22 @@ class ServiceComplaintFormController extends Controller
     }
 
     /**
-     * Lists all ServiceComplaintForm models.
+     * Lists all Box models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ServiceComplaintFormSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $grid = GridSetting::findOne([
-            'class' => static::grid,
-            'user_id' => Yii::$app->user->id,
+        $dataProvider = new ActiveDataProvider([
+            'query' => Box::find(),
         ]);
-        $columns = null;
-        if ($grid) {
-            $columns = json_decode($grid->settings, true);
-        }
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'customColumns' => $columns,
         ]);
     }
 
     /**
-     * Displays a single ServiceComplaintForm model.
+     * Displays a single Box model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -70,27 +58,16 @@ class ServiceComplaintFormController extends Controller
     }
 
     /**
-     * Creates a new ServiceComplaintForm model.
+     * Creates a new Box model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new ServiceComplaintForm();
+        $model = new Box();
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate())
-        {
-            if (is_array($model->id_services))
-            {
-                foreach ($model->id_services as $key => $id_service)
-                {
-                    $complain = new ServiceComplaintForm();
-                    $complain->attributes = $model->attributes;
-                    $complain->id_service = $id_service;
-                    $complain->save();
-                }
-            }
-            return $this->redirect(['index', 'id' => $model->id_appeal]);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['index', 'id' => $model->id_box]);
         }
 
         return $this->render('create', [
@@ -99,7 +76,7 @@ class ServiceComplaintFormController extends Controller
     }
 
     /**
-     * Updates an existing ServiceComplaintForm model.
+     * Updates an existing Box model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -110,7 +87,7 @@ class ServiceComplaintFormController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index', 'id' => $model->id_appeal]);
+            return $this->redirect(['index', 'id' => $model->id_box]);
         }
 
         return $this->render('update', [
@@ -119,7 +96,7 @@ class ServiceComplaintFormController extends Controller
     }
 
     /**
-     * Deletes an existing ServiceComplaintForm model.
+     * Deletes an existing Box model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -133,15 +110,15 @@ class ServiceComplaintFormController extends Controller
     }
 
     /**
-     * Finds the ServiceComplaintForm model based on its primary key value.
+     * Finds the Box model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return ServiceComplaintForm the loaded model
+     * @return Box the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = ServiceComplaintForm::findOne($id)) !== null) {
+        if (($model = Box::findOne($id)) !== null) {
             return $model;
         }
 

@@ -73,15 +73,19 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
             case CollectionColumn::TYPE_DATE:
                 $options['type'] = 'date';
 
-                if (is_numeric($model->$clearAttribute))
-                    $model->$clearAttribute = date('Y-m-d', $model->$clearAttribute);
+                if (!is_numeric($model->$clearAttribute))
+                    $model->$clearAttribute = strtotime($model->$clearAttribute);
+
+                $model->$clearAttribute = date('Y-m-d', $model->$clearAttribute);
 
                 echo $form->field($model, $attribute)->textInput($options);
                 break;
             case CollectionColumn::TYPE_DATETIME:
 
-                if (is_numeric($model->$clearAttribute))
-                    $model->$clearAttribute = date('Y-m-d\TH:i:s', $model->$clearAttribute);
+                if (!is_numeric($model->$clearAttribute))
+                    $model->$clearAttribute = strtotime($model->$clearAttribute);
+
+                $model->$clearAttribute = date('Y-m-d\TH:i:s', $model->$clearAttribute);
 
                 $options['type'] = 'datetime-local';
                 echo $form->field($model, $attribute)->textInput($options);
@@ -103,10 +107,8 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                                 <span class="checkbox_label">' . ($input->label ?? $input->name) . '</span>
                             </label>
                         </div>';
-
-                echo $form->field($model, $attribute.'')->dropDownList($input->getArrayValues(), $options);
-
-                echo $form->field($model, $attribute)->textArea($options);*/
+                echo $form->field($model, $attribute.'[repeat]')->dropDownList($input->getArrayValues(), $options);
+                echo $form->field($model, $attribute.'[days]')->textinput($options);*/
                 break;
             case CollectionColumn::TYPE_ADDRESSES:
                 echo $form->field($model, $attribute)->widget(Select2::class, [
