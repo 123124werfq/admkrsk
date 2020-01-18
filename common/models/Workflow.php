@@ -285,7 +285,7 @@ class Workflow extends Model
             $out = "POST /WSSiteRSA HTTP/1.1\r\n";
             $out .= "Host: t1.admkrsk.ru1\r\n";
             $out .= "Content-Length: ".strlen($body)."\r\n";
-            $out .= "Content-Type: application/x-www-form-urlencoded\r\n\r\n";
+            //$out .= "Content-Type: application/x-www-form-urlencoded\r\n\r\n";
             $out .= $body;
 
             echo "<h1>Request</h1><pre>".htmlspecialchars($out)."</pre>";
