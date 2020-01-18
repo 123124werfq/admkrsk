@@ -275,3 +275,33 @@ tinymce.PluginManager.add("gallery", function (editor, url) {
         onAction: _onAction
     });
 });
+
+tinymce.PluginManager.add("hrreserve", function (editor, url) {
+    var _dialog = false;
+    var _typeOptions = [];
+
+    /**
+     * Plugin behaviour for when the Toolbar or Menu item is selected
+     *
+     * @private
+     */
+    function _onAction()
+    {
+        editor.insertContent('<hrreserve>Кадровый Резерв</hrreserve>');
+    }
+
+    // Define the Toolbar button
+    editor.ui.registry.addButton('hrreserve', {
+        text: "Резерв",
+        //icon: 'bubbles',
+        onAction: _onAction
+    });
+
+    // Define the Menu Item
+    editor.ui.registry.addMenuItem('hrreserve', {
+        text: 'Резерв',
+        context: 'insert',
+        //icon: 'bubbles',
+        onAction: _onAction
+    });
+});
