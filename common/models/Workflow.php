@@ -283,14 +283,22 @@ class Workflow extends Model
             echo "$errstr ($errno)<br />\n";
         } else {
             $out = "POST /WSSiteRSA HTTP/1.1\r\n";
-            $out .= "Host: 10.24.0.201\r\n";
-            $out .= "Content-Length: ".strlen($body)."\r\n\r\n";
+            $out .= "Host: t1.admkrsk.ru1\r\n";
+            $out .= "Content-Length: ".strlen($body)."\r\n";
+            $out .= "Content-Type: multipart/related;";
+            //$out .= "Content-Type: application/x-www-form-urlencoded\r\n\r\n";
             $out .= $body;
             $out .= "Connection: Close\r\n\r\n";
+            
+            echo "<h1>Request</h1><pre>".htmlspecialchars($out)."</pre>";
+
+            //$out .= "Connection: Close\r\n\r\n";
             fwrite($fp, $out);
+            echo "<h1>Response</h1><pre>";
             while (!feof($fp)) {
-                echo fgets($fp, 128);
+                echo htmlspecialchars(fgets($fp, 128));
             }
+            echo "</pre>";
             fclose($fp);
         }
 
