@@ -241,12 +241,14 @@ class Workflow extends Model
 
     public function sendMultipartTest()
     {
+        $url = $this->sendServiceURL;
+
+        /*
         $body = '';
 
         $soapBoundaryId = "c73c9ce8-6e02-40ce-9f68-064e18843428";
         $zipBoundaryId = "5aeaa450-17f0-4484-b845-a8480c363444";
         $boundary = "MIME_boundary";
-        $url = $this->sendServiceURL;
         $boundarybytes = "\r\n--{$boundary}\r\n";
         $boundarybytesEnd = "\r\n--{$boundary}--";
         $rn = "\r\n";
@@ -273,6 +275,9 @@ class Workflow extends Model
         // тут файл подключаем, если есть
 
         $body .= $boundarybytesEnd;
+        */
+
+        $body = file_get_contents(Yii::getAlias('@app').'/assets/testrequest.txt');
 
         $headers = [
             'SOAPAction:urn:#Operation_03_00_004FL',
