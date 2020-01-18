@@ -38,7 +38,7 @@ function filePicker(callback, value, meta) {
 var tinymceConfig = {
     selector:'.redactor',
     plugins: [
-        'link image imagetools table autoresize collections gallery code paste media lists fullscreen stickytoolbar form hrreserve news'
+        'link image imagetools table autoresize collections gallery code paste media lists fullscreen stickytoolbar form hrreserve pagenews'
     ],
     menu: {
         custom: { title: 'Плагины', items: 'form gallery collections hrreserve pagenews' }
