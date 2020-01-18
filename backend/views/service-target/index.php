@@ -28,7 +28,7 @@ $defaultColumns = [
     'id_target' => 'id_target',
     'service.name' => [
         'attribute' => 'service.name',
-        'label' => 'Название',
+        'label' => 'Название услуги',
     ],
     'name' => 'name',
     'reestr_number' => 'reestr_number',
