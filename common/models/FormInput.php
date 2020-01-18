@@ -63,7 +63,7 @@ class FormInput extends \yii\db\ActiveRecord
      */
     public function fieldnameUnique()
     {
-        $count = FormInput::find()->where(['fieldname'=$this->fieldname,'id_form'=>$this->id_form])->andWhere('id_input <> '.(int)$this->id_input)->count();
+        $count = FormInput::find()->where(['fieldname'=>$this->fieldname,'id_form'=>$this->id_form])->andWhere('id_input <> '.(int)$this->id_input)->count();
 
         if ($count>0)
             $this->addError('fieldname', 'Такой псевдоним уже существует');
