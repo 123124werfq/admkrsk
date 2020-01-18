@@ -52,7 +52,7 @@ if ($user) {
                         <h1><?= $page->title ?></h1>
                         <?php
                         preg_match_all("/<(hrreserve|collection|gallery|forms)\s(.+?)>(.+?)<\/(hrreserve|collection|gallery|forms)>/is", $page->content, $matches);
-
+                        
                         if (!empty($matches[0]))
                             foreach ($matches[0] as $key => $match) {
                                 $attributes = parseAttributesFromTag($match);
@@ -62,6 +62,13 @@ if ($user) {
 
                                     $page->content = '<div class="widget-wrapper">'.str_replace($match, $class::widget(['attributes' => $attributes, 'page' => $page]), $page->content).'</div>';
                                 }
+                                else if($matches[1][$key] == 'hrreserve')
+                                {
+                                    $class = 'frontend\widgets\\' . ucwords($matches[1][$key]) . 'Widget';
+                                    $page->content = '<div class="widget-wrapper">'.str_replace($match, $class::widget(['page' => $page]), $page->content).'</div>';
+                                }
+
+
                             }
 
                             echo $page->content;

@@ -7,6 +7,8 @@ use yii\base\Widget;
 
 class HrreserveWidget extends Widget
 {
+    public $page;
+
     public function run()
     {
         $reservers = HrReserve::findAll([]);
