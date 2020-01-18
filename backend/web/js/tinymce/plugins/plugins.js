@@ -161,7 +161,7 @@ tinymce.PluginManager.add("form", function(editor, url) {
     });
 });
 
-tinymce.PluginManager.add("pagepagenews", function(editor, url) {
+tinymce.PluginManager.add("pagenews", function(editor, url) {
     var _dialog = false;
     var _forms = [];
 
