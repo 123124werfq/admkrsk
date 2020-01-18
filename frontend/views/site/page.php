@@ -51,7 +51,7 @@ if ($user) {
                     <div class="content searchable">
                         <h1><?= $page->title ?></h1>
                         <?php
-                        preg_match_all("/<(collection|gallery|forms)\s(.+?)>(.+?)<\/(collection|gallery|forms)>/is", $page->content, $matches);
+                        preg_match_all("/<(hrreserve|collection|gallery|forms)\s(.+?)>(.+?)<\/(hrreserve|collection|gallery|forms)>/is", $page->content, $matches);
 
                         if (!empty($matches[0]))
                             foreach ($matches[0] as $key => $match) {
