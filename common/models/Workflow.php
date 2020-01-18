@@ -276,7 +276,7 @@ class Workflow extends Model
         $body .= $boundarybytesEnd;
 
 
-        $body = file_get_contents(Yii::getAlias('@app').'/assets/testrequest.txt');
+        //$body = file_get_contents(Yii::getAlias('@app').'/assets/testrequest.txt');
 
         $fp = fsockopen('10.24.0.201', 80, $errno, $errstr, 30);
         if (!$fp) {
@@ -287,7 +287,7 @@ class Workflow extends Model
             $out .= "Content-Length: ".strlen($body)."\r\n";
             $out .= "Content-Type: application/x-www-form-urlencoded\r\n\r\n";
             $out .= $body;
-            //$out .= "Connection: Close\r\n\r\n";
+            $out .= "Connection: Close\r\n\r\n";
             fwrite($fp, $out);
             while (!feof($fp)) {
                 echo fgets($fp, 128);
