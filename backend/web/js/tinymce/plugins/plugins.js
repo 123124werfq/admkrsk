@@ -49,6 +49,15 @@
                 $(".tox-button--secondary").click();
             });
 
+            // Define the Menu Item
+            editor.ui.registry.addMenuItem('collections', {
+                text: 'Списки',
+                context: 'insert',
+                onAction: () => {
+                    _api = editor.windowManager.openUrl(_urlDialogConfig)
+                }
+            });
+
             // Define the Toolbar button
             editor.ui.registry.addButton('collections', {
                 text: "Списки",
