@@ -284,7 +284,8 @@ class Workflow extends Model
         } else {
             $out = "POST /WSSiteRSA HTTP/1.1\r\n";
             $out .= "Host: 10.24.0.201\r\n";
-            $out .= "Content-Length: ".strlen($body)."\r\n\r\n";
+            $out .= "Content-Length: ".strlen($body)."\r\n";
+            $out .= "Content-Type: application/x-www-form-urlencoded\r\n\r\n";
             $out .= $body;
             $out .= "Connection: Close\r\n\r\n";
             fwrite($fp, $out);
