@@ -220,6 +220,83 @@ class Workflow extends Model
         }
     }
 
+
+    protected function rawTransport($url)
+    {
+        $fp = fsockopen($url, 80, $errno, $errstr, 30);
+        if (!$fp) {
+            echo "$errstr ($errno)<br />\n";
+        } else {
+            $out = "POST / HTTP/1.1\r\n";
+            $out .= "Host: www.example.com\r\n";
+            $out .= "Connection: Close\r\n\r\n";
+            fwrite($fp, $out);
+            while (!feof($fp)) {
+                echo fgets($fp, 128);
+            }
+            fclose($fp);
+        }
+    }
+
+
+    public function sendMultipartTest()
+    {
+        $body = '';
+
+        $soapBoundaryId = "c73c9ce8-6e02-40ce-9f68-064e18843428";
+        $zipBoundaryId = "5aeaa450-17f0-4484-b845-a8480c363444";
+        $boundary = "MIME_boundary";
+        $url = $this->sendServiceURL;
+        $boundarybytes = "\r\n--{$boundary}\r\n";
+        $boundarybytesEnd = "\r\n--{$boundary}--";
+        $rn = "\r\n";
+
+        $headerbytes  = "MIME-Version: 1.0\r\n";
+        $headerbytes .= "Content-Type: multipart/related; ";
+        $headerbytes .= "start=\"<rootpart*{$soapBoundaryId}>\"; ";
+        $headerbytes .= "start-info=\"text/xml\"; ";
+        $headerbytes .= "type=\"application/xop+xml\"; ";
+        $headerbytes .= "boundary=\"MIME_boundary\";\r\n\r\n";
+
+        $soapheaderbuf = "Content-Type: application/xop+xml;charset=utf-8;type=\"text/xml\"\r\n";
+        $soapheaderbuf .= "Content-Id: <rootpart*{$soapBoundaryId}>\r\n";
+        $soapheaderbuf .= "Content-Transfer-Encoding: binary\r\n";
+
+        $rawMessage = $this->serviceTestTemplate2;
+
+        $body .= $headerbytes;
+        $body .= $boundarybytes;
+        $body .= $soapheaderbuf;
+        $body .= $rn;
+        $body .= $rawMessage;
+
+        // тут файл подключаем, если есть
+
+        $body .= $boundarybytesEnd;
+
+        $headers = [
+            'SOAPAction:urn:#Operation_03_00_004FL',
+            'Content-Type: text/xml; charset=utf-8',
+            'Content-Length: '.strlen($body),
+            'Content-Transfer-Encoding: text'
+        ];
+
+        if( $curl = curl_init() ) {
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+            $server_output = curl_exec($curl);
+
+            print_r($server_output);
+            die();
+        }
+    }
+
+
     public function sendAppealMessage($appealRecord)
     {
         return $this->sendPost($appealRecord->toString(), $this->sendAppealURL);
