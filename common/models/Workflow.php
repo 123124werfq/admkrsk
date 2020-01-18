@@ -276,7 +276,7 @@ class Workflow extends Model
         $body .= $boundarybytesEnd;
 
 
-        //$body = file_get_contents(Yii::getAlias('@app').'/assets/testrequest.txt');
+        $body = file_get_contents(Yii::getAlias('@app').'/assets/testrequest.txt');
 
         $fp = fsockopen('10.24.0.201', 80, $errno, $errstr, 30);
         if (!$fp) {
