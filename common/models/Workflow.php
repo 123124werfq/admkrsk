@@ -288,13 +288,13 @@ class Workflow extends Model
             $out .= "Content-Type: application/x-www-form-urlencoded\r\n\r\n";
             $out .= $body;
 
-            echo "<h1>Request</h1><pre>$out</pre>";
+            echo "<h1>Request</h1><pre>".htmlspecialchars($out)."</pre>";
 
             //$out .= "Connection: Close\r\n\r\n";
             fwrite($fp, $out);
             echo "<h1>Response</h1><pre>";
             while (!feof($fp)) {
-                echo fgets($fp, 128);
+                echo htmlspecialchars(fgets($fp, 128));
             }
             echo "</pre>";
             fclose($fp);
