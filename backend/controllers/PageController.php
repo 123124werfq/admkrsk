@@ -73,7 +73,7 @@ class PageController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['update','hide','order'],
+                        'actions' => ['update','hide','order','get-page'],
                         'roles' => ['backend.page.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),

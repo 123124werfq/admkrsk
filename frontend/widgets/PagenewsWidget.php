@@ -8,22 +8,26 @@ use common\models\Page;
 class PagenewsWidget extends \yii\base\Widget
 {
 	public $page;
-    public $block;
 
     public function run()
     {
         if (!empty($this->attributes['id']))
-            $this->form = Page::findOne($this->attributes['id']);
+            $page = Page::findOne($this->attributes['id']);
 
-       $news = $news
+        if (empty($page))
+            return false;
+
+        $news = $news
             //->offset($pagination->offset)
+            ->where(['state'=>1)
+            ->andWhere(['id_page'=>$page->id_page])->orWhere("id_news IN (SELECT id_news FROM dbl_news_page WHERE id_page = $page->id_page)");
             ->limit(20)//$pagination->limit
-            ->offset((int)Yii::$app->request->get('p',0)*20)
+            //->offset((int)Yii::$app->request->get('p',0)*20)
             ->orderBy('date_publish DESC')
             ->all();
 
         return $this->render('pagenews',[
-            'menu'=>$menu,
+            'news'=>$news,
         ]);
     }
 }
