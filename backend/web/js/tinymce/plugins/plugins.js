@@ -180,7 +180,7 @@ tinymce.PluginManager.add("pagenews", function(editor, url) {
             },
             onSubmit: function(api) {
                 // insert markup
-                editor.insertContent('<pagenews data-id="' + api.getData().id_page + '">Новости #' + api.getData().id_form + '.</pagenews>');
+                editor.insertContent('<pagenews data-id="' + api.getData().id_page + '">Новости #' + api.getData().id_page + '.</pagenews>');
 
                 // close the dialog
                 api.close();
