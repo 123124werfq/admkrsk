@@ -27,8 +27,25 @@
                 <div class="footer-address">
                     <p class="footer-contacts_label"><?=Yii::t('site', 'Адрес')?>:</p>
                     <p class="footer-contacts_text">660049, г. Красноярск, ул. Карла Маркса, 93</p>
+                    <p class="footer-contacts_text">Электронная почта: adm@admkrsk.ru</p>
                 </div>
                 <?= frontend\widgets\MenuWidget::widget(['alias'=>'footer_social_menu','template'=>'footer_social_menu']); ?>
+            </div>
+
+            <div class="footer-contacts footer-contacts_phones">
+                <div class="footer-phone">
+                    <p class="footer-contacts_label">Отдел служебных писем (служебная корреспонденция):</p>
+                    <p class="footer-contacts_text"><a href="tel:+73912261140">+7 (391) 226-11-40</a></p>
+                    <p class="footer-contacts_text"><a href="tel:+73912261251">+7 (391) 226-12-51</a></p>
+                </div>
+                <div class="footer-phone">
+                    <p class="footer-contacts_label">Обращения граждан:</p>
+                    <p class="footer-contacts_text"><a href="tel:+73912261122">+7 (391) 226-11-22</a></p>
+                </div>
+                <div class="footer-phone">
+                    <p class="footer-contacts_label">Телефон доверия:</p>
+                    <p class="footer-contacts_text"><a href="tel:+73912261060">+7 (391) 226-10-60</a></p>
+                </div>
             </div>
 
             <hr class="footer-hr">
