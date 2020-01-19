@@ -221,7 +221,7 @@ toastr.options = {
     closeButton: true,
     progressBar: true,
     showMethod: 'slideDown',
-    timeOut: 1000
+    timeOut: 5000
 };
 
 function reordModels($block,$data)
