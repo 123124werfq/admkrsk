@@ -7,7 +7,8 @@ use common\models\Page;
 
 class PagenewsWidget extends \yii\base\Widget
 {
-	public $page;
+	public $attributes;
+    public $page;
 
     public function run()
     {
@@ -17,10 +18,9 @@ class PagenewsWidget extends \yii\base\Widget
         if (empty($page))
             return false;
 
-        $news = $news
-            //->offset($pagination->offset)
-            ->where(['state'=>1)
-            ->andWhere(['id_page'=>$page->id_page])->orWhere("id_news IN (SELECT id_news FROM dbl_news_page WHERE id_page = $page->id_page)");
+        $news = News::find()
+            ->where(['state'=>1])
+            ->andWhere(['id_page'=>$page->id_page])->orWhere("id_news IN (SELECT id_news FROM dbl_news_page WHERE id_page = $page->id_page)")
             ->limit(20)//$pagination->limit
             //->offset((int)Yii::$app->request->get('p',0)*20)
             ->orderBy('date_publish DESC')
@@ -28,6 +28,7 @@ class PagenewsWidget extends \yii\base\Widget
 
         return $this->render('pagenews',[
             'news'=>$news,
+            'page'=>$page,
         ]);
     }
 }

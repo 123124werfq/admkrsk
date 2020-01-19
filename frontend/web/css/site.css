@@ -22,6 +22,15 @@
     opacity: 0;
 }
 
+.content .press_info {padding-left: 0px!important;}
+.content .press-list .press_info-item {margin: 0px 0px 0px 12px!important;}
+
+.press-list .press_info-item::before {
+    display: none!important;
+}
+
+.press-list a {border-bottom: 0px!important;}
+
 .collection-controls {text-align: right; }
 .collection-controls a {margin-bottom: 10px; border-bottom: 0px; display: inline-block; margin-left: 10px;}
 
