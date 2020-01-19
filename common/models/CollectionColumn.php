@@ -17,6 +17,8 @@ use Yii;
  */
 class CollectionColumn extends \yii\db\ActiveRecord
 {
+    public $is_link; // для отображения таблиц в хранении данных не учавствует
+
     //public $values = []; // array of values for dropdown search
 
     const TYPE_INPUT = 1;
