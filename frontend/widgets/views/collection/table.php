@@ -89,5 +89,9 @@
 </div>
 <?=\yii\widgets\LinkPager::widget([
     'pagination' => $pagination,
+    'nextPageLabel'=>'>',
+    'lastPageLabel'=>'>>',
+    'prevPageLabel'=>'<',
+    'firstPageLabel'=>'<<'
 ]);?>
 <?php Pjax::end(); ?>
