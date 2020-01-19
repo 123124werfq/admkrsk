@@ -62,6 +62,13 @@ if ($user) {
 
                                     $page->content = '<div class="widget-wrapper">'.str_replace($match, $class::widget(['attributes' => $attributes, 'page' => $page]), $page->content).'</div>';
                                 }
+                                else if($matches[1][$key] == 'hrreserve')
+                                {
+                                    $class = 'frontend\widgets\\' . ucwords($matches[1][$key]) . 'Widget';
+                                    $page->content = '<div class="widget-wrapper">'.str_replace($match, $class::widget(['page' => $page]), $page->content).'</div>';
+                                }
+
+
                             }
 
                             echo $page->content;
