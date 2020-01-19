@@ -2,8 +2,7 @@
 
 ?>
 <div id="hr_vote_view">
-    <!--
-    <table class="ms-formtoolbar search" cellpadding="2" cellspacing="0" border="0" width="100%">
+    <table class="reserve-form search" cellpadding="2" cellspacing="0" border="0" width="100%">
         <tbody>
         <tr valign="top">
             <td>
@@ -25,7 +24,6 @@
         </tr>
         </tbody>
     </table>
-    -->
     <div style="padding:2px;">Количество резервистов: <?=count($reservers)?></div>
     <table width="100%" class="ms-listviewtable border" border="0" cellspacing="0" cellpadding="2">
         <tbody><tr class="hr_header" valign="top">
