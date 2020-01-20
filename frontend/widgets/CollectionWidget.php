@@ -22,6 +22,7 @@ class CollectionWidget extends \yii\base\Widget
     public $sort; // сортировка
     public $dir = SORT_ASC; // направление сортировки
 
+    public $link_column = false;
     public $show_row_num = false;
     public $show_column_num = false;
     public $show_on_map = 0; // отображать на карте
@@ -61,6 +62,9 @@ class CollectionWidget extends \yii\base\Widget
 
             if (!empty($this->attributes['columns']))
                 $this->columns = json_decode(str_replace("&quot;", '"', $this->attributes['columns']),true);
+
+            if (!empty($this->attributes['link_column']))
+                $this->link_column = (int)$this->attributes['link_column'];
         }
 
     	$model = Collection::find()->where(['id_collection'=>$this->id_collection])->one();
@@ -68,8 +72,10 @@ class CollectionWidget extends \yii\base\Widget
         if (empty($model) || empty($this->columns))
             return '';
 
+        // уникальный хэш для виджета PJAX, paginatinon и тп. переделать на более короткий
         $unique_hash = $this->id_collection.md5(serialize($this->columns));
 
+        // mongo query
         $query = $model->getDataQueryByOptions($this->columns);
 
         // страница
@@ -78,6 +84,7 @@ class CollectionWidget extends \yii\base\Widget
         // колонки коллекции
         $columns = $query->columns;
 
+        // обработка поисковых колонок
         $search_columns = [];
         if (!empty($this->columns['search']))
             foreach ($this->columns['search'] as $key => $column_search)
@@ -90,7 +97,7 @@ class CollectionWidget extends \yii\base\Widget
                 }
             }
 
-
+        // добавляем поиск полученный из GET
         if (!empty($_GET['search_column'][$unique_hash]))
         {
             $search = $_GET['search_column'][$unique_hash];
@@ -110,12 +117,14 @@ class CollectionWidget extends \yii\base\Widget
         // имя колонки группировки
         $group_alias = false;
 
+        // елси есть группа то сортируем сначало по группе
         if (!empty($this->group) && !empty($columns[$this->group]))
         {
             $orderBy['col'.$this->group] = SORT_ASC;
             $group_alias = $columns[$this->group]->alias;
         }
 
+        // щатем добавляем сортировку которую задали
         if (!empty($this->sort))
             $orderBy['col'.$this->sort] = $this->dir;
 
@@ -123,6 +132,7 @@ class CollectionWidget extends \yii\base\Widget
         if (!empty($orderBy))
             $query->orderBy($orderBy);
 
+        // обработка url для пагинации с PJAX
         $url = parse_url(Yii::$app->request->url);
 
         if (!empty($_GET['ps']))
@@ -139,7 +149,6 @@ class CollectionWidget extends \yii\base\Widget
             unset($url_query['p']);
             unset($url_query['ps']);
             unset($url_query['_pjax']);
-
             $url = $url['path'].http_build_query($url_query);
         }
         else
@@ -169,23 +178,28 @@ class CollectionWidget extends \yii\base\Widget
 
                     $alias = $search_column['column']->alias;
 
+                    // собираем все возможные значения для выпадшки в фильтре
                     if (!empty($row[$alias]) && (is_string($row[$alias]) || is_numeric($row[$alias])))
-                    {
                         $search_columns[$key]['values'][$row[$alias]] = $row[$alias];
-                    }
                 }
             }
         }
 
-        // переворачиваем колонки на алиас
+        // проверяем существование отображения колонки-ссылки и ставим признак
+        if (!empty($this->link_column) && !empty($columns[$this->link_column]))
+            $columns[$this->link_column]->is_link = true;
+
+        // переворачиваем колонки на алиас с очередностью выбора
         $columnsByAlias = [];
+        foreach ($this->columns['columns'] as $key => $col)
+            if (!empty($columns[$col['id_column']]))
+                $columnsByAlias[$columns[$col['id_column']]->alias] = $columns[$col['id_column']];
 
-        foreach ($columns as $key => $col)
-            $columnsByAlias[$col->alias] = $col;
-
+        // оффсет и срез данных
         $offset = ($p-1)*$this->pagesize;
         $allrows = array_slice($allrows, $offset, $this->pagesize,true);
 
+        // отображение по группам
         if ($this->group)
         {
             $group_rows = [];
@@ -218,6 +232,7 @@ class CollectionWidget extends \yii\base\Widget
             ]);
         }
 
+        // обычное отображение
         return $this->render('collection/'.$this->template,[
         	'model'=>$model,
             'id_collection'=>$this->id_collection,

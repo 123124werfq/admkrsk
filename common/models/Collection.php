@@ -83,10 +83,12 @@ class Collection extends ActiveRecord
     public $show_row_num;
     public $show_column_num;
     public $show_on_map;
+    public $link_column;
 
     public $id_partitions = [];
 
     public $id_page;
+
 
     /**
      * {@inheritdoc}
@@ -105,7 +107,7 @@ class Collection extends ActiveRecord
             [['alias'], 'unique'],
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
-            [['id_parent_collection','id_box','id_column_order','order_direction','pagesize','show_row_num','show_column_num', 'notify_rule', 'show_on_map', 'id_column_map'], 'integer'],
+            [['id_parent_collection','id_box','id_column_order','order_direction','pagesize','show_row_num','show_column_num', 'notify_rule', 'show_on_map', 'id_column_map', 'link_column'], 'integer'],
             [['filter', 'options','label'], 'safe'],
             [['template','template_element','template_view','notify_message'], 'string'],
             [['is_authenticate'], 'boolean'],

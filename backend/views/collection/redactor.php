@@ -75,19 +75,26 @@ else
 
     $columns = $columns_dropdown;
 ?>
+    <?=$form->field($model, 'id_parent_collection',['template'=>'{input}'])->hiddenInput();?>
+
     <?=$form->field($model, 'template_view')->dropDownList(['table'=>'Таблицей','template'=>'Шаблоном'])->hint('Если не заполнен шаблон вывода элемента, то выведятся все данные из колонок отображения в виде списка');?>
 
     <?=$form->field($model, 'pagesize')->textInput(['type'=>'number','step'=>1,'min'=>1]);?>
-
-    <?=$form->field($model, 'show_row_num')->checkBox();?>
-
-    <?=$form->field($model, 'show_column_num')->checkBox();?>
-
-    <?=$form->field($model, 'id_parent_collection',['template'=>'{input}'])->hiddenInput();?>
-
-    <?=$form->field($model, 'show_on_map')->checkBox();?>
+    <div class="row">
+        <div class="col-md-4">
+            <?=$form->field($model, 'show_row_num')->checkBox();?>
+        </div>
+        <div class="col-md-4">
+            <?=$form->field($model, 'show_column_num')->checkBox();?>
+        </div>
+        <div class="col-md-4">
+            <?=$form->field($model, 'show_on_map')->checkBox();?>
+        </div>
+    </div>
 
     <?=$form->field($model, 'id_group')->dropDownList($columns,['prompt'=>'Выберите колонку для группировки']);?>
+
+    <?=$form->field($model, 'link_column')->dropDownList($columns,['prompt'=>'Выберите колонку для ссылки на подробную информацию']);?>
 
     <div class="row">
         <div class="col-md-6">
@@ -148,28 +155,25 @@ else
         <div class="col-sm-5">
             <label class="control-label">Колонка</label>
         </div>
-        <div class="col-sm-6">
-            <label class="control-label">Шаблон значения</label>
-        </div>
     </div>
     <div id="view-columns" class="multiyiinput sortable">
         <?php foreach ($model->getViewColumns() as $key => $data) {?>
-            <div class="row">
-                <div class="col-sm-5">
-                    <div class="form-group">
-                        <?=Html::dropDownList("ViewColumns[$key][id_column]",$data['id_column'],$columns,['class'=>'form-control','id'=>'CollectionColumn_id_column_'.$key,'placeholder'=>'Выберите колонку']);?>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <?=Html::textInput("ViewColumns[$key][value]",$data['value'],['class'=>'form-control','id'=>'value_'.$key,'placeholder'=>'Введите шаблон']);?>
-                    </div>
-                </div>
-                <div class="col-sm-1 col-close">
-                    <a class="close btn" href="#">&times;</a>
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <?=Html::dropDownList("ViewColumns[$key][id_column]",$data['id_column'],$columns,['class'=>'form-control','id'=>'CollectionColumn_id_column_'.$key,'placeholder'=>'Выберите колонку']);?>
                 </div>
             </div>
-        <?php }?>
+            <!--div class="col-sm-6">
+                <div class="form-group">
+                    <?= ''//Html::checkBoxtInput("ViewColumns[$key][is_link]",$data['value'],['class'=>'form-control','id'=>'value_'.$key,'placeholder'=>'Это ссылка на элемент']);?>
+                </div>
+            </div-->
+            <div class="col-sm-1 col-close">
+                <a class="close btn" href="#">&times;</a>
+            </div>
+        </div>
+        <?php break; }?>
     </div>
     <a onclick="return addInput('view-columns')" href="#" class="btn btn-default">Добавить еще</a>
     <hr>
