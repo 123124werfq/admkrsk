@@ -4,6 +4,7 @@ use backend\widgets\MapInputWidget;
 use common\models\District;
 use common\models\FormElement;
 use common\models\Media;
+use common\models\City;
 use yii\helpers\Html;
 use common\models\CollectionColumn;
 use common\models\CollectionRecord;
@@ -131,13 +132,12 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 break;
 
             case CollectionColumn::TYPE_ADDRESS:
-                
+
                 if (empty($model->$attribute))
-                    $model->$attribute = [
+                {
+                    $value = [
                         'country'=>'',
-                        'id_countru'=>'',
-                        'region'=>'',
-                        'id_region'=>'',
+                        'id_country'=>'',
                         'region'=>'',
                         'id_region'=>'',
                         'subregion'=>'',
@@ -150,16 +150,34 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         'id_street'=>'',
                         'house'=>'',
                         'id_house'=>'',
-                        'house'=>'',
                         'houseguid'=>'',
                         'lat'=>'',
                         'lon'=>'',
                         'postcode'=>''
                     ];
 
+                    $city = City::find()->where("name LIKE '%Красноярск%'")->one();
+
+                    if (!empty($city))
+                    {
+                        $value['id_city'] = $city->id_city;
+                        $value['city'] = $city->name;
+
+                        $house = $city->getHouses()->one();
+
+                        $value['country'] = $house->country->name??'';
+                        $value['id_country'] = $house->country->id_country??'';
+
+                        $value['region'] = $house->region->name??'';
+                        $value['id_region'] = $house->region->id_region??'';
+                    }
+
+                    $model->$attribute = $value;
+                }
+
                 echo '<div class="flex-wrap">';
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[country]')->widget(Select2::class, [
-                    'data' => [],
+                    'data' => [$value['id_country']=>$value['country']],
                     'pluginOptions' => [
                         'multiple' => false,
                         'tags' => true,
@@ -172,12 +190,13 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         ],
                     ],
                     'options' => [
+                        'value'=>empty($value['id_country'])?$value['country']:$value['id_country'],
                         'id' => 'input-country' . $attribute
                     ]
                 ]).'</div>';
 
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[region]')->widget(Select2::class, [
-                    'data' => [],
+                    'data' => [$value['id_region']=>$value['region']],
                     'pluginOptions' => [
                         'multiple' => false,
                         'minimumInputLength' => 0,
@@ -190,12 +209,13 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         ],
                     ],
                     'options' => [
+                        'value'=>empty($value['id_region'])?$value['region']:$value['id_region'],
                         'id' => 'input-region' . $attribute
                     ]
                 ]).'</div>';
 
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[subregion]')->widget(Select2::class, [
-                    'data' => [],
+                    'data' => [$value['id_subregion']=>$value['subregion']],
                     'pluginOptions' => [
                         'multiple' => false,
                         'minimumInputLength' => 0,
@@ -208,12 +228,13 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         ],
                     ],
                     'options' => [
+                        'value'=>empty($value['id_subregion'])?$value['subregion']:$value['id_subregion'],
                         'id' => 'input-subregion' . $attribute
                     ]
                 ]).'</div>';
 
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[city]')->widget(Select2::class, [
-                    'data' => [],
+                    'data' => [$value['id_city']=>$value['city']],
                     'pluginOptions' => [
                         'multiple' => false,
                         'minimumInputLength' => 0,
@@ -226,12 +247,13 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         ],
                     ],
                     'options' => [
+                        'value'=>empty($value['id_city'])?$value['city']:$value['id_city'],
                         'id' => 'input-city'.$attribute
                     ]
                 ]).'</div>';
 
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[district]')->widget(Select2::class, [
-                    'data' => [],
+                    'data' => [$value['id_district']=>$value['district']],
                     'pluginOptions' => [
                         'multiple' => false,
                         'tags' => true,
@@ -243,6 +265,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         ],
                     ],
                     'options' => [
+                        'value'=>empty($value['id_district'])?$value['district']:$value['id_district'],
                         'id' => 'input-district' . $attribute
                     ]
                 ]).'</div>';
@@ -250,7 +273,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 echo '<div class="col-md-12"></div>';
 
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[street]')->widget(Select2::class, [
-                    'data' => [],
+                    'data' => [$value['id_street']=>$value['street']],
                     'pluginOptions' => [
                         'multiple' => false,
                         //'allowClear' => true,
@@ -264,12 +287,13 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         ],
                     ],
                     'options' => [
+                        'value'=>empty($value['id_street'])?$value['street']:$value['id_street'],
                         'id' => 'input-street' . $attribute
                     ]
                 ]).'</div>';
 
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[house]')->widget(Select2::class, [
-                    'data' => [],
+                    'data' => [$value['id_house']=>$value['house']],
                     'pluginOptions' => [
                         'multiple' => false,
                         //'allowClear' => true,
@@ -281,6 +305,10 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                             'dataType' => 'json',
                             'data' => new JsExpression('function(params) { return {search:params.term,id_street:$("#input-street' . $attribute . '").val()};}')
                         ],
+                    ],
+                    'options' => [
+                        'value'=>empty($value['id_house'])?$value['house']:$value['id_house'],
+                        'id' => 'input-house' . $attribute
                     ],
                     'pluginEvents' => [
                         "select2:select" => "function(e) {
