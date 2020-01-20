@@ -102,14 +102,14 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 echo $form->field($model, $attribute)->textArea($options);
                 break;
             case CollectionColumn::TYPE_REPEAT:
-                /*echo '<div class="checkbox-group">
+                echo '<div class="checkbox-group">
                             <label class="checkbox checkbox__ib">
-                                ' . Html::checkBox('FormDynamic[' . $attribute . '][active]', (!empty($model->$clearAttribute)), $options) . '
+                                ' . Html::checkBox('FormDynamic[' . $attribute . '][active]', (!empty($model->$clearAttribute)), ['class'=>'checkbox_control']) . '
                                 <span class="checkbox_label">' . ($input->label ?? $input->name) . '</span>
                             </label>
-                        </div>';
-                echo $form->field($model, $attribute.'[repeat]')->dropDownList($input->getArrayValues(), $options);
-                echo $form->field($model, $attribute.'[days]')->textinput($options);*/
+                      </div>';
+                echo $form->field($model, $attribute.'[repeat]')->radioList([1=>'Ежедневно',7=>'Еженедельно',31=>"Ежемесячно"], $options);
+                echo $form->field($model, $attribute.'[days]')->textinput(['placeholder'=>'Дней между повторами']);
                 break;
             case CollectionColumn::TYPE_ADDRESSES:
                 echo $form->field($model, $attribute)->widget(Select2::class, [
