@@ -268,8 +268,8 @@ class CollectionRecord extends \yii\db\ActiveRecord
     /*public function updateCustomColumn($column)
     {
         $recordData = $this->getData(true);
-
     }*/
+
 
     public function getData($keyAsAlias=false,$id_columns=[])
     {

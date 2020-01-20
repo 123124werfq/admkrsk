@@ -326,6 +326,26 @@ class Collection extends ActiveRecord
         return $query;
     }
 
+    // пробный метод работы через модели MSD
+    public static function getRecordsByData($data)
+    {
+        $ids = [];
+        foreach ($data as $id_record => $row)
+            $ids[] = $id_record;
+
+        $records = CollectionRecord::find()->where(['id_record'=>$ids])->indexBy('id_record')->all();
+
+        foreach ($records as $id_record => $record)
+            $record->loadDataAlias = $data[$id_record];
+
+        return $records;
+    }
+
+    /*public function getRecords($options)
+    {
+
+    }*/
+
     public function getDataQueryByOptions($options, array $search_columns = [])
     {
         if (!empty($this->id_parent_collection)) {
