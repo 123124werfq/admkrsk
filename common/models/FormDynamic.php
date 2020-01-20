@@ -152,7 +152,8 @@ class FormDynamic extends DynamicModel
                                 ];
                             }
                         }
-                        else
+
+                        if (empty($address))
                         {
                             if (!empty($value['country']))
                             {
@@ -169,6 +170,7 @@ class FormDynamic extends DynamicModel
 
                             if (!empty($value['region']))
                             {
+
                                 if (is_numeric($value['region']))
                                 {
                                     $addModel = Region::findOne($value['region']);
@@ -245,17 +247,19 @@ class FormDynamic extends DynamicModel
                                     $empty['house'] = $value['house'];
                             }
 
-                            if (!empty($value['lat']))
-                                $empty['lat'] = $value['lat'];
+                            if (!empty($value['coords'][0]))
+                                $empty['lat'] = $value['coords'][0];
 
-                            if (!empty($value['lon']))
-                                $empty['lon'] = $value['lon'];
+                            if (!empty($value['coords'][1]))
+                                $empty['lon'] = $value['coords'][1];
 
                             if (!empty($value['poastacode']))
                                 $empty['poastacode'] = $value['poastacode'];
+
+                            $value = $empty;
                         }
 
-                        $data[$index] = $empty;
+                        $data[$index] = $value;
 
                         break;
                     /*case CollectionColumn::TYPE_CHECKBOXLIST:
