@@ -119,13 +119,13 @@ class FormDynamic extends DynamicModel
                         if (!empty($value['house']))
                         {
                             $address = House::find()->filterWhere([
-                                'id_country'=>!empty($value['country'])??(int)$value['country']:null,
-                                'id_region'=>!empty($value['region'])??(int)$value['region']:null,
-                                'id_subregion'=>!empty($value['subregion'])??(int)$value['subregion']:null,
-                                'id_city'=>!empty($value['city'])??(int)$value['city']:null,
-                                'id_district'=>!empty($value['district'])??(int)$value['district']:null,
-                                'id_street'=>!empty($value['street'])??(int)$value['street']:null,
-                                'id_house'=>!empty($value['house'])??(int)$value['house']:null,
+                                'id_country'=>!empty($value['country'])?(int)$value['country']:null,
+                                'id_region'=>!empty($value['region'])?(int)$value['region']:null,
+                                'id_subregion'=>!empty($value['subregion'])?(int)$value['subregion']:null,
+                                'id_city'=>!empty($value['city'])?(int)$value['city']:null,
+                                'id_district'=>!empty($value['district'])?(int)$value['district']:null,
+                                'id_street'=>!empty($value['street'])?(int)$value['street']:null,
+                                'id_house'=>!empty($value['house'])?(int)$value['house']:null,
                             ])->one();
 
                             if (!empty($address))
@@ -156,7 +156,7 @@ class FormDynamic extends DynamicModel
                         {
                             if (!empty($value['country']))
                             {
-                                if (is_numeric($value['country'])
+                                if (is_numeric($value['country']))
                                 {
                                     $addModel = Country::findOne($value['country']);
 
@@ -169,7 +169,7 @@ class FormDynamic extends DynamicModel
 
                             if (!empty($value['region']))
                             {
-                                if (is_numeric($value['region'])
+                                if (is_numeric($value['region']))
                                 {
                                     $addModel = Region::findOne($value['region']);
 
@@ -182,7 +182,7 @@ class FormDynamic extends DynamicModel
 
                             if (!empty($value['subregion']))
                             {
-                                if (is_numeric($value['subregion'])
+                                if (is_numeric($value['subregion']))
                                 {
                                     $addModel = Subregion::findOne($value['subregion']);
 
@@ -195,7 +195,7 @@ class FormDynamic extends DynamicModel
 
                             if (!empty($value['city']))
                             {
-                                if (is_numeric($value['city'])
+                                if (is_numeric($value['city']))
                                 {
                                     $addModel = City::findOne($value['city']);
 
@@ -208,7 +208,7 @@ class FormDynamic extends DynamicModel
 
                             if (!empty($value['district']))
                             {
-                                if (is_numeric($value['district'])
+                                if (is_numeric($value['district']))
                                 {
                                     $addModel = District::findOne($value['district']);
 
@@ -221,7 +221,7 @@ class FormDynamic extends DynamicModel
 
                             if (!empty($value['street']))
                             {
-                                if (is_numeric($value['street'])
+                                if (is_numeric($value['street']))
                                 {
                                     $addModel = Street::findOne($value['street']);
 
@@ -234,7 +234,7 @@ class FormDynamic extends DynamicModel
 
                             if (!empty($value['house']))
                             {
-                                if (is_numeric($value['house'])
+                                if (is_numeric($value['house']))
                                 {
                                     $addModel = Street::findOne($value['house']);
 
@@ -255,7 +255,7 @@ class FormDynamic extends DynamicModel
                                 $empty['poastacode'] = $value['poastacode'];
                         }
 
-                        $data[$index] = ;
+                        $data[$index] = $empty;
 
                         break;
                     /*case CollectionColumn::TYPE_CHECKBOXLIST:
