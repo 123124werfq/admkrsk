@@ -227,12 +227,13 @@ class AddressController extends \yii\web\Controller
      */
     public function actionHouse($id_street, $search = '')
     {
+        $id_street = (int)$id_street;
         if (empty($id_street)) {
             return ['results' => []];
         };
 
         $query = House::find()
-            ->filterWhere(['id_street' => $id_street])
+            ->filterWhere(['id_street' => $id_street?$id_street:null])
             ->groupBy('id_house')
             ->orderBy(['name' => SORT_ASC])
             ->limit(20)
