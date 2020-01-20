@@ -174,6 +174,8 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
 
                     $model->$attribute = $value;
                 }
+                else
+                    $value = $model->$attribute;
 
                 echo '<div class="flex-wrap">';
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[country]')->widget(Select2::class, [
