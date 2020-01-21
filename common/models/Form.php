@@ -178,11 +178,10 @@ class Form extends \yii\db\ActiveRecord
             ),
         );
 
-        $template = file_get_contents($url, false, stream_context_create($arrContextOptions));
         $root = Yii::getAlias('@app');
 
         $template_path = $root.'/runtime/templates/template_'.$media->id_media.'_'.time().'.docx';
-        $template = file_put_contents($template_path,file_get_contents($url, false, stream_context_create($arrContextOptions)));
+        file_put_contents($template_path,file_get_contents($url, false, stream_context_create($arrContextOptions)));
 
         $export_path = \common\components\worddoc\WordDoc::makeDocByForm($this, $data, $template_path);
 
