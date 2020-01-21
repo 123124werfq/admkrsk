@@ -202,9 +202,15 @@ class FormInput extends \yii\db\ActiveRecord
                 'type'=>'input',
                 'value'=>'',
             ],
+            'alias'=>[
+                'name'=>'Псевдоним',
+                'type'=>'input',
+                'value'=>'',
+            ],
             'width'=>[
-                'name'=>'Ширина %',
+                'name'=>'Шир. %',
                 'type'=>'number',
+                'width'=>'300',
                 'value'=>'100',
                 'min'=>1,
                 'max'=>100
@@ -213,6 +219,7 @@ class FormInput extends \yii\db\ActiveRecord
                 'name'=>'Тип ввода',
                 'type'=>'dropdown',
                 'value'=>'',
+                'width'=>'375',
                 'values'=>[
                     'text'=>"Текст",
                     'email'=>"Емейл",
@@ -220,7 +227,14 @@ class FormInput extends \yii\db\ActiveRecord
                     'url'=>"Ссылка",
                     'datetime'=>"Дата+Время",
                     'date'=>"Дата",
+                    'list'=>"Список",
                 ],
+            ],
+            'values'=>[
+                'name'=>'Значения',
+                'type'=>'input',
+                'value'=>'',
+                'placeholder'=>'Черезе ;',
             ],
         ];
 
@@ -231,13 +245,8 @@ class FormInput extends \yii\db\ActiveRecord
 
             // какаято проблема с экранированием строки в PG
             if (is_string($data))
-            {
                 $data = json_decode($data,true);
-            }
         }
-
-        //var_dump($data);
-        //die();
 
         if (empty($data))
             return [$options];
