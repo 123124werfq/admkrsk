@@ -341,7 +341,8 @@ class ServiceController extends Controller
                 //'target' => $target,
                 'service'=>$service,
                 'page' => $page,
-                'date' => date("d.m.Y", $appeal->created_at)
+                'date' => date("d.m.Y", $appeal->created_at),
+                'fio' => Yii::$app->user->identity->username
             ]);
         }
 
