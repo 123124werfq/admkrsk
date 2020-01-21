@@ -184,7 +184,7 @@ class WordDoc
 
                 if (count($output)>1)
                     $string_output[$col->alias] = implode('<w:br/>', $output);
-                else
+                else if(count($output) == 1)
                 {
                     $string_output[$col->alias] = $output[0];
                     $string_output[$col->alias.'_file'] = $media->getUrl();
