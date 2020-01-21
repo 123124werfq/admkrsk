@@ -195,9 +195,11 @@ class AddressController extends \yii\web\Controller
      */
     public function actionStreet($id_city, $search = '')
     {
+        $id_city = (int)$id_city;
+
         $query = Street::find()
             ->joinWith('houses', false)
-            ->filterWhere([House::tableName() . '.id_city' => (int)$id_city])
+            ->filterWhere([House::tableName() . '.id_city' => $id_city?$id_city:null])
             ->groupBy(Street::tableName() . '.id_street')
             ->orderBy([Street::tableName() . '.name' => SORT_ASC])
             ->limit(20)
@@ -225,12 +227,13 @@ class AddressController extends \yii\web\Controller
      */
     public function actionHouse($id_street, $search = '')
     {
+        $id_street = (int)$id_street;
         if (empty($id_street)) {
             return ['results' => []];
         };
 
         $query = House::find()
-            ->filterWhere(['id_street' => $id_street])
+            ->filterWhere(['id_street' => $id_street?$id_street:null])
             ->groupBy('id_house')
             ->orderBy(['name' => SORT_ASC])
             ->limit(20)
@@ -246,6 +249,8 @@ class AddressController extends \yii\web\Controller
                 'id' => $house['id_house'],
                 'text' => $house['name'],
                 'postalcode' => $house['postalcode'],
+                'lat' => $house['lat'],
+                'lon' => $house['lon'],
             ];
         }
 
@@ -253,7 +258,9 @@ class AddressController extends \yii\web\Controller
             $results = [
                 'id' => null,
                 'text' => $search,
-                'postalcode' => ''
+                'postalcode' => '',
+                'lat' => '',
+                'lon' => '',
             ];
         }
 
