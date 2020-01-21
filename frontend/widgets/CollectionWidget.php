@@ -211,7 +211,6 @@ class CollectionWidget extends \yii\base\Widget
             }
 
             return $this->render('collection/group/'.$this->template,[
-
                 'groups'=>$group_rows,
                 'model'=>$model,
                 'id_collection'=>$this->id_collection,

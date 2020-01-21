@@ -285,6 +285,27 @@ class CollectionRecordController extends Controller
                         return $model[$col_alias];
                 };
             }
+            else if ($col->type==CollectionColumn::TYPE_ADDRESS)
+            {
+                $dataProviderColumns[$col_alias]['format'] = 'raw';
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
+
+                    if (empty($model[$col_alias]))
+                        return '';
+
+                    //$array = json_decode($model[$col_alias],true);
+                    $output = [];
+                    $output[] = $model[$col_alias]['country']??'';
+                    $output[] = $model[$col_alias]['region']??'';
+                    $output[] = $model[$col_alias]['subregion']??'';
+                    $output[] = $model[$col_alias]['city']??'';
+                    $output[] = $model[$col_alias]['disctrict']??'';
+                    $output[] = $model[$col_alias]['street']??'';
+                    $output[] = $model[$col_alias]['house']??'';
+
+                    return implode(',', $output);
+                };
+            }
             else if ($col->type==CollectionColumn::TYPE_IMAGE)
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
