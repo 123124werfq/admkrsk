@@ -790,6 +790,14 @@ JS;
                 break;
         }
         ?>
+        <?php if (!empty($input->copyInput)){?>
+            <div class="checkbox-group">
+                <label class="checkbox checkbox__ib">
+                    <input class="checkbox_control copydate" type="checkbox" data-input="<?=$input->copyInput->id_input?>" name="copydate" value="<?=$input->id_input?>"/>
+                    <span class="checkbox_label">Совпадает с <?=$input->copyInput->label?$input->copyInput->label:$input->copyInput->name?></span>
+                </label>
+            </div>
+        <?php }?>
         <?php if (!empty($input->hint)) { ?>
             <p class="text-help"><?= $input->hint ?></p>
         <?php } ?>

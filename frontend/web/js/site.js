@@ -84,6 +84,28 @@ $(document).ready(function() {
         });
     }
 
+    $(".copydate").change(function(){
+
+        var checkbox = $(this);
+        if (checkbox.prop('checked'))
+        {
+            var group = checkbox.closest(".form-group");
+            
+            $("#inputGroup"+checkbox.data('input')).find('input, select, textarea').each(function(){
+                var input = $("#"+$(this).attr('id').replace(checkbox.data('input'),checkbox.val()));
+                
+                if (input.hasClass('select2-hidden-accessible'))
+                {
+                    input.html($(this).html());
+                    input.val($(this).val());
+                    input.trigger("change");
+                }
+                else 
+                    input.val($(this).val());
+            });
+        }
+    });
+
     $("body").delegate('.showonmap','click',function(){
         showMap($(this).data('id'),'map'+$(this).data('hash'));
     });
