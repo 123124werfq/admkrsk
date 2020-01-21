@@ -714,8 +714,8 @@ JS;
 
                 $columns = json_decode($input->values, true);
 
-                if (is_string($columns))
-                    $columns = json_decode($columns, true);
+                if (!is_array($columns) && !empty($columns))
+                    break;
 
                 $data = json_decode($model->$attribute,true);
 

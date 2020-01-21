@@ -125,7 +125,7 @@ class FormInput extends \yii\db\ActiveRecord
 
     public function beforeValidate()
     {
-        if ($this->type==CollectionColumn::TYPE_JSON)
+        if ($this->type==CollectionColumn::TYPE_JSON && is_array($this->values))
             $this->values = json_encode($this->values);
 
         //если сменили тип на неподдерживаемый коллекции
@@ -240,15 +240,9 @@ class FormInput extends \yii\db\ActiveRecord
 
 
         if (is_string($this->values))
-        {
             $data = json_decode($this->values,true);
 
-            // какаято проблема с экранированием строки в PG
-            if (is_string($data))
-                $data = json_decode($data,true);
-        }
-
-        if (empty($data))
+        if (empty($data) || !is_array($data))
             return [$options];
 
         $output = [];

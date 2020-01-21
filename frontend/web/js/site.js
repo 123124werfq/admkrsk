@@ -126,7 +126,7 @@ $(document).ready(function() {
     });
 
     $('.boxed.form-inside').delegate(".delete-subform",'click',function(){
-        if ($(this).closest('.subform').siblings().length>0)
+        if ($(this).closest('.subform').parent().find('.subform').length>1)
             $(this).closest('.subform').remove();
         return false;
     });
