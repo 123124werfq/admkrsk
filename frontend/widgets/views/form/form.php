@@ -9,9 +9,9 @@
 	$visibleElements = [];
 	$visibleInputs = [];
 
-	$visibleInputs = FormVisibleInput::find()->joinWith(['visibleInput'])->where(['id_form'=>$form->id_form])->all();
+	$visibleInputsModels = FormVisibleInput::find()->joinWith(['visibleInput'])->where(['id_form'=>$form->id_form])->all();
 
-	foreach ($visibleInputs as $vkey => $vinput)
+	foreach ($visibleInputsModels as $vkey => $vinput)
 	{
 		$visibleInputs[$vinput->id_input_visible][$vinput->id_element] = $vinput->id_element;
 		$visibleElements[$vinput->id_element][$vinput->id_input_visible] = $vinput->values;

@@ -52,4 +52,9 @@ class FormVisibleInput extends \yii\db\ActiveRecord
     {
         return $this->hasOne(FormInput::class, ['id_input' => 'id_input_visible']);
     }
+
+    public function getVisibleElement()
+    {
+        return $this->hasOne(FormElement::class, ['id_element' => 'id_element']);
+    }
 }
