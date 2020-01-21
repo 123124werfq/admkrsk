@@ -403,6 +403,7 @@ class Workflow extends Model
 
             $zip->close();
 
+            $filesToUnlink = []; //временно
             foreach ($filesToUnlink as $ufile)
                 if(is_file($ufile)) unlink($ufile);
 
