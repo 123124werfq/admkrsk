@@ -49,26 +49,7 @@ if ($model->alias == 'institution') {
 }
 ?>
 <?php if ($model->alias == 'institution'): ?>
-    <div class="ibox">
-        <div class="ibox-title">
-            <h3>Настройки обновления</h3>
-        </div>
-        <div class="ibox-content">
-            <?php $form = ActiveForm::begin(); ?>
-
-            <div class="row">
-                <div class="col-sm-4">
-                    <?= $form->field($settingForm, 'schedule')->textInput() ?>
-                </div>
-            </div>
-
-            <hr>
-
-            <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']) ?>
-
-            <?php ActiveForm::end(); ?>
-        </div>
-    </div>
+    <?= $this->render('_form_institution_setting', ['settingForm' => $settingForm])?>
 <?php endif; ?>
 
 <div class="tabs-container">

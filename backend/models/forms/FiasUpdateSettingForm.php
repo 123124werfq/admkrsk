@@ -2,11 +2,13 @@
 
 namespace backend\models\forms;
 
+use Cron\CronExpression;
 use Yii;
 use yii\base\Exception;
 use yii\base\Model;
 use yii\helpers\FileHelper;
 use yii\helpers\Json;
+use \DateTime;
 
 /**
  * @property string $schedule
@@ -20,6 +22,7 @@ use yii\helpers\Json;
  * @property array $selectedMonths
  * @property string $weekdays
  * @property array $selectedWeekdays
+ * @property string $nextRunDates
  */
 class FiasUpdateSettingForm extends Model
 {
@@ -56,21 +59,6 @@ class FiasUpdateSettingForm extends Model
     /* @var array */
     public $selectedWeekdays = [];
 
-    /* @var array */
-    private $defaultSetting = [
-        'schedule' => '* * * * *',
-        'minutes' => 'select',
-        'selectedMinutes' => ['0'],
-        'hours' => 'select',
-        'selectedHours' => ['0'],
-        'days' => '*',
-        'selectedDays' => [],
-        'months' => '*',
-        'selectedMonths' => [],
-        'weekdays' => '*',
-        'selectedWeekdays' => [],
-    ];
-
     /* @var string */
     static $path = '@console/runtime/settings';
 
@@ -92,7 +80,6 @@ class FiasUpdateSettingForm extends Model
         '1-23/2' => 'Нечетные часы',
         '*/6' => 'Каждые 6 часов',
         '*/12' => 'Каждые 12 часов',
-        'select' => 'Выберите',
     ];
 
     const DAYS = [
@@ -102,7 +89,6 @@ class FiasUpdateSettingForm extends Model
         '*/5' => 'Каждые 5 дней',
         '*/10' => 'Каждые 10 дней',
         '*/15' => 'Каждые пол месяца',
-        'select' => 'Выберите',
     ];
 
     const MONTHS = [
@@ -111,14 +97,92 @@ class FiasUpdateSettingForm extends Model
         '1-11/2' => 'Нечетные месяцы',
         '*/4' => 'Каждые 4 месяца',
         '*/6' => 'Каждые пол года',
-        'select' => 'Выберите',
     ];
 
     const WEEKDAYS = [
         '*' => 'Каждый день недели',
         '1-5' => 'Понедельник-пятница',
         '0,6' => 'Выходные дни',
-        'select' => 'Выберите',
+    ];
+
+    const SELECTED_DAYS = [
+        1 => 1,
+        2 => 2,
+        3 => 3,
+        4 => 4,
+        5 => 5,
+        6 => 6,
+        7 => 7,
+        8 => 8,
+        9 => 9,
+        10 => 10,
+        11 => 11,
+        12 => 12,
+        13 => 13,
+        14 => 14,
+        15 => 15,
+        16 => 16,
+        17 => 17,
+        18 => 18,
+        19 => 19,
+        20 => 20,
+        21 => 21,
+        22 => 22,
+        23 => 23,
+        24 => 24,
+        25 => 25,
+        26 => 26,
+        27 => 27,
+        28 => 28,
+        29 => 29,
+        30 => 30,
+        31 => 31,
+    ];
+
+    const SELECTED_MONTHS = [
+        1 => 'Январь',
+        2 => 'Февраль',
+        3 => 'Март',
+        4 => 'Апрель',
+        5 => 'Май',
+        6 => 'Июнь',
+        7 => 'Июль',
+        8 => 'Август',
+        9 => 'Сентябрь',
+        10 => 'Октябрь',
+        11 => 'Ноябрь',
+        12 => 'Декабрь',
+    ];
+
+    const SELECTED_WEEKDAYS = [
+        1 => 'Понедельник',
+        2 => 'Вторник',
+        3 => 'Среда',
+        4 => 'Четверг',
+        5 => 'Пятница',
+        6 => 'Суббота',
+        0 => 'Воскресенье',
+    ];
+
+    /* @var array */
+    private $_nextRunDates;
+
+    /* @var CronExpression */
+    private $_cronExpression;
+
+    /* @var array */
+    private $_defaultSetting = [
+        'schedule' => '* * * * *',
+        'minutes' => 'select',
+        'selectedMinutes' => ['0'],
+        'hours' => 'select',
+        'selectedHours' => ['0'],
+        'days' => '*',
+        'selectedDays' => [],
+        'months' => '*',
+        'selectedMonths' => [],
+        'weekdays' => '*',
+        'selectedWeekdays' => [],
     ];
 
     /**
@@ -139,12 +203,53 @@ class FiasUpdateSettingForm extends Model
         if (is_file($filename)) {
             $settings = Json::decode(file_get_contents($filename));
         } else {
-            $settings = $this->defaultSetting;
+            $settings = $this->_defaultSetting;
 
             file_put_contents($filename, Json::encode($settings));
         }
 
         $this->setAttributes($settings);
+
+        foreach ($this->getCronExpression()->getMultipleRunDates(3) as $dateTime) {
+            /* @var DateTime $dateTime */
+            $this->_nextRunDates[] =  Yii::$app->formatter->asDatetime($dateTime->format('U'));
+        }
+    }
+
+    /**
+     * @return CronExpression
+     */
+    public function getCronExpression()
+    {
+        if (!$this->_cronExpression) {
+            $this->_cronExpression = CronExpression::factory($this->schedule);
+        }
+
+        return $this->_cronExpression;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getExpression()
+    {
+        return $this->getCronExpression()->getExpression();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDue()
+    {
+        return $this->getCronExpression()->isDue();
+    }
+
+    /**
+     * @return array
+     */
+    public function getNextRunDates()
+    {
+        return $this->_nextRunDates;
     }
 
     /**
@@ -158,19 +263,19 @@ class FiasUpdateSettingForm extends Model
             [['selectedMinutes', 'selectedHours', 'selectedDays', 'selectedMonths', 'selectedWeekdays'], 'each', 'rule' => ['integer']],
             ['selectedMinutes', 'required', 'when' => function() {
                 return $this->minutes == 'select';
-            }],
+            }, 'message' => 'Выберите минуты.'],
             ['selectedHours', 'required', 'when' => function() {
                 return $this->hours == 'select';
-            }],
+            }, 'message' => 'Выберите часы.'],
             ['selectedDays', 'required', 'when' => function() {
                 return $this->days == 'select';
-            }],
+            }, 'message' => 'Выберите дни.'],
             ['selectedMonths', 'required', 'when' => function() {
                 return $this->months == 'select';
-            }],
+            }, 'message' => 'Выберите месяцы.'],
             ['selectedWeekdays', 'required', 'when' => function() {
                 return $this->weekdays == 'select';
-            }],
+            }, 'message' => 'Выберите дни недели.'],
         ];
     }
 
@@ -181,13 +286,13 @@ class FiasUpdateSettingForm extends Model
             'minutes' => 'Минуты',
             'selectedMinutes' => 'Минуты',
             'hours' => 'Часы',
-            'selectHours' => 'Часы',
+            'selectedHours' => 'Часы',
             'days' => 'Дни',
-            'selectDays' => 'Дни',
+            'selectedDays' => 'Дни',
             'months' => 'Месяцы',
-            'selectMonths' => 'Месяцы',
+            'selectedMonths' => 'Месяцы',
             'weekdays' => 'Дни недели',
-            'selectWeekdays' => 'Дни недели',
+            'selectedWeekdays' => 'Дни недели',
         ];
     }
 
@@ -205,35 +310,36 @@ class FiasUpdateSettingForm extends Model
                 $this->schedule = implode(',', $this->selectedMinutes) . ' ';
             } else {
                 $this->schedule = $this->minutes . ' ';
+                $this->selectedMinutes = [];
             }
 
             if ($this->hours == 'select') {
                 $this->schedule .= implode(',', $this->selectedHours) . ' ';
             } else {
                 $this->schedule .= $this->hours . ' ';
+                $this->selectedHours = [];
             }
 
             if ($this->days == 'select') {
                 $this->schedule .= implode(',', $this->selectedDays) . ' ';
             } else {
                 $this->schedule .= $this->days . ' ';
+                $this->selectedDays = [];
             }
 
             if ($this->months == 'select') {
                 $this->schedule .= implode(',', $this->selectedMonths) . ' ';
             } else {
                 $this->schedule .= $this->months . ' ';
+                $this->selectedMonths = [];
             }
 
             if ($this->weekdays == 'select') {
                 $this->schedule .= implode(',', $this->selectedWeekdays) . ' ';
             } else {
                 $this->schedule .= $this->weekdays . ' ';
+                $this->selectedWeekdays = [];
             }
-
-            echo "<pre>";
-            print_r($this->attributes);
-            die();
 
             if (!is_dir($path)) {
                 FileHelper::createDirectory($path);
