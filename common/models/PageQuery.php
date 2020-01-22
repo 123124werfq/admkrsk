@@ -1,13 +1,15 @@
 <?php
+
 namespace common\models;
 
-use creocoder\nestedsets\NestedSetsQueryBehavior;
+use common\behaviors\NestedSetsQueryBehavior;
+use common\components\softdelete\SoftDeleteQuery;
 
-class PageQuery extends \yii\db\ActiveQuery
+class PageQuery extends SoftDeleteQuery
 {
     public function behaviors() {
         return [
-            NestedSetsQueryBehavior::className(),
+            NestedSetsQueryBehavior::class,
         ];
     }
 }

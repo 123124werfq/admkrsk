@@ -4,11 +4,11 @@ namespace common\models;
 
 use common\behaviors\AccessControlBehavior;
 use common\behaviors\MailNotifyBehaviour;
+use common\behaviors\NestedSetsBehavior;
 use common\components\multifile\MultiUploadBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\AccessTrait;
-use creocoder\nestedsets\NestedSetsBehavior;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
@@ -243,7 +243,8 @@ class Page extends ActiveRecord
 
     public static function find()
     {
-        return new PageQuery(get_called_class());
+        $query = new PageQuery(get_called_class());
+        return $query->active();
     }
 
     public function getMedias()
