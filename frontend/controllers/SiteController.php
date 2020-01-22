@@ -743,7 +743,7 @@ class SiteController extends Controller
 
         $oid = $esia->getConfig()->getOid();
 
-        $roles = $esia->getRolesUrl();
+        $roles = $esia->getRolesInfo();
 
         var_dump($roles); die();
 
