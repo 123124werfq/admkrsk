@@ -743,6 +743,11 @@ class SiteController extends Controller
 
         $oid = $esia->getConfig()->getOid();
 
+        $roles = $esia->getRolesUrl();
+
+        var_dump($roles); die();
+
+
         $user = User::findByOid($oid);
         if ($user) {
             $esiauser = EsiaUser::findOne($user->id_esia_user);
