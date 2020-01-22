@@ -56,6 +56,12 @@ class FormController extends \yii\web\Controller
         if (empty($input))
             return '';
 
+        Yii::$app->assetManager->bundles = [
+            'yii\bootstrap\BootstrapAsset' => false,
+            'yii\web\JqueryAsset'=>false,
+            'yii\web\YiiAsset'=>false,
+        ];
+        
         $activeForm = \yii\widgets\ActiveForm::begin([
             'fieldConfig' => [
                 'template' => '{input}{error}',

@@ -203,6 +203,11 @@ class Form extends \yii\db\ActiveRecord
         return $this->hasOne(Service::class, ['id_service' => 'id_service']);
     }
 
+    public function getInputs()
+    {
+        return $this->hasOne(FormInput::class, ['id_form' => 'id_form']);
+    }
+
     public function getTemplate()
     {
         return $this->hasOne(Media::class, ['id_media' => 'id_media_template']);

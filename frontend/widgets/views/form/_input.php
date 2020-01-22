@@ -714,15 +714,21 @@ JS;
 
                 $columns = json_decode($input->values, true);
 
-                if (is_string($columns))
-                    $columns = json_decode($columns, true);
+                if (!is_array($columns) && !empty($columns))
+                    break;
 
-                $data = json_decode($model->$attribute);
+                $data = json_decode($model->$attribute,true);
 
-                if (!is_array($columns)) {
+                if (!is_array($columns) && !empty($data))
+                {
                     $columns = [];
+                    
+                    foreach ($data as $alias => $value)
+                        $columns[] = ['name'=>$alias,'alias'=>$alias];
                 }
-                ?>
+                else if (!empty($columns) && empty($data))
+                    $data = [[]];
+            ?>
                 <table class="form-table">
                     <thead>
                     <tr>
@@ -735,21 +741,37 @@ JS;
                     <tbody id="inputs<?= $input->id_input ?>">
                     <tr>
                         <?php
-                        if (empty($data)) {
+                        /*if (empty($data))
+                        {
                             $i = 0;
-                            foreach ($columns as $key => $column) {
-                                echo '<td><input id="input' . $input->id_input . '_col' . $i . '" type="' . ($column['type'] ?? 'text') . '" name="FormDynamic[input' . $input->id_input . '][0][' . $i . ']" class="form-control"/></td>';
+                            foreach ($columns as $key => $column)
+                            {
+                                echo '<td><input id="' . $attribute . '_col' . $i . '" type="' . ($column['type'] ?? 'text') . '" name="FormDynamic[input' . $input->id_input . '][0][' . $i . ']" class="form-control"/></td>';
                                 $i++;
                             }
-                        } else {
-                            foreach ($data as $key => $row) {
+                        } 
+                        else 
+                        {*/
+                            foreach ($data as $rkey => $row)
+                            {
                                 $i = 0;
-                                foreach ($columns as $key => $column) {
-                                    echo '<td><input id="input' . $input->id_input . '_col' . $i . '" type="' . ($column['type'] ?? 'text') . '" value="' . ($row[$i] ?? '') . '" name="FormDynamic[input' . $input->id_input . '][0][' . $i . ']" class="form-control"/></td>';
+                                foreach ($columns as $ckey => $column)
+                                {
+                                    if (!empty($column['type']) && $column['type']=='list')
+                                    {
+                                        $values = [];
+
+                                        foreach ((!empty($column['values']))?explode(';', $column['values']):[] as $vkey => $value)
+                                            $values[$value] = $value;
+
+                                        echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::dropDownList('FormDynamic['.$attribute.']['.$rkey.']['.$i.']',$row[$i]??'',$values,['id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
+                                    }
+                                    else 
+                                        echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::textINput('FormDynamic['.$attribute.']['.$rkey.']['.$i.']',$row[$i]??'',['id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
                                     $i++;
                                 }
                             }
-                        }
+                        //}
                         ?>
                         <td width="10" class="td-close">
                             <a class="close" onclick="return removeRow(this)" href="javascript:">&times;</a>
@@ -768,6 +790,14 @@ JS;
                 break;
         }
         ?>
+        <?php if (!empty($input->copyInput)){?>
+            <div class="checkbox-group">
+                <label class="checkbox checkbox__ib">
+                    <input class="checkbox_control copydate" type="checkbox" data-input="<?=$input->copyInput->id_input?>" name="copydate" value="<?=$input->id_input?>"/>
+                    <span class="checkbox_label">Совпадает с <?=$input->copyInput->label?$input->copyInput->label:$input->copyInput->name?></span>
+                </label>
+            </div>
+        <?php }?>
         <?php if (!empty($input->hint)) { ?>
             <p class="text-help"><?= $input->hint ?></p>
         <?php } ?>
