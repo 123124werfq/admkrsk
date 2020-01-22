@@ -26,9 +26,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <div class="content">
                     <ul>
-                        <li><a href="<?=$returnUrl?>"><?=$fio?> (физическое лицо)</a></li>
+                        <li><a href="<?=$backUrl?>"><?=$fio?> (физическое лицо)</a></li>
                     <?php foreach($firms as $firm){?>
-                        <li><a href="/asfirm?r=<?=urlencode($returnUrl)?>&f=<?=$firm['oid']?>"><?=$firm['fullName']?></a></li>
+                        <li><a href="/asfirm?r=<?=urlencode($backUrl)?>&f=<?=$firm['oid']?>"><?=$firm['fullName']?></a></li>
                     <?php }?>
                     </ul>
                 </div>
