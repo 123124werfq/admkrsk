@@ -307,7 +307,7 @@ class Workflow extends Model
 */
         $headers = [
             'SOAPAction:urn:#Operation_03_00_004FL',
-            'Content-Type: text/xml; charset=utf-8',
+            'Content-Type: multipart/related; charset=utf-8',
             'Content-Length: '.strlen($body),
             'Content-Transfer-Encoding: text'
         ];
