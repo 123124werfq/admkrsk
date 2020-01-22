@@ -278,7 +278,7 @@ class Workflow extends Model
            */
 
         $body = file_get_contents(Yii::getAlias('@app').'/assets/testrequest.txt');
-
+/*
         $fp = fsockopen('10.24.0.201', 80, $errno, $errstr, 30);
         if (!$fp) {
             echo "$errstr ($errno)<br />\n";
@@ -304,7 +304,7 @@ class Workflow extends Model
         }
 
         die();
-
+*/
         $headers = [
             'SOAPAction:urn:#Operation_03_00_004FL',
             'Content-Type: text/xml; charset=utf-8',
