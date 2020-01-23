@@ -789,7 +789,7 @@ class SiteController extends Controller
 
                 if(!$efirm) {
                     $efirm = new EsiaFirm;
-                    $efirm->oid = $firmInfo['oid'];
+                    $efirm->oid = (string)$firmInfo['oid'];
                 }
 
                 $efirm->active = (int)$firmInfo['active'];
