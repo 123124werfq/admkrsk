@@ -72,6 +72,21 @@ class CollectionController extends Controller
         }
     }
 
+    public function actionAddressFix()
+    {
+        $sql = "SELECT * FROM form_form WHERE is_template = 2 AND name LIKE '%Адрес%'";
+
+        $forms = Form::find()->where("is_template = 2 AND name LIKE '%Адрес%'")->all();
+
+        foreach ($forms as $key => $form)
+        {
+            foreach ($variable as $key => $value)
+            {
+                # code...
+            }$form
+        }
+    }
+
     public function actionMongofix()
     {
         set_time_limit(0);
