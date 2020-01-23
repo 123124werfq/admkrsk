@@ -835,7 +835,6 @@ class SiteController extends Controller
 
         var_dump($ogrn);
         var_dump(Yii::$app->user->id);
-        die();
 
         $efirm = EsiaFirm::find()->where(['id_user' => Yii::$app->user->id, 'ogrn' => $ogrn])->one();
         $esiauser = EsiaUser::find()->where(['id_user' => Yii::$app->user->id])->one();
@@ -844,7 +843,10 @@ class SiteController extends Controller
         {
             $esiauser->is_org = $efirm->id_esia_firm;
             $esiauser->updateAttributes(['is_org']);
+
+            var_dump($esiauser->errors);
         }
+        die();
 
         $backUrl =  Yii::$app->request->get('r', '/');
         return $this->redirect($backUrl);
