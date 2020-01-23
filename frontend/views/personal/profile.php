@@ -9,40 +9,63 @@
                 <h1 class="h2">Профиль</h1>
                 <p><?=$user->esiainfo->getUsertype()?></p>
                 <div class="content">
-                    <h3>Основная информация</h3>
-                    <p><em>ФИО:</em> <?=$user->esiainfo->last_name?> <?=$user->esiainfo->first_name?> <?=$user->esiainfo->middle_name?></p>
+                    <?php
+                        if($user->esiainfo->is_org){
+                    ?>
+                        <h3>Основная информация</h3>
+                        <p><em>ФИО:</em> <?=$user->esiainfo->last_name?> <?=$user->esiainfo->first_name?> <?=$user->esiainfo->middle_name?></p>
 
-                    <?php if(!empty($user->esiainfo->birthdate)) { ?>
-                    <p><em>Дата рождения:</em> <?=$user->esiainfo->birthdate?></p>
-                    <?php } ?>
-                    <?php if(!empty($user->esiainfo->birthplace)){ ?>
-                    <p><em>Место рождения:</em> <?=$user->esiainfo->birthplace?></p>
-                    <?php } ?>
-                    <?php if(!empty($user->esiainfo->passport_serie)){ ?>
-                    <p><em>Паспорт гражданина РФ:</em> <?=$user->esiainfo->passport_serie?> <?=$user->esiainfo->passport_number?>. Выдан <?=$user->esiainfo->passport_date?> <?=$user->esiainfo->passport_issuer?> код подразделения <?=$user->esiainfo->passport_issuer_id?></p>
-                    <?php } ?>
+                        <?php if(!empty($user->esiainfo->birthdate)) { ?>
+                        <p><em>Дата рождения:</em> <?=$user->esiainfo->birthdate?></p>
+                        <?php } ?>
+                        <?php if(!empty($user->esiainfo->birthplace)){ ?>
+                        <p><em>Место рождения:</em> <?=$user->esiainfo->birthplace?></p>
+                        <?php } ?>
+                        <?php if(!empty($user->esiainfo->passport_serie)){ ?>
+                        <p><em>Паспорт гражданина РФ:</em> <?=$user->esiainfo->passport_serie?> <?=$user->esiainfo->passport_number?>. Выдан <?=$user->esiainfo->passport_date?> <?=$user->esiainfo->passport_issuer?> код подразделения <?=$user->esiainfo->passport_issuer_id?></p>
+                        <?php } ?>
 
-                    <?php if(!empty($user->esiainfo->inn) || !empty($user->esiainfo->snils)){ ?>
-                    <h3>Идентификаторы</h3>
-                    <?php if(!empty($user->esiainfo->inn)){ ?>
-                    <p><em>ИНН:</em> <?=$user->esiainfo->inn?></p>
-                    <?php } ?>
-                    <?php if(!empty($user->esiainfo->snils)){ ?>
-                    <p><em>СНИЛС:</em> <?=$user->esiainfo->snils?></p>
-                    <?php } ?>
-                    <?php } ?>
+                        <?php if(!empty($user->esiainfo->inn) || !empty($user->esiainfo->snils)){ ?>
+                        <h3>Идентификаторы</h3>
+                        <?php if(!empty($user->esiainfo->inn)){ ?>
+                        <p><em>ИНН:</em> <?=$user->esiainfo->inn?></p>
+                        <?php } ?>
+                        <?php if(!empty($user->esiainfo->snils)){ ?>
+                        <p><em>СНИЛС:</em> <?=$user->esiainfo->snils?></p>
+                        <?php } ?>
+                        <?php } ?>
 
-                    <h3>Контактная информация</h3>
-                    <?php if(!empty($user->esiainfo->register_addr)){ ?>
-                    <p><em>Адрес регистрации:</em> <?=$user->esiainfo->register_addr?></p>
-                    <?php } ?>
-                    <?php if(!empty($user->esiainfo->mobile)){ ?>
-                    <p><em>Телефон:</em> <?=$user->esiainfo->mobile?></p>
-                    <?php } ?>
-                    <?php if(!empty($user->esiainfo->email)){ ?>
-                    <p><em>Email:</em> <?=$user->esiainfo->email?></p>
-                    <?php } ?>
+                        <h3>Контактная информация</h3>
+                        <?php if(!empty($user->esiainfo->register_addr)){ ?>
+                        <p><em>Адрес регистрации:</em> <?=$user->esiainfo->register_addr?></p>
+                        <?php } ?>
+                        <?php if(!empty($user->esiainfo->mobile)){ ?>
+                        <p><em>Телефон:</em> <?=$user->esiainfo->mobile?></p>
+                        <?php } ?>
+                        <?php if(!empty($user->esiainfo->email)){ ?>
+                        <p><em>Email:</em> <?=$user->esiainfo->email?></p>
+                        <?php } ?>
 
+                        <?php
+                            $afirms = $user->getActiveFirms();
+                            if($afirms) echo "<ul>";
+                            foreach ($afirms as $afirm){
+                        ?>
+                                <li><?=$firm->fullname?></li>
+                            <?php }
+                            if($afirms) echo "<ul>";
+
+                            ?>
+
+                    <?php
+                        } else {
+                            $firm = $user->getCurrentFirm();
+                    ?>
+                        <h3>Основная информация</h3>
+                        <p><em>Наименование:</em> <?=$firm->fullname?></p>
+                        <p><em>ОГРН:</em> <?=$firm->ogrn?></p>
+
+                        <?php } ?>
                     <a href="https://esia.gosuslugi.ru/profile/user/personal?cid=PGU" class="btn btn__block btn__border">Редактировать информацию на Госуслугах</a>
                     <br><br>
 
