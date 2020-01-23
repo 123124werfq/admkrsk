@@ -108,7 +108,7 @@ if (!Yii::$app->user->isGuest)
                     <span class="gosbar_btn dropdown-toggle">
                         <span class="material-icons gosbar-icon">account_circle</span>
                         <?php
-                            if($user){
+                            if(isset($user)){
                                 $ufirm = $user->getCurrentFirm();
                                 $userTitle = $ufirm?($ufirm->shortname):$user->username;
                             }
