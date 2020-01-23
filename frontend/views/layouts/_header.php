@@ -107,7 +107,15 @@ if (!Yii::$app->user->isGuest)
                 <div class="dropdown dropdown-flex">
                     <span class="gosbar_btn dropdown-toggle">
                         <span class="material-icons gosbar-icon">account_circle</span>
-                        <span class="gosbar_btn-text"><?=isset($user)?$user->username:'Личный кабинет'?></span>
+                        <?php
+                            if($user){
+                                $ufirm = $user->getCurrentFirm();
+                                $userTitle = $ufirm?($ufirm->shortname):$user->username;
+                            }
+                            else
+                                $userTitle = 'Личный кабинет';
+                        ?>
+                        <span class="gosbar_btn-text"><?=$userTitle?></span>
                         <span class="material-icons gosbar-icon gosbar-icon__right">arrow_drop_down</span>
                     </span>
                     <div class="dropdown-menu">
