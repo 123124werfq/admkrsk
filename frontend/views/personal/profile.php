@@ -51,7 +51,7 @@
                             if($afirms) echo "<ul>";
                             foreach ($afirms as $afirm){
                         ?>
-                                <li><?=$firm->fullname?></li>
+                                <li><?=$afirm->fullname?></li>
                             <?php }
                             if($afirms) echo "<ul>";
 
