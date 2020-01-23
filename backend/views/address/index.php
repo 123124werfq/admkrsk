@@ -8,6 +8,8 @@ use yii\helpers\Html;
 /* @var $searchModel backend\models\search\HouseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
+$archive = Yii::$app->request->get('archive');
+
 $this->title = $searchModel->breadcrumbsLabel;
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -45,6 +47,8 @@ if (Yii::$app->user->can('admin.address')) {
                             return $model->getFullName();
                         },
                     ],
+                    'is_active:boolean',
+                    'is_updatable:boolean',
 
                     [
                         'class' => 'yii\grid\ActionColumn',

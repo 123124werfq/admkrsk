@@ -647,7 +647,8 @@ class SiteController extends Controller
     public function actionStest()
     {
         $ww = new Workflow;
-        $ww->sendTest();
+        $ww->sendMultipartTest();
+        die();
     }
 
     /**
@@ -742,6 +743,8 @@ class SiteController extends Controller
 
         $oid = $esia->getConfig()->getOid();
 
+        $roles = $esia->getRolesInfo();
+
         $user = User::findByOid($oid);
         if ($user) {
             $esiauser = EsiaUser::findOne($user->id_esia_user);
@@ -751,6 +754,17 @@ class SiteController extends Controller
 
             $login = Yii::$app->user->login($user);
             Yii::$app->user->identity->createAction(Action::ACTION_LOGIN_ESIA);
+
+            if(isset($roles['elements']) && count($roles['elements']))
+            {
+                // тут обновление списка фирм
+
+                return $this->render('firmselect', [
+                    'fio' => Yii::$app->user->identity->username,
+                    'firms' => $roles['elements'],
+                    'backUrl' => '/'
+                ]);
+            }
 
             return $this->goHome();
             //return $login;
@@ -765,9 +779,9 @@ class SiteController extends Controller
 
         $esiauser = new EsiaUser();
 
-        if ($esiauser->actualize($esia))
+        if ($esiauser->actualize($esia)) {
             $user->id_esia_user = $esiauser->id_esia_user;
-
+        }
         if (!$user->save()) {
             throw new yii\web\ServerErrorHttpException('Внутренняя ошибка сервера');
         }
@@ -776,13 +790,5 @@ class SiteController extends Controller
         Yii::$app->user->identity->createAction(Action::ACTION_SIGNUP_ESIA);
 
         return $this->redirect('/');
-
-        /*
-        var_dump($token);
-        var_dump($personInfo);
-
-        echo "<br><br>".$oid;
-        Yii::$app->end();
-        */
     }
 }

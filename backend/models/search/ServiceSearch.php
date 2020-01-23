@@ -53,7 +53,7 @@ class ServiceSearch extends Service
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.service')) {
-            $query->andWhere(['id_service' => AuthEntity::getEntityIds(Service::class)]);
+            $query->andFilterWhere(['id_service' => AuthEntity::getEntityIds(Service::class)]);
         }
 
         $dataProvider = new ActiveDataProvider([

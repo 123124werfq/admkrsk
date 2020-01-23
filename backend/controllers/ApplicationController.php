@@ -35,7 +35,7 @@ class ApplicationController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.application.index'],
+                        'roles' => ['backend.application.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Application::class,
                         ],
@@ -43,7 +43,7 @@ class ApplicationController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.application.view'],
+                        'roles' => ['backend.application.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Application::class,
@@ -52,7 +52,7 @@ class ApplicationController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.application.create'],
+                        'roles' => ['backend.application.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Application::class,
                         ],
@@ -60,7 +60,7 @@ class ApplicationController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.application.update'],
+                        'roles' => ['backend.application.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Application::class,
@@ -69,7 +69,7 @@ class ApplicationController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.application.delete'],
+                        'roles' => ['backend.application.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Application::class,
@@ -78,7 +78,7 @@ class ApplicationController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.application.log.index'],
+                        'roles' => ['backend.application.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Application::class,
@@ -87,7 +87,7 @@ class ApplicationController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.application.log.view'],
+                        'roles' => ['backend.application.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -101,7 +101,7 @@ class ApplicationController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.application.log.restore'],
+                        'roles' => ['backend.application.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {

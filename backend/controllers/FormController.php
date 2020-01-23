@@ -46,7 +46,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.form.index'],
+                        'roles' => ['backend.form.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Form::class,
                         ],
@@ -54,7 +54,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.form.view'],
+                        'roles' => ['backend.form.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Form::class,
@@ -63,7 +63,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create','create-service','copy','make-doc'],
-                        'roles' => ['backend.form.create'],
+                        'roles' => ['backend.form.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Form::class,
                         ],
@@ -71,7 +71,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create-row'],
-                        'roles' => ['backend.form.createRow'],
+                        'roles' => ['backend.form.createRow', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id_form'),
                             'class' => Form::class,
@@ -80,7 +80,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update-row', 'undelete', 'delete-row'],
-                        'roles' => ['backend.form.updateRow'],
+                        'roles' => ['backend.form.updateRow', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id_form'),
                             'class' => Form::class,
@@ -89,7 +89,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update','order','assign-form'],
-                        'roles' => ['backend.form.update'],
+                        'roles' => ['backend.form.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Form::class,
@@ -108,7 +108,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete'],
-                        'roles' => ['backend.form.delete'],
+                        'roles' => ['backend.form.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Form::class,
@@ -117,7 +117,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.form.log.index'],
+                        'roles' => ['backend.form.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Form::class,
@@ -126,7 +126,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.form.log.view'],
+                        'roles' => ['backend.form.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -140,7 +140,7 @@ class FormController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.form.log.restore'],
+                        'roles' => ['backend.form.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -310,6 +310,8 @@ class FormController extends Controller
             $copyForm->id_collection = null;
             $copyForm->name = 'Копия - '.$form->name;
 
+            $oldToNewInputs = $visibleInputs = [];
+
             if ($copyForm->save())
             {
                 $collection = new Collection;
@@ -335,29 +337,14 @@ class FormController extends Controller
                             $copyElement->attributes = $element->attributes;
                             $copyElement->id_row = $newRow->id_row;
 
-                            $visibleInputs = [];
-
-                            $newVisibleInputs = [];
-                            if (!empty($element->visibleInputs))
-                            {
-                                foreach ($element->visibleInputs as $vikey => $vinput)
-                                    $visibleInputs[$vinput->id_input_visible] = $vinput->values;
-                            }
-
                             if (!empty($element->input))
                             {
-
                                 $newInput = new FormInput;
                                 $newInput->attributes = $element->input->attributes;
                                 $newInput->id_form = $copyForm->id_form;
 
                                 if (!$newInput->save())
                                     print_r($newInput->errors);
-
-                                if (isset($visibleInputs[$element->input->id_input]))
-                                {
-                                    $newVisibleInputs[$newInput->id_input] = $visibleInputs[$element->input->id_input];
-                                }
 
                                 $copyElement->id_input = $newInput->id_input;
 
@@ -372,17 +359,16 @@ class FormController extends Controller
 
                                 $newInput->id_column = $column->id_column;
                                 $newInput->updateAttributes(['id_column']);
+
+                                $oldToNewInputs[$element->input->id_input] = $newInput->id_input;
                             }
 
-                            if ($copyElement->save() && !empty($newVisibleInputs))
+                            if ($copyElement->save())
                             {
-                                foreach ($newVisibleInputs as $vikey => $values)
+                                if (!empty($element->visibleInputs))
                                 {
-                                    Yii::$app->db->createCommand()->insert('form_visibleinput',[
-                                        'id_element'=>$copyElement->id_element,
-                                        'values'=>$values,
-                                        'id_input_visible'=>$vikey,
-                                    ])->execute();
+                                    foreach ($element->visibleInputs as $vikey => $vinput)
+                                        $visibleInputs[$copyElement->id_element][$vinput->id_input_visible] = $vinput->values;
                                 }
                             }
 
@@ -395,6 +381,22 @@ class FormController extends Controller
                     else
                     {
                         print_r($newRow->errors);
+                    }
+                }
+
+                if (!empty($visibleInputs))
+                {
+                    foreach ($visibleInputs as $id_element => $inputs)
+                    {
+                        foreach ($inputs as $id_input => $values)
+                        {
+                            if (!empty($oldToNewInputs[$id_input]))
+                                Yii::$app->db->createCommand()->insert('form_visibleinput',[
+                                    'id_element'=>$id_element,
+                                    'values'=>$values,
+                                    'id_input_visible'=>$oldToNewInputs[$id_input],
+                                ])->execute();
+                        }
                     }
                 }
 
@@ -691,13 +693,16 @@ class FormController extends Controller
         $model = $this->findModel($id);
 
         // ищем связанную коллекцию
-        if ($model->id_form == $model->collection->id_form)
+        if (!empty($model->collection) && $model->id_form == $model->collection->id_form)
             $collection = $model->collection;
 
         if ($model->delete())
         {
             if (!empty($collection))
+            {
                 $collection->delete();
+                $collection->createAction(Action::ACTION_DELETE);
+            }
 
             $model->createAction(Action::ACTION_DELETE);
         }

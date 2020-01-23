@@ -62,12 +62,7 @@ use yii\web\JsExpression;
         <?=$form->field($model, 'values')->textarea(['rows' => 6,'required'=>($model->type==CollectionColumn::TYPE_CHECKBOX)])->hint('Вводить через ;')?>
     <?php }?>
 
-    <?php if ($model->type == CollectionColumn::TYPE_SELECT
-           || $model->type == CollectionColumn::TYPE_RADIO
-           || $model->type == CollectionColumn::TYPE_CHECKBOXLIST
-           || $model->type == CollectionColumn::TYPE_COLLECTION
-           || $model->type == CollectionColumn::TYPE_COLLECTIONS
-       ){?>
+    <?php if ($model->supportCollectionSource()){?>
     <div class="row">
         <div class="col-md-6">
         <?=$form->field($model, 'id_collection')->widget(Select2::class, [
@@ -105,8 +100,8 @@ use yii\web\JsExpression;
 
         echo '<div class="row-flex">';
         foreach ($data[0] as $key => $option)
-            echo '<div class="col"><label class="control-label">'.$option['name'].'</label></div>';
-        echo '</div>';
+            echo '<div class="col" '.(!empty($option['width'])?'style="width:'.$option['width'].'px;"':'').'><label class="control-label">'.$option['name'].'</label></div>';
+        echo '<div class="col col-close"></div></div>';
 
         echo '<div id="table_options" class="multiyiinput">';
         foreach ($data as $key => $row)
@@ -116,7 +111,8 @@ use yii\web\JsExpression;
             {
                 $option['class'] = 'form-control';
                 $option['id'] = 'values_'.$okey.'_'.$key;
-                echo '<div class="col">';
+
+                echo '<div class="col" '.(!empty($option['width'])?'style="width:'.$option['width'].'px;"':'').'>';
                     if (empty($option['values']))
                         echo Html::textInput("FormInput[values][$key][$okey]",$option['value'],$option);
                     else
@@ -137,6 +133,9 @@ use yii\web\JsExpression;
         ?>
     </div>
 
+    <?php if ($model->isCopyable()){
+       echo $form->field($model, 'id_input_copy')->dropDownList(ArrayHelper::map($model->form->getInputs()->select(['id_input','name'])->where(['type'=>$model->type])->andWhere('id_input <> '.(int)$model->id_input)->all(),'id_input','name'),['prompt'=>'Выберите поле']);
+    }?>
     <br/>
 
     <h3>Настройка отображения</h3>

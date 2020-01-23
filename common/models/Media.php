@@ -188,14 +188,16 @@ class Media extends \yii\db\ActiveRecord
         $ip = Yii::$app->request->userIP;
 
         if ($ip!='127.0.0.1')
-            return str_replace('127.0.0.1:9000', 'storage.admkrsk.ru', $url);
+            return str_replace('http://127.0.0.1:9000', 'https://storage.admkrsk.ru', $url);
 
         return $url;
     }
 
     public function getUrl()
     {
-        return $this->makePublic(Yii::$app->publicStorage->getPublicUrl($this->getFilePath()));
+        $url = str_replace('http://storage.admkrsk.ru', 'https://storage.admkrsk.ru', $this->makePublic(Yii::$app->publicStorage->getPublicUrl($this->getFilePath())));
+
+        return $url;
     }
 
     public function getFilePath()

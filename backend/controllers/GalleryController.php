@@ -35,7 +35,7 @@ class GalleryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index','get-gallery'],
-                        'roles' => ['backend.gallery.index'],
+                        'roles' => ['backend.gallery.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Gallery::class,
                         ],
@@ -43,7 +43,7 @@ class GalleryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.gallery.view'],
+                        'roles' => ['backend.gallery.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Gallery::class,
@@ -52,7 +52,7 @@ class GalleryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.gallery.create'],
+                        'roles' => ['backend.gallery.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Gallery::class,
                         ],
@@ -60,7 +60,7 @@ class GalleryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.gallery.update'],
+                        'roles' => ['backend.gallery.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Gallery::class,
@@ -69,7 +69,7 @@ class GalleryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.gallery.delete'],
+                        'roles' => ['backend.gallery.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Gallery::class,
@@ -78,7 +78,7 @@ class GalleryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.gallery.log.index'],
+                        'roles' => ['backend.gallery.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Gallery::class,
@@ -87,7 +87,7 @@ class GalleryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.gallery.log.view'],
+                        'roles' => ['backend.gallery.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -101,7 +101,7 @@ class GalleryController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.gallery.log.restore'],
+                        'roles' => ['backend.gallery.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {

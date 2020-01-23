@@ -40,7 +40,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['layout','template'],
-                        'roles' => ['backend.page.layout'],
+                        'roles' => ['backend.page.layout', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Page::class,
@@ -48,8 +48,8 @@ class PageController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'list', 'tree'],
-                        'roles' => ['backend.page.index'],
+                        'actions' => ['index', 'list', 'tree', 'partition'],
+                        'roles' => ['backend.page.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Page::class,
                         ],
@@ -57,7 +57,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.page.view'],
+                        'roles' => ['backend.page.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Page::class,
@@ -66,15 +66,15 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.page.create'],
+                        'roles' => ['backend.page.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Page::class,
                         ],
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['update','hide','order'],
-                        'roles' => ['backend.page.update'],
+                        'actions' => ['update','hide','order','get-page'],
+                        'roles' => ['backend.page.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Page::class,
@@ -83,7 +83,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.page.delete'],
+                        'roles' => ['backend.page.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Page::class,
@@ -92,7 +92,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.page.log.index'],
+                        'roles' => ['backend.page.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Page::class,
@@ -101,7 +101,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.page.log.view'],
+                        'roles' => ['backend.page.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -115,7 +115,7 @@ class PageController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.page.log.restore'],
+                        'roles' => ['backend.page.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -195,6 +195,17 @@ class PageController extends Controller
         return ['results' => $results];
     }
 
+    public function actionGetPage()
+    {
+        $records = Page::find()->where('id_page IN (SELECT id_page FROM db_news)')->all();
+
+        $output = [];
+        foreach ($records as $key => $data)
+            $output[] = ['text'=>$data->title,'value'=>(string)$data->id_page];
+
+        return json_encode($output);
+    }
+
     public function actionTemplate($id)
     {
         $page = $this->findModel($id);
@@ -254,14 +265,28 @@ class PageController extends Controller
         return $this->render('tree',['tree'=>$tree]);
     }
 
-
-
     public function actionPartition($id=null)
     {
-        /*if (!empty($id))
-            $this->findModel($id);
+        $model = null;
+
+        if (!empty($id))
+        {
+            $model = $this->findModel($id);
+            $partitions = $model->children()->andWhere(['is_partition'=>1])->all();
+
+            return $this->render('partition/partition',[
+                'partitions'=>$partitions,
+                'model'=>$model,
+            ]);
+        }
         else
-            Page::*/
+        {
+            $partitions = Page::find()->where(['is_partition'=>1])->all();
+
+            return $this->render('partition/all',[
+                'partitions'=>$partitions,
+            ]);
+        }
     }
 
     /**
@@ -269,7 +294,7 @@ class PageController extends Controller
      * @return mixed
      * @throws ExitException
      */
-    public function actionIndex($export=false)
+    public function actionIndex($id_partition=null,$export=false)
     {
         $searchModel = new PageSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -279,6 +304,7 @@ class PageController extends Controller
             'user_id' => Yii::$app->user->id,
         ]);
         $columns = null;
+
         if ($grid) {
             $columns = json_decode($grid->settings, true);
         }
@@ -319,6 +345,7 @@ class PageController extends Controller
         }
 
         return $this->render('index', [
+            'partition'=>($id_partition)?$this->findModel($id_partition):null,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'customColumns' => $columns,

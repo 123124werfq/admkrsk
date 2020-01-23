@@ -45,16 +45,28 @@ class FormInput extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'id_column', 'deleted_by','label','id_collection_column'], 'default', 'value' => null],
-            [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_column', 'required','type','readonly','id_collection_column'], 'integer'],
+            [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'id_column', 'deleted_by','label','id_collection_column', 'id_input_copy'], 'default', 'value' => null],
+            [['id_form', 'id_type', 'id_collection', 'size', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_column', 'required','type','readonly','id_collection_column','id_input_copy'], 'integer'],
             [['name', 'type', 'fieldname'], 'required'],
             ['id_collection_column', 'required', 'when' => function($model) {
                 return (!empty($model->id_collection));
             }],
+            [['fieldname'], 'fieldnameUnique'],
             [['hint','label'], 'string'],
             [['options','values'],'safe'],
             [['name', 'fieldname','alias'], 'string', 'max' => 500],
         ];
+    }
+
+    /**
+     * проверка на уникальность алиаса инпута в рамках одной формы
+     */
+    public function fieldnameUnique()
+    {
+        $count = FormInput::find()->where(['fieldname'=>$this->fieldname,'id_form'=>$this->id_form])->andWhere('id_input <> '.(int)$this->id_input)->count();
+
+        if ($count>0)
+            $this->addError('fieldname', 'Такой псевдоним уже существует');
     }
 
     /**
@@ -76,6 +88,7 @@ class FormInput extends \yii\db\ActiveRecord
             'hint' => 'Пояснение',
             'fieldname' => 'Псевдоним переменной',
             'values' => 'Значения',
+            'id_input_copy'=>'Копировать данные из',
             'size' => 'Размер',
             'options' => 'Опции',
             'created_at' => 'Created At',
@@ -99,10 +112,26 @@ class FormInput extends \yii\db\ActiveRecord
         ];
     }
 
+    public function supportCollectionSource()
+    {
+        if ($this->type == CollectionColumn::TYPE_SELECT
+           || $this->type == CollectionColumn::TYPE_RADIO
+           || $this->type == CollectionColumn::TYPE_CHECKBOXLIST
+           || $this->type == CollectionColumn::TYPE_COLLECTION
+           || $this->type == CollectionColumn::TYPE_COLLECTIONS)
+            return true;
+
+        return false;
+    }
+
     public function beforeValidate()
     {
-        if ($this->type==CollectionColumn::TYPE_JSON)
+        if ($this->type==CollectionColumn::TYPE_JSON && is_array($this->values))
             $this->values = json_encode($this->values);
+
+        //если сменили тип на неподдерживаемый коллекции
+        if (!$this->supportCollectionSource() && !empty($this->id_collection))
+            $this->id_collection = $this->id_collection_column = null;
 
         return parent::beforeValidate();
     }
@@ -166,6 +195,11 @@ class FormInput extends \yii\db\ActiveRecord
         return $values;
     }
 
+    public function isCopyable()
+    {
+        return ($this->type != CollectionColumn::TYPE_FILE && $this->type != CollectionColumn::TYPE_IMAGE);
+    }
+
     public function getTableOptions()
     {
         $options = [
@@ -174,9 +208,15 @@ class FormInput extends \yii\db\ActiveRecord
                 'type'=>'input',
                 'value'=>'',
             ],
+            'alias'=>[
+                'name'=>'Псевдоним',
+                'type'=>'input',
+                'value'=>'',
+            ],
             'width'=>[
-                'name'=>'Ширина %',
+                'name'=>'Шир. %',
                 'type'=>'number',
+                'width'=>'300',
                 'value'=>'100',
                 'min'=>1,
                 'max'=>100
@@ -185,6 +225,7 @@ class FormInput extends \yii\db\ActiveRecord
                 'name'=>'Тип ввода',
                 'type'=>'dropdown',
                 'value'=>'',
+                'width'=>'375',
                 'values'=>[
                     'text'=>"Текст",
                     'email'=>"Емейл",
@@ -192,26 +233,22 @@ class FormInput extends \yii\db\ActiveRecord
                     'url'=>"Ссылка",
                     'datetime'=>"Дата+Время",
                     'date'=>"Дата",
+                    'list'=>"Список",
                 ],
+            ],
+            'values'=>[
+                'name'=>'Значения',
+                'type'=>'input',
+                'value'=>'',
+                'placeholder'=>'Черезе ;',
             ],
         ];
 
 
         if (is_string($this->values))
-        {
             $data = json_decode($this->values,true);
 
-            // какаято проблема с экранированием строки в PG
-            if (is_string($data))
-            {
-                $data = json_decode($data,true);
-            }
-        }
-
-        //var_dump($data);
-        //die();
-
-        if (empty($data))
+        if (empty($data) || !is_array($data))
             return [$options];
 
         $output = [];
@@ -237,6 +274,16 @@ class FormInput extends \yii\db\ActiveRecord
         return $this->hasOne(FormElement::class, ['id_input' => 'id_input']);
     }
 
+    public function getCopyInput()
+    {
+        return $this->hasOne(FormInput::class, ['id_input' => 'id_input_copy']);
+    }
+
+    public function getForm()
+    {
+        return $this->hasOne(Form::class, ['id_form' => 'id_form']);
+    }
+
     public function getCollection()
     {
         return $this->hasOne(Collection::class, ['id_collection' => 'id_collection']);
@@ -251,4 +298,6 @@ class FormInput extends \yii\db\ActiveRecord
     {
         return $this->hasOne(FormInputType::class, ['id_type' => 'id_type']);
     }
+
+
 }

@@ -9,6 +9,7 @@ use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use common\models\CollectionColumn;
 use common\models\Collection;
+use common\models\Box;
 use yii\web\JsExpression;
 
 /* @var $this yii\web\View */
@@ -18,7 +19,7 @@ use yii\web\JsExpression;
 
 <?php $form = ActiveForm::begin(); ?>
 
-<?= $form->field($model, 'id_group')->dropDownList(Collection::getArrayByAlias('collection_group')) ?>
+<?= $form->field($model, 'id_box')->dropDownList(ArrayHelper::map(Box::find()->all(), 'id_box', 'name'),['prompt'=>'Выберите группу']) ?>
 
 <?= $form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
 
@@ -41,7 +42,7 @@ use yii\web\JsExpression;
 
     <?php if (!$model->isNewRecord) { ?>
         <?= $form->field($model, 'label')->widget(Select2::class, [
-            'data' => ArrayHelper::map(CollectionColumn::find()->where([
+            'data' => ArrayHelper::map($model->getColumns()->andWhere([
                 'id_collection' => $model->id_collection,
                 'type' => [CollectionColumn::TYPE_INPUT, CollectionColumn::TYPE_INTEGER]
             ])->all(), 'id_column', 'name'),
@@ -52,13 +53,18 @@ use yii\web\JsExpression;
             ],
             'options' => ['multiple' => true,]
         ])->hint('Выберите колонки из которых будет составляться представление для отображения в списках') ?>
-    <?php } ?>
 
+        <?= $form->field($model, 'id_column_map')->dropDownList(
+            ArrayHelper::map($model->getColumns()->andWhere([
+                    'id_collection' => $model->id_collection,
+                    'type' => CollectionColumn::TYPE_MAP
+            ])->all(),'id_column','name'),['prompt'=>'Выберите колонку']);
+        ?>
+    <?php } ?>
     <hr>
 
-    <h3>Доступ</h3>
+    <h3>Настройка уведомлений</h3>
 
-    <p>Настройка уведомлений</p>
     <?= $form->field($model, 'notify_rule')->radioList(
         [
             0 => 'Отключить уведомления',
@@ -80,9 +86,16 @@ use yii\web\JsExpression;
         ?>
     <?php endif; ?>
 
+    <hr>
+
+    <h3>Доступ</h3>
+
     <?php
         $records = $model->getRecords('partitions');
-        $records = ArrayHelper::map($records, 'id_page', 'title');
+            if (!empty($records[0]->id_page))
+                $records = ArrayHelper::map($records, 'id_page', 'title');
+            else
+                $records = [];
 
         echo Select2::widget([
             'data' => $records,
@@ -102,7 +115,6 @@ use yii\web\JsExpression;
                 'multiple' => true
             ]
         ]);
-        //->hint('Выберите разделы в которых можно использовать данный список');
     ?>
 
     <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>

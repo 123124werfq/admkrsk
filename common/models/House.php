@@ -20,14 +20,19 @@ use Yii;
  * @property string $id_district
  * @property string $id_street
  * @property string $name
+ * @property float $lat
+ * @property float $lon
  * @property string $fullname
- * @property bool $is_manual
+ * @property bool $is_updatable
+ * @property bool $is_active
+ * @property int $sputnik_updated_at
  * @property int $update_at
  * @property int $created_by
  * @property int $updated_at
  * @property int $updated_by
  * @property int $deleted_at
  * @property int $deleted_by
+ * @property array $location
  *
  * @property FiasHouse $house
  * @property Country $country
@@ -63,9 +68,10 @@ class House extends \yii\db\ActiveRecord
         return [
             [['houseguid'], 'string'],
             [['postalcode', 'name', 'fullname'], 'string', 'max' => 255],
-            [['is_manual'], 'boolean'],
-            [['id_country', 'id_region', 'id_subregion', 'id_city', 'id_district', 'id_street'], 'default', 'value' => null],
-            [['id_country', 'id_region', 'id_subregion', 'id_city', 'id_district', 'id_street'], 'integer'],
+            [['is_updatable', 'is_active'], 'boolean'],
+            [['lat', 'lon'], 'number'],
+            [['id_country', 'id_region', 'id_subregion', 'id_city', 'id_district', 'id_street', 'sputnik_updated_at'], 'default', 'value' => null],
+            [['id_country', 'id_region', 'id_subregion', 'id_city', 'id_district', 'id_street', 'sputnik_updated_at'], 'integer'],
             [['id_country'], 'exist', 'targetClass' => Country::class, 'targetAttribute' => 'id_country'],
             [['id_region'], 'exist', 'targetClass' => Region::class, 'targetAttribute' => 'id_region'],
             [['id_subregion'], 'exist', 'targetClass' => Subregion::class, 'targetAttribute' => 'id_subregion'],
@@ -91,8 +97,12 @@ class House extends \yii\db\ActiveRecord
             'id_district' => 'Район города',
             'id_street' => 'Улица',
             'name' => 'Дом',
+            'lat' => 'Широта',
+            'lon' => 'Долгота',
+            'sputnik_updated_at' => 'Координаты обновлены',
             'fullname' => 'Полный адрес',
-            'is_manual' => 'Добавлен вручную',
+            'is_updatable' => 'Обновлять из ФИАС',
+            'is_active' => 'Активный',
         ];
     }
 
@@ -175,5 +185,34 @@ class House extends \yii\db\ActiveRecord
             ($this->district ? $this->district->name . ', ' : null) .
             $this->street->name . ', ' .
             $this->name;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLocation()
+    {
+        return [
+            'lat' => $this->lat,
+            'lon' => $this->lon,
+        ];
+    }
+
+    /**
+     * @return void
+     */
+    public function updateLocation()
+    {
+        $location = Yii::$app->sputnik->getLocation($this->fullname);
+
+        if ($location) {
+            self::updateAttributes([
+                'lat' => $location['lat'],
+                'lon' => $location['lon'],
+                'sputnik_updated_at' => time(),
+            ]);
+        } else {
+            self::updateAttributes(['sputnik_updated_at' => time()]);
+        }
     }
 }

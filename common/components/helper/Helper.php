@@ -120,7 +120,7 @@ class Helper
 			"ш" => "sh", "щ" => "shch", "ъ" => "", "ы" => "i", "ь" => "", "э" => "e",  "ю" => "yu", "я" => "ya", "А" => "A", "Б" => "B", "В" => "V", "Г" => "G", "Д" => "D", "Е" => "E", "Ё" => "Yo", "Ж" => "G", "З" => "Z", "И" => "I",  "Й" => "Y", "К" => "K", "Л" => "L", "М" => "M", "Н" => "N", "О" => "O", "П" => "P", "Р" => "R", "С" => "S", "Т" => "T",
 			"У" => "U", "Ф" => "F", "Х" => "H", "Ц" => "Ts", "Ч" => "Ch", "Ш" => "Sh", "Щ" => "Shch", "Ъ" =>"", "Ы" => "I", "Ь" => "",
 			"Э" => "E", "Ю" => "Yu", "Я" => "Ya", "ж"=>"zh", '/'=>'_', '\\'=>'_', '"'=>'_', '#'=>'_', '№'=>'_',
-			"'"=>"", "-"=>"_",","=>"_", " "=>"_", "ч"=>"ch", "ш"=>"sh", "щ"=>"shch","ь"=>"", "ъ"=>"", "ю"=>"yu", "я"=>"ya", "Ж"=>"Zh", "Ч"=>"Ch", "Ш"=>"Sh", "Щ"=>"Shch","Ь"=>"", "ъ"=>"Ъ", "Ю"=>"Yu",
+			"'"=>"", "-"=>"_",","=>"_", " "=>"_", "ч"=>"ch", "ш"=>"sh", "щ"=>"shch","ь"=>"", "ю"=>"yu", "я"=>"ya", "Ж"=>"Zh", "Ч"=>"Ch", "Ш"=>"Sh", "Щ"=>"Shch","Ь"=>"", "Ю"=>"Yu",
 			"Я"=>"Ya", "ї"=>"i", "Ї"=>"Yi", "є"=>"ie", "Є"=>"Ye", ")"=>"", "("=>""));
 		return $name;
 	}
@@ -342,7 +342,7 @@ class Helper
 
 		if (isset($get['v']))
 		{
-			return '<iframe width="438" height="267" src="http://www.youtube.com/embed/'.$get['v'].'" frameborder="0" allowfullscreen></iframe>';
+			return '<iframe width="438" height="267" src="//www.youtube.com/embed/'.$get['v'].'" frameborder="0" allowfullscreen></iframe>';
 		}
 
 		return '';
@@ -387,7 +387,7 @@ class Helper
 
 			if (isset($get['v']))
 			{
-				$file = file_get_contents("http://img.youtube.com/vi/{$get['v']}/0.jpg");
+				$file = file_get_contents("//img.youtube.com/vi/{$get['v']}/0.jpg");
 				$img = Yii::app()->params['upload'].$get['v'].'.jpg';
 				file_put_contents($img,$file);
 

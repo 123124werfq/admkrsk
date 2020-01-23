@@ -1,12 +1,14 @@
-  <?php
+<?php
 
+use backend\models\forms\InstitutionUpdateSettingForm;
+use common\jobs\InstitutionImportJob;
 use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
+/* @var InstitutionUpdateSettingForm $settingForm */
 /* @var $model common\models\Collection */
 
 $this->title = $model->pageTitle;
@@ -31,7 +33,25 @@ $this->params['action-block'][] = Html::a('Создать копию', ['/collec
 
 $this->params['action-block'][] = Html::a('Связать данные', ['/collection/assign', 'id' => $model->id_collection]);
 
+$this->params['action-block'][] = Html::a('Конвертировать данные', ['/collection/convert-type', 'id' => $model->id_collection]);
+
+$this->params['action-block'][] = Html::a('Импортировать данные', ['/collection/import', 'id' => $model->id_collection]);
+
+if ($model->alias == 'institution') {
+    $jobId = InstitutionImportJob::getJobId();
+
+    if (!$jobId || (!Yii::$app->queue->isWaiting($jobId) && !Yii::$app->queue->isReserved($jobId) && Yii::$app->queue->isDone($jobId))) {
+        $this->params['button-block'][] = Html::a('Обновить организации', ['institution-import'],
+            ['class' => 'btn btn-primary']);
+    } else {
+        $this->params['button-block'][] = Html::tag('span', 'Идет обновление..', ['class' => 'btn btn-warning']);
+    }
+}
 ?>
+<?php if ($model->alias == 'institution'): ?>
+    <?= $this->render('_form_institution_setting', ['settingForm' => $settingForm])?>
+<?php endif; ?>
+
 <div class="tabs-container">
     <ul class="nav nav-tabs" role="tablist">
         <li class="active">

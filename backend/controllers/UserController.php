@@ -41,7 +41,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.user.index'],
+                        'roles' => ['backend.user.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => User::class,
                         ],
@@ -49,7 +49,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.user.view'],
+                        'roles' => ['backend.user.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => User::class,
@@ -58,7 +58,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.user.create'],
+                        'roles' => ['backend.user.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => User::class,
                         ],
@@ -66,7 +66,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.user.update'],
+                        'roles' => ['backend.user.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => User::class,
@@ -75,7 +75,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete'],
-                        'roles' => ['backend.user.delete'],
+                        'roles' => ['backend.user.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => User::class,
@@ -84,7 +84,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['action'],
-                        'roles' => ['backend.user.update'],
+                        'roles' => ['backend.user.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => User::class,
@@ -93,7 +93,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.user.log.index'],
+                        'roles' => ['backend.user.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => User::class,
@@ -102,7 +102,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.user.log.view'],
+                        'roles' => ['backend.user.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -116,7 +116,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.user.log.restore'],
+                        'roles' => ['backend.user.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {

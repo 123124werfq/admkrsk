@@ -82,9 +82,8 @@ use yii\widgets\ActiveForm;
 
 <?php if (Yii::$app->user->can('admin.page')): ?>
     <hr>
-    <h3>Доступ</h3>
 
-    <p>Настройка уведомлений</p>
+    <h3>Настройка уведомлений</h3>
     <?= $form->field($model, 'notify_rule')->radioList(
         [
             0 => 'Отключить уведомления',
@@ -105,6 +104,9 @@ use yii\widgets\ActiveForm;
                 'label' => 'Уведомлять админа об изменении списка?'])
         ?>
     <?php endif; ?>
+
+    <hr>
+    <h3>Доступ</h3>
 
     <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>
     <?= $form->field($model, 'access_user_group_ids')->label('Группы пользоватей')->widget(UserGroupAccessControl::class) ?>

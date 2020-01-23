@@ -10,7 +10,6 @@ use yii\grid\GridView;
 /* @var $model \yii\db\ActiveRecord */
 /* @var $parentModel \yii\db\ActiveRecord */
 /* @var $parent array */
-
 $parentModel = !empty($parent) ? $model->{$parent['relation']} : null;
 
 $this->title = 'История';
@@ -73,6 +72,7 @@ $this->params['button-block'][] = Html::a('Назад', ['view', 'id' => $model-
                                     'title' => $title,
                                     'aria-label' => $title,
                                     'data-pjax' => '0',
+                                    'data-confirm' => 'Вы действительно хотите восстановить эти данные?',
                                 ]);
                             },
                         ],

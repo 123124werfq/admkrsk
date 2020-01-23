@@ -6,6 +6,8 @@ use common\models\GridSetting;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use \common\models\Form;
+use \common\models\Box;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\search\FormSearch */
@@ -48,6 +50,13 @@ $defaultColumns = [
                 $output = Html::a($model->service->reestr_number, ['service/view', 'id' => $model->id_service]);
             return $output;
         }
+    ],
+    [
+        'attribute' => 'id_box',
+        'value' => function ($model) {
+            return (!empty($model->box))?$model->box->name:'';
+        },
+        'filter'    => ArrayHelper::map(Box::find()->all(),'id_box','name'),
     ],
     'created_at' => [
         'attribute' => 'created_at',
@@ -95,8 +104,9 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
     </div>
 </div>
 
-<div class="form-index">
-    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
+<div class="ibox">
+    <div class="ibox-content">
+    <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -125,4 +135,5 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
             'id' => 'grid',
         ]
     ]); ?>
+    </div>
 </div>

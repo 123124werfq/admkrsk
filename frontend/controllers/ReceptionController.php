@@ -125,6 +125,7 @@ class ReceptionController extends \yii\web\Controller
 
     public function actionCreate()
     {
+        die();
         return $this->render('result');
     }
 

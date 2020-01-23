@@ -8,28 +8,25 @@ $uniq_id = substr(md5(time().rand(0,9999)),0,10);
 
 <?php
 
-$pointsJS = [];
-
-foreach ($points as $pkey => $pt) {
-
-    $pointcode = <<< JS
-    
-    let point$pkey  = new ymaps.Placemark([{$pt['x']}, {$pt['y']}], {
-            balloonContentBody: "{$pt['content']}",
-        }, {
-            preset: '{$pt['icon']}'
-        });
-    map$uniq_id.geoObjects.add(point$pkey);
-JS;
-
-    $pointsJS[] = $pointcode;
-}
-
-$pointsPlain = implode("", $pointsJS);
-
+$jsonPoints = json_encode($points);
 
 $script = <<< JS
     var map$uniq_id;
+    
+    function updatePoints(mapObject, pointsArray)
+    {
+        mapObject.geoObjects.removeAll();
+        
+        for (let counter = 0; counter < pointsArray.length; counter++)
+        {
+            let pointTemp  = new ymaps.Placemark([pointsArray[counter]['x'], pointsArray[counter]['y']], {
+                    balloonContentBody: pointsArray[counter]['content'],
+                }, {
+                    preset: pointsArray[counter]['icon']
+                });
+            mapObject.geoObjects.add(pointTemp);
+        }
+    }
     
     ymaps.ready(init);
     
@@ -42,10 +39,9 @@ $script = <<< JS
             searchControlProvider: 'yandex#search'
         });
         
-        $pointsPlain
+        updatePoints(map$uniq_id, $jsonPoints)
         
     }
 JS;
 
 $this->registerJs($script, yii\web\View::POS_END);
-?>

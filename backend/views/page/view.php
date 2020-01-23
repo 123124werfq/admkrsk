@@ -9,9 +9,15 @@ use yii\widgets\Pjax;
 /* @var $model common\models\Page */
 
 $this->title = $model->pageTitle;
-$this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
+
+if (empty($model->partition))
+    $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
+else 
+    $this->params['breadcrumbs'][] = ['label' => $model->partition->title, 'url' => ['partition','id'=>$model->partition->id_page]];
+
 if (!empty($model->parent))
     $this->params['breadcrumbs'][] = ['label' => $model->parent->title, 'url' => ['view', 'id' => $model->id_parent]];
+
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->render('_head',['model'=>$model]);

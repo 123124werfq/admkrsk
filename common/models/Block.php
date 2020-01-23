@@ -295,6 +295,16 @@ class Block extends \yii\db\ActiveRecord
                 ],
             ]
         ],
+        'map'=> [
+            'label'=>'Несколько списков на карте ',
+            'widget'=>'frontend\widgets\MapsWidget',
+            'vars'=>[
+                'collections'=>[
+                    'name'=>'Списки',
+                    'type'=>BlockVar::TYPE_COLLECTIONS,
+                ],
+            ]
+        ],
         'content'=> [
             'label'=>'Содержение',
         ],

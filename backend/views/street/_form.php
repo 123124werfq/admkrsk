@@ -12,6 +12,10 @@ use yii\widgets\ActiveForm;
 
 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
+<?= $form->field($model, 'is_active')->checkbox() ?>
+
+<?= $form->field($model, 'is_updatable')->checkbox() ?>
+
 <hr>
 
 <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

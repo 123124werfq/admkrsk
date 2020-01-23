@@ -12,7 +12,8 @@ use Yii;
  *
  * @property int $id_district
  * @property string $name
- * @property bool $is_manual
+ * @property bool $is_updatable
+ * @property bool $is_active
  * @property int $update_at
  * @property int $created_by
  * @property int $updated_at
@@ -55,7 +56,7 @@ class District extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'string', 'max' => 255],
-            [['is_manual'], 'boolean'],
+            [['is_updatable', 'is_active'], 'boolean'],
         ];
     }
 
@@ -67,7 +68,8 @@ class District extends \yii\db\ActiveRecord
         return [
             'id_district' => '#',
             'name' => 'Район',
-            'is_manual' => 'Добавлен вручную',
+            'is_updatable' => 'Обновлять из ФИАС',
+            'is_active' => 'Активный',
         ];
     }
 

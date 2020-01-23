@@ -13,7 +13,8 @@ use Yii;
  * @property int $id_street
  * @property string $aoguid
  * @property string $name
- * @property bool $is_manual
+ * @property bool $is_updatable
+ * @property bool $is_active
  * @property int $update_at
  * @property int $created_by
  * @property int $updated_at
@@ -50,7 +51,7 @@ class Street extends \yii\db\ActiveRecord
         return [
             [['aoguid'], 'string'],
             [['name'], 'string', 'max' => 255],
-            [['is_manual'], 'boolean'],
+            [['is_updatable', 'is_active'], 'boolean'],
         ];
     }
 
@@ -63,7 +64,8 @@ class Street extends \yii\db\ActiveRecord
             'id_street' => '#',
             'aoguid' => 'Aoguid',
             'name' => 'Улица',
-            'is_manual' => 'Добавлен вручную',
+            'is_updatable' => 'Обновлять из ФИАС',
+            'is_active' => 'Активный',
         ];
     }
 

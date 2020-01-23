@@ -16,8 +16,8 @@ class AppAsset extends AssetBundle
     ];*/
 
     public $js = [
-        'http://yastatic.net/es5-shims/0.0.2/es5-shims.min.js',
-        'http://yastatic.net/share2/share.js',
+        '//yastatic.net/es5-shims/0.0.2/es5-shims.min.js',
+        '//yastatic.net/share2/share.js',
         'js/polyfill.js',
         'js/plyr.js',
         'js/slick.min.js',

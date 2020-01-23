@@ -40,7 +40,7 @@ class FaqController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.faq.index'],
+                        'roles' => ['backend.faq.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Faq::class,
                         ],
@@ -48,7 +48,7 @@ class FaqController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.faq.view'],
+                        'roles' => ['backend.faq.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Faq::class,
@@ -57,7 +57,7 @@ class FaqController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.faq.create'],
+                        'roles' => ['backend.faq.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Faq::class,
                         ],
@@ -65,7 +65,7 @@ class FaqController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.faq.update'],
+                        'roles' => ['backend.faq.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Faq::class,
@@ -74,7 +74,7 @@ class FaqController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.faq.delete'],
+                        'roles' => ['backend.faq.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Faq::class,
@@ -83,7 +83,7 @@ class FaqController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['history'],
-                        'roles' => ['backend.faq.log.index'],
+                        'roles' => ['backend.faq.log.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Faq::class,
@@ -92,7 +92,7 @@ class FaqController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['log'],
-                        'roles' => ['backend.faq.log.view'],
+                        'roles' => ['backend.faq.log.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {
@@ -106,7 +106,7 @@ class FaqController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['restore'],
-                        'roles' => ['backend.faq.log.restore'],
+                        'roles' => ['backend.faq.log.restore', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
                                 if (($log = Log::findOne(Yii::$app->request->get('id'))) !== null) {

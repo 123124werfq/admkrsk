@@ -22,6 +22,35 @@
     opacity: 0;
 }
 
+.content .press_info {padding-left: 0px!important;}
+.content .press-list .press_info-item {margin: 0px 0px 0px 12px!important;}
+
+.red {color: #ff0000};
+
+.press-list .press_info-item::before {
+    display: none!important;
+}
+
+.press-list a {border-bottom: 0px!important;}
+
+.collection-controls {text-align: right; }
+.collection-controls a {margin-bottom: 10px; border-bottom: 0px; display: inline-block; margin-left: 10px;}
+
+.showonmap {margin-bottom: 10px;}
+.collection-map {display: none; margin-bottom: 20px;}
+.collection-map.open {display: block; height: 300px;}
+.collection-map.open > div {height: 300px;}
+
+.close-window {
+    display: none;
+    position: absolute;
+    right: 30px;
+    top: 18px;
+    font-size: 53px!important;
+}
+.widget-wrapper.full-screen {position: fixed;left: 0px; right: 0px; bottom: 0px; top: 0px; height: 100vh; overflow-y: auto; z-index: 9999; background: #fff; padding: 40px 30px; height: 100vh;}
+.widget-wrapper.full-screen .close-window {display: block; font-size: 30px; color: #000; border-bottom: 0px!important;}
+
 .row_num {color: #aaa; font-size: 12px;}
 .colnum {text-align: center!important;}
 
@@ -31,6 +60,28 @@
     width: 75px!important;
     align-self: flex-end;
     margin-left: auto;
+}
+
+.col-md-4 {width: 33%;}
+.col-md-12 {width: 100%;}
+.col-md-6 {width: 50%;}
+.col-md-3 {width: 25%;}
+
+.widget-input-map{
+    width: 100%;
+    min-height: 300px;
+}
+
+.input-group-space {display: flex; justify-content: space-between;}
+.input-group-space input {margin-right: 5px; margin-bottom: 0px;}
+.input-group-space .btn.btn__gray {height: 47px;}
+
+.flex-wrap .form-group {margin-right: 5px;}
+
+.flex-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    /*justify-content: space-between;*/
 }
 
 .header-search{padding: 10px; border: none; border-radius: 5px; width: 100%;}
@@ -69,8 +120,9 @@ img[src*="http://www.admkrsk.ru/_layouts/images/icdocx.png"], .ms-asset-icon {di
 
 ul.pagination , ul.pagination li {list-style-type: none;}
 .content ul.pagination li::before {display: none!important;}
-.content .pagination li.prev a, .content .pagination li.next a {border-bottom-color: transparent!important;}
+.content .pagination li.first a, .content .pagination li.last a, .content .pagination li.prev a, .content .pagination li.next a {border-bottom-color: transparent!important;}
 .content .pagination li.active a {border-bottom-color: transparent!important; color: #aaa!important;}
+.content .pagination li.disabled {opacity: 0;}
 ul.pagination li {display: inline-block; padding: 5px;}
 ul.pagination {text-align: center;}
 

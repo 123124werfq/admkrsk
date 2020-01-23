@@ -13,7 +13,8 @@ use Yii;
  * @property int $id_subregion
  * @property string $aoguid
  * @property string $name
- * @property bool $is_manual
+ * @property bool $is_updatable
+ * @property bool $is_active
  * @property int $update_at
  * @property int $created_by
  * @property int $updated_at
@@ -50,7 +51,7 @@ class Subregion extends \yii\db\ActiveRecord
         return [
             [['aoguid'], 'string'],
             [['name'], 'string', 'max' => 255],
-            [['is_manual'], 'boolean'],
+            [['is_updatable', 'is_active'], 'boolean'],
         ];
     }
 
@@ -63,7 +64,8 @@ class Subregion extends \yii\db\ActiveRecord
             'id_subregion' => '#',
             'aoguid' => 'Aoguid',
             'name' => 'Район',
-            'is_manual' => 'Добавлен вручную',
+            'is_updatable' => 'Обновлять из ФИАС',
+            'is_active' => 'Активный',
         ];
     }
 

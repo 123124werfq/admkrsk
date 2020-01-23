@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\models;
+namespace backend\models\forms;
 
 use Yii;
 use yii\base\Model;
@@ -15,8 +15,10 @@ class CollectionImportForm extends Model
     public $skip = '';
     public $keyrow = '';
     public $name;
+    public $erase=true;
     public $filepath;
     public $firstRowAsName = false;
+    public $columns = [];
 
     /**
      * @return array the validation rules.
@@ -24,8 +26,9 @@ class CollectionImportForm extends Model
     public function rules()
     {
         return [
-            [['skip','firstRowAsName'],'integer'],
+            [['skip','firstRowAsName','erase'],'integer'],
             [['sheet','filepath','name'],'string'],
+            [['columns'],'safe'],
             [['file'], 'file', 'skipOnEmpty' => false, 'extensions' => 'xls,csv,xlsx'],
         ];
     }
@@ -38,6 +41,7 @@ class CollectionImportForm extends Model
         return [
             'file'=>'Файл',
             'skip'=>'Начать со строки',
+            'erase'=>'Удалить старые записи',
             'keyrow'=>'Взять ключи с',
             'firstRowAsName'=>'Использовать первую строку как названия столбцов',
         ];

@@ -3,7 +3,9 @@
 namespace common\models;
 
 use common\behaviors\AccessControlBehavior;
+use common\components\yiinput\RelationBehavior;
 use common\components\softdelete\SoftDeleteTrait;
+use common\traits\AccessTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
@@ -27,6 +29,7 @@ class Gallery extends \yii\db\ActiveRecord
     use MetaTrait;
     use ActionTrait;
     use SoftDeleteTrait;
+    use AccessTrait;
 
     const VERBOSE_NAME = 'Галерея';
     const VERBOSE_NAME_PLURAL = 'Галереи';
@@ -79,6 +82,16 @@ class Gallery extends \yii\db\ActiveRecord
                 ],
                 //'cover'=>'media'
             ],
+            'yiinput' => [
+                'class' => RelationBehavior::class,
+                'relations'=> [
+                    'partitions'=>[
+                        'modelname'=>'Page',
+                        'jtable'=>'dbl_gallery_page',
+                        'added'=>false,
+                    ],
+                ]
+            ],
         ];
     }
 
@@ -103,5 +116,10 @@ class Gallery extends \yii\db\ActiveRecord
     public function getMedias()
     {
         return $this->hasMany(Media::class, ['id_media' => 'id_media'])->viaTable('dbl_gallery_media', ['id_gallery' => 'id_gallery']);
+    }
+
+    public function getPartitions()
+    {
+        return $this->hasMany(Page::class, ['id_page' => 'id_page'])->viaTable('dbl_gallery_page',['id_gallery'=>'id_gallery']);
     }
 }

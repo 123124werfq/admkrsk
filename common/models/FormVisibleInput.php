@@ -29,6 +29,7 @@ class FormVisibleInput extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['id_input_visible','values'],'required'],
             [['id_element', 'id_input_visible'], 'default', 'value' => null],
             [['id_element', 'id_input_visible'], 'integer'],
             [['values'], 'safe'],
@@ -51,5 +52,10 @@ class FormVisibleInput extends \yii\db\ActiveRecord
     public function getVisibleInput()
     {
         return $this->hasOne(FormInput::class, ['id_input' => 'id_input_visible']);
+    }
+
+    public function getVisibleElement()
+    {
+        return $this->hasOne(FormElement::class, ['id_element' => 'id_element']);
     }
 }

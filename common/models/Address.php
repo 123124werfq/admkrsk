@@ -2,8 +2,11 @@
 
 namespace common\models;
 
+use common\traits\AccessTrait;
 use common\traits\MetaTrait;
 use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "map_address".
@@ -12,9 +15,10 @@ use Yii;
  * @property string $fullname
  *
  */
-class Address extends \yii\db\ActiveRecord
+class Address extends ActiveRecord
 {
     use MetaTrait;
+    use AccessTrait;
 
     const VERBOSE_NAME = 'Адрес';
     const VERBOSE_NAME_PLURAL = 'Адреса';
@@ -50,7 +54,7 @@ class Address extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getHouse()
     {

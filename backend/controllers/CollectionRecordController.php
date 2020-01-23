@@ -2,14 +2,18 @@
 
 namespace backend\controllers;
 
+use backend\models\forms\InstitutionUpdateSettingForm;
+use common\jobs\InstitutionImportJob;
+use common\models\District;
 use Yii;
 use common\models\CollectionRecord;
 use common\models\CollectionColumn;
 use common\models\Collection;
 use common\models\FormDynamic;
 use common\models\Media;
-
+use yii\base\Exception;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -26,8 +30,100 @@ class CollectionRecordController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['institution-import'],
+                        'roles' => ['backend.collection.update', 'backend.entityAccess'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($collection = Collection::findOne(['alias' => 'institution'])) !== null) {
+                                    return $collection->id_collection;
+                                }
+                                return null;
+                            },
+                            'class' => Collection::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => ['backend.collection.view', 'backend.entityAccess'],
+                        'roleParams' => [
+                            'entity_id' => Yii::$app->request->get('id'),
+                            'class' => Collection::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['download-doc'],
+                        'roles' => ['backend.collection.view', 'backend.entityAccess'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($collectionRecord = $this->findModel(Yii::$app->request->get('id'))) !== null) {
+                                    return $collectionRecord->id_collection;
+                                }
+                                return null;
+                            },
+                            'class' => Collection::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['view'],
+                        'roles' => ['backend.collection.view', 'backend.entityAccess'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($collectionRecord = $this->findModel(Yii::$app->request->get('id'))) !== null) {
+                                    return $collectionRecord->id_collection;
+                                }
+                                return null;
+                            },
+                            'class' => Collection::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create'],
+                        'roles' => ['backend.collection.create', 'backend.entityAccess'],
+                        'roleParams' => [
+                            'class' => Collection::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['update'],
+                        'roles' => ['backend.collection.update', 'backend.entityAccess'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($collectionRecord = $this->findModel(Yii::$app->request->get('id'))) !== null) {
+                                    return $collectionRecord->id_collection;
+                                }
+                                return null;
+                            },
+                            'class' => Collection::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['delete'],
+                        'roles' => ['backend.collection.delete', 'backend.entityAccess'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($collectionRecord = $this->findModel(Yii::$app->request->get('id'))) !== null) {
+                                    return $collectionRecord->id_collection;
+                                }
+                                return null;
+                            },
+                            'class' => Collection::class,
+                        ],
+                    ],
+                ],
+            ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -36,11 +132,45 @@ class CollectionRecordController extends Controller
     }
 
     /**
-     * Lists all CollectionRecord models.
      * @return mixed
+     * @throws Exception
+     */
+    public function actionInstitutionImport()
+    {
+        $jobId = InstitutionImportJob::getJobId();
+
+        if (!$jobId || (!Yii::$app->queue->isWaiting($jobId) && !Yii::$app->queue->isReserved($jobId) && Yii::$app->queue->isDone($jobId))) {
+            Yii::$app->session->setFlash('success', 'Запущено обновление организайций');
+
+            $jobId = Yii::$app->queue->push(new InstitutionImportJob());
+
+            InstitutionImportJob::saveJobId($jobId);
+        } else {
+            Yii::$app->session->setFlash('success', 'Обновление организайций уже выполняется');
+        }
+
+        $this->redirect(Yii::$app->request->referrer ?: '/');
+    }
+
+    /**
+     * Lists all CollectionRecord models.
+     * @param $id
+     * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionIndex($id)
     {
+        $settingForm = new InstitutionUpdateSettingForm();
+
+        if ($settingForm->load(Yii::$app->request->post())) {
+            if ($settingForm->save()) {
+                Yii::$app->session->setFlash('success', 'Настройки успешно сохранены');
+                $this->refresh();
+            } else {
+                Yii::$app->session->setFlash('error', 'Произошла ошибка при сохранении настроек');
+            }
+        }
+
         $model = $this->findCollection($id);
         $query = $model->getDataQuery();
 
@@ -110,7 +240,7 @@ class CollectionRecordController extends Controller
                     if (empty($model[$col_alias]))
                         return '';
 
-                    $district = \common\models\District::findOne($model[$col_alias]);
+                    $district = District::findOne($model[$col_alias]);
 
                     if (!empty($district))
                         return $district->name;
@@ -153,6 +283,27 @@ class CollectionRecordController extends Controller
                         return $output[] = '<a href="'.$array[0].'" download>'.$array[0].'</a>';
                     else
                         return $model[$col_alias];
+                };
+            }
+            else if ($col->type==CollectionColumn::TYPE_ADDRESS)
+            {
+                $dataProviderColumns[$col_alias]['format'] = 'raw';
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
+
+                    if (empty($model[$col_alias]))
+                        return '';
+
+                    //$array = json_decode($model[$col_alias],true);
+                    $output = [];
+                    $output[] = $model[$col_alias]['country']??'';
+                    $output[] = $model[$col_alias]['region']??'';
+                    $output[] = $model[$col_alias]['subregion']??'';
+                    $output[] = $model[$col_alias]['city']??'';
+                    $output[] = $model[$col_alias]['disctrict']??'';
+                    $output[] = $model[$col_alias]['street']??'';
+                    $output[] = $model[$col_alias]['house']??'';
+
+                    return implode(',', $output);
                 };
             }
             else if ($col->type==CollectionColumn::TYPE_IMAGE)
@@ -267,6 +418,7 @@ class CollectionRecordController extends Controller
         ];*/
 
         return $this->render('index', [
+            'settingForm' => $settingForm,
             'model' => $model,
             'columns' => $dataProviderColumns,
             'dataProvider' => $dataProvider,

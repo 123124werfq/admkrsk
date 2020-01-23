@@ -86,17 +86,7 @@ class CollectionColumnController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save())
         {
             if ($model->isCustom() && !empty($model->template))
-            {
-                $collection = $model->collection;
-                $mongoCollection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
-
-                $collection->getData();
-
-                foreach ($records as $key => $data)
-                {
-                    $dataMongo['col'.$column->id_column] = CollectionColumn::renderCustomValue($model->template,$data);
-                }
-            }
+                $this->updateCustomValues($model);
 
             return $this->redirect(['index', 'id' => $model->id_collection]);
         }
@@ -119,12 +109,31 @@ class CollectionColumnController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save())
         {
+            if ($model->isCustom() && !empty($model->template))
+                $this->updateCustomValues($model);
+
             return $this->redirect(['index', 'id' => $model->id_collection]);
         }
 
         return $this->render('update', [
             'model' => $model,
         ]);
+    }
+
+
+    protected function updateCustomValues($model)
+    {
+        $collection = $model->collection;
+        $mongoCollection = Yii::$app->mongodb->getCollection('collection'.$collection->id_collection);
+
+        $records = $collection->getData([],true);
+
+        foreach ($records as $id_record => $data)
+        {
+            $dataMongo = ['col'.$model->id_column => CollectionColumn::renderCustomValue($model->template,$data)];
+
+            $mongoCollection->update(['id_record' => $id_record], $dataMongo);
+        }
     }
 
     /**

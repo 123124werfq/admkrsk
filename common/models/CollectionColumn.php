@@ -17,6 +17,8 @@ use Yii;
  */
 class CollectionColumn extends \yii\db\ActiveRecord
 {
+    public $is_link; // для отображения таблиц в хранении данных не учавствует
+
     //public $values = []; // array of values for dropdown search
 
     const TYPE_INPUT = 1;
@@ -47,8 +49,9 @@ class CollectionColumn extends \yii\db\ActiveRecord
     const TYPE_SERVICETARGET = 26;
     const TYPE_SERVICE = 27;
     const TYPE_CUSTOM = 28;
-
     const TYPE_FILE_OLD = 29;
+    const TYPE_ADDRESSES = 30;
+    const TYPE_REPEAT = 31;
 
     public static function getTypeOptions($type)
     {
@@ -104,6 +107,16 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'type'=>'richtext',
                 ],
             ],
+            self::TYPE_REPEAT => [
+                'begin'=>[
+                    'name'=>'Дата начала',
+                    'type'=>'column',
+                ],
+                'end'=>[
+                    'name'=>'Дата конца',
+                    'type'=>'column',
+                ],
+            ],
             self::TYPE_INTEGER => [
                 'min'=>[
                     'name'=>'Минимум',
@@ -142,7 +155,6 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'type'=>'input',
                 ],
             ],
-
             self::TYPE_IMAGE => [
                 'acceptedFiles'=>[
                     'name'=>'Допустимые расширения файлов',
@@ -196,6 +208,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_JSON => "Таблицы",
 
             self::TYPE_ADDRESS => "Адрес строкой",
+            self::TYPE_ADDRESSES => "Несколько адресов",
             self::TYPE_REGION => 'Регион',
             self::TYPE_SUBREGION => 'Область',
             self::TYPE_CITY => 'Город',
@@ -206,6 +219,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_SERVICETARGET => "Цель муниципальной услуги",
             self::TYPE_SERVICE => "Услуги для обжалования",
 
+            self::TYPE_REPEAT => 'Повторяющаяся строка по дате',
             self::TYPE_CUSTOM => 'Составная колонка',
         ];
 
@@ -231,7 +245,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
         try {
             $loader = new \Twig\Loader\ArrayLoader([
-            'template' => $template,
+                'template' => $template,
             ]);
             $twig = new \Twig\Environment($loader);
             $value = $twig->render('template', $data);

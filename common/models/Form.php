@@ -3,8 +3,10 @@
 namespace common\models;
 
 use common\behaviors\AccessControlBehavior;
+use common\components\yiinput\RelationBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\AccessTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
@@ -29,6 +31,7 @@ class Form extends \yii\db\ActiveRecord
     use MetaTrait;
     use ActionTrait;
     use SoftDeleteTrait;
+    use AccessTrait;
 
     const VERBOSE_NAME = 'Форма';
     const VERBOSE_NAME_PLURAL = 'Формы';
@@ -52,9 +55,9 @@ class Form extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_collection','id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_group'], 'default', 'value' => null],
+            [['id_collection','id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_box'], 'default', 'value' => null],
             [['state'], 'default', 'value' => 1],
-            [['id_collection', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_page','id_group','state','is_template'], 'integer'],
+            [['id_collection', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_page','id_box','state','is_template'], 'integer'],
             [['alias'], 'unique'],
             [['name'], 'required'],
             [['message_success'], 'string'],
@@ -78,7 +81,7 @@ class Form extends \yii\db\ActiveRecord
             'alias' => 'Системное название формы',
             'name' => 'Название',
             'fullname' => 'Полное название',
-            'id_group' => 'Группа',
+            'id_box' => 'Группа',
             'state' => 'Включена',
             'message_success'=>'Сообщение при успешном отправлении',
             'id_page'=>'Переход на раздел при успешном отправлении',
@@ -118,37 +121,18 @@ class Form extends \yii\db\ActiveRecord
                 ],
                 'cover'=>'template'
             ],
+            'yiinput' => [
+                'class' => RelationBehavior::class,
+                'relations'=> [
+                    'partitions'=>[
+                        'modelname'=>'Page',
+                        'jtable'=>'dbl_form_page',
+                        'added'=>false,
+                    ],
+                ]
+            ],
         ];
     }
-
-    // deprecated
-    /*public function createFromByCollection()
-    {
-        foreach ($this->collection->columns as $key => $column)
-        {
-            $row = new FormRow;
-            $row->id_form = $this->id_form;
-            $row->ord = $key;
-
-            if ($row->save())
-            {
-                $input = new FormInput;
-                $input->type = $column->type;
-                $input->id_form = $this->id_form;
-                $input->id_column = $column->id_column;
-                $input->label = $input->name = $column->name;
-
-                if ($input->save())
-                {
-                    $element = new FormElement;
-                    $element->id_row = $row->id_row;
-                    $element->id_input = $input->id_input;
-                    $element->ord = 0;
-                    $element->save();
-                }
-            }
-        }
-    }*/
 
     public function createInput($attributes)
     {
@@ -173,6 +157,36 @@ class Form extends \yii\db\ActiveRecord
         }
     }
 
+    public function makeDoc($collectionRecord, $addData=null)
+    {
+        if (empty($this->template) && empty($this->service->template))
+            return false;
+
+        if (!empty($this->template))
+            $media = $this->template;
+        else if (!empty($this->service->template))
+            $media = $this->service->template;
+
+        $url = $media->getUrl();
+
+        $data = $collectionRecord->getData(true);
+
+        $arrContextOptions=array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+
+        $root = Yii::getAlias('@app');
+
+        $template_path = $root.'/runtime/templates/template_'.$media->id_media.'_'.time().'.docx';
+        file_put_contents($template_path,file_get_contents($url, false, stream_context_create($arrContextOptions)));
+
+        $export_path = \common\components\worddoc\WordDoc::makeDocByForm($this, $data, $template_path);
+
+        return $export_path;
+    }
 
     public function getCollection()
     {
@@ -189,50 +203,23 @@ class Form extends \yii\db\ActiveRecord
         return $this->hasOne(Service::class, ['id_service' => 'id_service']);
     }
 
+    public function getInputs()
+    {
+        return $this->hasOne(FormInput::class, ['id_form' => 'id_form']);
+    }
+
     public function getTemplate()
     {
         return $this->hasOne(Media::class, ['id_media' => 'id_media_template']);
     }
 
-    public function getGroup()
+    public function getBox()
     {
-        return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_group']);
+        return $this->hasOne(Box::class, ['id_box' => 'id_box']);
     }
 
-    public function makeDoc($collectionRecord, $addData=null)
+    public function getPartitions()
     {
-        if (empty($this->template) && empty($this->service->template))
-            return false;
-
-        if (!empty($this->template))
-            $media = $this->template;
-        else if (!empty($this->service->template))
-            $media = $this->service->template;
-
-        $url = $media->getUrl();
-
-        $data = $collectionRecord->getData(true);
-
-        $template = file_get_contents($url);
-        $root = Yii::getAlias('@app');
-
-        $template_path = $root.'/runtime/templates/template_'.$media->id_media.'_'.time().'.docx';
-        $template = file_put_contents($template_path,file_get_contents($url));
-
-        $export_path = \common\components\worddoc\WordDoc::makeDocByForm($this, $data, $template_path);
-
-        /*header('Content-Description: File Transfer');
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="'.$appeal->targer->number.' '.$appeal->created_at.'"');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($export_path));
-
-        readfile($export_path);
-        unlink($export_path);
-        */
-
-        return $export_path;
+        return $this->hasMany(Page::class, ['id_page' => 'id_page'])->viaTable('dbl_form_page',['id_form'=>'id_form']);
     }
 }

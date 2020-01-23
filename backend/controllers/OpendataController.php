@@ -37,7 +37,7 @@ class OpendataController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.opendata.index'],
+                        'roles' => ['backend.opendata.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Opendata::class,
                         ],
@@ -45,7 +45,7 @@ class OpendataController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['backend.opendata.view'],
+                        'roles' => ['backend.opendata.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Opendata::class,
@@ -54,7 +54,7 @@ class OpendataController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['backend.opendata.create'],
+                        'roles' => ['backend.opendata.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Opendata::class,
                         ],
@@ -62,7 +62,7 @@ class OpendataController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['backend.opendata.update'],
+                        'roles' => ['backend.opendata.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Opendata::class,
@@ -71,7 +71,7 @@ class OpendataController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['upload'],
-                        'roles' => ['backend.opendata.update'],
+                        'roles' => ['backend.opendata.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Opendata::class,
@@ -80,7 +80,7 @@ class OpendataController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'undelete'],
-                        'roles' => ['backend.opendata.delete'],
+                        'roles' => ['backend.opendata.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
                             'class' => Opendata::class,
@@ -89,7 +89,7 @@ class OpendataController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete-data'],
-                        'roles' => ['backend.opendata.delete'],
+                        'roles' => ['backend.opendata.delete', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function() {
                                 $data = OpendataData::findOne(Yii::$app->request->get('id'));

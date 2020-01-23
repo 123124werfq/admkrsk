@@ -52,20 +52,22 @@ class AddressController extends \yii\web\Controller
      */
     public function actionRegion($id_country = null, $search = '')
     {
+        $region_table = Region::tableName();
+
         $query = Region::find()
             ->joinWith('houses', false);
 
-        if (!empty($id_country)) {
-            $query->filterWhere([House::tableName() . '.id_country' => $id_country]);
+        if (!empty($id_country))
+        {
+            $query->filterWhere([House::tableName() . '.id_country' => (int)$id_country]);
         }
 
-        $query->groupBy(Region::tableName() . '.id_region')
-            ->orderBy([Region::tableName() . '.name' => SORT_ASC])
+        $query->groupBy($region_table . '.id_region')
+            ->orderBy([$region_table . '.name' => SORT_ASC])
             ->asArray();
 
-        if ($search) {
-            $query->filterWhere(['ilike', 'name', $search]);
-        }
+        if ($search)
+            $query->filterWhere(['ilike', $region_table.'.name', $search]);
 
         $results = [];
         foreach ($query->all() as $region) {
@@ -89,7 +91,7 @@ class AddressController extends \yii\web\Controller
             ->joinWith('houses', false);
 
         if (!empty($id_region)) {
-            $query->filterWhere([House::tableName() . '.id_region' => $id_region]);
+            $query->filterWhere([House::tableName() . '.id_region' => (int)$id_region]);
         }
 
         $query->groupBy(Subregion::tableName() . '.id_subregion')
@@ -120,25 +122,28 @@ class AddressController extends \yii\web\Controller
      */
     public function actionCity($id_region = null, $id_subregion = null, $search = '')
     {
-        if (!$id_region && !$id_subregion) {
+        if (!$id_region && !$id_subregion)
+        {
             throw new BadRequestHttpException(Yii::t('yii', 'Missing required parameters: {params}', [
                 'params' => 'id_region или id_subregion',
             ]));
         }
 
+        $id_region = (int)$id_region;
+        $id_subregion = (int)$id_subregion;
+
         $query = City::find()
             ->joinWith('houses', false)
             ->filterWhere([
-                House::tableName() . '.id_region' => $id_region,
-                House::tableName() . '.id_subregion' => $id_subregion,
+                House::tableName() . '.id_region' => $id_region?$id_region:null,
+                House::tableName() . '.id_subregion' => $id_subregion?$id_subregion:null,
             ])
             ->groupBy(City::tableName() . '.id_city')
             ->orderBy([City::tableName() . '.name' => SORT_ASC])
             ->asArray();
 
-        if ($search) {
+        if ($search)
             $query->andFilterWhere(['ilike', City::tableName() . '.name', $search]);
-        }
 
         $results = [];
         foreach ($query->all() as $city) {
@@ -158,9 +163,11 @@ class AddressController extends \yii\web\Controller
      */
     public function actionDistrict($id_city, $search = '')
     {
+        $id_city = (int)$id_city;
+
         $query = District::find()
             ->joinWith('houses', false)
-            ->filterWhere([House::tableName() . '.id_city' => $id_city])
+            ->filterWhere([House::tableName() . '.id_city' => $id_city?$id_city:null])
             ->groupBy(District::tableName() . '.id_district')
             ->orderBy([District::tableName() . '.name' => SORT_ASC])
             ->limit(20)
@@ -188,9 +195,11 @@ class AddressController extends \yii\web\Controller
      */
     public function actionStreet($id_city, $search = '')
     {
+        $id_city = (int)$id_city;
+
         $query = Street::find()
             ->joinWith('houses', false)
-            ->filterWhere([House::tableName() . '.id_city' => $id_city])
+            ->filterWhere([House::tableName() . '.id_city' => $id_city?$id_city:null])
             ->groupBy(Street::tableName() . '.id_street')
             ->orderBy([Street::tableName() . '.name' => SORT_ASC])
             ->limit(20)
@@ -218,12 +227,13 @@ class AddressController extends \yii\web\Controller
      */
     public function actionHouse($id_street, $search = '')
     {
+        $id_street = (int)$id_street;
         if (empty($id_street)) {
             return ['results' => []];
         };
 
         $query = House::find()
-            ->filterWhere(['id_street' => $id_street])
+            ->filterWhere(['id_street' => $id_street?$id_street:null])
             ->groupBy('id_house')
             ->orderBy(['name' => SORT_ASC])
             ->limit(20)
@@ -239,6 +249,8 @@ class AddressController extends \yii\web\Controller
                 'id' => $house['id_house'],
                 'text' => $house['name'],
                 'postalcode' => $house['postalcode'],
+                'lat' => $house['lat'],
+                'lon' => $house['lon'],
             ];
         }
 
@@ -246,7 +258,9 @@ class AddressController extends \yii\web\Controller
             $results = [
                 'id' => null,
                 'text' => $search,
-                'postalcode' => ''
+                'postalcode' => '',
+                'lat' => '',
+                'lon' => '',
             ];
         }
 

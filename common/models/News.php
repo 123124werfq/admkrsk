@@ -5,13 +5,17 @@ use common\behaviors\AccessControlBehavior;
 use common\components\multifile\MultiUploadBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\AccessTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use dosamigos\taggable\Taggable;
+use yii\caching\TagDependency;
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
+use yii\helpers\StringHelper;
 
 /**
  * This is the model class for table "db_news".
@@ -48,6 +52,7 @@ class News extends \yii\db\ActiveRecord
     use MetaTrait;
     use ActionTrait;
     use SoftDeleteTrait;
+    use AccessTrait;
 
     const VERBOSE_NAME = 'Новость';
     const VERBOSE_NAME_PLURAL = 'Новости';
@@ -264,5 +269,99 @@ class News extends \yii\db\ActiveRecord
     public function getFullUrl()
     {
         return $this->getUrl(true);
+    }
+
+    public static function hasAccess()
+    {
+        $cacheKey = self::hasAccessCacheKey();
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $hasAccess = true;
+            } else {
+                $hasAccess = !empty(self::getAccessNewsIds());
+            }
+
+            Yii::$app->cache->set(
+                $cacheKey,
+                $hasAccess,
+                0,
+                User::rbacCacheTag()
+            );
+        } else {
+            $hasAccess = Yii::$app->cache->get($cacheKey);
+        }
+
+        return $hasAccess;
+    }
+
+    public static function hasEntityAccess($entity_id)
+    {
+        $cacheKey = self::hasEntityAccessCacheKey($entity_id);
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $hasEntityAccess = true;
+            } elseif ($entity_id) {
+                $hasEntityAccess = in_array($entity_id, self::getAccessNewsIds());
+            } else {
+                $hasEntityAccess = !empty(self::getAccessNewsIds());
+            }
+
+            Yii::$app->cache->set(
+                $cacheKey,
+                $hasEntityAccess,
+                0,
+                User::rbacCacheTag()
+            );
+        } else {
+            $hasEntityAccess = Yii::$app->cache->get($cacheKey);
+        }
+
+        return $hasEntityAccess;
+    }
+
+    public static function getAccessNewsIds()
+    {
+        $cacheKey = self::entityIdsCacheKey();
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $entityIds = null;
+            } else {
+                $newsQuery = News::find()
+                    ->select('id_news');
+
+                $pageIds = Page::getAccessPageIds();
+
+                if (is_array($pageIds) && !empty($pageIds)) {
+                    $newsQuery->andFilterWhere(['id_page' => $pageIds]);
+                } else {
+                    $newsQuery->andWhere(['id_page' => $pageIds]);
+                }
+
+                $entityIds = array_unique(ArrayHelper::merge($newsQuery->column(), self::getAccessEntityIds()));
+            }
+
+            Yii::$app->cache->set(
+                $cacheKey,
+                $entityIds,
+                0,
+                User::rbacCacheTag()
+            );
+        } else {
+            $entityIds = Yii::$app->cache->get($cacheKey);
+        }
+
+        return $entityIds;
     }
 }
