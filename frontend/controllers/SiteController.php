@@ -835,7 +835,8 @@ class SiteController extends Controller
 
         $efirm = EsiaFirm::find()->where(['id_user' => Yii::$app->user->id, 'ogrn' => $ogrn])->one();
         $esiauser = EsiaUser::find()->where(['id_user' => Yii::$app->user->id])->one();
-        if($esiauser && $esiauser->is_org)
+
+        if($esiauser)
         {
             $esiauser->is_org = $efirm->id_esia_firm;
             $esiauser->updateAttributes(['is_org']);
