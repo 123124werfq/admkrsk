@@ -781,6 +781,14 @@ class SiteController extends Controller
             Yii::$app->user->identity->createAction(Action::ACTION_SIGNUP_ESIA);
         }
 
+        $esiauser = EsiaUser::find()->where(['id_user' => Yii::$app->user->id])->one();
+
+        if($esiauser && $esiauser->is_org)
+        {
+            $esiauser->is_org = 0;
+            $esiauser->updateAttributes(['is_org']);
+        }
+
         if(isset($roles['elements']) && count($roles['elements']))
         {
             foreach($roles['elements'] as $firmInfo)
@@ -800,18 +808,41 @@ class SiteController extends Controller
                 $efirm->id_user = $user->id;
                 if(!$efirm->save())
                 {
-                    var_dump($efirm->errors);
-                    die();
+                    //var_dump($efirm->errors);
+                    //die();
                 }
             }
 
-            return $this->render('firmselect', [
-                'fio' => Yii::$app->user->identity->username,
-                'firms' => $roles['elements'],
-                'backUrl' => '/'
-            ]);
+            $actveFirms = $user->getActiveFirms();
+
+            if($actveFirms)
+                return $this->render('firmselect', [
+                    'fio' => Yii::$app->user->identity->username,
+                    'firms' => $actveFirms,
+                    'backUrl' => '/'
+                ]);
         }
 
         return $this->redirect('/');
     }
+
+    public function actionAsfirm()
+    {
+        if(Yii::$app->user->isGuest)
+            return $this->redirect('/');
+
+        $ogrn = Yii::$app->request->get('f', 0);
+
+        $efirm = EsiaFirm::find()->where(['id_user' => Yii::$app->user->id, 'ogrn' => $ogrn])->one();
+        $esiauser = EsiaUser::find()->where(['id_user' => Yii::$app->user->id])->one();
+        if($esiauser && $esiauser->is_org)
+        {
+            $esiauser->is_org = $efirm->id_esia_firm;
+            $esiauser->updateAttributes(['is_org']);
+        }
+
+        $backUrl =  Yii::$app->request->get('r', '/');
+        return $this->redirect($backUrl);
+    }
+
 }
