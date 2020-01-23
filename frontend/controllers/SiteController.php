@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\EsiaFirm;
 use Esia\Config;
 use Esia\Exceptions\InvalidConfigurationException;
 use Esia\OpenId;
@@ -752,42 +753,60 @@ class SiteController extends Controller
             if ($esiauser)
                 $esiauser->actualize($esia);
 
-            $login = Yii::$app->user->login($user);
+            Yii::$app->user->login($user);
             Yii::$app->user->identity->createAction(Action::ACTION_LOGIN_ESIA);
 
-            if(isset($roles['elements']) && count($roles['elements']))
-            {
-                // тут обновление списка фирм
-
-                return $this->render('firmselect', [
-                    'fio' => Yii::$app->user->identity->username,
-                    'firms' => $roles['elements'],
-                    'backUrl' => '/'
-                ]);
-            }
-
-            return $this->goHome();
+            //return $this->goHome();
             //return $login;
         }
+        else
+        {
+            $user = new User();
+            $user->email = $oid . '@esia.ru';
+            $user->username = $personInfo['firstName'] . ' ' . $personInfo['lastName'];
+            $user->setPassword($personInfo['eTag']);
+            $user->generateAuthKey();
+            $user->status = User::STATUS_ACTIVE;
 
-        $user = new User();
-        $user->email = $oid . '@esia.ru';
-        $user->username = $personInfo['firstName'] . ' ' . $personInfo['lastName'];
-        $user->setPassword($personInfo['eTag']);
-        $user->generateAuthKey();
-        $user->status = User::STATUS_ACTIVE;
+            $esiauser = new EsiaUser();
 
-        $esiauser = new EsiaUser();
+            if ($esiauser->actualize($esia)) {
+                $user->id_esia_user = $esiauser->id_esia_user;
+            }
+            if (!$user->save()) {
+                throw new yii\web\ServerErrorHttpException('Внутренняя ошибка сервера');
+            }
 
-        if ($esiauser->actualize($esia)) {
-            $user->id_esia_user = $esiauser->id_esia_user;
+            Yii::$app->user->login($user);
+            Yii::$app->user->identity->createAction(Action::ACTION_SIGNUP_ESIA);
         }
-        if (!$user->save()) {
-            throw new yii\web\ServerErrorHttpException('Внутренняя ошибка сервера');
-        }
 
-        Yii::$app->user->login($user);
-        Yii::$app->user->identity->createAction(Action::ACTION_SIGNUP_ESIA);
+        if(isset($roles['elements']) && count($roles['elements']))
+        {
+            foreach($roles['elements'] as $firmInfo)
+            {
+                $efirm = EsiaFirm::find()->where(['oid' => $firmInfo['oid']])->one();
+
+                if(!$efirm) {
+                    $efirm = new EsiaFirm;
+                    $efirm->oid = $firmInfo['oid'];
+                }
+
+                $efirm->active = (int)$firmInfo['active'];
+                $efirm->fullname = $firmInfo['fullName'];
+                $efirm->shortname = $firmInfo['shortName'];
+                $efirm->ogrn = $firmInfo['ogrn'];
+                $efirm->email = $firmInfo['email'];
+                $efirm->id_user = $user->id;
+                $efirm->save();
+            }
+
+            return $this->render('firmselect', [
+                'fio' => Yii::$app->user->identity->username,
+                'firms' => $roles['elements'],
+                'backUrl' => '/'
+            ]);
+        }
 
         return $this->redirect('/');
     }
