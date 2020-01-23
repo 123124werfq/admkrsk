@@ -798,7 +798,11 @@ class SiteController extends Controller
                 $efirm->ogrn = $firmInfo['ogrn'];
                 $efirm->email = $firmInfo['email'];
                 $efirm->id_user = $user->id;
-                $efirm->save();
+                if(!$efirm->save())
+                {
+                    var_dump($efirm->errors);
+                    die();
+                }
             }
 
             return $this->render('firmselect', [
