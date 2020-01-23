@@ -131,6 +131,44 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'type'=>'input',
                 ],
             ],
+            self::TYPE_ADDRESS => [
+                'show_country'=>[
+                    'name'=>'Показывать страну',
+                    'type'=>'checkbox',
+                ],
+                'show_region'=>[
+                    'name'=>'Показывать регион',
+                    'type'=>'checkbox',
+                ],
+                'show_subregion'=>[
+                    'name'=>'Показывать область',
+                    'type'=>'checkbox',
+                ],
+                'show_city'=>[
+                    'name'=>'Показывать город',
+                    'type'=>'checkbox',
+                ],
+                'show_district'=>[
+                    'name'=>'Показывать район',
+                    'type'=>'checkbox',
+                ],
+                'show_street'=>[
+                    'name'=>'Показывать улицу',
+                    'type'=>'checkbox',
+                ],
+                'show_house'=>[
+                    'name'=>'Показывать дом',
+                    'type'=>'checkbox',
+                ],
+                'show_postcode'=>[
+                    'name'=>'Показывать индекс',
+                    'type'=>'checkbox',
+                ],
+                'show_coord'=>[
+                    'name'=>'Показывать координаты',
+                    'type'=>'checkbox',
+                ],
+            ],
             self::TYPE_TEXTAREA => [
                 'maxlength'=>[
                     'name'=>'Максимальная длинна',

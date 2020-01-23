@@ -13,10 +13,10 @@
 
 		foreach ($options as $key => $option)
 		{
-			$inputOption = ['class'=>'form-control'];
+			$inputOption = ['class'=>'form-control','id'=>'option'.$key];
 
 			echo '<div class="col '.($option['type']=='richtext'?'fullwidth':'').'">
-					<label class="control-label">'.$option['name'].'</label>';
+					<label for="option'.$key.'" class="control-label">'.$option['name'].'</label>';
 
 			$value = (isset($model->options[$key]))?$model->options[$key]:'';
 
@@ -24,6 +24,11 @@
 			{
 				case 'input':
 					echo Html::textInput("FormInput[options][$key]",$value,$inputOption);
+					break;
+				case 'checkbox':
+					if ($model->isNewRecord)
+						$value = 1;
+					echo Html::checkBox("FormInput[options][$key]",$value,['style'=>'margin-left:10px;','id'=>'option'.$key]);
 					break;
 				case 'column':
 					if (empty($columns))

@@ -12,6 +12,13 @@ function removeRow(obj)
   return false;
 }
 
+function getValueById(id)
+{
+    if ($("#"+id).length>0)
+        return $("#"+id).val();
+
+    return '';
+}
 
 function addInput(block)
 {
@@ -90,17 +97,17 @@ $(document).ready(function() {
         if (checkbox.prop('checked'))
         {
             var group = checkbox.closest(".form-group");
-            
+
             $("#inputGroup"+checkbox.data('input')).find('input, select, textarea').each(function(){
                 var input = $("#"+$(this).attr('id').replace(checkbox.data('input'),checkbox.val()));
-                
+
                 if (input.hasClass('select2-hidden-accessible'))
                 {
                     input.html($(this).html());
                     input.val($(this).val());
                     input.trigger("change");
                 }
-                else 
+                else
                     input.val($(this).val());
             });
         }
