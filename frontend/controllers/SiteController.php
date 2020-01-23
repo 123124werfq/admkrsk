@@ -781,9 +781,7 @@ class SiteController extends Controller
             Yii::$app->user->identity->createAction(Action::ACTION_SIGNUP_ESIA);
         }
 
-        $esiauser = EsiaUser::find()->where(['id_user' => Yii::$app->user->id])->one();
-
-        if($esiauser && $esiauser->is_org)
+        if($esiauser->is_org)
         {
             $esiauser->is_org = 0;
             $esiauser->updateAttributes(['is_org']);
