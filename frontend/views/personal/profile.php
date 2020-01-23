@@ -10,7 +10,7 @@
                 <p><?=$user->esiainfo->getUsertype()?></p>
                 <div class="content">
                     <?php
-                        if($user->esiainfo->is_org){
+                        if(!$user->esiainfo->is_org){
                     ?>
                         <h3>Основная информация</h3>
                         <p><em>ФИО:</em> <?=$user->esiainfo->last_name?> <?=$user->esiainfo->first_name?> <?=$user->esiainfo->middle_name?></p>
