@@ -161,7 +161,7 @@ class SiteController extends Controller
                 Yii::getAlias('@runtime')
             ));
 
-            $url = $esia->buildUrl();
+            $url = $esia->buildUrl(['redirectUrl' => Yii::$app->request->referrer]);
 
             return $this->render('login', [
                 'model' => $model,
@@ -724,7 +724,7 @@ class SiteController extends Controller
             //var_dump($_REQUEST);
             //die();
         }
-
+die();
         $esia = User::openId();
         $esia->setSigner(new CliSignerPKCS7(
             Yii::getAlias('@app'). '/assets/admkrsk.pem',
