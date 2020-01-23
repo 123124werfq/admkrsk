@@ -9,6 +9,7 @@ use common\traits\AccessTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use dosamigos\taggable\Taggable;
@@ -192,7 +193,7 @@ class News extends \yii\db\ActiveRecord
 
     /**
      * @return ActiveQuery
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function getTags()
     {
@@ -269,6 +270,32 @@ class News extends \yii\db\ActiveRecord
     public function getFullUrl()
     {
         return $this->getUrl(true);
+    }
+
+    /**
+     * @return array
+     * @throws InvalidConfigException
+     * ... [
+     *          7 => 'Новости',
+     *          8 => 'Анонсы',
+     *          ....
+     *    ]
+     */
+    public static function getUniqueNews()
+    {
+        return static::find()
+            ->select(
+                [
+                    'page.title',
+                    'news.id_page',
+                ])
+            ->alias('news')
+            ->joinWith('page page', false)
+            ->where('news.id_page IS NOT NULL ')
+            ->groupBy(['news.id_page', 'page.title'])
+            ->indexBy('news.id_page')
+            ->asArray()
+            ->column();
     }
 
     public static function hasAccess()

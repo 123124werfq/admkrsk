@@ -20,6 +20,7 @@ use common\models\Service;
 use common\models\ServiceRubric;
 use common\models\ServiceSituation;
 use common\models\Statistic;
+use common\models\Subscriber;
 use common\models\User;
 use common\models\UserGroup;
 use common\models\UserRole;
@@ -316,6 +317,12 @@ return [
                 'title' => 'Меню',
                 'roles' => [
                     'menu.menu' => ['class' => Menu::class],
+                ],
+            ],
+            'subscribe' => [
+                'title' => 'Расслыка уведомлений',
+                'roles' => [
+                    'menu.menu' => ['class' => Subscriber::class],
                 ],
             ],
             'alert' => [

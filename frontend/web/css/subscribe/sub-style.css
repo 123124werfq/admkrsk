@@ -1,0 +1,9 @@
+.invalid-data {
+    color: red;
+    margin-bottom: 16px;
+    margin-top: 10px;
+}
+
+.page .form-control {
+    margin-bottom: 16px;
+}
