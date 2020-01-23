@@ -743,6 +743,8 @@ class SiteController extends Controller
 
         $oid = $esia->getConfig()->getOid();
 
+        $roles = $esia->getRolesInfo();
+
         $user = User::findByOid($oid);
         if ($user) {
             $esiauser = EsiaUser::findOne($user->id_esia_user);
@@ -752,6 +754,17 @@ class SiteController extends Controller
 
             $login = Yii::$app->user->login($user);
             Yii::$app->user->identity->createAction(Action::ACTION_LOGIN_ESIA);
+
+            if(isset($roles['elements']) && count($roles['elements']))
+            {
+                // тут обновление списка фирм
+
+                return $this->render('firmselect', [
+                    'fio' => Yii::$app->user->identity->username,
+                    'firms' => $roles['elements'],
+                    'backUrl' => '/'
+                ]);
+            }
 
             return $this->goHome();
             //return $login;
