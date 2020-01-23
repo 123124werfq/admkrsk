@@ -833,6 +833,10 @@ class SiteController extends Controller
 
         $ogrn = Yii::$app->request->get('f', 0);
 
+        var_dump($ogrn);
+        var_dump(Yii::$app->user->id);
+        die();
+
         $efirm = EsiaFirm::find()->where(['id_user' => Yii::$app->user->id, 'ogrn' => $ogrn])->one();
         $esiauser = EsiaUser::find()->where(['id_user' => Yii::$app->user->id])->one();
 
