@@ -161,7 +161,9 @@ class SiteController extends Controller
                 Yii::getAlias('@runtime')
             ));
 
-            $url = $esia->buildUrl(['redirectUrl' => Yii::$app->request->referrer]);
+            Yii::$app->session->set('backUrl', Yii::$app->request->referrer);
+
+            $url = $esia->buildUrl();
 
             return $this->render('login', [
                 'model' => $model,
@@ -724,7 +726,7 @@ class SiteController extends Controller
             //var_dump($_REQUEST);
             //die();
         }
-die();
+
         $esia = User::openId();
         $esia->setSigner(new CliSignerPKCS7(
             Yii::getAlias('@app'). '/assets/admkrsk.pem',
@@ -745,6 +747,8 @@ die();
         $oid = $esia->getConfig()->getOid();
 
         $roles = $esia->getRolesInfo();
+
+        $backUrl = Yii::$app->session->get('backUrl', '/');
 
         $user = User::findByOid($oid);
         if ($user) {
@@ -817,11 +821,11 @@ die();
                 return $this->render('firmselect', [
                     'fio' => Yii::$app->user->identity->username,
                     'firms' => $actveFirms,
-                    'backUrl' => '/'
+                    'backUrl' => $backUrl
                 ]);
         }
 
-        return $this->redirect('/');
+        return $this->redirect($backUrl);
     }
 
     public function actionAsfirm()
