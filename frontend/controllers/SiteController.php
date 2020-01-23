@@ -833,10 +833,10 @@ class SiteController extends Controller
 
         $ogrn = Yii::$app->request->get('f', 0);
 
-        $efirm = EsiaFirm::find()->where(['id_user' => Yii::$app->user->id, 'ogrn' => $ogrn])->one();
+        $efirm = EsiaFirm::find()->where(['id_user' => Yii::$app->user->id, 'oid' => $ogrn])->one();
         $esiauser = EsiaUser::find()->where(['id_esia_user' => Yii::$app->user->identity->id_esia_user])->one();
 
-        if($esiauser)
+        if($esiauser && $efirm)
         {
             $esiauser->is_org = $efirm->id_esia_firm;
             $esiauser->updateAttributes(['is_org']);
