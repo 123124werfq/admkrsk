@@ -17,8 +17,8 @@ class M200123044021CreateTableSubscribersNotify extends Migration
             'page_id' => $this->integer(),
             'news_id' => $this->integer(),
             'isNotify' => $this->boolean(),
-            'created_at' => $this->timestamp(),
-            'notify_at' => $this->timestamp(),
+            'created_at' => $this->integer(),
+            'notify_at' => $this->integer(),
         ]);
     }
 

@@ -320,9 +320,9 @@ return [
                 ],
             ],
             'subscribe' => [
-                'title' => 'Расслыка уведомлений',
+                'title' => 'Статистика по подписчикам',
                 'roles' => [
-                    'menu.menu' => ['class' => Subscriber::class],
+                    'menu.menu' => ['class' => Menu::class],
                 ],
             ],
             'alert' => [

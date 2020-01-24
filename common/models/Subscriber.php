@@ -8,7 +8,6 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\db\Exception;
-use yii\db\Query;
 
 /**
  * @property integer $id
@@ -43,19 +42,9 @@ class Subscriber extends ActiveRecord
     public function getPagesIds()
     {
         return $this->getSubscriptions()
-            ->select('page_id')
+            ->select('id_page')
             ->asArray()
             ->column();
-    }
-
-    public static function getStatisticsByPage()
-    {
-        return (new Query())
-            ->select(['cnt_page.title', 'COUNT(page_id)'])
-            ->from('subscriber_subscriptions')
-            ->leftJoin('cnt_page', 'subscriber_subscriptions.page_id = cnt_page.id_page')
-            ->groupBy('cnt_page.title')
-            ->all();
     }
 
     /**
@@ -93,8 +82,11 @@ class Subscriber extends ActiveRecord
      * @return bool
      * @throws Exception
      */
-    public function createSubscriptions(array $subscriptions)
+    public function createSubscriptions($subscriptions)
     {
+        if (!$subscriptions) {
+            return false;
+        }
         $pages = [];
         foreach ($subscriptions as $subscription) {
             $page = Page::findOne(['id_page' => $subscription]);

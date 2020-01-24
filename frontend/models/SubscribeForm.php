@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use common\models\News;
 use common\models\Subscriber;
 use Yii;
 use yii\base\Model;
@@ -30,21 +31,37 @@ class SubscribeForm extends Model
      */
     public function subscribe()
     {
+        if (is_string($this->subscribeSections)) {
+            return false;
+        }
         $subscriber = Subscriber::findByEmail($this->email);
+        if ($this->isAllSubscribe) {
+            $this->subscribeSections = array_flip(News::getUniqueNews());
+        }
         if ($subscriber) {
             $pages = $subscriber->pagesIds;
             return $subscriber->createSubscriptions($this->diffSubscription($pages));
         }
+        $subscriber = $this->createSubscribe();
+        if ($subscriber->save()) {
+            return $subscriber->createSubscriptions($this->subscribeSections);
+        }
+        return false;
+    }
+
+    /**
+     * @return Subscriber
+     * @throws Exception
+     */
+    private function createSubscribe()
+    {
         $subscriber = new Subscriber();
         $subscriber->email = $this->email;
         $subscriber->access_token = Yii::$app->security->generateRandomString();
         if (Yii::$app->user->identity) {
             $subscriber->id_user = Yii::$app->user->identity->id;
         }
-        if ($subscriber->save()) {
-            return $subscriber->createSubscriptions($this->subscribeSections);
-        }
-        return false;
+        return $subscriber;
     }
 
     /**
@@ -60,7 +77,7 @@ class SubscribeForm extends Model
     {
         return [
             ['email', 'string'],
-            [['email', 'subscribeSections'], 'required'],
+            [['email'], 'required'],
             [['subscribeSections'], 'each', 'rule' => ['integer']],
             ['isAllSubscribe', 'boolean'],
         ];
