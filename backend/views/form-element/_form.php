@@ -13,7 +13,7 @@ use yii\widgets\ActiveForm;
 ]); ?>
 
 <?php
-    echo $this->render('/form-input/_element_options',['element'=>$model,'form'=>$form, 'id_form'=>$id_form]);
+    echo $this->render('/form-input/_element_options',['element'=>$model,'form'=>$form, 'id_form'=>$model->row->id_form]);
 ?>
 
 <?php if (empty($model->id_form)){?>

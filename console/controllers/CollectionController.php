@@ -10,6 +10,8 @@ use common\models\Form;
 use common\models\FormRow;
 use common\models\FormElement;
 use common\models\FormInput;
+use common\models\CollectionColumn;
+
 use Yii;
 use yii\console\Controller;
 
@@ -32,6 +34,7 @@ class CollectionController extends Controller
         } catch (\Exception $e)
         {
             $transaction->rollBack();
+
             throw $e;
         }
     }
@@ -74,16 +77,96 @@ class CollectionController extends Controller
 
     public function actionAddressFix()
     {
+        set_time_limit(0);
         $sql = "SELECT * FROM form_form WHERE is_template = 2 AND name LIKE '%Адрес%'";
-
         $forms = Form::find()->where("is_template = 2 AND name LIKE '%Адрес%'")->all();
 
-        foreach ($forms as $key => $form)
-        {
-            foreach ($variable as $key => $value)
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+            foreach ($forms as $key => $form)
             {
-                # code...
-            }$form
+                $prefix = '';
+                $formModel = null;
+
+                foreach ($form->rows as $rkey => $row)
+                {
+                    foreach ($row->elements as $ekey => $element)
+                    {
+                        if (!empty($element->input))
+                        {
+                            $prefix = $element->input->column->alias;
+
+                            $formModel = $element->input->form;
+                            $element->input->column->delete();
+                            $element->input->delete();
+                        }
+                    }
+                }
+
+                $element = FormElement::find()->where(['id_form'=>$form->id_form])->one();
+
+                if (!empty($element) && !empty($formModel))
+                {
+                    $element->id_form = null;
+
+                    $prefix = explode('_', $prefix);
+                    if (count($prefix)>1)
+                    {
+                        array_pop($prefix);
+                        $prefix = implode('_', $prefix).'_address';
+                    }
+                    else
+                        $prefix = 'address';
+
+                    $input = new FormInput;
+                    $input->id_form = $formModel->id_form;
+                    $input->fieldname = $prefix;
+                    $input->options = json_decode('{"show_city": "1", "show_room": "1", "show_house": "1", "show_region": "1", "show_street": "1", "show_country": "1", "show_district": "1", "show_postcode": "1", "show_subregion": "1"}',true);
+                    $input->name = 'Адрес';
+                    $input->type = CollectionColumn::TYPE_ADDRESS;
+
+                    $count = Yii::$app->db->createCommand("SELECT count(*) FROM form_input WHERE fieldname = '$input->fieldname' AND id_form = $input->id_form")->queryScalar();
+
+                    if ($count>0)
+                        $input->fieldname = 'full_'.$input->fieldname;
+
+                    if ($input->save())
+                    {
+                        $column = new CollectionColumn;
+                        $column->name = $input->name;
+                        $column->alias = $input->fieldname;
+                        $column->id_collection = $formModel->id_collection;
+                        $column->type = $input->type;
+
+                        if ($column->save())
+                        {
+                            $input->id_column = $column->id_column;
+                            $input->updateAttributes(['id_column']);
+
+                            $element->id_input = $input->id_input;
+                            $element->save();
+                        }
+                    }
+                    else
+                    {
+                        var_dump($input->id_form);
+                        var_dump($input->fieldname);
+
+                        print_r($input->errors);
+                        $transaction->rollBack();
+                        die();
+                    }
+                }
+            }
+
+            $transaction->commit();
+        }
+        catch (\Exception $e)
+        {
+            $transaction->rollBack();
+
+            throw $e;
         }
     }
 
