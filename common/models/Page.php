@@ -85,6 +85,9 @@ class Page extends ActiveRecord
             [['id_media', 'active', 'id_parent', 'noguest', 'hidemenu','notify_rule'], 'integer'],
             [['is_admin_notify'], 'boolean'],
             [['title', 'alias'], 'required'],
+            ['id_parent', 'required', 'when' => function($model) {
+                return ($model->lft!=1);
+            }],
             [['is_partition'], 'boolean'],
             [['content', 'path','notify_message'], 'string'],
             [['alias'], 'unique'],

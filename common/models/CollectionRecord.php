@@ -113,6 +113,57 @@ class CollectionRecord extends \yii\db\ActiveRecord
         return $mongoLabels;
     }
 
+    protected function getMongoDate($value, $column)
+    {
+        $output = [];
+        switch ($column->type)
+        {
+            case CollectionColumn::TYPE_DATE:
+                $output['value'] = $value;
+                $output['search'] = date('d.m.Y',$value);
+                break;
+            case CollectionColumn::TYPE_DATETIME:
+                $output['value'] = $value;
+                $output['search'] = date('d.m.Y H:i',$value);
+                break;
+            case CollectionColumn::TYPE_CHECKBOXLIST:
+                $output['value'] = $value;
+                $output['search'] = implode("\r\n", $value);
+                break;
+            case CollectionColumn::TYPE_MAP:
+                $output['value'] = $value;
+                $output['search'] = implode(' ', $value);
+                break;
+            case CollectionColumn::TYPE_DISTRICT:
+            case CollectionColumn::TYPE_STREET:
+            case CollectionColumn::TYPE_COUNTRY:
+            case CollectionColumn::TYPE_CITY:
+            case CollectionColumn::TYPE_REGION:
+            case CollectionColumn::TYPE_SUBREGION:
+                $output['search'] = $column->getValueByType($value);
+                $output['value'] = [
+                    'id'=>$value,
+                    'name'=>$output['search'],
+                ];
+                break;
+            case CollectionColumn::TYPE_FILE:
+            case CollectionColumn::TYPE_IMAGE:
+                $output['value'] = $value;
+                $output['search'] = $value['name']??'';
+                break;
+            case CollectionColumn::TYPE_SERVICETARGET:
+            case CollectionColumn::TYPE_SERVICE:
+                $output['value'] = $value;
+                break;
+            default:
+                $output['value'] = $value;
+                $output['search'] = is_array($value)?json_encode($value):$value;
+                break;
+        }
+
+        return $output;
+    }
+
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert) && !empty($this->data))

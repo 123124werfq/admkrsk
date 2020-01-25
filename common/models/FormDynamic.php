@@ -87,6 +87,9 @@ class FormDynamic extends DynamicModel
                     case CollectionColumn::TYPE_INPUT:
                         $data[$index] = trim((string)$this->$attribute);
                         break;
+                    case CollectionColumn::TYPE_DITRICT:
+                        $data[$index] = trim((string)$this->$attribute);
+                        break;
                     case CollectionColumn::TYPE_JSON:
                         $data[$index] = json_encode($this->$attribute);
                         break;
@@ -253,8 +256,8 @@ class FormDynamic extends DynamicModel
                             if (!empty($value['coords'][1]))
                                 $empty['lon'] = $value['coords'][1];
 
-                            if (!empty($value['poastacode']))
-                                $empty['poastacode'] = $value['poastacode'];
+                            if (!empty($value['postalcode']))
+                                $empty['postalcode'] = $value['postalcode'];
 
                             $value = $empty;
                         }
@@ -334,10 +337,23 @@ class FormDynamic extends DynamicModel
                                     if ($media->save())
                                         $media->saveFile();
 
-                                    $data[$index][] = $media->id_media;
+                                    $data[$index][] = [
+                                        'id'=>$media->id_media,
+                                        'name'=>$media->name,
+                                        'size'=>$media->size,
+                                    ];
                                 }
                                 else
-                                    $data[$index][] = (int)$file['id_media'];
+                                {
+                                    $media = Media::findOne((int)$file['id_media']);
+
+                                    if (!empty($media))
+                                        $data[$index][] = [
+                                            'id'=>$media->id_media,
+                                            'name'=>$media->name,
+                                            'size'=>$media->size,
+                                        ];
+                                }
                             }
                         }
 
