@@ -797,7 +797,7 @@ class SiteController extends Controller
             {
                 $efirm = EsiaFirm::find()->where(['oid' => $firmInfo['oid']])->one();
 
-                $test = $esia->getOrgInfo($firmInfo['oid']);
+                $test = $esia->getOrgInfo($firmInfo['oid'], $_REQUEST['code'], $_REQUEST['state']);
                 var_dump($test); die();
 
                 if(!$efirm) {
