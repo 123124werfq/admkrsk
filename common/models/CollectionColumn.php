@@ -160,6 +160,10 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'name'=>'Показывать дом',
                     'type'=>'checkbox',
                 ],
+                'show_room'=>[
+                    'name'=>'Показывать квартиру',
+                    'type'=>'checkbox',
+                ],
                 'show_postcode'=>[
                     'name'=>'Показывать индекс',
                     'type'=>'checkbox',
