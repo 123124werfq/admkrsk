@@ -12,11 +12,15 @@ use common\models\House;
 use common\models\Region;
 use common\models\Street;
 use common\models\Subregion;
+use GuzzleHttp\Client;
 use SoapClient;
 use SoapFault;
 use Yii;
+use yii\base\ErrorException;
 use yii\console\Controller;
+use yii\db\ActiveRecord;
 use yii\db\Connection;
+use yii\db\Exception;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
@@ -73,44 +77,64 @@ class FiasController extends Controller
 
     public function actionUpdate()
     {
-        $lastVersion = FiasUpdateHistory::find()->max('version');
+//        $lastVersion = FiasUpdateHistory::find()->max('version');
+//
+//        $client = new SoapClient('https://fias.nalog.ru/WebServices/Public/DownloadService.asmx?WSDL');
+//
+//        try {
+//            $response = $client->GetAllDownloadFileInfo();
+//        } catch (SoapFault $exception) {
+//            $updateHistory = new FiasUpdateHistory(['text' => $exception->getMessage()]);
+//            $updateHistory->save();
+//            echo "<pre>";
+//            print_r($updateHistory->errors);
+//            die();
+//            exit(0);
+//        }
+//
+//        $updates = ArrayHelper::map($response->GetAllDownloadFileInfoResult->DownloadFileInfo, 'VersionId', function (\StdClass $object) use ($lastVersion) {
+//            return [
+//                'version' => $object->VersionId,
+//                'text' => $object->TextVersion,
+//                'file' => $lastVersion ? $object->FiasDeltaDbfUrl : $object->FiasCompleteDbfUrl,
+//            ];
+//        });
 
-        $client = new SoapClient('https://fias.nalog.ru/WebServices/Public/DownloadService.asmx?WSDL');
+        $lastVersion = null;
 
-        try {
-            $response = $client->GetAllDownloadFileInfo();
-        } catch (SoapFault $exception) {
-            $updateHistory = new FiasUpdateHistory(['text' => $exception->getMessage()]);
-            $updateHistory->save();
-            echo "<pre>";
-            print_r($updateHistory->errors);
-            die();
-            exit(0);
-        }
+        $updates = [
+            [
+                'version' => 602,
+                'text' => 'БД ФИАС от 23.12.2019',
+                'file' => 'http://data.nalog.ru/Public/Downloads/20191223/fias_dbf.rar',
+            ],
+            [
+                'version' => 603,
+                'text' => 'БД ФИАС от 26.12.2019',
+                'file' => 'http://data.nalog.ru/Public/Downloads/20191226/fias_delta_dbf.rar',
+            ],
+        ];
 
-        $updates = ArrayHelper::map($response->GetAllDownloadFileInfoResult->DownloadFileInfo, 'VersionId', function (\StdClass $object) use ($lastVersion) {
-            return [
-                'version' => $object->VersionId,
-                'text' => $object->TextVersion,
-                'file' => $lastVersion ? $object->FiasDeltaDbfUrl : $object->FiasCompleteDbfUrl,
-            ];
-        });
-
-        if ($lastVersion) {
-            foreach ($updates as $key => $update) {
-                if ($update['version'] <= $lastVersion) {
-                    unset($updates[$key]);
-                }
-            }
-        } else {
-            $updates = [array_pop($updates)];
-        }
+//        if ($lastVersion) {
+//            foreach ($updates as $key => $update) {
+//                if ($update['version'] <= $lastVersion) {
+//                    unset($updates[$key]);
+//                }
+//            }
+//        } else {
+//            $updates = [array_pop($updates)];
+//        }
 
         foreach ($updates as $update) {
             $this->fiasUpdate($update);
         }
     }
 
+    /**
+     * @param $update
+     * @throws ErrorException
+     * @throws \yii\base\Exception
+     */
     private function fiasUpdate($update)
     {
         $updateHistory = new FiasUpdateHistory($update);
@@ -126,6 +150,17 @@ class FiasController extends Controller
         $updateHistory->save();
     }
 
+    private function updateData($path)
+    {
+//        foreach (FileHelper::findFiles($path, ['only' => ['ADDROB' . $this->region . '*']]) as $file) {
+//            $this->importDbf($file);
+//        }
+
+        foreach (FileHelper::findFiles($path, ['only' => ['HOUSE' . $this->region . '*']]) as $file) {
+            $this->importDbf($file);
+        }
+    }
+
     /**
      * @param FiasUpdateHistory $updateHistory
      * @return string
@@ -134,37 +169,31 @@ class FiasController extends Controller
     {
         $filename = Yii::getAlias('@runtime/fias_update/' . $updateHistory->version . '_' . basename($updateHistory->file));
 
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_FILE => fopen($filename, 'w'),
-            CURLOPT_TIMEOUT => 28800,
-            CURLOPT_URL => $filename
-        ]);
-        curl_exec($ch);
-        curl_close($ch);
+//        $client = new Client();
+//        $client->get($updateHistory->file, ['save_to' => $filename]);
 
         return $filename;
     }
 
-    public function actionTest()
-    {
-        $file = Yii::getAlias('@runtime/fias_update/603_fias_delta_dbf.rar');
-
-        $path = $this->extractFile($file);
-
-        foreach (FileHelper::findFiles($path, ['only' => ['ADDROB' . $this->region . '*']]) as $file) {
-            $this->importDbf($file);
-        }
-
-        foreach (FileHelper::findFiles($path, ['only' => ['HOUSE' . $this->region . '*']]) as $file) {
-            $this->importDbf($file);
-        }
-    }
+//    public function actionTest()
+//    {
+//        $file = Yii::getAlias('@runtime/fias_update/603_fias_delta_dbf.rar');
+//
+//        $path = $this->extractFile($file);
+//
+//        foreach (FileHelper::findFiles($path, ['only' => ['ADDROB' . $this->region . '*']]) as $file) {
+//            $this->importDbf($file);
+//        }
+//
+//        foreach (FileHelper::findFiles($path, ['only' => ['HOUSE' . $this->region . '*']]) as $file) {
+//            $this->importDbf($file);
+//        }
+//    }
 
     /**
      * @param string $archive
      * @return string
-     * @throws \yii\base\ErrorException
+     * @throws ErrorException
      */
     private function extractFile($archive)
     {
@@ -182,7 +211,7 @@ class FiasController extends Controller
     /**
      * @param $filename
      * @return int
-     * @throws \yii\db\Exception
+     * @throws Exception
      */
     private function importDbf($filename)
     {
@@ -210,12 +239,15 @@ class FiasController extends Controller
         }
 
         $rowsCount = dbase_numrecords($db);
-        $this->stdout("Записей в DBF файле '$filename' : $rowsCount\n");
+        $this->stdout("Записей в DBF файле '$filename': $rowsCount\n");
 
         $transaction = Yii::$app->db->beginTransaction();
 
         $houseGuids = [];
-        $count = $j = 0;
+        $count = $insert = $update = $j = 0;
+
+        ProgressHelper::startProgress($count, $rowsCount, "Обработка записей: ");
+
         for ($i = 1; $i <= $rowsCount; $i++) {
             $row = dbase_get_record_with_names($db, $i);
 
@@ -231,6 +263,7 @@ class FiasController extends Controller
                     break;
             }
 
+            /* @var ActiveRecord $model */
             if (!$model = $modelClass::findOne($condition)) {
                 $model = new $modelClass;
             }
@@ -244,35 +277,47 @@ class FiasController extends Controller
                 $model->{$key} = trim(mb_convert_encoding($value, 'UTF-8', 'CP866'));
             }
 
+            $isNewRecord = $model->isNewRecord;
+
             if (!$model->save()) {
                 echo get_class($model) . PHP_EOL;
                 print_r($model->errors);
                 print_r($model->attributes);
                 print_r($row);
+            } else {
+                if ($isNewRecord) {
+                    $insert++;
+                } else {
+                    $update++;
+                }
             }
 
             $j++;
             $count++;
 
             if ($j == 1000) {
-                if ($houseGuids) {
-                    $this->updateAddresses(['houseguid' => $houseGuids]);
-                }
+//                if ($houseGuids) {
+//                    $this->updateAddresses(['houseguid' => $houseGuids]);
+//                }
                 $transaction->commit();
                 $j = 0;
                 $houseGuids = [];
-                $this->stdout("Обработано $count из $rowsCount записей\n");
+                ProgressHelper::updateProgress($count, $rowsCount);
                 $transaction = Yii::$app->db->beginTransaction();
             }
         }
 
         if ($j != 0) {
-            if ($houseGuids) {
-                $this->updateAddresses(['houseguid' => $houseGuids]);
-            }
+//            if ($houseGuids) {
+//                $this->updateAddresses(['houseguid' => $houseGuids]);
+//            }
             $transaction->commit();
-            $this->stdout("Обработано $count из $rowsCount записей\n");
+            ProgressHelper::updateProgress($count, $rowsCount);
         }
+
+        ProgressHelper::endProgress("100% ($count/$count) Done." . PHP_EOL);
+
+        $this->stdout("Файл $filename обработан. Обновлено $update записей, $insert новых записей\n");
     }
 
     /**
