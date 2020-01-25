@@ -310,6 +310,8 @@ class FormController extends Controller
             $copyForm->id_collection = null;
             $copyForm->name = 'Копия - '.$form->name;
 
+            $oldToNewInputs = $visibleInputs = [];
+
             if ($copyForm->save())
             {
                 $collection = new Collection;
@@ -335,29 +337,14 @@ class FormController extends Controller
                             $copyElement->attributes = $element->attributes;
                             $copyElement->id_row = $newRow->id_row;
 
-                            $visibleInputs = [];
-
-                            $newVisibleInputs = [];
-                            if (!empty($element->visibleInputs))
-                            {
-                                foreach ($element->visibleInputs as $vikey => $vinput)
-                                    $visibleInputs[$vinput->id_input_visible] = $vinput->values;
-                            }
-
                             if (!empty($element->input))
                             {
-
                                 $newInput = new FormInput;
                                 $newInput->attributes = $element->input->attributes;
                                 $newInput->id_form = $copyForm->id_form;
 
                                 if (!$newInput->save())
                                     print_r($newInput->errors);
-
-                                if (isset($visibleInputs[$element->input->id_input]))
-                                {
-                                    $newVisibleInputs[$newInput->id_input] = $visibleInputs[$element->input->id_input];
-                                }
 
                                 $copyElement->id_input = $newInput->id_input;
 
@@ -372,17 +359,16 @@ class FormController extends Controller
 
                                 $newInput->id_column = $column->id_column;
                                 $newInput->updateAttributes(['id_column']);
+
+                                $oldToNewInputs[$element->input->id_input] = $newInput->id_input;
                             }
 
-                            if ($copyElement->save() && !empty($newVisibleInputs))
+                            if ($copyElement->save())
                             {
-                                foreach ($newVisibleInputs as $vikey => $values)
+                                if (!empty($element->visibleInputs))
                                 {
-                                    Yii::$app->db->createCommand()->insert('form_visibleinput',[
-                                        'id_element'=>$copyElement->id_element,
-                                        'values'=>$values,
-                                        'id_input_visible'=>$vikey,
-                                    ])->execute();
+                                    foreach ($element->visibleInputs as $vikey => $vinput)
+                                        $visibleInputs[$copyElement->id_element][$vinput->id_input_visible] = $vinput->values;
                                 }
                             }
 
@@ -395,6 +381,22 @@ class FormController extends Controller
                     else
                     {
                         print_r($newRow->errors);
+                    }
+                }
+
+                if (!empty($visibleInputs))
+                {
+                    foreach ($visibleInputs as $id_element => $inputs)
+                    {
+                        foreach ($inputs as $id_input => $values)
+                        {
+                            if (!empty($oldToNewInputs[$id_input]))
+                                Yii::$app->db->createCommand()->insert('form_visibleinput',[
+                                    'id_element'=>$id_element,
+                                    'values'=>$values,
+                                    'id_input_visible'=>$oldToNewInputs[$id_input],
+                                ])->execute();
+                        }
                     }
                 }
 

@@ -17,6 +17,8 @@ use Yii;
  */
 class CollectionColumn extends \yii\db\ActiveRecord
 {
+    public $is_link; // для отображения таблиц в хранении данных не учавствует
+
     //public $values = []; // array of values for dropdown search
 
     const TYPE_INPUT = 1;
@@ -127,6 +129,48 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 'step'=>[
                     'name'=>'Шаг',
                     'type'=>'input',
+                ],
+            ],
+            self::TYPE_ADDRESS => [
+                'show_country'=>[
+                    'name'=>'Показывать страну',
+                    'type'=>'checkbox',
+                ],
+                'show_region'=>[
+                    'name'=>'Показывать регион',
+                    'type'=>'checkbox',
+                ],
+                'show_subregion'=>[
+                    'name'=>'Показывать область',
+                    'type'=>'checkbox',
+                ],
+                'show_city'=>[
+                    'name'=>'Показывать город',
+                    'type'=>'checkbox',
+                ],
+                'show_district'=>[
+                    'name'=>'Показывать район',
+                    'type'=>'checkbox',
+                ],
+                'show_street'=>[
+                    'name'=>'Показывать улицу',
+                    'type'=>'checkbox',
+                ],
+                'show_house'=>[
+                    'name'=>'Показывать дом',
+                    'type'=>'checkbox',
+                ],
+                'show_room'=>[
+                    'name'=>'Показывать квартиру',
+                    'type'=>'checkbox',
+                ],
+                'show_postcode'=>[
+                    'name'=>'Показывать индекс',
+                    'type'=>'checkbox',
+                ],
+                'show_coord'=>[
+                    'name'=>'Показывать координаты',
+                    'type'=>'checkbox',
                 ],
             ],
             self::TYPE_TEXTAREA => [

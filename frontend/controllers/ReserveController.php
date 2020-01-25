@@ -221,6 +221,5 @@ class ReserveController extends \yii\web\Controller
             'data' => $contest,
             'votes' => $votes
         ]);
-
     }
 }

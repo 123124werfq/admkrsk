@@ -132,7 +132,7 @@ class EsiaUser extends \yii\db\ActiveRecord
 
     public function getUsertype()
     {
-        if (!empty($this->org_fullname))
+        if ($this->is_org)
             return 'Юридическое лицо';
 
         return 'Физическое лицо';

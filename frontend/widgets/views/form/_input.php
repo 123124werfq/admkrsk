@@ -4,6 +4,7 @@ use backend\widgets\MapInputWidget;
 use common\models\District;
 use common\models\FormElement;
 use common\models\Media;
+use common\models\City;
 use yii\helpers\Html;
 use common\models\CollectionColumn;
 use common\models\CollectionRecord;
@@ -55,7 +56,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
      class="col" <?= (!empty($styles)) ? 'style="' . implode(';', $styles) . '"' : '' ?>>
     <div id="inputGroup<?= $input->id_input ?>" class="form-group <?= $groupClass ?>">
         <?php if (!empty($input->label) && $input->type != CollectionColumn::TYPE_CHECKBOX) { ?>
-            <label class="form-label"><?= $input->label ?><?= !empty($options['required']) ? '*' : '' ?></label>
+            <label class="form-label"><?= $input->label ?><?= !empty($options['required']) ? ' <span class="red">*</span>' : '' ?></label>
         <?php } ?>
         <?php switch ($input->type) {
             case CollectionColumn::TYPE_SERVICETARGET:
@@ -101,14 +102,14 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 echo $form->field($model, $attribute)->textArea($options);
                 break;
             case CollectionColumn::TYPE_REPEAT:
-                /*echo '<div class="checkbox-group">
+                echo '<div class="checkbox-group">
                             <label class="checkbox checkbox__ib">
-                                ' . Html::checkBox('FormDynamic[' . $attribute . '][active]', (!empty($model->$clearAttribute)), $options) . '
+                                ' . Html::checkBox('FormDynamic[' . $attribute . '][active]', (!empty($model->$clearAttribute)), ['class'=>'checkbox_control']) . '
                                 <span class="checkbox_label">' . ($input->label ?? $input->name) . '</span>
                             </label>
-                        </div>';
-                echo $form->field($model, $attribute.'[repeat]')->dropDownList($input->getArrayValues(), $options);
-                echo $form->field($model, $attribute.'[days]')->textinput($options);*/
+                      </div>';
+                echo $form->field($model, $attribute.'[repeat]')->radioList([1=>'Ежедневно',7=>'Еженедельно',31=>"Ежемесячно"], $options);
+                echo $form->field($model, $attribute.'[days]')->textinput(['placeholder'=>'Дней между повторами']);
                 break;
             case CollectionColumn::TYPE_ADDRESSES:
                 echo $form->field($model, $attribute)->widget(Select2::class, [
@@ -132,13 +133,11 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
 
             case CollectionColumn::TYPE_ADDRESS:
 
-
                 if (empty($model->$attribute))
-                    $model->$attribute = [
+                {
+                    $value = [
                         'country'=>'',
-                        'id_countru'=>'',
-                        'region'=>'',
-                        'id_region'=>'',
+                        'id_country'=>'',
                         'region'=>'',
                         'id_region'=>'',
                         'subregion'=>'',
@@ -151,15 +150,38 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         'id_street'=>'',
                         'house'=>'',
                         'id_house'=>'',
-                        'house'=>'',
                         'houseguid'=>'',
                         'lat'=>'',
-                        'lon'=>''
+                        'lon'=>'',
+                        'postcode'=>''
                     ];
 
+                    $city = City::find()->where("name LIKE '%Красноярск%'")->one();
+
+                    if (!empty($city))
+                    {
+                        $value['id_city'] = $city->id_city;
+                        $value['city'] = $city->name;
+
+                        $house = $city->getHouses()->one();
+
+                        $value['country'] = $house->country->name??'';
+                        $value['id_country'] = $house->country->id_country??'';
+
+                        $value['region'] = $house->region->name??'';
+                        $value['id_region'] = $house->region->id_region??'';
+                    }
+
+                    $model->$attribute = $value;
+                }
+                else
+                    $value = $model->$attribute;
+
                 echo '<div class="flex-wrap">';
+
+                if (!empty($options['show_country']))
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[country]')->widget(Select2::class, [
-                    'data' => [],
+                    'data' => [$value['id_country']=>$value['country']],
                     'pluginOptions' => [
                         'multiple' => false,
                         'tags' => true,
@@ -172,12 +194,14 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         ],
                     ],
                     'options' => [
+                        'value'=>empty($value['id_country'])?$value['country']:$value['id_country'],
                         'id' => 'input-country' . $attribute
                     ]
                 ]).'</div>';
 
+                if (!empty($options['show_region']))
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[region]')->widget(Select2::class, [
-                    'data' => [],
+                    'data' => [$value['id_region']=>$value['region']],
                     'pluginOptions' => [
                         'multiple' => false,
                         'minimumInputLength' => 0,
@@ -186,16 +210,38 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         'ajax' => [
                             'url' => '/address/region',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_country:$("#input-country' . $attribute . '").val()};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_country:getValueById("input-country' . $attribute . '")};}')
                         ],
                     ],
                     'options' => [
+                        'value'=>empty($value['id_region'])?$value['region']:$value['id_region'],
                         'id' => 'input-region' . $attribute
                     ]
                 ]).'</div>';
 
+                if (!empty($options['show_subregion']))
+                echo '<div class="col-md-4">'.$form->field($model, $attribute.'[subregion]')->widget(Select2::class, [
+                    'data' => [$value['id_subregion']=>$value['subregion']],
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        'minimumInputLength' => 0,
+                        'tags'=> true,
+                        'placeholder' => 'Область / Район',
+                        'ajax' => [
+                            'url' => '/address/subregion',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_region:getValueById("input-region' . $attribute . '")};}')
+                        ],
+                    ],
+                    'options' => [
+                        'value'=>empty($value['id_subregion'])?$value['subregion']:$value['id_subregion'],
+                        'id' => 'input-subregion' . $attribute
+                    ]
+                ]).'</div>';
+
+                if (!empty($options['show_city']))
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[city]')->widget(Select2::class, [
-                    'data' => [],
+                    'data' => [$value['id_city']=>$value['city']],
                     'pluginOptions' => [
                         'multiple' => false,
                         'minimumInputLength' => 0,
@@ -204,16 +250,18 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         'ajax' => [
                             'url' => '/address/city',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_region:$("#input-region' . $attribute . '").val(),id_subregion:$("#input-subregion' . $attribute . '").val()};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_region:getValueById("input-region' . $attribute . '"),id_subregion:getValueById("input-subregion' . $attribute . '")};}')
                         ],
                     ],
                     'options' => [
+                        'value'=>empty($value['id_city'])?$value['city']:$value['id_city'],
                         'id' => 'input-city'.$attribute
                     ]
                 ]).'</div>';
 
+                if (!empty($options['show_district']))
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[district]')->widget(Select2::class, [
-                    'data' => [],
+                    'data' => [$value['id_district']=>$value['district']],
                     'pluginOptions' => [
                         'multiple' => false,
                         'tags' => true,
@@ -221,16 +269,20 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         'ajax' => [
                             'url' => '/address/district',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:getValueById("input-city' . $attribute . '")};}')
                         ],
                     ],
                     'options' => [
+                        'value'=>empty($value['id_district'])?$value['district']:$value['id_district'],
                         'id' => 'input-district' . $attribute
                     ]
                 ]).'</div>';
 
+                //echo '<div class="col-md-12"></div>';
+
+                if (!empty($options['show_street']))
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[street]')->widget(Select2::class, [
-                    'data' => [],
+                    'data' => [$value['id_street']=>$value['street']],
                     'pluginOptions' => [
                         'multiple' => false,
                         //'allowClear' => true,
@@ -240,16 +292,18 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         'ajax' => [
                             'url' => '/address/street',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:$("#input-city' . $attribute . '").val(),id_district:$("#input-district' . $attribute . '").val()};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:getValueById("input-city' . $attribute . '"),id_district:getValueById("input-district' . $attribute . '")};}')
                         ],
                     ],
                     'options' => [
+                        'value'=>empty($value['id_street'])?$value['street']:$value['id_street'],
                         'id' => 'input-street' . $attribute
                     ]
                 ]).'</div>';
 
+                if (!empty($options['show_house']))
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[house]')->widget(Select2::class, [
-                    'data' => [],
+                    'data' => [$value['id_house']=>$value['house']],
                     'pluginOptions' => [
                         'multiple' => false,
                         //'allowClear' => true,
@@ -259,17 +313,35 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         'ajax' => [
                             'url' => '/address/house',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_street:$("#input-street' . $attribute . '").val()};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_street:getValueById("input-street' . $attribute . '")};}')
                         ],
+                    ],
+                    'options' => [
+                        'value'=>empty($value['id_house'])?$value['house']:$value['id_house'],
+                        'id' => 'input-house' . $attribute
                     ],
                     'pluginEvents' => [
                         "select2:select" => "function(e) {
-                            if ($('#postalcode" . $attribute . "').length>0)
-                                $('#postalcode" . $attribute . "').val(e.params.data.postalcode);
+                            if ($('#postcode" . $attribute . "').length>0)
+                                $('#postcode" . $attribute . "').val(e.params.data.postalcode);
                         }",
                     ]
                 ]).'</div>';
 
+                //echo '<div class="col-md-4">';
+
+                //echo '<div class="col-md-12"></div>';
+
+                if (!empty($options['show_postcode']))
+                echo $form->field($model, $attribute.'[postcode]')->textInput(['id'=>'postcode'.$attribute,'placeholder'=>'Почтовый индекс']);
+                //echo '</div>';
+
+                if (!empty($options['show_coords']))
+                {
+                    echo '<div class="col-md-12">';
+                    echo MapInputWidget::widget(['name' => 'FormDynamic[' . $attribute . '][coords]', 'index' => $options['id'], /*'value' => $model->$clearAttribute*/]);
+                    echo '</div>';
+                }
                 echo '</div>';
 
                 /*$script = <<< JS
@@ -652,15 +724,21 @@ JS;
 
                 $columns = json_decode($input->values, true);
 
-                if (is_string($columns))
-                    $columns = json_decode($columns, true);
+                if (!is_array($columns) && !empty($columns))
+                    break;
 
-                $data = json_decode($model->$attribute);
+                $data = json_decode($model->$attribute,true);
 
-                if (!is_array($columns)) {
+                if (!is_array($columns) && !empty($data))
+                {
                     $columns = [];
+
+                    foreach ($data as $alias => $value)
+                        $columns[] = ['name'=>$alias,'alias'=>$alias];
                 }
-                ?>
+                else if (!empty($columns) && empty($data))
+                    $data = [[]];
+            ?>
                 <table class="form-table">
                     <thead>
                     <tr>
@@ -673,21 +751,37 @@ JS;
                     <tbody id="inputs<?= $input->id_input ?>">
                     <tr>
                         <?php
-                        if (empty($data)) {
+                        /*if (empty($data))
+                        {
                             $i = 0;
-                            foreach ($columns as $key => $column) {
-                                echo '<td><input id="input' . $input->id_input . '_col' . $i . '" type="' . ($column['type'] ?? 'text') . '" name="FormDynamic[input' . $input->id_input . '][0][' . $i . ']" class="form-control"/></td>';
+                            foreach ($columns as $key => $column)
+                            {
+                                echo '<td><input id="' . $attribute . '_col' . $i . '" type="' . ($column['type'] ?? 'text') . '" name="FormDynamic[input' . $input->id_input . '][0][' . $i . ']" class="form-control"/></td>';
                                 $i++;
                             }
-                        } else {
-                            foreach ($data as $key => $row) {
+                        }
+                        else
+                        {*/
+                            foreach ($data as $rkey => $row)
+                            {
                                 $i = 0;
-                                foreach ($columns as $key => $column) {
-                                    echo '<td><input id="input' . $input->id_input . '_col' . $i . '" type="' . ($column['type'] ?? 'text') . '" value="' . ($row[$i] ?? '') . '" name="FormDynamic[input' . $input->id_input . '][0][' . $i . ']" class="form-control"/></td>';
+                                foreach ($columns as $ckey => $column)
+                                {
+                                    if (!empty($column['type']) && $column['type']=='list')
+                                    {
+                                        $values = [];
+
+                                        foreach ((!empty($column['values']))?explode(';', $column['values']):[] as $vkey => $value)
+                                            $values[$value] = $value;
+
+                                        echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::dropDownList('FormDynamic['.$attribute.']['.$rkey.']['.$i.']',$row[$i]??'',$values,['id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
+                                    }
+                                    else
+                                        echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::textINput('FormDynamic['.$attribute.']['.$rkey.']['.$i.']',$row[$i]??'',['id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
                                     $i++;
                                 }
                             }
-                        }
+                        //}
                         ?>
                         <td width="10" class="td-close">
                             <a class="close" onclick="return removeRow(this)" href="javascript:">&times;</a>
@@ -706,6 +800,14 @@ JS;
                 break;
         }
         ?>
+        <?php if (!empty($input->copyInput)){?>
+            <div class="checkbox-group">
+                <label class="checkbox checkbox__ib">
+                    <input class="checkbox_control copydate" type="checkbox" data-input="<?=$input->copyInput->id_input?>" name="copydate" value="<?=$input->id_input?>"/>
+                    <span class="checkbox_label">Совпадает с <?=$input->copyInput->label?$input->copyInput->label:$input->copyInput->name?></span>
+                </label>
+            </div>
+        <?php }?>
         <?php if (!empty($input->hint)) { ?>
             <p class="text-help"><?= $input->hint ?></p>
         <?php } ?>

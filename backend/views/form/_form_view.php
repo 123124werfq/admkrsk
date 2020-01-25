@@ -2,7 +2,7 @@
 	<div class="form-row flex-row" data-id="<?=$row->id_row?>">
 		<?php foreach ($row->elements as $ikey => $element) {?>
 		<?php
-            if (!empty($element->id_input))
+            if (!empty($element->input))
                 echo $this->render('_input',['element'=>$element]);
             else if (!empty($element->subForm))
             {

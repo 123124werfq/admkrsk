@@ -74,7 +74,7 @@ use yii\web\View;
 <div class="input-group input-group-space">
     <input id="lat<?=$cid?>" class="form-control" type="text" value="<?=$value[0]?>" name="<?=$fname?>[]" placeholder="Широта"/>
     <input id="lon<?=$cid?>" class="form-control" type="text" value="<?=$value[1]?>" name="<?=$fname?>[]" placeholder="Долгота" />
-    <span class="btn btn-default btn-visible" id="toggle_wim<?=$cid?>"><i class="fa fa-map-marker"></i></span>
+    <span class="btn btn-default btn-visible btn__gray" id="toggle_wim<?=$cid?>"><i class="fa fa-map-marker">Карта</i></span>
 </div>
 <div class="widget-input-map hidden" id="wim<?=$cid?>">
 </div>

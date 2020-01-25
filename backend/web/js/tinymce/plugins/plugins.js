@@ -180,7 +180,7 @@ tinymce.PluginManager.add("pagenews", function(editor, url) {
             },
             onSubmit: function(api) {
                 // insert markup
-                editor.insertContent('<pagenews data-id="' + api.getData().id_page + '">Новости #' + api.getData().id_form + '.</pagenews>');
+                editor.insertContent('<pagenews data-id="' + api.getData().id_page + '">Новости #' + api.getData().id_page + '.</pagenews>');
 
                 // close the dialog
                 api.close();
@@ -371,14 +371,14 @@ tinymce.PluginManager.add("hrreserve", function(editor, url) {
 
     // Define the Toolbar button
     editor.ui.registry.addButton('hrreserve', {
-        text: "Резерв",
+        text: "Кадровый резерв",
         //icon: 'bubbles',
         onAction: _onAction
     });
 
     // Define the Menu Item
     editor.ui.registry.addMenuItem('hrreserve', {
-        text: 'Резерв',
+        text: 'Кадровый резерв',
         context: 'insert',
         //icon: 'bubbles',
         onAction: _onAction

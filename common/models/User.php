@@ -486,6 +486,23 @@ class User extends ActiveRecord implements IdentityInterface
         return null;
     }
 
+    public function getCurrentFirm()
+    {
+        if(empty($this->id_esia_user))
+            return false;
+
+        if(!$this->esiainfo->is_org)
+            return false;
+
+        return EsiaFirm::findOne($this->esiainfo->is_org);
+    }
+
+    public function getActiveFirms()
+    {
+        return EsiaFirm::find()->where(['id_user' => $this->id, 'active' => 1])->all();
+    }
+
+
     /**
      * Проверка доступа
      * @param array|string $permissions

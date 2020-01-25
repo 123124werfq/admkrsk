@@ -28,12 +28,14 @@ use yii\helpers\FileHelper;
 class FiasController extends Controller
 {
     public $region;
+    public $limit = 1000;
 
-    public function options($actionId)
+    public function options($actionID)
     {
-        return [
-            'region',
-        ];
+        return array_merge(parent::options($actionID),
+            $actionID == 'update' ? ['region'] : [],
+            $actionID == 'update-location' ? ['limit'] : []
+        );
     }
 
     /**
@@ -67,7 +69,7 @@ class FiasController extends Controller
     {
         $houseQuery = House::find()
             ->where(['sputnik_updated_at' => null])
-            ->limit(25000);
+            ->limit($this->limit);
 
         foreach ($houseQuery->each() as $house) {
             /* @var House $house */

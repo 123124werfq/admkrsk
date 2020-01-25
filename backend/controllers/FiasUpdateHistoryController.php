@@ -15,6 +15,7 @@ class FiasUpdateHistoryController extends Controller
     /**
      * Lists all FiasUpdateHistory models.
      * @return mixed
+     * @throws \yii\base\Exception
      */
     public function actionIndex()
     {
@@ -23,7 +24,7 @@ class FiasUpdateHistoryController extends Controller
         if ($settingForm->load(Yii::$app->request->post())) {
             if ($settingForm->save()) {
                 Yii::$app->session->setFlash('success', 'Настройки успешно сохранены');
-                $this->refresh();
+                return $this->refresh();
             } else {
                 Yii::$app->session->setFlash('error', 'Произошла ошибка при сохранении настроек');
             }

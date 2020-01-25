@@ -245,6 +245,7 @@ class Workflow extends Model
 
         $body = '';
 
+        /*
         $soapBoundaryId = "c73c9ce8-6e02-40ce-9f68-064e18843428";
         $zipBoundaryId = "5aeaa450-17f0-4484-b845-a8480c363444";
         $boundary = "MIME_boundary";
@@ -274,10 +275,10 @@ class Workflow extends Model
         // тут файл подключаем, если есть
 
         $body .= $boundarybytesEnd;
-
+           */
 
         $body = file_get_contents(Yii::getAlias('@app').'/assets/testrequest.txt');
-
+/*
         $fp = fsockopen('10.24.0.201', 80, $errno, $errstr, 30);
         if (!$fp) {
             echo "$errstr ($errno)<br />\n";
@@ -288,9 +289,9 @@ class Workflow extends Model
             $out .= "Content-Type: multipart/related;";
             //$out .= "Content-Type: application/x-www-form-urlencoded\r\n\r\n";
             $out .= $body;
-            $out .= "Connection: Close\r\n\r\n";
-            
-            echo "<h1>Request</h1><pre>".htmlspecialchars($out)."</pre>";
+            //$out .= "Connection: Close\r\n\r\n";
+
+            //echo "<h1>Request</h1><pre>".htmlspecialchars($out)."</pre>";
 
             //$out .= "Connection: Close\r\n\r\n";
             fwrite($fp, $out);
@@ -303,10 +304,10 @@ class Workflow extends Model
         }
 
         die();
-
+*/
         $headers = [
-            'SOAPAction:urn:#Operation_03_00_004FL',
-            'Content-Type: text/xml; charset=utf-8',
+            //'SOAPAction:urn:#Operation_03_00_004FL',
+            'Content-Type: multipart/related; charset=utf-8',
             'Content-Length: '.strlen($body),
             'Content-Transfer-Encoding: text'
         ];
@@ -402,6 +403,7 @@ class Workflow extends Model
 
             $zip->close();
 
+            $filesToUnlink = []; //временно
             foreach ($filesToUnlink as $ufile)
                 if(is_file($ufile)) unlink($ufile);
 
