@@ -828,7 +828,7 @@ class SiteController extends Controller
                 {
                     continue;
                 }
-                
+
                 if(isset($oinf['common']))
                 {
                     $efirm->inn = $oinf['common']['inn']??null;
@@ -838,7 +838,7 @@ class SiteController extends Controller
 
                 if(isset($oinf['org_addrs']['elements'][0]))
                 {
-                    $efirm->main_addr = $oinf['org_addrs']['elements'][0]['addressStr']??null;
+                    $efirm->main_addr = ($oinf['org_addrs']['elements'][0]['zipCode']??'') . " " .($oinf['org_addrs']['elements'][0]['addressStr']??'') . " " . ($oinf['org_addrs']['elements'][0]['house']??'');
                     $efirm->main_addr_fias = $oinf['org_addrs']['elements'][0]['fiasCode']??null;
                     $efirm->main_addr_fias_alt = $oinf['org_addrs']['elements'][0]['fiasCode2']??null;
                 }
