@@ -26,7 +26,7 @@ if (Yii::$app->user->can('admin.form')) {
     } else {
         $this->params['button-block'][] = Html::a('Архив', ['index', 'archive' => 1], ['class' => 'btn btn-default']);
     }
-    $this->params['button-block'][] = Html::a('Добавить', ['create'], ['class' => 'btn btn-success']);
+    $this->params['button-block'][] = Html::a('Добавить дополнительную форму', ['create','id_collection'=>$collection->id_collection], ['class' => 'btn btn-success']);
 }
 
 $defaultColumns = [
