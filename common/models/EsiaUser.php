@@ -138,11 +138,18 @@ class EsiaUser extends \yii\db\ActiveRecord
         return 'Физическое лицо';
     }
 
+    public function getUsertype()
+    {
+        if (!empty($this->is_org))
+            return 'Юридическое лицо';
+
+        return 'Физическое лицо';
+    }
+
     public static function getAttributeValues($attribute,$model=null)
     {
         if ($attribute=='usertype')
         {
-
             return [
                 'Физическое лицо' => 'Физическое лицо',
                 'Юридическое лицо' => 'Юридическое лицо'
