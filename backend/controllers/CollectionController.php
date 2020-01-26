@@ -352,7 +352,7 @@ class CollectionController extends Controller
                     break;
 
                 case CollectionColumn::TYPE_CHECKBOXES:
-                    
+
                     $col = Yii::$app->request->post('column');
 
                     if (!empty($col))
@@ -625,8 +625,10 @@ class CollectionController extends Controller
         $model->name = 'temp';
         //$model->id_parent_collection = Yii::$app->request->post('id_collection');
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if (!empty(Yii::$app->request->post('json'))) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            if (!empty(Yii::$app->request->post('json')))
+            {
                 $json = $this->saveView($model, true);
 
                 $json['id_collection'] = $model->id_parent_collection;
@@ -635,9 +637,14 @@ class CollectionController extends Controller
                 $json['sort'] = $model->id_column_order;
                 $json['dir'] = $model->order_direction;
                 $json['pagesize'] = $model->pagesize;
+                $json['table_head'] = $model->table_head;
+                $json['table_style'] = $model->table_style;
+                $json['show_download'] = $model->show_download;
                 $json['show_row_num'] = $model->show_row_num;
                 $json['show_on_map'] = $model->show_on_map;
                 $json['show_column_num'] = $model->show_column_num;
+
+                $json['base64'] = base64_encode(json_encode($json));
 
                 return json_encode($json);
             }

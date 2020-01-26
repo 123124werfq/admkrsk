@@ -81,14 +81,17 @@ else
 
     <?=$form->field($model, 'pagesize')->textInput(['type'=>'number','step'=>1,'min'=>1]);?>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?=$form->field($model, 'show_row_num')->checkBox();?>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?=$form->field($model, 'show_column_num')->checkBox();?>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?=$form->field($model, 'show_on_map')->checkBox();?>
+        </div>
+        <div class="col-md-3">
+            <?=$form->field($model, 'show_download')->checkBox();?>
         </div>
     </div>
 
@@ -148,7 +151,6 @@ else
     <a onclick="return addInput('view-filters')" href="#" class="btn btn-default">Добавить еще</a>
 
     <hr>
-
     <h3>Поля</h3>
     <br/>
     <div class="row">
@@ -209,12 +211,16 @@ else
     </div>
     <a onclick="return addInput('search-columns')" href="#" class="btn btn-default">Добавить еще</a>
 
+    <?=$form->field($model, 'table_head')->textArea()->hint('Заполняется для нестандартных шапок таблиц. Количество колонок должно совпадать с количеством отображаемых столбцов');?>
+
+    <?=$form->field($model, 'table_style')->textArea();?>
+
     <br/><br/>
     <center>
         <button class="btn btn-primary" id="submit-redactor">Вставить</button>
     </center>
     <br/><br/><br/>
-s
+
     <script>
         document.getElementById('submit-redactor').addEventListener('click', function (event) {
             $form = $("#collection-redactor");

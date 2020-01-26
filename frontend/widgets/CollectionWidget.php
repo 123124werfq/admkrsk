@@ -18,6 +18,8 @@ class CollectionWidget extends \yii\base\Widget
 
     public $template = 'table'; // шаблон отображения
 
+    public $table_head;
+
     public $group; // группировка
     public $sort; // сортировка
     public $dir = SORT_ASC; // направление сортировки
@@ -35,6 +37,9 @@ class CollectionWidget extends \yii\base\Widget
         {
             if (!empty($this->attributes['id']))
                 $this->id_collection = (int)$this->attributes['id'];
+
+            if (!empty($this->attributes['id_collection']))
+                $this->id_collection = (int)$this->attributes['id_collection'];
 
             if (!empty($this->attributes['template']))
                 $this->template = $this->attributes['template'];
@@ -57,11 +62,19 @@ class CollectionWidget extends \yii\base\Widget
             if (!empty($this->attributes['show_on_map']))
                 $this->show_on_map = (int)$this->attributes['show_on_map'];
 
+            if (!empty($this->attributes['table_head']))
+                $this->table_head = $this->attributes['table_head'];
+
             if (!empty($this->attributes['group']))
                 $this->group = (int)$this->attributes['group'];
 
             if (!empty($this->attributes['columns']))
-                $this->columns = json_decode(str_replace("&quot;", '"', $this->attributes['columns']),true);
+            {
+                if (!is_array($this->columns))
+                    $this->columns = json_decode(str_replace("&quot;", '"', $this->attributes['columns']),true);
+                else
+                    $this->columns = $this->attributes;
+            }
 
             if (!empty($this->attributes['link_column']))
                 $this->link_column = (int)$this->attributes['link_column'];
@@ -221,6 +234,7 @@ class CollectionWidget extends \yii\base\Widget
                 'allrows'=>$allrows,
                 'search_columns'=>$search_columns,
                 'show_on_map'=>(!empty($this->show_on_map) && !empty($model->id_column_map))?1:0,
+                'table_head'=>$this->table_head,
 
                 'pagesize'=>$this->pagesize,
                 'pagination'=>$pagination,
@@ -238,10 +252,12 @@ class CollectionWidget extends \yii\base\Widget
             'unique_hash'=>$unique_hash,
             'page'=>$this->page,
 
+
             'columns'=>$columnsByAlias,
             'allrows'=>$allrows,
             'search_columns'=>$search_columns,
             'show_on_map'=>(!empty($this->show_on_map) && !empty($model->id_column_map))?1:0,
+            'table_head'=>$this->table_head,
 
             'pagesize'=>$this->pagesize,
             'pagination'=>$pagination,
