@@ -819,7 +819,7 @@ class SiteController extends Controller
                 }
             }
 
-            $test = $esia->getOrgInfo($oids, ['org_inn', 'org_leg', 'org_kpp', 'org_ctts', 'org_addrs'], $_REQUEST['code'], $_REQUEST['state']);
+            $test = $esia->getOrgInfo($oids, ['org_shortname', 'org_fullname', 'org_type', 'org_ogrn', 'org_inn', 'org_leg', 'org_kpp', 'org_ctts', 'org_addrs'], $_REQUEST['code'], $_REQUEST['state']);
             var_dump($test); 
             die();
 
