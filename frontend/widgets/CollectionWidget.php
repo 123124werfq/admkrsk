@@ -21,7 +21,6 @@ class CollectionWidget extends \yii\base\Widget
     public $table_head;
     public $table_style;
 
-
     public $group; // группировка
     public $sort; // сортировка
     public $dir = SORT_ASC; // направление сортировки
@@ -66,6 +65,9 @@ class CollectionWidget extends \yii\base\Widget
 
             if (!empty($this->attributes['table_head']))
                 $this->table_head = $this->attributes['table_head'];
+
+            if (!empty($this->attributes['table_style']))
+                $this->table_style = $this->attributes['table_style'];
 
             if (!empty($this->attributes['group']))
                 $this->group = (int)$this->attributes['group'];
