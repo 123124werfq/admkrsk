@@ -114,18 +114,23 @@ $(document).ready(function() {
     });
 
     $("body").delegate('.showonmap','click',function(){
-        showMap($(this).data('id'),'map'+$(this).data('hash'));
+        if($('#map'+$(this).data('hash')+':visible').length)
+            $('#map'+$(this).data('hash')+':visible').parent().removeClass('open');
+        else
+            showMap($(this).data('id'),'map'+$(this).data('hash'));
     });
 
     $("body").delegate('.fullsize-table','click',function(){
         var $link = $(this);
 
         $link.closest('.widget-wrapper').addClass('full-screen');
+        if((typeof map != 'undefined') && (map)) map.container.fitToViewport();
         return false;
     });
 
     $(".widget-wrapper").delegate('.close-window','click',function(){
         $(this).parent().removeClass('full-screen');
+        if((typeof map != 'undefined') && (map)) map.container.fitToViewport();
         return false;
     });
 
