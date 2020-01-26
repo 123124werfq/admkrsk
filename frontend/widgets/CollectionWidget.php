@@ -19,6 +19,8 @@ class CollectionWidget extends \yii\base\Widget
     public $template = 'table'; // шаблон отображения
 
     public $table_head;
+    public $table_style;
+
 
     public $group; // группировка
     public $sort; // сортировка
@@ -235,6 +237,7 @@ class CollectionWidget extends \yii\base\Widget
                 'search_columns'=>$search_columns,
                 'show_on_map'=>(!empty($this->show_on_map) && !empty($model->id_column_map))?1:0,
                 'table_head'=>$this->table_head,
+                'table_style'=>$this->table_style,
 
                 'pagesize'=>$this->pagesize,
                 'pagination'=>$pagination,
@@ -252,12 +255,12 @@ class CollectionWidget extends \yii\base\Widget
             'unique_hash'=>$unique_hash,
             'page'=>$this->page,
 
-
             'columns'=>$columnsByAlias,
             'allrows'=>$allrows,
             'search_columns'=>$search_columns,
             'show_on_map'=>(!empty($this->show_on_map) && !empty($model->id_column_map))?1:0,
             'table_head'=>$this->table_head,
+            'table_style'=>$this->table_style,
 
             'pagesize'=>$this->pagesize,
             'pagination'=>$pagination,

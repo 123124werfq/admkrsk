@@ -42,7 +42,7 @@
 	//'enablePushState' => false,
 ]) ?>
 <div class="table-responsive">
-	<table>
+	<table <?=!empty($table_style)?'class="'.$table_style.'"':''?>>
 		<thead>
 			<?php if (!empty($table_head))
 			{
