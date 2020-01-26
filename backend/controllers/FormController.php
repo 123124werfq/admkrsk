@@ -45,7 +45,7 @@ class FormController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index'],
+                        'actions' => ['index', 'collection'],
                         'roles' => ['backend.form.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Form::class,
@@ -181,6 +181,31 @@ class FormController extends Controller
         }
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
+        ]);
+    }
+
+     /**
+     * Lists Form models for collection.
+     * @return mixed
+     * @throws InvalidConfigException
+     */
+    public function actionCollection($id)
+    {
+        $searchModel = new FormSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
+
+        return $this->render('collection', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'customColumns' => $columns,
