@@ -22,12 +22,12 @@
     opacity: 0;
 }
 
-.content table.table-borderd thead th, .content table.table-borderd tbody td
+.content table.table-bordered thead th, .content table.table-bordered tbody td
 {
     border: 1px solid #dde1e6!important;
 }
 
-.content table.table-striped tbody tr:odd td
+.content table.table-striped tbody tr:nth-child(even) td
 {
     background: #F4F7FB;
 }
