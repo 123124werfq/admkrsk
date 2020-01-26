@@ -11,6 +11,7 @@
 
 	$i=1;
 ?>
+
 <form class="search-table" data-hash="<?=$unique_hash?>" action="" >
 	<?php if (!empty($search_columns)){?>
 		<?php foreach ($search_columns as $key => $column)
@@ -41,8 +42,13 @@
 	//'enablePushState' => false,
 ]) ?>
 <div class="table-responsive">
-	<table>
+	<table <?=!empty($table_style)?'class="'.$table_style.'"':''?>>
 		<thead>
+			<?php if (!empty($table_head))
+			{
+				echo $table_head;
+			}
+else {?>
 			<tr>
 				<?php if ($show_row_num){?>
 					<th width="10"></th>
@@ -63,6 +69,7 @@
 			 		echo '<th class="colnum">'.($colnum++).'</th>';
 			}
 			?>
+<?php }?>
 		</thead>
 		<tbody>
 			<?php foreach ($allrows as $key => $row){?>

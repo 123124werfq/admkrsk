@@ -8,6 +8,7 @@ use yii\base\Widget;
 class HrreserveWidget extends Widget
 {
     public $page;
+    public $attributes;
 
     public function run()
     {

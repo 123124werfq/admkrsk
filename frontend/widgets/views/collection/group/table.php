@@ -1,6 +1,9 @@
 <div class="table-responsive">
-	<table>
+	<table <?=!empty($table_style)?'class="'.$table_style.'"':''?>>
 		<thead>
+<?php if (!empty($table_head))
+				echo $table_head;
+else {?>
 			<tr>
 			<?php if ($show_row_num){?>
 				<th></th>
@@ -9,6 +12,7 @@
 				<th><?=$column->name?></th>
 			<?php }?>
 			</tr>
+<?php }?>
 		</thead>
 		<tbody>
 			<?php

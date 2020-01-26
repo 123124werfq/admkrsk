@@ -43,7 +43,7 @@ class FormSearch extends Form
      *
      * @param array $params
      *
-     * @return ActiveDataProvider
+     * @return ActiveDataPrfovider
      * @throws InvalidConfigException
      */
     public function search($params)
@@ -53,10 +53,13 @@ class FormSearch extends Form
         else
             $query = Form::find();
 
+        if (Yii::$app->request->get('id'))
+            $this->id_collection = Yii::$app->request->get('id');
+
         if (Yii::$app->request->get('is_template'))
-            $query->where(['is_template' => 1]);
+            $query->andWhere(['is_template' => 1]);
         else
-            $query->where(['is_template' => 0]);
+            $query->andWhere(['is_template' => 0]);
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.form')) {
