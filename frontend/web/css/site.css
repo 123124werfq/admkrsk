@@ -22,6 +22,16 @@
     opacity: 0;
 }
 
+.content table.table-borderd thead th, .content table.table-borderd tbody td
+{
+    border: 1px solid #dde1e6!important;
+}
+
+.content table.table-striped tbody tr:odd td
+{
+    background: #F4F7FB;
+}
+
 .content .press_info {padding-left: 0px!important;}
 .content .press-list .press_info-item {margin: 0px 0px 0px 12px!important;}
 
