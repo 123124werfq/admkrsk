@@ -4,6 +4,7 @@ namespace console\controllers;
 
 use common\helpers\ProgressHelper;
 use common\models\City;
+use common\models\Country;
 use common\models\District;
 use common\models\FiasAddrObj;
 use common\models\FiasHouse;
@@ -105,11 +106,11 @@ class FiasController extends Controller
         $lastVersion = null;
 
         $updates = [
-            [
-                'version' => 602,
-                'text' => 'БД ФИАС от 23.12.2019',
-                'file' => 'http://data.nalog.ru/Public/Downloads/20191223/fias_dbf.rar',
-            ],
+//            [
+//                'version' => 602,
+//                'text' => 'БД ФИАС от 23.12.2019',
+//                'file' => 'http://data.nalog.ru/Public/Downloads/20191223/fias_dbf.rar',
+//            ],
             [
                 'version' => 603,
                 'text' => 'БД ФИАС от 26.12.2019',
@@ -154,9 +155,9 @@ class FiasController extends Controller
 
     private function updateData($path)
     {
-//        foreach (FileHelper::findFiles($path, ['only' => ['ADDROB' . $this->region . '*']]) as $file) {
-//            $this->importDbf($file);
-//        }
+        foreach (FileHelper::findFiles($path, ['only' => ['ADDROB' . $this->region . '*']]) as $file) {
+            $this->importDbf($file);
+        }
 
         foreach (FileHelper::findFiles($path, ['only' => ['HOUSE' . $this->region . '*']]) as $file) {
             $this->importDbf($file);
@@ -171,8 +172,8 @@ class FiasController extends Controller
     {
         $filename = Yii::getAlias('@runtime/fias_update/' . $updateHistory->version . '_' . basename($updateHistory->file));
 
-//        $client = new Client();
-//        $client->get($updateHistory->file, ['save_to' => $filename]);
+        $client = new Client();
+        $client->get($updateHistory->file, ['save_to' => $filename]);
 
         return $filename;
     }
@@ -201,11 +202,11 @@ class FiasController extends Controller
     {
         $path = Yii::getAlias('@runtime/fias_update/' . basename($archive, '.rar') . DIRECTORY_SEPARATOR);
 
-//        if (is_dir($path)) {
-//            FileHelper::removeDirectory($path);
-//        }
-//
-//        exec("unrar x $archive $path");
+        if (is_dir($path)) {
+            FileHelper::removeDirectory($path);
+        }
+
+        exec("unrar x $archive $path");
 
         return $path;
     }
@@ -298,34 +299,35 @@ class FiasController extends Controller
             $count++;
 
             if ($j == 1000) {
-//                if ($houseGuids) {
-//                    $this->updateAddresses(['houseguid' => $houseGuids]);
-//                }
+                if ($houseGuids) {
+                    $this->updateAddresses(['houseguid' => $houseGuids], false);
+                }
+                $houseGuids = [];
                 $transaction->commit();
                 $j = 0;
-                $houseGuids = [];
                 ProgressHelper::updateProgress($count, $rowsCount);
                 $transaction = Yii::$app->db->beginTransaction();
             }
         }
 
         if ($j != 0) {
-//            if ($houseGuids) {
-//                $this->updateAddresses(['houseguid' => $houseGuids]);
-//            }
+            if ($houseGuids) {
+                $this->updateAddresses(['houseguid' => $houseGuids], false);
+            }
             $transaction->commit();
             ProgressHelper::updateProgress($count, $rowsCount);
         }
 
         ProgressHelper::endProgress("100% ($count/$count) Done." . PHP_EOL);
 
-        $this->stdout("Файл $filename обработан. Обновлено $update записей, $insert новых записей\n");
+        $this->stdout("Файл $filename обработан.\nОбновлено $update записей, $insert новых записей\n");
     }
 
     /**
      * @param array $condition
+     * @param bool $verbose
      */
-    private function updateAddresses($condition = [])
+    private function updateAddresses($condition = [], $verbose = true)
     {
         $query = FiasHouse::find()
             ->andWhere(['divtype' => 0])
@@ -334,14 +336,12 @@ class FiasController extends Controller
         $count = 0;
         $fiasHouseCount = $query->count();
 
-        Region::deleteAll(['is_manual' => false]);
-        Subregion::deleteAll(['is_manual' => false]);
-        City::deleteAll(['is_manual' => false]);
-        District::deleteAll(['is_manual' => false]);
-        Street::deleteAll(['is_manual' => false]);
-        House::deleteAll(['is_manual' => false]);
+        if ($verbose) {
+            ProgressHelper::startProgress($count, $fiasHouseCount, "Обновление адресов: ");
+        }
 
-        ProgressHelper::startProgress($count, $fiasHouseCount, "Обновление адресов: ");
+        /* @var Country $country */
+        $country = Country::findOne(['name' => 'Россия']);
 
         /* @var FiasHouse $fiasHouse */
         foreach ($query->each() as $fiasHouse) {
@@ -394,6 +394,7 @@ class FiasController extends Controller
             /** @var Subregion $subregion */
             /** @var City $city */
             $address = new House([
+                'id_country' => $country ? $country->id_country : null,
                 'id_region' => $region ? $region->id_region : null,
                 'id_subregion' => $subregion ? $subregion->id_subregion : null,
                 'id_city' => $city ? $city->id_city : null,
@@ -409,8 +410,13 @@ class FiasController extends Controller
                 $count++;
             }
 
-            ProgressHelper::updateProgress($count, $fiasHouseCount);
+            if ($verbose) {
+                ProgressHelper::updateProgress($count, $fiasHouseCount);
+            }
         }
-        ProgressHelper::endProgress("100% ($count/$count) Done." . PHP_EOL);
+
+        if ($verbose) {
+            ProgressHelper::endProgress("100% ($count/$count) Done." . PHP_EOL);
+        }
     }
 }
