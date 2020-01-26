@@ -175,6 +175,7 @@ class EsiaUser extends \yii\db\ActiveRecord
             $zipode = $addressInfo[0]['zipCode']??'';
 
             $this->register_addr = $zipode . ', ' . $addrString . ', ' . $house . ', ' . $flat;
+            $this->register_addr_fias = $addressInfo[0]['fiasCode']??null;
         }
 
         $contactInfo = $esia->getContactInfo();

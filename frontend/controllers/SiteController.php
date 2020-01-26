@@ -819,9 +819,36 @@ class SiteController extends Controller
                 }
             }
 
-            $test = $esia->getOrgInfo($oids, ['org_shortname', 'org_fullname', 'org_type', 'org_ogrn', 'org_inn', 'org_leg', 'org_kpp', 'org_ctts', 'org_addrs'], $_REQUEST['code'], $_REQUEST['state']);
-            var_dump($test); 
-            die();
+            $orgsInfo = $esia->getOrgInfo($oids, ['org_shortname', 'org_fullname', 'org_type', 'org_ogrn', 'org_inn', 'org_leg', 'org_kpp', 'org_ctts', 'org_addrs'], $_REQUEST['code'], $_REQUEST['state']);
+
+            foreach($orgsInfo as $foid => $oinf)
+            {
+                $efirm = EsiaFirm::find()->where(['oid' => $foid])->one();
+                if(!$efirm)
+                {
+                    continue;
+                }
+                
+                if(isset($oinf['common']))
+                {
+                    $efirm->inn = $oinf['common']['inn']??null;
+                    $efirm->kpp = $oinf['common']['kpp']??null;
+                    $efirm->leg = $oinf['common']['leg']??null;
+                }
+
+                if(isset($oinf['org_addrs']['elements'][0]))
+                {
+                    $efirm->main_addr = $oinf['org_addrs']['elements'][0]['addressStr']??null;
+                    $efirm->main_addr_fias = $oinf['org_addrs']['elements'][0]['fiasCode']??null;
+                    $efirm->main_addr_fias_alt = $oinf['org_addrs']['elements'][0]['fiasCode2']??null;
+                }
+                
+                if(!$efirm->save())
+                {
+                    //var_dump($efirm->errors);
+                    //die();
+                }
+            }
 
             $actveFirms = $user->getActiveFirms();
 
