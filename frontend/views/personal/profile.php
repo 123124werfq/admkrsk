@@ -63,7 +63,25 @@
                     ?>
                         <h3>Основная информация</h3>
                         <p><em>Наименование:</em> <?=$firm->fullname?></p>
+                        <?php if(!empty($firm->ogrn)){ ?>
                         <p><em>ОГРН:</em> <?=$firm->ogrn?></p>
+                        <?php } ?>
+
+                        <?php if(!empty($firm->inn)){ ?>
+                        <p><em>ИНН:</em> <?=$firm->inn?></p>
+                        <?php } ?>
+
+                        <?php if(!empty($firm->kpp)){ ?>
+                        <p><em>КПП:</em> <?=$firm->kpp?></p>
+                        <?php } ?>
+
+                        <?php if(!empty($firm->leg)){ ?>
+                        <p><em>ОПФ:</em> <?=$firm->leg?></p>
+                        <?php } ?>
+
+                        <?php if(!empty($firm->main_addr)){ ?>
+                        <p><em>Адрес:</em> <?=$firm->main_addr?></p>
+                        <?php } ?>
 
                         <?php } ?>
                     <a href="https://esia.gosuslugi.ru/profile/user/personal?cid=PGU" class="btn btn__block btn__border">Редактировать информацию на Госуслугах</a>
