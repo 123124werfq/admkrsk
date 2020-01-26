@@ -30,7 +30,7 @@
                 if (value.id_collection == '')
                     editor.windowManager.alert('Вы не выбрали список');
                 else {
-                    editor.insertContent('<collection date-encodedata="'+value.base64+'">Список #' + value.id_collection + '.</collection>');
+                    editor.insertContent('<collection data-encodedata="'+value.base64+'">Список #' + value.id_collection + '.</collection>');
                 }
 
                 $(".tox-button--secondary").click();
