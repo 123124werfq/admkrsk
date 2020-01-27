@@ -71,17 +71,17 @@ class CollectionSearch extends Collection
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id_collection' => $this->id_collection,
-            'created_at' => $this->created_at,
-            'created_by' => $this->created_by,
-            'updated_at' => $this->updated_at,
-            'updated_by' => $this->updated_by,
-            'deleted_at' => $this->deleted_at,
-            'deleted_by' => $this->deleted_by,
+            'db_collection.id_collection' => $this->id_collection,
+            'db_collection.created_at' => $this->created_at,
+            'db_collection.created_by' => $this->created_by,
+            'db_collection.updated_at' => $this->updated_at,
+            'db_collection.updated_by' => $this->updated_by,
+            'db_collection.deleted_at' => $this->deleted_at,
+            'db_collection.deleted_by' => $this->deleted_by,
         ]);
 
-        $query->andFilterWhere(['ilike', 'name', $this->name])
-            ->andFilterWhere(['ilike', 'alias', $this->alias])
+        $query->andFilterWhere(['ilike', 'db_collection.name', $this->name])
+            ->andFilterWhere(['ilike', 'db_collection.alias', $this->alias])
             ->andFilterWhere(['ilike', 'is_dictionary', $this->is_dictionary]);
 
         return $dataProvider;

@@ -87,10 +87,16 @@ class CollectionRecord extends \yii\db\ActiveRecord
        return parent::__get($name);
     }
 
-    public function getLineValue()
+    public function getLineValue($id_column=null)
     {
         $data = $this->getData();
-        return implode(' ', $data);
+
+        if (empty($id_column))
+        {
+            return implode(' ', $data);
+        }
+        else
+            return $data[$id_column]??'Колонка не найдена';
     }
 
     protected function getLabelsByID($ids,$column)

@@ -92,6 +92,10 @@ class CollectionColumn extends \yii\db\ActiveRecord
                         '1'=>"Да",
                     ]
                 ],
+                'sortable'=>[
+                    'name'=>'Сортировка элементов',
+                    'type'=>'checkbox',
+                ],
             ],
             self::TYPE_CHECKBOX => [
                 'popup'=>[
