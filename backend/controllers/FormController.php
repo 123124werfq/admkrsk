@@ -45,7 +45,7 @@ class FormController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index'],
+                        'actions' => ['index', 'collection'],
                         'roles' => ['backend.form.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Form::class,
@@ -187,6 +187,38 @@ class FormController extends Controller
         ]);
     }
 
+     /**
+     * Lists Form models for collection.
+     * @return mixed
+     * @throws InvalidConfigException
+     */
+    public function actionCollection($id)
+    {
+        $collection = $this->findModelCollection($id);
+
+        $searchModel = new FormSearch();
+
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+
+        $grid = GridSetting::findOne([
+            'class' => static::grid,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
+
+        return $this->render('collection', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
+            'collection' => $collection,
+        ]);
+    }
+
     /**
      * Displays a single Form model.
      * @param integer $id
@@ -238,21 +270,25 @@ class FormController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($id_collection=null)
     {
         $model = new Form();
         $model->state = 1;
+        $model->id_collection = $id_collection;
 
         if ($model->load(Yii::$app->request->post()) && $model->save())
         {
-            $collection = new Collection;
-            $collection->name = $model->name;
-            $collection->id_form = $model->id_form;
-
-            if ($collection->save())
+            if (empty($model->id_collection))
             {
-                $model->id_collection = $collection->id_collection;
-                $model->updateAttributes(['id_collection']);
+                $collection = new Collection;
+                $collection->name = $model->name;
+                $collection->id_form = $model->id_form;
+
+                if ($collection->save())
+                {
+                    $model->id_collection = $collection->id_collection;
+                    $model->updateAttributes(['id_collection']);
+                }
             }
 
             $model->createAction(Action::ACTION_CREATE);
@@ -721,6 +757,15 @@ class FormController extends Controller
     protected function findModel($id)
     {
         if (($model = Form::findOneWithDeleted($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function findModelCollection($id)
+    {
+        if (($model = Collection::findOneWithDeleted($id)) !== null) {
             return $model;
         }
 

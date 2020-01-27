@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\EsiaFirm;
 use Esia\Config;
 use Esia\Exceptions\InvalidConfigurationException;
 use Esia\OpenId;
@@ -159,6 +160,8 @@ class SiteController extends Controller
                 'T%52gs]CPJ',
                 Yii::getAlias('@runtime')
             ));
+
+            Yii::$app->session->set('backUrl', Yii::$app->request->referrer);
 
             $url = $esia->buildUrl();
 
@@ -745,6 +748,8 @@ class SiteController extends Controller
 
         $roles = $esia->getRolesInfo();
 
+        $backUrl = Yii::$app->session->get('backUrl', '/');
+
         $user = User::findByOid($oid);
         if ($user) {
             $esiauser = EsiaUser::findOne($user->id_esia_user);
@@ -752,43 +757,132 @@ class SiteController extends Controller
             if ($esiauser)
                 $esiauser->actualize($esia);
 
-            $login = Yii::$app->user->login($user);
+            Yii::$app->user->login($user);
             Yii::$app->user->identity->createAction(Action::ACTION_LOGIN_ESIA);
 
-            if(isset($roles['elements']) && count($roles['elements']))
-            {
-                // тут обновление списка фирм
-
-                return $this->render('firmselect', [
-                    'fio' => Yii::$app->user->identity->username,
-                    'firms' => $roles['elements'],
-                    'backUrl' => '/'
-                ]);
-            }
-
-            return $this->goHome();
+            //return $this->goHome();
             //return $login;
         }
+        else
+        {
+            $user = new User();
+            $user->email = $oid . '@esia.ru';
+            $user->username = $personInfo['firstName'] . ' ' . $personInfo['lastName'];
+            $user->setPassword($personInfo['eTag']);
+            $user->generateAuthKey();
+            $user->status = User::STATUS_ACTIVE;
 
-        $user = new User();
-        $user->email = $oid . '@esia.ru';
-        $user->username = $personInfo['firstName'] . ' ' . $personInfo['lastName'];
-        $user->setPassword($personInfo['eTag']);
-        $user->generateAuthKey();
-        $user->status = User::STATUS_ACTIVE;
+            $esiauser = new EsiaUser();
 
-        $esiauser = new EsiaUser();
+            if ($esiauser->actualize($esia)) {
+                $user->id_esia_user = $esiauser->id_esia_user;
+            }
+            if (!$user->save()) {
+                throw new yii\web\ServerErrorHttpException('Внутренняя ошибка сервера');
+            }
 
-        if ($esiauser->actualize($esia)) {
-            $user->id_esia_user = $esiauser->id_esia_user;
+            Yii::$app->user->login($user);
+            Yii::$app->user->identity->createAction(Action::ACTION_SIGNUP_ESIA);
         }
-        if (!$user->save()) {
-            throw new yii\web\ServerErrorHttpException('Внутренняя ошибка сервера');
+
+        if($esiauser->is_org)
+        {
+            $esiauser->is_org = 0;
+            $esiauser->updateAttributes(['is_org']);
         }
 
-        Yii::$app->user->login($user);
-        Yii::$app->user->identity->createAction(Action::ACTION_SIGNUP_ESIA);
+        if(isset($roles['elements']) && count($roles['elements']))
+        {
+            $oids = [];
 
-        return $this->redirect('/');
+            foreach($roles['elements'] as $firmInfo)
+            {
+                $efirm = EsiaFirm::find()->where(['oid' => $firmInfo['oid']])->one();
+
+                $oids[] = $firmInfo['oid'];
+
+                if(!$efirm) {
+                    $efirm = new EsiaFirm;
+                    $efirm->oid = (string)$firmInfo['oid'];
+                }
+
+                $efirm->active = (int)$firmInfo['active'];
+                $efirm->fullname = $firmInfo['fullName'];
+                $efirm->shortname = $firmInfo['shortName'];
+                $efirm->ogrn = $firmInfo['ogrn'];
+                $efirm->email = $firmInfo['email'];
+                $efirm->id_user = $user->id;
+                if(!$efirm->save())
+                {
+                    //var_dump($efirm->errors);
+                    //die();
+                }
+            }
+
+            $orgsInfo = $esia->getOrgInfo($oids, ['org_shortname', 'org_fullname', 'org_type', 'org_ogrn', 'org_inn', 'org_leg', 'org_kpp', 'org_ctts', 'org_addrs'], $_REQUEST['code'], $_REQUEST['state']);
+
+            foreach($orgsInfo as $foid => $oinf)
+            {
+                $efirm = EsiaFirm::find()->where(['oid' => $foid])->one();
+                if(!$efirm)
+                {
+                    continue;
+                }
+
+                if(isset($oinf['common']))
+                {
+                    $efirm->inn = $oinf['common']['inn']??null;
+                    $efirm->kpp = $oinf['common']['kpp']??null;
+                    $efirm->leg = $oinf['common']['leg']??null;
+                }
+
+                if(isset($oinf['org_addrs']['elements'][0]))
+                {
+                    $efirm->main_addr = ($oinf['org_addrs']['elements'][0]['zipCode']??'') . " " .($oinf['org_addrs']['elements'][0]['addressStr']??'') . " " . ($oinf['org_addrs']['elements'][0]['house']??'');
+                    $efirm->main_addr_fias = $oinf['org_addrs']['elements'][0]['fiasCode']??null;
+                    $efirm->main_addr_fias_alt = $oinf['org_addrs']['elements'][0]['fiasCode2']??null;
+                }
+                
+                if(!$efirm->save())
+                {
+                    //var_dump($efirm->errors);
+                    //die();
+                }
+            }
+
+            $actveFirms = $user->getActiveFirms();
+
+            if($actveFirms)
+            {
+                return $this->render('firmselect', [
+                    'fio' => Yii::$app->user->identity->username,
+                    'firms' => $actveFirms,
+                    'backUrl' => $backUrl
+                ]);
+            }
+        }
+
+        return $this->redirect($backUrl);
     }
+
+    public function actionAsfirm()
+    {
+        if(Yii::$app->user->isGuest)
+            return $this->redirect('/');
+
+        $ogrn = Yii::$app->request->get('f', 0);
+
+        $efirm = EsiaFirm::find()->where(['id_user' => Yii::$app->user->id, 'oid' => $ogrn])->one();
+        $esiauser = EsiaUser::find()->where(['id_esia_user' => Yii::$app->user->identity->id_esia_user])->one();
+
+        if($esiauser && $efirm)
+        {
+            $esiauser->is_org = $efirm->id_esia_firm;
+            $esiauser->updateAttributes(['is_org']);
+        }
+
+        $backUrl =  Yii::$app->request->get('r', '/');
+        return $this->redirect($backUrl);
+    }
+
 }

@@ -48,6 +48,9 @@ class CollectionSearch extends Collection
             $query = Collection::find();
         }
 
+        $query->joinWith('form');
+        $query->andWhere(['is_template'=>0]);
+
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.collection')) {
             $query->andFilterWhere(['id_collection' => AuthEntity::getEntityIds(Collection::class)]);

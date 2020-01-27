@@ -132,7 +132,7 @@ class EsiaUser extends \yii\db\ActiveRecord
 
     public function getUsertype()
     {
-        if (!empty($this->org_fullname))
+        if ($this->is_org)
             return 'Юридическое лицо';
 
         return 'Физическое лицо';
@@ -142,7 +142,6 @@ class EsiaUser extends \yii\db\ActiveRecord
     {
         if ($attribute=='usertype')
         {
-
             return [
                 'Физическое лицо' => 'Физическое лицо',
                 'Юридическое лицо' => 'Юридическое лицо'
@@ -175,6 +174,7 @@ class EsiaUser extends \yii\db\ActiveRecord
             $zipode = $addressInfo[0]['zipCode']??'';
 
             $this->register_addr = $zipode . ', ' . $addrString . ', ' . $house . ', ' . $flat;
+            $this->register_addr_fias = $addressInfo[0]['fiasCode']??null;
         }
 
         $contactInfo = $esia->getContactInfo();

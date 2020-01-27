@@ -50,6 +50,52 @@ class Helper
 		return 'Январь';
 	}
 
+
+	public static function runContentWidget($page)
+	{
+		function parseAttributesFromTag($tag)
+		{
+		    $pattern = '/(\w+)=[\'"]([^\'"]*)/';
+
+		    preg_match_all($pattern, $tag, $matches, PREG_SET_ORDER);
+
+		    $result = [];
+
+		    foreach ($matches as $match)
+		    {
+		        $attrName = $match[1];
+		        $attrValue = is_numeric($match[2]) ? (int)$match[2] : trim($match[2]);
+		        $result[$attrName] = $attrValue;
+		    }
+
+		    // новый формат передачи данных не конфликтный со старым
+		    if (!empty($result['encodedata']))
+		    	$result = json_decode(base64_decode($result['encodedata']),true);
+
+		    return $result;
+		}
+
+		preg_match_all("/<(hrreserve|collection|gallery|forms|pagenews)\s(.+?)>(.+?)<\/(hrreserve|collection|gallery|forms|pagenews)>/is", $page->content, $matches);
+
+        if (!empty($matches[0]))
+	        foreach ($matches[0] as $key => $match)
+	        {
+	            $attributes = parseAttributesFromTag($match);
+
+                $class = 'frontend\widgets\\' . ucwords($matches[1][$key]) . 'Widget';
+
+                $page->content = '<div class="widget-wrapper">'.str_replace($match, $class::widget(['attributes' => $attributes, 'page' => $page]), $page->content).'</div>';
+
+	            /*else if($matches[1][$key] == 'hrreserve')
+	            {
+	                $class = 'frontend\widgets\\' . ucwords($matches[1][$key]) . 'Widget';
+	                $page->content = '<div class="widget-wrapper">'.str_replace($match, $class::widget(['page' => $page]), $page->content).'</div>';
+	            }*/
+	        }
+
+        return $page->content;
+	}
+
 	public function getOldtime($time)
 	{
 		$delta = mktime() - $time;

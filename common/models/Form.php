@@ -134,6 +134,11 @@ class Form extends \yii\db\ActiveRecord
         ];
     }
 
+    public function isMainForm()
+    {
+        return ($this->id_form == $this->collection->id_form);
+    }
+
     public function createInput($attributes)
     {
         $row = new FormRow;

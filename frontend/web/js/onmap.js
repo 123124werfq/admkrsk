@@ -28,10 +28,10 @@ function updatePoints(mapObject, pointsArray)
 
 }
 
+var map = false;
+
 function showMap(id_collection,block_id)
 {
-    var map = false;
-
     $('#'+block_id).parent().addClass('open');
 
     ymaps.ready(
