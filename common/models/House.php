@@ -181,7 +181,7 @@ class House extends \yii\db\ActiveRecord
             $this->country->name . ', ' .
             $this->region->name . ', ' .
             ($this->subregion ? $this->subregion->name . ', ' : null) .
-            $this->city->name . ', ' .
+            ($this->city ? $this->city->name . ', ' : null) .
             ($this->district ? $this->district->name . ', ' : null) .
             $this->street->name . ', ' .
             $this->name;
