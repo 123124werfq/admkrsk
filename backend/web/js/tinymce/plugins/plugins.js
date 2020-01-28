@@ -2,6 +2,13 @@
     var iframe = (function() {
         'use strict';
 
+        function getTinyContents(editor) {
+            /** get iframe nodes */
+            let contents = editor.getContainer();
+            let iframe = contents.querySelector(".tox-editor-container .tox-sidebar-wrap .tox-edit-area #page-content_ifr");
+            return  iframe.contentDocument.querySelector('html #tinymce').children;
+        }
+
         tinymce.PluginManager.add("collections", function(editor, url) {
 
             var _api = false;
@@ -25,46 +32,59 @@
                 height: 600
             };
 
+            function setEdit(collectionId, base64) {
+                editor.windowManager.openUrl({
+                    ..._urlDialogConfig,
+                    url: '/collection/redactor?Collection[id_parent_collection]=' + collectionId + '&data=' + base64 + '&edit=1',
+                });
+            }
+
+            function setEditableCollections(){
+                for (let item of getTinyContents(editor)) {
+                    let collection = item.querySelector('collection');
+                    if (collection) {
+                        let encodeData = collection.getAttribute('data-encodedata');
+                        if (encodeData) {
+                            let collectionId = collection.getAttribute('data-id');
+                            /** edit Collection with double click */
+                            item.ondblclick = function () {
+                                setEdit(collectionId, encodeData);
+                            };
+                        }
+                    }
+                }
+            }
+
+            setTimeout(function () {
+                setEditableCollections();
+            }, 500);
+
             editor.addCommand('iframeCommand', function(ui, value) {
 
                 if (value.id_collection == '') {
                     editor.windowManager.alert('Вы не выбрали список');
                 }
-                let contents = editor.getContainer();
-                let iframe = contents.querySelector(".tox-editor-container .tox-sidebar-wrap .tox-edit-area #page-content_ifr");
-                let frameChildren = iframe.contentDocument.querySelector('html #tinymce').children;
 
-                console.log(value);
+                /** behaviour of edit collection */
                 if (value.isEdit === true) {
-                    for (let item of frameChildren) {
-                        if (item.querySelector('collection')) {
-                            let collection = item.querySelector('collection');
+                    for (let item of getTinyContents(editor)) {
+                        let collection = item.querySelector('collection');
+                        if (collection) {
                             let dataId = collection.getAttribute('data-id');
                             if (dataId == value.id_collection) {
-                                collection.setAttribute('data-encodedata',value.base64);
-                                collection.setAttribute('data-id', value.id_collection);
+                                collection.setAttribute('data-encodedata', value.base64);
+                                collection.setAttribute('data-id', dataId);
                                 item.ondblclick = function () {
-                                    editor.windowManager.openUrl({
-                                        ..._urlDialogConfig,
-                                        url: '/collection/redactor?Collection[id_parent_collection]=' + dataId + '&edit=1&data=' + value.base64,
-                                    });
-                                }
+                                    setEdit(dataId, value.base64);
+                                };
                             }
                         }
                     }
 
                 } else {
+                    /** behaviour of create collection */
                     editor.insertContent('<p><collection data-id=' + value.id_collection + ' data-encodedata="' + value.base64 + '">Список #' + value.id_collection + '.</collection></p>');
-                    for (let item of frameChildren) {
-                        let collection = item.querySelector('collection');
-                        let dataAttr = collection.getAttribute('data-encodedata');
-                        item.ondblclick = function () {
-                            editor.windowManager.openUrl({
-                                ..._urlDialogConfig,
-                                url: '/collection/redactor?Collection[id_parent_collection]=' + value.id_collection + '&data=' + dataAttr + '&edit=1',
-                            });
-                        }
-                    }
+                    setEditableCollections();
                 }
 
                 $(".tox-button--secondary").click();

@@ -623,24 +623,26 @@ class CollectionController extends Controller
         $this->layout = 'clear';
         $model = new Collection;
         $model->name = 'temp';
-        //$model->id_parent_collection = Yii::$app->request->post('id_collection');
         $requestParams = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
 
-        if ($requestParams['record_no_insert']) {
+        /** configure and return changes of collection */
+        if ($requestParams['configureEditCollection']) {
             $requestParams = array_merge($requestParams, json_decode(base64_decode($requestParams['data']), true));
-            $this->map($model, $requestParams['Collection']);
+            $model->mapPropsAndAttributes($requestParams['Collection']);
             $model->isEdit = true;
             return $this->configureJsonCollection($model);
         }
 
+        /** open modal dialog for edit collection */
         if ($requestParams['edit'] && $requestParams['data']) {
-            $requestParams = array_merge($requestParams, json_decode(base64_decode($requestParams['data']), true));
-            $this->map($model, $requestParams);
+            $requestParams = json_decode(base64_decode($requestParams['data']), true);
+            $model->mapPropsAndAttributes($requestParams);
             $model->isEdit = true;
         }
 
+        /** configure and return new data collection */
         if ($model->load($requestParams) && !empty(Yii::$app->request->post('json'))) {
-            $this->map($model, $requestParams['Collection']);
+            $model->mapPropsAndAttributes($requestParams['Collection']);
             return $this->configureJsonCollection($model);
         }
 
@@ -662,11 +664,11 @@ class CollectionController extends Controller
     {
         $json = $this->saveView($model, true);
         $json['id_collection'] = $model->id_parent_collection;
-        $json['template'] = $model->template_view;
+        $json['template_view'] = $model->template_view;
         $json['id_group'] = $model->id_group;
         $json['link_column'] = $model->link_column;
         $json['id_column_order'] = $model->id_column_order;
-        $json['dir'] = $model->order_direction;
+        $json['order_direction'] = $model->order_direction;
         $json['pagesize'] = $model->pagesize;
         $json['table_head'] = $model->table_head;
         $json['table_style'] = $model->table_style;
@@ -729,24 +731,6 @@ class CollectionController extends Controller
         return $this->render('update_view', [
             'model' => $model,
         ]);
-    }
-
-    private function map(&$model, $data)
-    {
-        $options = [];
-        foreach ($data as $key => $value) {
-            if (property_exists(Collection::class, $key) || $model->hasAttribute($key)) {
-                $model->$key = $value;
-            }
-            if (in_array($key, ['search', 'columns', 'filters'])) {
-                $options[$key] = $value;
-            }
-            if ($key === 'sort') {
-                $model->id_column_order = $value;
-            }
-        }
-        $model->options = json_encode($options);
-        $model->updateAttributes(['options']);
     }
 
     /**
