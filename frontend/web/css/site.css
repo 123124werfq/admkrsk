@@ -66,6 +66,7 @@
 
 .search-table {display: flex; flex-wrap: wrap;}
 .search-table input, .search-table select {padding: 10px!important; width: 32%!important; margin-right: 5px;}
+
 .search-table select.pagesize {
     width: 75px!important;
     align-self: flex-end;
@@ -263,6 +264,11 @@ table.vote thead{
 @media screen and (min-width: 992px) {
     form .row {flex-wrap: nowrap!important;}
 }
+
+@media screen and (max-width: 992px) {
+    .search-table input, .search-table select {width: 100%!important;}
+}
+
 
 table.vote thead td{
     padding: 10px;

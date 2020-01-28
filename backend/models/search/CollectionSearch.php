@@ -42,11 +42,10 @@ class CollectionSearch extends Collection
      */
     public function search($params)
     {
-        if (Yii::$app->request->get('archive')) {
+        if (Yii::$app->request->get('archive'))
             $query = Collection::findDeleted();
-        } else {
+        else
             $query = Collection::find();
-        }
 
         $query->joinWith('form');
         $query->andWhere(['is_template'=>0]);
