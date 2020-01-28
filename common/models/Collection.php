@@ -36,6 +36,7 @@ use yii\helpers\Url;
  * @property int $deleted_by
  * @property int $id_parent_collection
  * @property int $id_form
+ * @property int $id_group
  * @property array $label
  * @property int $id_box
  * @property int $system
@@ -91,6 +92,8 @@ class Collection extends ActiveRecord
     public $id_partitions = [];
 
     public $id_page;
+
+    public $isEdit = false;
 
 
     /**

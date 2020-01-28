@@ -1,12 +1,7 @@
 <?php
 
-use backend\widgets\UserAccessControl;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\helpers\ArrayHelper;
-
-use common\models\CollectionColumn;
-use common\models\Collection;
 use kartik\select2\Select2;
 use yii\web\JsExpression;
 
@@ -217,7 +212,7 @@ else
 
     <br/><br/>
     <center>
-        <button class="btn btn-primary" id="submit-redactor">Вставить</button>
+        <button class="btn btn-primary" id="submit-redactor"><?= $model->isEdit ? 'Изменить' : 'Вставить'?></button>
     </center>
     <br/><br/><br/>
 
@@ -225,11 +220,12 @@ else
         document.getElementById('submit-redactor').addEventListener('click', function (event) {
             $form = $("#collection-redactor");
             var origin = '<?=$_SERVER["HTTP_REFERER"]?>';
+            let url = "<?= $model->isEdit ? '&record_no_insert=1' : '&json=1' ?>";
             $.ajax({
                 url: $form.attr('action'),
                 type: 'post',
                 dataType:'json',
-                data: $form.serialize()+'&json=1',
+                data: $form.serialize() + url,
                 success: function(data)
                 {
                     window.parent.postMessage({

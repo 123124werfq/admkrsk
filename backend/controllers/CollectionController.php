@@ -624,30 +624,24 @@ class CollectionController extends Controller
         $model = new Collection;
         $model->name = 'temp';
         //$model->id_parent_collection = Yii::$app->request->post('id_collection');
+        $requestParams = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate())
-        {
-            if (!empty(Yii::$app->request->post('json')))
-            {
-                $json = $this->saveView($model, true);
+        if ($requestParams['record_no_insert']) {
+            $requestParams = array_merge($requestParams, json_decode(base64_decode($requestParams['data']), true));
+            $this->map($model, $requestParams['Collection']);
+            $model->isEdit = true;
+            return $this->configureJsonCollection($model);
+        }
 
-                $json['id_collection'] = $model->id_parent_collection;
-                $json['template'] = $model->template_view;
-                $json['group'] = $model->id_group;
-                $json['sort'] = $model->id_column_order;
-                $json['dir'] = $model->order_direction;
-                $json['pagesize'] = $model->pagesize;
-                $json['table_head'] = $model->table_head;
-                $json['table_style'] = $model->table_style;
-                $json['show_download'] = $model->show_download;
-                $json['show_row_num'] = $model->show_row_num;
-                $json['show_on_map'] = $model->show_on_map;
-                $json['show_column_num'] = $model->show_column_num;
+        if ($requestParams['edit'] && $requestParams['data']) {
+            $requestParams = array_merge($requestParams, json_decode(base64_decode($requestParams['data']), true));
+            $this->map($model, $requestParams);
+            $model->isEdit = true;
+        }
 
-                $json['base64'] = base64_encode(json_encode($json));
-
-                return json_encode($json);
-            }
+        if ($model->load($requestParams) && !empty(Yii::$app->request->post('json'))) {
+            $this->map($model, $requestParams['Collection']);
+            return $this->configureJsonCollection($model);
         }
 
         if (Yii::$app->request->isAjax)
@@ -660,11 +654,37 @@ class CollectionController extends Controller
         ]);
     }
 
+    /**
+     * @param Collection $model
+     * @return array
+     */
+    private function configureJsonCollection($model)
+    {
+        $json = $this->saveView($model, true);
+        $json['id_collection'] = $model->id_parent_collection;
+        $json['template'] = $model->template_view;
+        $json['id_group'] = $model->id_group;
+        $json['link_column'] = $model->link_column;
+        $json['id_column_order'] = $model->id_column_order;
+        $json['dir'] = $model->order_direction;
+        $json['pagesize'] = $model->pagesize;
+        $json['table_head'] = $model->table_head;
+        $json['table_style'] = $model->table_style;
+        $json['show_download'] = $model->show_download;
+        $json['show_row_num'] = $model->show_row_num;
+        $json['show_on_map'] = $model->show_on_map;
+        $json['show_column_num'] = $model->show_column_num;
+        $json['base64'] = base64_encode(json_encode($json));
+        $json['isEdit'] = $model->isEdit;
+        return json_encode($json);
+    }
+
 
     /**
      * Creates a new Collection model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
+     * @throws \Exception
      */
     public function actionCreate()
     {
@@ -709,6 +729,24 @@ class CollectionController extends Controller
         return $this->render('update_view', [
             'model' => $model,
         ]);
+    }
+
+    private function map(&$model, $data)
+    {
+        $options = [];
+        foreach ($data as $key => $value) {
+            if (property_exists(Collection::class, $key) || $model->hasAttribute($key)) {
+                $model->$key = $value;
+            }
+            if (in_array($key, ['search', 'columns', 'filters'])) {
+                $options[$key] = $value;
+            }
+            if ($key === 'sort') {
+                $model->id_column_order = $value;
+            }
+        }
+        $model->options = json_encode($options);
+        $model->updateAttributes(['options']);
     }
 
     /**
@@ -855,12 +893,11 @@ class CollectionController extends Controller
                             }
 
                             // пропускаем
-                            if (!empty($model->skip) && $rowkey<=$model->skip)
+                            if (!empty($model->skip) && $rowkey <= $model->skip)
                                 continue;
 
                             // устанавливаем именя колонок по первой строке если выбрали
-                            if ($rowkey==($model->skip+1) && $model->firstRowAsName)
-                            {
+                            if ($rowkey == ($model->skip + 1) && $model->firstRowAsName) {
                                 $columns = $row;
                                 continue;
                             }
