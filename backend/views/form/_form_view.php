@@ -17,13 +17,19 @@
             ...
         </button>
         <ul class="dropdown-menu pull-right">
+          <?php if ($form->isMainForm()){?>
           <li><a href="/form-input/create?id_row=<?=$row->id_row?>" class="create-form-input">Добавить поле</a></li>
+          <?php }else {?>
+          <li><a href="/form-input/assign?id_row=<?=$row->id_row?>" class="create-form-input">Привязать поле</a></li>
+          <?php }?>
           <li><a href="/form-element/create?id_row=<?=$row->id_row?>" class="create-element">Добавить текст</a></li>
           <li><a href="/form/update-row?id_row=<?=$row->id_row?>" class="update-row">Редактировать стили</a></li>
           <?php if (count($row->elements)==0){?>
             <li><a href="/form/delete-row?id_row=<?=$row->id_row?>" class="delete-row" data-pjax="0" data-confirm="Вы уверены, что хотите удалить этот элемент?" data-method="post">Удалить строку</a></li>
           <?php }?>
-          <li><a href="/form/assign-form?id_row=<?=$row->id_row?>" class="create-subform">Добавить подформу</a></li>
+          <?php if ($form->isMainForm()){?>
+            <li><a href="/form/assign-form?id_row=<?=$row->id_row?>" class="create-subform">Добавить подформу</a></li>
+          <?php }?>
         </ul>
     </div>
 	</div>
