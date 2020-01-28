@@ -13,6 +13,7 @@ class FormDynamic extends DynamicModel
 {
     public $inputs;
     public $form;
+    public $data;
 
     //private $_properties;
 
@@ -22,6 +23,7 @@ class FormDynamic extends DynamicModel
 
         $this->form = $form;
         $this->inputs = $form->getInputs()->indexBy('id_input')->all();
+        $this->data = $data;
 
         foreach ($this->inputs as $input)
         {
@@ -35,7 +37,7 @@ class FormDynamic extends DynamicModel
                     $data[$input->id_input] = $esia->$attr;
             }
 
-            $attributes['input'.$input->id_input] = (isset($data[$input->id_input]))?$data[$input->id_input]:'';
+            $attributes['input'.$input->id_input] = (isset($data[$input->alias]))?$data[$input->alias]:'';
         }
 
         parent::__construct($attributes, $config);
@@ -68,7 +70,7 @@ class FormDynamic extends DynamicModel
         }
     }
 
-    public function prepareData($columnAsIndex=false, $post=null)
+    public function prepareData($columnAsIndex=true, $post=null)
     {
         $data = [];
 
@@ -368,6 +370,14 @@ class FormDynamic extends DynamicModel
                         break;
                 }
             }
+        }
+
+        if (!empty($this->data))
+        {
+            $columns = $this->form->collection->getColumns()->andWhere(['alias'=>array_keys($this->data)])->indexBy('alias')->all();
+            
+            foreach ($columns as $alias => $column)
+                $data[$column->id_column] = $this->data[$alias];
         }
 
         return $data;
