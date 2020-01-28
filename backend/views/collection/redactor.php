@@ -173,22 +173,22 @@ else
                     опции
                 </label>
             </div>
-            <div class="col-sm-11 hide flex">
+            <div class="col-sm-1 col-close">
+                <a class="close btn" href="#">&times;</a>
+            </div>
+            <div class="col-sm-12 hide flex">
                 <div class="row">
                     <div class="col-sm-5">
                         <div class="form-group">
                             <?=Html::textInput("ViewColumns[$key][group]",$data['options']['group']??'',['class'=>'form-control','id'=>'CollectionColumn_group_'.$key,'placeholder'=>'Введите группу']);?>
                         </div>
                     </div>
-                    <div class="col-sm-5">
+                    <div class="col-sm-6">
                         <div class="form-group">
                             <?=Html::dropDownList("ViewColumns[$key][show_for_searchcolumn]",$data['show_for_searchcolumn'],$columns,['class'=>'form-control','id'=>'CollectionColumn_show_for_searchcolumn_'.$key,'prompt'=>'Показывать если введено']);?>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-1 col-close">
-                <a class="close btn" href="#">&times;</a>
             </div>
         </div>
         <?php break; }?>
