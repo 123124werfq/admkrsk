@@ -349,11 +349,6 @@ class Collection extends ActiveRecord
         return $records;
     }
 
-    /*public function getRecords($options)
-    {
-
-    }*/
-
     public function getDataQueryByOptions($options, array $search_columns = [])
     {
         if (!empty($this->id_parent_collection)) {
@@ -433,7 +428,8 @@ class Collection extends ActiveRecord
         foreach ($this->parent->columns as $key => $column) {
             $options[] = [
                 'id_column' => $column->id_column,
-                'value' => '',
+                'group'=>'',
+                'show_for_searchcolumn'=>'',
             ];
         }
 

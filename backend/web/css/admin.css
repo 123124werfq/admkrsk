@@ -234,6 +234,9 @@ ul.menu-container ul .create-menu {display: none;}
     height: 40px
 }
 
+
+.hide {display: none;}
+
 .field-menu-access_user_ids {margin-top: 20px;}
 
 .question  .btn-danger {margin-top: -19px;}

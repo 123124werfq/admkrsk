@@ -253,6 +253,11 @@ function reordModels($block,$data)
 
 jQuery(document).ready(function()
 {
+    $('body').delegate(".showdetails",'change',function(){
+      console.log('123');
+      $(this).parent().parent().next().toggleClass('hide');
+    });
+
     $("#collection-redactor #collection-id_parent_collection").change(function(){
         $form = $("#collection-redactor");
 
