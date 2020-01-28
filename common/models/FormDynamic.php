@@ -21,7 +21,7 @@ class FormDynamic extends DynamicModel
         $attributes = [];
 
         $this->form = $form;
-        $this->inputs = FormInput::find()->where(['id_form' => $form->id_form])->indexBy('id_input')->all();
+        $this->inputs = $form->getInputs()->indexBy('id_input')->all();
 
         foreach ($this->inputs as $input)
         {

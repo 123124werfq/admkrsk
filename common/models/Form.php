@@ -210,7 +210,14 @@ class Form extends \yii\db\ActiveRecord
 
     public function getInputs()
     {
-        return $this->hasOne(FormInput::class, ['id_form' => 'id_form']);
+        if ($this->isMainForm())
+            return $this->hasMany(FormInput::class, ['id_form' => 'id_form']);
+        else 
+            return FormInput::find()->where('id_input IN (
+            SELECT id_input 
+                FROM form_element as fi
+                INNER JOIN form_row as fr ON fr.id_row = fi.id_row
+            WHERE fr.id_form = '.$this->id_form.')');
     }
 
     public function getTemplate()
