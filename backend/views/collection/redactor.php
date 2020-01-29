@@ -170,7 +170,7 @@ else
                 <a class="close btn" href="#">&times;</a>
             </div>
         </div>
-        <?php break; }?>
+        <?php }?>
     </div>
     <a onclick="return addInput('view-columns')" href="#" class="btn btn-default">Добавить еще</a>
     <hr>
