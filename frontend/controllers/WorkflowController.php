@@ -79,4 +79,34 @@ class WorkflowController extends \yii\web\Controller
         return $this->render('testupload', ['model' => $model]);
     }
 
+    public function beforeAction($action)
+    {
+        $this->enableCsrfValidation = false;
+
+        return parent::beforeAction($action);
+    }
+
+    public function actionInlet()
+    {
+        $path = Yii::getAlias('@runtime')."/logs/services.log";
+        file_put_contents($path,date("r").":\n\n", FILE_APPEND);
+        file_put_contents($path,file_get_contents('php://input'), FILE_APPEND);
+        file_put_contents($path,"\n", FILE_APPEND);
+    }    
+
+    public function actionAppealsinput()
+    {
+        $path = Yii::getAlias('@runtime')."/logs/appeals.log";
+        file_put_contents($path,date("r").":\n\n", FILE_APPEND);
+        file_put_contents($path,file_get_contents('php://input'), FILE_APPEND);
+        file_put_contents($path,"\n", FILE_APPEND);
+    }  
+    
+    public function actionDocsinput()
+    {
+        $path = Yii::getAlias('@runtime')."/logs/docs.log";
+        file_put_contents($path,date("r").":\n\n", FILE_APPEND);
+        file_put_contents($path,file_get_contents('php://input'), FILE_APPEND);
+        file_put_contents($path,"\n", FILE_APPEND);
+    }      
 }
