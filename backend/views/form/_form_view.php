@@ -6,7 +6,7 @@
                 echo $this->render('_input',['element'=>$element]);
             else if (!empty($element->subForm))
             {
-                echo $this->render('_subform',['element'=>$element]);
+                echo $this->render('_subform',['element'=>$element,'form'=>$form]);
             }
             else if (!empty($element->content))
                 echo $this->render('_element',['element'=>$element]);
