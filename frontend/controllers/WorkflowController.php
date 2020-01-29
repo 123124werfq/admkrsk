@@ -94,7 +94,7 @@ class WorkflowController extends \yii\web\Controller
         file_put_contents($path,"\n", FILE_APPEND);
     }    
 
-    public function actionAppealsinut()
+    public function actionAppealsinput()
     {
         $path = Yii::getAlias('@runtime')."/logs/appeals.log";
         file_put_contents($path,date("r").":\n\n", FILE_APPEND);
