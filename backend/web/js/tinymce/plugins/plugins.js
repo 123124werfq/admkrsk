@@ -32,10 +32,10 @@ function getTinyContents(editor) {
                 height: 600
             };
 
-            function setEdit(collectionId, base64) {
+            function setEdit(collectionId, json) {
                 editor.windowManager.openUrl({
                     ..._urlDialogConfig,
-                    url: '/collection/redactor?Collection[id_parent_collection]=' + collectionId + '&data=' + base64 + '&edit=1',
+                    url: '/collection/redactor?Collection[id_parent_collection]=' + collectionId + '&data=' + JSON.parse(json) + '&edit=1',
                 });
             }
 
@@ -43,7 +43,7 @@ function getTinyContents(editor) {
                 for (let item of getTinyContents(editor)) {
                     let collection = item.querySelector('collection');
                     if (collection) {
-                        let encodeData = collection.getAttribute('data-encodedata');
+                        let encodeData = collection.getAttribute('data-json');
                         if (encodeData) {
                             let collectionId = collection.getAttribute('data-id');
                             /** edit Collection with double click */
@@ -72,10 +72,11 @@ function getTinyContents(editor) {
                         if (collection) {
                             let dataId = collection.getAttribute('data-id');
                             if (dataId == value.id_collection) {
-                                collection.setAttribute('data-encodedata', value.base64);
+                                let jsonData = JSON.stringify(value.jsonData);
+                                collection.setAttribute('data-json', jsonData);
                                 collection.setAttribute('data-id', dataId);
                                 item.ondblclick = function () {
-                                    setEdit(dataId, value.base64);
+                                    setEdit(dataId, jsonData);
                                 };
                             }
                         }
@@ -83,7 +84,7 @@ function getTinyContents(editor) {
 
                 } else {
                     /** behaviour of create collection */
-                    editor.insertContent('<p><collection data-id=' + value.id_collection + ' data-encodedata="' + value.base64 + '">Список #' + value.id_collection + '.</collection></p>');
+                    editor.insertContent('<p><collection data-id=' + value.id_collection + ' data-json=\'' + JSON.stringify(value.jsonData) + '\'>Список #' + value.id_collection + '.</collection></p>');
                     setEditableCollections();
                 }
 

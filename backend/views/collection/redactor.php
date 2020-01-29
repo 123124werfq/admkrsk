@@ -219,7 +219,7 @@ else
     <script>
         document.getElementById('submit-redactor').addEventListener('click', function (event) {
             $form = $("#collection-redactor");
-            var origin = '<?=$_SERVER["HTTP_REFERER"]?>';
+            var origin = '<?= isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : '' ?>';
             let url = "<?= $model->isEdit ? '&configureEditCollection=1' : '&json=1' ?>";
             $.ajax({
                 url: $form.attr('action'),

@@ -16,6 +16,7 @@ use backend\models\forms\CollectionCombineForm;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 use yii\mongodb\Exception;
 use yii\db\Exception as DbException;
 use yii\validators\NumberValidator;
@@ -627,7 +628,7 @@ class CollectionController extends Controller
 
         /** configure and return changes of collection */
         if (isset($requestParams['configureEditCollection'])) {
-            $requestParams = array_merge($requestParams, json_decode(base64_decode($requestParams['data']), true));
+            $requestParams = array_merge($requestParams, Json::decode($requestParams['data'], true));
             $model->mapPropsAndAttributes($requestParams['Collection']);
             $model->isEdit = true;
             return $this->configureJsonCollection($model);
@@ -635,7 +636,7 @@ class CollectionController extends Controller
 
         /** open modal dialog for edit collection */
         if (isset($requestParams['edit']) && isset($requestParams['data'])) {
-            $requestParams = json_decode(base64_decode($requestParams['data']), true);
+            $requestParams = Json::decode($requestParams['data'], true);
             $model->mapPropsAndAttributes($requestParams);
             $model->isEdit = true;
         }
@@ -676,7 +677,7 @@ class CollectionController extends Controller
         $json['show_row_num'] = $model->show_row_num;
         $json['show_on_map'] = $model->show_on_map;
         $json['show_column_num'] = $model->show_column_num;
-        $json['base64'] = base64_encode(json_encode($json));
+        $json['jsonData'] = json_encode($json);
         $json['isEdit'] = $model->isEdit;
         return json_encode($json);
     }
@@ -759,7 +760,7 @@ class CollectionController extends Controller
             foreach (Yii::$app->request->post('SearchColumns') as $key => $data) {
                 $options['search'][] = [
                     'id_column' => $data['id_column'],
-                    'type' => $data['type'],
+                    'type' => isset($data['type']) ? $data['type'] : '0',
                 ];
             }
         }
@@ -771,7 +772,7 @@ class CollectionController extends Controller
                 if (!empty($data['id_column']))
                     $options['filters'][] = [
                         'id_column' => $data['id_column'],
-                        'operator' => $data['operator'],
+                        'operator' => isset($data['operator']) ? $data['operator'] : '=',
                         'value' => (!empty($data['value'])) ? $data['value'] : ''
                     ];
             }
