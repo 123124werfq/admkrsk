@@ -1,13 +1,13 @@
+function getTinyContents(editor) {
+    /** get iframe nodes */
+    let contents = editor.getContainer();
+    let iframe = contents.querySelector(".tox-editor-container .tox-sidebar-wrap .tox-edit-area #page-content_ifr");
+    return  iframe.contentDocument.querySelector('html #tinymce').children;
+}
+
 (function() {
     var iframe = (function() {
         'use strict';
-
-        function getTinyContents(editor) {
-            /** get iframe nodes */
-            let contents = editor.getContainer();
-            let iframe = contents.querySelector(".tox-editor-container .tox-sidebar-wrap .tox-edit-area #page-content_ifr");
-            return  iframe.contentDocument.querySelector('html #tinymce').children;
-        }
 
         tinymce.PluginManager.add("collections", function(editor, url) {
 
@@ -112,11 +112,7 @@
 
 /** Set on double click feature for edit plugin */
 function setElementsEditable(editor, selector, editFunc) {
-    let contents = editor.getContainer();
-    let iframe = contents.querySelector(".tox-editor-container .tox-sidebar-wrap .tox-edit-area #page-content_ifr");
-    let frameChildren = iframe.contentDocument.querySelector('html #tinymce').children;
-
-    for (let item of frameChildren) {
+    for (let item of getTinyContents(editor)) {
         let element = item.querySelector(selector);
         if (element) {
             element.ondblclick = function () {
