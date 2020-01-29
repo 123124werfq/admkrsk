@@ -90,9 +90,81 @@
     }());
 })();
 
+/** Set on double click feature for edit plugin */
+function setElementsEditable(editor, selector, editFunc) {
+    let contents = editor.getContainer();
+    let iframe = contents.querySelector(".tox-editor-container .tox-sidebar-wrap .tox-edit-area #page-content_ifr");
+    let frameChildren = iframe.contentDocument.querySelector('html #tinymce').children;
+
+    for (let item of frameChildren) {
+        let element = item.querySelector(selector);
+        if (element) {
+            element.ondblclick = function () {
+                editFunc(element);
+            }
+        }
+    }
+}
+
 tinymce.PluginManager.add("form", function(editor, url) {
     var _dialog = false;
     var _forms = [];
+
+    setTimeout(function () {
+        setElementsEditable(editor, 'forms', editableForm);
+    }, 100);
+
+    let editDialog = {
+        title: 'Изменить форму',
+        body: {},
+        buttons: [
+            {
+                text: 'Close',
+                type: 'cancel',
+                onclick: 'close'
+            },
+            {
+                text: 'Insert',
+                type: 'submit',
+                primary: true,
+                enabled: false
+            }
+        ]
+    };
+
+    function editableForm(form) {
+        let formId = form.getAttribute('data-id');
+        $.ajax({
+            url: '/form/get-form?form-id=' + formId,
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                editDialog.body = {
+                    type: 'panel',
+                    items: [{
+                        type: 'selectbox',
+                        name: 'id_form',
+                        label: 'Форма',
+                        items: data,
+                        flex: true
+                    }]
+                };
+                editDialog.onSubmit = function (api) {
+                    let editFormId = api.getData().id_form;
+                    form.setAttribute('data-id', editFormId);
+                    form.innerText = 'Форма #' + editFormId + '.';
+                    form.ondblclick = function () {
+                        editableForm(form)
+                    };
+                    api.close();
+                };
+                _dialog = editor.windowManager.open(editDialog);
+                _dialog.block('Loading...');
+                _dialog.redial(editDialog);
+                _dialog.unblock();
+            }
+        });
+    }
 
     function _getDialogConfig() {
         return {
@@ -111,6 +183,7 @@ tinymce.PluginManager.add("form", function(editor, url) {
                 // insert markup
                 editor.insertContent('<forms data-id="' + api.getData().id_form + '">Форма #' + api.getData().id_form + '.</forms>');
 
+                setElementsEditable(editor, 'forms', editableForm);
                 // close the dialog
                 api.close();
             },
@@ -189,6 +262,62 @@ tinymce.PluginManager.add("pagenews", function(editor, url) {
     var _dialog = false;
     var _forms = [];
 
+    setTimeout(function () {
+        setElementsEditable(editor, 'pagenews', editablePage);
+    }, 100);
+
+    let editDialog = {
+        title: 'Изменить новости',
+        body: {},
+        buttons: [
+            {
+                text: 'Close',
+                type: 'cancel',
+                onclick: 'close'
+            },
+            {
+                text: 'Insert',
+                type: 'submit',
+                primary: true,
+                enabled: false
+            }
+        ]
+    };
+
+    function editablePage(page) {
+        let pageId = page.getAttribute('data-id');
+        $.ajax({
+            url: '/page/get-page?news=1' + '&page-id=' + pageId,
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                editDialog.body = {
+                    type: 'panel',
+                    items: [{
+                        type: 'selectbox',
+                        name: 'id_page',
+                        label: 'Новости',
+                        items: data,
+                        flex: true
+                    }]
+                };
+                editDialog.onSubmit = function (api) {
+                    let editPageId = api.getData().id_page;
+                    page.setAttribute('data-id', editPageId);
+                    page.innerText = 'Новости #' + editPageId + '.';
+                    page.ondblclick = function () {
+                        editablePage(page)
+                    };
+                    api.close();
+                };
+                _dialog = editor.windowManager.open(editDialog);
+                _dialog.block('Loading...');
+                _dialog.redial(editDialog);
+                _dialog.unblock();
+            }
+        });
+    }
+
     function _getDialogConfig() {
         return {
             title: 'Вставить новости',
@@ -206,6 +335,7 @@ tinymce.PluginManager.add("pagenews", function(editor, url) {
                 // insert markup
                 editor.insertContent('<pagenews data-id="' + api.getData().id_page + '">Новости #' + api.getData().id_page + '.</pagenews>');
 
+                setElementsEditable(editor, 'pagenews', editablePage);
                 // close the dialog
                 api.close();
             },
@@ -282,6 +412,77 @@ tinymce.PluginManager.add("gallery", function(editor, url) {
     var _dialog = false;
     var _typeOptions = [];
 
+    setTimeout(function () {
+        setElementsEditable(editor, 'gallery', editableGallery);
+    }, 100);
+
+    let editDialog = {
+        title: 'Изменить галерею',
+        body: {},
+        buttons: [
+            {
+                text: 'Close',
+                type: 'cancel',
+                onclick: 'close'
+            },
+            {
+                text: 'Insert',
+                type: 'submit',
+                primary: true,
+                enabled: false
+            }
+        ]
+    };
+
+    function editableGallery(gallery) {
+        let galleryId = gallery.getAttribute('data-id');
+        let galleryLimitText = gallery.getAttribute('data-limit');
+        $.ajax({
+            url: '/gallery/get-gallery?' + '&gallery-id=' + galleryId,
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                editDialog.initialData = {
+                    /** default limit value */
+                    limit: galleryLimitText
+                };
+                editDialog.body = {
+                    type: 'panel',
+                    items: [
+                        {
+                            type: 'selectbox',
+                            name: 'id_gallery',
+                            label: 'Галлерея',
+                            items: data,
+                            flex: true
+                        },
+                        {
+                            type: 'input',
+                            name: 'limit',
+                            label: 'Видимых записей',
+                            flex: true
+                        }
+                    ]
+                };
+                editDialog.onSubmit = function (api) {
+                    let editGalleryId = api.getData().id_gallery;
+                    let editGalleryLimit = api.getData().limit;
+                    gallery.setAttribute('data-id', editGalleryId);
+                    gallery.setAttribute('data-limit', editGalleryLimit);
+                    gallery.innerText = 'Галлерея #' + editGalleryId + '.';
+                    gallery.ondblclick = function () {
+                        editableGallery(gallery)
+                    };
+                    api.close();
+                };
+                _dialog = editor.windowManager.open(editDialog);
+                _dialog.block('Loading...');
+                _dialog.redial(editDialog);
+                _dialog.unblock();
+            }
+        });
+    }
+
     function _getDialogConfig() {
         return {
             title: 'Вставить галерею',
@@ -305,6 +506,8 @@ tinymce.PluginManager.add("gallery", function(editor, url) {
             onSubmit: function(api) {
                 // insert markup
                 editor.insertContent('<gallery data-id="' + api.getData().type + '" data-limit="' + api.getData().limit + '">Галерея #' + api.getData().type + '.</gallery>');
+
+                setElementsEditable(editor, 'gallery', editableGallery);
 
                 // close the dialog
                 api.close();

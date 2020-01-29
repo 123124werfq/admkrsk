@@ -153,11 +153,26 @@ class GalleryController extends Controller
     {
         $records = Gallery::find()->all();
 
-        $output = [];
-        foreach ($records as $key => $data)
-            $output[] = ['text'=>$data->name,'value'=>(string)$data->id_gallery];
+        $galleries = [];
+        $selectedGallery = null;
+        $galleryId = Yii::$app->request->get('gallery-id');
+        /** @var Gallery $gallery */
+        foreach ($records as $key => $gallery) {
+            $galleryData = [
+                'text' => $gallery->name,
+                'value' => (string)$gallery->id_gallery,
+            ];
+            if ($galleryId == $gallery->id_gallery) {
+                $selectedGallery = $galleryData;
+                continue;
+            }
+            $galleries[] = $galleryData;
+        }
+        if ($selectedGallery) {
+            array_unshift($galleries, $selectedGallery);
+        }
 
-        return json_encode($output);
+        return json_encode($galleries);
     }
 
     /**
