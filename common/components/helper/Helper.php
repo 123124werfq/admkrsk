@@ -51,7 +51,7 @@ class Helper
 	}
 
 
-	public static function runContentWidget($page)
+	public static function runContentWidget($content, $page)
 	{
 		function parseAttributesFromTag($tag)
 		{
@@ -63,6 +63,8 @@ class Helper
 
 		    foreach ($matches as $match)
 		    {
+		    	$match[2] = str_replace(['&lt;','&gt;','&quot;'], ['<','>','"'], $match[2]);
+
 		        $attrName = $match[1];
 		        $attrValue = is_numeric($match[2]) ? (int)$match[2] : trim($match[2]);
 		        $result[$attrName] = $attrValue;
@@ -75,7 +77,7 @@ class Helper
 		    return $result;
 		}
 
-		preg_match_all("/<(hrreserve|collection|gallery|forms|pagenews)\s(.+?)>(.+?)<\/(hrreserve|collection|gallery|forms|pagenews)>/is", $page->content, $matches);
+		preg_match_all("/<(hrreserve|collection|gallery|forms|pagenews)\s(.+?)>(.+?)<\/(hrreserve|collection|gallery|forms|pagenews)>/is", $content, $matches);
 
         if (!empty($matches[0]))
 	        foreach ($matches[0] as $key => $match)
@@ -84,7 +86,7 @@ class Helper
 
                 $class = 'frontend\widgets\\' . ucwords($matches[1][$key]) . 'Widget';
 
-                $page->content = '<div class="widget-wrapper">'.str_replace($match, $class::widget(['attributes' => $attributes, 'page' => $page]), $page->content).'</div>';
+                $content = '<div class="widget-wrapper">'.str_replace($match, $class::widget(['attributes' => $attributes, 'page' => $page]), $content).'</div>';
 
 	            /*else if($matches[1][$key] == 'hrreserve')
 	            {
@@ -93,7 +95,7 @@ class Helper
 	            }*/
 	        }
 
-        return $page->content;
+        return $content;
 	}
 
 	public function getOldtime($time)

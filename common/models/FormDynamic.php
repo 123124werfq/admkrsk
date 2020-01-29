@@ -14,6 +14,7 @@ class FormDynamic extends DynamicModel
     public $inputs;
     public $form;
     public $data;
+    public $postData;
 
     //private $_properties;
 
@@ -372,12 +373,17 @@ class FormDynamic extends DynamicModel
             }
         }
 
-        if (!empty($this->data))
+        if (!empty(Yii::$app->request->post('postData')))
         {
-            $columns = $this->form->collection->getColumns()->andWhere(['alias'=>array_keys($this->data)])->indexBy('alias')->all();
-            
-            foreach ($columns as $alias => $column)
-                $data[$column->id_column] = $this->data[$alias];
+            $postData = json_decode(Yii::$app->request->post('postData'),true);
+
+            if (!empty($postData))
+            {
+                $columns = $this->form->collection->getColumns()->andWhere(['alias'=>array_keys($postData)])->indexBy('alias')->all();
+
+                foreach ($columns as $alias => $column)
+                    $data[$column->id_column] = $postData[$alias];
+            }
         }
 
         return $data;
