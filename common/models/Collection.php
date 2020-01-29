@@ -201,6 +201,33 @@ class Collection extends ActiveRecord
         ];
     }
 
+    /**
+     * Mapping property and attributes
+     *
+     * @param array $data
+     */
+    public function mapPropsAndAttributes($data){
+        $options = [];
+        foreach ($data as $key => $value) {
+            if ($key === 'id_collection') {
+                $this->id_parent_collection = $value;
+                continue;
+            }
+
+            if (property_exists(static::class, $key) || $this->hasAttribute($key)) {
+                $this->$key = $value;
+            }
+            if (in_array($key, ['search', 'columns', 'filters'])) {
+                $options[$key] = $value;
+            }
+            if ($key === 'sort') {
+                $this->id_column_order = $value;
+            }
+        }
+        $this->options = json_encode($options);
+        $this->updateAttributes(['options']);
+    }
+
     public function insertRecord($data)
     {
         $model = new CollectionRecord;

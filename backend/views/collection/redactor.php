@@ -220,7 +220,7 @@ else
         document.getElementById('submit-redactor').addEventListener('click', function (event) {
             $form = $("#collection-redactor");
             var origin = '<?=$_SERVER["HTTP_REFERER"]?>';
-            let url = "<?= $model->isEdit ? '&record_no_insert=1' : '&json=1' ?>";
+            let url = "<?= $model->isEdit ? '&configureEditCollection=1' : '&json=1' ?>";
             $.ajax({
                 url: $form.attr('action'),
                 type: 'post',
