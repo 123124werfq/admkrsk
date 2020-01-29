@@ -626,7 +626,7 @@ class CollectionController extends Controller
         $requestParams = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
 
         /** configure and return changes of collection */
-        if ($requestParams['configureEditCollection']) {
+        if (isset($requestParams['configureEditCollection'])) {
             $requestParams = array_merge($requestParams, json_decode(base64_decode($requestParams['data']), true));
             $model->mapPropsAndAttributes($requestParams['Collection']);
             $model->isEdit = true;
@@ -634,7 +634,7 @@ class CollectionController extends Controller
         }
 
         /** open modal dialog for edit collection */
-        if ($requestParams['edit'] && $requestParams['data']) {
+        if (isset($requestParams['edit']) && isset($requestParams['data'])) {
             $requestParams = json_decode(base64_decode($requestParams['data']), true);
             $model->mapPropsAndAttributes($requestParams);
             $model->isEdit = true;
