@@ -102,7 +102,7 @@ class WorkflowController extends \yii\web\Controller
         file_put_contents($path,"\n", FILE_APPEND);
     }  
     
-    public function actionDoscinput()
+    public function actionDocsinput()
     {
         $path = Yii::getAlias('@runtime')."/logs/docs.log";
         file_put_contents($path,date("r").":\n\n", FILE_APPEND);
