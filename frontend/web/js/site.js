@@ -55,6 +55,21 @@ function addInput(block)
 
 $(document).ready(function() {
 
+    $(".ajax-form").submit(function(){
+        var $form = $(this);
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            url: $form.attr('action'),
+            data: $form.serialize()
+        }).done(function(data){
+            if (data)
+                $form.html(data);
+        });
+
+        return false;
+    });
+
     var curpage = 0;
 
     $(".col-2-third .load-more").click(function(){

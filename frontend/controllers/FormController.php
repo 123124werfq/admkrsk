@@ -34,15 +34,14 @@ class FormController extends \yii\web\Controller
 
             if ($collection->insertRecord($prepare))
             {
-                echo "OK!";
+                if (Yii::$app->request->isAjax)
+                    return $form->message_success?$form->message_success:'Спасибо, данные отправлены';
 
                 if (!empty($form->url))
                 	return $this->redirect($form->url);
 
                 if (!empty($form->id_page) && $url = Page::getUrlByID($form->id_page))
                 	return $this->redirect($url);
-
-                return $this->redirect($form->message_success);
             }
             else
                 echo "Данные не сохранены";
@@ -61,7 +60,7 @@ class FormController extends \yii\web\Controller
             'yii\web\JqueryAsset'=>false,
             'yii\web\YiiAsset'=>false,
         ];
-        
+
         $activeForm = \yii\widgets\ActiveForm::begin([
             'fieldConfig' => [
                 'template' => '{input}{error}',
