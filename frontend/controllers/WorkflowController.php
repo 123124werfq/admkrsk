@@ -79,6 +79,13 @@ class WorkflowController extends \yii\web\Controller
         return $this->render('testupload', ['model' => $model]);
     }
 
+    public function beforeAction($action)
+    {
+        $this->enableCsrfValidation = false;
+
+        return parent::beforeAction($action);
+    }
+
     public function actionInlet()
     {
         $path = Yii::getAlias('@runtime')."/logs/services.log";
