@@ -79,4 +79,27 @@ class WorkflowController extends \yii\web\Controller
         return $this->render('testupload', ['model' => $model]);
     }
 
+    public function actionInlet()
+    {
+        $path = Yii::getAlias('@runtime')."/logs/services.log";
+        file_put_contents($path,date("r").":\n\n", FILE_APPEND);
+        file_put_contents($path,file_get_contents('php://input'), FILE_APPEND);
+        file_put_contents($path,"\n", FILE_APPEND);
+    }    
+
+    public function actionAppealsinut()
+    {
+        $path = Yii::getAlias('@runtime')."/logs/appeals.log";
+        file_put_contents($path,date("r").":\n\n", FILE_APPEND);
+        file_put_contents($path,file_get_contents('php://input'), FILE_APPEND);
+        file_put_contents($path,"\n", FILE_APPEND);
+    }  
+    
+    public function actionDoscinput()
+    {
+        $path = Yii::getAlias('@runtime')."/logs/docs.log";
+        file_put_contents($path,date("r").":\n\n", FILE_APPEND);
+        file_put_contents($path,file_get_contents('php://input'), FILE_APPEND);
+        file_put_contents($path,"\n", FILE_APPEND);
+    }      
 }
