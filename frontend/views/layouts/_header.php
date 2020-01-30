@@ -114,6 +114,9 @@ if (!Yii::$app->user->isGuest)
                             }
                             else
                                 $userTitle = 'Личный кабинет';
+
+                            if (mb_strlen($userTitle) > 20)
+                                $userTitle = mb_substr($userTitle, 0, 17) . '...';                                
                         ?>
                         <span class="gosbar_btn-text"><?=$userTitle?></span>
                         <span class="material-icons gosbar-icon gosbar-icon__right">arrow_drop_down</span>
