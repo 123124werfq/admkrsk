@@ -55,7 +55,7 @@ function addInput(block)
 
 $(document).ready(function() {
 
-    $(".ajax-form").submit(function(e){
+    /*$(".ajax-form").submit(function(e){
 
         var $form = $(this);
 
@@ -71,7 +71,7 @@ $(document).ready(function() {
 
         e.preventDefault();
         return false;
-    });
+    });*/
 
     var curpage = 0;
 
