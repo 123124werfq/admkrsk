@@ -24,7 +24,6 @@ class FormDynamic extends DynamicModel
 
         $this->form = $form;
         $this->inputs = $form->getInputs()->indexBy('id_input')->all();
-        $this->data = $data;
 
         foreach ($this->inputs as $input)
         {
@@ -35,12 +34,16 @@ class FormDynamic extends DynamicModel
                 $attr = $input->typeOptions->esia;
 
                 if (!empty($esia->$attr))
-                    $data[$input->id_input] = $esia->$attr;
+                    $data[$input->fieldname] = $esia->$attr;
             }
 
-            if (!empty($data[$input->alias]))
-                $attributes['input'.$input->id_input] = $data[$input->alias];
+            if (!empty($data[$input->fieldname]))
+                $attributes['input'.$input->id_input] = $data[$input->fieldname];
+            else
+                $attributes['input'.$input->id_input] = '';
         }
+
+        $this->data = $data;
 
         parent::__construct($attributes, $config);
 
