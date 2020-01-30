@@ -90,7 +90,6 @@ class EsiaUser extends \yii\db\ActiveRecord
             return false;
     }
 
-
     /**
      * {@inheritdoc}
      */
