@@ -173,6 +173,20 @@ return [
         'roles' => [
             'menu.gallery' => ['class' => Gallery::class],
         ],
+        'submenu' => [
+            'gallery-group' => [
+                'title' => 'Группы галерей',
+                'roles' => [
+                    'menu.gallery' => ['class' => Gallery::class],
+                ]
+            ],
+            'gallery' => [
+                'title' => 'Фотогаллерии',
+                'roles' => [
+                    'menu.gallery' => ['class' => Gallery::class],
+                ]
+            ],
+        ]
     ],
     'project' => [
         'title' => 'Проекты и события',

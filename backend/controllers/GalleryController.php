@@ -9,6 +9,7 @@ use Yii;
 use common\models\Gallery;
 use backend\models\search\GallerySearch;
 use yii\base\InvalidConfigException;
+use yii\db\Exception;
 use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -215,12 +216,14 @@ class GalleryController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws InvalidConfigException
+     * @throws Exception
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->updateGroups();
             $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['index', 'id' => $model->id_gallery]);
         }
