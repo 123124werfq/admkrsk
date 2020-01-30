@@ -51,7 +51,7 @@ class Helper
 	}
 
 
-	public static function runContentWidget($content, $page, $recordData=[]])
+	public static function runContentWidget($content, $page, $recordData=[])
 	{
 		function parseAttributesFromTag($tag, $recordData=[])
 		{

@@ -306,7 +306,8 @@ class Collection extends ActiveRecord
                     $where = [$filter['operator'], $filter['id_column'], $filter['value']];
                     if ($key == 0) {
                         $query->where($where);
-                    } else {
+                    } else
+                    {
                         $query->andWhere($where);
                     }
                 }
