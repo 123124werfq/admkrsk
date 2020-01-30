@@ -68,15 +68,19 @@ class Helper
 		        $attrName = $match[1];
 		        $attrValue = is_numeric($match[2]) ? (int)$match[2] : trim($match[2]);
 
-		        foreach ($recordData as $alias => $value)
-		        	$attrValue = str_replace("{{$alias}}", $value, $attrValue);
-
 		        $result[$attrName] = $attrValue;
 		    }
 
 		    // новый формат передачи данных не конфликтный со старым
 		    if (!empty($result['encodedata']))
-		    	$result = json_decode(base64_decode($result['encodedata']),true);
+		    {
+		    	$result = base64_decode($result['encodedata']);
+
+		    	foreach ($recordData as $alias => $value)
+		        	$result = str_replace("{{".$alias."}}", $value, $result);
+
+		        $result = json_decode($result,true);
+		    }
 
 		    return $result;
 		}

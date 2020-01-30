@@ -302,8 +302,10 @@ class Collection extends ActiveRecord
             $options = json_decode($this->options, true);
 
             if (!empty($options['filters'])) {
-                foreach ($options['filters'] as $key => $filter) {
+                foreach ($options['filters'] as $key => $filter)
+                {
                     $where = [$filter['operator'], $filter['id_column'], $filter['value']];
+
                     if ($key == 0) {
                         $query->where($where);
                     } else
@@ -400,11 +402,20 @@ class Collection extends ActiveRecord
 
         if (!empty($options['filters'])) {
             foreach ($options['filters'] as $key => $filter) {
-                $where = [
-                    $filter['operator'],
-                    'col' . $filter['id_column'],
-                    (is_numeric($filter['value'])) ? (float)$filter['value'] : $filter['value']
-                ];
+
+                if ($filter['operator']=='not')
+                    $where = [
+                        $filter['operator'],
+                        'col' . $filter['id_column'],
+                        null
+                    ];
+                else
+                    $where = [
+                        $filter['operator'],
+                        'col' . $filter['id_column'],
+                        (is_numeric($filter['value'])) ? (float)$filter['value'] : $filter['value']
+                    ];
+
                 $query->andWhere($where);
             }
         }
