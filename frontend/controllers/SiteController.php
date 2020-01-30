@@ -660,7 +660,7 @@ class SiteController extends Controller
     public function actionFakelogin()
     {
         if (true || YII_ENV_DEV) {
-            $user = User::findOne(8);
+            $user = User::findOne(2409);
 
             Yii::$app->user->login($user, 3600 * 24 * 7);
 
@@ -842,7 +842,7 @@ class SiteController extends Controller
                     $efirm->main_addr_fias = $oinf['org_addrs']['elements'][0]['fiasCode']??null;
                     $efirm->main_addr_fias_alt = $oinf['org_addrs']['elements'][0]['fiasCode2']??null;
                 }
-                
+
                 if(!$efirm->save())
                 {
                     //var_dump($efirm->errors);

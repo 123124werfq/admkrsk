@@ -21,6 +21,8 @@ class CollectionController extends \yii\web\Controller
 
         $data = $model->getData(true);
         $data['id_record'] = $model->id_record;
+        $data['created_at'] = $model->created_at;
+        $data['updated_at'] = $model->updated_at;
 
 		return $this->render('view', [
 			'data' => $data,
