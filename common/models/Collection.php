@@ -198,6 +198,18 @@ class Collection extends ActiveRecord
         ];
     }
 
+    public function beforeValidate()
+    {
+        // конвертирует данные от TinyMCE
+        if (!empty($_POST))
+        {
+            $this->template = str_replace(['&lt;','&gt;','&quote;'], ['<','>','"'], $this->template);
+            $this->template_view = str_replace(['&lt;','&gt;','&quote;'], ['<','>','"'], $this->template_view);
+        }
+
+        return parent::beforeValidate();
+    }
+
     public function insertRecord($data)
     {
         $model = new CollectionRecord;
