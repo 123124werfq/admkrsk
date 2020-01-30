@@ -41,7 +41,6 @@ use Yii;
  */
 class EsiaUser extends \yii\db\ActiveRecord
 {
-    public $usertype, $living_addr_object;
     /**
      * {@inheritdoc}
      */
@@ -82,14 +81,13 @@ class EsiaUser extends \yii\db\ActiveRecord
 
     public function getFirmaddrfias()
     {
-        $model =  House::find()->where(['houseguid'=>$this->user->currentFirm->main_addr_fias])->one();
+        $model =  House::find()->where(['houseguid'=>$this->user->currentFirm->main_addr_fias_alt])->one();
 
         if (!empty($model))
             return $model->getArrayData();
         else
             return false;
     }
-
 
     /**
      * {@inheritdoc}
