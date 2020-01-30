@@ -38,7 +38,8 @@ class FormDynamic extends DynamicModel
                     $data[$input->id_input] = $esia->$attr;
             }
 
-            $attributes['input'.$input->id_input] = (isset($data[$input->alias]))?$data[$input->alias]:'';
+            if (!empty($data[$input->alias]))
+                $attributes['input'.$input->id_input] = $data[$input->alias];
         }
 
         parent::__construct($attributes, $config);
