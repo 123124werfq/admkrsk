@@ -51,9 +51,9 @@ class Helper
 	}
 
 
-	public static function runContentWidget($content, $page)
+	public static function runContentWidget($content, $page, $recordData=[]])
 	{
-		function parseAttributesFromTag($tag)
+		function parseAttributesFromTag($tag, $recordData=[])
 		{
 		    $pattern = '/(\w+)=[\'"]([^\'"]*)/';
 
@@ -67,6 +67,10 @@ class Helper
 
 		        $attrName = $match[1];
 		        $attrValue = is_numeric($match[2]) ? (int)$match[2] : trim($match[2]);
+
+		        foreach ($recordData as $alias => $value)
+		        	$attrValue = str_replace("{{$alias}}", $value, $attrValue);
+
 		        $result[$attrName] = $attrValue;
 		    }
 
@@ -86,7 +90,7 @@ class Helper
 
                 $class = 'frontend\widgets\\' . ucwords($matches[1][$key]) . 'Widget';
 
-                $content = '<div class="widget-wrapper">'.str_replace($match, $class::widget(['attributes' => $attributes, 'page' => $page]), $content).'</div>';
+                $content = '<div class="widget-wrapper">'.str_replace($match, $class::widget(['attributes' => $attributes, 'page' => $page, 'recordData'=>$recordData]), $content).'</div>';
 
 	            /*else if($matches[1][$key] == 'hrreserve')
 	            {
