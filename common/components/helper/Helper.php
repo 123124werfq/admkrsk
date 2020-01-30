@@ -86,11 +86,11 @@ class Helper
         if (!empty($matches[0]))
 	        foreach ($matches[0] as $key => $match)
 	        {
-	            $attributes = parseAttributesFromTag($match);
+	            $attributes = parseAttributesFromTag($match, $recordData);
 
                 $class = 'frontend\widgets\\' . ucwords($matches[1][$key]) . 'Widget';
 
-                $content = '<div class="widget-wrapper">'.str_replace($match, $class::widget(['attributes' => $attributes, 'page' => $page, 'recordData'=>$recordData]), $content).'</div>';
+                $content = '<div class="widget-wrapper">'.str_replace($match, $class::widget(['attributes' => $attributes, 'page' => $page]), $content).'</div>';
 
 	            /*else if($matches[1][$key] == 'hrreserve')
 	            {
