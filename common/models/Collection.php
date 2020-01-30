@@ -228,6 +228,18 @@ class Collection extends ActiveRecord
         $this->updateAttributes(['options']);
     }
 
+    public function beforeValidate()
+    {
+        // конвертирует данные от TinyMCE
+        if (!empty($_POST))
+        {
+            $this->template = str_replace(['&lt;','&gt;','&quote;'], ['<','>','"'], $this->template);
+            $this->template_view = str_replace(['&lt;','&gt;','&quote;'], ['<','>','"'], $this->template_view);
+        }
+
+        return parent::beforeValidate();
+    }
+
     public function insertRecord($data)
     {
         $model = new CollectionRecord;
@@ -379,11 +391,6 @@ class Collection extends ActiveRecord
         return $records;
     }
 
-    /*public function getRecords($options)
-    {
-
-    }*/
-
     public function getDataQueryByOptions($options, array $search_columns = [])
     {
         if (!empty($this->id_parent_collection)) {
@@ -463,7 +470,8 @@ class Collection extends ActiveRecord
         foreach ($this->parent->columns as $key => $column) {
             $options[] = [
                 'id_column' => $column->id_column,
-                'value' => '',
+                'group'=>'',
+                'show_for_searchcolumn'=>'',
             ];
         }
 

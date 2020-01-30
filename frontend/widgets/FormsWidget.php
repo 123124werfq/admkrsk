@@ -30,6 +30,12 @@ class FormsWidget extends \yii\base\Widget
         if (!empty($this->attributes['id']))
             $this->form = Form::findOne($this->attributes['id']);
 
+        if (!empty($this->attributes['data']))
+        {
+            $this->data = json_decode($this->attributes['data'],true);
+            $this->inputs['postData'] = json_encode($this->data);
+        }
+
         if (empty($this->form))
         	return false;
 
@@ -42,8 +48,8 @@ class FormsWidget extends \yii\base\Widget
         	'form'=>$this->form,
             'model'=>$model,
             'inputs'=>$this->inputs,
+            'data'=>$this->data,
             'action'=>$this->action,
-
             'arrayGroup'=>$this->arrayGroup,
             'activeForm'=>$this->activeForm,
         ]);

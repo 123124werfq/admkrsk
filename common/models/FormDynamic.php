@@ -13,6 +13,8 @@ class FormDynamic extends DynamicModel
 {
     public $inputs;
     public $form;
+    public $data;
+    public $postData;
 
     //private $_properties;
 
@@ -21,7 +23,7 @@ class FormDynamic extends DynamicModel
         $attributes = [];
 
         $this->form = $form;
-        $this->inputs = FormInput::find()->where(['id_form' => $form->id_form])->indexBy('id_input')->all();
+        $this->inputs = $form->getInputs()->indexBy('id_input')->all();
 
         foreach ($this->inputs as $input)
         {
@@ -32,11 +34,16 @@ class FormDynamic extends DynamicModel
                 $attr = $input->typeOptions->esia;
 
                 if (!empty($esia->$attr))
-                    $data[$input->id_input] = $esia->$attr;
+                    $data[$input->fieldname] = $esia->$attr;
             }
 
-            $attributes['input'.$input->id_input] = (isset($data[$input->id_input]))?$data[$input->id_input]:'';
+            if (!empty($data[$input->fieldname]))
+                $attributes['input'.$input->id_input] = $data[$input->fieldname];
+            else
+                $attributes['input'.$input->id_input] = '';
         }
+
+        $this->data = $data;
 
         parent::__construct($attributes, $config);
 
@@ -68,7 +75,7 @@ class FormDynamic extends DynamicModel
         }
     }
 
-    public function prepareData($columnAsIndex=false, $post=null)
+    public function prepareData($columnAsIndex=true, $post=null)
     {
         $data = [];
 
@@ -310,8 +317,22 @@ class FormDynamic extends DynamicModel
                             $data[$index] = $ids;
                         }
                         else
-                            $data[$index] = $data[$index];
-                            //$data[$index] = json_encode($data[$index]);
+                        {
+                            /*$records = CollectionRecord::find()->where(['id_record' => $this->$attribute])->all();
+
+                            $output = [];
+                            foreach ($records as $key => $record)
+                            {
+                                $data = $record->getData(false,[$input->id_collection_column]);
+                                $output[$record->id_record] = $data[$input->id_collection_column];
+                            }
+
+                            var_dump($output);
+                            die();
+
+                            $data[$index] = $output;*/
+                            $data[$index] = $this->$attribute;
+                        }
                         break;
                     case CollectionColumn::TYPE_DATE:
                     case CollectionColumn::TYPE_DATETIME:
@@ -353,6 +374,19 @@ class FormDynamic extends DynamicModel
 
                         break;
                 }
+            }
+        }
+
+        if (!empty(Yii::$app->request->post('postData')))
+        {
+            $postData = json_decode(Yii::$app->request->post('postData'),true);
+
+            if (!empty($postData))
+            {
+                $columns = $this->form->collection->getColumns()->andWhere(['alias'=>array_keys($postData)])->indexBy('alias')->all();
+
+                foreach ($columns as $alias => $column)
+                    $data[$column->id_column] = $postData[$alias];
             }
         }
 

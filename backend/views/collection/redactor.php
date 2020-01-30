@@ -158,16 +158,32 @@ else
         <div class="row">
             <div class="col-sm-5">
                 <div class="form-group">
-                    <?=Html::dropDownList("ViewColumns[$key][id_column]",$data['id_column'],$columns,['class'=>'form-control','id'=>'CollectionColumn_id_column_'.$key,'placeholder'=>'Выберите колонку']);?>
+                    <?=Html::dropDownList("ViewColumns[$key][id_column]",$data['id_column'],$columns,['class'=>'form-control','id'=>'CollectionColumn_id_column_'.$key]);?>
                 </div>
             </div>
-            <!--div class="col-sm-6">
-                <div class="form-group">
-                    <?= ''//Html::checkBoxtInput("ViewColumns[$key][is_link]",$data['value'],['class'=>'form-control','id'=>'value_'.$key,'placeholder'=>'Это ссылка на элемент']);?>
-                </div>
-            </div-->
+            <div class="col-sm-6">
+                <label>
+                    <?=Html::checkBox("showdetails",'',['class'=>'showdetails','id'=>'CollectionColumn_showdetails_'.$key]);?>
+
+                    опции
+                </label>
+            </div>
             <div class="col-sm-1 col-close">
                 <a class="close btn" href="#">&times;</a>
+            </div>
+            <div class="col-sm-12 hide flex">
+                <div class="row">
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <?=Html::textInput("ViewColumns[$key][group]",$data['options']['group']??'',['class'=>'form-control','id'=>'CollectionColumn_group_'.$key,'placeholder'=>'Введите группу']);?>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <?=Html::dropDownList("ViewColumns[$key][show_for_searchcolumn]",$data['show_for_searchcolumn'],$columns,['class'=>'form-control','id'=>'CollectionColumn_show_for_searchcolumn_'.$key,'prompt'=>'Показывать если введено']);?>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <?php }?>
@@ -195,6 +211,7 @@ else
                     <?=Html::dropDownList("SearchColumns[$key][type]",$data['type'],[
                         0=>'Выпадающий список',
                         1=>'Поиск строкой',
+                        2=>'Поиск строкой, строгое соответствие',
                     ],['class'=>'form-control','id'=>'SearchColumns_type'.$key,'placeholder'=>'Выберите тип ввода']);?>
                 </div>
             </div>
@@ -215,7 +232,6 @@ else
         <button class="btn btn-primary" id="submit-redactor"><?= $model->isEdit ? 'Изменить' : 'Вставить'?></button>
     </center>
     <br/><br/><br/>
-
     <script>
         document.getElementById('submit-redactor').addEventListener('click', function (event) {
             $form = $("#collection-redactor");
@@ -239,6 +255,4 @@ else
        });
     </script>
 <?php }?>
-
-
 <?php ActiveForm::end(); ?>

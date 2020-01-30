@@ -369,6 +369,8 @@ class CollectionRecordController extends Controller
                             if (!empty($labels[$ckey]))
                                 $links[] = '<a href="/collection-record/update?id='.$id.'">'.$labels[$ckey].'</a>';
                         }
+                    else
+                        $links = $labels;
 
                     return implode('<br>', $links);
                 };

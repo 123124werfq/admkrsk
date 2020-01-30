@@ -35,9 +35,7 @@ if ($user) {
                 <div class="col-2-third order-xs-1">
                     <div class="content searchable">
                         <h1><?= $page->title ?></h1>
-                        <?php
-                            echo common\components\helper\Helper::runContentWidget($page);
-                        ?>
+                        <?=common\components\helper\Helper::runContentWidget($page->content,$page)?>
 
                         <?php if (!empty($page->medias)) { ?>
                             <div class="file-list">

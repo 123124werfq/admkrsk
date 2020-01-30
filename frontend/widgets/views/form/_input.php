@@ -74,19 +74,21 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
             case CollectionColumn::TYPE_DATE:
                 $options['type'] = 'date';
 
-                if (!is_numeric($model->$clearAttribute))
+                if (!is_numeric($model->$clearAttribute) && (!empty($model->$clearAttribute)))
                     $model->$clearAttribute = strtotime($model->$clearAttribute);
 
-                $model->$clearAttribute = date('Y-m-d', $model->$clearAttribute);
+                if (!empty($model->$clearAttribute))
+                    $model->$clearAttribute = date('Y-m-d', $model->$clearAttribute);
 
                 echo $form->field($model, $attribute)->textInput($options);
                 break;
             case CollectionColumn::TYPE_DATETIME:
 
-                if (!is_numeric($model->$clearAttribute))
+                if (!is_numeric($model->$clearAttribute) && (!empty($model->$clearAttribute)))
                     $model->$clearAttribute = strtotime($model->$clearAttribute);
 
-                $model->$clearAttribute = date('Y-m-d\TH:i:s', $model->$clearAttribute);
+                if (!empty($model->$clearAttribute))
+                    $model->$clearAttribute = date('Y-m-d\TH:i:s', $model->$clearAttribute);
 
                 $options['type'] = 'datetime-local';
                 echo $form->field($model, $attribute)->textInput($options);
@@ -538,9 +540,10 @@ JS;
                 $records = [];
 
                 if (!empty($ids))
-                    $records = CollectionRecord::find()->where(['id_record' => array_keys($ids)])->all();
+                    $records = CollectionRecord::find()->where(['id_record' => array_keys($ids)])->indexBy('id_record')->all();
 
-                if (!empty($options['accept_add'])) {
+                if (!empty($options['accept_add']))
+                {
                     echo '<div id="subforms' . $input->id_input . '">';
 
                     if (empty($records))
@@ -566,12 +569,29 @@ JS;
                     echo '</div>';
 
                     echo '<div class="collections-action-buttons"><a data-id="' . $input->id_input . '" data-group="subforms' . $input->id_input . '" class="btn btn__secondary form-copy" href="javascript:">Добавить еще</a></div>';
-                } else {
+                } else
+                {
                     $value = [];
 
-                    foreach ($records as $key => $record)
-                        if (isset($ids[$record->id_record]))
-                            $value[$record->id_record] = $ids[$record->id_record];
+                    foreach ($ids as $id => $label)
+                        if (isset($records[$id]))
+                            $value[(string)$id] = $label;
+
+                    if (!empty($options['sortable']))
+                    {
+$script = <<< JS
+setTimeout(function(){
+    console.log(123);
+$("#{$options['id']}").next().find('.select2-selection__rendered').sortable({
+      stop: function(event, ui){
+        var id = ui.item.data('select2-id');
+        var index = ui.item.index();
+        $("#{$options['id']} option[data-select2-id="+id+"]").insertBefore($("#{$options['id']} option:eq("+index+")"));
+      }
+    }).disableSelection();},1000);
+JS;
+                        $this->registerJs($script, yii\web\View::POS_END);
+                    }
 
                     echo $form->field($model, $attribute)->widget(Select2::class, [
                         'data' => $value,
