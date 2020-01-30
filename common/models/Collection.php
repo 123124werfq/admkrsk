@@ -457,6 +457,21 @@ class Collection extends ActiveRecord
         return [];
     }
 
+    public function getViewColumnsOrFirstColumn()
+    {
+        $options = json_decode($this->options, true);
+        if (isset($options['columns'])) {
+            return $options['columns'];
+        }
+        return [
+            [
+                'id_column' => $this->parent->columns[0]->id_column,
+                'group' => '',
+                'show_for_searchcolumn' => '',
+            ]
+        ];
+    }
+
     public function getViewColumns()
     {
         $options = json_decode($this->options, true);
