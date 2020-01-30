@@ -41,7 +41,6 @@ use Yii;
  */
 class EsiaUser extends \yii\db\ActiveRecord
 {
-    public $usertype;
     /**
      * {@inheritdoc}
      */
