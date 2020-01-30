@@ -751,7 +751,7 @@ class CollectionController extends Controller
                     'id_column' => $data['id_column'],
                     'group' => $data['group'],
                     'show_for_searchcolumn' => $data['show_for_searchcolumn'],
-                    'showdetails' => isset($data['showdetails'])? $data['showdetails'] : '',
+                    'showdetails' => isset($data['showdetails']) ? '1' : '',
                 ];
             }
         }
