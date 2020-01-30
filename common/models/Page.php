@@ -86,6 +86,9 @@ class Page extends ActiveRecord
             [['is_admin_notify'], 'boolean'],
             [['title', 'alias'], 'required'],
             [['is_partition'], 'boolean'],
+            ['id_parent', 'required', 'when' => function($model) {
+                return ($model->lft!=1);
+            }],
             [['content', 'path','notify_message'], 'string'],
             [['alias'], 'unique'],
             [['title', 'alias', 'seo_title', 'seo_description', 'seo_keywords'], 'string', 'max' => 255],
