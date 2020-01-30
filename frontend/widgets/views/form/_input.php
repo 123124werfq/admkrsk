@@ -74,7 +74,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
             case CollectionColumn::TYPE_DATE:
                 $options['type'] = 'date';
 
-                if (!is_numeric($model->$clearAttribute))
+                if (!is_numeric($model->$clearAttribute) && (!empty($model->$clearAttribute)))
                     $model->$clearAttribute = strtotime($model->$clearAttribute);
 
                 if (!empty($model->$clearAttribute))
@@ -84,12 +84,11 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 break;
             case CollectionColumn::TYPE_DATETIME:
 
-                if (!is_numeric($model->$clearAttribute))
+                if (!is_numeric($model->$clearAttribute) && (!empty($model->$clearAttribute)))
                     $model->$clearAttribute = strtotime($model->$clearAttribute);
 
                 if (!empty($model->$clearAttribute))
-
-                $model->$clearAttribute = date('Y-m-d\TH:i:s', $model->$clearAttribute);
+                    $model->$clearAttribute = date('Y-m-d\TH:i:s', $model->$clearAttribute);
 
                 $options['type'] = 'datetime-local';
                 echo $form->field($model, $attribute)->textInput($options);
