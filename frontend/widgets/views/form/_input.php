@@ -77,7 +77,8 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 if (!is_numeric($model->$clearAttribute))
                     $model->$clearAttribute = strtotime($model->$clearAttribute);
 
-                $model->$clearAttribute = date('Y-m-d', $model->$clearAttribute);
+                if (!empty($model->$clearAttribute))
+                    $model->$clearAttribute = date('Y-m-d', $model->$clearAttribute);
 
                 echo $form->field($model, $attribute)->textInput($options);
                 break;
@@ -85,6 +86,8 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
 
                 if (!is_numeric($model->$clearAttribute))
                     $model->$clearAttribute = strtotime($model->$clearAttribute);
+
+                if (!empty($model->$clearAttribute))
 
                 $model->$clearAttribute = date('Y-m-d\TH:i:s', $model->$clearAttribute);
 
