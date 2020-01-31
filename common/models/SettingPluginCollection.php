@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -26,11 +27,12 @@ class SettingPluginCollection extends ActiveRecord
      * @param string $settings
      * @param $collectionId
      * @return string|null
+     * @throws Exception
      */
     public static function setSettings(string $settings, $collectionId)
     {
         $setting = new SettingPluginCollection();
-        $setting->key = md5($settings);
+        $setting->key = Yii::$app->security->generateRandomString();
         $setting->id_collection = intval($collectionId);
         $setting->id_page = intval(Yii::$app->request->get('page_id', 0));
         $setting->settings = $settings;
