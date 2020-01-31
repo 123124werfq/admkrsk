@@ -472,6 +472,43 @@ class Collection extends ActiveRecord
         ];
     }
 
+    /**
+     * @param string $settings
+     * @return string|null
+     */
+    public function savePluginSettings(string $settings)
+    {
+        return SettingPluginCollection::setSettings($settings, $this->id_parent_collection);
+    }
+
+    /**
+     * @return int
+     */
+    public function deletePluginSettings()
+    {
+        return SettingPluginCollection::deleteAll([
+            'id_collection' => $this->id_parent_collection
+        ]);
+    }
+
+    /**
+     * @param $key
+     * @param $settings
+     * @return string|null
+     */
+    public function updatePluginSettings($key, $settings)
+    {
+        $oldSettings = SettingPluginCollection::getSettings($key);
+        if (!$oldSettings) {
+            return null;
+        }
+        $oldSettings->settings = $settings;
+        if ($oldSettings->save()) {
+            return $oldSettings->key;
+        };
+        return null;
+    }
+
     public function getViewColumns()
     {
         $options = json_decode($this->options, true);

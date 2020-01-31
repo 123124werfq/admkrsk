@@ -5,6 +5,11 @@ function getTinyContents(editor) {
     return  iframe.contentDocument.querySelector('html #tinymce').children;
 }
 
+function getPageId() {
+    let pageUrl = window.location.toString();
+    return pageUrl.split('?id=')[1];
+}
+
 (function() {
     var iframe = (function() {
         'use strict';
@@ -12,12 +17,13 @@ function getTinyContents(editor) {
         tinymce.PluginManager.add("collections", function(editor, url) {
 
             const CONTENT_ATTRIBUTE_NAME = 'data-encodedata';
+            const KEY_ATTRIBUTE_NAME = 'data-key';
 
             var _api = false;
 
             var _urlDialogConfig = {
                 title: 'Вставка списка',
-                url: '/collection/redactor',
+                url: '/collection/redactor?page_id=' + getPageId(),
                 buttons: [{
                     type: 'cancel',
                     name: 'cancel',
@@ -34,10 +40,10 @@ function getTinyContents(editor) {
                 height: 600
             };
 
-            function setEdit(collectionId, data) {
+            function setEdit(collectionId, search) {
                 editor.windowManager.openUrl({
                     ..._urlDialogConfig,
-                    url: '/collection/redactor?Collection[id_parent_collection]=' + collectionId + '&data=' + data + '&edit=1',
+                    url: '/collection/redactor?Collection[id_parent_collection]=' + collectionId + '&key=' + search + '&edit=1&page_id=' + getPageId(),
                 });
             }
 
@@ -45,12 +51,12 @@ function getTinyContents(editor) {
                 for (let item of getTinyContents(editor)) {
                     let collection = item.querySelector('collection');
                     if (collection) {
-                        let encodeData = collection.getAttribute(CONTENT_ATTRIBUTE_NAME);
-                        if (encodeData) {
+                        let key = collection.getAttribute(KEY_ATTRIBUTE_NAME);
+                        if (key) {
                             let collectionId = collection.getAttribute('data-id');
                             /** edit Collection with double click */
                             item.ondblclick = function () {
-                                setEdit(collectionId, encodeData);
+                                setEdit(collectionId, key);
                             };
                         }
                     }
@@ -72,13 +78,15 @@ function getTinyContents(editor) {
                     for (let item of getTinyContents(editor)) {
                         let collection = item.querySelector('collection');
                         if (collection) {
-                            let dataId = collection.getAttribute('data-id');
-                            if (dataId == value.id_collection) {
+                            let key = collection.getAttribute(KEY_ATTRIBUTE_NAME);
+                            if (key == value.key) {
+                                let dataId = collection.getAttribute('data-id');
                                 let encodeData = value.base64;
+                                let key = value.key;
                                 collection.setAttribute(CONTENT_ATTRIBUTE_NAME, encodeData);
-                                collection.setAttribute('data-id', dataId);
+                                collection.setAttribute(KEY_ATTRIBUTE_NAME, key);
                                 item.ondblclick = function () {
-                                    setEdit(dataId, encodeData);
+                                    setEdit(dataId, key);
                                 };
                             }
                         }
@@ -86,7 +94,7 @@ function getTinyContents(editor) {
 
                 } else {
                     /** behaviour of create collection */
-                    editor.insertContent('<p><collection data-id=' + value.id_collection + ' ' + CONTENT_ATTRIBUTE_NAME  + '="' + value.base64 + '">Список #' + value.id_collection + '.</collection></p>');
+                    editor.insertContent('<p><collection'+ ' '+ KEY_ATTRIBUTE_NAME + '=' + value.key +' data-id=' + value.id_collection + ' ' + CONTENT_ATTRIBUTE_NAME  + '="' + value.base64 + '">Список #' + value.id_collection + '.</collection></p>');
                     setEditableCollections();
                 }
 

@@ -409,7 +409,10 @@ class PageController extends Controller
     /**
      * Creates a new Page model.
      * If creation is successful, the browser will be redirected to the 'view' page.
+     * @param null $id_parent
      * @return mixed
+     * @throws InvalidConfigException
+     * @throws NotFoundHttpException
      */
     public function actionCreate($id_parent=null)
     {

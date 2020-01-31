@@ -3,9 +3,10 @@
 namespace backend\controllers;
 
 use backend\models\forms\CollectionConvertForm;
-use common\components\helper\JsonHelper;
 use common\models\Action;
+use common\models\SettingPluginCollection;
 use common\modules\log\models\Log;
+use Throwable;
 use Yii;
 use common\models\Collection;
 use common\models\CollectionRecord;
@@ -19,6 +20,7 @@ use yii\helpers\ArrayHelper;
 use yii\mongodb\Exception;
 use yii\db\Exception as DbException;
 use yii\validators\NumberValidator;
+use yii\web\HttpException;
 use yii\web\Response;
 use yii\web\UploadedFile;
 use yii\filters\AccessControl;
@@ -297,7 +299,7 @@ class CollectionController extends Controller
      * @param $id
      * @return string
      * @throws NotFoundHttpException
-     * @throws \Throwable
+     * @throws Throwable
      * @throws StaleObjectException
      */
     public function actionConvertType($id)
@@ -618,6 +620,10 @@ class CollectionController extends Controller
         ]);
     }
 
+    /**
+     * @return array|string
+     * @throws HttpException
+     */
     public function actionRedactor()
     {
         $this->layout = 'clear';
@@ -627,23 +633,35 @@ class CollectionController extends Controller
 
         /** configure and return changes of collection */
         if (isset($requestParams['configureEditCollection'])) {
-            $requestParams = array_merge($requestParams, JsonHelper::decodeBase64($requestParams['data']));
-            $model->mapPropsAndAttributes($requestParams['Collection']);
+            /** update plugin options */
+            $model->mapPropsAndAttributes(Yii::$app->request->post('Collection'));
             $model->isEdit = true;
-            return $this->configureJsonCollection($model);
+            $updatePluginOptions = $this->configureJsonCollection($model);
+            $jsonFormatOptions = base64_decode($updatePluginOptions['base64']);
+            $updatePluginOptions['key'] = $model->updatePluginSettings($requestParams['key'], $jsonFormatOptions);
+            return json_encode($updatePluginOptions);
         }
 
         /** open modal dialog for edit collection */
-        if (isset($requestParams['edit']) && isset($requestParams['data'])) {
-            $requestParams = JsonHelper::decodeBase64($requestParams['data']);
-            $model->mapPropsAndAttributes($requestParams);
+        if (isset($requestParams['edit']) && isset($requestParams['key'])) {
+            $pluginOptions = SettingPluginCollection::getSettings($requestParams['key']);
+            if (!$pluginOptions) {
+                throw new HttpException(400);
+            }
+            /** decode collection options */
+            $decodePluginOptions = json_decode($pluginOptions->settings,true);
+            $model->mapPropsAndAttributes($decodePluginOptions);
             $model->isEdit = true;
         }
 
         /** configure and return new data collection */
         if ($model->load($requestParams) && !empty(Yii::$app->request->post('json'))) {
             $model->mapPropsAndAttributes($requestParams['Collection']);
-            return $this->configureJsonCollection($model);
+            $configureJsonPluginOptions = $this->configureJsonCollection($model);
+            /** save plugin options */
+            $jsonFormatOptions = base64_decode($configureJsonPluginOptions['base64']);
+            $configureJsonPluginOptions['key'] = $model->savePluginSettings($jsonFormatOptions);
+            return json_encode($configureJsonPluginOptions);
         }
 
         if (Yii::$app->request->isAjax)
@@ -662,24 +680,23 @@ class CollectionController extends Controller
      */
     private function configureJsonCollection($model)
     {
-        $json = $this->saveView($model, true);
-        $json['id_collection'] = $model->id_parent_collection;
-        $json['template_view'] = $model->template_view;
-        $json['id_group'] = $model->id_group;
-        $json['link_column'] = $model->link_column;
-        $json['id_column_order'] = $model->id_column_order;
-        $json['order_direction'] = $model->order_direction;
-        $json['pagesize'] = $model->pagesize;
-        $json['table_head'] = $model->table_head;
-        $json['table_style'] = $model->table_style;
-        $json['show_download'] = $model->show_download;
-        $json['show_row_num'] = $model->show_row_num;
-        $json['show_on_map'] = $model->show_on_map;
-        $json['show_column_num'] = $model->show_column_num;
-        $json['base64'] = base64_encode(json_encode($json));
-        $json['jsonData'] = json_encode($json);
-        $json['isEdit'] = $model->isEdit;
-        return json_encode($json);
+        $collectionPluginSettings = $this->saveView($model, true);
+        $collectionPluginSettings['id_collection'] = $model->id_parent_collection;
+        $collectionPluginSettings['template_view'] = $model->template_view;
+        $collectionPluginSettings['id_group'] = $model->id_group;
+        $collectionPluginSettings['link_column'] = $model->link_column;
+        $collectionPluginSettings['id_column_order'] = $model->id_column_order;
+        $collectionPluginSettings['order_direction'] = $model->order_direction;
+        $collectionPluginSettings['pagesize'] = $model->pagesize;
+        $collectionPluginSettings['table_head'] = $model->table_head;
+        $collectionPluginSettings['table_style'] = $model->table_style;
+        $collectionPluginSettings['show_download'] = $model->show_download;
+        $collectionPluginSettings['show_row_num'] = $model->show_row_num;
+        $collectionPluginSettings['show_on_map'] = $model->show_on_map;
+        $collectionPluginSettings['show_column_num'] = $model->show_column_num;
+        $collectionPluginSettings['base64'] = base64_encode(json_encode($collectionPluginSettings));
+        $collectionPluginSettings['isEdit'] = $model->isEdit;
+        return $collectionPluginSettings;
     }
 
 
@@ -1054,7 +1071,7 @@ class CollectionController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
-     * @throws \Throwable
+     * @throws Throwable
      * @throws StaleObjectException
      */
     public function actionDelete($id)
