@@ -3,9 +3,9 @@
 namespace backend\controllers;
 
 use backend\models\forms\CollectionConvertForm;
+use common\components\helper\JsonHelper;
 use common\models\Action;
 use common\modules\log\models\Log;
-use moonland\phpexcel\Excel;
 use Yii;
 use common\models\Collection;
 use common\models\CollectionRecord;
@@ -16,7 +16,6 @@ use backend\models\forms\CollectionCombineForm;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Json;
 use yii\mongodb\Exception;
 use yii\db\Exception as DbException;
 use yii\validators\NumberValidator;
@@ -628,7 +627,7 @@ class CollectionController extends Controller
 
         /** configure and return changes of collection */
         if (isset($requestParams['configureEditCollection'])) {
-            $requestParams = array_merge($requestParams, Json::decode($requestParams['data'], true));
+            $requestParams = array_merge($requestParams, JsonHelper::decodeBase64($requestParams['data']));
             $model->mapPropsAndAttributes($requestParams['Collection']);
             $model->isEdit = true;
             return $this->configureJsonCollection($model);
@@ -636,7 +635,7 @@ class CollectionController extends Controller
 
         /** open modal dialog for edit collection */
         if (isset($requestParams['edit']) && isset($requestParams['data'])) {
-            $requestParams = Json::decode($requestParams['data'], true);
+            $requestParams = JsonHelper::decodeBase64($requestParams['data']);
             $model->mapPropsAndAttributes($requestParams);
             $model->isEdit = true;
         }
@@ -677,6 +676,7 @@ class CollectionController extends Controller
         $json['show_row_num'] = $model->show_row_num;
         $json['show_on_map'] = $model->show_on_map;
         $json['show_column_num'] = $model->show_column_num;
+        $json['base64'] = base64_encode(json_encode($json));
         $json['jsonData'] = json_encode($json);
         $json['isEdit'] = $model->isEdit;
         return json_encode($json);
