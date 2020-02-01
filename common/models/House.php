@@ -236,7 +236,8 @@ class House extends \yii\db\ActiveRecord
             'houseguid'=>$this->houseguid??'',
             'lat'=>$this->lat??'',
             'lon'=>$this->lon??'',
-            'postalcode'=>$this->postalcode??''
+            'postalcode'=>$this->postalcode??'',
+            'fullname'=>$this->getFullName(),
         ];
     }
 }
