@@ -16,6 +16,7 @@ use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\validators\NumberValidator;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
@@ -405,7 +406,14 @@ class PageController extends Controller
         {
             $model->id_parent = $id_parent;
             $parent = $this->findModel($id_parent);
-            $model->populateRelation('parent',$parent);
+
+            if (Page::hasEntityAccess($parent->id_page)) {
+                $model->populateRelation('parent',$parent);
+            } else {
+                throw new ForbiddenHttpException();
+            }
+        } elseif (!Yii::$app->user->can('admin.page')) {
+            throw new ForbiddenHttpException();
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate())
