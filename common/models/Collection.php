@@ -61,7 +61,6 @@ class Collection extends ActiveRecord
     const VERBOSE_NAME_PLURAL = 'Списки';
     const TITLE_ATTRIBUTE = 'name';
 
-
     /**
      * Is need to notify the administrator
      *
@@ -83,7 +82,11 @@ class Collection extends ActiveRecord
     public $show_row_num;
     public $show_column_num;
     public $show_on_map;
+    public $show_download;
     public $link_column;
+
+    public $table_head;
+    public $table_style;
 
     public $id_partitions = [];
 
@@ -107,8 +110,8 @@ class Collection extends ActiveRecord
             [['alias'], 'unique'],
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
-            [['id_parent_collection','id_box','id_column_order','order_direction','pagesize','show_row_num','show_column_num', 'notify_rule', 'show_on_map', 'id_column_map', 'link_column'], 'integer'],
-            [['filter', 'options','label'], 'safe'],
+            [['id_parent_collection','id_box','id_column_order','order_direction','pagesize','show_row_num','show_column_num', 'notify_rule', 'show_on_map', 'id_column_map', 'link_column','show_download'], 'integer'],
+            [['filter', 'options','label','table_head', 'table_style'], 'safe'],
             [['template','template_element','template_view','notify_message'], 'string'],
             [['is_authenticate'], 'boolean'],
             [['is_admin_notify'], 'boolean'],
@@ -143,11 +146,16 @@ class Collection extends ActiveRecord
             'id_column_order' => 'Сортировать по',
             'order_direction' => 'Направление сортировки',
             'is_authenticate' => 'Авторизация (API)',
+
             'pagesize'=>'Элементов на страницу',
             'show_column_num'=>'Показывать номер столбца',
             'show_row_num'=>'Показывать номер строки',
             'show_on_map'=>'Показать на карте',
             'id_column_map'=>'Колонка координат для показа на карте',
+            'table_head'=>'Шапка таблицы',
+            'table_style'=>'Стиль таблицы',
+            'show_download'=>'Показывать ссылку для скачивания',
+
             'created_at' => 'Создана',
             'created_by' => 'Кем создана',
             'updated_at' => 'Изменено',
@@ -188,6 +196,18 @@ class Collection extends ActiveRecord
                 'messageAttribute' => 'notify_message',
             ],
         ];
+    }
+
+    public function beforeValidate()
+    {
+        // конвертирует данные от TinyMCE
+        if (!empty($_POST))
+        {
+            $this->template = str_replace(['&lt;','&gt;','&quote;'], ['<','>','"'], $this->template);
+            $this->template_view = str_replace(['&lt;','&gt;','&quote;'], ['<','>','"'], $this->template_view);
+        }
+
+        return parent::beforeValidate();
     }
 
     public function insertRecord($data)
@@ -282,11 +302,14 @@ class Collection extends ActiveRecord
             $options = json_decode($this->options, true);
 
             if (!empty($options['filters'])) {
-                foreach ($options['filters'] as $key => $filter) {
+                foreach ($options['filters'] as $key => $filter)
+                {
                     $where = [$filter['operator'], $filter['id_column'], $filter['value']];
+
                     if ($key == 0) {
                         $query->where($where);
-                    } else {
+                    } else
+                    {
                         $query->andWhere($where);
                     }
                 }
@@ -341,11 +364,6 @@ class Collection extends ActiveRecord
         return $records;
     }
 
-    /*public function getRecords($options)
-    {
-
-    }*/
-
     public function getDataQueryByOptions($options, array $search_columns = [])
     {
         if (!empty($this->id_parent_collection)) {
@@ -384,11 +402,20 @@ class Collection extends ActiveRecord
 
         if (!empty($options['filters'])) {
             foreach ($options['filters'] as $key => $filter) {
-                $where = [
-                    $filter['operator'],
-                    'col' . $filter['id_column'],
-                    (is_numeric($filter['value'])) ? (float)$filter['value'] : $filter['value']
-                ];
+
+                if ($filter['operator']=='not')
+                    $where = [
+                        $filter['operator'],
+                        'col' . $filter['id_column'],
+                        null
+                    ];
+                else
+                    $where = [
+                        $filter['operator'],
+                        'col' . $filter['id_column'],
+                        (is_numeric($filter['value'])) ? (float)$filter['value'] : $filter['value']
+                    ];
+
                 $query->andWhere($where);
             }
         }
@@ -425,7 +452,8 @@ class Collection extends ActiveRecord
         foreach ($this->parent->columns as $key => $column) {
             $options[] = [
                 'id_column' => $column->id_column,
-                'value' => '',
+                'group'=>'',
+                'show_for_searchcolumn'=>'',
             ];
         }
 

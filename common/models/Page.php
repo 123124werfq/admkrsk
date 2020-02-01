@@ -89,6 +89,9 @@ class Page extends ActiveRecord
                 return ($model->lft!=1);
             }],
             [['is_partition'], 'boolean'],
+            ['id_parent', 'required', 'when' => function($model) {
+                return ($model->lft!=1);
+            }],
             [['content', 'path','notify_message'], 'string'],
             [['alias'], 'unique'],
             [['title', 'alias', 'seo_title', 'seo_description', 'seo_keywords'], 'string', 'max' => 255],

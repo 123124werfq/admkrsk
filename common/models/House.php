@@ -181,7 +181,7 @@ class House extends \yii\db\ActiveRecord
             $this->country->name . ', ' .
             $this->region->name . ', ' .
             ($this->subregion ? $this->subregion->name . ', ' : null) .
-            $this->city->name . ', ' .
+            ($this->city ? $this->city->name . ', ' : null) .
             ($this->district ? $this->district->name . ', ' : null) .
             $this->street->name . ', ' .
             $this->name;
@@ -214,5 +214,29 @@ class House extends \yii\db\ActiveRecord
         } else {
             self::updateAttributes(['sputnik_updated_at' => time()]);
         }
+    }
+
+    public function getArrayData()
+    {
+        return [
+            'country'=>$this->country->name??'',
+            'id_country'=>$this->id_country??'',
+            'region'=>$this->region->name??'',
+            'id_region'=>$this->id_region??'',
+            'subregion'=>$this->subregion->name??'',
+            'id_subregion'=>$this->id_subregion??'',
+            'city'=>$this->city->name??'',
+            'id_city'=>$this->id_city??'',
+            'district'=>$this->district->name??'',
+            'id_district'=>$this->id_district??'',
+            'street'=>$this->street->name??'',
+            'id_street'=>$this->id_street??'',
+            'house'=>$this->name??'',
+            'id_house'=>$this->id_house??'',
+            'houseguid'=>$this->houseguid??'',
+            'lat'=>$this->lat??'',
+            'lon'=>$this->lon??'',
+            'postalcode'=>$this->postalcode??''
+        ];
     }
 }

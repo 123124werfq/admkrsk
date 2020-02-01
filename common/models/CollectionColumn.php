@@ -92,6 +92,10 @@ class CollectionColumn extends \yii\db\ActiveRecord
                         '1'=>"Да",
                     ]
                 ],
+                'sortable'=>[
+                    'name'=>'Сортировка элементов',
+                    'type'=>'checkbox',
+                ],
             ],
             self::TYPE_CHECKBOX => [
                 'popup'=>[
@@ -249,7 +253,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
             self::TYPE_JSON => "Таблицы",
 
-            self::TYPE_ADDRESS => "Адрес строкой",
+            self::TYPE_ADDRESS => "Адрес",
             self::TYPE_ADDRESSES => "Несколько адресов",
             self::TYPE_REGION => 'Регион',
             self::TYPE_SUBREGION => 'Область',

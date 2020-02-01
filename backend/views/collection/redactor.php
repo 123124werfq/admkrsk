@@ -22,7 +22,8 @@ $operators = [
     '>='=>'>=',
     '<'=>'<',
     '<='=>'<=',
-    //'<>'=>'<>'
+    'not'=>'Не пусто',
+    '<>'=>'Не равно',
 ];
 
 if (empty($filtes))
@@ -81,14 +82,17 @@ else
 
     <?=$form->field($model, 'pagesize')->textInput(['type'=>'number','step'=>1,'min'=>1]);?>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?=$form->field($model, 'show_row_num')->checkBox();?>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?=$form->field($model, 'show_column_num')->checkBox();?>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?=$form->field($model, 'show_on_map')->checkBox();?>
+        </div>
+        <div class="col-md-3">
+            <?=$form->field($model, 'show_download')->checkBox();?>
         </div>
     </div>
 
@@ -148,7 +152,6 @@ else
     <a onclick="return addInput('view-filters')" href="#" class="btn btn-default">Добавить еще</a>
 
     <hr>
-
     <h3>Поля</h3>
     <br/>
     <div class="row">
@@ -161,16 +164,32 @@ else
         <div class="row">
             <div class="col-sm-5">
                 <div class="form-group">
-                    <?=Html::dropDownList("ViewColumns[$key][id_column]",$data['id_column'],$columns,['class'=>'form-control','id'=>'CollectionColumn_id_column_'.$key,'placeholder'=>'Выберите колонку']);?>
+                    <?=Html::dropDownList("ViewColumns[$key][id_column]",$data['id_column'],$columns,['class'=>'form-control','id'=>'CollectionColumn_id_column_'.$key]);?>
                 </div>
             </div>
-            <!--div class="col-sm-6">
-                <div class="form-group">
-                    <?= ''//Html::checkBoxtInput("ViewColumns[$key][is_link]",$data['value'],['class'=>'form-control','id'=>'value_'.$key,'placeholder'=>'Это ссылка на элемент']);?>
-                </div>
-            </div-->
+            <div class="col-sm-6">
+                <label>
+                    <?=Html::checkBox("showdetails",'',['class'=>'showdetails','id'=>'CollectionColumn_showdetails_'.$key]);?>
+
+                    опции
+                </label>
+            </div>
             <div class="col-sm-1 col-close">
                 <a class="close btn" href="#">&times;</a>
+            </div>
+            <div class="col-sm-12 hide flex">
+                <div class="row">
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <?=Html::textInput("ViewColumns[$key][group]",$data['options']['group']??'',['class'=>'form-control','id'=>'CollectionColumn_group_'.$key,'placeholder'=>'Введите группу']);?>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <?=Html::dropDownList("ViewColumns[$key][show_for_searchcolumn]",$data['show_for_searchcolumn'],$columns,['class'=>'form-control','id'=>'CollectionColumn_show_for_searchcolumn_'.$key,'prompt'=>'Показывать если введено']);?>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <?php break; }?>
@@ -198,6 +217,7 @@ else
                     <?=Html::dropDownList("SearchColumns[$key][type]",$data['type'],[
                         0=>'Выпадающий список',
                         1=>'Поиск строкой',
+                        2=>'Поиск строкой, строгое соответствие',
                     ],['class'=>'form-control','id'=>'SearchColumns_type'.$key,'placeholder'=>'Выберите тип ввода']);?>
                 </div>
             </div>
@@ -209,12 +229,15 @@ else
     </div>
     <a onclick="return addInput('search-columns')" href="#" class="btn btn-default">Добавить еще</a>
 
+    <?=$form->field($model, 'table_head')->textArea()->hint('Заполняется для нестандартных шапок таблиц. Количество колонок должно совпадать с количеством отображаемых столбцов');?>
+
+    <?=$form->field($model, 'table_style')->textArea();?>
+
     <br/><br/>
     <center>
         <button class="btn btn-primary" id="submit-redactor">Вставить</button>
     </center>
     <br/><br/><br/>
-s
     <script>
         document.getElementById('submit-redactor').addEventListener('click', function (event) {
             $form = $("#collection-redactor");
@@ -237,6 +260,4 @@ s
        });
     </script>
 <?php }?>
-
-
 <?php ActiveForm::end(); ?>

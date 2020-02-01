@@ -74,6 +74,62 @@ class FormInputController extends Controller
         }
     }
 
+    public function actionAssign($id_row)
+    {
+        $model = new FormInput();
+
+        $row = FormRow::findOne($id_row);
+        $form = $row->form;
+
+        $model->populateRelation('element', new FormElement);
+
+        $element = new FormElement;
+
+        if (Yii::$app->request->isAjax)
+        {
+            Yii::$app->assetManager->bundles = [
+                'yii\bootstrap\BootstrapAsset' => false,
+                'yii\web\JqueryAsset'=>false,
+                'yii\web\YiiAsset'=>false,
+            ];
+        }
+
+        if ($element->load(Yii::$app->request->post()) && $element->validate())
+        {
+            $model = FormInput::findOne($_POST['FormInput']['id_input']);
+
+            if (!empty($_POST['submit']) && !empty($model))
+            {
+                // создается элемент формы
+                $element->id_input = $model->id_input;
+                $element->id_row = $id_row;
+                $element->ord = Yii::$app->db->createCommand("SELECT count(*) FROM form_element WHERE id_row = $id_row")->queryScalar();
+                $element->save();
+
+                if (!Yii::$app->request->isAjax)
+                    return $this->redirect(['form/view', 'id' => $model->id_form]);
+                else
+                    return '';
+            }
+        }
+
+        $exist_inputs = $form->collection->form->getInputs()->select(['id_input','name'])->andWhere('id_input NOT IN (
+            SELECT id_input 
+                FROM form_element as fi
+                INNER JOIN form_row as fr ON fr.id_row = fi.id_row
+            WHERE fr.id_form = '.$form->id_form.')')->all();
+
+        if (Yii::$app->request->isAjax)
+            return $this->renderAjax('_form_assign',[
+                'model' => $model,
+                'exist_inputs'=>$exist_inputs
+            ]);
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
+
     /**
      * Creates a new FormInput model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -178,6 +234,12 @@ class FormInputController extends Controller
                 {
                     $model->column->alias = $model->fieldname;
                     $model->column->updateAttributes(['alias']);
+                }
+
+                if ($model->column->name != $model->name)
+                {
+                    $model->column->name = $model->name;
+                    $model->column->updateAttributes(['name']);
                 }
 
                 if (!Yii::$app->request->isAjax)

@@ -46,5 +46,3 @@ class MongoController extends Controller
         }
     }
 }
-
-

@@ -50,7 +50,7 @@ if ($model->isDeleted()) {
         <div class="panel-body">
             <div id="form-template">
             <?php Pjax::begin(['id' => 'form-template_pjax']) ?>
-                <?=$this->render('_form_view',['rows'=>$rows])?>
+                <?=$this->render('_form_view',['rows'=>$rows,'form'=>$model])?>
             <?php Pjax::end() ?>
             </div>
             <center>

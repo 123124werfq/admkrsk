@@ -37,7 +37,8 @@ $this->params['action-block'][] = Html::a('Конвертировать данн
 
 $this->params['action-block'][] = Html::a('Импортировать данные', ['/collection/import', 'id' => $model->id_collection]);
 
-if ($model->alias == 'institution') {
+if ($model->alias == 'institution')
+{
     $jobId = InstitutionImportJob::getJobId();
 
     if (!$jobId || (!Yii::$app->queue->isWaiting($jobId) && !Yii::$app->queue->isReserved($jobId) && Yii::$app->queue->isDone($jobId))) {
@@ -61,7 +62,10 @@ if ($model->alias == 'institution') {
             <?=Html::a('Колонки', ['collection-column/index', 'id' => $model->id_collection], ['class' => 'nav-link'])?>
         </li>
         <li>
-            <?=Html::a('Форма', ['form/view', 'id' => $model->id_form], ['class' => 'nav-link'])?>
+            <?=Html::a('Главная форма', ['form/view', 'id' => $model->id_form], ['class' => 'nav-link'])?>
+        </li>
+        <li>
+            <?=Html::a('Формы', ['form/collection', 'id' => $model->id_collection], ['class' => 'nav-link'])?>
         </li>
     </ul>
     <div class="tab-content">

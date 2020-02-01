@@ -47,7 +47,7 @@ var tinymceConfig = {
     contextmenu: "link image imagetools table spellchecker",
     toolbar: "code fullscreen | undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist blockquote | link image media",
     language: 'ru',
-    extended_valid_elements : "pagenews[data-id],hrreserve[pagesize],collection[data-id],gallery[data-id|data-limit|data-type],forms[data-id]",
+    extended_valid_elements : "pagenews[data-id],hrreserve[pagesize],collection[data-id|data-encodedata],gallery[data-id|data-limit|data-type],forms[data-id|data-data]",
     content_css : "/js/tinymce/admin.css",
     image_title: true,
     images_upload_url: '/media/tinymce',
@@ -253,6 +253,11 @@ function reordModels($block,$data)
 
 jQuery(document).ready(function()
 {
+    $('body').delegate(".showdetails",'change',function(){
+      console.log('123');
+      $(this).parent().parent().next().next().toggleClass('hide');
+    });
+
     $("#collection-redactor #collection-id_parent_collection").change(function(){
         $form = $("#collection-redactor");
 

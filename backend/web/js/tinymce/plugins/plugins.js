@@ -30,17 +30,7 @@
                 if (value.id_collection == '')
                     editor.windowManager.alert('Вы не выбрали список');
                 else {
-                    editor.insertContent('<collection \
-                                            data-columns=\'' + JSON.stringify(value) + '\' \
-                                            data-id="' + value.id_collection + '" \
-                                            data-template="' + value.template + '" \
-                                            data-group="' + value.group + '" \
-                                            data-pagesize="' + value.pagesize + '" \
-                                            data-sort="' + value.sort + '" \
-                                            data-show_on_map="' + value.show_on_map + '" \
-                                            data-show_row_num="' + value.show_row_num + '" \
-                                            data-show_column_num="' + value.show_column_num + '" \
-                                            data-dir="' + value.dir + '">Список #' + value.id_collection + '.</collection>');
+                    editor.insertContent('<collection data-encodedata="'+value.base64+'">Список #' + value.id_collection + '.</collection>');
                 }
 
                 $(".tox-button--secondary").click();

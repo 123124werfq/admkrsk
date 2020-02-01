@@ -660,7 +660,7 @@ class SiteController extends Controller
     public function actionFakelogin()
     {
         if (true || YII_ENV_DEV) {
-            $user = User::findOne(8);
+            $user = User::findOne(2409);
 
             Yii::$app->user->login($user, 3600 * 24 * 7);
 
@@ -793,9 +793,13 @@ class SiteController extends Controller
 
         if(isset($roles['elements']) && count($roles['elements']))
         {
+            $oids = [];
+
             foreach($roles['elements'] as $firmInfo)
             {
                 $efirm = EsiaFirm::find()->where(['oid' => $firmInfo['oid']])->one();
+
+                $oids[] = $firmInfo['oid'];
 
                 if(!$efirm) {
                     $efirm = new EsiaFirm;
@@ -815,14 +819,47 @@ class SiteController extends Controller
                 }
             }
 
+            $orgsInfo = $esia->getOrgInfo($oids, ['org_shortname', 'org_fullname', 'org_type', 'org_ogrn', 'org_inn', 'org_leg', 'org_kpp', 'org_ctts', 'org_addrs'], $_REQUEST['code'], $_REQUEST['state']);
+
+            foreach($orgsInfo as $foid => $oinf)
+            {
+                $efirm = EsiaFirm::find()->where(['oid' => $foid])->one();
+                if(!$efirm)
+                {
+                    continue;
+                }
+
+                if(isset($oinf['common']))
+                {
+                    $efirm->inn = $oinf['common']['inn']??null;
+                    $efirm->kpp = $oinf['common']['kpp']??null;
+                    $efirm->leg = $oinf['common']['leg']??null;
+                }
+
+                if(isset($oinf['org_addrs']['elements'][0]))
+                {
+                    $efirm->main_addr = ($oinf['org_addrs']['elements'][0]['zipCode']??'') . " " .($oinf['org_addrs']['elements'][0]['addressStr']??'') . " " . ($oinf['org_addrs']['elements'][0]['house']??'');
+                    $efirm->main_addr_fias = $oinf['org_addrs']['elements'][0]['fiasCode']??null;
+                    $efirm->main_addr_fias_alt = $oinf['org_addrs']['elements'][0]['fiasCode2']??null;
+                }
+
+                if(!$efirm->save())
+                {
+                    //var_dump($efirm->errors);
+                    //die();
+                }
+            }
+
             $actveFirms = $user->getActiveFirms();
 
             if($actveFirms)
+            {
                 return $this->render('firmselect', [
                     'fio' => Yii::$app->user->identity->username,
                     'firms' => $actveFirms,
                     'backUrl' => $backUrl
                 ]);
+            }
         }
 
         return $this->redirect($backUrl);

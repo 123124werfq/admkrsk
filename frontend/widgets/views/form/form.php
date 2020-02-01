@@ -27,11 +27,13 @@
 
 	<?php $activeForm = ActiveForm::begin([
 		'action'=>($action===null)?'/form/create?id='.$form->id_form:$action,
+		'enableAjaxValidation'=>false,
 		'fieldConfig' => [
 	        'template' => '{input}{error}',
 	    ],
 		'options'=>[
-			'enctype'=>'multipart/form-data'
+			'enctype'=>'multipart/form-data',
+			'class'=>'ajax-form'
 		]
 	]); ?>
 
@@ -39,7 +41,13 @@
 			echo Html::hiddenInput($name,$value);
 	?>
 
-	<?=$this->render('_rows',['rows'=>$form->rows,'model'=>$model,'activeForm'=>$activeForm,'arrayGroup'=>$arrayGroup])?>
+	<?=$this->render('_rows',[
+		'rows'=>$form->rows,
+		'model'=>$model,
+		'activeForm'=>$activeForm,
+		'arrayGroup'=>$arrayGroup
+	])?>
+
 	<div class="form-end">
         <div class="form-end_right">
             <input type="submit" class="btn btn__secondary" value="Отправить">
