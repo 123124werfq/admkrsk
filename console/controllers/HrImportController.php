@@ -27,10 +27,10 @@ class HrImportController extends Controller
                 printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
 
                 //print_r($data);
-                
+
                 $anketa = [];
                 $xml = simplexml_load_string($data[4]);
-                for ($vkey=0; $vkey < count($xml->value); $vkey++) 
+                for ($vkey=0; $vkey < count($xml->value); $vkey++)
                 {
                     $item = $xml->value[$vkey];
                     foreach($xml->value[$vkey]->attributes() as $a => $b) {
@@ -40,27 +40,27 @@ class HrImportController extends Controller
                         }
                     }
                 }
-                
-                for ($rkey=0; $rkey < count($xml->repeat); $rkey++) 
+
+                for ($rkey=0; $rkey < count($xml->repeat); $rkey++)
                 {
                     $record = [];
                     foreach($xml->repeat[$rkey]->attributes() as $a => $b) {
                         if($a == 'id')
                         {
                             $anketa[$b->__toString()] = [];
-                         
-                            
+
+
                             for($rwkey = 0; $rwkey < count($xml->repeat[$rkey]->row); $rwkey++)
                             {
                                 $anketa[$b->__toString()][$rwkey] = [];
-                                for ($rvkey=0; $rvkey < count($xml->repeat[$rkey]->row[$rwkey]->values[0]->value) ; $rvkey++) { 
+                                for ($rvkey=0; $rvkey < count($xml->repeat[$rkey]->row[$rwkey]->values[0]->value) ; $rvkey++) {
                                     $attr = $xml->repeat[$rkey]->row[$rwkey]->values->value[$rvkey]->attributes();
 
                                     $anketa[$b->__toString()][$rwkey][$attr['id']->__toString()] = $xml->repeat[$rkey]->row[$rwkey]->values->value[$rvkey]->__toString();
                                 }
                             }
                         }
-                    }                    
+                    }
                 }
 
                 $csv[] = [
@@ -88,12 +88,11 @@ class HrImportController extends Controller
 
        var_dump($csv[0]);
 
-
        $anketaCollection = Collection::findOne(['alias'=>'reserv_anketa']);
        $experienceCollection = Collection::findOne(['alias'=>'reserve_work_experience']);
        $educationCollection = Collection::findOne(['alias'=>'reserve_education']);
        $addeducationCollection = Collection::findOne(['alias'=>'reserve_additional_education']);
-      
+
        foreach ($csv as $anketa) {
         // заполняем подколлекции
             // образование
@@ -113,15 +112,16 @@ class HrImportController extends Controller
                     ];
 
                     var_dump($data);
- 
+
                     $eductionRecord = $educationCollection->insertRecord($data);
+
                     if($eductionRecord)
                         $eductionRecords[] = $eductionRecord->id_record;
-                        
+
                 }
             }
 
-            var_dump($eductionRecords); 
+            var_dump($eductionRecords);
        }
 
 

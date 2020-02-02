@@ -203,6 +203,8 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
             foreach ($columns as $key => $column)
             {
+                $value = '';
+
                 if (isset($this->data[$column->alias]))
                     $value = $this->data[$column->alias];
                 elseif (isset($this->data[$column->id_column]))
@@ -230,8 +232,6 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 $dataMongo = array_merge($dataMongo,$this->getMongoDate($value,$column));
                 /*$dataMongo['col'.$column->id_column] = ($column->type == CollectionColumn::TYPE_INTEGER)?(float)$value:$value;*/
             }
-
-            var_dump($dataMongo);
 
             $dataMongo['id_record'] = $this->id_record;
 
