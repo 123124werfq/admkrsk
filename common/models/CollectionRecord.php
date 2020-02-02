@@ -132,6 +132,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
         {
             case CollectionColumn::TYPE_INTEGER:
                 $output[$value_index] = (float)$value;
+                break;
             case CollectionColumn::TYPE_CHECKBOXLIST:
                 $output[$search_index] = implode("\r\n", $value);
                 break;
