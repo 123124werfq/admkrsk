@@ -1,7 +1,9 @@
 <?php
 
 namespace console\controllers;
+
 use common\models\Collection;
+use common\models\HrProfile;
 
 use Yii;
 use yii\console\Controller;
@@ -16,6 +18,7 @@ class HrImportController extends Controller
         $i = $count = 0;
         ini_set('memory_limit', '1048M');
         $csv = [];
+        $subtypes = [];
         $filePath = Yii::getAlias('@app'). '/assets/HR_Candidate3.csv';
 
         echo "Reading: ";
@@ -28,8 +31,24 @@ class HrImportController extends Controller
 
                 //print_r($data);
 
+                if(!isset($data[4]))
+                    continue;
+
                 $anketa = [];
-                $xml = simplexml_load_string($data[4]);
+                libxml_use_internal_errors(TRUE);
+                try{
+                    $xml = simplexml_load_string($data[4]);
+                } catch (Exception $e) {
+                    echo 'Caught exception: ' . $e->getMessage() . chr(10);
+                    echo 'Failed loading XML: ' . chr(10);
+                    foreach(libxml_get_errors() as $error) {
+                        echo '- ' . $error->message;
+                    }
+                }
+
+                if(!isset($xml->value))
+                    continue;
+
                 for ($vkey=0; $vkey < count($xml->value); $vkey++)
                 {
                     $item = $xml->value[$vkey];
@@ -49,6 +68,8 @@ class HrImportController extends Controller
                         {
                             $anketa[$b->__toString()] = [];
 
+                            if(!\in_array($b->__toString(),$subtypes))
+                                $subtypes[] = $b->__toString();
 
                             for($rwkey = 0; $rwkey < count($xml->repeat[$rkey]->row); $rwkey++)
                             {
@@ -81,12 +102,15 @@ class HrImportController extends Controller
                     'deleted' => $data[16]
                 ];
 
-            break;
+            //break;
             }
             fclose($handle);
         }
 
+        echo "\n".count($csv)."\n";
+        var_dump($subtypes);
        var_dump($csv[0]);
+       die();
 
        $anketaCollection = Collection::findOne(['alias'=>'reserv_anketa']);
        $experienceCollection = Collection::findOne(['alias'=>'reserve_work_experience']);
@@ -96,10 +120,35 @@ class HrImportController extends Controller
        foreach ($csv as $anketa) {
         // заполняем подколлекции
             // образование
-            $eductionRecords = [];
+            $educationRecords = [];
             if(\is_array($anketa['anketaParsed']['education'])){
 
                 foreach ($anketa['anketaParsed']['education'] as $ekey => $education) {
+                    $fyear = explode(".", $education['eduYear']??0);
+                    $fyear = (int)end($fyear);
+
+                    $data = [
+                        'education_level' => $education['eduLevel']??'',
+                        'institution' => $education['eduCollege']??'',
+                        'finish_year' => $fyear,
+                        'speciality' => $education['speciality']??'',
+                        'qualification' => $education['eduQualification']??''
+                    ];
+
+                    $eductionRecord = $educationCollection->insertRecord($data);
+
+                    if($eductionRecord)
+                        $educationRecords[] = $eductionRecord->id_record;
+
+                }
+            }
+
+            //допобразование
+            $extraeductionRecords = [];
+            /*
+            if(\is_array($anketa['anketaParsed']['extraeducation'])){
+
+                foreach ($anketa['anketaParsed']['extraeducation'] as $ekey => $education) {
                     $fyear = explode(".", $education['eduYear']??0);
                     $fyear = (int)end($fyear);
 
@@ -120,9 +169,58 @@ class HrImportController extends Controller
 
                 }
             }
+            */
 
-            var_dump($eductionRecords);
-       }
+            // опыт работы
+            $experienceRecords = [];
+            if(\is_array($anketa['anketaParsed']['workexperience'])){
+
+                foreach ($anketa['anketaParsed']['workexperience'] as $ekey => $workexperience) {
+                
+                    $data = [
+                        'organization' => $workexperience['weName']??'',
+                        'position' => $workexperience['weJob']??'',
+                        'period_begin' => strtotime($workexperience['weStart']??0),
+                        'period_end' => strtotime($workexperience['weEnd']??0),
+                    ];
+
+                    $experienceRecord = $experienceCollection->insertRecord($data);
+
+                    if($experienceRecord)
+                        $experienceRecords[] = $experienceRecord->id_record;
+
+                }
+            }            
+//            var_dump($eductionRecords);
+
+            //создаём анкету
+
+            $data = [
+                '_firstname'            => $anketa['anketaParsed']['surname']??'',
+                '_secondname'           => $anketa['anketaParsed']['name']??'',
+                '_middlename'           => $anketa['anketaParsed']['patronymic']??'',
+                'surname'               => $anketa['anketaParsed']['surname']??'',
+                'name'                  => $anketa['anketaParsed']['name']??'',
+                'parental_name'         => $anketa['anketaParsed']['patronymic']??'',
+                'contact_phone'         => $anketa['anketaParsed']['openPhone']??'',
+                'email'                 => $anketa['anketaParsed']['email']??'',
+                'work_experience'       => ($anketa['anketaParsed']['totalWorkSpanYear']??0)*12 + ($anketa['anketaParsed']['totalWorkSpanMonth']??0),
+                'goverment_experience'  => ($anketa['anketaParsed']['totalStateServiceSpanYear']??0)*12 + ($anketa['anketaParsed']['totalStateServiceSpanMonth']??0),
+                'prizes'                => $anketa['anketaParsed']['promotion']??'',
+                'contact_phone_private'         => $anketa['anketaParsed']['phone']??'',
+                '_passport_number'      => $anketa['anketaParsed']['docNumber']??'',
+                '_passport_seria'       => $anketa['anketaParsed']['docSeries']??'',
+                'birthdate'             => strtotime($anketa['anketaParsed']['birthday']??0),
+                'work_expirience'       => $experienceRecords,
+                'additional_education'  => $extraeductionRecords,
+                'education'             => $educationRecords
+            ];
+
+            $anketaRecord = $anketaCollection->insertRecord($data);
+
+            // здесь добавляем профиль
+            
+        }
 
 
        //$xml = simplexml_load_string($csv[0]['anketaXML']);
