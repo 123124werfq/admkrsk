@@ -288,57 +288,26 @@ class FormDynamic extends DynamicModel
                                             if (!empty($collectionRecord->id_record))
                                                 $ids[] = $collectionRecord->id_record;
                                         }
-                                        else
-                                            print_r($insertData->attributes);
-
                                     }
                                 }
                             }
                         }
                         else
-                        {
-                            /*$records = CollectionRecord::find()->where(['id_record' => $this->$attribute])->all();
-
-                            $output = [];
-                            foreach ($records as $key => $record)
-                            {
-                                $data = $record->getData(false,[$input->id_collection_column]);
-                                $output[$record->id_record] = $data[$input->id_collection_column];
-                            }
-
-                            var_dump($output);
-                            die();
-
-                            $data[$index] = $output;*/
                             $data[$index] = $this->$attribute;
-                        }
-
-                        $labels = $this->getRecordLabelsByID($ids,$input);
-
-                        $output = [];
-                        foreach ($labels as $id_record => $label)
-                        {
-                            $output[] = [
-                                'id' = $id_record,
-                                'label' = $label,
-                            ];
-                        }
-
-                        $data[$index] = $output;
 
                         break;
                     case CollectionColumn::TYPE_DISTRICT:
                     case CollectionColumn::TYPE_STREET:
-                    case CollectionColumn::TYPE_COUNTRY:
+                    //case CollectionColumn::TYPE_COUNTRY:
                     case CollectionColumn::TYPE_CITY:
                     case CollectionColumn::TYPE_REGION:
                     case CollectionColumn::TYPE_SUBREGION:
-                        $output[$search_index] = $input->column->getValueByType($value);
+                        /*$output[$search_index] = $input->column->getValueByType($value);
                         $output[$value_index] = [
                             'value'=>$value,
                             'label'=>$output['search'],
-                        ];
-                        $data[$index] = trim((string)$this->$attribute);
+                        ];*/
+                        $data[$index] = $this->$attribute;
                         break;
                     case CollectionColumn::TYPE_DATE:
                     case CollectionColumn::TYPE_DATETIME:

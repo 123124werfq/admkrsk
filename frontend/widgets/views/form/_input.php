@@ -103,6 +103,10 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
             case CollectionColumn::TYPE_TEXTAREA:
                 echo $form->field($model, $attribute)->textArea($options);
                 break;
+            case CollectionColumn::TYPE_RICHTEXT:
+                $options['class'] .= ' redactor';
+                echo $form->field($model, $attribute)->textArea($options);
+                break;
             case CollectionColumn::TYPE_REPEAT:
                 echo '<div class="checkbox-group">
                             <label class="checkbox checkbox__ib">
