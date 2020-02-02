@@ -510,14 +510,8 @@ JS;
 
                 $value = [];
 
-                if (!empty($model->$attribute)) {
-                    /*if (is_array($model->$attribute))
-                        $record = \common\models\CollectionRecord::findOne(key($model->$attribute));
-                    else
-                        $record = \common\models\CollectionRecord::findOne((int)$model->$attribute);*/
-
-                    $value = $model->$attribute; // [$record->id_collection=>$record->name];
-                }
+                if (!empty($model->$attribute))
+                    $value = $model->$attribute;
 
                 echo $form->field($model, $attribute)->widget(Select2::class, [
                     'data' => $value,
@@ -585,12 +579,15 @@ JS;
                     {
 $script = <<< JS
 setTimeout(function(){
-    console.log(123);
+    var optpos = 0;
 $("#{$options['id']}").next().find('.select2-selection__rendered').sortable({
+      start: function(event, ui){
+        optpos = ui.item.index();        
+      },
       stop: function(event, ui){
-        var id = ui.item.data('select2-id');
         var index = ui.item.index();
-        $("#{$options['id']} option[data-select2-id="+id+"]").insertBefore($("#{$options['id']} option:eq("+index+")"));
+        console.log(optpos+' '+index);
+        $("#{$options['id']} option:eq("+optpos+")").insertAfter($("#{$options['id']} option:eq("+index+")"));
       }
     }).disableSelection();},1000);
 JS;

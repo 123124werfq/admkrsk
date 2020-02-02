@@ -112,8 +112,12 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     'id_column'=>$column->input->id_collection_column
                 ])->all();
 
+            $labelsByIndex = [];
             foreach ($labels as $lkey => $data)
-                $mongoLabels[$data['id_record']] = $data['value'];
+                $labelsByIndex[$data['id_record']] = $data['value'];
+
+            foreach ($ids as $key => $id)
+                $mongoLabels[$id] = $labelsByIndex[$id];
         }
 
         return $mongoLabels;
@@ -140,11 +144,12 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 $output[$search_index] = implode(' ', $value);
                 break;
             case CollectionColumn::TYPE_COLLECTION:
-                $label = $this->getLabelsByID($value);
+                $label = $this->getLabelsByID($value,$column);
                 if (count($label)>0)
-                    $output[$search_index] = $this->getLabelsByID(array_shift($label));
+                    $output[$search_index] = array_shift($label);
+                break;
             case CollectionColumn::TYPE_COLLECTIONS:
-                $output[$search_index] = json_encode($this->getLabelsByID($value),JSON_UNESCAPED_UNICODE);
+                $output[$search_index] = json_encode($this->getLabelsByID($value,$column),JSON_UNESCAPED_UNICODE);
                 break;
             case CollectionColumn::TYPE_DISTRICT:
             case CollectionColumn::TYPE_STREET:
