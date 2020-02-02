@@ -1,6 +1,7 @@
 <?php
 
 namespace console\controllers;
+use common\models\Collection;
 
 use Yii;
 use yii\console\Controller;
@@ -80,12 +81,50 @@ class HrImportController extends Controller
                     'deleted' => $data[16]
                 ];
 
-            //break;
+            break;
             }
             fclose($handle);
         }
 
-       //var_dump($csv[0]);
+       var_dump($csv[0]);
+
+
+       $anketaCollection = Collection::findOne(['alias'=>'reserv_anketa']);
+       $experienceCollection = Collection::findOne(['alias'=>'reserve_work_experience']);
+       $educationCollection = Collection::findOne(['alias'=>'reserve_education']);
+       $addeducationCollection = Collection::findOne(['alias'=>'reserve_additional_education']);
+      
+       foreach ($csv as $anketa) {
+        // заполняем подколлекции
+            // образование
+            $eductionRecords = [];
+            if(\is_array($anketa['anketaParsed']['education'])){
+
+                foreach ($anketa['anketaParsed']['education'] as $ekey => $education) {
+                    $fyear = explode(".", $education['eduYear']??0);
+                    $fyear = (int)end($fyear);
+
+                    $data = [
+                        'education_level' => $education['eduLevel']??'',
+                        'institution' => $education['eduCollege']??'',
+                        'finish_year' => $fyear,
+                        'speciality' => $education['speciality']??'',
+                        'qualification' => $education['eduQualification']??''
+                    ];
+
+                    var_dump($data);
+ 
+                    $eductionRecord = $educationCollection->insertRecord($data);
+                    if($eductionRecord)
+                        $eductionRecords[] = $eductionRecord->id_record;
+                        
+                }
+            }
+
+            var_dump($eductionRecords); 
+       }
+
+
        //$xml = simplexml_load_string($csv[0]['anketaXML']);
        //var_dump($xml->repeat[0]->row[0]->values);
     }
