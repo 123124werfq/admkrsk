@@ -87,7 +87,8 @@ class FormDynamic extends DynamicModel
             {
                 $index = ($columnAsIndex)?$input->id_column:$input->id_input;
 
-                switch ($input->type) {
+                switch ($input->type)
+                {
                     case CollectionColumn::TYPE_INTEGER:
                         $data[$index] = (float)$this->$attribute;
                         break;
@@ -97,31 +98,30 @@ class FormDynamic extends DynamicModel
                     case CollectionColumn::TYPE_JSON:
                         $data[$index] = json_encode($this->$attribute);
                         break;
-
                     case CollectionColumn::TYPE_ADDRESS:
 
                         $value = $this->$attribute;
 
                         $empty = [
-                                'country'=>'',
-                                'id_country'=>'',
-                                'region'=>'',
-                                'id_region'=>'',
-                                'subregion'=>'',
-                                'id_subregion'=>'',
-                                'city'=>'',
-                                'id_city'=>'',
-                                'district'=>'',
-                                'id_district'=>'',
-                                'street'=>'',
-                                'id_street'=>'',
-                                'house'=>'',
-                                'id_house'=>'',
-                                'houseguid'=>'',
-                                'lat'=>'',
-                                'lon'=>'',
-                                'postcode'=>''
-                            ];
+                                    'country'=>'',
+                                    'id_country'=>'',
+                                    'region'=>'',
+                                    'id_region'=>'',
+                                    'subregion'=>'',
+                                    'id_subregion'=>'',
+                                    'city'=>'',
+                                    'id_city'=>'',
+                                    'district'=>'',
+                                    'id_district'=>'',
+                                    'street'=>'',
+                                    'id_street'=>'',
+                                    'house'=>'',
+                                    'id_house'=>'',
+                                    'houseguid'=>'',
+                                    'lat'=>'',
+                                    'lon'=>'',
+                                    'postcode'=>''
+                                ];
 
                         if (!empty($value['house']))
                         {
@@ -136,28 +136,7 @@ class FormDynamic extends DynamicModel
                             ])->one();
 
                             if (!empty($address))
-                            {
-                                $value = [
-                                    'country'=>$address->country->name??'',
-                                    'id_country'=>$address->id_country??'',
-                                    'region'=>$address->region->name??'',
-                                    'id_region'=>$address->id_region??'',
-                                    'subregion'=>$address->subregion->name??'',
-                                    'id_subregion'=>$address->id_subregion??'',
-                                    'city'=>$address->city->name??'',
-                                    'id_city'=>$address->id_city??'',
-                                    'district'=>$address->district->name??'',
-                                    'id_district'=>$address->id_district??'',
-                                    'street'=>$address->street->name??'',
-                                    'id_street'=>$address->id_street??'',
-                                    'house'=>$address->name??'',
-                                    'id_house'=>$address->id_house??'',
-                                    'houseguid'=>$address->houseguid??'',
-                                    'lat'=>$address->lat??'',
-                                    'lon'=>$address->lon??'',
-                                    'postalcode'=>$address->postalcode??''
-                                ];
-                            }
+                                $value = $address->getArrayData();
                         }
 
                         if (empty($address))
@@ -260,8 +239,8 @@ class FormDynamic extends DynamicModel
                             if (!empty($value['coords'][1]))
                                 $empty['lon'] = $value['coords'][1];
 
-                            if (!empty($value['poastacode']))
-                                $empty['poastacode'] = $value['poastacode'];
+                            if (!empty($value['postalcode']))
+                                $empty['postalcode'] = $value['postalcode'];
 
                             $value = $empty;
                         }
@@ -273,6 +252,8 @@ class FormDynamic extends DynamicModel
                         $data[$index] = json_encode($this->$attribute);
                         break;*/
                     case CollectionColumn::TYPE_COLLECTIONS:
+
+                        // если разрешили добавлять
                         if ($input->options['accept_add'])
                         {
                             $ids = [];
@@ -307,32 +288,26 @@ class FormDynamic extends DynamicModel
                                             if (!empty($collectionRecord->id_record))
                                                 $ids[] = $collectionRecord->id_record;
                                         }
-                                        else
-                                            print_r($insertData->attributes);
-
                                     }
                                 }
                             }
-                            //$data[$index] = json_encode($ids);
-                            $data[$index] = $ids;
                         }
                         else
-                        {
-                            /*$records = CollectionRecord::find()->where(['id_record' => $this->$attribute])->all();
-
-                            $output = [];
-                            foreach ($records as $key => $record)
-                            {
-                                $data = $record->getData(false,[$input->id_collection_column]);
-                                $output[$record->id_record] = $data[$input->id_collection_column];
-                            }
-
-                            var_dump($output);
-                            die();
-
-                            $data[$index] = $output;*/
                             $data[$index] = $this->$attribute;
-                        }
+
+                        break;
+                    case CollectionColumn::TYPE_DISTRICT:
+                    case CollectionColumn::TYPE_STREET:
+                    //case CollectionColumn::TYPE_COUNTRY:
+                    case CollectionColumn::TYPE_CITY:
+                    case CollectionColumn::TYPE_REGION:
+                    case CollectionColumn::TYPE_SUBREGION:
+                        /*$output[$search_index] = $input->column->getValueByType($value);
+                        $output[$value_index] = [
+                            'value'=>$value,
+                            'label'=>$output['search'],
+                        ];*/
+                        $data[$index] = $this->$attribute;
                         break;
                     case CollectionColumn::TYPE_DATE:
                     case CollectionColumn::TYPE_DATETIME:
@@ -353,17 +328,31 @@ class FormDynamic extends DynamicModel
                                     $media->getImageAttributes($file['file_path'],$file);
 
                                     if ($media->save())
+                                    {
                                         $media->saveFile();
 
-                                    $data[$index][] = $media->id_media;
+                                        $data[$index][] = [
+                                            'id'=>$media->id_media,
+                                            'name'=>$media->name,
+                                            'size'=>$media->size,
+                                        ];
+                                    }
                                 }
                                 else
-                                    $data[$index][] = (int)$file['id_media'];
+                                {
+                                    $media = Media::findOne((int)$file['id_media']);
+
+                                    if (!empty($media))
+                                        $data[$index][] = [
+                                            'id'=>$media->id_media,
+                                            'name'=>$media->name,
+                                            'size'=>$media->size,
+                                        ];
+                                }
                             }
                         }
 
                         $data[$index] = $data[$index];
-
                         break;
                     default:
 
@@ -391,5 +380,26 @@ class FormDynamic extends DynamicModel
         }
 
         return $data;
+    }
+
+    protected function getRecordLabelsByID($ids,$input)
+    {
+        $mongoLabels = [];
+
+        if (!empty($ids))
+        {
+            $labels = (new \yii\db\Query())
+                ->select(['value', 'id_record','id_column'])
+                ->from('db_collection_value')
+                ->where([
+                    'id_record' => $ids,
+                    'id_column'=>$input->id_collection_column
+                ])->all();
+
+            foreach ($labels as $lkey => $data)
+                $mongoLabels[$data['id_record']] = $data['value'];
+        }
+
+        return $mongoLabels;
     }
 }

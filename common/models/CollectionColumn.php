@@ -400,6 +400,26 @@ class CollectionColumn extends \yii\db\ActiveRecord
             case self::TYPE_DATETIME:
                 return date('d.m.Y H:i',$value);
                 break;
+            case self::TYPE_DISTRICT:
+                $model = District::findOne((int)$value);
+                return $model->name??null;
+                break;
+            case self::TYPE_REGION:
+                $model = Region::findOne((int)$value);
+                return $model->name??null;
+                break;
+            case self::TYPE_SUBREGION:
+                $model = Subregion::findOne((int)$value);
+                return $model->name??null;
+                break;
+            case self::TYPE_CITY:
+                $model = City::findOne((int)$value);
+                return $city->name??null;
+                break;
+            case self::TYPE_STREET:
+                $model = Street::findOne((int)$value);
+                return $city->name??null;
+                break;
             case self::TYPE_IMAGE:
                 if (is_array($value) || is_numeric($value))
                 {
@@ -411,7 +431,6 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     if (!empty($file_uploaded))
                         return '<img src="'.$file_uploaded.'" />';
                 }
-
                 break;
             default:
                 if (is_array($value))
