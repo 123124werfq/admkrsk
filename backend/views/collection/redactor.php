@@ -1,12 +1,7 @@
 <?php
 
-use backend\widgets\UserAccessControl;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\helpers\ArrayHelper;
-
-use common\models\CollectionColumn;
-use common\models\Collection;
 use kartik\select2\Select2;
 use yii\web\JsExpression;
 
@@ -160,7 +155,8 @@ else
         </div>
     </div>
     <div id="view-columns" class="multiyiinput sortable">
-        <?php foreach ($model->getViewColumns() as $key => $data) {?>
+        <?php foreach ($model->getViewColumnsOrFirstColumn() as $key => $data) {?>
+            <?php $showDetail = !empty($data['showdetails'])? true : false; ?>
         <div class="row">
             <div class="col-sm-5">
                 <div class="form-group">
@@ -169,19 +165,18 @@ else
             </div>
             <div class="col-sm-6">
                 <label>
-                    <?=Html::checkBox("showdetails",'',['class'=>'showdetails','id'=>'CollectionColumn_showdetails_'.$key]);?>
-
+                    <?=Html::checkBox("ViewColumns[$key][showdetails]",$showDetail,['class'=>'showdetails','id'=>'CollectionColumn_showdetails_'.$key]);?>
                     опции
                 </label>
             </div>
             <div class="col-sm-1 col-close">
                 <a class="close btn" href="#">&times;</a>
             </div>
-            <div class="col-sm-12 hide flex">
+            <div class="col-sm-12 <?= $showDetail? 'flex' : 'hide flex' ?>">
                 <div class="row">
                     <div class="col-sm-5">
                         <div class="form-group">
-                            <?=Html::textInput("ViewColumns[$key][group]",$data['options']['group']??'',['class'=>'form-control','id'=>'CollectionColumn_group_'.$key,'placeholder'=>'Введите группу']);?>
+                            <?=Html::textInput("ViewColumns[$key][group]",$data['group']??'',['class'=>'form-control','id'=>'CollectionColumn_group_'.$key,'placeholder'=>'Введите группу']);?>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -192,7 +187,7 @@ else
                 </div>
             </div>
         </div>
-        <?php break; }?>
+        <?php }?>
     </div>
     <a onclick="return addInput('view-columns')" href="#" class="btn btn-default">Добавить еще</a>
     <hr>
@@ -235,18 +230,19 @@ else
 
     <br/><br/>
     <center>
-        <button class="btn btn-primary" id="submit-redactor">Вставить</button>
+        <button class="btn btn-primary" id="submit-redactor"><?= $model->isEdit ? 'Изменить' : 'Вставить'?></button>
     </center>
     <br/><br/><br/>
     <script>
         document.getElementById('submit-redactor').addEventListener('click', function (event) {
             $form = $("#collection-redactor");
-            var origin = '<?=$_SERVER["HTTP_REFERER"]?>';
+            var origin = '<?= isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : '' ?>';
+            let url = "<?= $model->isEdit ? '&configureEditCollection=1' : '&json=1' ?>";
             $.ajax({
                 url: $form.attr('action'),
                 type: 'post',
                 dataType:'json',
-                data: $form.serialize()+'&json=1',
+                data: $form.serialize() + url,
                 success: function(data)
                 {
                     window.parent.postMessage({

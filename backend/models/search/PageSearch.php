@@ -39,6 +39,11 @@ class PageSearch extends Page
         return Model::scenarios();
     }
 
+    public function beforeValidate()
+    {
+        return true;
+    }
+
     /**
      * Creates data provider instance with search query applied
      *

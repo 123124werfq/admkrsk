@@ -33,7 +33,7 @@ trait ActiveRangeValidateTrait
             if (preg_match('/^(\d{4}-\d{2}-\d{2})$/i', $date, $mat)) {
                 $query->andFilterWhere(['<=', $attributeName, strtotime($date)]);
             }
-            if (preg_match('/до/i', $date)) {
+            if (preg_match('/^(\d{4}-\d{2}-\d{2}) до (\d{4}-\d{2}-\d{2})$/i', $date)) {
                 list($startDate, $endDate) = explode(' до ', $date);
                 if (preg_match('/\d{4}-\d{2}-\d{2}/i', $startDate)
                     && preg_match('/\d{4}-\d{2}-\d{2}/i', $endDate)) {

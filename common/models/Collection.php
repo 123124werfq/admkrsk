@@ -36,6 +36,7 @@ use yii\helpers\Url;
  * @property int $deleted_by
  * @property int $id_parent_collection
  * @property int $id_form
+ * @property int $id_group
  * @property array $label
  * @property int $id_box
  * @property int $system
@@ -91,6 +92,8 @@ class Collection extends ActiveRecord
     public $id_partitions = [];
 
     public $id_page;
+
+    public $isEdit = false;
 
     /**
      * {@inheritdoc}
@@ -197,6 +200,33 @@ class Collection extends ActiveRecord
                 'messageAttribute' => 'notify_message',
             ],
         ];
+    }
+
+    /**
+     * Mapping property and attributes
+     *
+     * @param array $data
+     */
+    public function mapPropsAndAttributes($data){
+        $options = [];
+        foreach ($data as $key => $value) {
+            if ($key === 'id_collection') {
+                $this->id_parent_collection = $value;
+                continue;
+            }
+
+            if (property_exists(static::class, $key) || $this->hasAttribute($key)) {
+                $this->$key = $value;
+            }
+            if (in_array($key, ['search', 'columns', 'filters'])) {
+                $options[$key] = $value;
+            }
+            if ($key === 'sort') {
+                $this->id_column_order = $value;
+            }
+        }
+        $this->options = json_encode($options);
+        $this->updateAttributes(['options']);
     }
 
     public function beforeValidate()
@@ -439,6 +469,58 @@ class Collection extends ActiveRecord
         }
 
         return [];
+    }
+
+    public function getViewColumnsOrFirstColumn()
+    {
+        $options = json_decode($this->options, true);
+        if (isset($options['columns'])) {
+            return $options['columns'];
+        }
+        return [
+            [
+                'id_column' => $this->parent->columns[0]->id_column,
+                'group' => '',
+                'show_for_searchcolumn' => '',
+            ]
+        ];
+    }
+
+    /**
+     * @param string $settings
+     * @return string|null
+     */
+    public function savePluginSettings(string $settings)
+    {
+        return SettingPluginCollection::setSettings($settings, $this->id_parent_collection);
+    }
+
+    /**
+     * @return int
+     */
+    public function deletePluginSettings()
+    {
+        return SettingPluginCollection::deleteAll([
+            'id_collection' => $this->id_parent_collection
+        ]);
+    }
+
+    /**
+     * @param $key
+     * @param $settings
+     * @return string|null
+     */
+    public function updatePluginSettings($key, $settings)
+    {
+        $oldSettings = SettingPluginCollection::getSettings($key);
+        if (!$oldSettings) {
+            return null;
+        }
+        $oldSettings->settings = $settings;
+        if ($oldSettings->save()) {
+            return $oldSettings->key;
+        };
+        return null;
     }
 
     public function getViewColumns()

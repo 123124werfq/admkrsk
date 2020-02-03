@@ -20,6 +20,7 @@ use common\models\Service;
 use common\models\ServiceRubric;
 use common\models\ServiceSituation;
 use common\models\Statistic;
+use common\models\Subscriber;
 use common\models\User;
 use common\models\UserGroup;
 use common\models\UserRole;
@@ -172,6 +173,20 @@ return [
         'roles' => [
             'menu.gallery' => ['class' => Gallery::class],
         ],
+        'submenu' => [
+            'gallery-group' => [
+                'title' => 'Группы галерей',
+                'roles' => [
+                    'menu.gallery' => ['class' => Gallery::class],
+                ]
+            ],
+            'gallery' => [
+                'title' => 'Фотогаллерии',
+                'roles' => [
+                    'menu.gallery' => ['class' => Gallery::class],
+                ]
+            ],
+        ]
     ],
     'project' => [
         'title' => 'Проекты и события',
@@ -314,6 +329,12 @@ return [
         'submenu' => [
             'menu' => [
                 'title' => 'Меню',
+                'roles' => [
+                    'menu.menu' => ['class' => Menu::class],
+                ],
+            ],
+            'subscribe' => [
+                'title' => 'Статистика по подписчикам',
                 'roles' => [
                     'menu.menu' => ['class' => Menu::class],
                 ],

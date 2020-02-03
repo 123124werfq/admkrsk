@@ -201,11 +201,26 @@ class PageController extends Controller
     {
         $records = Page::find()->where('id_page IN (SELECT id_page FROM db_news)')->all();
 
-        $output = [];
-        foreach ($records as $key => $data)
-            $output[] = ['text'=>$data->title,'value'=>(string)$data->id_page];
+        $pages = [];
+        $selectedPage = null;
+        $pageId = Yii::$app->request->get('page-id');
+        /** @var Page $page */
+        foreach ($records as $key => $page) {
+            $pageData = [
+                'text' => $page->title,
+                'value' => (string)$page->id_page,
+            ];
+            if ($pageId == $page->id_page) {
+                $selectedPage = $pageData;
+                continue;
+            }
+            $pages[] = $pageData;
+        }
+        if ($selectedPage) {
+            array_unshift($pages, $selectedPage);
+        }
 
-        return json_encode($output);
+        return json_encode($pages);
     }
 
     public function actionTemplate($id)
@@ -396,7 +411,10 @@ class PageController extends Controller
     /**
      * Creates a new Page model.
      * If creation is successful, the browser will be redirected to the 'view' page.
+     * @param null $id_parent
      * @return mixed
+     * @throws InvalidConfigException
+     * @throws NotFoundHttpException
      */
     public function actionCreate($id_parent=null)
     {

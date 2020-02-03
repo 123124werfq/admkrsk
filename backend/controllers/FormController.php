@@ -699,11 +699,26 @@ class FormController extends Controller
     {
         $records = Form::find()->all();
 
-        $output = [];
-        foreach ($records as $key => $data)
-            $output[] = ['text'=>$data->name,'value'=>(string)$data->id_form];
+        $forms = [];
+        $selectedForm = null;
+        $formId = Yii::$app->request->get('form-id');
+        /** @var Form $form */
+        foreach ($records as $key => $form) {
+            $formData = [
+                'text' => $form->name,
+                'value' => (string)$form->id_form,
+            ];
+            if ($formId == $form->id_form) {
+                $selectedForm = $formData;
+                continue;
+            }
+            $forms[] = $formData;
+        }
+        if ($selectedForm) {
+            array_unshift($forms, $selectedForm);
+        }
 
-        return json_encode($output);
+        return json_encode($forms);
     }
 
 

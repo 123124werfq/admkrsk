@@ -117,6 +117,8 @@ return [
                 //'/' => 'site/page',
                 'service/search'=>'service/search',
                 '/press/events' => 'event/index',
+                'subscribe' => 'subscribe/index',
+                'un-subscribe' => 'subscribe/un-subscribe',
                 'event/program' => 'event/program',
                 'login' => 'site/login',
                 'signup' => 'site/signup',
