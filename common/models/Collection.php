@@ -85,14 +85,12 @@ class Collection extends ActiveRecord
     public $show_download;
     public $link_column;
     public $id_group;
-
     public $table_head;
     public $table_style;
 
     public $id_partitions = [];
 
     public $id_page;
-
 
     /**
      * {@inheritdoc}
