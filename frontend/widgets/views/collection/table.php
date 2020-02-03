@@ -98,12 +98,12 @@ else {
 <?php }?>
 		</thead>
 		<tbody>
-			<?php foreach ($allrows as $key => $row){?>
+			<?php foreach ($allrows as $id_record => $row){?>
 				<tr>
 				<?php if ($show_row_num){?>
 					<td class="row_num" width="10"><?=$offset+$i++?></td>
 				<?php }?>
-				<?php foreach ($columns as $key => $column) {?>
+				<?php foreach ($columns as $ckey => $column) {?>
 					<td><?php
 						if (isset($row[$column->alias]))
 						{
@@ -113,7 +113,7 @@ else {
 								$value = $row[$column->alias];
 
 							if ($column->is_link)
-								echo '<a href="/collection?id='.$id_record.'&id_page='.$id_page.'">'.$value.'</a>';
+								echo '<a href="/collection?id='.$id_record.'&id_page='.$page->id_page.'">'.$value.'</a>';
 							else
 								echo $value;
 						}?>
