@@ -420,6 +420,9 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 $model = Street::findOne((int)$value);
                 return $city->name??null;
                 break;
+            case self::TYPE_FILE_OLD:
+                return '<a href="'.$value.'">'.$value.'<a>';
+                break;
             case self::TYPE_IMAGE:
                 if (is_array($value) || is_numeric($value))
                 {
