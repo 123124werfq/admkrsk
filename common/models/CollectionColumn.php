@@ -421,7 +421,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 return $city->name??null;
                 break;
             case self::TYPE_FILE_OLD:
-                $slugs = explode('/', $value)
+                $slugs = explode('/', $value);
                 return '<a href="'.$value.'">'.array_pop($slugs).'<a>';
                 break;
             case self::TYPE_IMAGE:
