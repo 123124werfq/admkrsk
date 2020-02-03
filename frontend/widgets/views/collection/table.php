@@ -115,7 +115,7 @@ else {
 							if ($column->is_link)
 								echo '<a href="/collection?id='.$id_record.'&id_page='.$page->id_page.'">'.$value.'</a>';
 							else
-								echo $value;
+								echo $column->getValueByType($value);
 						}?>
 					</td>
 				<?php }?>
