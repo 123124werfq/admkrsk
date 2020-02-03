@@ -637,6 +637,7 @@ class CollectionController extends Controller
                 $json['sort'] = $model->id_column_order;
                 $json['dir'] = $model->order_direction;
                 $json['pagesize'] = $model->pagesize;
+                $json['link_column'] = $model->link_column;
                 $json['table_head'] = $model->table_head;
                 $json['table_style'] = $model->table_style;
                 $json['show_download'] = $model->show_download;
