@@ -22,6 +22,7 @@ use yii\db\ActiveRecord;
  * This is the model class for table "cnt_page".
  *
  * @property int $id_page
+ * @property int $id_parent
  * @property int $id_media
  * @property string $title
  * @property string $alias
