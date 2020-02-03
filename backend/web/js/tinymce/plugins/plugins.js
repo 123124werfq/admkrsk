@@ -438,6 +438,7 @@ tinymce.PluginManager.add("pagenews", function(editor, url) {
 tinymce.PluginManager.add("gallery", function(editor, url) {
     var _dialog = false;
     var _typeOptions = [];
+    let _galleryGroups = [];
 
     setTimeout(function () {
         setElementsEditable(editor, 'gallery', editableGallery);
@@ -462,10 +463,15 @@ tinymce.PluginManager.add("gallery", function(editor, url) {
     };
 
     function editableGallery(gallery) {
-        let galleryId = gallery.getAttribute('data-id');
-        let galleryLimitText = gallery.getAttribute('data-limit');
+        let galleryItem = gallery.getAttribute('data-id');
+        let restUrl = '&gallery-id=' + galleryItem;
+        if (!galleryItem) {
+            galleryItem = gallery.getAttribute('data-groupId');
+            restUrl = '&gallery-group-id=' + galleryItem;
+        }
+        let galleryLimitText = gallery.getAttribute('data-limit') || '';
         $.ajax({
-            url: '/gallery/get-gallery?' + '&gallery-id=' + galleryId,
+            url: '/gallery/get-gallery?' + restUrl,
             type: 'get',
             dataType: 'json',
             success: function (data) {
@@ -480,7 +486,14 @@ tinymce.PluginManager.add("gallery", function(editor, url) {
                             type: 'selectbox',
                             name: 'id_gallery',
                             label: 'Галлерея',
-                            items: data,
+                            items: data.galleries,
+                            flex: true
+                        },
+                        {
+                            type: 'selectbox',
+                            name: 'id_galleryGroup',
+                            label: 'Группа галлерей',
+                            items: data.galleriesGroup,
                             flex: true
                         },
                         {
@@ -494,9 +507,18 @@ tinymce.PluginManager.add("gallery", function(editor, url) {
                 editDialog.onSubmit = function (api) {
                     let editGalleryId = api.getData().id_gallery;
                     let editGalleryLimit = api.getData().limit;
-                    gallery.setAttribute('data-id', editGalleryId);
-                    gallery.setAttribute('data-limit', editGalleryLimit);
-                    gallery.innerText = 'Галлерея #' + editGalleryId + '.';
+                    if (!editGalleryId) {
+                        gallery.removeAttribute('data-id');
+                        gallery.setAttribute('data-groupId', api.getData().id_galleryGroup);
+                        gallery.setAttribute('data-limit', editGalleryLimit);
+                        gallery.innerText = 'Группа галлерей #' + api.getData().id_galleryGroup + '.';
+                    }
+                    else {
+                        gallery.setAttribute('data-id', editGalleryId);
+                        gallery.removeAttribute('data-groupId');
+                        gallery.setAttribute('data-limit', editGalleryLimit);
+                        gallery.innerText = 'Галлерея #' + editGalleryId + '.';
+                    }
                     gallery.ondblclick = function () {
                         editableGallery(gallery)
                     };
@@ -515,11 +537,19 @@ tinymce.PluginManager.add("gallery", function(editor, url) {
             title: 'Вставить галерею',
             body: {
                 type: 'panel',
-                items: [{
+                items: [
+                    {
                         type: 'selectbox',
                         name: 'type',
                         label: 'Галерея',
                         items: _typeOptions,
+                        flex: true
+                    },
+                    {
+                        type: 'selectbox',
+                        name: 'groupId',
+                        label: 'Группы галлерей',
+                        items: _galleryGroups,
                         flex: true
                     },
                     {
@@ -532,9 +562,14 @@ tinymce.PluginManager.add("gallery", function(editor, url) {
             },
             onSubmit: function(api) {
                 // insert markup
-                editor.insertContent('<gallery data-id="' + api.getData().type + '" data-limit="' + api.getData().limit + '">Галерея #' + api.getData().type + '.</gallery>');
-
-                setElementsEditable(editor, 'gallery', editableGallery);
+                if (api.getData().groupId) {
+                    editor.insertContent('<gallery data-groupId="' + api.getData().groupId + '">Группа галлерей #' + api.getData().groupId + '.</gallery>');
+                    setElementsEditable(editor, 'gallery', editableGallery);
+                }
+                else {
+                    editor.insertContent('<gallery data-id="' + api.getData().type + '" data-limit="' + api.getData().limit + '">Галерея #' + api.getData().type + '.</gallery>');
+                    setElementsEditable(editor, 'gallery', editableGallery);
+                }
 
                 // close the dialog
                 api.close();
@@ -576,6 +611,7 @@ tinymce.PluginManager.add("gallery", function(editor, url) {
             // the _typeOptions array with new values. We're just going to hard code
             // those for now.
             _typeOptions = [];
+            _galleryGroups = [];
 
             $.ajax({
                 url: '/gallery/get-gallery',
@@ -583,7 +619,8 @@ tinymce.PluginManager.add("gallery", function(editor, url) {
                 dataType: 'json',
                 //data: {_csrf: csrf_value},
                 success: function(data) {
-                    _typeOptions = data;
+                    _galleryGroups = data.galleriesGroup;
+                    _typeOptions = data.galleries;
                     _dialog.redial(_getDialogConfig());
                     // unblock the dialog
                     _dialog.unblock();

@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\GalleryGroup;
 use common\models\GridSetting;
 use common\modules\log\models\Log;
 use Yii;
@@ -149,31 +150,20 @@ class GalleryController extends Controller
         ]);
     }
 
-
+    /**
+     * @return false|string
+     * @throws InvalidConfigException
+     */
     public function actionGetGallery()
     {
-        $records = Gallery::find()->all();
-
-        $galleries = [];
-        $selectedGallery = null;
         $galleryId = Yii::$app->request->get('gallery-id');
-        /** @var Gallery $gallery */
-        foreach ($records as $key => $gallery) {
-            $galleryData = [
-                'text' => $gallery->name,
-                'value' => (string)$gallery->id_gallery,
-            ];
-            if ($galleryId == $gallery->id_gallery) {
-                $selectedGallery = $galleryData;
-                continue;
-            }
-            $galleries[] = $galleryData;
-        }
-        if ($selectedGallery) {
-            array_unshift($galleries, $selectedGallery);
-        }
+        $groupGalleryId = Yii::$app->request->get('gallery-group-id');
 
-        return json_encode($galleries);
+        $data = [
+            'galleries' => Gallery::prepareGroupsForPlugin(Gallery::find()->all(), $galleryId),
+            'galleriesGroup' =>  GalleryGroup::prepareGroupsForPlugin(GalleryGroup::find()->all(), $groupGalleryId),
+        ];
+        return json_encode($data);
     }
 
     /**

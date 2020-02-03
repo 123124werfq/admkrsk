@@ -28,6 +28,7 @@ use yii\db\Exception;
  * @property int $deleted_by
  * @property array $access_user_ids
  * @property GalleryGroup[] $groups
+ * @property Media[] $medias
  */
 class Gallery extends ActiveRecord
 {
@@ -110,6 +111,37 @@ class Gallery extends ActiveRecord
                 ]
             ],
         ];
+    }
+
+    /**
+     * @param Gallery[] $galleries
+     * @param string|null $selectGallery
+     * @return array
+     */
+    public static function prepareGroupsForPlugin($galleries, $selectGallery = null)
+    {
+        $galleriesData = [];
+        $selectedGallery = [];
+        /** @var Gallery $gallery */
+        foreach ($galleries as $gallery) {
+            $galleryData = [
+                'text' => $gallery->name,
+                'value' => (string)$gallery->id_gallery,
+            ];
+            if ($selectGallery == $gallery->id_gallery) {
+                $selectedGallery = $galleryData;
+                continue;
+            }
+            $galleriesData[] = $galleryData;
+        }
+        array_unshift($galleriesData, [
+            'text' => '',
+            'value' => '',
+        ]);
+        if ($selectedGallery) {
+            array_unshift($galleriesData, $selectedGallery);
+        }
+        return $galleriesData;
     }
 
     /**
