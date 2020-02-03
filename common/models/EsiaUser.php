@@ -58,7 +58,8 @@ class EsiaUser extends \yii\db\ActiveRecord
             [['id_user', 'is_org', 'created_at', 'created_by', 'updated_at', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
             [['id_user', 'is_org', 'created_at', 'created_by', 'updated_at', 'deleted_at', 'deleted_by'], 'integer'],
             [['fullname', 'birthdate', 'gender', 'snils', 'inn', 'id_doc', 'birthplace', 'medical_doc', 'residence_doc', 'email', 'mobile', 'contacts', 'usr_org', 'usr_avt', 'org_shortname', 'org_fullname', 'org_type', 'org_ogrn', 'org_inn', 'org_leg', 'org_kpp', 'org_ctts', 'org_addrs'], 'string', 'max' => 255],
-            [['first_name', 'last_name', 'last_name', 'middle_name', 'trusted', 'home_phone', 'living_addr_object', 'living_addr', 'living_addr_fias', 'firmaddrfias',  'register_addr', 'register_addr_fias'], 'string'],
+//            [['first_name', 'last_name', 'last_name', 'middle_name', 'trusted', 'home_phone', 'living_addr_object', 'living_addr', 'living_addr_fias', 'firmaddrfias',  'register_addr', 'register_addr_fias'], 'string'],
+            [['first_name', 'last_name', 'last_name', 'middle_name', 'trusted', 'home_phone', 'living_addr', 'living_addr_fias',  'register_addr', 'register_addr_fias'], 'string'],
             [['passport_serie', 'passport_number', 'passport_issuer', 'passport_issuer_id', 'passport_comments', 'userdoc_raw', 'mediacal_raw', 'residence_raw'], 'string'],
         ];
     }
