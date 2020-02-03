@@ -84,14 +84,13 @@ class Collection extends ActiveRecord
     public $show_on_map;
     public $show_download;
     public $link_column;
-
+    public $id_group;
     public $table_head;
     public $table_style;
 
     public $id_partitions = [];
 
     public $id_page;
-
 
     /**
      * {@inheritdoc}
@@ -110,7 +109,7 @@ class Collection extends ActiveRecord
             [['alias'], 'unique'],
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
-            [['id_parent_collection','id_box','id_column_order','order_direction','pagesize','show_row_num','show_column_num', 'notify_rule', 'show_on_map', 'id_column_map', 'link_column','show_download'], 'integer'],
+            [['id_parent_collection','id_box','id_column_order','order_direction','pagesize','show_row_num','show_column_num', 'notify_rule','id_group', 'show_on_map', 'id_column_map', 'link_column','show_download'], 'integer'],
             [['filter', 'options','label','table_head', 'table_style'], 'safe'],
             [['template','template_element','template_view','notify_message'], 'string'],
             [['is_authenticate'], 'boolean'],
@@ -154,6 +153,8 @@ class Collection extends ActiveRecord
             'id_column_map'=>'Колонка координат для показа на карте',
             'table_head'=>'Шапка таблицы',
             'table_style'=>'Стиль таблицы',
+            'id_group'=>'Колонка для группировки',
+            'link_column'=>'Колонка ссылка',
             'show_download'=>'Показывать ссылку для скачивания',
 
             'created_at' => 'Создана',
@@ -216,7 +217,8 @@ class Collection extends ActiveRecord
         $model->id_collection = $this->id_collection;
         $model->data = $data;
 
-        if ($model->save()) {
+        if ($model->save())
+        {
             return $model;
         }
 

@@ -12,7 +12,7 @@
 	$i=1;
 ?>
 
-<form class="search-table" data-hash="<?=$unique_hash?>" action="" >
+<form class="search-table" data-hash="<?=$unique_hash?>" action="">
 	<?php if (!empty($search_columns)){?>
 		<?php foreach ($search_columns as $key => $column)
 		{
@@ -48,15 +48,41 @@
 			{
 				echo $table_head;
 			}
-else {?>
+else {
+	$rowspan = 1;
+	$tr_1 = [];
+	$tr_2 = [];
+
+	foreach ($columnsOptions as $key => $column)
+	{
+		if (!empty($column['group']))
+		{
+			$rowspan = 2;
+			$tr_1[$column['group']] = [
+				'label'=>$column['group'],
+				'colspan'=>($tr_1[$column['group']]['colspan']??0)+1];
+
+			$tr_2[] = $columns[$key];
+		}
+		else
+			$tr_1[] = $columns[$key];
+	}
+?>
 			<tr>
 				<?php if ($show_row_num){?>
-					<th width="10"></th>
+					<th <?=$rowspan>1?'rowspan="2"':''?> width="10"></th>
 				<?php }?>
-			<?php foreach ($columns as $key => $column) {?>
-				<th><?=$column->name?></th>
-			<?php }?>
+				<?php foreach ($tr_1 as $key => $column) {?>
+					<th <?=($rowspan>1 && empty($column['colspan']))?'rowspan="2"':''?> <?=(!empty($column['colspan']))?'colspan="'.$column['colspan'].'"':''?>><?=(!empty($column['label']))?$column['label']:$column->name?></th>
+				<?php }?>
 			</tr>
+			<?php if (!empty($tr_2)){?>
+			<tr>
+				<?php foreach ($tr_2 as $key => $column) {?>
+					<th><?=$column->name?></th>
+				<?php }?>
+			</tr>
+			<?php }?>
 
 			<?php
 			if (!empty($show_column_num))
@@ -72,20 +98,24 @@ else {?>
 <?php }?>
 		</thead>
 		<tbody>
-			<?php foreach ($allrows as $key => $row){?>
+			<?php foreach ($allrows as $id_record => $row){?>
 				<tr>
 				<?php if ($show_row_num){?>
 					<td class="row_num" width="10"><?=$offset+$i++?></td>
 				<?php }?>
-				<?php foreach ($columns as $key => $column) {?>
+				<?php foreach ($columns as $ckey => $column) {?>
 					<td><?php
 						if (isset($row[$column->alias]))
 						{
 							if (is_array($row[$column->alias]))
-								echo implode('<br>', $row[$column->alias]);
+								$value = implode('<br>', $row[$column->alias]);
 							else
-								echo $row[$column->alias];
+								$value = $row[$column->alias];
 
+							if ($column->is_link)
+								echo '<a href="/collection?id='.$id_record.'&id_page='.$page->id_page.'">'.$value.'</a>';
+							else
+								echo $column->getValueByType($value);
 						}?>
 					</td>
 				<?php }?>

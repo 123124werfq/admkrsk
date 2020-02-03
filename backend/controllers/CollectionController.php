@@ -637,6 +637,7 @@ class CollectionController extends Controller
                 $json['sort'] = $model->id_column_order;
                 $json['dir'] = $model->order_direction;
                 $json['pagesize'] = $model->pagesize;
+                $json['link_column'] = $model->link_column;
                 $json['table_head'] = $model->table_head;
                 $json['table_style'] = $model->table_style;
                 $json['show_download'] = $model->show_download;
@@ -726,7 +727,9 @@ class CollectionController extends Controller
             foreach (Yii::$app->request->post('ViewColumns') as $key => $data) {
                 $options['columns'][] = [
                     'id_column' => $data['id_column'],
-                    'value' => (!empty($data['value'])) ? $data['value'] : ''
+                    'value' => (!empty($data['value'])) ? $data['value'] : '',
+                    'show_for_searchcolumn'=> $data['show_for_searchcolumn']??'',
+                    'group'=> $data['group']??'',
                 ];
             }
         }

@@ -112,11 +112,71 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     'id_column'=>$column->input->id_collection_column
                 ])->all();
 
+            $labelsByIndex = [];
             foreach ($labels as $lkey => $data)
-                $mongoLabels[$data['id_record']] = $data['value'];
+                $labelsByIndex[$data['id_record']] = $data['value'];
+
+            foreach ($ids as $key => $id)
+                $mongoLabels[$id] = $labelsByIndex[$id];
         }
 
         return $mongoLabels;
+    }
+
+    protected function getMongoDate($value, $column)
+    {
+        $output = [];
+
+        $value_index = 'col'.$column->id_column;
+        $search_index = 'col'.$column->id_column.'_search';
+
+        $output[$value_index] = $value;
+
+        switch ($column->type)
+        {
+            case CollectionColumn::TYPE_INTEGER:
+                $output[$value_index] = (float)$value;
+                break;
+            case CollectionColumn::TYPE_CHECKBOXLIST:
+                $output[$search_index] = implode("\r\n", $value);
+                break;
+            case CollectionColumn::TYPE_MAP:
+                $output[$search_index] = implode(' ', $value);
+                break;
+            case CollectionColumn::TYPE_COLLECTION:
+                $label = $this->getLabelsByID($value,$column);
+                if (count($label)>0)
+                    $output[$search_index] = array_shift($label);
+                break;
+            case CollectionColumn::TYPE_COLLECTIONS:
+                $output[$search_index] = json_encode($this->getLabelsByID($value,$column),JSON_UNESCAPED_UNICODE);
+                break;
+            case CollectionColumn::TYPE_DISTRICT:
+            case CollectionColumn::TYPE_STREET:
+            //case CollectionColumn::TYPE_COUNTRY:
+            case CollectionColumn::TYPE_CITY:
+            case CollectionColumn::TYPE_REGION:
+            case CollectionColumn::TYPE_SUBREGION:
+            case CollectionColumn::TYPE_DATE:
+            case CollectionColumn::TYPE_DATETIME:
+            case CollectionColumn::TYPE_SERVICETARGET:
+            case CollectionColumn::TYPE_SERVICE:
+                $output[$search_index] = $column->getValueByType($value);
+                break;
+            case CollectionColumn::TYPE_FILE:
+            case CollectionColumn::TYPE_IMAGE:
+                $output[$search_index] = $value['name']??'';
+                break;
+                break;
+            default:
+                $output[$value_index] = $value;
+                if (is_array($value))
+                    $output[$search_index] = is_array($value)?json_encode($value,JSON_UNESCAPED_UNICODE):$value;
+
+                break;
+        }
+
+        return $output;
     }
 
     public function beforeSave($insert)
@@ -140,106 +200,42 @@ class CollectionRecord extends \yii\db\ActiveRecord
             // коллекция монги
             $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
 
-            if ($insert)
+            unset($this->data['id_record']);
+
+            // запись в postgree
+            $insertData = [];
+            $dataMongo = [];
+
+            foreach ($columns as $key => $column)
             {
-                unset($this->data['id_record']);
+                $value = '';
 
-                // запись в postgree
-                $insertData = [];
-                $dataMongo = [];
+                if (isset($this->data[$column->alias]))
+                    $value = $this->data[$column->alias];
+                elseif (isset($this->data[$column->id_column]))
+                    $value = $this->data[$column->id_column];
 
-                foreach ($columns as $key => $column)
+                if (!$insert)
                 {
-                    if (isset($this->data[$column->id_column]))
-                    {
-                        $value = $this->data[$column->id_column];
-
-                        $insertData[] = [
-                            'id_column'=>$column->id_column,
-                            'id_record'=>$this->id_record,
-                            'value'=>(is_array($value))?json_encode($value):$value,
-                        ];
-
-                        if (!empty($column->input->id_collection) && !empty($column->input->id_collection_column))
-                        {
-                            if (is_numeric($value))
-                                $ids = [$value];
-                            elseif (is_array($value))
-                                $ids = $value; // json_decode($value,true);*/
-                            else if (is_string($value))
-                                $ids = json_decode($value,true);
-
-                            $ids = $ids??[];
-
-                            $mongoLabels = $this->getLabelsByID($ids,$column);
-
-                            foreach ($ids as $idskey => $id)
-                                $ids[$idskey] = (int)$id;
-
-                            $dataMongo['col'.$column->id_column] = $ids;
-                            $dataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);
-                        }
-                        else
-                            $dataMongo['col'.$column->id_column] = (is_numeric($value)&& strpos($value, '.')==false)?(float)$value:$value;
-                    }
+                    $count = Yii::$app->db->createCommand("SELECT count(*) FROM db_collection_value WHERE id_record = $this->id_record AND
+                        id_column = $column->id_column")->queryScalar();
                 }
 
-                Yii::$app->db->createCommand()->batchInsert('db_collection_value',['id_column','id_record','value'],$insertData)->execute();
+                if (!$insert && !empty($count))
+                    Yii::$app->db->createCommand()->update('db_collection_value',
+                        ['value'=>is_array($value)?json_encode($value):$value],[
+                        'id_record'=>$this->id_record,
+                        'id_column'=>$column->id_column
+                    ])->execute();
+                else
+                    Yii::$app->db->createCommand()->insert('db_collection_value',[
+                        'id_column'=>$column->id_column,
+                        'id_record'=>$this->id_record,
+                        'value'=>(is_array($value))?json_encode($value):$value,
+                    ])->execute();
 
-            }
-            else
-            {
-                $dataMongo = [];
-
-                foreach ($columns as $key => $column)
-                {
-                    $updateData = null;
-
-                    if (isset($this->data[$column->alias]))
-                        $updateData = $this->data[$column->alias];
-                    elseif (isset($this->data[$column->id_column]))
-                        $updateData = $this->data[$column->id_column];
-
-                    if ($updateData!==null)
-                    {
-                        $count = Yii::$app->db->createCommand("SELECT count(*) FROM db_collection_value WHERE id_record = $this->id_record AND
-                            id_column = $column->id_column")->queryScalar();
-
-                        if ($count>0)
-                            Yii::$app->db->createCommand()->update('db_collection_value',
-                                ['value'=>is_array($updateData)?json_encode($updateData):$updateData],[
-                                'id_record'=>$this->id_record,
-                                'id_column'=>$column->id_column
-                            ])->execute();
-                        else
-                            Yii::$app->db->createCommand()->insert('db_collection_value',[
-                                'id_record'=>$this->id_record,
-                                'id_column'=>$column->id_column,
-                                'value'=>is_array($updateData)?json_encode($updateData):$updateData
-                            ])->execute();
-
-                        if (!empty($column->input->id_collection) && !empty($column->input->id_collection_column))
-                        {
-                            if (is_numeric($updateData))
-                                $ids = [$updateData];
-                            else if (is_array($updateData))
-                                $ids = $updateData;
-                            else if (is_string($updateData))
-                                $ids = json_decode($updateData,true);
-
-                            $ids = $ids??[];
-                            $mongoLabels = $this->getLabelsByID($ids,$column);
-
-                            foreach ($ids as $idskey => $id)
-                                $ids[$idskey] = (int)$id;
-
-                            $dataMongo['col'.$column->id_column] = $ids;
-                            $dataMongo['col'.$column->id_column.'_search'] = implode(';', $mongoLabels);
-                        }
-                        else
-                            $dataMongo['col'.$column->id_column] = (is_numeric($updateData) && strpos($updateData, '.')==false)?(float)$updateData:$updateData;
-                    }
-                }
+                $dataMongo = array_merge($dataMongo,$this->getMongoDate($value,$column));
+                /*$dataMongo['col'.$column->id_column] = ($column->type == CollectionColumn::TYPE_INTEGER)?(float)$value:$value;*/
             }
 
             $dataMongo['id_record'] = $this->id_record;

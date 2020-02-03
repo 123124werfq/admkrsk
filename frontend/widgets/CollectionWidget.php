@@ -122,8 +122,16 @@ class CollectionWidget extends \yii\base\Widget
             {
                 foreach ($search as $id_col => $search_col)
                 {
+
                     if (isset($search_columns[$id_col]) && $search_col!=='' && $search_col!==NULL)
-                        $query->andWhere(['col'.$id_col=>(is_numeric($search_col))?(float)$search_col:$search_col]);
+                    {
+                        $search_columns[$id_col]['value'] = (is_numeric($search_col))?(float)$search_col:$search_col;
+
+                        if ($search_columns[$id_col]['type']==1)
+                            $query->andWhere(['like','col'.$id_col,$search_columns[$id_col]['value']]);
+                        else 
+                            $query->andWhere(['col'.$id_col=>$search_columns[$id_col]['value']]);
+                    }
                 }
             }
         }
@@ -208,9 +216,33 @@ class CollectionWidget extends \yii\base\Widget
 
         // переворачиваем колонки на алиас с очередностью выбора
         $columnsByAlias = [];
+        $columnsOptions = [];
+        
         foreach ($this->columns['columns'] as $key => $col)
+        {
             if (!empty($columns[$col['id_column']]))
+            {
+                if (!empty($col['show_for_searchcolumn']) && is_array($col['show_for_searchcolumn']))
+                {
+                    $show = false;
+
+                    foreach ($col['show_for_searchcolumn'] as $skey => $serchcol)
+                    {
+                        if (empty($serchcol) || !empty($search_columns[$serchcol]['value']))
+                        {
+                            $show = true;
+                            break;
+                        }
+                    }
+
+                    if (!$show)
+                        continue;
+                }
+
+                $columnsOptions[$columns[$col['id_column']]->alias] = $col;
                 $columnsByAlias[$columns[$col['id_column']]->alias] = $columns[$col['id_column']];
+            }
+        }
 
         // оффсет и срез данных
         $offset = ($p-1)*$this->pagesize;
@@ -235,6 +267,7 @@ class CollectionWidget extends \yii\base\Widget
                 'page'=>$this->page,
 
                 'columns'=>$columnsByAlias,
+                'columnsOptions'=>$columnsOptions,
                 'allrows'=>$allrows,
                 'search_columns'=>$search_columns,
                 'show_on_map'=>(!empty($this->show_on_map) && !empty($model->id_column_map))?1:0,
@@ -258,6 +291,7 @@ class CollectionWidget extends \yii\base\Widget
             'page'=>$this->page,
 
             'columns'=>$columnsByAlias,
+            'columnsOptions'=>$columnsOptions,
             'allrows'=>$allrows,
             'search_columns'=>$search_columns,
             'show_on_map'=>(!empty($this->show_on_map) && !empty($model->id_column_map))?1:0,

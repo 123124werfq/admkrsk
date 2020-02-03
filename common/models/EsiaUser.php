@@ -89,6 +89,34 @@ class EsiaUser extends \yii\db\ActiveRecord
             return false;
     }
 
+    public function getFirmkpp()
+    {
+        if(!$this->is_org)
+            return false;
+        return (string)$this->user->currentFirm->kpp;
+    }
+
+    public function getFirminn()
+    {
+        if(!$this->is_org)
+            return false;
+        return (string)$this->user->currentFirm->inn;
+    }   
+    
+    public function getFirmogrn()
+    {
+        if(!$this->is_org)
+            return false;
+        return (string)$this->user->currentFirm->ogrn;
+    }  
+
+    public function getFirmname()
+    {
+        if(!$this->is_org)
+            return false;
+        return (string)$this->user->currentFirm->fullname;
+    } 
+
     /**
      * {@inheritdoc}
      */
@@ -144,11 +172,16 @@ class EsiaUser extends \yii\db\ActiveRecord
             'org_fullname' => 'Полное наименование организации',
             'org_type' => 'Тип организации',
             'org_ogrn' => 'ОГРН',
-            'org_inn' => 'ИНН',
+            'org_inn' => 'ИНН орг',
             'org_leg' => 'ЛЕГ',
             'org_kpp' => 'КПП',
             'org_ctts' => 'Контактаы организации',
             'org_addrs' => 'Адреса организации',
+
+            'firmkpp' => 'КПП организации (ЕСИА)',
+            'firminn' => 'ИНН организации (ЕСИА)',
+            'firmogrn' => 'ОГРН организации (ЕСИА)',
+            'firmname' => 'Наименование организации (ЕСИА)',
 
             'created_at' => 'Created At',
             'created_by' => 'Created By',

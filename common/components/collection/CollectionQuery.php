@@ -159,12 +159,12 @@ class CollectionQuery extends \yii\mongodb\Query
 
                 if (is_array($value) && isset($record['col'.$id_column.'_search']))
                 {
-                    $labels = explode(';', $record['col'.$id_column.'_search']);
+                    $labels = json_decode($record['col'.$id_column.'_search'],true);
 
                     $combine_value = [];
 
                     foreach ($value as $ikey => $id)
-                        $combine_value[$id] = $labels[$ikey]??$id;
+                        $combine_value[$id] = $labels[$id]??$id;
 
                     $value = $combine_value;
                 }
