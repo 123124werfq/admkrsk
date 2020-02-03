@@ -58,7 +58,10 @@ else {
 		if (!empty($column['group']))
 		{
 			$rowspan = 2;
-			$tr_1[$column['group']] = ['label'=>$column['group'],'colspan'=>($tr_1[$column['group']]['colspan']??1)+1];
+			$tr_1[$column['group']] = [
+				'label'=>$column['group'],
+				'colspan'=>($tr_1[$column['group']]['colspan']??0)+1];
+
 			$tr_2[] = $columns[$key];
 		}
 		else
