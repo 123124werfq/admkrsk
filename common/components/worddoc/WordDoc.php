@@ -40,7 +40,7 @@ class WordDoc
         return true;
     }
 
-    public static function makeDocByForm($form, $data, $templatePath)
+    public static function makeDocByForm($form, $data, $templatePath, $addData=[])
     {
         $root = Yii::getAlias('@app');
 
@@ -49,6 +49,9 @@ class WordDoc
         $columns = $form->collection->getColumns()->indexBy('alias')->all();
 
         $stringData = WordDoc::convertDataToString($data,$columns);
+
+        foreach ($addData as $key => $value)
+            $stringData[$key] = $value;
 
         foreach ($stringData as $alias => $value)
         {
