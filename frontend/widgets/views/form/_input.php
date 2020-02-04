@@ -334,6 +334,10 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                     ]
                 ]).'</div>';
 
+
+                if (!empty($options['show_room']))
+                    echo $form->field($model, $attribute.'[show_room]')->textInput(['id'=>'show_room'.$attribute,'placeholder'=>'кв.,оф.']);
+
                 //echo '<div class="col-md-4">';
 
                 //echo '<div class="col-md-12"></div>';
@@ -582,7 +586,7 @@ setTimeout(function(){
     var optpos = 0;
 $("#{$options['id']}").next().find('.select2-selection__rendered').sortable({
       start: function(event, ui){
-        optpos = ui.item.index();        
+        optpos = ui.item.index();
       },
       stop: function(event, ui){
         var index = ui.item.index();
