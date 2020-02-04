@@ -59,14 +59,17 @@ class WordDoc
                 if (is_string($value))
                     $value = json_decode($value,true);
 
-                $template->cloneRow($alias.'_1', count($value));
-
-                foreach ($value as $rkey => $row)
+                if (!empty($value))
                 {
-                    $i = $rkey+1;
+                    $template->cloneRow($alias.'_1', count($value));
 
-                    foreach ($row as $tkey => $td)
-                        $template->setValue($alias."_".($tkey+1)."#$i", $td);
+                    foreach ($value as $rkey => $row)
+                    {
+                        $i = $rkey+1;
+
+                        foreach ($row as $tkey => $td)
+                            $template->setValue($alias."_".($tkey+1)."#$i", $td);
+                    }
                 }
             }
             else if (isset($stringData[$alias.'_file']) && $columns[$alias]->type==CollectionColumn::TYPE_IMAGE)
