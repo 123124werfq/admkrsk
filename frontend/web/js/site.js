@@ -55,8 +55,10 @@ function addInput(block)
 
 $(document).ready(function() {
 
-    $(".ajax-form").submit(function(){
+    $(".ajax-form").submit(function(e){
+
         var $form = $(this);
+
         $.ajax({
             type: "POST",
             dataType: "html",
@@ -67,6 +69,7 @@ $(document).ready(function() {
                 $form.html(data);
         });
 
+        e.preventDefault();
         return false;
     });
 

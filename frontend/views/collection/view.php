@@ -19,8 +19,7 @@
                     ?>
                     <?php
                         $output = str_replace('\n', '', $twig->render('index', $data));
-
-                        echo common\components\helper\Helper::runContentWidget($output,$page);
+                        echo common\components\helper\Helper::runContentWidget($output,$page,$data);
                     ?>
             	</div>
             </div>

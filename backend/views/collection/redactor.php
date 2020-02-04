@@ -17,7 +17,8 @@ $operators = [
     '>='=>'>=',
     '<'=>'<',
     '<='=>'<=',
-    //'<>'=>'<>'
+    'not'=>'Не пусто',
+    '<>'=>'Не равно',
 ];
 
 if (empty($filtes))
@@ -180,7 +181,7 @@ else
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <?=Html::dropDownList("ViewColumns[$key][show_for_searchcolumn]",$data['show_for_searchcolumn'],$columns,['class'=>'form-control','id'=>'CollectionColumn_show_for_searchcolumn_'.$key,'prompt'=>'Показывать если введено']);?>
+                            <?=Html::dropDownList("ViewColumns[$key][show_for_searchcolumn]",$data['show_for_searchcolumn'],$columns,['class'=>'form-control','id'=>'CollectionColumn_show_for_searchcolumn_'.$key,'prompt'=>'Показывать если введено','multiple'=>true]);?>
                         </div>
                     </div>
                 </div>

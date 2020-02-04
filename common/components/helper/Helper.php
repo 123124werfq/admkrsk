@@ -51,9 +51,9 @@ class Helper
 	}
 
 
-	public static function runContentWidget($content, $page)
+	public static function runContentWidget($content, $page, $recordData=[])
 	{
-		function parseAttributesFromTag($tag)
+		function parseAttributesFromTag($tag, $recordData=[])
 		{
 		    $pattern = '/(\w+)=[\'"]([^\'"]*)/';
 
@@ -67,12 +67,20 @@ class Helper
 
 		        $attrName = $match[1];
 		        $attrValue = is_numeric($match[2]) ? (int)$match[2] : trim($match[2]);
+
 		        $result[$attrName] = $attrValue;
 		    }
 
 		    // новый формат передачи данных не конфликтный со старым
 		    if (!empty($result['encodedata']))
-		    	$result = json_decode(base64_decode($result['encodedata']),true);
+		    {
+		    	$result = base64_decode($result['encodedata']);
+
+		    	foreach ($recordData as $alias => $value)
+		        	$result = str_replace("{{".$alias."}}", $value, $result);
+
+		        $result = json_decode($result,true);
+		    }
 
 		    return $result;
 		}
@@ -82,7 +90,7 @@ class Helper
         if (!empty($matches[0]))
 	        foreach ($matches[0] as $key => $match)
 	        {
-	            $attributes = parseAttributesFromTag($match);
+	            $attributes = parseAttributesFromTag($match, $recordData);
 
                 $class = 'frontend\widgets\\' . ucwords($matches[1][$key]) . 'Widget';
 

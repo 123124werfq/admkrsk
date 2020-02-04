@@ -22,6 +22,7 @@ use yii\db\ActiveRecord;
  * This is the model class for table "cnt_page".
  *
  * @property int $id_page
+ * @property int $id_parent
  * @property int $id_media
  * @property string $title
  * @property string $alias
@@ -85,7 +86,13 @@ class Page extends ActiveRecord
             [['id_media', 'active', 'id_parent', 'noguest', 'hidemenu','notify_rule'], 'integer'],
             [['is_admin_notify'], 'boolean'],
             [['title', 'alias'], 'required'],
+            ['id_parent', 'required', 'when' => function($model) {
+                return ($model->lft!=1);
+            }],
             [['is_partition'], 'boolean'],
+            ['id_parent', 'required', 'when' => function($model) {
+                return ($model->lft!=1);
+            }],
             [['content', 'path','notify_message'], 'string'],
             [['alias'], 'unique'],
             [['title', 'alias', 'seo_title', 'seo_description', 'seo_keywords'], 'string', 'max' => 255],

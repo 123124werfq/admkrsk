@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\forms\CopyPageForm;
 use common\models\Action;
 use common\models\GridSetting;
 use common\modules\log\models\Log;
@@ -16,6 +17,7 @@ use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\validators\NumberValidator;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
@@ -73,7 +75,7 @@ class PageController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['update','hide','order','get-page'],
+                        'actions' => ['update','copy','hide','order','get-page'],
                         'roles' => ['backend.page.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => Yii::$app->request->get('id'),
@@ -423,7 +425,14 @@ class PageController extends Controller
         {
             $model->id_parent = $id_parent;
             $parent = $this->findModel($id_parent);
-            $model->populateRelation('parent',$parent);
+
+            if (Page::hasEntityAccess($parent->id_page)) {
+                $model->populateRelation('parent',$parent);
+            } else {
+                throw new ForbiddenHttpException();
+            }
+        } elseif (!Yii::$app->user->can('admin.page')) {
+            throw new ForbiddenHttpException();
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate())
@@ -485,14 +494,36 @@ class PageController extends Controller
         ]);
     }
 
-    public function actionHide($id)
+    /**
+     * @param $id
+     * @return mixed
+     * @throws InvalidConfigException
+     * @throws NotFoundHttpException
+     */
+    public function actionCopy($id)
     {
         $model = $this->findModel($id);
 
-        $model->hidemenu = ($model->hidemenu)?0:1;
-        $model->updateAttributes(['hidemenu']);
+        $copyForm = new CopyPageForm(['id_page' => $model->id_page]);
 
-        return $this->redirect(['view', 'id' => $model->id_parent]);
+        if ($copyForm->load(Yii::$app->request->post())) {
+            $transaction = Yii::$app->db->beginTransaction();
+
+            try {
+                $newPage = $copyForm->cloneNode();
+                $transaction->commit();
+            } catch (\Exception $e) {
+                $transaction->rollBack();
+                throw $e;
+            }
+
+            return $this->redirect(['view', 'id' => $newPage->id_page]);
+        }
+
+        return $this->render('copy', [
+            'model' => $model,
+            'copyForm' => $copyForm,
+        ]);
     }
 
     /**
