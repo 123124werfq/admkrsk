@@ -61,8 +61,6 @@ class WordDoc
 
                 if (!empty($value))
                 {
-                    var_dump($value);
-                    die();
                     $template->cloneRow($alias.'_1', count($value));
 
                     foreach ($value as $rkey => $row)
