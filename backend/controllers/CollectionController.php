@@ -954,7 +954,7 @@ class CollectionController extends Controller
                                         {
                                             $columnModel = new CollectionColumn;
                                             $columnModel->name = $column['name'];
-                                            $columnModel->type = $column['type'];//CollectionColumn::TYPE_INPUT;
+                                            $columnModel->type = $column['type'];
                                             $columnModel->alias = strtolower(\common\components\helper\Helper::transFileName($column['alias']));
                                             $columnModel->ord = $i;
                                             $columnModel->id_collection = $collection->id_collection;
@@ -971,6 +971,7 @@ class CollectionController extends Controller
                                         $i++;
                                     }
 
+                                    $values = [];
                                     foreach ($records as $rkey => $row)
                                     {
                                         $collectionRecord = new CollectionRecord;
@@ -990,6 +991,10 @@ class CollectionController extends Controller
                                                 case CollectionColumn::TYPE_DATETIME:
                                                     $insert[$columns[$tdkey]->id_column] = strtotime($value);
                                                     break;
+                                                case CollectionColumn::TYPE_SELECT:
+                                                    $insert[$columns[$tdkey]->id_column] = $value;
+                                                    $values[$columns[$tdkey]->id_column][$value] = $value;
+                                                    break;
                                                 default:
                                                     $insert[$columns[$tdkey]->id_column] = $value;
                                                     break;
@@ -1003,6 +1008,14 @@ class CollectionController extends Controller
                                     Yii::$app->session->setFlash('success', 'Данные импортированы');
 
                                     $collection->createForm();
+
+                                    foreach ($values as $id_column => $value)
+                                    {
+                                        $input = FormInput::find()->where(['id_column'=>$id_column])->one();
+                                        if (!empty($input))
+                                            $input->values = implode(';', $value);
+                                        $input->updateAttributes('values');
+                                    }
 
                                     unlink($model->filepath);
 

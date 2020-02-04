@@ -36,9 +36,10 @@ class SettingPluginCollection extends ActiveRecord
         $setting->id_collection = intval($collectionId);
         $setting->id_page = intval(Yii::$app->request->get('page_id', 0));
         $setting->settings = $settings;
-        if ($setting->save()) {
+
+        if ($setting->save())
             return $setting->key;
-        };
+
         return null;
     }
 

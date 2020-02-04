@@ -97,9 +97,9 @@ use common\models\Box;
                     ],
                     'placeholder' => 'Выберите разделы',
                 ],
-                'value'=>array_keys($records),
                 'options' => [
-                    'multiple' => true
+                    'multiple' => true,
+                    'value'=>array_keys($records),
                 ]
             ]);
         ?>

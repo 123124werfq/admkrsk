@@ -72,7 +72,7 @@ class Helper
 		    }
 
 		    // новый формат передачи данных не конфликтный со старым
-		    if (!empty($result['encodedata']))
+		    if (!empty($result['encodedata']) && empty($result['key']))
 		    {
 		    	$result = base64_decode($result['encodedata']);
 

@@ -199,7 +199,7 @@ class WordDoc
                 if (is_array($data[$col_alias]))
                     $string_output[$col->alias] = implode('<w:br/>', $data[$col_alias]);
                 else
-                    $string_output[$col->alias] = $data[$col_alias];
+                    $string_output[$col->alias] = (string)$data[$col_alias];
             }
         }
 
