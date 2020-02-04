@@ -138,7 +138,10 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 $output[$value_index] = (float)$value;
                 break;
             case CollectionColumn::TYPE_CHECKBOXLIST:
-                $output[$search_index] = implode("\r\n", $value);
+                if (is_array($value))
+                    $output[$search_index] = implode("\r\n", $value);
+                else
+                    $output[$search_index] = '';
                 break;
             case CollectionColumn::TYPE_MAP:
                 $output[$search_index] = implode(' ', $value);
