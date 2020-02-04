@@ -290,7 +290,7 @@ class ServiceController extends Controller
                         // запрос к СЭД
                         $attachments = $record->getAllMedias();
 
-                        $export_path = $record->collection->form->makeDoc($record);
+                        $export_path = $record->collection->form->makeDoc($record, ['number_internal' => (string)$appeal->number_internal, 'date' => date("d.m.Y", $appeal->date)]);
 
                         $wf = new Workflow;
                         $wf->generateArchive($idents['guid'], $attachments, $export_path);
