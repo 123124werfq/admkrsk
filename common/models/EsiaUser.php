@@ -61,6 +61,7 @@ class EsiaUser extends \yii\db\ActiveRecord
 //            [['first_name', 'last_name', 'last_name', 'middle_name', 'trusted', 'home_phone', 'living_addr_object', 'living_addr', 'living_addr_fias', 'firmaddrfias',  'register_addr', 'register_addr_fias'], 'string'],
             [['first_name', 'last_name', 'last_name', 'middle_name', 'trusted', 'home_phone', 'living_addr', 'living_addr_fias',  'register_addr', 'register_addr_fias'], 'string'],
             [['passport_serie', 'passport_number', 'passport_issuer', 'passport_issuer_id', 'passport_comments', 'userdoc_raw', 'mediacal_raw', 'residence_raw'], 'string'],
+            [['living_addr_object', 'firmaddrfias'], 'safe']
         ];
     }
 
