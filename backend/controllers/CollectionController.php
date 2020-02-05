@@ -767,7 +767,7 @@ class CollectionController extends Controller
                 $options['columns'][] = [
                     'id_column' => $data['id_column'],
                     'group' => $data['group'],
-                    'show_for_searchcolumn' => $data['show_for_searchcolumn'],
+                    'show_for_searchcolumn' => isset($data['show_for_searchcolumn'])? $data['show_for_searchcolumn'] : '',
                     'showdetails' => isset($data['showdetails']) ? '1' : '',
                 ];
             }
