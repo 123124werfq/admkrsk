@@ -102,6 +102,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
     protected function getLabelsByID($ids,$column)
     {
         $mongoLabels = [];
+
         if (!empty($ids))
         {
             $labels = (new \yii\db\Query())
@@ -116,8 +117,11 @@ class CollectionRecord extends \yii\db\ActiveRecord
             foreach ($labels as $lkey => $data)
                 $labelsByIndex[$data['id_record']] = $data['value'];
 
-            foreach ($ids as $key => $id)
-                $mongoLabels[$id] = $labelsByIndex[$id];
+            if (is_array($ids))
+                foreach ($ids as $key => $id)
+                    $mongoLabels[$id] = $labelsByIndex[$id];
+            else
+                $mongoLabels[$ids] = $labelsByIndex[$ids];
         }
 
         return $mongoLabels;
