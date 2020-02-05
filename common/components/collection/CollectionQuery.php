@@ -157,8 +157,11 @@ class CollectionQuery extends \yii\mongodb\Query
                 if (!isset($this->columns[$id_column]))
                     continue;
 
-                if (is_array($value) && isset($record['col'.$id_column.'_search']))
+                if (isset($record['col'.$id_column.'_search']))
                 {
+                    if (!is_array($value))
+                        $value = [$value];
+
                     $labels = json_decode($record['col'.$id_column.'_search'],true);
 
                     $combine_value = [];

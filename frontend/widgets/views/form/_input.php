@@ -530,7 +530,7 @@ JS;
                         ],
                     ],
                     'options' => [
-                        'value' => is_array($value)?key($value):$value
+                        'value' => key($value)
                     ]
                 ]);
                 break;
