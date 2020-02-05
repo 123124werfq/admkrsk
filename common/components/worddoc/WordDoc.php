@@ -150,6 +150,19 @@ class WordDoc
             {
                 $string_output[$col->alias] = $data[$col_alias];
             }
+            else if ($col->type==CollectionColumn::TYPE_ADDRESS)
+            {
+                $string_output[$col->alias.'.country'] = $data[$col_alias]['country'];
+                $string_output[$col->alias.'.region'] = $data[$col_alias]['region'];
+                $string_output[$col->alias.'.subregion'] = $data[$col_alias]['subregion'];
+                $string_output[$col->alias.'.city'] = $data[$col_alias]['city'];
+                $string_output[$col->alias.'.district'] = $data[$col_alias]['district'];
+                $string_output[$col->alias.'.street'] = $data[$col_alias]['street'];
+                $string_output[$col->alias.'.house'] = $data[$col_alias]['house'];
+                $string_output[$col->alias.'.room'] = $data[$col_alias]['room'];
+                $string_output[$col->alias.'.postalcode'] = $data[$col_alias]['postalcode'];
+                $string_output[$col->alias.'.fulladdress'] = $data[$col_alias]['fulladdress'];
+            }
             else if ($col->type==CollectionColumn::TYPE_CITY)
             {
                 $model = \common\models\City::findOne($data[$col_alias]);
