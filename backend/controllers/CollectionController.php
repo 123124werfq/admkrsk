@@ -766,7 +766,6 @@ class CollectionController extends Controller
             foreach (Yii::$app->request->post('ViewColumns') as $key => $data) {
                 $options['columns'][] = [
                     'id_column' => $data['id_column'],
-                    'value' => (!empty($data['value'])) ? $data['value'] : '',
                     'show_for_searchcolumn'=> $data['show_for_searchcolumn']??'',
                     'group'=> $data['group']??'',
                 ];

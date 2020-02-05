@@ -247,8 +247,7 @@ class Collection extends ActiveRecord
         $model->id_collection = $this->id_collection;
         $model->data = $data;
 
-        if ($model->save())
-        {
+        if ($model->save()) {
             return $model;
         }
 
@@ -334,14 +333,11 @@ class Collection extends ActiveRecord
             $options = json_decode($this->options, true);
 
             if (!empty($options['filters'])) {
-                foreach ($options['filters'] as $key => $filter)
-                {
+                foreach ($options['filters'] as $key => $filter) {
                     $where = [$filter['operator'], $filter['id_column'], $filter['value']];
-
                     if ($key == 0) {
                         $query->where($where);
-                    } else
-                    {
+                    } else {
                         $query->andWhere($where);
                     }
                 }
