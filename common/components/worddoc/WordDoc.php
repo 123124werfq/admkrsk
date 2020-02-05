@@ -64,15 +64,14 @@ class WordDoc
 
                 if (!empty($value))
                 {
-                    $template->cloneRow($alias.'_1', count($value));
+                    $template->cloneRowAndSetValues($alias.'.'.key($value[0]), $value);
 
-                    foreach ($value as $rkey => $row)
+                    /*foreach ($value as $rkey => $row)
                     {
-                        $i = $rkey+1;
-
                         foreach ($row as $tkey => $td)
-                            $template->setValue($alias."_".($tkey+1)."#$i", $td);
-                    }
+                            $template->setValue($alias.".".$tkey."#$i", $td);
+
+                    }*/
                 }
             }
             else if (isset($stringData[$alias.'_file']) && $columns[$alias]->type==CollectionColumn::TYPE_IMAGE)

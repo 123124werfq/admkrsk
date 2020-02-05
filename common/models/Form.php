@@ -162,7 +162,7 @@ class Form extends \yii\db\ActiveRecord
         }
     }
 
-    public function makeDoc($collectionRecord, $addData=null)
+    public function makeDoc($collectionRecord, $addData=[])
     {
         if (empty($this->template) && empty($this->service->template))
             return false;
