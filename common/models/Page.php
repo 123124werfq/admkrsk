@@ -248,6 +248,41 @@ class Page extends ActiveRecord
         ];
     }
 
+    public function beforeSave($insert)
+    {
+        $this->updateCollectionPluginSettings();
+        return parent::beforeSave($insert);
+    }
+
+    /**
+     * Remove collection setting plugins by keys
+     */
+    private function updateCollectionPluginSettings()
+    {
+        $oldCollectionSettingsKeys = $this->searchCollectionKeys($this->getOldAttribute('content'));
+        $newCollectionSettingsKeys = $this->searchCollectionKeys($this->getAttribute('content'));
+        $deleteKeys = array_diff($oldCollectionSettingsKeys, $newCollectionSettingsKeys);
+        SettingPluginCollection::deleteAll([
+            'key' => $deleteKeys,
+        ]);
+    }
+
+    /**
+     * @param string $content
+     * @return array
+     */
+    private function searchCollectionKeys(string $content)
+    {
+        $collectionSettingsKeys = [];
+        if (preg_match_all('/data-key=".*"/i', $content, $matches)) {
+            foreach ($matches[0] as $match) {
+                $key = preg_split('/data-key=/i', $match);
+                $collectionSettingsKeys[] = str_replace('"', '', $key[1]);
+            }
+        }
+        return $collectionSettingsKeys;
+    }
+
     public static function find()
     {
         $query = new PageQuery(get_called_class());

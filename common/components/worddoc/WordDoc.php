@@ -40,7 +40,7 @@ class WordDoc
         return true;
     }
 
-    public static function makeDocByForm($form, $data, $templatePath)
+    public static function makeDocByForm($form, $data, $templatePath, $addData=[])
     {
         $root = Yii::getAlias('@app');
 
@@ -49,6 +49,9 @@ class WordDoc
         $columns = $form->collection->getColumns()->indexBy('alias')->all();
 
         $stringData = WordDoc::convertDataToString($data,$columns);
+
+        foreach ($addData as $key => $value)
+            $stringData[$key] = $value;
 
         foreach ($stringData as $alias => $value)
         {
@@ -59,14 +62,16 @@ class WordDoc
                 if (is_string($value))
                     $value = json_decode($value,true);
 
-                $template->cloneRow($alias.'_1', count($value));
-
-                foreach ($value as $rkey => $row)
+                if (!empty($value))
                 {
-                    $i = $rkey+1;
+                    $template->cloneRowAndSetValues($alias.'.'.key($value[0]), $value);
 
-                    foreach ($row as $tkey => $td)
-                        $template->setValue($alias."_".($tkey+1)."#$i", $td);
+                    /*foreach ($value as $rkey => $row)
+                    {
+                        foreach ($row as $tkey => $td)
+                            $template->setValue($alias.".".$tkey."#$i", $td);
+
+                    }*/
                 }
             }
             else if (isset($stringData[$alias.'_file']) && $columns[$alias]->type==CollectionColumn::TYPE_IMAGE)
@@ -144,6 +149,19 @@ class WordDoc
             {
                 $string_output[$col->alias] = $data[$col_alias];
             }
+            else if ($col->type==CollectionColumn::TYPE_ADDRESS)
+            {
+                $string_output[$col->alias.'.country'] = $data[$col_alias]['country'];
+                $string_output[$col->alias.'.region'] = $data[$col_alias]['region'];
+                $string_output[$col->alias.'.subregion'] = $data[$col_alias]['subregion'];
+                $string_output[$col->alias.'.city'] = $data[$col_alias]['city'];
+                $string_output[$col->alias.'.district'] = $data[$col_alias]['district'];
+                $string_output[$col->alias.'.street'] = $data[$col_alias]['street'];
+                $string_output[$col->alias.'.house'] = $data[$col_alias]['house'];
+                $string_output[$col->alias.'.room'] = $data[$col_alias]['room'];
+                $string_output[$col->alias.'.postalcode'] = $data[$col_alias]['postalcode'];
+                $string_output[$col->alias.'.fulladdress'] = $data[$col_alias]['fulladdress'];
+            }
             else if ($col->type==CollectionColumn::TYPE_CITY)
             {
                 $model = \common\models\City::findOne($data[$col_alias]);
@@ -199,7 +217,7 @@ class WordDoc
                 if (is_array($data[$col_alias]))
                     $string_output[$col->alias] = implode('<w:br/>', $data[$col_alias]);
                 else
-                    $string_output[$col->alias] = $data[$col_alias];
+                    $string_output[$col->alias] = (string)$data[$col_alias];
             }
         }
 

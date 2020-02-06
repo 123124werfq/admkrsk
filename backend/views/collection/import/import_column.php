@@ -15,7 +15,9 @@
         CollectionColumn::TYPE_INTEGER=>'',
         CollectionColumn::TYPE_DATE=>'',
         CollectionColumn::TYPE_DATETIME=>'',
-        CollectionColumn::TYPE_TEXTAREA=>''
+        CollectionColumn::TYPE_TEXTAREA=>'',
+        CollectionColumn::TYPE_FILE_OLD=>'',
+        CollectionColumn::TYPE_SELECT=>'',
     ];
 
     foreach ($types as $key => $type)

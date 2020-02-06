@@ -4,8 +4,9 @@ namespace backend\controllers;
 
 use backend\models\forms\CollectionConvertForm;
 use common\models\Action;
+use common\models\SettingPluginCollection;
 use common\modules\log\models\Log;
-use moonland\phpexcel\Excel;
+use Throwable;
 use Yii;
 use common\models\Collection;
 use common\models\CollectionRecord;
@@ -19,6 +20,7 @@ use yii\helpers\ArrayHelper;
 use yii\mongodb\Exception;
 use yii\db\Exception as DbException;
 use yii\validators\NumberValidator;
+use yii\web\HttpException;
 use yii\web\Response;
 use yii\web\UploadedFile;
 use yii\filters\AccessControl;
@@ -297,7 +299,7 @@ class CollectionController extends Controller
      * @param $id
      * @return string
      * @throws NotFoundHttpException
-     * @throws \Throwable
+     * @throws Throwable
      * @throws StaleObjectException
      */
     public function actionConvertType($id)
@@ -618,37 +620,48 @@ class CollectionController extends Controller
         ]);
     }
 
+    /**
+     * @return array|string
+     * @throws HttpException
+     */
     public function actionRedactor()
     {
         $this->layout = 'clear';
         $model = new Collection;
         $model->name = 'temp';
-        //$model->id_parent_collection = Yii::$app->request->post('id_collection');
+        $requestParams = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate())
-        {
-            if (!empty(Yii::$app->request->post('json')))
-            {
-                $json = $this->saveView($model, true);
+        /** configure and return changes of collection */
+        if (isset($requestParams['configureEditCollection'])) {
+            /** update plugin options */
+            $model->mapPropsAndAttributes(Yii::$app->request->post('Collection'));
+            $model->isEdit = true;
+            $updatePluginOptions = $this->configureJsonCollection($model);
+            $jsonFormatOptions = base64_decode($updatePluginOptions['base64']);
+            $updatePluginOptions['key'] = $model->updatePluginSettings($requestParams['key'], $jsonFormatOptions);
+            return json_encode($updatePluginOptions);
+        }
 
-                $json['id_collection'] = $model->id_parent_collection;
-                $json['template'] = $model->template_view;
-                $json['group'] = $model->id_group;
-                $json['sort'] = $model->id_column_order;
-                $json['dir'] = $model->order_direction;
-                $json['pagesize'] = $model->pagesize;
-                $json['link_column'] = $model->link_column;
-                $json['table_head'] = $model->table_head;
-                $json['table_style'] = $model->table_style;
-                $json['show_download'] = $model->show_download;
-                $json['show_row_num'] = $model->show_row_num;
-                $json['show_on_map'] = $model->show_on_map;
-                $json['show_column_num'] = $model->show_column_num;
-
-                $json['base64'] = base64_encode(json_encode($json));
-
-                return json_encode($json);
+        /** open modal dialog for edit collection */
+        if (isset($requestParams['edit']) && isset($requestParams['key'])) {
+            $pluginOptions = SettingPluginCollection::getSettings($requestParams['key']);
+            if (!$pluginOptions) {
+                throw new HttpException(400);
             }
+            /** decode collection options */
+            $decodePluginOptions = json_decode($pluginOptions->settings,true);
+            $model->mapPropsAndAttributes($decodePluginOptions);
+            $model->isEdit = true;
+        }
+
+        /** configure and return new data collection */
+        if ($model->load($requestParams) && !empty(Yii::$app->request->post('json'))) {
+            $model->mapPropsAndAttributes($requestParams['Collection']);
+            $configureJsonPluginOptions = $this->configureJsonCollection($model);
+            /** save plugin options */
+            $jsonFormatOptions = base64_decode($configureJsonPluginOptions['base64']);
+            $configureJsonPluginOptions['key'] = $model->savePluginSettings($jsonFormatOptions);
+            return json_encode($configureJsonPluginOptions);
         }
 
         if (Yii::$app->request->isAjax)
@@ -661,11 +674,37 @@ class CollectionController extends Controller
         ]);
     }
 
+    /**
+     * @param Collection $model
+     * @return array
+     */
+    private function configureJsonCollection($model)
+    {
+        $collectionPluginSettings = $this->saveView($model, true);
+        $collectionPluginSettings['id_collection'] = $model->id_parent_collection;
+        $collectionPluginSettings['template_view'] = $model->template_view;
+        $collectionPluginSettings['id_group'] = $model->id_group;
+        $collectionPluginSettings['link_column'] = $model->link_column;
+        $collectionPluginSettings['id_column_order'] = $model->id_column_order;
+        $collectionPluginSettings['order_direction'] = $model->order_direction;
+        $collectionPluginSettings['pagesize'] = $model->pagesize;
+        $collectionPluginSettings['table_head'] = $model->table_head;
+        $collectionPluginSettings['table_style'] = $model->table_style;
+        $collectionPluginSettings['show_download'] = $model->show_download;
+        $collectionPluginSettings['show_row_num'] = $model->show_row_num;
+        $collectionPluginSettings['show_on_map'] = $model->show_on_map;
+        $collectionPluginSettings['show_column_num'] = $model->show_column_num;
+        $collectionPluginSettings['base64'] = base64_encode(json_encode($collectionPluginSettings));
+        $collectionPluginSettings['isEdit'] = $model->isEdit;
+        return $collectionPluginSettings;
+    }
+
 
     /**
      * Creates a new Collection model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
+     * @throws \Exception
      */
     public function actionCreate()
     {
@@ -727,7 +766,6 @@ class CollectionController extends Controller
             foreach (Yii::$app->request->post('ViewColumns') as $key => $data) {
                 $options['columns'][] = [
                     'id_column' => $data['id_column'],
-                    'value' => (!empty($data['value'])) ? $data['value'] : '',
                     'show_for_searchcolumn'=> $data['show_for_searchcolumn']??'',
                     'group'=> $data['group']??'',
                 ];
@@ -740,7 +778,7 @@ class CollectionController extends Controller
             foreach (Yii::$app->request->post('SearchColumns') as $key => $data) {
                 $options['search'][] = [
                     'id_column' => $data['id_column'],
-                    'type' => $data['type'],
+                    'type' => isset($data['type']) ? $data['type'] : '0',
                 ];
             }
         }
@@ -752,7 +790,7 @@ class CollectionController extends Controller
                 if (!empty($data['id_column']))
                     $options['filters'][] = [
                         'id_column' => $data['id_column'],
-                        'operator' => $data['operator'],
+                        'operator' => isset($data['operator']) ? $data['operator'] : '=',
                         'value' => (!empty($data['value'])) ? $data['value'] : ''
                     ];
             }
@@ -858,12 +896,11 @@ class CollectionController extends Controller
                             }
 
                             // пропускаем
-                            if (!empty($model->skip) && $rowkey<=$model->skip)
+                            if (!empty($model->skip) && $rowkey <= $model->skip)
                                 continue;
 
                             // устанавливаем именя колонок по первой строке если выбрали
-                            if ($rowkey==($model->skip+1) && $model->firstRowAsName)
-                            {
+                            if ($rowkey == ($model->skip + 1) && $model->firstRowAsName) {
                                 $columns = $row;
                                 continue;
                             }
@@ -916,7 +953,7 @@ class CollectionController extends Controller
                                         {
                                             $columnModel = new CollectionColumn;
                                             $columnModel->name = $column['name'];
-                                            $columnModel->type = $column['type'];//CollectionColumn::TYPE_INPUT;
+                                            $columnModel->type = $column['type'];
                                             $columnModel->alias = strtolower(\common\components\helper\Helper::transFileName($column['alias']));
                                             $columnModel->ord = $i;
                                             $columnModel->id_collection = $collection->id_collection;
@@ -933,6 +970,7 @@ class CollectionController extends Controller
                                         $i++;
                                     }
 
+                                    $values = [];
                                     foreach ($records as $rkey => $row)
                                     {
                                         $collectionRecord = new CollectionRecord;
@@ -952,6 +990,10 @@ class CollectionController extends Controller
                                                 case CollectionColumn::TYPE_DATETIME:
                                                     $insert[$columns[$tdkey]->id_column] = strtotime($value);
                                                     break;
+                                                case CollectionColumn::TYPE_SELECT:
+                                                    $insert[$columns[$tdkey]->id_column] = $value;
+                                                    $values[$columns[$tdkey]->id_column][$value] = $value;
+                                                    break;
                                                 default:
                                                     $insert[$columns[$tdkey]->id_column] = $value;
                                                     break;
@@ -965,6 +1007,14 @@ class CollectionController extends Controller
                                     Yii::$app->session->setFlash('success', 'Данные импортированы');
 
                                     $collection->createForm();
+
+                                    foreach ($values as $id_column => $value)
+                                    {
+                                        $input = FormInput::find()->where(['id_column'=>$id_column])->one();
+                                        if (!empty($input))
+                                            $input->values = implode(';', $value);
+                                        $input->updateAttributes('values');
+                                    }
 
                                     unlink($model->filepath);
 
@@ -1033,7 +1083,7 @@ class CollectionController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
-     * @throws \Throwable
+     * @throws Throwable
      * @throws StaleObjectException
      */
     public function actionDelete($id)

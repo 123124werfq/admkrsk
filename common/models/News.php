@@ -2,6 +2,7 @@
 
 namespace common\models;
 use common\behaviors\AccessControlBehavior;
+use common\behaviors\SubscribeBehaviour;
 use common\components\multifile\MultiUploadBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
@@ -9,11 +10,12 @@ use common\traits\AccessTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use dosamigos\taggable\Taggable;
-use yii\caching\TagDependency;
 use yii\db\ActiveQuery;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\helpers\StringHelper;
 
@@ -157,6 +159,7 @@ class News extends \yii\db\ActiveRecord
     {
         return [
             'ts' => TimestampBehavior::class,
+            'subscribeNotify' => SubscribeBehaviour::class,
             'ba' => BlameableBehavior::class,
             'log' => LogBehavior::class,
             'ac' => [
@@ -192,7 +195,7 @@ class News extends \yii\db\ActiveRecord
 
     /**
      * @return ActiveQuery
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function getTags()
     {
@@ -269,6 +272,56 @@ class News extends \yii\db\ActiveRecord
     public function getFullUrl()
     {
         return $this->getUrl(true);
+    }
+
+    /**
+     * @return array
+     * ... [
+     *      [
+     *          title => 'Новости',
+     *          count => 532,
+     *      ],
+     *      [
+     *          title => 'Анонсы',
+     *          count => 742,
+     *      ],
+     *      ....
+     * ]
+     */
+    public static function getSubscriberStatistics()
+    {
+        return (new Query())
+            ->select(['cnt_page.title', 'COUNT(page_id)'])
+            ->from('subscriber_subscriptions')
+            ->leftJoin('cnt_page', 'subscriber_subscriptions.page_id = cnt_page.id_page')
+            ->groupBy('cnt_page.title')
+            ->all();
+    }
+
+    /**
+     * @return array
+     * @throws InvalidConfigException
+     * ... [
+     *          7 => 'Новости',
+     *          8 => 'Анонсы',
+     *          ....
+     *    ]
+     */
+    public static function getUniqueNews()
+    {
+        return static::find()
+            ->select(
+                [
+                    'page.title',
+                    'news.id_page',
+                ])
+            ->alias('news')
+            ->joinWith('page page', false)
+            ->where('news.id_page IS NOT NULL ')
+            ->groupBy(['news.id_page', 'page.title'])
+            ->indexBy('news.id_page')
+            ->asArray()
+            ->column();
     }
 
     public static function hasAccess()

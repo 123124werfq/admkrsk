@@ -1,8 +1,12 @@
 <?php
 
+use backend\widgets\GalleryGroupsWidget;
 use backend\widgets\UserAccessControl;
 use backend\widgets\UserGroupAccessControl;
+use common\components\multifile\MultiFileWidget;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\web\JsExpression;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 
@@ -17,14 +21,16 @@ use kartik\select2\Select2;
         <?='' //$form->field($model, 'id_page')->textInput() ?>
         <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-         <?=\common\components\multifile\MultiFileWidget::widget([
-            'model'=>$model,
-            'single'=>false,
-            'relation'=>'medias',
-            'extensions'=>['jpg','jpeg','gif','png'],
-            'grouptype'=>1,
-            'showPreview'=>true
-        ]);?>
+        <?= MultiFileWidget::widget([
+            'model' => $model,
+            'single' => false,
+            'relation' => 'medias',
+            'extensions' => ['jpg', 'jpeg', 'gif', 'png'],
+            'grouptype' => 1,
+            'showPreview' => true
+        ]); ?>
+
+        <?= $form->field($model, 'galleryGroup')->widget(GalleryGroupsWidget::class) ?>
 
         <?php if (Yii::$app->user->can('admin.gallery')): ?>
 
@@ -36,7 +42,7 @@ use kartik\select2\Select2;
                 $records = $model->getRecords('partitions');
                 if (!empty($records[0]->id_page))
                     $records = ArrayHelper::map($records, 'id_page', 'title');
-                else 
+                else
                     $records = [];
 
                 echo Select2::widget([

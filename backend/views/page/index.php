@@ -119,14 +119,6 @@ $this->params['button-block'][] = Html::a('Экспорт XLS', ['', 'export' =>
                         'class' => 'yii\grid\ActionColumn',
                         'template' => '{view} {update} {copy} ' . ($archive ? '{undelete}' : '{delete}'),
                         'buttons' => [
-                            'copy' => function ($url, $model, $key) {
-                                $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-floppy-disk"]);
-                                return Html::a($icon, $url, [
-                                    'title' => 'Копировать',
-                                    'aria-label' => 'Копировать',
-                                    'data-pjax' => '0',
-                                ]);
-                            },
                             'undelete' => function ($url, $model, $key) {
                                 $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-floppy-disk"]);
                                 return Html::a($icon, $url, [

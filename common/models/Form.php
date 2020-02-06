@@ -162,7 +162,7 @@ class Form extends \yii\db\ActiveRecord
         }
     }
 
-    public function makeDoc($collectionRecord, $addData=null)
+    public function makeDoc($collectionRecord, $addData=[])
     {
         if (empty($this->template) && empty($this->service->template))
             return false;
@@ -188,7 +188,7 @@ class Form extends \yii\db\ActiveRecord
         $template_path = $root.'/runtime/templates/template_'.$media->id_media.'_'.time().'.docx';
         file_put_contents($template_path,file_get_contents($url, false, stream_context_create($arrContextOptions)));
 
-        $export_path = \common\components\worddoc\WordDoc::makeDocByForm($this, $data, $template_path);
+        $export_path = \common\components\worddoc\WordDoc::makeDocByForm($this, $data, $template_path,$addData);
 
         return $export_path;
     }
@@ -212,9 +212,9 @@ class Form extends \yii\db\ActiveRecord
     {
         if ($this->isMainForm())
             return $this->hasMany(FormInput::class, ['id_form' => 'id_form']);
-        else 
+        else
             return FormInput::find()->where('id_input IN (
-            SELECT id_input 
+            SELECT id_input
                 FROM form_element as fi
                 INNER JOIN form_row as fr ON fr.id_row = fi.id_row
             WHERE fr.id_form = '.$this->id_form.')');

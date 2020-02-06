@@ -334,6 +334,10 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                     ]
                 ]).'</div>';
 
+
+                if (!empty($options['show_room']))
+                    echo $form->field($model, $attribute.'[show_room]')->textInput(['id'=>'show_room'.$attribute,'placeholder'=>'кв.,оф.']);
+
                 //echo '<div class="col-md-4">';
 
                 //echo '<div class="col-md-12"></div>';
@@ -582,7 +586,7 @@ setTimeout(function(){
     var optpos = 0;
 $("#{$options['id']}").next().find('.select2-selection__rendered').sortable({
       start: function(event, ui){
-        optpos = ui.item.index();        
+        optpos = ui.item.index();
       },
       stop: function(event, ui){
         var index = ui.item.index();
@@ -788,6 +792,8 @@ JS;
                                 $i = 0;
                                 foreach ($columns as $ckey => $column)
                                 {
+                                    $alias = $column['alias'];
+
                                     if (!empty($column['type']) && $column['type']=='list')
                                     {
                                         $values = [];
@@ -795,10 +801,10 @@ JS;
                                         foreach ((!empty($column['values']))?explode(';', $column['values']):[] as $vkey => $value)
                                             $values[$value] = $value;
 
-                                        echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::dropDownList('FormDynamic['.$attribute.']['.$rkey.']['.$i.']',$row[$i]??'',$values,['id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
+                                        echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::dropDownList('FormDynamic['.$attribute.']['.$rkey.']['.$alias.']',$row[$alias]??'',$values,['id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
                                     }
                                     else
-                                        echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::textINput('FormDynamic['.$attribute.']['.$rkey.']['.$i.']',$row[$i]??'',['id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
+                                        echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::textINput('FormDynamic['.$attribute.']['.$rkey.']['.$alias.']',$row[$alias]??'',['id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
                                     $i++;
                                 }
                             }

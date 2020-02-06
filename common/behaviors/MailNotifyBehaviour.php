@@ -3,7 +3,6 @@
 namespace common\behaviors;
 
 use common\models\MailNotifyManager;
-use common\models\Notify;
 use common\models\NotifyMessage;
 use Yii;
 use yii\base\Behavior;

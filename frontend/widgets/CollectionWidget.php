@@ -3,6 +3,7 @@ namespace frontend\widgets;
 
 use Yii;
 use common\models\Collection;
+use common\models\SettingPluginCollection;
 use yii\data\Pagination;
 
 class CollectionWidget extends \yii\base\Widget
@@ -36,6 +37,13 @@ class CollectionWidget extends \yii\base\Widget
     {
         if (!empty($this->attributes))
         {
+            if (!empty($this->attributes['key']))
+            {
+                $setting = SettingPluginCollection::find()->where(['key'=>$this->attributes['key']])->one();
+                if (!empty($setting))
+                    $this->attributes = json_decode($setting->settings,true);
+            }
+
             if (!empty($this->attributes['id']))
                 $this->id_collection = (int)$this->attributes['id'];
 
@@ -129,7 +137,7 @@ class CollectionWidget extends \yii\base\Widget
 
                         if ($search_columns[$id_col]['type']==1)
                             $query->andWhere(['like','col'.$id_col,$search_columns[$id_col]['value']]);
-                        else 
+                        else
                             $query->andWhere(['col'.$id_col=>$search_columns[$id_col]['value']]);
                     }
                 }
@@ -217,7 +225,7 @@ class CollectionWidget extends \yii\base\Widget
         // переворачиваем колонки на алиас с очередностью выбора
         $columnsByAlias = [];
         $columnsOptions = [];
-        
+
         foreach ($this->columns['columns'] as $key => $col)
         {
             if (!empty($columns[$col['id_column']]))

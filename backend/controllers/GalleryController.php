@@ -3,12 +3,14 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\GalleryGroup;
 use common\models\GridSetting;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\Gallery;
 use backend\models\search\GallerySearch;
 use yii\base\InvalidConfigException;
+use yii\db\Exception;
 use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -148,16 +150,20 @@ class GalleryController extends Controller
         ]);
     }
 
-
+    /**
+     * @return false|string
+     * @throws InvalidConfigException
+     */
     public function actionGetGallery()
     {
-        $records = Gallery::find()->all();
+        $galleryId = Yii::$app->request->get('gallery-id');
+        $groupGalleryId = Yii::$app->request->get('gallery-group-id');
 
-        $output = [];
-        foreach ($records as $key => $data)
-            $output[] = ['text'=>$data->name,'value'=>(string)$data->id_gallery];
-
-        return json_encode($output);
+        $data = [
+            'galleries' => Gallery::prepareGroupsForPlugin(Gallery::find()->all(), $galleryId),
+            'galleriesGroup' =>  GalleryGroup::prepareGroupsForPlugin(GalleryGroup::find()->all(), $groupGalleryId),
+        ];
+        return json_encode($data);
     }
 
     /**
@@ -200,12 +206,14 @@ class GalleryController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws InvalidConfigException
+     * @throws Exception
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->updateGroups();
             $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['index', 'id' => $model->id_gallery]);
         }
