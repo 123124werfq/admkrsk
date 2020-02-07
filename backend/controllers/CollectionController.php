@@ -9,6 +9,7 @@ use common\modules\log\models\Log;
 use Throwable;
 use Yii;
 use common\models\Collection;
+use common\models\FormInput;
 use common\models\CollectionRecord;
 use common\models\CollectionColumn;
 use backend\models\search\CollectionSearch;
@@ -993,6 +994,7 @@ class CollectionController extends Controller
                                                     break;
                                                 case CollectionColumn::TYPE_SELECT:
                                                     $insert[$columns[$tdkey]->id_column] = $value;
+                                                    if (!empty($value))
                                                     $values[$columns[$tdkey]->id_column][$value] = $value;
                                                     break;
                                                 default:
@@ -1014,7 +1016,7 @@ class CollectionController extends Controller
                                         $input = FormInput::find()->where(['id_column'=>$id_column])->one();
                                         if (!empty($input))
                                             $input->values = implode(';', $value);
-                                        $input->updateAttributes('values');
+                                        $input->updateAttributes(['values']);
                                     }
 
                                     unlink($model->filepath);
