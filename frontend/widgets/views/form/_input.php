@@ -775,7 +775,6 @@ JS;
                     </tr>
                     </thead>
                     <tbody id="inputs<?= $input->id_input ?>">
-                    <tr>
                         <?php
                         /*if (empty($data))
                         {
@@ -790,6 +789,7 @@ JS;
                         {*/
                             foreach ($data as $rkey => $row)
                             {
+                                echo "<tr>";
                                 $i = 0;
                                 foreach ($columns as $ckey => $column)
                                 {
@@ -808,13 +808,13 @@ JS;
                                         echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::textINput('FormDynamic['.$attribute.']['.$rkey.']['.$alias.']',$row[$alias]??'',['id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
                                     $i++;
                                 }
+                                echo '<td width="10" class="td-close">
+                                            <a class="close" onclick="return removeRow(this)" href="javascript:">&times;</a>
+                                      </td>
+                                      </tr>';
                             }
                         //}
                         ?>
-                        <td width="10" class="td-close">
-                            <a class="close" onclick="return removeRow(this)" href="javascript:">&times;</a>
-                        </td>
-                    </tr>
                     </tbody>
                     <tfoot>
                     <td colspan="<?= count($columns) + 1 ?>">
