@@ -758,11 +758,12 @@ JS;
                 {
                     $columns = [];
 
-                    foreach ($data as $alias => $value)
+                    foreach ($data[key($data)] as $alias => $value)
                         $columns[] = ['name'=>$alias,'alias'=>$alias];
                 }
                 else if (!empty($columns) && empty($data))
                     $data = [[]];
+
             ?>
                 <table class="form-table">
                     <thead>
