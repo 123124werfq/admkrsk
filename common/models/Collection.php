@@ -260,6 +260,10 @@ class Collection extends ActiveRecord
     public function updateRecord($id_record,$data)
     {
         $model = CollectionRecord::findOne($id_record);
+
+        if (empty($model))
+            return false;
+
         $model->data = $data;
 
         if ($model->save())

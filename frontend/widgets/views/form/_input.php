@@ -541,7 +541,7 @@ JS;
                 $records = [];
 
                 if (!empty($ids))
-                    $records = CollectionRecord::find()->where(['id_record' => $ids])->indexBy('id_record')->all();
+                    $records = CollectionRecord::find()->where(['id_record' => array_keys($ids)])->indexBy('id_record')->all();
 
                 if (!empty($options['accept_add']))
                 {

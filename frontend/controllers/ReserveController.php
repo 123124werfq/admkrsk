@@ -48,8 +48,8 @@ class ReserveController extends \yii\web\Controller
         {
             $prepare = $model->prepareData(true);
 
-            if ($record = $collection->insertRecord($prepare)) {
-
+            if ($record = $collection->insertRecord($prepare))
+            {
                 if(!$profile)
                     $profile = new HrProfile;
 
@@ -67,13 +67,6 @@ class ReserveController extends \yii\web\Controller
 
                 if (!empty($collection->form->id_page) && $url = Page::getUrlByID($collection->form->id_page))
                     return $this->redirect($url);
-<<<<<<< HEAD
-
-            } else
-                echo "Данные не сохранены";                
-=======
->>>>>>> 21e09a47442700bbd8062c348eaa2e7204422ea6
-
             }
             else
                 echo "Данные не сохранены";
