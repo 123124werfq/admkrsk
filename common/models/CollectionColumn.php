@@ -241,8 +241,6 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_CHECKBOXLIST => "Чекбокс множественный",
             self::TYPE_RADIO => "Радио кнопки",
 
-            self::TYPE_MAP => "Координаты",
-
             self::TYPE_FILE => "Файл",
             self::TYPE_FILE_OLD => "Файл (старый формат для импорта)",
 
@@ -253,6 +251,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
             self::TYPE_JSON => "Таблицы",
 
+            self::TYPE_MAP => "Координаты",
             self::TYPE_ADDRESS => "Адрес",
             self::TYPE_ADDRESSES => "Несколько адресов",
             self::TYPE_REGION => 'Регион',
@@ -339,6 +338,102 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
         parent::afterSave($insert, $changedAttributes);
     }
+
+    public function getJsonQuery()
+    {
+        $type = 'string';
+
+        $operators = [
+           'equal',
+           'not_equal',
+           'in',
+           'not_in',
+           'less',
+           'less_or_equal',
+           'greater',
+           'greater_or_equal',
+           'between',
+           'not_between',
+           'begins_with',
+           'not_begins_with',
+           'contains',
+           'not_contains',
+           'ends_with',
+           'not_ends_with',
+           'is_empty',
+           'is_not_empty',
+           'is_null',
+           'is_not_null'
+        ];
+
+        switch ($this->type) {
+            case self::TYPE_DATETIME:
+                $type = 'datetime';
+                $operators = [
+                   'equal',
+                   'not_equal',
+                   'in',
+                   'not_in',
+                   'less',
+                   'less_or_equal',
+                   'greater',
+                   'greater_or_equal',
+                   'between',
+                   'not_between',
+                   'is_empty',
+                   'is_not_empty',
+                ];
+                break;
+            case self::TYPE_DATE:
+                $type = 'date';
+                $operators = [
+                   'equal',
+                   'not_equal',
+                   'in',
+                   'not_in',
+                   'less',
+                   'less_or_equal',
+                   'greater',
+                   'greater_or_equal',
+                   'between',
+                   'not_between',
+                   'is_empty',
+                   'is_not_empty',
+                ];
+                break;
+            case self::TYPE_INPUT:
+                $type = 'integer';
+                break;
+            case self::TYPE_COLLECTIONS:
+                $operators = ['is_null', 'is_not_null','contains','not_contains'];
+                break;
+            case self::TYPE_CHECKBOX:
+                $operators = [
+                    'is_empty',
+                    'is_not_empty',
+                ];
+                break;
+            case self::TYPE_FILE:
+            case self::TYPE_IMAGE:
+                $operators = [
+                    'is_empty',
+                    'is_not_empty',
+               ];
+                break;
+        }
+
+        $json = [
+            'id' =>"col{$this->id_column}",
+            'label'=> $this->name,
+            'type'=> $type,
+            'input'=> 'text',
+            'operators'=> $operators,
+        ];
+
+        return $json;
+    }
+
+
 
     public function getOptionsData()
     {

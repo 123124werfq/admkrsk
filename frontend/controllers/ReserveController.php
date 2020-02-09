@@ -57,7 +57,6 @@ class ReserveController extends \yii\web\Controller
                 $record = $collection->insertRecord($prepare);
 
             if ($record) {
-
                 if(!$profile)
                     $profile = new HrProfile;
 

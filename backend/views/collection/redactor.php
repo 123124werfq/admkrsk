@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use yii\web\JsExpression;
+use yii\web\View;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Collection */
@@ -21,14 +22,14 @@ $operators = [
     '<>'=>'Не равно',
 ];
 
-if (empty($filtes))
+/*if (empty($filtes))
     $filtes = [
         [
             'id_column'=>'',
             'operator'=>'',
             'value'=>'',
         ]
-    ];
+    ];*/
 
 if (empty($search))
     $search = [
@@ -38,6 +39,8 @@ if (empty($search))
         ]
     ]
 ?>
+
+
 
 <?php $form = ActiveForm::begin(['id'=>'collection-redactor']); ?>
 
@@ -62,7 +65,11 @@ else
 {
     $columns = $model->parent->columns;
 
-    //$columns_coords = [];
+    $json_filters = [];
+    foreach ($columns as $key => $column) {
+        $json_filters[] = $column->getJsonQuery();
+    }
+
     $columns_dropdown = [];
 
     foreach ($columns as $key => $column) {
@@ -106,47 +113,6 @@ else
 
     <hr>
 
-    <h3>Условия фильтрации</h3>
-
-    <br/>
-    <div class="row">
-        <div class="col-sm-5">
-            <label class="control-label">Колонка</label>
-        </div>
-        <div class="col-sm-1">
-            <label class="control-label">Условие</label>
-        </div>
-        <div class="col-sm-5">
-            <label class="control-label">Значение</label>
-        </div>
-    </div>
-    <div id="view-filters" class="multiyiinput">
-        <?php foreach ($filtes as $key => $data) {?>
-            <div class="row">
-                <div class="col-sm-5">
-                    <div class="form-group">
-                        <?=Html::dropDownList("ViewFilters[$key][id_column]",$data['id_column'],$columns,['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_id_column'.$key,'prompt'=>'Выберите колонку']);?>
-                    </div>
-                </div>
-                <div class="col-sm-1">
-                    <div class="form-group">
-                        <?=Html::dropDownList("ViewFilters[$key][operator]",$data['operator'],$operators,['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_operator'.$key]);?>
-                    </div>
-                </div>
-                <div class="col-sm-5">
-                    <div class="form-group">
-                        <?=Html::textInput("ViewFilters[$key][value]",$data['value'],['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_value_'.$key,'placeholder'=>'Введите значение']);?>
-                    </div>
-                </div>
-                <div class="col-sm-1">
-                    <a class="close btn" href="#">&times;</a>
-                </div>
-            </div>
-        <?php }?>
-    </div>
-    <a onclick="return addInput('view-filters')" href="#" class="btn btn-default">Добавить еще</a>
-
-    <hr>
     <h3>Поля</h3>
     <br/>
     <div class="row">
@@ -224,6 +190,52 @@ else
     </div>
     <a onclick="return addInput('search-columns')" href="#" class="btn btn-default">Добавить еще</a>
 
+    <h3>Условия фильтрации</h3>
+
+    <?php if (empty($filtes['condition'])){?>
+    <br/>
+    <div class="row">
+        <div class="col-sm-5">
+            <label class="control-label">Колонка</label>
+        </div>
+        <div class="col-sm-1">
+            <label class="control-label">Условие</label>
+        </div>
+        <div class="col-sm-5">
+            <label class="control-label">Значение</label>
+        </div>
+    </div>
+    <div id="view-filters" class="multiyiinput">
+        <?php foreach ($filtes as $key => $data) {?>
+            <div class="row">
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <?=Html::dropDownList("ViewFilters[$key][id_column]",$data['id_column'],$columns,['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_id_column'.$key,'prompt'=>'Выберите колонку']);?>
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <div class="form-group">
+                        <?=Html::dropDownList("ViewFilters[$key][operator]",$data['operator'],$operators,['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_operator'.$key]);?>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <?=Html::textInput("ViewFilters[$key][value]",$data['value'],['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_value_'.$key,'placeholder'=>'Введите значение']);?>
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <a class="close btn" href="#">&times;</a>
+                </div>
+            </div>
+        <?php }?>
+    </div>
+    <a onclick="return addInput('view-filters')" href="#" class="btn btn-default">Добавить еще</a>
+    <?php }?>
+
+    <?=$form->field($model, 'filters')->hiddenInput();?>
+
+    <div id="querybuilder"></div>
+
     <?=$form->field($model, 'table_head')->textArea()->hint('Заполняется для нестандартных шапок таблиц. Количество колонок должно совпадать с количеством отображаемых столбцов');?>
 
     <?=$form->field($model, 'table_style')->textArea();?>
@@ -235,7 +247,10 @@ else
     <br/><br/><br/>
     <script>
         document.getElementById('submit-redactor').addEventListener('click', function (event) {
+            $("#collection-filters").val(JSON.stringify($('#querybuilder').queryBuilder('getRules')));
+
             $form = $("#collection-redactor");
+
             var origin = '<?= isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : '' ?>';
             let url = "<?= $model->isEdit ? '&configureEditCollection=1' : '&json=1' ?>";
             $.ajax({
@@ -257,3 +272,17 @@ else
     </script>
 <?php }?>
 <?php ActiveForm::end(); ?>
+
+<?php
+
+
+$json_filters = json_encode($json_filters);
+$script = <<< JS
+    $('#querybuilder').queryBuilder({
+      lang_code: 'ru',
+      filters: $json_filters
+    });
+JS;
+
+$this->registerJs($script, View::POS_END);
+?>

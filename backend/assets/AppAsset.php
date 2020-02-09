@@ -20,6 +20,7 @@ class AppAsset extends AssetBundle
         "inspinia/css/plugins/select2/select2.min.css",
         'inspinia/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css',
         "inspinia/css/plugins/jasny/jasny-bootstrap.min.css",
+        "js/jquerybuilder/css/query-builder.default.min.css",
         "css/admin.css?1"
     ];
     public $js = [
@@ -37,6 +38,8 @@ class AppAsset extends AssetBundle
         "inspinia/js/plugins/jasny/jasny-bootstrap.min.js",
         "/js/tinymce/tinymce.min.js",
         "/js/tinymce/plugins/plugins.js",
+        "js/jquerybuilder/query-builder.standalone.min.js",
+        "js/jquerybuilder/i18n/query-builder.ru.js",
         "js/admin.js?3"
 //        'js/select2/js/select2.js', // если миша захочет раскомментить, надо сначала файл туда положить
     ];

@@ -285,12 +285,15 @@ class FormDynamic extends DynamicModel
                                                 $collectionRecord->save();
                                             }
 
+
                                             if (!empty($collectionRecord->id_record))
                                                 $ids[] = $collectionRecord->id_record;
                                         }
                                     }
                                 }
                             }
+
+                            $data[$index] = $ids;
                         }
                         else
                             $data[$index] = $this->$attribute;
