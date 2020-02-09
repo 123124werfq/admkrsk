@@ -629,22 +629,27 @@ class CollectionController extends Controller
     {
         $this->layout = 'clear';
         $model = new Collection;
+        $model->id_parent_collection = 52;
         $model->name = 'temp';
         $requestParams = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
 
         /** configure and return changes of collection */
-        if (isset($requestParams['configureEditCollection'])) {
+        if (isset($requestParams['configureEditCollection']))
+        {
             /** update plugin options */
             $model->mapPropsAndAttributes(Yii::$app->request->post('Collection'));
             $model->isEdit = true;
+
             $updatePluginOptions = $this->configureJsonCollection($model);
             $jsonFormatOptions = base64_decode($updatePluginOptions['base64']);
             $updatePluginOptions['key'] = $model->updatePluginSettings($requestParams['key'], $jsonFormatOptions);
+
             return json_encode($updatePluginOptions);
         }
 
         /** open modal dialog for edit collection */
-        if (isset($requestParams['edit']) && isset($requestParams['key'])) {
+        if (isset($requestParams['edit']) && isset($requestParams['key']))
+        {
             $pluginOptions = SettingPluginCollection::getSettings($requestParams['key']);
             if (!$pluginOptions) {
                 throw new HttpException(400);
@@ -656,7 +661,8 @@ class CollectionController extends Controller
         }
 
         /** configure and return new data collection */
-        if ($model->load($requestParams) && !empty(Yii::$app->request->post('json'))) {
+        if ($model->load($requestParams) && !empty(Yii::$app->request->post('json')))
+        {
             $model->mapPropsAndAttributes($requestParams['Collection']);
             $configureJsonPluginOptions = $this->configureJsonCollection($model);
             /** save plugin options */
@@ -682,6 +688,7 @@ class CollectionController extends Controller
     private function configureJsonCollection($model)
     {
         $collectionPluginSettings = $this->saveView($model, true);
+
         $collectionPluginSettings['id_collection'] = $model->id_parent_collection;
         $collectionPluginSettings['template_view'] = $model->template_view;
         $collectionPluginSettings['id_group'] = $model->id_group;
@@ -784,18 +791,21 @@ class CollectionController extends Controller
             }
         }
 
-        if (!empty(Yii::$app->request->post('ViewFilters'))) {
-            $options['filters'] = [];
+        if (!empty($model->filters))
+        {
+            $options['filters'] = $model->filters;
 
-            foreach (Yii::$app->request->post('ViewFilters') as $key => $data) {
+            /*foreach (Yii::$app->request->post('ViewFilters') as $key => $data) {
                 if (!empty($data['id_column']))
                     $options['filters'][] = [
                         'id_column' => $data['id_column'],
                         'operator' => isset($data['operator']) ? $data['operator'] : '=',
                         'value' => (!empty($data['value'])) ? $data['value'] : ''
                     ];
-            }
+            }*/
         }
+        else
+            $options['filters'] = '';
 
         if ($return)
             return $options;
