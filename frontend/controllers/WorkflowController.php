@@ -11,6 +11,11 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\UploadedFile;
 
+use Selective\XmlDSig\DigestAlgorithmType;
+use Selective\XmlDSig\XmlSigner;
+use XmlDsig\XmlDigitalSignature;
+
+
 use common\models\Pdocument;
 use frontend\models\WorkflowForm;
 
@@ -119,6 +124,34 @@ class WorkflowController extends \yii\web\Controller
 
     public function actionSigntest()
     {
+        /*
+        $certName = Yii::getAlias('@app'). "/assets/private.pem";
+
+        $dsig = new XmlDigitalSignature();
+
+        $dsig->loadPrivateKey( $certName);
+        //$dsig->loadPublicKey('path/to/public/key');
+        
+        $dsig->addObject('I am a data blob.');
+        $dsig->sign();
+        
+        $result = $dsig->getSignedDocument();
+
+        var_dump($result);
+
+        die();
+        */
+        
+        $certName = Yii::getAlias('@app'). "/assets/ADMKRSK-TEST-SERVICE-SITE.pfx";
+        $xmlSigner = new XmlSigner();
+        $xmlSigner->loadPfxFile($certName, 'CdtDblGfh');
+        //$xmlSigner->setReferenceUri('');
+        $xmlSigner->signXmlFile( Yii::getAlias('@app').'/assets/example.xml', Yii::getAlias('@app').'/assets/signed-example.xml', DigestAlgorithmType::SHA1);
+
+        //var_dump($result);
+        die();
+        
+
         $certName = Yii::getAlias('@app'). "/assets/ADMKRSK-TEST-SERVICE-SITE.pfx";
 
         $data = file_get_contents($certName);

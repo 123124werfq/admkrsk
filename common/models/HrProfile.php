@@ -55,6 +55,7 @@ class HrProfile extends \yii\db\ActiveRecord
             [['id_user', 'id_record', 'reserve_date', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
             [['id_user', 'id_record', 'reserve_date', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['state'], 'string'],
+            [['import_author', 'import_candidateid', 'import_timestamp'], 'safe']
         ];
     }
 
@@ -107,6 +108,8 @@ class HrProfile extends \yii\db\ActiveRecord
 
         foreach($positions as $id_pos=>$label)
         {
+            if(empty($id_pos))
+                continue;
             $posRecord = CollectionRecord::findOne($id_pos);
             if($posRecord){
                 $profilePosition = new HrProfilePositions;
@@ -152,6 +155,9 @@ class HrProfile extends \yii\db\ActiveRecord
             return false;
 
         $record = CollectionRecord::findOne($this->id_record);
+
+        if(!$record)
+            return false;
 
         return $record->getData(true);
     }
