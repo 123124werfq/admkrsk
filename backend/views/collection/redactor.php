@@ -10,8 +10,6 @@ use yii\web\View;
 /* @var $model common\models\Collection */
 /* @var $form yii\widgets\ActiveForm */
 
-$filtes = $model->getViewFilters();
-
 $operators = [
     '='=>'=',
     '>'=>'>',
@@ -21,15 +19,6 @@ $operators = [
     'not'=>'Не пусто',
     '<>'=>'Не равно',
 ];
-
-/*if (empty($filtes))
-    $filtes = [
-        [
-            'id_column'=>'',
-            'operator'=>'',
-            'value'=>'',
-        ]
-    ];*/
 
 if (empty($search))
     $search = [
@@ -207,36 +196,47 @@ else
     <br/><br/><br/>
     <script>
         document.getElementById('submit-redactor').addEventListener('click', function (event) {
-            $("#collection-filters").val(JSON.stringify($('#querybuilder').queryBuilder('getRules')));
 
-            $form = $("#collection-redactor");
+            if ($rules = $('#querybuilder').queryBuilder('getRules'))
+            {
+                $("#collection-filters").val(JSON.stringify($rules));
 
-            var origin = '<?= isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : '' ?>';
-            let url = "<?= $model->isEdit ? '&configureEditCollection=1' : '&json=1' ?>";
-            $.ajax({
-                url: $form.attr('action'),
-                type: 'post',
-                dataType:'json',
-                data: $form.serialize() + url,
-                success: function(data)
-                {
-                    window.parent.postMessage({
-                        mceAction: 'execCommand',
-                        cmd: 'iframeCommand',
-                        value: data
-                    }, origin);
-                }
-            });
-            event.preventDefault();
+                $form = $("#collection-redactor");
+
+                var origin = '<?= isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : '' ?>';
+                let url = "<?= $model->isEdit ? '&configureEditCollection=1' : '&json=1' ?>";
+                $.ajax({
+                    url: $form.attr('action'),
+                    type: 'post',
+                    dataType:'json',
+                    data: $form.serialize() + url,
+                    success: function(data)
+                    {
+                        window.parent.postMessage({
+                            mceAction: 'execCommand',
+                            cmd: 'iframeCommand',
+                            value: data
+                        }, origin);
+                    }
+                });
+                event.preventDefault();
+            }
        });
     </script>
 <?php
 
 $json_filters = json_encode($json_filters);
+$rules = $model->getViewFilters();
+if (empty($rules))
+    $rules = [['empty'=>true]];
+
+$rules = json_encode($rules);
+
 $script = <<< JS
     $('#querybuilder').queryBuilder({
       lang_code: 'ru',
-      filters: $json_filters
+      rules: $rules,
+      filters: $json_filters,
     });
 JS;
 
