@@ -52,8 +52,19 @@ class ReserveController extends \yii\web\Controller
                 $profile->id_record = $record->id_record;
                 $profile->save();
 
-                return $this->render('result', ['page'=>$page, 'form'=>$collection->form]);
-            }
+                //return $this->render('result', ['page'=>$page, 'form'=>$collection->form]);
+
+                if (Yii::$app->request->isAjax)
+                    return $collection->form->message_success?$collection->form->message_success:'Спасибо, данные отправлены';
+
+                if (!empty($collection->form->url))
+                    return $this->redirect($collection->form->url);
+
+                if (!empty($collection->form->id_page) && $url = Page::getUrlByID($collection->form->id_page))
+                    return $this->redirect($url);
+                    
+            } else
+                echo "Данные не сохранены";                
 
         }
 
