@@ -124,11 +124,19 @@ class HrImportController extends Controller
        echo "\nImporting: ";
        printf( "%c7", ESC );
 
+       $begin = 1;
+        $end = 10;
+
+
        foreach ($csv as $anketa) {
             if((int)$anketa['deleted'])
                 continue;
 
             printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
+
+            // для импорта "кусками"
+            if($count<$begin)
+                continue;
 
             // заполняем подколлекции
             // образование
@@ -291,11 +299,19 @@ class HrImportController extends Controller
                     $profile->import_candidateid = $anketa['candidateId'];
                     $profile->import_timestamp = time();
 
-                    $profile->save();                    
+                    if($profile->save())
+                    {
+                        $profile->created_at = strtotime($anketa['created']);
+                        $profile->updated_at = strtotime($anketa['modified']);
+                        $profile->updateAttributes(['created_at', 'updated_at']);
+                    }
                 }
             }
         
-            die();
+            //die();
+
+            if($count>=$end)
+                break;
         }
 
         echo "\n";
@@ -311,6 +327,61 @@ class HrImportController extends Controller
         $csv = [];
         $subtypes = [];
         $filePath = Yii::getAlias('@app'). '/assets/HR_Files.csv';
+
+
+        $fileList = [];
+
+        if (($handle = fopen($filePath, 'r')) !== false) {
+            while (($data = fgetcsv($handle, 1000)) !== false) {
+
+                printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
+
+                if(!(int)$data[5])
+                    $fileList[$data[1]] = [
+                        'candidateId' => $data[0],
+                        'type' => $data[2]
+                    ];
+
+            }
+        }
+
+
+        $filePath = Yii::getAlias('@app'). '/assets/LK_Files.csv';
+
+        echo "\nReading files: ";
+        printf( "%c7", ESC );
+        $count = 0;
+
+        if (($handle = fopen($filePath, 'r')) !== false) {
+            while (($data = fgetcsv($handle, 100000, ";")) !== false) {
+
+                printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
+
+                $key = $data[0];
+
+                if(isset($fileList[$data[0]]))
+                {
+                    $dirname = $fileList[$data[0]]['candidateId'];
+                }
+                else
+                    continue;
+
+                $filename = $data[1];
+                $plain = $data[5];
+
+                $dir = Yii::getAlias('@app'). '/assets/hrimport/'.$dirname;
+
+                if(!is_dir($dir))
+                    \mkdir($dir);
+
+                $ifp = fopen( $dir . '/' . $filename, 'wb'); 
+                fwrite( $ifp, pack('n', $plain ) ); // как правильно сохранять - не ясно
+                fclose( $ifp );
+
+                if($count==2) die();
+
+            }
+        }
 
     }
     
