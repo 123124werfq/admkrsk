@@ -106,19 +106,20 @@ class HrProfile extends \yii\db\ActiveRecord
                 unset($positions[$pos->id_record_position]);
         }
 
-        foreach($positions as $id_pos=>$label)
-        {
-            if(empty($id_pos))
-                continue;
-            $posRecord = CollectionRecord::findOne($id_pos);
-            if($posRecord){
-                $profilePosition = new HrProfilePositions;
-                $profilePosition->id_profile = $this->id_profile;
-                $profilePosition->id_record_position = $id_pos;
-                $profilePosition->state = (string)HrProfilePositions::STATE_OPEN;
-                $profilePosition->save();
+        if(is_array($positions))
+            foreach($positions as $id_pos=>$label)
+            {
+                if(empty($id_pos))
+                    continue;
+                $posRecord = CollectionRecord::findOne($id_pos);
+                if($posRecord){
+                    $profilePosition = new HrProfilePositions;
+                    $profilePosition->id_profile = $this->id_profile;
+                    $profilePosition->id_record_position = $id_pos;
+                    $profilePosition->state = (string)HrProfilePositions::STATE_OPEN;
+                    $profilePosition->save();
+                }
             }
-        }
 
         return true;
     }
