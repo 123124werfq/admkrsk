@@ -35,7 +35,7 @@ class ReserveController extends \yii\web\Controller
 
         $profile = HrProfile::findOne(['id_user' => Yii::$app->user->id]);
 
-        if(!$profile || true)
+        if(!$profile)
             $model = new FormDynamic($collection->form);
         else
             $model = Form::findOne($collection->form->id_form);
