@@ -157,28 +157,31 @@ class CollectionQuery extends \yii\mongodb\Query
                 if (!isset($this->columns[$id_column]))
                     continue;
 
-                if (isset($record['col'.$id_column.'_search']))
+                if (!empty($value))
                 {
-                    if (!is_array($value))
-                        $value = [$value];
+                    if (isset($record['col'.$id_column.'_search']))
+                    {
+                        if (!is_array($value))
+                            $value = [$value];
 
-                    $labels = json_decode($record['col'.$id_column.'_search'],true);
+                        $labels = json_decode($record['col'.$id_column.'_search'],true);
 
-                    $combine_value = [];
+                        $combine_value = [];
 
-                    foreach ($value as $ikey => $id)
-                        $combine_value[$id] = $labels[$id]??$id;
+                        foreach ($value as $ikey => $id)
+                            $combine_value[$id] = $labels[$id]??$id;
 
-                    $value = $combine_value;
-                }
+                        $value = $combine_value;
+                    }
 
-                // временное решение
-                if ($this->columns[$id_column]->type == CollectionColumn::TYPE_FILE_OLD)
-                {
-                    $value = json_decode($value,true);
+                    // временное решение
+                    if ($this->columns[$id_column]->type == CollectionColumn::TYPE_FILE_OLD)
+                    {
+                        $value = json_decode($value,true);
 
-                    if (!empty($value))
-                        $value = $value[0];
+                        if (!empty($value))
+                            $value = $value[0];
+                    }
                 }
 
                 if ($this->keyAsAlias && !empty($this->columns[$id_column]->alias))

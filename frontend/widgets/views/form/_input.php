@@ -48,7 +48,6 @@ $clearAttribute = $attribute = "input$input->id_input";
 if (!empty($arrayGroup))
     $attribute = "[$arrayGroup]" . $attribute;
 
-
 $id_subform = (!empty($subform)) ? $subform->id_form : '';
 ?>
 
