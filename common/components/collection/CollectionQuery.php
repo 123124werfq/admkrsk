@@ -142,7 +142,8 @@ class CollectionQuery extends \yii\mongodb\Query
         $output = [];
         $emptyRow = [];
 
-        foreach ($this->columns as $key => $col) {
+        foreach ($this->columns as $key => $col)
+        {
             $emptyRow[$this->keyAsAlias?$col->alias:$col->id_column] = '';
         }
 
