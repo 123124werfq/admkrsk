@@ -5,7 +5,8 @@ namespace console\controllers;
 use Yii;
 use common\models\Page;
 use yii\console\Controller;
-define('ESC', 27);
+if (!defined('ESC'))
+    define('ESC', 27);
 /**
  * This command revert old page
  * created and updated timestamp

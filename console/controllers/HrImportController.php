@@ -7,10 +7,13 @@ use common\models\HrProfile;
 
 use Yii;
 use yii\console\Controller;
-define('ESC', 27);
+if (!defined('ESC'))
+    define('ESC', 27);
+
 
 class HrImportController extends Controller
 {
+    private $debug = false;
     private $cursorArray = array('/','-','\\','|','/','-','\\','|');
 
     public function actionIndex()
@@ -28,8 +31,6 @@ class HrImportController extends Controller
             while (($data = fgetcsv($handle, 1000, "\t")) !== false) {
 
                 printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
-
-                //print_r($data);
 
                 if(!isset($data[4]))
                     continue;
@@ -107,18 +108,37 @@ class HrImportController extends Controller
             fclose($handle);
         }
 
+        /*
         echo "\n".count($csv)."\n";
         var_dump($subtypes);
        var_dump($csv[0]);
        die();
+       */
 
        $anketaCollection = Collection::findOne(['alias'=>'reserv_anketa']);
        $experienceCollection = Collection::findOne(['alias'=>'reserve_work_experience']);
        $educationCollection = Collection::findOne(['alias'=>'reserve_education']);
        $addeducationCollection = Collection::findOne(['alias'=>'reserve_additional_education']);
 
+       $count = 0;
+       echo "\nImporting: ";
+       printf( "%c7", ESC );
+
+       $begin = 1;
+        $end = 10;
+
+
        foreach ($csv as $anketa) {
-        // заполняем подколлекции
+            if((int)$anketa['deleted'])
+                continue;
+
+            printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
+
+            // для импорта "кусками"
+            if($count<$begin)
+                continue;
+
+            // заполняем подколлекции
             // образование
             $educationRecords = [];
             if(\is_array($anketa['anketaParsed']['education'])){
@@ -134,46 +154,96 @@ class HrImportController extends Controller
                         'speciality' => $education['speciality']??'',
                         'qualification' => $education['eduQualification']??''
                     ];
+                    
+                    if(!$this->debug)
+                    {
+                        $educationRecord = $educationCollection->insertRecord($data);
 
-                    $eductionRecord = $educationCollection->insertRecord($data);
-
-                    if($eductionRecord)
-                        $educationRecords[] = $eductionRecord->id_record;
+                        if($educationRecord)
+                            $educationRecords[] = $educationRecord->id_record;
+                    }
 
                 }
             }
 
             //допобразование
-            $extraeductionRecords = [];
-            /*
-            if(\is_array($anketa['anketaParsed']['extraeducation'])){
+            $extraeducationRecords = [];
+            if(isset($anketa['anketaParsed']['retrainingeducation']) &&  \is_array($anketa['anketaParsed']['retrainingeducation'])){
 
-                foreach ($anketa['anketaParsed']['extraeducation'] as $ekey => $education) {
-                    $fyear = explode(".", $education['eduYear']??0);
+                foreach ($anketa['anketaParsed']['retrainingeducation'] as $ekey => $retraineducation) {
+
+                    $fyear = explode(".", $retraineducation['reteduYear']??0);
                     $fyear = (int)end($fyear);
 
-                    $data = [
-                        'education_level' => $education['eduLevel']??'',
-                        'institution' => $education['eduCollege']??'',
-                        'finish_year' => $fyear,
-                        'speciality' => $education['speciality']??'',
-                        'qualification' => $education['eduQualification']??''
+                    $data = [ 
+                        'additional_education' => 'профессиональная переподготовка' .(empty($retraineducation['reteduQualification'])?'':' (с присвоением квалификации)'),
+                        'educational_program' => $retraineducation['reteduProgram']??'',
+                        'year_extra_eductaion' => $fyear,
+                        'qualification_extra' => $retraineducation['reteduQualification']??'',
+                        'extra_edu_hours' => 0
                     ];
 
-                    var_dump($data);
+                    if(!$this->debug)
+                    {
+                        $extraeducationRecord = $addeducationCollection->insertRecord($data);
 
-                    $eductionRecord = $educationCollection->insertRecord($data);
-
-                    if($eductionRecord)
-                        $eductionRecords[] = $eductionRecord->id_record;
-
+                        if($extraeducationRecord)
+                            $extraeducationRecords[] = $extraeducationRecord->id_record;
+                    }
                 }
             }
-            */
+            if(isset($anketa['anketaParsed']['trainingeducation']) &&  \is_array($anketa['anketaParsed']['trainingeducation'])){
+
+                foreach ($anketa['anketaParsed']['trainingeducation'] as $ekey => $trainingeducation) {
+
+                    $fyear = explode(".", $trainingeducation['teduYear']??0);
+                    $fyear = (int)end($fyear);
+
+                    $data = [ 
+                        'additional_education' => 'повышение квалификации',
+                        'educational_program' => $trainingeducation['teduProgram']??'',
+                        'year_extra_eductaion' => $fyear,
+                        'qualification_extra' => '',
+                        'extra_edu_hours' => 0
+                    ];
+
+                    if(!$this->debug)
+                    {
+                        $extraeducationRecord = $addeducationCollection->insertRecord($data);
+
+                        if($extraeducationRecord)
+                            $extraeducationRecords[] = $extraeducationRecord->id_record;
+                    }
+                }
+            }
+            if(isset($anketa['anketaParsed']['graduateereducation']) &&  \is_array($anketa['anketaParsed']['graduateereducation'])){
+
+                foreach ($anketa['anketaParsed']['graduateereducation'] as $ekey => $graduateereducation) {
+
+                    $fyear = explode(".", $graduateereducation['geduYear']??0);
+                    $fyear = (int)end($fyear);
+
+                    $data = [ 
+                        'additional_education' => 'послевузовское профессиональное образование',
+                        'educational_program' => $graduateereducation['geduDegree']??'',
+                        'year_extra_eductaion' => $fyear,
+                        'qualification_extra' => $graduateereducation['geduAcademicTitle']??'',
+                        'extra_edu_hours' => 0
+                    ];
+
+                    if(!$this->debug)
+                    {
+                        $extraeducationRecord = $addeducationCollection->insertRecord($data);
+
+                        if($extraeducationRecord)
+                            $extraeducationRecords[] = $extraeducationRecord->id_record;
+                    }
+                }
+            }                   
 
             // опыт работы
             $experienceRecords = [];
-            if(\is_array($anketa['anketaParsed']['workexperience'])){
+            if(isset($anketa['anketaParsed']['workexperience']) && \is_array($anketa['anketaParsed']['workexperience'])){
 
                 foreach ($anketa['anketaParsed']['workexperience'] as $ekey => $workexperience) {
                 
@@ -183,18 +253,18 @@ class HrImportController extends Controller
                         'period_begin' => strtotime($workexperience['weStart']??0),
                         'period_end' => strtotime($workexperience['weEnd']??0),
                     ];
+                    
+                    if(!$this->debug)
+                    {
+                        $experienceRecord = $experienceCollection->insertRecord($data);
 
-                    $experienceRecord = $experienceCollection->insertRecord($data);
-
-                    if($experienceRecord)
-                        $experienceRecords[] = $experienceRecord->id_record;
-
+                        if($experienceRecord)
+                            $experienceRecords[] = $experienceRecord->id_record;
+                    }
                 }
             }            
-//            var_dump($eductionRecords);
 
             //создаём анкету
-
             $data = [
                 '_firstname'            => $anketa['anketaParsed']['surname']??'',
                 '_secondname'           => $anketa['anketaParsed']['name']??'',
@@ -204,26 +274,115 @@ class HrImportController extends Controller
                 'parental_name'         => $anketa['anketaParsed']['patronymic']??'',
                 'contact_phone'         => $anketa['anketaParsed']['openPhone']??'',
                 'email'                 => $anketa['anketaParsed']['email']??'',
-                'work_experience'       => ($anketa['anketaParsed']['totalWorkSpanYear']??0)*12 + ($anketa['anketaParsed']['totalWorkSpanMonth']??0),
-                'goverment_experience'  => ($anketa['anketaParsed']['totalStateServiceSpanYear']??0)*12 + ($anketa['anketaParsed']['totalStateServiceSpanMonth']??0),
+                'work_experience'       => ((int)($anketa['anketaParsed']['totalWorkSpanYear']??0))*12 + ((int)($anketa['anketaParsed']['totalWorkSpanMonth']??0)),
+                'goverment_experience'  => ((int)($anketa['anketaParsed']['totalStateServiceSpanYear']??0))*12 + ((int)($anketa['anketaParsed']['totalStateServiceSpanMonth']??0)),
                 'prizes'                => $anketa['anketaParsed']['promotion']??'',
                 'contact_phone_private'         => $anketa['anketaParsed']['phone']??'',
                 '_passport_number'      => $anketa['anketaParsed']['docNumber']??'',
                 '_passport_seria'       => $anketa['anketaParsed']['docSeries']??'',
                 'birthdate'             => strtotime($anketa['anketaParsed']['birthday']??0),
                 'work_expirience'       => $experienceRecords,
-                'additional_education'  => $extraeductionRecords,
+                'additional_education'  => $extraeducationRecords,
                 'education'             => $educationRecords
             ];
 
-            $anketaRecord = $anketaCollection->insertRecord($data);
+            if(!$this->debug)
+            {
+                $anketaRecord = $anketaCollection->insertRecord($data);
 
-            // здесь добавляем профиль
-            
+                if($anketaRecord)
+                {
+                    $profile = new HrProfile;
+
+                    $profile->id_record = $anketaRecord->id_record;
+                    $profile->import_author = $anketa['author'];
+                    $profile->import_candidateid = $anketa['candidateId'];
+                    $profile->import_timestamp = time();
+
+                    if($profile->save())
+                    {
+                        $profile->created_at = strtotime($anketa['created']);
+                        $profile->updated_at = strtotime($anketa['modified']);
+                        $profile->updateAttributes(['created_at', 'updated_at']);
+                    }
+                }
+            }
+        
+            //die();
+
+            if($count>=$end)
+                break;
         }
 
+        echo "\n";
 
        //$xml = simplexml_load_string($csv[0]['anketaXML']);
        //var_dump($xml->repeat[0]->row[0]->values);
     }
+
+    public function actionFiles()
+    {
+        $i = $count = 0;
+        ini_set('memory_limit', '1048M');
+        $csv = [];
+        $subtypes = [];
+        $filePath = Yii::getAlias('@app'). '/assets/HR_Files.csv';
+
+
+        $fileList = [];
+
+        if (($handle = fopen($filePath, 'r')) !== false) {
+            while (($data = fgetcsv($handle, 1000)) !== false) {
+
+                printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
+
+                if(!(int)$data[5])
+                    $fileList[$data[1]] = [
+                        'candidateId' => $data[0],
+                        'type' => $data[2]
+                    ];
+
+            }
+        }
+
+
+        $filePath = Yii::getAlias('@app'). '/assets/LK_Files.csv';
+
+        echo "\nReading files: ";
+        printf( "%c7", ESC );
+        $count = 0;
+
+        if (($handle = fopen($filePath, 'r')) !== false) {
+            while (($data = fgetcsv($handle, 100000, ";")) !== false) {
+
+                printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
+
+                $key = $data[0];
+
+                if(isset($fileList[$data[0]]))
+                {
+                    $dirname = $fileList[$data[0]]['candidateId'];
+                }
+                else
+                    continue;
+
+                $filename = $data[1];
+                $plain = $data[5];
+
+                $dir = Yii::getAlias('@app'). '/assets/hrimport/'.$dirname;
+
+                if(!is_dir($dir))
+                    \mkdir($dir);
+
+                $ifp = fopen( $dir . '/' . $filename, 'wb'); 
+                fwrite( $ifp, pack('n', $plain ) ); // как правильно сохранять - не ясно
+                fclose( $ifp );
+
+                if($count==2) die();
+
+            }
+        }
+
+    }
+    
 }
