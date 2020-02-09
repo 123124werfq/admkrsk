@@ -3,6 +3,7 @@
 use backend\widgets\UserAccessControl;
 use backend\widgets\UserGroupAccessControl;
 use common\models\Faq;
+use common\models\FaqCategory;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -20,17 +21,11 @@ $model->id_faq_categories = ArrayHelper::getColumn($model->categories, 'id_faq_c
 <?php $form = ActiveForm::begin(); ?>
 
 <?= $form->field($model, 'id_faq_categories')->widget(Select2::class, [
-    'data' => $model->categories ? ArrayHelper::map($model->categories, 'id_faq_category', 'title') : [],
+    'data' => FaqCategory::getTree(),
     'pluginOptions' => [
         'multiple' => true,
         'allowClear' => true,
-        'minimumInputLength' => 1,
-        'placeholder' => 'Начните ввод',
-        'ajax' => [
-            'url' => Url::toRoute(['/faq-category/list']),
-            'dataType' => 'json',
-            'data' => new JsExpression('function(params) { return {q:params.term}; }')
-        ],
+        'placeholder' => 'Выберите категорию',
     ],
 ]) ?>
 

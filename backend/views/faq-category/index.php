@@ -19,6 +19,7 @@ if (Yii::$app->user->can('admin.faq')) {
         $this->params['button-block'][] = Html::a('Архив', ['index', 'archive' => 1], ['class' => 'btn btn-default']);
     }
     $this->params['button-block'][] = Html::a('Добавить категорию', ['create'], ['class' => 'btn btn-success']);
+    $this->params['button-block'][] = Html::a('Дерево', ['tree'], ['class' => 'btn btn-default']);
 }
 ?>
 <div class="faq-index">
@@ -33,7 +34,6 @@ if (Yii::$app->user->can('admin.faq')) {
                 'columns' => [
                     'id_faq_category',
                     'title',
-                    //'answer:ntext',
                     //'created_at',
                     //'created_by',
                     //'updated_at',

@@ -2,6 +2,9 @@
 
 use backend\widgets\UserAccessControl;
 use backend\widgets\UserGroupAccessControl;
+use common\models\FaqCategory;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -11,6 +14,14 @@ use yii\widgets\ActiveForm;
 ?>
 
 <?php $form = ActiveForm::begin(); ?>
+
+<?= $form->field($model, 'id_parent')->widget(Select2::class, [
+    'data' => FaqCategory::getTree($model->id_faq_category),
+    'pluginOptions' => [
+        'allowClear' => true,
+        'placeholder' => 'Выберите категорию',
+    ],
+]) ?>
 
 <?= $form->field($model, 'title')->textInput() ?>
 

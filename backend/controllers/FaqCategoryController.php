@@ -7,6 +7,7 @@ use common\modules\log\models\Log;
 use Yii;
 use common\models\FaqCategory;
 use backend\models\search\FaqCategorySearch;
+use yii\base\InvalidArgumentException;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
@@ -37,7 +38,7 @@ class FaqCategoryController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index'],
+                        'actions' => ['index', 'tree'],
                         'roles' => ['backend.faqCategory.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => FaqCategory::class,
@@ -193,6 +194,13 @@ class FaqCategoryController extends Controller
         ]);
     }
 
+    public function actionTree()
+    {
+        $root = FaqCategory::find()->roots()->one();
+        $children = $root->children()->all();
+        return $this->render('tree', ['children' => $children]);
+    }
+
     /**
      * Displays a single FaqCategory model.
      * @param integer $id
@@ -212,13 +220,22 @@ class FaqCategoryController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($id_faq_category)
     {
         $model = new FaqCategory();
+        $model->id_parent = $id_faq_category;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->createAction(Action::ACTION_CREATE);
-            return $this->redirect(['view', 'id' => $model->id_faq_category]);
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->id_parent) {
+                $parent = $this->findModel($model->id_parent);
+            } else  {
+                $parent = FaqCategory::find()->roots()->one();
+            }
+
+            if ($model->appendTo($parent)) {
+                $model->createAction(Action::ACTION_CREATE);
+                return $this->redirect(['view', 'id' => $model->id_faq_category]);
+            }
         }
 
         return $this->render('create', [
@@ -238,7 +255,30 @@ class FaqCategoryController extends Controller
     {
         $model = $this->findModel($id);
 
+        if ($model->depth === 0) {
+            Yii::$app->session->setFlash('error', 'Нельзя редактировать корневую категорию');
+            return $this->redirect(['index']);
+        }
+
+        /* @var FaqCategory $parent */
+        $parent = $model->parents(1)->one();
+        if ($parent && $parent->depth) {
+            $model->id_parent = $parent->id_faq_category;
+        }
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if ($parent && $parent->id_faq_category != $model->id_parent) {
+                if ($model->id_parent) {
+                    $parentNew = FaqCategory::findOne($model->id_parent);
+                } else  {
+                    $parentNew = FaqCategory::find()->roots()->one();
+                }
+
+                if ($parentNew) {
+                    $model->appendTo($parentNew);
+                }
+            }
+
             $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id_faq_category]);
         }
@@ -260,6 +300,11 @@ class FaqCategoryController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
+
+        if ($model->depth === 0) {
+            Yii::$app->session->setFlash('error', 'Нельзя удалить корневую категорию');
+            return $this->redirect(['index']);
+        }
 
         if ($model->delete()) {
             $model->createAction(Action::ACTION_DELETE);
