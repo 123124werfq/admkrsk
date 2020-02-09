@@ -88,6 +88,7 @@ class Collection extends ActiveRecord
     public $id_group;
     public $table_head;
     public $table_style;
+    public $filters;
 
     public $id_partitions = [];
 
@@ -113,7 +114,7 @@ class Collection extends ActiveRecord
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
             [['id_parent_collection','id_box','id_column_order','order_direction','pagesize','show_row_num','show_column_num', 'notify_rule','id_group', 'show_on_map', 'id_column_map', 'link_column','show_download'], 'integer'],
-            [['filter', 'options','label','table_head', 'table_style'], 'safe'],
+            [['filter', 'options','label','table_head', 'table_style', 'filters'], 'safe'],
             [['template','template_element','template_view','notify_message'], 'string'],
             [['is_authenticate'], 'boolean'],
             [['is_admin_notify'], 'boolean'],
@@ -159,6 +160,7 @@ class Collection extends ActiveRecord
             'id_group'=>'Колонка для группировки',
             'link_column'=>'Колонка ссылка',
             'show_download'=>'Показывать ссылку для скачивания',
+            'filters'=>'Фильтры',
 
             'created_at' => 'Создана',
             'created_by' => 'Кем создана',
@@ -209,7 +211,8 @@ class Collection extends ActiveRecord
      */
     public function mapPropsAndAttributes($data){
         $options = [];
-        foreach ($data as $key => $value) {
+        foreach ($data as $key => $value)
+        {
             if ($key === 'id_collection') {
                 $this->id_parent_collection = $value;
                 continue;
@@ -248,6 +251,19 @@ class Collection extends ActiveRecord
         $model->data = $data;
 
         if ($model->save()) {
+            return $model;
+        }
+
+        return false;
+    }
+
+    public function updateRecord($id_record,$data)
+    {
+        $model = CollectionRecord::findOne($id_record);
+        $model->data = $data;
+
+        if ($model->save())
+        {
             return $model;
         }
 
@@ -332,12 +348,17 @@ class Collection extends ActiveRecord
         if (!empty($this->options)) {
             $options = json_decode($this->options, true);
 
-            if (!empty($options['filters'])) {
-                foreach ($options['filters'] as $key => $filter) {
+            if (!empty($options['filters']))
+            {
+                foreach ($options['filters'] as $key => $filter)
+                {
                     $where = [$filter['operator'], $filter['id_column'], $filter['value']];
-                    if ($key == 0) {
+                    if ($key == 0)
+                    {
                         $query->where($where);
-                    } else {
+                    }
+                    else
+                    {
                         $query->andWhere($where);
                     }
                 }
@@ -460,9 +481,8 @@ class Collection extends ActiveRecord
     {
         $options = json_decode($this->options, true);
 
-        if (isset($options['filters'])) {
+        if (isset($options['filters']))
             return $options['filters'];
-        }
 
         return [];
     }

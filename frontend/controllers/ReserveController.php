@@ -44,7 +44,8 @@ class ReserveController extends \yii\web\Controller
             $model = Form::findOne($collection->form->id_form);
         */
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
             $prepare = $model->prepareData(true);
 
             if ($record = $collection->insertRecord($prepare)) {
@@ -66,10 +67,16 @@ class ReserveController extends \yii\web\Controller
 
                 if (!empty($collection->form->id_page) && $url = Page::getUrlByID($collection->form->id_page))
                     return $this->redirect($url);
+<<<<<<< HEAD
 
             } else
                 echo "Данные не сохранены";                
+=======
+>>>>>>> 21e09a47442700bbd8062c348eaa2e7204422ea6
 
+            }
+            else
+                echo "Данные не сохранены";
         }
 
         return $this->render('form', [
