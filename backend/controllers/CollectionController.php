@@ -629,7 +629,7 @@ class CollectionController extends Controller
     {
         $this->layout = 'clear';
         $model = new Collection;
-        $model->id_parent_collection = 52;
+        //$model->id_parent_collection = 52;
         $model->name = 'temp';
         $requestParams = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
 
@@ -668,6 +668,7 @@ class CollectionController extends Controller
             /** save plugin options */
             $jsonFormatOptions = base64_decode($configureJsonPluginOptions['base64']);
             $configureJsonPluginOptions['key'] = $model->savePluginSettings($jsonFormatOptions);
+
             return json_encode($configureJsonPluginOptions);
         }
 
@@ -811,6 +812,7 @@ class CollectionController extends Controller
             return $options;
 
         $model->options = json_encode($options);
+
         $model->updateAttributes(['options']);
     }
 

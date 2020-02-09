@@ -192,47 +192,7 @@ else
 
     <h3>Условия фильтрации</h3>
 
-    <?php if (empty($filtes['condition'])){?>
-    <br/>
-    <div class="row">
-        <div class="col-sm-5">
-            <label class="control-label">Колонка</label>
-        </div>
-        <div class="col-sm-1">
-            <label class="control-label">Условие</label>
-        </div>
-        <div class="col-sm-5">
-            <label class="control-label">Значение</label>
-        </div>
-    </div>
-    <div id="view-filters" class="multiyiinput">
-        <?php foreach ($filtes as $key => $data) {?>
-            <div class="row">
-                <div class="col-sm-5">
-                    <div class="form-group">
-                        <?=Html::dropDownList("ViewFilters[$key][id_column]",$data['id_column'],$columns,['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_id_column'.$key,'prompt'=>'Выберите колонку']);?>
-                    </div>
-                </div>
-                <div class="col-sm-1">
-                    <div class="form-group">
-                        <?=Html::dropDownList("ViewFilters[$key][operator]",$data['operator'],$operators,['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_operator'.$key]);?>
-                    </div>
-                </div>
-                <div class="col-sm-5">
-                    <div class="form-group">
-                        <?=Html::textInput("ViewFilters[$key][value]",$data['value'],['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_value_'.$key,'placeholder'=>'Введите значение']);?>
-                    </div>
-                </div>
-                <div class="col-sm-1">
-                    <a class="close btn" href="#">&times;</a>
-                </div>
-            </div>
-        <?php }?>
-    </div>
-    <a onclick="return addInput('view-filters')" href="#" class="btn btn-default">Добавить еще</a>
-    <?php }?>
-
-    <?=$form->field($model, 'filters')->hiddenInput();?>
+    <?=$form->field($model, 'filters')->hiddenInput()->label(false);?>
 
     <div id="querybuilder"></div>
 
@@ -270,11 +230,7 @@ else
             event.preventDefault();
        });
     </script>
-<?php }?>
-<?php ActiveForm::end(); ?>
-
 <?php
-
 
 $json_filters = json_encode($json_filters);
 $script = <<< JS
@@ -284,5 +240,6 @@ $script = <<< JS
     });
 JS;
 
-$this->registerJs($script, View::POS_END);
-?>
+    $this->registerJs($script, View::POS_END);
+}?>
+<?php ActiveForm::end(); ?>
