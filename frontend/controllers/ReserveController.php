@@ -35,10 +35,14 @@ class ReserveController extends \yii\web\Controller
 
         $profile = HrProfile::findOne(['id_user' => Yii::$app->user->id]);
 
-        if(!$profile)
+        $model = new FormDynamic($collection->form);
+
+        /*
+        if(!$profile || true)
             $model = new FormDynamic($collection->form);
         else
             $model = Form::findOne($collection->form->id_form);
+        */
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $prepare = $model->prepareData(true);
@@ -62,7 +66,7 @@ class ReserveController extends \yii\web\Controller
 
                 if (!empty($collection->form->id_page) && $url = Page::getUrlByID($collection->form->id_page))
                     return $this->redirect($url);
-                    
+
             } else
                 echo "Данные не сохранены";                
 
