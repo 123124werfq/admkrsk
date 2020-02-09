@@ -124,7 +124,7 @@ class HrImportController extends Controller
        echo "\nImporting: ";
        printf( "%c7", ESC );
 
-       $begin = 1;
+       $begin = 0;
         $end = 10;
 
 
