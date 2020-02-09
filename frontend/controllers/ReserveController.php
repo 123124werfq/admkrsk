@@ -48,8 +48,15 @@ class ReserveController extends \yii\web\Controller
         {
             $prepare = $model->prepareData(true);
 
-            if ($record = $collection->insertRecord($prepare))
-            {
+            $record = false;
+
+            if($profile && $profile->id_record)
+                $record = $collection->updateRecord($profile->id_record, $prepare);
+
+            if(!$record)
+                $record = $collection->insertRecord($prepare);
+
+            if ($record) {
                 if(!$profile)
                     $profile = new HrProfile;
 
