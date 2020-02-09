@@ -127,65 +127,6 @@ class CollectionRecord extends \yii\db\ActiveRecord
         return $mongoLabels;
     }
 
-    protected function getMongoDate($value, $column)
-    {
-        $output = [];
-
-        $value_index = 'col'.$column->id_column;
-        $search_index = 'col'.$column->id_column.'_search';
-
-        $output[$value_index] = $value;
-
-        switch ($column->type)
-        {
-            case CollectionColumn::TYPE_INTEGER:
-                $output[$value_index] = (float)$value;
-                break;
-            case CollectionColumn::TYPE_CHECKBOXLIST:
-                if (is_array($value))
-                    $output[$search_index] = implode("\r\n", $value);
-                else
-                    $output[$search_index] = '';
-                break;
-            case CollectionColumn::TYPE_MAP:
-                $output[$search_index] = implode(' ', $value);
-                break;
-            case CollectionColumn::TYPE_COLLECTION:
-                $label = $this->getLabelsByID($value,$column);
-                if (count($label)>0)
-                    $output[$search_index] = array_shift($label);
-                break;
-            case CollectionColumn::TYPE_COLLECTIONS:
-                $output[$search_index] = json_encode($this->getLabelsByID($value,$column),JSON_UNESCAPED_UNICODE);
-                break;
-            case CollectionColumn::TYPE_DISTRICT:
-            case CollectionColumn::TYPE_STREET:
-            //case CollectionColumn::TYPE_COUNTRY:
-            case CollectionColumn::TYPE_CITY:
-            case CollectionColumn::TYPE_REGION:
-            case CollectionColumn::TYPE_SUBREGION:
-            case CollectionColumn::TYPE_DATE:
-            case CollectionColumn::TYPE_DATETIME:
-            case CollectionColumn::TYPE_SERVICETARGET:
-            case CollectionColumn::TYPE_SERVICE:
-                $output[$search_index] = $column->getValueByType($value);
-                break;
-            case CollectionColumn::TYPE_FILE:
-            case CollectionColumn::TYPE_IMAGE:
-                $output[$search_index] = $value['name']??'';
-                break;
-                break;
-            default:
-                $output[$value_index] = $value;
-                if (is_array($value))
-                    $output[$search_index] = is_array($value)?json_encode($value,JSON_UNESCAPED_UNICODE):$value;
-
-                break;
-        }
-
-        return $output;
-    }
-
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert) && !empty($this->data))
@@ -224,6 +165,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                 if (!$insert)
                 {
+                    $valueModel = CollectionValue::find()->where('$this->id_record')
                     $count = Yii::$app->db->createCommand("SELECT count(*) FROM db_collection_value WHERE id_record = $this->id_record AND
                         id_column = $column->id_column")->queryScalar();
                 }
@@ -241,8 +183,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                         'value'=>(is_array($value))?json_encode($value):$value,
                     ])->execute();
 
-                $dataMongo = array_merge($dataMongo,$this->getMongoDate($value,$column));
-                /*$dataMongo['col'.$column->id_column] = ($column->type == CollectionColumn::TYPE_INTEGER)?(float)$value:$value;*/
+                $dataMongo = array_merge($dataMongo,$this->prepareMongoDate($value,$column));
             }
 
             $dataMongo['id_record'] = $this->id_record;
@@ -274,11 +215,6 @@ class CollectionRecord extends \yii\db\ActiveRecord
         parent::afterSave($insert, $changedAttributes);
     }
 
-    /*public function updateCustomColumn($column)
-    {
-        $recordData = $this->getData(true);
-    }*/
-
 
     public function getData($keyAsAlias=false,$id_columns=[])
     {
@@ -305,23 +241,8 @@ class CollectionRecord extends \yii\db\ActiveRecord
         else
             return [];
 
-        /*$rows = (new \yii\db\Query());
-
-        $rows = $rows->select(['dcv.id_column', 'value','id_record','dcc.alias as alias'])
-                ->from('db_collection_value as dcv')
-                ->join('INNER JOIN', 'db_collection_column as dcc', 'dcc.id_column = dcv.id_column')
-                ->where(['id_record'=>$this->id_record]);
-
-        if (!empty($columns))
-            $rows->andWhere(['dcv.id_column'=>$id_columns]);*/
-
         if (!empty($keyAsAlias))
         {
-            /*$aliased = [];
-
-            foreach ($columns as $key => $column)
-                $aliased[$column['alias']] = $record[$column->id_column];*/
-
             return $this->loadDataAlias;
         }
         else
