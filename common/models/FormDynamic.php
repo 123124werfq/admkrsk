@@ -45,7 +45,13 @@ class FormDynamic extends DynamicModel
 
         $this->data = $data;
 
+        if ($form->captcha)
+            $attributes['captcha'] = '';
+
         parent::__construct($attributes, $config);
+
+        if ($form->captcha)
+            $this->addRule(['captcha'], 'captcha');
 
         foreach ($this->inputs as $input)
         {
@@ -117,6 +123,7 @@ class FormDynamic extends DynamicModel
                                     'id_street'=>'',
                                     'house'=>'',
                                     'id_house'=>'',
+                                    'room'=>'',
                                     'houseguid'=>'',
                                     'lat'=>'',
                                     'lon'=>'',
@@ -136,7 +143,7 @@ class FormDynamic extends DynamicModel
                             ])->one();
 
                             if (!empty($address))
-                                $value = $address->getArrayData();
+                                $data[$index] = $address->getArrayData();
                         }
 
                         if (empty($address))
@@ -242,10 +249,11 @@ class FormDynamic extends DynamicModel
                             if (!empty($value['postalcode']))
                                 $empty['postalcode'] = $value['postalcode'];
 
-                            $value = $empty;
+                            $data[$index] = $empty;
                         }
 
-                        $data[$index] = $value;
+                        if (!empty($value['room']))
+                            $data[$index]['room'] = $value['room'];
 
                         break;
                     /*case CollectionColumn::TYPE_CHECKBOXLIST:

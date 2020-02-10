@@ -19,6 +19,7 @@ class FormsWidget extends \yii\base\Widget
     public $collectionRecord = null; // данные
     public $arrayGroup = null; // группирующий признак для подколлекций
     public $activeForm = null; // класс эктив форм для подколлекций
+    public $nocaptcha=false;
 
     public $page;
 
@@ -38,6 +39,9 @@ class FormsWidget extends \yii\base\Widget
 
         if (empty($this->form))
         	return false;
+
+        if ($this->nocaptcha)
+            $form->captcha = false;
 
         $model = new FormDynamic($this->form,$this->data);
 

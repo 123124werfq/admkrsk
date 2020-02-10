@@ -25,6 +25,7 @@ function parseAttributesFromTag($tag){
         <div class="content">
             <h1>Предпросмотр формы</h1>
             <?=frontend\widgets\FormsWidget::widget(['id_form'=>$model->id_form])?>
+            <br/><br/><br/>
         </div>
     </div>
 </div>

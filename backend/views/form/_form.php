@@ -20,8 +20,9 @@ use common\models\Box;
     <?php $form = ActiveForm::begin(); ?>
 
     <div class="row">
-        <div class="col-sm-6"><?= $form->field($model, 'is_template')->checkBox()?></div>
-        <div class="col-sm-6"><?= $form->field($model, 'state')->checkBox()?></div>
+        <div class="col-sm-4"><?= $form->field($model, 'is_template')->checkBox()?></div>
+        <div class="col-sm-4"><?= $form->field($model, 'captcha')->checkBox()?></div>
+        <div class="col-sm-4"><?= $form->field($model, 'state')->checkBox()?></div>
     </div>
 
     <?= $form->field($model, 'id_box')->dropDownList(ArrayHelper::map(Box::find()->all(), 'id_box', 'name'),['prompt'=>'Выберите группу']) ?>

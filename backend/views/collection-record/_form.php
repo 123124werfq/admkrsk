@@ -13,6 +13,7 @@ use yii\widgets\ActiveForm;
 <?=\frontend\widgets\FormsWidget::widget([
     'form'=>$collection->form,
     'collectionRecord'=>$model,
+    'nocaptcha'=>true,
     'inputs'=>[
         'id_collection'=>$collection->id_collection,
         'id_record'=>$model->id_record,
