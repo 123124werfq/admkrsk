@@ -220,7 +220,7 @@ class FaqCategoryController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($id_faq_category)
+    public function actionCreate($id_faq_category = null)
     {
         $model = new FaqCategory();
         $model->id_parent = $id_faq_category;

@@ -2,7 +2,10 @@
 
 namespace console\migrations;
 
+use common\models\Faq;
 use common\models\FaqCategory;
+use common\models\FaqFaqCategory;
+use Yii;
 use yii\db\Migration;
 
 /**
@@ -15,25 +18,18 @@ class M200209154353AlterFaqCategoryTable extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('{{%db_faq_category}}', 'lft', $this->integer());
-        $this->addColumn('{{%db_faq_category}}', 'rgt', $this->integer());
-        $this->addColumn('{{%db_faq_category}}', 'depth', $this->integer());
+        Yii::$app->db->createCommand('TRUNCATE TABLE ' . Yii::$app->db->quoteTableName('{{%db_faq}}') . ' CASCADE')->execute();
+        Yii::$app->db->createCommand('TRUNCATE TABLE ' . Yii::$app->db->quoteTableName('{{%db_faq_category}}') . ' CASCADE')->execute();
 
-        $categories = FaqCategory::find()->all();
+        $this->addColumn('{{%db_faq_category}}', 'lft', $this->integer()->notNull());
+        $this->addColumn('{{%db_faq_category}}', 'rgt', $this->integer()->notNull());
+        $this->addColumn('{{%db_faq_category}}', 'depth', $this->integer()->notNull());
 
         $root = new FaqCategory(['title' => 'Вопросы и ответы']);
         $root->makeRoot();
 
-        foreach ($categories as $category) {
-            $category->appendTo($root);
-        }
-
         $this->createIndex('idx-db_faq_category-lft', '{{%db_faq_category}}', ['lft', 'rgt']);
         $this->createIndex('idx-db_faq_category-rgt', '{{%db_faq_category}}', ['rgt']);
-
-        $this->alterColumn('{{%db_faq_category}}', 'lft', $this->integer()->notNull());
-        $this->alterColumn('{{%db_faq_category}}', 'rgt', $this->integer()->notNull());
-        $this->alterColumn('{{%db_faq_category}}', 'depth', $this->integer()->notNull());
     }
 
     /**
