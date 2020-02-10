@@ -675,3 +675,34 @@ tinymce.PluginManager.add("hrreserve", function(editor, url) {
         onAction: _onAction
     });
 });
+
+tinymce.PluginManager.add("faq", function(editor, url) {
+    var _dialog = false;
+    var _typeOptions = [];
+
+    function _onAction() {
+        $.ajax({
+            url: '/faq/redactor',
+            type: 'get',
+            dataType: 'html',
+            success: function(data) {
+                $('#redactor-modal').modal();
+                $('#redactor-modal .modal-body').html(data);
+                console.log(123);
+            }
+        });
+    }
+
+    // Define the Toolbar button
+    editor.ui.registry.addButton('faq', {
+        text: "Вопрос-Ответ",
+        onAction: _onAction
+    });
+
+    // Define the Menu Item
+    editor.ui.registry.addMenuItem('faq', {
+        text: 'Вопрос-Ответ',
+        context: 'insert',
+        onAction: _onAction
+    });
+});

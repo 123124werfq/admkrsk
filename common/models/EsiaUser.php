@@ -73,7 +73,31 @@ class EsiaUser extends \yii\db\ActiveRecord
 
     public function getLiving_addr_object()
     {
-        $model =  House::find()->where(['houseguid'=>$this->living_addr_fias])->one();
+        $fias = $this->living_addr_fias;
+        if (empty($fias))
+            $fias = $this->register_addr_object;
+
+        if (empty($fias))
+            return false;
+
+        $model =  House::find()->where(['houseguid'=>$fias])->one();
+
+        if (!empty($model))
+            return $model->getArrayData();
+        else
+            return false;
+    }
+
+    public function getRegister_addr_object()
+    {
+        $fias = $this->register_addr_object;
+        if (empty($fias))
+            $fias = $this->living_addr_fias;
+
+        if (empty($fias))
+            return false;
+
+        $model =  House::find()->where(['houseguid'=>$fias])->one();
 
         if (!empty($model))
             return $model->getArrayData();
@@ -103,21 +127,21 @@ class EsiaUser extends \yii\db\ActiveRecord
         if(!$this->is_org)
             return false;
         return (string)$this->user->currentFirm->inn;
-    }   
-    
+    }
+
     public function getFirmogrn()
     {
         if(!$this->is_org)
             return false;
         return (string)$this->user->currentFirm->ogrn;
-    }  
+    }
 
     public function getFirmname()
     {
         if(!$this->is_org)
             return false;
         return (string)$this->user->currentFirm->fullname;
-    } 
+    }
 
     /**
      * {@inheritdoc}
@@ -166,6 +190,7 @@ class EsiaUser extends \yii\db\ActiveRecord
             'firmaddrfias' => 'Адресный объект фактический адрес юр.лица',
 
             'register_addr' => 'Адрес регистрации',
+            'register_addr_object' => 'Адресный объект адреса регистрации',
             'register_addr_fias' => 'ФИАС для адреса регстрации',
 
             'usr_org' => 'Организация пользователя',

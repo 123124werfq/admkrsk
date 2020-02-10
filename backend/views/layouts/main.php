@@ -469,6 +469,20 @@ $this->beginPage();
         </div-->
     </div>
 
+<div id="redactor-modal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <?php $this->endBody();?>
 </body>
 </html>

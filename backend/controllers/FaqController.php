@@ -39,7 +39,7 @@ class FaqController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index'],
+                        'actions' => ['index','redactor'],
                         'roles' => ['backend.faq.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Faq::class,
@@ -223,6 +223,12 @@ class FaqController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+        ]);
+    }
+
+    public function actionRedactor()
+    {
+        return $this->renderAjax('redactor', [
         ]);
     }
 

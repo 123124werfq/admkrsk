@@ -38,16 +38,16 @@ function filePicker(callback, value, meta) {
 var tinymceConfig = {
     selector:'.redactor',
     plugins: [
-        'link image imagetools table autoresize collections gallery code paste media lists fullscreen stickytoolbar form hrreserve pagenews'
+        'link image imagetools table autoresize collections gallery code paste media lists fullscreen stickytoolbar form hrreserve pagenews faq'
     ],
     menu: {
-        custom: { title: 'Плагины', items: 'form gallery collections hrreserve pagenews' }
+        custom: { title: 'Плагины', items: 'form gallery collections hrreserve pagenews faq' }
     },
     menubar: 'file edit view insert format tools table custom',
     contextmenu: "link image imagetools table spellchecker",
     toolbar: "code fullscreen | undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist blockquote | link image media",
     language: 'ru',
-    extended_valid_elements : "pagenews[data-id],hrreserve[pagesize],collection[data-id|data-encodedata],gallery[data-id|data-limit|data-type],forms[data-id|data-data]",
+    extended_valid_elements : "faq[data-ids|data-category],pagenews[data-id],hrreserve[pagesize],collection[data-id|data-encodedata],gallery[data-id|data-limit|data-type],forms[data-id|data-data]",
     content_css : "/js/tinymce/admin.css",
     image_title: true,
     images_upload_url: '/media/tinymce',
@@ -291,7 +291,6 @@ jQuery(document).ready(function()
 
       var $form = $("#FormElement form");
 
-      //$('#' + 'your_editor_id').html( tinymce.get('your_editor_id').getContent() );
       tinyMCE.triggerSave();
 
       $.ajax({
