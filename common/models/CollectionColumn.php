@@ -403,6 +403,22 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 break;
             case self::TYPE_INPUT:
                 $type = 'integer';
+                $operators = [
+                   'equal',
+                   'not_equal',
+                   'in',
+                   'not_in',
+                   'less',
+                   'less_or_equal',
+                   'greater',
+                   'greater_or_equal',
+                   'between',
+                   'not_between',
+                   'is_empty',
+                   'is_not_empty',
+                   'is_null',
+                   'is_not_null'
+                ];
                 break;
             case self::TYPE_COLLECTIONS:
                 $operators = ['is_null', 'is_not_null','contains','not_contains'];

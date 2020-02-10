@@ -23,7 +23,7 @@ use yii\widgets\ActiveForm;
     'name'=>'id_faq_category',
     'pluginOptions' => [
         'allowClear' => true,
-        'multiple' => true,
+        'multiple' => false,
         'ajax' => [
             'url' => '/faq-category/list',
             'dataType' => 'json',
@@ -33,7 +33,7 @@ use yii\widgets\ActiveForm;
     ],
     //'value'=>array_keys($records),
     'options' => [
-        'multiple' => true
+        'multiple' => false
     ]
 ]);
 ?>

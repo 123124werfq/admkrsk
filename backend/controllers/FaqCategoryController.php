@@ -151,7 +151,7 @@ class FaqCategoryController extends Controller
      * @return mixed
      * @throws InvalidConfigException
      */
-    public function actionList($q)
+    public function actionList($q='')
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -163,7 +163,7 @@ class FaqCategoryController extends Controller
                 ['id_faq_category' => $q],
                 ['ilike', 'title', $q],
             ]);
-        } else {
+        } elseif (!empty($q)) {
             $query->andWhere(['ilike', 'title', $q]);
         }
 

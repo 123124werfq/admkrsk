@@ -31,7 +31,7 @@ $model->id_faq_categories = ArrayHelper::getColumn($model->categories, 'id_faq_c
 
 <?= $form->field($model, 'status')->dropDownList(Faq::getStatusNames()) ?>
 
-<?= $form->field($model, 'question')->textarea(['rows' => 6, 'class' => 'redactor']) ?>
+<?= $form->field($model, 'question')->textarea(['rows' => 6]) ?>
 
 <?= $form->field($model, 'answer')->textarea(['rows' => 6, 'class' => 'redactor']) ?>
 

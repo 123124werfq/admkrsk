@@ -228,6 +228,13 @@ class FaqController extends Controller
 
     public function actionRedactor()
     {
+        if (!empty($_POST['id_faq_category']))
+        {
+            $ids = $_POST['id_faq_category'];
+
+            return json_encode(['id_faq_category'=>$ids]);
+        }
+
         return $this->renderAjax('redactor', [
         ]);
     }

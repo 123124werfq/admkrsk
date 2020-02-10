@@ -85,7 +85,7 @@ class Helper
 		    return $result;
 		}
 
-		preg_match_all("/<(hrreserve|collection|gallery|forms|pagenews)\s(.+?)>(.+?)<\/(hrreserve|collection|gallery|forms|pagenews)>/is", $content, $matches);
+		preg_match_all("/<(hrreserve|faq|collection|gallery|forms|pagenews)\s(.+?)>(.+?)<\/(hrreserve|faq|collection|gallery|forms|pagenews)>/is", $content, $matches);
 
         if (!empty($matches[0]))
 	        foreach ($matches[0] as $key => $match)

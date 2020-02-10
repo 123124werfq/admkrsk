@@ -688,9 +688,25 @@ tinymce.PluginManager.add("faq", function(editor, url) {
             success: function(data) {
                 $('#redactor-modal').modal();
                 $('#redactor-modal .modal-body').html(data);
-                console.log(123);
+
+                $('#redactor-modal form').submit(function(){
+                    $.ajax({
+                        url: '/faq/redactor',
+                        type: 'post',
+                        dataType: 'json',
+                        data: $('#redactor-modal form').serialize(),
+                        success: function(data) {
+                            editor.insertContent('<p><faq data-id_faq_category="'+data.id_faq_category+'">Вопрос-Ответ #' + data.id_faq_category + '.</faq></p>');
+                            $('#redactor-modal').modal('hide');
+                        }
+                    });
+
+                    return false;
+                });
             }
         });
+
+
     }
 
     // Define the Toolbar button

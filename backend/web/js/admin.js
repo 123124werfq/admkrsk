@@ -253,6 +253,11 @@ function reordModels($block,$data)
 
 jQuery(document).ready(function()
 {
+    $("#redactor-modal button[type=submit]").click(function(){
+      $("#redactor-modal form").submit();
+      return false;
+    });
+
     $('body').delegate(".showdetails",'change',function(){
       $(this).parent().parent().next().next().toggleClass('hide');
     });

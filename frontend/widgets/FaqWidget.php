@@ -10,10 +10,16 @@ use yii\base\Widget;
 class FaqWidget extends Widget
 {
     public $id_faq_category;
+    public $attributes;
+    public $page;
 
     public function run()
     {
-        if (($category = FaqCategory::findOne($this->id_faq_category)) === null) {
+        if (!empty($this->attributes['id_faq_category']))
+            $this->id_faq_category = (int)$this->attributes['id_faq_category'];
+
+        if (($category = FaqCategory::findOne($this->id_faq_category)) === null)
+        {
             return false;
         }
 

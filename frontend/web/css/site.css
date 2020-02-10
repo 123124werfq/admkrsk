@@ -262,7 +262,7 @@ table.vote thead{
 }
 
 @media screen and (min-width: 992px) {
-    form .row {flex-wrap: nowrap!important;}
+    form.ajax-form .row {flex-wrap: nowrap!important;}
 }
 
 @media screen and (max-width: 992px) {
@@ -303,4 +303,78 @@ table.vote thead td{
     border-bottom: 1px solid #b8babd;
     font-weight: bold!important;
     font-style: italic;
+}
+
+/* Quotes */
+.b-quotes {
+    list-style-type:none!important;
+    padding-left: 0px!important;
+}
+.b-quotes li{
+    list-style-type:none!important;
+    padding: 0!important;
+    margin: 0;
+}
+.b-quotes .b-quotes_item {
+    border-bottom: 1px solid #FFF;    
+    border-left: 1px solid #f0f0f0;
+    border-right: 1px solid #f0f0f0;    
+    background: #f0f0f0;
+    cursor: pointer;
+    padding:0;
+    margin:0!important;
+    list-style-type: none;
+}
+
+.b-quotes .b-quotes_item:before {display: none!important;}
+
+    .b-quotes .b-quotes_item.active {
+        background-color:#c0c0c0;  
+        border-bottom: 1px solid #f0f0f0;  
+        color: #fff;
+    }
+
+.b-quotes .b-quotes_header {
+    padding: 1em 4em 1em 2em;
+    margin: 0;
+    position:relative;
+}
+
+.b-quotes .b-quotes_header_wrap {
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.b-quotes .b-quotes_group {
+    padding:0;
+    margin:0;   
+}
+
+.b-quotes_header_icon{
+    height: 100%;
+    width: 26px;
+    position:absolute;
+    right:1em;
+    top:0;
+    z-index:10;
+    background: url('/img/quotes_open.png') center right no-repeat;
+}
+
+.active .b-quotes_header_icon {
+    background: url('/img/quotes_close.png') center right no-repeat;
+}
+
+.b-quotes_text blockquote {margin-bottom: 0px;}
+.b-quotes_text {
+    display: none;
+    background: #e9e5e2;
+    background: #FFF;
+    color: #3b3b3b;  
+}
+
+.active .b-quotes_text {
+}
+
+.b-quotes_text_wrap {
+    padding: 1em 2em;
 }
