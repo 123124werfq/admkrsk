@@ -75,7 +75,7 @@ class EsiaUser extends \yii\db\ActiveRecord
     {
         $fias = $this->living_addr_fias;
         if (empty($fias))
-            $fias = $this->register_addr_object;
+            $fias = $this->register_addr_fias;
 
         if (empty($fias))
             return false;
@@ -90,7 +90,7 @@ class EsiaUser extends \yii\db\ActiveRecord
 
     public function getRegister_addr_object()
     {
-        $fias = $this->register_addr_object;
+        $fias = $this->register_addr_fias;
         if (empty($fias))
             $fias = $this->living_addr_fias;
 
