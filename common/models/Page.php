@@ -275,13 +275,13 @@ class Page extends ActiveRecord
     {
         $collectionSettingsKeys = [];
 
-        if (!empty($content)
-        if (preg_match_all('/data-key=".*"/i', $content, $matches)) {
-            foreach ($matches[0] as $match) {
-                $key = preg_split('/data-key=/i', $match);
-                $collectionSettingsKeys[] = str_replace('"', '', $key[1]);
+        if (!empty($content))
+            if (preg_match_all('/data-key=".*"/i', $content, $matches)) {
+                foreach ($matches[0] as $match) {
+                    $key = preg_split('/data-key=/i', $match);
+                    $collectionSettingsKeys[] = str_replace('"', '', $key[1]);
+                }
             }
-        }
         return $collectionSettingsKeys;
     }
 
