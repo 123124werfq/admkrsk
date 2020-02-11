@@ -271,9 +271,11 @@ class Page extends ActiveRecord
      * @param string $content
      * @return array
      */
-    private function searchCollectionKeys(string $content)
+    private function searchCollectionKeys($content)
     {
         $collectionSettingsKeys = [];
+
+        if (!empty($content)
         if (preg_match_all('/data-key=".*"/i', $content, $matches)) {
             foreach ($matches[0] as $match) {
                 $key = preg_split('/data-key=/i', $match);
