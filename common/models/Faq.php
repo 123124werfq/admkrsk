@@ -118,8 +118,9 @@ class Faq extends \yii\db\ActiveRecord
     public function afterSave($insert, $changedAttributes)
     {
         if ($this->id_faq_categories) {
-            $this->unlinkAll('categories');
-            foreach (FaqCategory::findAll($this->id_faq_categories) as $category) {
+            $this->unlinkAll('categories',true);
+            foreach (FaqCategory::findAll($this->id_faq_categories) as $category)
+            {
                 /* @var FaqCategory $category */
                 $this->link('categories', $category);
             }
