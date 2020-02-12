@@ -453,7 +453,7 @@ class Collection extends ActiveRecord
             $options = json_decode($this->options, true);
         }
 
-        if (!empty($options['filters'])) {
+        /*if (!empty($options['filters'])) {
             foreach ($options['filters'] as $key => $filter) {
 
                 if ($filter['operator']=='not')
@@ -471,7 +471,7 @@ class Collection extends ActiveRecord
 
                 $query->andWhere($where);
             }
-        }
+        }*/
 
         return $query;
     }
