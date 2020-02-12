@@ -574,9 +574,10 @@ JS;
                 {
                     $value = [];
 
-                    foreach ($ids as $id => $label)
-                        if (isset($records[$id]))
-                            $value[(string)$id] = $label;
+                    if (is_array($ids))
+                        foreach ($ids as $id => $label)
+                            if (isset($records[$id]))
+                                $value[(string)$id] = $label;
 
                     if (!empty($options['sortable']))
                     {
