@@ -381,6 +381,11 @@ return [
                     'menu.application' => ['class' => Application::class],
                 ]
             ],
+            'collection-type' => [
+                'title' => 'Типы списков',
+                'roles' => [
+                ]
+            ],
             'box' => [
                 'title' => 'Группы',
                 'roles' => [

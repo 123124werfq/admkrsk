@@ -113,7 +113,7 @@ class Collection extends ActiveRecord
             [['alias'], 'unique'],
             [['name'], 'required'],
             [['name', 'alias'], 'string', 'max' => 255],
-            [['id_parent_collection','id_box','id_column_order','order_direction','pagesize','show_row_num','show_column_num', 'notify_rule','id_group', 'show_on_map', 'id_column_map', 'link_column','show_download'], 'integer'],
+            [['id_parent_collection','id_box','id_column_order','order_direction','pagesize','show_row_num','show_column_num', 'notify_rule','id_group', 'show_on_map', 'id_column_map', 'link_column','show_download','id_type'], 'integer'],
             [['filter', 'options','label','table_head', 'table_style', 'filters'], 'safe'],
             [['template','template_element','template_view','notify_message'], 'string'],
             [['is_authenticate'], 'boolean'],
@@ -149,6 +149,7 @@ class Collection extends ActiveRecord
             'id_column_order' => 'Сортировать по',
             'order_direction' => 'Направление сортировки',
             'is_authenticate' => 'Авторизация (API)',
+            'id_type'=>'Тип списка',
 
             'pagesize'=>'Элементов на страницу',
             'show_column_num'=>'Показывать номер столбца',
@@ -474,6 +475,11 @@ class Collection extends ActiveRecord
         }*/
 
         return $query;
+    }
+
+    public function getType()
+    {
+        return $this->hasOne(CollectionType::class, ['id_type' => 'id_type']);
     }
 
     public function getGroup()

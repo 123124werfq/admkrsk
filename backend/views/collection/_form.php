@@ -9,6 +9,7 @@ use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use common\models\CollectionColumn;
 use common\models\Collection;
+use common\models\CollectionType;
 use common\models\Box;
 use yii\web\JsExpression;
 
@@ -39,6 +40,11 @@ use yii\web\JsExpression;
     <?= $form->field($model, 'is_authenticate')->checkbox() ?>
 
     <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
+
+    <?php if ($model->isNewRecord){?>
+    <?= $form->field($model, 'id_type')->dropDownList(ArrayHelper::map(CollectionType::find()->all(), 'id_type', 'name')
+        ,['prompt'=>'Выберите тип'])->hint('Заполняется только для создания специальных типов списков') ?>
+    <?php }?>
 
     <?php if (!$model->isNewRecord) { ?>
         <?= $form->field($model, 'label')->widget(Select2::class, [

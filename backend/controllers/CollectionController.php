@@ -718,9 +718,25 @@ class CollectionController extends Controller
     public function actionCreate()
     {
         $model = new Collection();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
+            if (!empty($model->id_type))
+            {
+                foreach ($model->type->columns as $key => $data)
+                {
+                    $column = new CollectionColumn;
+                    $column->id_collection = $model->id_collection;
+                    $column->name = $data->name;
+                    $column->alias = $data->alias;
+                    $column->type = $data->type;
+                    if (!$column->save())
+                        print_r($column->errors);
+                }   
+            }
+
             $model->createForm();
             $model->createAction(Action::ACTION_CREATE);
+
             return $this->redirect(['form/view', 'id' => $model->id_form]);
         }
 
