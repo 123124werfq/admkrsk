@@ -197,8 +197,7 @@ else
     <script>
         document.getElementById('submit-redactor').addEventListener('click', function (event) {
 
-            if ($rules = $('#querybuilder').queryBuilder('getRules'))
-            {
+                $rules = $('#querybuilder').queryBuilder('getRules')
                 $("#collection-filters").val(JSON.stringify($rules));
 
                 $form = $("#collection-redactor");
@@ -220,7 +219,6 @@ else
                     }
                 });
                 event.preventDefault();
-            }
        });
     </script>
 <?php
