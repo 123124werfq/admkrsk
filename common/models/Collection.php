@@ -354,7 +354,7 @@ class Collection extends ActiveRecord
 
             if (!empty($options['filters']))
             {
-                foreach ($options['filters'] as $key => $filter)
+                /*foreach ($options['filters'] as $key => $filter)
                 {
                     $where = [$filter['operator'], $filter['id_column'], $filter['value']];
                     if ($key == 0)
@@ -365,7 +365,7 @@ class Collection extends ActiveRecord
                     {
                         $query->andWhere($where);
                     }
-                }
+                }*/
             }
         }
 
