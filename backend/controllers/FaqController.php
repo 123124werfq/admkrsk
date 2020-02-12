@@ -7,6 +7,7 @@ use common\models\GridSetting;
 use common\modules\log\models\Log;
 use Yii;
 use common\models\Faq;
+use common\models\CollectionRecord;
 use backend\models\search\FaqSearch;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
@@ -190,9 +191,18 @@ class FaqController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($id=null)
     {
         $model = new Faq();
+
+        if (!empty($id))
+        {
+            $record = CollectionRecord::findOne($id);
+            $record->getData(true);
+
+            $model->question = $record->question??'';
+            $model->answer = $record->answer??'';
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_CREATE);

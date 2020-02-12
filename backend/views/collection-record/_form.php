@@ -10,6 +10,12 @@ use yii\widgets\ActiveForm;
 
 <?php $form = ActiveForm::begin(); ?>
 
+<?php if (!$model->isNewRecord && !empty($model->collection->type->is_faq)){?>
+    <div class="text-right">
+        <a class="btn btn-info btn-visible" href="/faq/create?id=<?=$model->id_record?>">Экспортировать в Вопрос-Ответ</a>
+        <br/><br/>
+    </div>
+<?php }?>
 <?=\frontend\widgets\FormsWidget::widget([
     'form'=>$collection->form,
     'collectionRecord'=>$model,

@@ -41,7 +41,7 @@ class FormsWidget extends \yii\base\Widget
         	return false;
 
         if ($this->nocaptcha)
-            $form->captcha = false;
+            $this->form->captcha = false;
 
         $model = new FormDynamic($this->form,$this->data);
 

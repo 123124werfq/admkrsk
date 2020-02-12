@@ -129,7 +129,7 @@ position: absolute;
 .form-table td {padding: 5px;}
 .search-form .btn, .search .btn {    padding: 9px 12px;}
 
-.btn-visible {display: block!important;}
+.btn-visible {display: inline-block!important;}
 .subform-action-buttons .btn {display: inline-block!important;}
 .subform-action-buttons {text-align: right; margin-bottom: 30px;}
 

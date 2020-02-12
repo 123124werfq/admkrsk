@@ -81,7 +81,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
     public function __get($name)
     {
-       if (isset($this->loadDataAlias[$name]))
+        if (isset($this->loadDataAlias[$name]))
           return $this->loadDataAlias[$name];
 
        return parent::__get($name);
