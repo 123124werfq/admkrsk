@@ -68,4 +68,29 @@ class SettingPluginCollection extends ActiveRecord
             [['created_at', 'id', 'created_at', 'id_collection', 'id_page'], 'integer'],
         ];
     }
+
+    public function getCollection()
+    {
+        return $this->hasOne(Collection::className(), ['id_collection' => 'id_collection']);
+    }
+
+    public function getColumns()
+    {
+        $settings = json_decode($this->settings,true);
+
+        $columns = [];
+
+        if (!empty($settings['columns']))
+        {
+            foreach ($settings['columns'] as $key => $data)
+            {
+                $column = CollectionColumn::findOne($data['id_column']);
+
+                if (!empty($column))
+                    $columns[] = $column;
+            }
+        }
+
+        return $columns;
+    }
 }

@@ -485,7 +485,7 @@ class Collection extends ActiveRecord
     {
         $options = json_decode($this->options, true);
 
-        if (isset($options['filters']))
+        if (isset($options['filters']) && !is_array($options['filters']))
             return json_decode($options['filters']);
 
         return [];

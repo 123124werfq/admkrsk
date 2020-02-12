@@ -29,12 +29,15 @@ class CollectionWidget extends \yii\base\Widget
     public $link_column = false;
     public $show_row_num = false;
     public $show_column_num = false;
+    public $show_download = false;
     public $show_on_map = 0; // отображать на карте
 
     public $page;
 
     public function run()
     {
+        $setting = '';
+
         if (!empty($this->attributes))
         {
             if (!empty($this->attributes['key']))
@@ -64,6 +67,9 @@ class CollectionWidget extends \yii\base\Widget
 
             if (!empty($this->attributes['show_column_num']))
                 $this->show_column_num = (int)$this->attributes['show_column_num'];
+
+            if (!empty($this->attributes['show_download']))
+                $this->show_download = (int)$this->attributes['show_download'];
 
             if (!empty($this->attributes['show_row_num']))
                 $this->show_row_num = (int)$this->attributes['show_row_num'];
@@ -296,12 +302,14 @@ class CollectionWidget extends \yii\base\Widget
         	'model'=>$model,
             'id_collection'=>$this->id_collection,
             'unique_hash'=>$unique_hash,
+            'setting'=>$setting,
             'page'=>$this->page,
 
             'columns'=>$columnsByAlias,
             'columnsOptions'=>$columnsOptions,
             'allrows'=>$allrows,
             'search_columns'=>$search_columns,
+            'show_download'=>$this->show_download,
             'show_on_map'=>(!empty($this->show_on_map) && !empty($model->id_column_map))?1:0,
             'table_head'=>$this->table_head,
             'table_style'=>$this->table_style,

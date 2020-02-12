@@ -10,6 +10,9 @@ use yii\web\View;
 /* @var $model common\models\Collection */
 /* @var $form yii\widgets\ActiveForm */
 
+$model->filters = $rules = $model->getViewFilters();
+$model->filters = json_encode($model->filters);
+
 $operators = [
     '='=>'=',
     '>'=>'>',
@@ -224,7 +227,6 @@ else
 <?php
 
 $json_filters = json_encode($json_filters);
-$rules = $model->getViewFilters();
 if (empty($rules))
     $rules = [['empty'=>true]];
 

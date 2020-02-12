@@ -6,6 +6,7 @@ use common\models\CollectionRecord;
 use common\models\CollectionColumn;
 use common\models\Page;
 use common\models\Collection;
+use common\models\SettingPluginCollection;
 use yii\web\Response;
 use Yii;
 
@@ -73,6 +74,38 @@ class CollectionController extends \yii\web\Controller
         }
 
         return $points;
+    }
+
+    public function actionDownload($key,$id_page)
+    {
+        $settings = SettingPluginCollection::find()->where(['key'=>$key,'id_page'=>$id_page])->one();
+
+        if (empty($settings))
+            throw new NotFoundHttpException('The requested page does not exist.');
+
+        $options = json_decode($settings->settings,true);
+
+        $head = [];
+        
+        foreach ($settings->columns as $key => $column)
+            $head[] = $column->name;
+
+        $query = $settings->collection->getDataQueryByOptions($options);
+        $allrows = $query->getArray();
+
+        $allrows = array_merge([$head],$allrows);
+
+        header("Content-Disposition: attachment; filename=\"{$settings->collection->name}.xls\"");
+        header("Content-Type: application/vnd.ms-excel;");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+        $out = fopen("php://output", 'w');
+
+        foreach ($allrows as $data)
+        {
+            fputcsv($out, $data,"\t");
+        }
+        fclose($out);
     }
 
 	public function actionRecordList($id,$q)

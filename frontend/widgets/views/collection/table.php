@@ -26,6 +26,10 @@
 </form>
 
 <div class="collection-controls">
+	
+	<?php if (!empty($show_download) && !empty($setting)){?>
+		<a href="/collection/download?key=<?=$setting->key?>&id_page=<?=$page->id_page?>">Скачать</a>
+	<?php }?>
 	<?php if (!empty($show_on_map)){?>
 		<a class="showonmap" data-hash="<?=$unique_hash?>" data-id="<?=$id_collection?>" data-column="<?=$show_on_map?>" href="javascript:">Показать на карте</a>
 	<?php }?>
