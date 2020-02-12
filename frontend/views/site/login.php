@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <p>Регистрация в Единой системе идентификации и аутентификации (ЕСИА)</p>
                 <p>Авторизация через портал государственных услуг Российской Федерации (www.gosuslugi.ru)</p>
-                <input type="image" name="ctl00$PlaceHolderMain$LoginESIAImageButton" id="ctl00_PlaceHolderMain_LoginESIAImageButton" class="image" src="http://admkrsk.ru/Style%20Library/res/images/gosuslugi_logo-esia.png">
+                <input type="image" name="ctl00$PlaceHolderMain$LoginESIAImageButton" id="ctl00_PlaceHolderMain_LoginESIAImageButton" class="image" src="http://www.admkrsk.ru/Style%20Library/res/images/gosuslugi_logo-esia.png">
     			<table id="ctl00_PlaceHolderMain_signInControl" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;">
                 	<tbody><tr>
                 		<td>
