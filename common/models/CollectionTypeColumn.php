@@ -49,11 +49,11 @@ class CollectionTypeColumn extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_column' => 'Id Column',
+            'id_column' => 'ID',
             'id_type' => 'Id Type',
             'name' => 'Название',
             'type' => 'Тип колонки',
-            'alias' => 'Псведоним',
+            'alias' => 'Псевдоним',
             'settings' => 'Settings',
             'created_at' => 'Created At',
             'created_by' => 'Created By',

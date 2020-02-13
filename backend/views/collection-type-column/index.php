@@ -20,15 +20,17 @@ use yii\grid\GridView;
             'id_column',
             'name',
             'type',
-            //'created_at',
-            //'created_by',
-            //'updated_at',
-            //'updated_by',
-            //'deleted_at',
-            //'deleted_by',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {update} {delete}',
+                'contentOptions' => ['class' => 'button-column'],
+            ]
         ],
+        'tableOptions' => [
+            'emptyCell' => '',
+            'class' => 'table table-striped ids-style valign-middle table-hover',
+            'id' => 'grid',
+        ]
     ]); ?>
 </div>
 </div>

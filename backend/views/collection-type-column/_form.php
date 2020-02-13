@@ -9,8 +9,7 @@ use common\models\CollectionColumn;
 ?>
 
 <div class="ibox">
-        <div class="ibox-content">
-
+    <div class="ibox-content">
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
@@ -20,7 +19,7 @@ use common\models\CollectionColumn;
     <?= $form->field($model, 'type')->dropDownList(CollectionColumn::getTypeLabel(),['class'=>'form-control column-type'])?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

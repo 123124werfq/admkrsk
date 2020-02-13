@@ -21,9 +21,17 @@ $this->params['button-block'][] = Html::a('Добавить', ['create'], ['clas
                 'name',
                 'is_faq:boolean',
                 'created_at:date',
-
-                ['class' => 'yii\grid\ActionColumn'],
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'template' => '{view} {update} {delete}',
+                    'contentOptions' => ['class' => 'button-column'],
+                ]
             ],
+            'tableOptions' => [
+                'emptyCell' => '',
+                'class' => 'table table-striped ids-style valign-middle table-hover',
+                'id' => 'grid',
+            ]
         ]); ?>
         </div>
     </div>
