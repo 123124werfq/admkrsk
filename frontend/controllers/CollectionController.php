@@ -86,7 +86,7 @@ class CollectionController extends \yii\web\Controller
         $options = json_decode($settings->settings,true);
 
         $head = [];
-        
+
         foreach ($settings->columns as $key => $column)
             $head[] = $column->name;
 
@@ -96,7 +96,7 @@ class CollectionController extends \yii\web\Controller
         $allrows = array_merge([$head],$allrows);
 
         header("Content-Disposition: attachment; filename=\"{$settings->collection->name}.xls\"");
-        header("Content-Type: application/vnd.ms-excel;");
+        header("Content-Type: application/vnd.ms-excel; charset=utf-8");
         header("Pragma: no-cache");
         header("Expires: 0");
         $out = fopen("php://output", 'w');
