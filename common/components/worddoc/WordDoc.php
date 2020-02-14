@@ -64,14 +64,13 @@ class WordDoc
 
                 if (!empty($value))
                 {
-                    $template->cloneRowAndSetValues($alias.'.'.key($value[0]), $value);
+                    $template->cloneRow($alias.'.'.key($value[0]), count($value));
 
-                    /*foreach ($value as $rkey => $row)
+                    foreach ($value as $rkey => $row)
                     {
                         foreach ($row as $tkey => $td)
                             $template->setValue($alias.".".$tkey."#$i", $td);
-
-                    }*/
+                    }
                 }
             }
             else if (isset($stringData[$alias.'_file']) && $columns[$alias]->type==CollectionColumn::TYPE_IMAGE)
@@ -160,7 +159,9 @@ class WordDoc
                 $string_output[$col->alias.'.house'] = $data[$col_alias]['house']??'';
                 $string_output[$col->alias.'.room'] = $data[$col_alias]['room']??'';
                 $string_output[$col->alias.'.postalcode'] = $data[$col_alias]['postalcode']??'';
-                $string_output[$col->alias.'.fulladdress'] = $data[$col_alias]['fulladdress']??'';
+                $string_output[$col->alias.'.fullname'] = $string_output[$col->alias.'.fulladdress'] = $data[$col_alias]['fulladdress']??'';
+                $string_output[$col->alias.'.lat'] = $data[$col_alias]['lat']??'';
+                $string_output[$col->alias.'.lon'] = $data[$col_alias]['lon']??'';
             }
             else if ($col->type==CollectionColumn::TYPE_CITY)
             {

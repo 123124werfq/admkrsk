@@ -158,7 +158,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         'houseguid'=>'',
                         'lat'=>'',
                         'lon'=>'',
-                        'postcode'=>''
+                        'postalcode'=>''
                     ];
 
                     $city = City::find()->where("name LIKE '%Красноярск%'")->one();
@@ -342,7 +342,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 //echo '<div class="col-md-12"></div>';
 
                 if (!empty($options['show_postcode']))
-                echo $form->field($model, $attribute.'[postcode]')->textInput(['id'=>'postcode'.$attribute,'placeholder'=>'Почтовый индекс']);
+                echo $form->field($model, $attribute.'[postalcode]')->textInput(['id'=>'postcode'.$attribute,'placeholder'=>'Почтовый индекс']);
                 //echo '</div>';
 
                 if (!empty($options['show_coords']))

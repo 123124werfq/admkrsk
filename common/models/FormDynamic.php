@@ -127,7 +127,7 @@ class FormDynamic extends DynamicModel
                                     'houseguid'=>'',
                                     'lat'=>'',
                                     'lon'=>'',
-                                    'postcode'=>''
+                                    'postalcode'=>''
                                 ];
 
                         if (!empty($value['house']))
