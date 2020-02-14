@@ -66,10 +66,13 @@ class WordDoc
                 {
                     $template->cloneRow($alias.'.'.key($value[0]), count($value));
 
+                    $i = 1;
                     foreach ($value as $rkey => $row)
                     {
                         foreach ($row as $tkey => $td)
                             $template->setValue($alias.".".$tkey."#$i", $td);
+
+                        $i++;
                     }
                 }
             }
