@@ -837,7 +837,7 @@ class SiteController extends Controller
                     $efirm->leg = $oinf['common']['leg']??null;
                 }
 
-
+var_dump($oinf['org_addrs']['elements']); die();
                 foreach($oinf['org_addrs']['elements'] as $address)
                 {
                     switch ($address['type']){
