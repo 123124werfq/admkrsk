@@ -119,6 +119,8 @@ class WordDoc
     {
         $string_output = [];
 
+        //print_r($columns);
+
         foreach ($columns as $key => $col)
         {
             $col_alias = $col->alias;
@@ -146,6 +148,17 @@ class WordDoc
                     $string_output[$col_alias] = $model->name;
 
                 $string_output[$col->alias] = $data[$col_alias];
+            }
+            else if ($col->type==CollectionColumn::TYPE_CHECKBOXLIST)
+            {
+                $values = $col->input->getArrayValues();
+
+                $output = [];
+                foreach ($values as $key => $value) {
+                    $output[] = $value.(in_array($value, $data[$col_alias])?' - да':'- нет');
+                }
+
+                $string_output[$col->alias] = implode('<w:br/>', $output);
             }
             else if ($col->type==CollectionColumn::TYPE_JSON)
             {
