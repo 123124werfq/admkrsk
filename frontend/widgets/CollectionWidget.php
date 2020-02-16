@@ -32,6 +32,8 @@ class CollectionWidget extends \yii\base\Widget
     public $show_download = false;
     public $show_on_map = 0; // отображать на карте
 
+    public $objectData = []; // данные CollectionRecord объекста если идет его рендер
+
     public $page;
 
     public function run()
@@ -89,7 +91,14 @@ class CollectionWidget extends \yii\base\Widget
             if (!empty($this->attributes['columns']))
             {
                 if (!is_array($this->attributes['columns']))
-                    $this->columns = json_decode(str_replace("&quot;", '"', $this->attributes['columns']),true);
+                {
+                    $this->columns = str_replace("&quot;", '"', $this->attributes['columns']);
+
+                    foreach ($objectData as $key => $value)
+                        $this->columns = str_replace('{{'.$key.'}}', $value, $this->columns);
+
+                    $this->columns = json_decode($this->columns,true);
+                }
                 else
                     $this->columns = $this->attributes;
             }

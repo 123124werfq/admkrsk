@@ -12,6 +12,7 @@ class FaqWidget extends Widget
     public $id_faq_category;
     public $attributes;
     public $page;
+    public $objectData; // данные CollectionRecord объекста если идет его рендер
 
     public function run()
     {

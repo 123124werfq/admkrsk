@@ -20,6 +20,7 @@ class FormsWidget extends \yii\base\Widget
     public $arrayGroup = null; // группирующий признак для подколлекций
     public $activeForm = null; // класс эктив форм для подколлекций
     public $nocaptcha=false;
+    public $objectData; // данные CollectionRecord объекста если идет его рендер
 
     public $page;
 

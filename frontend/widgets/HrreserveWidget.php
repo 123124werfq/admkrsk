@@ -9,6 +9,7 @@ class HrreserveWidget extends Widget
 {
     public $page;
     public $attributes;
+    public $objectData; // данные CollectionRecord объекста если идет его рендер
 
     public function run()
     {

@@ -19,6 +19,7 @@ class GalleryWidget extends Widget
     public $limit;
     public $page;
     public $groupGalleryId;
+    public $objectData; // данные CollectionRecord объекста если идет его рендер
 
     /**
      * @return string
