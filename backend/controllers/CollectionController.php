@@ -1014,6 +1014,8 @@ class CollectionController extends Controller
                                             if (!isset($columns[$tdkey]))
                                                 continue;
 
+                                            $value = str_replace('\n', "\r\n", $value);
+
                                             switch ($columns[$tdkey]->type)
                                             {
                                                 case CollectionColumn::TYPE_DATE:

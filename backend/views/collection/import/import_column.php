@@ -16,6 +16,7 @@
         CollectionColumn::TYPE_DATE=>'',
         CollectionColumn::TYPE_DATETIME=>'',
         CollectionColumn::TYPE_TEXTAREA=>'',
+        CollectionColumn::TYPE_RICHTEXT=>'',
         CollectionColumn::TYPE_FILE_OLD=>'',
         CollectionColumn::TYPE_SELECT=>'',
     ];
