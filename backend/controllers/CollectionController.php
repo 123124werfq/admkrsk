@@ -731,7 +731,7 @@ class CollectionController extends Controller
                     $column->type = $data->type;
                     if (!$column->save())
                         print_r($column->errors);
-                }   
+                }
             }
 
             $model->createForm();
@@ -876,7 +876,8 @@ class CollectionController extends Controller
         {
             if (empty($model->filepath))
             {
-                $model->filepath = '../../temp/import_test.'.$model->file->extension;
+                $root = Yii::getAlias('@app');
+                $model->filepath = $root.'/runtime/import_'.time().'.'.$model->file->extension;
                 $model->file->saveAs($model->filepath);
             }
 
