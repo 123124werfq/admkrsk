@@ -430,7 +430,8 @@ class CollectionController extends Controller
             $newColumn->id_collection = $id;
             $newColumn->type = $form->type;
 
-            if ($newColumn->save()) {
+            if ($newColumn->save())
+            {
                 $newColumn->collection->form->createInput([
                     'type' => $form->type,
                     'name' => $newColumn->name,
@@ -447,15 +448,18 @@ class CollectionController extends Controller
 
                     $collection = Yii::$app->mongodb->getCollection('collection' . $id);
 
-                    foreach ($datas as $id_record => $data) {
-                        if (!empty($data[$form->id_collection_column])) {
+                    foreach ($datas as $id_record => $data)
+                    {
+                        if (!empty($data[$form->id_collection_column]))
+                        {
                             $array = $data[$form->id_collection_column];
 
                             $array = str_replace(['[', ']', ", ", '""'], ['{', '}', ":", '\"'], $array);
                             $array = str_replace(['{{', '}}', '}:{'], ['[{', '}]', '},{'], $array);
                             $array = json_decode($array, true);
 
-                            if (!empty($array)) {
+                            if (!empty($array))
+                            {
                                 $id_records_source = [];
                                 $textSearch = [];
 
@@ -463,17 +467,19 @@ class CollectionController extends Controller
                                 {
                                     $id = key($kdata);
 
-                                    foreach ($datas_source as $id_record_source => $sources) {
-                                        if ($sources[$form->id_collection_from_column] == $id) {
+                                    foreach ($datas_source as $id_record_source => $sources)
+                                    {
+                                        if ($sources[$form->id_collection_from_column] == $id)
+                                        {
                                             $id_records_source[] = $id_record_source;
-                                            $textSearch[] = $kdata[$id];
+                                            $textSearch[$id_record_source] = $kdata[$id];
                                         }
                                     }
                                 }
 
                                 if (!empty($id_records_source))
                                 {
-                                    Yii::$app->db->createCommand()->insert('db_collection_value', [
+                                    Yii::$app->db->createCommand()->insert('db_collection_value',[
                                         'id_record' => $id_record,
                                         'id_column' => $newColumn->id_column,
                                         'value' => json_encode($id_records_source)
@@ -481,19 +487,23 @@ class CollectionController extends Controller
 
                                     $update = [];
                                     $update['col' . $newColumn->id_column] = $id_records_source;
-                                    $update['col' . $newColumn->id_column . '_search'] = implode(';', $textSearch);
+                                    $update['col' . $newColumn->id_column . '_search'] = json_encode($textSearch,JSON_UNESCAPED_UNICODE);
+
                                     $collection->update(['id_record' => $id_record], $update);
                                 }
                             }
                         }
                     }
-                } else {
+                }
+                else
+                {
                     $datas = $collection->getData();
                     $datas_source = Collection::findOne($form->id_collection_from)->getData();
 
                     $collection = Yii::$app->mongodb->getCollection('collection' . $id);
 
-                    foreach ($datas as $id_record => $data) {
+                    foreach ($datas as $id_record => $data)
+                    {
                         if (!empty($data[$form->id_collection_column])) {
                             $id_link = $data[$form->id_collection_column];
                             $textSearch = $id_source = null;
@@ -505,7 +515,8 @@ class CollectionController extends Controller
                                 }
                             }
 
-                            if (!empty($id_source)) {
+                            if (!empty($id_source))
+                            {
                                 Yii::$app->db->createCommand()->insert('db_collection_value', [
                                     'id_record' => $id_record,
                                     'id_column' => $newColumn->id_column,

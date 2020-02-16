@@ -586,4 +586,9 @@ class CollectionColumn extends \yii\db\ActiveRecord
     {
         return $this->hasOne(FormInput::class, ['id_column' => 'id_column'])->andWhere(['id_form'=>$this->collection->id_form]);
     }
+
+    public function getInputs()
+    {
+        return $this->hasMany(FormInput::class, ['id_column' => 'id_column']);
+    }
 }

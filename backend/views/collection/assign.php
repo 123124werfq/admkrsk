@@ -34,54 +34,60 @@ $this->params['breadcrumbs'][] = 'Связывание';
 
             <hr>
 
-        	<?=$form->field($formAssign, 'id_collection_column')->widget(Select2::class, [
-		        	'data' => ArrayHelper::map($model->columns,'id_column','name'),
-		        	'pluginOptions' => [
-    		            'allowClear' => true,
-    		            'multiple' => false,
-    		            'placeholder' => 'Выберите колонку',
-    		        ],
-		    ])->hint('Выберите колонку с ключем / ключами')?>
+            <div class="row">
+                <div class="col-md-6">
 
-		    <?=$form->field($formAssign, 'id_collection_from')->widget(Select2::class, [
-		        	'data' => ArrayHelper::map(Collection::find()->all(),'id_collection','name'),
-		        	'pluginOptions' => [
-		            'allowClear' => true,
-		            'multiple' => false,
-		            'placeholder' => 'Выберите список',
-		        ],
-		    ])?>
+            	<?=$form->field($formAssign, 'id_collection_column')->widget(Select2::class, [
+    		        	'data' => ArrayHelper::map($model->columns,'id_column','name'),
+    		        	'pluginOptions' => [
+        		            'allowClear' => true,
+        		            'multiple' => false,
+        		            'placeholder' => 'Выберите колонку',
+        		        ],
+    		    ])->hint('Выберите колонку с ключем / ключами')?>
 
-		    <?= $form->field($formAssign, 'id_collection_from_column')->widget(Select2::class, [
-                'data' => [],
-                'pluginOptions' => [
-                    'multiple' => false,
-                    'allowClear' => true,
-                    'minimumInputLength' => 0,
-                    'placeholder' => 'Начните ввод',
-                    'ajax' => [
-                        'url' => '/collection-column/list',
-                        'dataType' => 'json',
-                        'data' => new JsExpression('function(params) {return {q:params.term,id_collection:$("#collectioncombineform-id_collection_from").val()}}')
-                    ],
-                ],
-            ])?>
+                </div>
+                <div class="col-md-6">
+                    <?=$form->field($formAssign, 'id_collection_from')->widget(Select2::class, [
+                            'data' => ArrayHelper::map(Collection::find()->all(),'id_collection','name'),
+                            'pluginOptions' => [
+                            'allowClear' => true,
+                            'multiple' => false,
+                            'placeholder' => 'Выберите список',
+                        ],
+                    ])?>
+                
+                    <?= $form->field($formAssign, 'id_collection_from_column')->widget(Select2::class, [
+                            'data' => [],
+                            'pluginOptions' => [
+                                'multiple' => false,
+                                'allowClear' => true,
+                                'minimumInputLength' => 0,
+                                'placeholder' => 'Начните ввод',
+                                'ajax' => [
+                                    'url' => '/collection-column/list',
+                                    'dataType' => 'json',
+                                    'data' => new JsExpression('function(params) {return {q:params.term,id_collection:$("#collectioncombineform-id_collection_from").val()}}')
+                                ],
+                            ],
+                        ])?>
 
-            <?= $form->field($formAssign, 'id_collection_from_column_label')->widget(Select2::class, [
-                'data' => [],
-                'pluginOptions' => [
-                    'multiple' => false,
-                    'allowClear' => true,
-                    'minimumInputLength' => 0,
-                    'placeholder' => 'Начните ввод',
-                    'ajax' => [
-                        'url' => '/collection-column/list',
-                        'dataType' => 'json',
-                        'data' => new JsExpression('function(params) {return {q:params.term,id_collection:$("#collectioncombineform-id_collection_from").val()}}')
-                    ],
-                ],
-            ])?>
-
+                        <?= $form->field($formAssign, 'id_collection_from_column_label')->widget(Select2::class, [
+                            'data' => [],
+                            'pluginOptions' => [
+                                'multiple' => false,
+                                'allowClear' => true,
+                                'minimumInputLength' => 0,
+                                'placeholder' => 'Начните ввод',
+                                'ajax' => [
+                                    'url' => '/collection-column/list',
+                                    'dataType' => 'json',
+                                    'data' => new JsExpression('function(params) {return {q:params.term,id_collection:$("#collectioncombineform-id_collection_from").val()}}')
+                                ],
+                            ],
+                        ])?>
+                </div>
+            </div>
 
         	<?= Html::submitButton('Связать', ['class' => 'btn btn-success']) ?>
 

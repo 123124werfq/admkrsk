@@ -114,14 +114,15 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 ])->all();
 
             $labelsByIndex = [];
+
             foreach ($labels as $lkey => $data)
                 $labelsByIndex[$data['id_record']] = $data['value'];
 
             if (is_array($ids))
                 foreach ($ids as $key => $id)
-                    $mongoLabels[$id] = $labelsByIndex[$id];
+                    $mongoLabels[$id] = $labelsByIndex[$id]??'';
             else
-                $mongoLabels[$ids] = $labelsByIndex[$ids];
+                $mongoLabels[$ids] = $labelsByIndex[$ids]??'';
         }
 
         return $mongoLabels;

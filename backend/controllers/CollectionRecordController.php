@@ -306,6 +306,21 @@ class CollectionRecordController extends Controller
                     return implode(',', $output);
                 };
             }
+            else if ($col->type==CollectionColumn::TYPE_COLLECTIONS)
+            {
+                $dataProviderColumns[$col_alias]['format'] = 'raw';
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias)
+                {
+                    if (!empty($model[$col_alias.'_search']))
+                    {
+                        $labels = json_decode($model[$col_alias.'_search'],true);
+                        return implode('<br>', $labels);
+                    }
+
+                    //$labels = json_decode($model[$col_alias],true);
+                    
+                };
+            }
             else if ($col->type==CollectionColumn::TYPE_IMAGE)
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';

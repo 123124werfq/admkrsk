@@ -147,7 +147,13 @@ class CollectionColumnController extends Controller
     {
         $model = $this->findModel($id);
         $id = $model->id_collection;
+        
+        $inputs = $model->inputs;
+
         $model->delete();
+
+        foreach ($inputs as $key => $input)
+            $input->delete();
 
         return $this->redirect(['index','id'=>$id]);
     }
