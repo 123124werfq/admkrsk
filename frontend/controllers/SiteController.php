@@ -837,12 +837,31 @@ class SiteController extends Controller
                     $efirm->leg = $oinf['common']['leg']??null;
                 }
 
+                foreach($oinf['org_addrs']['elements'] as $address)
+                {
+                    switch ($address['type']){
+                        case 'OLG':
+                            $efirm->law_addr = ($address['zipCode']??'') . " " .($address['addressStr']??'') . " " . ($address['house']??'');
+                            $efirm->law_addr_fias = $address['fiasCode2']??null;
+                            $efirm->law_addr_fias_alt = $address['fiasCode2']??null;
+                            break;
+                        case 'OPS':
+                        default:
+                            $efirm->main_addr = ($address['zipCode']??'') . " " .($address['addressStr']??'') . " " . ($address['house']??'');
+                            $efirm->main_addr_fias = $address['fiasCode2']??null;
+                            $efirm->main_addr_fias_alt = $address['fiasCode']??null;
+                            break;
+                    }            
+                }
+
+                /*
                 if(isset($oinf['org_addrs']['elements'][0]))
                 {
                     $efirm->main_addr = ($oinf['org_addrs']['elements'][0]['zipCode']??'') . " " .($oinf['org_addrs']['elements'][0]['addressStr']??'') . " " . ($oinf['org_addrs']['elements'][0]['house']??'');
                     $efirm->main_addr_fias = $oinf['org_addrs']['elements'][0]['fiasCode']??null;
                     $efirm->main_addr_fias_alt = $oinf['org_addrs']['elements'][0]['fiasCode2']??null;
                 }
+                */
 
                 if(!$efirm->save())
                 {

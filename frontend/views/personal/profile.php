@@ -37,7 +37,10 @@
 
                         <h3>Контактная информация</h3>
                         <?php if(!empty($user->esiainfo->register_addr)){ ?>
-                        <p><em>Адрес регистрации:</em> <?=$user->esiainfo->register_addr?></p>
+                        <p><em>Адрес регистрации:</em> <?=$user->esiainfo->register_addr?> (<?=empty($user->esiainfo->register_addr_fias)?'ФИАС не указан':$user->esiainfo->register_addr_fias?>)</p>
+                        <?php } ?>
+                        <?php if(!empty($user->esiainfo->living_addr)){ ?>
+                        <p><em>Адрес проживания:</em> <?=$user->esiainfo->living_addr?> (<?=empty($user->esiainfo->living_addr_fias)?'ФИАС не указан':$user->esiainfo->living_addr_fias?>)</p>
                         <?php } ?>
                         <?php if(!empty($user->esiainfo->mobile)){ ?>
                         <p><em>Телефон:</em> <?=$user->esiainfo->mobile?></p>
@@ -51,7 +54,7 @@
                             if($afirms) echo "<ul>";
                             foreach ($afirms as $afirm){
                         ?>
-                                <li><?=$afirm->fullname?></li>
+                                <li><a href="/site/asfirm?f=<?=$afirm->oid?>"><?=$afirm->fullname?></a> </li>                               
                             <?php }
                             if($afirms) echo "<ul>";
 
@@ -80,7 +83,11 @@
                         <?php } ?>
 
                         <?php if(!empty($firm->main_addr)){ ?>
-                        <p><em>Адрес:</em> <?=$firm->main_addr?></p>
+                        <p><em>Адрес фактический:</em> <?=$firm->main_addr?> (<?=empty($firm->main_addr_fias)?'ФИАС не указан':$firm->main_addr_fias?>)</p>
+                        <?php } ?>
+
+                        <?php if(!empty($firm->law_addr)){ ?>
+                        <p><em>Адрес юридический:</em> <?=$firm->law_addr?> (<?=empty($firm->law_addr_fias)?'ФИАС не указан':$firm->law_addr_fias?>)</p>
                         <?php } ?>
 
                         <?php } ?>
