@@ -255,10 +255,41 @@ class EsiaUser extends \yii\db\ActiveRecord
 
         $addressInfo = $esia->getAddressInfo();
 
+        /*
         var_dump($personInfo);
         var_dump($addressInfo);
         die();
-        
+        */
+
+        foreach($addressInfo as $address)
+        {
+            switch ($address['type']){
+                case 'PLV':
+                    $addr_components = [];
+                    if(isset($address['zipCode'])) $addr_components[] = $address['zipCode'];
+                    if(isset($address['addressStr'])) $addr_components[] = $address['addressStr'];
+                    if(isset($address['house'])) $addr_components[] = $address['house'];
+                    if(isset($address['flat'])) $addr_components[] = $address['flat'];
+
+                    $this->living_addr = implode(', ', $addr_components);
+
+                    if(isset($address['fiasCode']))
+                        $this->living_addr_fias = $address['fiasCode'];
+                    break;
+                case 'PRG':
+                    $addr_components = [];
+                    if(isset($address['zipCode'])) $addr_components[] = $address['zipCode'];
+                    if(isset($address['addressStr'])) $addr_components[] = $address['addressStr'];
+                    if(isset($address['house'])) $addr_components[] = $address['house'];
+                    if(isset($address['flat'])) $addr_components[] = $address['flat'];
+
+                    $this->register_addr = $address['zipCode'] . ', ' .  $address['addressStr'] . ', ' . $address['house'] . ', ' . $address['flat'];
+                    if(isset($address['fiasCode']))
+                        $this->register_addr_fias = $address['fiasCode'];
+                    break;
+            }            
+        }
+/*
         if(isset($addressInfo[0]))
         {
             $addrString = $addressInfo[0]['addressStr']??'';
@@ -269,7 +300,7 @@ class EsiaUser extends \yii\db\ActiveRecord
             $this->register_addr = $zipode . ', ' . $addrString . ', ' . $house . ', ' . $flat;
             $this->register_addr_fias = $addressInfo[0]['fiasCode']??null;
         }
-
+*/
         $contactInfo = $esia->getContactInfo();
         foreach ($contactInfo as $cinfo)
         {

@@ -37,7 +37,10 @@
 
                         <h3>Контактная информация</h3>
                         <?php if(!empty($user->esiainfo->register_addr)){ ?>
-                        <p><em>Адрес регистрации:</em> <?=$user->esiainfo->register_addr?></p>
+                        <p><em>Адрес регистрации:</em> <?=$user->esiainfo->register_addr?> (<?=empty($user->esiainfo->register_addr_fias)?'ФИАС не указан':$user->esiainfo->register_addr_fias?>)</p>
+                        <?php } ?>
+                        <?php if(!empty($user->esiainfo->living_addr)){ ?>
+                        <p><em>Адрес проживания:</em> <?=$user->esiainfo->living_addr?> (<?=empty($user->esiainfo->living_addr_fias)?'ФИАС не указан':$user->esiainfo->living_addr_fias?>)</p>
                         <?php } ?>
                         <?php if(!empty($user->esiainfo->mobile)){ ?>
                         <p><em>Телефон:</em> <?=$user->esiainfo->mobile?></p>
