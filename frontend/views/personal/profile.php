@@ -54,7 +54,7 @@
                             if($afirms) echo "<ul>";
                             foreach ($afirms as $afirm){
                         ?>
-                                <li><?=$afirm->fullname?></li>
+                                <li><a href="/site/asfirm?f=<?=$afirm->oid?>"><?=$afirm->fullname?></a> </li>                               
                             <?php }
                             if($afirms) echo "<ul>";
 
