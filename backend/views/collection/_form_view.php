@@ -7,70 +7,21 @@ use yii\helpers\ArrayHelper;
 
 use common\models\CollectionColumn;
 use common\models\Collection;
+use yii\web\View;
 /* @var $this yii\web\View */
 /* @var $model common\models\Collection */
 /* @var $form yii\widgets\ActiveForm */
 
 $columns = ArrayHelper::map($model->parent->columns, 'id_column', 'name');
-$filtes = $model->getViewFilters();
-$operators = [
-    '='=>'=',
-    '>'=>'>',
-    '>='=>'>=',
-    '<'=>'<',
-    '<='=>'<=',
-    '<>'=>'<>'
-];
+$model->filters = $rules = $model->getViewFilters();
+$model->filters = json_encode($model->filters);
 
-if (empty($filtes))
-    $filtes = [
-        [
-            'id_column'=>'',
-            'operator'=>'',
-            'value'=>'',
-        ]
-    ]
 ?>
 
-<?php $form = ActiveForm::begin(); ?>
+<?php $form = ActiveForm::begin(['id'=>'collection-view']); ?>
 
 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 <br/>
-<h3>Условия</h3>
-<br/>
-<div class="row">
-    <div class="col-md-2">
-        <label class="control-label">Колонка</label>
-    </div>
-    <div class="col-md-1">
-        <label class="control-label">Условие</label>
-    </div>
-    <div class="col-md-2">
-        <label class="control-label">Значение</label>
-    </div>
-</div>
-<div id="view-filters" class="multiyiinput">
-    <?php foreach ($filtes as $key => $data) {?>
-        <div class="row">
-            <div class="col-md-2">
-                <div class="form-group">
-                    <?=Html::dropDownList("ViewFilters[$key][id_column]",$data['id_column'],$columns,['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_id_column'.$key]);?>
-                </div>
-            </div>
-            <div class="col-md-1">
-                <div class="form-group">
-                    <?=Html::dropDownList("ViewFilters[$key][operator]",$data['operator'],['='=>'=','>','>=','<','<=','<>'],['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_operator'.$key]);?>
-                </div>
-            </div>
-            <div class="col-md-5">
-                <div class="form-group">
-                    <?=Html::textInput("ViewFilters[$key][value]",$data['value'],['required'=>true,'class'=>'form-control','id'=>'CollectionColumn_value_'.$key,'placeholder'=>'Введите название']);?>
-                </div>
-            </div>
-        </div>
-    <?php }?>
-</div>
-<a onclick="return addInput('view-filters')" href="#" class="btn btn-default">Добавить еще</a>
 
 <br/><br/>
 <h3>Поля</h3>
@@ -78,9 +29,6 @@ if (empty($filtes))
 <div class="row">
     <div class="col-md-2">
         <label class="control-label">Колонка</label>
-    </div>
-    <div class="col-md-2">
-        <label class="control-label">Шаблон значения</label>
     </div>
 </div>
 <div id="view-columns" class="multiyiinput sortable">
@@ -99,6 +47,13 @@ if (empty($filtes))
 </div>
 <a onclick="return addInput('view-columns')" href="#" class="btn btn-default">Добавить еще</a>
 
+<br/><br/>
+<h3>Условия фильтрации</h3>
+
+<?=$form->field($model, 'filters')->hiddenInput()->label(false);?>
+
+<div id="querybuilder"></div>
+
 <?php if (Yii::$app->user->can('admin.collection')): ?>
     <hr>
     <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
@@ -111,3 +66,35 @@ if (empty($filtes))
 <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
 
 <?php ActiveForm::end(); ?>
+
+<?php 
+    $json_filters = [];
+    foreach ($model->parent->columns as $key => $column) {
+        $json_filters[] = $column->getJsonQuery();
+    }
+
+    $json_filters = json_encode($json_filters);
+    
+    if (empty($rules))
+        $rules = [['empty'=>true]];
+
+    $rules = json_encode($rules);
+
+    //var_dump($rules);
+
+$script = <<< JS
+    $('#querybuilder').queryBuilder({
+      lang_code: 'ru',
+      filters: $json_filters,
+    });
+
+    $('#querybuilder').queryBuilder('setRulesFromMongo',$rules);
+
+    $("#collection-view").submit(function(){
+        var rules = $('#querybuilder').queryBuilder('getMongo');
+        $("#collection-filters").val(JSON.stringify(rules));
+    });
+JS;
+
+$this->registerJs($script, View::POS_END);
+?>

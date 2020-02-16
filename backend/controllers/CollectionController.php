@@ -761,9 +761,15 @@ class CollectionController extends Controller
         $model = new Collection();
         $model->id_parent_collection = $id;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             $this->saveView($model);
+
             return $this->redirect(['update', 'id' => $model->id_collection]);
+        }
+        else 
+        {
+            print_r($model->errors);
         }
 
         return $this->render('create_view', [
@@ -839,7 +845,6 @@ class CollectionController extends Controller
             return $options;
 
         $model->options = json_encode($options);
-
         $model->updateAttributes(['options']);
     }
 

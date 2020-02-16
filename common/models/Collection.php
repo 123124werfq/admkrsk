@@ -7,6 +7,7 @@ use common\behaviors\MailNotifyBehaviour;
 use common\components\collection\CollectionQuery;
 use common\components\yiinput\RelationBehavior;
 use common\components\softdelete\SoftDeleteTrait;
+use common\components\collection\Translator;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\AccessTrait;
 use common\traits\ActionTrait;
@@ -306,8 +307,17 @@ class Collection extends ActiveRecord
         }
         else
         {
-            return $this->hasMany(CollectionColumn::class,
-                ['id_collection' => 'id_parent_collection'])->orderBy('ord ASC');
+            if (!is_array($this->options))
+                $options = json_decode($this->options, true);
+
+            $id_cols = [];
+
+            if (!empty($options['columns']))
+                foreach ($options['columns'] as $key => $col) {
+                    $id_cols[] = $col['id_column'];
+                }
+
+            return $this->hasMany(CollectionColumn::class, ['id_collection' => 'id_parent_collection'])->orderBy('ord ASC')->where(['id_column'=>$id_cols]);
         }
     }
 
@@ -377,11 +387,10 @@ class Collection extends ActiveRecord
 
     public function getDataQuery()
     {
-        if (!empty($this->id_parent_collection)) {
+        if (!empty($this->id_parent_collection))
             $id_collection = $this->id_parent_collection;
-        } else {
+        else
             $id_collection = $this->id_collection;
-        }
 
         $query = CollectionQuery::getQuery($id_collection)->select();
 
@@ -391,12 +400,17 @@ class Collection extends ActiveRecord
 
             if (!empty($options['filters']))
             {
-                foreach ($options['filters'] as $key => $filter)
+                //$translator = new Translator(json_decode($options['filters'],true));
+
+                /*foreach ($options['filters'] as $key => $filter)
                 {
                     $where = [$filter['operator'], 'col'.$filter['id_column'],(is_numeric($filter['value']))?(float)$filter['value']:$filter['value']];
-
-                    $query->andWhere($where);
-                }
+*/
+                    //$query->where = '1=1';
+                    $query->where(json_decode($options['filters'],true));
+                    //$query->andWhere($translator->where());
+                    //->addParams($translator->params());
+                //}
             }
         }
 

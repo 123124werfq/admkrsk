@@ -57,11 +57,6 @@ else
 {
     $columns = $model->parent->columns;
 
-    $json_filters = [];
-    foreach ($columns as $key => $column) {
-        $json_filters[] = $column->getJsonQuery();
-    }
-
     $columns_dropdown = [];
 
     foreach ($columns as $key => $column) {
@@ -188,7 +183,7 @@ else
 
     <div id="querybuilder"></div>
 
-    <?=$form->field($model, 'table_head')->textArea()->hint('Заполняется для нестандартных шапок таблиц. Количество колонок должно совпадать с количеством отображаемых столбцов');?>
+    <?=''//$form->field($model, 'table_head')->textArea()->hint('Заполняется для нестандартных шапок таблиц. Количество колонок должно совпадать с количеством отображаемых столбцов');?>
 
     <?=$form->field($model, 'table_style')->textArea();?>
 
@@ -225,6 +220,11 @@ else
        });
     </script>
 <?php
+
+$json_filters = [];
+foreach ($columns as $key => $column) {
+    $json_filters[] = $column->getJsonQuery();
+}
 
 $json_filters = json_encode($json_filters);
 if (empty($rules))

@@ -1,6 +1,6 @@
 <?php
 
-namespace components\collection;
+namespace common\components\collection;
 
 use yii\base\BaseObject;
 use yii\helpers\ArrayHelper;
