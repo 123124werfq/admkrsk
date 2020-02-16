@@ -254,6 +254,11 @@ class EsiaUser extends \yii\db\ActiveRecord
         $this->inn = $personInfo['inn']??null;
 
         $addressInfo = $esia->getAddressInfo();
+
+        var_dump($personInfo);
+        var_dump($addressInfo);
+        die();
+        
         if(isset($addressInfo[0]))
         {
             $addrString = $addressInfo[0]['addressStr']??'';
