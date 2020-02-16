@@ -44,7 +44,7 @@ class EsiaFirm extends \yii\db\ActiveRecord
         return [
             [['id_user', 'active', 'created_at', 'created_by', 'updated_at', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
             [['id_user', 'active', 'created_at', 'created_by', 'updated_at', 'deleted_at', 'deleted_by'], 'integer'],
-            [['oid', 'shortname', 'fullname', 'type', 'ogrn', 'inn', 'leg', 'kpp', 'ctts', 'email', 'main_addr', 'main_addr_fias', 'main_addr_fias_alt'], 'string', 'max' => 255],
+            [['oid', 'shortname', 'fullname', 'type', 'ogrn', 'inn', 'leg', 'kpp', 'ctts', 'email', 'main_addr', 'main_addr_fias', 'main_addr_fias_alt', 'law_addr', 'law_addr_fias', 'law_addr_fias_alt'], 'string', 'max' => 255],
         ];
     }
 

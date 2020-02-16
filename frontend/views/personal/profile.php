@@ -83,7 +83,11 @@
                         <?php } ?>
 
                         <?php if(!empty($firm->main_addr)){ ?>
-                        <p><em>Адрес:</em> <?=$firm->main_addr?></p>
+                        <p><em>Адрес фактический:</em> <?=$firm->main_addr?> (<?=empty($firm->main_addr_fias)?'ФИАС не указан':$firm->main_addr_fias?>)</p>
+                        <?php } ?>
+
+                        <?php if(!empty($firm->law_addr)){ ?>
+                        <p><em>Адрес юридический:</em> <?=$firm->law_addr?> (<?=empty($firm->law_addr_fias)?'ФИАС не указан':$firm->law_addr_fias?>)</p>
                         <?php } ?>
 
                         <?php } ?>
