@@ -94,7 +94,7 @@ class CollectionWidget extends \yii\base\Widget
                 {
                     $this->columns = str_replace("&quot;", '"', $this->attributes['columns']);
 
-                    foreach ($objectData as $key => $value)
+                    foreach ($this->objectData as $key => $value)
                         $this->columns = str_replace('{{'.$key.'}}', $value, $this->columns);
 
                     $this->columns = json_decode($this->columns,true);
