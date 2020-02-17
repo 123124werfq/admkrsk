@@ -773,6 +773,8 @@ class CollectionController extends Controller
         {
             $this->saveView($model);
 
+            $model->createForm();
+
             return $this->redirect(['update', 'id' => $model->id_collection]);
         }
         else
