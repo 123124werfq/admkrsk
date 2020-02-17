@@ -283,7 +283,7 @@ class EsiaUser extends \yii\db\ActiveRecord
                     if(isset($address['house'])) $addr_components[] = $address['house'];
                     if(isset($address['flat'])) $addr_components[] = $address['flat'];
 
-                    $this->register_addr = $address['zipCode'] . ', ' .  $address['addressStr'] . ', ' . $address['house'] . ', ' . $address['flat'];
+                    $this->register_addr = implode(', ', $addr_components);
                     if(isset($address['fiasCode']))
                         $this->register_addr_fias = $address['fiasCode'];
                     break;
