@@ -285,6 +285,9 @@ $(document).ready(function() {
             {
                 var value = getValue(id_input);
 
+                console.log(value);
+                console.log(id_input);
+
                 if (visibleElements[id_element][id_input].indexOf(value)<0)
                 {
                     show = false;
@@ -308,6 +311,9 @@ $(document).ready(function() {
                     check(id_element);
             });
         }
+
+        console.log(visibleInputs);
+        console.log(visibleElements);
 
         for (var id_element in visibleElements)
             check(id_element);
