@@ -314,11 +314,13 @@ class CollectionRecordController extends Controller
                     if (!empty($model[$col_alias.'_search']))
                     {
                         $labels = json_decode($model[$col_alias.'_search'],true);
-                        return implode('<br>', $labels);
+
+                        if (is_array($labels))
+                            return implode('<br>', $labels);
                     }
 
                     //$labels = json_decode($model[$col_alias],true);
-                    
+
                 };
             }
             else if ($col->type==CollectionColumn::TYPE_IMAGE)
