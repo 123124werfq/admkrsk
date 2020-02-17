@@ -222,7 +222,8 @@ else
 <?php
 
 $json_filters = [];
-foreach ($columns as $key => $column) {
+
+foreach ($model->parent->columns as $key => $column) {
     $json_filters[] = $column->getJsonQuery();
 }
 
