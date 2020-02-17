@@ -147,7 +147,7 @@ class CollectionColumnController extends Controller
     {
         $model = $this->findModel($id);
         $id = $model->id_collection;
-        
+
         $inputs = $model->inputs;
 
         $model->delete();
@@ -167,7 +167,7 @@ class CollectionColumnController extends Controller
         $query->andWhere(['id_collection' => $id_collection]);
 
         if (!empty($q))
-            $query->andWhere('or',['ilike', 'name', $q],['ilike', 'alias', $q]);
+            $query->andWhere(['or',['ilike', 'name', $q], ['ilike', 'alias', $q]]);
 
         $results = [];
 
