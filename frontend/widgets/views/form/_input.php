@@ -608,7 +608,7 @@ JS;
                             'ajax' => [
                                 'url' => '/collection/record-list',
                                 'dataType' => 'json',
-                                'data' => new JsExpression('function(params) { return {search:params.term,id:' . $input->id_collection . '};}')
+                                'data' => new JsExpression('function(params) { return {q:params.term,id:' . $input->id_collection . '};}')
                             ],
                         ],
                         'options' => [
