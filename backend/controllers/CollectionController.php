@@ -513,7 +513,9 @@ class CollectionController extends Controller
                                 $id_link = str_replace(['[', ']', ", ", '""'], ['{', '}', ":", '\"'], $id_link);
                                 $id_link = str_replace(['{{', '}}', '}:{'], ['[{', '}]', '},{'], $id_link);
                                 $id_link = json_decode($id_link, true);
-                                $id_link = $id_link[0][0];
+
+                                if (!empty($id_link[0]))
+                                    $id_link = key($id_link[0]);
                             }
 
                             foreach ($datas_source as $id_record_source => $sources) {

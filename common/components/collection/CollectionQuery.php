@@ -162,18 +162,20 @@ class CollectionQuery extends \yii\mongodb\Query
                 {
                     if (isset($record['col'.$id_column.'_search']))
                     {
-                        $labels = json_decode($record['col'.$id_column.'_search'],true);
-
-                        if (empty($labels) && !is_array($value))
-                            $labels = [$value=>$record['col'.$id_column.'_search']];
-
                         if (!is_array($value))
                             $value = [$value];
+
+                        $labels = json_decode($record['col'.$id_column.'_search'],true);
 
                         $combine_value = [];
 
                         foreach ($value as $ikey => $id)
-                            $combine_value[$id] = $labels[$id]??$id;
+                        {
+                            if (empty($labels) && !empty($record['col'.$id_column.'_search']))
+                                $combine_value[$id] = $record['col'.$id_column.'_search'];
+                            else
+                                $combine_value[$id] = $labels[$id]??$id;
+                        }
 
                         $value = $combine_value;
                     }
