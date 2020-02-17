@@ -508,6 +508,14 @@ class CollectionController extends Controller
                             $id_link = $data[$form->id_collection_column];
                             $textSearch = $id_source = null;
 
+                            if (strpos($id_link, '[[')!==false)
+                            {
+                                $id_link = str_replace(['[', ']', ", ", '""'], ['{', '}', ":", '\"'], $id_link);
+                                $id_link = str_replace(['{{', '}}', '}:{'], ['[{', '}]', '},{'], $id_link);
+                                $id_link = json_decode($id_link, true);
+                                $id_link = $id_link[0][0];
+                            }
+
                             foreach ($datas_source as $id_record_source => $sources) {
                                 if ($sources[$form->id_collection_from_column] == $id_link) {
                                     $id_source = $id_record_source;
@@ -767,7 +775,7 @@ class CollectionController extends Controller
 
             return $this->redirect(['update', 'id' => $model->id_collection]);
         }
-        else 
+        else
         {
             print_r($model->errors);
         }
