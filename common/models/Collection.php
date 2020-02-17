@@ -317,7 +317,12 @@ class Collection extends ActiveRecord
                     $id_cols[] = $col['id_column'];
                 }
 
-            return $this->hasMany(CollectionColumn::class, ['id_collection' => 'id_parent_collection'])->orderBy('ord ASC')->where(['id_column'=>$id_cols]);
+            $query =$this->hasMany(CollectionColumn::class, ['id_collection' => 'id_parent_collection'])->orderBy('ord ASC');
+
+            if (!empty($id_cols))
+                return $query->where(['id_column'=>$id_cols]);
+            else
+                return $query;
         }
     }
 
