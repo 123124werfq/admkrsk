@@ -63,7 +63,10 @@ use common\models\Box;
             <?= $form->field($model, 'url')->textInput(['maxlength' => true]) ?>
         </div>
     </div>
+
     <?= $form->field($model, 'message_success')->textArea(['maxlength' => true,'class'=>'redactor']) ?>
+
+    <?= $form->field($model, 'maxfilesize')->textInput(['type' => 'number'])->hint('вввод байтах') ?>
 
     <h3>Шаблон документа</h3>
     <?=common\components\multifile\MultiFileWidget::widget([

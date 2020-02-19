@@ -55,9 +55,9 @@ class Form extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_collection','id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_box'], 'default', 'value' => null],
+            [['id_collection','id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_box','maxfilesize'], 'default', 'value' => null],
             [['state'], 'default', 'value' => 1],
-            [['id_collection', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_page','id_box','state','is_template'], 'integer'],
+            [['id_collection', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_page','id_box','state','is_template','maxfilesize'], 'integer'],
             [['alias'], 'unique'],
             [['name'], 'required'],
             [['captcha'], 'boolean'],

@@ -200,6 +200,10 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'name'=>'Количество файлов',
                     'type'=>'input',
                 ],
+                'pagecount'=>[
+                    'name'=>'Вводить количество страниц',
+                    'type'=>'checkbox',
+                ],
             ],
             self::TYPE_IMAGE => [
                 'acceptedFiles'=>[

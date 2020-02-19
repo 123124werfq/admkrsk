@@ -394,7 +394,7 @@ JS;
 
                     $medias = Media::find()->where(['id_media' => $id_medias])->all();
                     foreach ($medias as $mkey => $media)
-                        $file_uploaded .= $this->render('_file', ['media' => $media, 'attribute' => $attribute, 'index' => $mkey]);
+                        $file_uploaded .= $this->render('_file', ['media' => $media, 'attribute' => $attribute, 'index' => $mkey,'options'=>$options]);
                 }
 
                 echo '

@@ -40,7 +40,10 @@ img {max-width: 100%;}
 .partitions {display: flex; justify-content: flex-start; text-align: center; padding: 10px;}
 .partition {display: flex; width: 200px; height: 200px; margin: 0px 20px 20px 0px; background: #fff; align-items: center; justify-content: center;}
 
-#input-options .col {max-width: 20%;}
+#input-options .col {    max-width: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;}
 #input-options .row-flex {flex-wrap: wrap; justify-content: start;}
 
 #form-template .form-control {
