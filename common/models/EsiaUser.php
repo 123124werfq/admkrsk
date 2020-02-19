@@ -61,7 +61,7 @@ class EsiaUser extends \yii\db\ActiveRecord
 //            [['first_name', 'last_name', 'last_name', 'middle_name', 'trusted', 'home_phone', 'living_addr_object', 'living_addr', 'living_addr_fias', 'firmaddrfias',  'register_addr', 'register_addr_fias'], 'string'],
             [['first_name', 'last_name', 'last_name', 'middle_name', 'trusted', 'home_phone', 'living_addr', 'living_addr_fias',  'register_addr', 'register_addr_fias'], 'string'],
             [['passport_serie', 'passport_number', 'passport_issuer', 'passport_issuer_id', 'passport_comments', 'userdoc_raw', 'mediacal_raw', 'residence_raw'], 'string'],
-            [['living_addr_object', 'firmaddrfias'], 'safe']
+            [['living_addr_object', 'firmaddrfias', 'lawfirmaddrfias'], 'safe']
         ];
     }
 
@@ -108,6 +108,22 @@ class EsiaUser extends \yii\db\ActiveRecord
     public function getFirmaddrfias()
     {
         $model =  House::find()->where(['houseguid'=>$this->user->currentFirm->main_addr_fias_alt])->one();
+
+        if(!$model)
+            $model =  House::find()->where(['houseguid'=>$this->user->currentFirm->main_addr_fias])->one();
+
+        if (!empty($model))
+            return $model->getArrayData();
+        else
+            return false;
+    }
+
+    public function getLawfirmaddrfias()
+    {
+        $model =  House::find()->where(['houseguid'=>$this->user->currentFirm->law_addr_fias_alt])->one();
+
+        if(!$model)
+            $model =  House::find()->where(['houseguid'=>$this->user->currentFirm->law_addr_fias])->one();
 
         if (!empty($model))
             return $model->getArrayData();
@@ -188,6 +204,7 @@ class EsiaUser extends \yii\db\ActiveRecord
             'living_addr_fias' => 'ФИАС для адреса проживания',
             'living_addr_object' => 'Адресный объект адреса проживания',
             'firmaddrfias' => 'Адресный объект фактический адрес юр.лица',
+            'lawfirmaddrfias' => 'Адресный объект юридический адрес юр.лица',
 
             'register_addr' => 'Адрес регистрации',
             'register_addr_object' => 'Адресный объект адреса регистрации',
@@ -283,7 +300,7 @@ class EsiaUser extends \yii\db\ActiveRecord
                     if(isset($address['house'])) $addr_components[] = $address['house'];
                     if(isset($address['flat'])) $addr_components[] = $address['flat'];
 
-                    $this->register_addr = $address['zipCode'] . ', ' .  $address['addressStr'] . ', ' . $address['house'] . ', ' . $address['flat'];
+                    $this->register_addr = implode(', ', $addr_components);
                     if(isset($address['fiasCode']))
                         $this->register_addr_fias = $address['fiasCode'];
                     break;
