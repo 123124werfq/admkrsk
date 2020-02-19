@@ -22,6 +22,16 @@
     opacity: 0;
 }
 
+.fileupload_item {padding-right: 26px!important;}
+.fileupload_list  .dz-remove {
+    font-size: 30px!important;
+    border-bottom: 0px!important;
+    color: #aaa!important;
+}
+.fileupload_item-pagecount {display: none; padding-right: 15px;}
+.fileupload_item-pagecount input {margin: 0px 5px 0px!important; width: 70px!important;}
+.show-pagecount .fileupload_item-pagecount {display: flex; align-items: center;}
+
 .content table.table-bordered thead th, .content table.table-bordered tbody td
 {
     border: 1px solid #dde1e6!important;
@@ -316,9 +326,9 @@ table.vote thead td{
     margin: 0;
 }
 .b-quotes .b-quotes_item {
-    border-bottom: 1px solid #FFF;    
+    border-bottom: 1px solid #FFF;
     border-left: 1px solid #f0f0f0;
-    border-right: 1px solid #f0f0f0;    
+    border-right: 1px solid #f0f0f0;
     background: #f0f0f0;
     cursor: pointer;
     padding:0;
@@ -329,8 +339,8 @@ table.vote thead td{
 .b-quotes .b-quotes_item:before {display: none!important;}
 
     .b-quotes .b-quotes_item.active {
-        background-color:#c0c0c0;  
-        border-bottom: 1px solid #f0f0f0;  
+        background-color:#c0c0c0;
+        border-bottom: 1px solid #f0f0f0;
         color: #fff;
     }
 
@@ -347,7 +357,7 @@ table.vote thead td{
 
 .b-quotes .b-quotes_group {
     padding:0;
-    margin:0;   
+    margin:0;
 }
 
 .b-quotes_header_icon{
@@ -369,7 +379,7 @@ table.vote thead td{
     display: none;
     background: #e9e5e2;
     background: #FFF;
-    color: #3b3b3b;  
+    color: #3b3b3b;
 }
 
 .active .b-quotes_text {

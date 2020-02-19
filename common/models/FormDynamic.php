@@ -338,6 +338,9 @@ class FormDynamic extends DynamicModel
                                     $media = new Media;
                                     $media->getImageAttributes($file['file_path'],$file);
 
+                                    if (isset($file['pagecount']))
+                                        $media->pagecount = (int)$file['pagecount'];
+
                                     if ($media->save())
                                     {
                                         $media->saveFile();
@@ -352,6 +355,9 @@ class FormDynamic extends DynamicModel
                                 else
                                 {
                                     $media = Media::findOne((int)$file['id_media']);
+
+                                    if (isset($file['pagecount']))
+                                        $media->pagecount = (int)$file['pagecount'];
 
                                     if (!empty($media))
                                         $data[$index][] = [

@@ -6,7 +6,14 @@
 	{
 		if (!empty($rowelement->id_input))
 		{
-			echo $this->render('_input',['input'=>$rowelement->input,'element'=>$rowelement,'subform'=>$element->subForm,'model'=>$model,'form'=>$activeForm,'arrayGroup'=>$arrayGroup]);
+			echo $this->render('_input',[
+				'input'=>$rowelement->input,
+				'element'=>$rowelement,
+				'subform'=>$element->subForm,
+				'model'=>$model,
+				'form'=>$activeForm,
+				'arrayGroup'=>$arrayGroup
+			]);
 		}
 		elseif (!empty($rowelement->content))
 		{

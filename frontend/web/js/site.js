@@ -498,6 +498,8 @@ $(document).ready(function() {
                                         </div><div class="fileupload_item-progress-value">100%</div>\
                                     </div>\
                                 </div>\
+                                <div class="fileupload_item-pagecount">\
+                                </div>\
                             </div>',
             init: function(){
                 this.on("success", function(file, response){
@@ -508,6 +510,12 @@ $(document).ready(function() {
                     $(file.previewElement).append(
                         '<input type="hidden" name="FormDynamic[input'+id_input+']['+new_index+'][filename]" value="'+response.filename+'"/>'
                     );
+                    $(file.previewElement).find('.fileupload_item-pagecount').append(
+                        'на <input class="form-control" type="number" step="1" min="1" name="FormDynamic[input'+id_input+']['+new_index+'][pagecount]" value="" placeholder="л."/> л.'
+                    );
+
+                    console.log(123);
+
                     if ($(file.previewElement).find('.fileupload_preview-type img').attr('src')==undefined)
                         $(file.previewElement).find('.fileupload_preview-type').text(response.file.split('.').pop());
 

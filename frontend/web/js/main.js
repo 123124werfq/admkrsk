@@ -1162,88 +1162,6 @@
         };
     }
 
-    /*function readerLoadStart(files, i) {
-        var f = files[i];
-        var fileExtension = f.name.split('.').pop();
-
-        $('#'+activeDropzoneID+' .fileupload_list').append('<div id="file'+ fileCount +'" class="fileupload_item"><div class="fileupload_iten-delete">close</div>' +
-            '<div class="fileupload_preview"><div class="fileupload_preview-type">'+ fileExtension +'</div></div>'+
-            '<div class="fileupload_item-content"><p class="fileupload_item-name">'+ f.name +'</p>'+
-            '<div class="fileupload_item-status"><span class="fileupload_item-size">'+ Math.floor(f.size/1024) +' kb</span>'+
-            '<div class="fileupload_item-progress"><div class="fileupload_progress-bar"></div></div>'+
-            '<div class="fileupload_item-progress-value">0%</div>'+
-            '</div></div></div>');
-    }
-
-    function readerLoading(e) {
-        // evt is an ProgressEvent.
-        if (e.lengthComputable) {
-            var percentLoaded = Math.round((e.loaded / e.total) * 100);
-            // Increase the progress bar length.
-            if (percentLoaded < 100) {
-                $('#file'+fileCount).find('.fileupload_progress-bar').css('width', percentLoaded + '%');
-                $('#file'+fileCount).find('.fileupload_item-progress-value').text(percentLoaded + '%');
-            }
-        }
-    }
-
-    function readerLoaded(e, files, i) {
-        var bin = e.target.result;
-        // do sth with text
-
-		uploadFiles.add(files[i], bin);
-
-        if (files[i].type.match('image.*')) {
-            $('#file'+fileCount).find('.fileupload_preview').remove();
-            $('#file'+fileCount).prepend('<img class="fileupload_thumb" src="'+ bin +'">');
-        }
-
-        $('#file'+fileCount).find('.fileupload_progress-bar').css('width', 100 + '%');
-        $('#file'+fileCount).find('.fileupload_item-progress-value').text(100 + '%');
-
-        fileCount++;
-
-        // If there's a file left to load
-        if (i < files.length - 1) {
-            // Load the next file
-            setupReader(files, i+1);
-        }
-    }
-
-    function setupReader(files, i) {
-        var file = files[i];
-        var reader = new FileReader();
-        reader.onloadstart = function(e){
-            readerLoadStart(files, i);
-        };
-        reader.onprogress = function(e){
-            readerLoading(e);
-        };
-        reader.onload = function(e){
-            readerLoaded(e, files, i);
-        };
-        reader.readAsDataURL(file);
-    }
-
-    function handleFileSelect(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-        dropZone.removeClass('active');
-        activeDropzoneID = evt.srcElement.getAttribute('id-dropzone');
-
-        $('.fileupload_list').removeClass('hidden');
-        var files;
-
-        // файл добавлен через инпут или перекинут из ОС
-        if (evt.target.files) {
-            files = evt.target.files; // FileList object.
-        } else {
-            files = evt.dataTransfer.files; // FileList object.
-        }
-
-        setupReader(files, 0);
-    }*/
-
     function handleDragOver(evt) {
         evt.stopPropagation();
         evt.preventDefault();
@@ -1251,40 +1169,7 @@
     }
 
     // Setup the dnd listeners.
-    //var dropZone = $('.fileupload_dropzone');
     var fileCount = 0;
 
     var activeDropzoneID = '';
-
-
-    /*if (dropZone.length)
-    {
-        dropZone.on('dragover', handleDragOver, false);
-        dropZone.on('dragenter', function() {
-            dropZone.addClass('active');
-        });
-        dropZone.on('dragleave', function() {
-            dropZone.removeClass('active');
-        });
-
-        var icl = 0;
-        dropZone.each(function(i){
-
-            $(this).parent().attr('id', 'dropzone'+icl);
-
-            this.addEventListener('drop', handleFileSelect, false);
-            $(this).find('.fileupload_control')[0].addEventListener('change', handleFileSelect, false);
-            $(this).find('.fileupload_control').attr('id-dropzone', 'dropzone'+(icl++));
-        });
-
-        // delete uploaded file
-        $body.on('click', '.fileupload_iten-delete', function() {
-			var $file = $(this).closest(".fileupload_item");
-			var fileName = $(".fileupload_item-name", $file).text();
-
-			uploadFiles.remove(fileName);
-			$file.remove();
-        });
-    }*/
-    // /FILE UPLOAD
 });

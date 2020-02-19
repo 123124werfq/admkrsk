@@ -388,9 +388,20 @@ JS;
 
                 $id_medias = $model->$clearAttribute;
 
-                if (!empty($id_medias)) {
+                if (!empty($id_medias))
+                {
                     if (is_string($id_medias))
                         $id_medias = json_decode($id_medias, true);
+                    else
+                        if (is_array($id_medias) && !empty($id_medias[0]['id']))
+                        {
+                            $ids = [];
+                            foreach ($id_medias as $key => $data) {
+                                $ids[] = $data['id'];
+                            }
+
+                            $id_medias = $ids;
+                        }
 
                     $medias = Media::find()->where(['id_media' => $id_medias])->all();
                     foreach ($medias as $mkey => $media)
@@ -409,7 +420,7 @@ JS;
 	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — ' . (!empty($options['filesize']) ? $options['filesize'] : '10') . ' Мб</p>
 	                    </div>
 	                </div>
-	                <div class="fileupload_list">' . $file_uploaded . '</div>
+	                <div class="fileupload_list '.(!empty($options['pagecount'])?'show-pagecount':'').'">' . $file_uploaded . '</div>
 	            </div>';
                 break;
             case CollectionColumn::TYPE_IMAGE:

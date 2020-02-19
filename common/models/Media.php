@@ -124,6 +124,7 @@ class Media extends \yii\db\ActiveRecord
         }
 
         $this->name = $post['filename']??$filename;
+        $this->pagecount = (int)$post['pagecount']??0;
         $this->extension = $ext;
         $this->size = filesize($file);
         $this->ord = (isset($post['ord']))?(int)$post['ord']:'';

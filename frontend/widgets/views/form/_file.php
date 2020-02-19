@@ -15,11 +15,9 @@
 			<span class="fileupload_item-size" data-dz-size=""><strong><?=round($media->size/1024/1024,2)?></strong> MB</span>
 		</div>
 	</div>
-	<?php if (!empty($options['pagecount'])){?>
-		<div class="fileupload_item-pagecount">
-			<input type="number" name="FormDynamic[<?=$attribute?>][<?=$index?>][pagecount]" <?=!empty($options['required'])?'required':''?> />
-		</div>
-	<?php }?>
+	<div class="fileupload_item-pagecount">
+		<input class="form-control" type="number" min="1" step="1" name="FormDynamic[<?=$attribute?>][<?=$index?>][pagecount]" value="<?=!empty($media->pagecount)?$media->pagecount:''?>"/>
+	</div>
 	<a class="dz-remove" href="javascript:undefined;" data-dz-remove="">×</a>
 	<input type="hidden" name="FormDynamic[<?=$attribute?>][<?=$index?>][id_media]" value="<?=$media->id_media?>">
 </div>
