@@ -514,8 +514,6 @@ $(document).ready(function() {
                         'на <input class="form-control" type="number" step="1" min="1" name="FormDynamic[input'+id_input+']['+new_index+'][pagecount]" value="" placeholder="л."/> л.'
                     );
 
-                    console.log(123);
-
                     if ($(file.previewElement).find('.fileupload_preview-type img').attr('src')==undefined)
                         $(file.previewElement).find('.fileupload_preview-type').text(response.file.split('.').pop());
 

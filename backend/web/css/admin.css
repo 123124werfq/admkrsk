@@ -438,6 +438,18 @@ td.date {background: #FAFAFA; border-right: 1px solid #eee;}
 
 img.main-img {width: 100%;}
 
+.file-row .preview img {width: 120px;}
+.file-row {display: flex;}
+.file-row .dz-remove {
+    font-size: 27px;
+    color: #aaa;
+    margin-left: 20px;
+}
+.file-progress {padding-top: 10px;}
+.file-row input {margin-bottom: 10px;}
+/*.file-progress {padding: 10px; width: 100px;}*/
+.file-row .progress  {height: 10px;}
+.media-data {flex-grow: 2; padding:0px 20px;}
 
 .forum-post-container .media {margin: 10px 0px;}
 .forum-avatar {width: 70px; margin-right: 5px;}
