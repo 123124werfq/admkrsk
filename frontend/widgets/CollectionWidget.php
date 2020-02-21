@@ -133,7 +133,11 @@ class CollectionWidget extends \yii\base\Widget
                 {
                     $search_columns[$column_search['id_column']]['column'] = $columns[$column_search['id_column']];
                     $search_columns[$column_search['id_column']]['type'] = $column_search['type'];
-                    $search_columns[$column_search['id_column']]['values'] = [];
+                    if (!empty($columns[$column_search['id_column']]->input->values))
+                        $search_columns[$column_search['id_column']]['values'] = $columns[$column_search['id_column']]->input->getArrayValues();
+                    else
+                        $search_columns[$column_search['id_column']]['values'] = [];
+
                 }
             }
 
@@ -141,11 +145,11 @@ class CollectionWidget extends \yii\base\Widget
         if (!empty($_GET['search_column'][$unique_hash]))
         {
             $search = $_GET['search_column'][$unique_hash];
+
             if (is_array($search))
             {
                 foreach ($search as $id_col => $search_col)
                 {
-
                     if (isset($search_columns[$id_col]) && $search_col!=='' && $search_col!==NULL)
                     {
                         $search_columns[$id_col]['value'] = (is_numeric($search_col))?(float)$search_col:$search_col;
