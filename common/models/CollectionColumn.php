@@ -535,6 +535,33 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 $model = Street::findOne((int)$value);
                 return $city->name??null;
                 break;
+            case self::TYPE_FILE:
+                if (is_array($value))
+                {
+                    $ids = [];
+                    foreach ($value as $key => $data)
+                    {
+                        if (is_numeric($data))
+                            $ids[] = $data;
+                        else if (!empty($data['id']))
+                            $ids[] = $data['id'];
+                    }
+
+                    if (empty($ids))
+                        return '';
+
+                    $medias = Media::find()->where(['id_media'=>$ids])->all();
+
+                    $output = [];
+                    foreach ($medias as $key => $media) {
+                        $output[] = '<a href="'.$media->getUrl().'" download><nobr>'.$media->name.'</nobr><a>';
+                    }
+
+                    return implode('<br>', $output);
+                }
+                else
+                    return '';
+                break;
             case self::TYPE_FILE_OLD:
                 $slugs = explode('/', $value);
                 return '<a href="'.$value.'">'.array_pop($slugs).'<a>';

@@ -251,22 +251,22 @@ class CollectionRecordController extends Controller
             else if ($col->type==CollectionColumn::TYPE_FILE)
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
-                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias,$col) {
 
                     if (empty($model[$col_alias]) || !is_array($model[$col_alias]))
                         return '';
 
                     //$ids = json_decode($model[$col_alias],true);
-                    $ids = $model[$col_alias];
+                    /*$ids = $model[$col_alias];
 
                     $medias = Media::find()->where(['id_media'=>$ids])->all();
 
                     $output = [];
                     foreach ($medias as $key => $media) {
                         $output[] = '<a href="'.$media->getUrl().'" download>'.$media->name.'</a>';
-                    }
+                    }*/
 
-                    return implode('', $output);
+                    return $col->getValueByType($model[$col_alias]);
                 };
             }
             else if ($col->type==CollectionColumn::TYPE_FILE_OLD)
