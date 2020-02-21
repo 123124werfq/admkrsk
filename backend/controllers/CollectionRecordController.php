@@ -194,12 +194,16 @@ class CollectionRecordController extends Controller
             ['attribute'=>'id_record','label'=>'#'],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '<span class="btn btn-default update-record">{update}</span> <span class="btn btn-default">{delete}</span>',
+                'template' => '<span class="btn btn-default">{view}</span><span class="btn btn-default update-record">{update}</span> <span class="btn btn-default">{delete}</span>',
                 'contentOptions'=>['class'=>'button-column'],
                 'urlCreator' => function ($action, $model, $key, $index) use ($id)
                 {
                     if ($action === 'update') {
                         $url ='update?id='.$model['id_record'];
+                        return $url;
+                    }
+                    if ($action === 'view') {
+                        $url ='view?id='.$model['id_record'];
                         return $url;
                     }
                     if ($action === 'delete') {
@@ -425,16 +429,6 @@ class CollectionRecordController extends Controller
                 ]
             ]
         ]);
-
-//print_r($sortAttributes);
-        /*$dataProvider->setSort([
-            'attributes' => $sortAttributes
-        ]);*/
-
-         /*$dataProvider->sort->attributes['cat.name'] = [
-            'asc' => ['cat.name' => SORT_ASC],
-            'desc' => ['cat.name' => SORT_DESC],
-        ];*/
 
         return $this->render('index', [
             'settingForm' => $settingForm,

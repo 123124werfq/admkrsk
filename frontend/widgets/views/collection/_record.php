@@ -14,7 +14,8 @@
                     echo 'Не заполнено';
                 else
                 {
-                    if ($column->type==CollectionColumn::TYPE_CHECKBOX)
+                    echo $column->getValueByType($Record[$column->id_column]);
+                    /*if ($column->type==CollectionColumn::TYPE_CHECKBOX)
                     {
                         if (empty($Record[$column->id_column]))
                             echo 'Да';
@@ -37,7 +38,7 @@
                         echo implode('<br>', $Record[$column->id_column]);
                     }
                     else
-                        echo $Record[$column->id_column];
+                        echo $Record[$column->id_column];*/
                 }
 
             ?>
