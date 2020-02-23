@@ -136,7 +136,7 @@ class FormCopy extends Model
 
                 if ($this->copydata)
                 {
-                    $oldColumns = $form->collection->getColumns()->indexBy('alias')->all();
+                    $oldColumns = $form->collection->getColumns()->indexBy('id_column')->all();
 
                     foreach ($oldColumns as $key => $column)
                     {
@@ -144,23 +144,40 @@ class FormCopy extends Model
                         {
                             $newColumn = new CollectionColumn;
                             $newColumn->attributes = $column->attributes;
+                            $newColumn->id_collection = $copyForm->id_collection;
                             $newColumn->save();
                         }
                     }
 
-                    $mongoCollection = Yii::$app->mongodb->getCollection('collection' . $form->id_collection);
+                    $mongoCollection = Yii::$app->mongodb->getCollection('collection' . $copyForm->id_collection);
 
                     $query = $form->collection->getDataQuery();
+
+                    $newColumns = $copyForm->collection->getColumns()->indexBy('alias')->all();
 
                     foreach ($query->all() as $key => $recordData)
                     {
                         $recordModel = new CollectionRecord;
                         $recordModel->id_collection = $copyForm->id_collection;
+
                         if ($recordModel->save())
                         {
-                            $recordData['id_record'] = $recordModel->id_record;
-                            $mongoCollection->insert($recordData);
+                            $inserData = ['id_record'=>$recordModel->id_record];
+
+                            foreach ($recordData as $rkey => $data)
+                            {
+                                $id_column = preg_replace('/\D/', '', $rkey);
+
+                                $oldColumn = $oldColumns[$id_column]??false;
+
+                                if (!empty($oldColumn))
+                                    $inserData[str_replace($id_column, $newColumns[$oldColumn->alias]->id_column, $rkey)] = $data;
+                            }
+
+                            $mongoCollection->insert($inserData);
                         }
+                        else
+                            print_r($recordModel->errors);
                     }
                 }
 

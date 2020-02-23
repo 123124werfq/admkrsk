@@ -25,7 +25,7 @@ use yii\mongodb\Query;
  */
 class CollectionRecord extends \yii\db\ActiveRecord
 {
-    public $data;
+    public $data = null;
 
     public $loadData = [];
     public $loadDataAlias = [];
@@ -190,13 +190,9 @@ class CollectionRecord extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert) && !empty($this->data))
-        {
             $this->data_hash = md5(json_encode($this->data));
 
-            return true;
-        }
-        else
-            return false;
+        return true;
     }
 
     public function afterSave($insert, $changedAttributes)
