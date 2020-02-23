@@ -15,6 +15,7 @@ use common\models\CollectionColumn;
 use backend\models\search\CollectionSearch;
 use backend\models\forms\CollectionImportForm;
 use backend\models\forms\CollectionCombineForm;
+use backend\models\forms\FormCopy;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
 use yii\helpers\ArrayHelper;
@@ -252,49 +253,16 @@ class CollectionController extends Controller
         return ['results' => $results];
     }
 
-    /*public function actionCopy($id)
+    public function actionCopy($id,$copydata = true)
     {
         $model = $this->findModel($id);
 
-        $newCollection = new Collection;
-        $newCollection->attributes = $model->attributes;
-        $newCollection->id_form = null;
-        $newCollection->name = 'Копия '.$model->name;
+        $formCopy = new FormCopy;
+        $formCopy->copydata = true;
 
-        if ($newCollection->save())
-        {
-            $compare = [];
-
-            foreach ($model->columns as $key => $column)
-            {
-                $newCol = new CollectionColumn;
-                $newCol->attributes = $column->attributes;
-                $newCol->id_collection = $newCollection->id_collection;
-
-                if ($newCol->save())
-                    $compare[$column->id_column] = $newCol->id_column;
-            }
-
-            $records = $model->getData();
-
-            foreach ($records as $rkey => $row)
-            {
-                $insert = [];
-
-                foreach ($row as $oldcol => $value)
-                    if (isset($compare[$oldcol]))
-                        $insert[$compare[$oldcol]] = $value;
-
-                $newRecord = new CollectionRecord;
-                $newRecord->id_collection = $newCollection->id_collection;
-                $newRecord->data = $insert;
-                $newRecord->save();
-            }
-
-            $this->redirect(["collection/view",'id'=>$newCollection->id_collection]);
-        }
-        else print_r($newCollection->errors);
-    }*/
+        if ($newForm = $formCopy->сopyForm($model->form))
+            return $this->redirect(['view', 'id'=>$newForm->id_collection]);
+    }
 
     /**
      * @param $id

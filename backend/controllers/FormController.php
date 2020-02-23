@@ -14,6 +14,8 @@ use common\models\FormInput;
 use common\models\Collection;
 use common\models\CollectionColumn;
 use backend\models\search\FormSearch;
+use backend\models\forms\FormCopy;
+
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
@@ -337,223 +339,10 @@ class FormController extends Controller
     {
         $form = $this->findModel($id);
 
-        $transaction = Yii::$app->db->beginTransaction();
+        $formCopy = new FormCopy;
 
-        try
-        {
-            $copyForm = new Form;
-            $copyForm->attributes = $form->attributes;
-            $copyForm->id_collection = null;
-            $copyForm->name = 'Копия - '.$form->name;
-
-            $oldToNewInputs = $visibleInputs = [];
-
-            if ($copyForm->save())
-            {
-                $collection = new Collection;
-                $collection->id_form = $copyForm->id_form;
-                $collection->name = $copyForm->name;
-                $collection->save();
-
-                $copyForm->id_collection = $collection->id_collection;
-                $copyForm->updateAttributes(['id_collection']);
-
-                foreach ($form->rows as $rkey => $row)
-                {
-                    $newRow = new FormRow;
-                    $newRow->attributes = $row->attributes;
-                    $newRow->id_form = $copyForm->id_form;
-                    $newRow->ord = $row->ord;
-
-                    if ($newRow->save())
-                    {
-                        foreach ($row->elements as $key => $element)
-                        {
-                            $copyElement = new FormElement;
-                            $copyElement->attributes = $element->attributes;
-                            $copyElement->id_row = $newRow->id_row;
-
-                            if (!empty($element->input))
-                            {
-                                $newInput = new FormInput;
-                                $newInput->attributes = $element->input->attributes;
-                                $newInput->id_form = $copyForm->id_form;
-
-                                if (!$newInput->save())
-                                    print_r($newInput->errors);
-
-                                $copyElement->id_input = $newInput->id_input;
-
-                                $column = new CollectionColumn;
-                                $column->name = $newInput->name;
-                                $column->alias = $newInput->fieldname;
-                                $column->id_collection = $copyForm->id_collection;
-                                $column->type = $newInput->type;
-
-                                if (!$column->save())
-                                    print_r($column->errors);
-
-                                $newInput->id_column = $column->id_column;
-                                $newInput->updateAttributes(['id_column']);
-
-                                $oldToNewInputs[$element->input->id_input] = $newInput->id_input;
-                            }
-
-                            if ($copyElement->save())
-                            {
-                                if (!empty($element->visibleInputs))
-                                {
-                                    foreach ($element->visibleInputs as $vikey => $vinput)
-                                        $visibleInputs[$copyElement->id_element][$vinput->id_input_visible] = $vinput->values;
-                                }
-                            }
-
-                            if (!empty($element->subForm))
-                            {
-                                $this->assignForm($element->id_form,'',$copyForm,'',$copyElement);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        print_r($newRow->errors);
-                    }
-                }
-
-                if (!empty($visibleInputs))
-                {
-                    foreach ($visibleInputs as $id_element => $inputs)
-                    {
-                        foreach ($inputs as $id_input => $values)
-                        {
-                            if (!empty($oldToNewInputs[$id_input]))
-                                Yii::$app->db->createCommand()->insert('form_visibleinput',[
-                                    'id_element'=>$id_element,
-                                    'values'=>$values,
-                                    'id_input_visible'=>$oldToNewInputs[$id_input],
-                                ])->execute();
-                        }
-                    }
-                }
-
-                $transaction->commit();
-
-                return $this->redirect(['view', 'id'=>$copyForm->id_form]);
-            }
-        }
-        catch (Exception $e)
-        {
-            $transaction->rollBack();
-            throw $e;
-        }
-    }
-
-    /**
-     * @param $id_form
-     * @param $id_row
-     * @param $parentForm
-     * @param string $prefix
-     * @param null $element
-     * @throws Exception
-     */
-    protected function assignForm($id_form, $id_row, $parentForm, $prefix='', $element=null)
-    {
-        $transaction = Yii::$app->db->beginTransaction();
-
-        try
-        {
-            $copyForm = Form::findOne($id_form);
-
-            $subForm = new Form;
-            $subForm->is_template = 2;
-            $subForm->id_collection = $parentForm->id_collection;
-            $subForm->name = $parentForm->name.' '.$copyForm->name;
-
-            if ($subForm->save())
-            {
-                if (empty($element))
-                {
-                    $newElement = new FormElement;
-                    $newElement->id_row = $id_row;
-                    $newElement->ord = Yii::$app->db->createCommand("SELECT count(*) FROM form_element WHERE id_row = $id_row")->queryScalar();
-                }
-                else
-                    $newElement = $element;
-
-                $newElement->id_form = $subForm->id_form;
-
-                if ($newElement->save())
-                {
-                    foreach ($copyForm->rows as $key => $row)
-                    {
-                        $newRow = new FormRow;
-                        $newRow->attributes = $row->attributes;
-                        $newRow->id_form = $subForm->id_form;
-                        $newRow->ord = $row->ord;
-
-                        if ($newRow->save())
-                        {
-                            foreach ($row->elements as $key => $element)
-                            {
-                                $copyElement = new FormElement;
-                                $copyElement->attributes = $element->attributes;
-                                $copyElement->id_row = $newRow->id_row;
-
-                                if (!empty($element->input))
-                                {
-                                    $newInput = new FormInput;
-                                    $newInput->attributes = $element->input->attributes;
-                                    $newInput->id_form = $parentForm->id_form;
-                                    $newInput->fieldname = (!empty($prefix)?$prefix.'_':'').$newInput->fieldname;
-
-                                    if (!$newInput->save())
-                                    {
-                                        $transaction->rollBack();
-                                        print_r($newInput->errors);
-                                    }
-
-                                    $copyElement->id_input = $newInput->id_input;
-
-                                    $column = new CollectionColumn;
-                                    $column->name = $newInput->name;
-                                    $column->alias = $newInput->fieldname;
-                                    $column->id_collection = $parentForm->id_collection;
-                                    $column->type = $newInput->type;
-
-                                    if (!$column->save())
-                                    {
-                                        $transaction->rollBack();
-                                        print_r($column->errors);
-                                    }
-
-                                    $newInput->id_column = $column->id_column;
-                                    $newInput->updateAttributes(['id_column']);
-                                }
-
-                                $copyElement->save();
-                            }
-                        }
-                        else
-                        {
-                            $transaction->rollBack();
-                            print_r($newRow->errors);
-                        }
-                    }
-                }
-                else
-                {
-                    $transaction->rollBack();
-                    print_r($newElement->errors);
-                }
-            }
-
-            $transaction->commit();
-        }
-        catch (Exception $e)
-        {
-            $transaction->rollBack();
-            throw $e;
-        }
+        if ($newForm = $formCopy->сopyForm($form))
+            return $this->redirect(['view', 'id'=>$newForm->id_form]);
     }
 
     /**
@@ -578,7 +367,7 @@ class FormController extends Controller
 
         if ($form->load(Yii::$app->request->post()) && $form->validate())
         {
-            $this->assignForm($form->id_form, $id_row, $parentForm, $form->prefix);
+            FormCopy::assignForm($form->id_form, $id_row, $parentForm, $form->prefix);
 
             if (!Yii::$app->request->isAjax)
                 $this->redirect(['/form/view','id'=>$parentForm->id_form]);

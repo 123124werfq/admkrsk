@@ -370,18 +370,7 @@ class Collection extends ActiveRecord
 
             if (!empty($options['filters']))
             {
-                /*foreach ($options['filters'] as $key => $filter)
-                {
-                    $where = [$filter['operator'], $filter['id_column'], $filter['value']];
-                    if ($key == 0)
-                    {
-                        $query->where($where);
-                    }
-                    else
-                    {
-                        $query->andWhere($where);
-                    }
-                }*/
+
             }
         }
 
@@ -404,19 +393,7 @@ class Collection extends ActiveRecord
             $options = json_decode($this->options, true);
 
             if (!empty($options['filters']))
-            {
-                //$translator = new Translator(json_decode($options['filters'],true));
-
-                /*foreach ($options['filters'] as $key => $filter)
-                {
-                    $where = [$filter['operator'], 'col'.$filter['id_column'],(is_numeric($filter['value']))?(float)$filter['value']:$filter['value']];
-*/
-                    //$query->where = '1=1';
-                    $query->where(json_decode($options['filters'],true));
-                    //$query->andWhere($translator->where());
-                    //->addParams($translator->params());
-                //}
-            }
+                $query->where(json_decode($options['filters'],true));
         }
 
         return $query;
