@@ -72,9 +72,21 @@ class ContestController extends \yii\web\Controller
 
     public function actionIndex($page=null)
     {
-        $page = Page::findOne(['alias'=>'reserve']);
-
+        //$page = Page::findOne(['alias'=>'reserve']);
+        //var_dump($_GET['id']);
+        //echo "Выбор конкурса и анкеты";
+//die();
         return $this->render('//site/page', ['page'=>$page]);
+    }
+
+    public function actionSelect($page=null)
+    {
+        $profiles = [];
+
+        return $this->render('select', [
+            'profiles' => $profiles,
+            'page' => $page
+        ]);
     }
 
 }

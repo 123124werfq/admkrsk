@@ -353,7 +353,7 @@ class HrImportController extends Controller
         $count = 0;
 
         if (($handle = fopen($filePath, 'r')) !== false) {
-            while (($data = fgetcsv($handle, 100000, ";")) !== false) {
+            while (($data = fgetcsv($handle, 0, ";")) !== false) {
 
                 printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
 
@@ -367,19 +367,21 @@ class HrImportController extends Controller
                     continue;
 
                 $filename = $data[1];
-                $plain = $data[5];
+                $plain = substr($data[5], 2);
 
                 $dir = Yii::getAlias('@app'). '/assets/hrimport/'.$dirname;
 
                 if(!is_dir($dir))
                     \mkdir($dir);
+                
+                if(strlen($plain) %2 != 0)
+                    $plain = $plain . '0';
 
-                $ifp = fopen( $dir . '/' . $filename, 'wb'); 
-                fwrite( $ifp, pack('n', $plain ) ); // как правильно сохранять - не ясно
-                fclose( $ifp );
+                $bindata = hex2bin($plain);
 
-                if($count==2) die();
+                file_put_contents($dir . '/' . $filename, $bindata);
 
+                if($count==10) die();
             }
         }
 

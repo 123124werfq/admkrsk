@@ -174,6 +174,103 @@ class WorkflowController extends \yii\web\Controller
 
     }
 
+    protected function signXML($sourcePath, $resultPath, $attachment = null)
+    {
+        $certName = Yii::getAlias('@app'). "/assets/ADMKRSK-TEST-SERVICE-SITE.pfx";
+
+        if($attachment && file_exists($attachment)){
+            //$toReplace = '<rev:Reference><xop:Include href="cid:5aeaa450-17f0-4484-b845-a8480c363444" xmlns:xop="http://www.w3.org/2004/08/xop/include" /></rev:Reference>';
+            $toReplace = '<xop:Include href="cid:5aeaa450-17f0-4484-b845-a8480c363444" xmlns:xop="http://www.w3.org/2004/08/xop/include" />';
+            $fp = fopen($attachment, "rb");
+            $binary = fread($fp, filesize($attachment));
+            $attachment64 = base64_encode($binary);
+            $attachment64 = chunk_split($attachment64, 76, "\r\n"); 
+            //$digest = base64_encode(pack('H*', hash('sha1',$attachment64)));  // считаем дайджест архива: хэш sha1 -> ASCII -> base64
+            $digest = base64_encode(sha1($binary));
+
+
+            echo ("Подписываем файл: $sourcePath<br>");
+
+            $sourceText = file_get_contents($sourcePath); 
+            $sourceText = str_replace($toReplace, $attachment64, $sourceText); // заменям ссылку файлоы (возможно, не надо)
+            $sourceText = str_replace('ATTDIGESTHERE', $digest, $sourceText); // записываем дайджест ФАЙЛа (дайдже xml запишется при подписи)
+
+            $tempPath = str_replace('.xml', '_temp.xml', $sourcePath); // формирум файл, который будем подписывать
+            file_put_contents($tempPath,$sourceText);
+            $sourcePath = $tempPath;
+        }
+
+        $xmlSigner = new XmlSigner();
+        $xmlSigner->loadPfxFile($certName, 'CdtDblGfh');
+        $xmlSigner->signXmlFile( $sourcePath, $resultPath, DigestAlgorithmType::SHA1); // подписали
+
+        echo ("Подписываем файл: $sourcePath<br>");
+        echo ("Результирующий файл: $resultPath<br>");
+
+        if($attachment && file_exists($attachment)){
+            $resultXML = file_get_contents($resultPath);
+            $resultXML = str_replace($attachment64, $toReplace, $resultXML);
+            file_put_contents($resultPath,$resultXML); // заменили файл на ссылку назад (возмжно, лишнее)
+        }
+    }
+
+
+    public function actionXopcreate()
+    {
+        $source = Yii::getAlias('@app').'/assets/template_attachment.xml';
+//        $source = Yii::getAlias('@app').'/assets/example.xml';
+        $xmlPath = Yii::getAlias('@app').'/assets/signed'.time().'.xml';
+        $output = Yii::getAlias('@app').'/assets/tosend'.time().'.txt';
+        $attachment = Yii::getAlias('@app').'/assets/archive.zip';
+
+        $this->signXML($source, $xmlPath, $attachment);
+//        $this->signXML($source, $xmlPath);
+
+        if(!file_exists($xmlPath))
+            return false;
+
+        $mtomHeader = <<<MTOMHEAD
+MIME-Version: 1.0
+Content-Type: multipart/related; start="<rootpart*c73c9ce8-6e02-40ce-9f68-064e18843428>"; start-info="text/xml"; type="application/xop+xml"; boundary="MIME_boundary";
+
+
+--MIME_boundary
+Content-Type: application/xop+xml;charset=utf-8;type="text/xml"
+Content-Id: <rootpart*c73c9ce8-6e02-40ce-9f68-064e18843428>
+Content-Transfer-Encoding: binary
+
+
+MTOMHEAD;
+
+        $mtomArchivehead = <<<MTMOARCH
+
+--MIME_boundary
+Content-Type: application/zip
+Content-Id: 5aeaa450-17f0-4484-b845-a8480c363444
+Content-Transfer-Encoding: base64
+
+MTMOARCH;
+
+        $mtomClose = "--MIME_boundary--";
+
+        if(file_exists($attachment))
+        {
+            $fp = fopen($attachment, "rb");
+            $binary = fread($fp, filesize($attachment));
+            $attachment64 = base64_encode($binary);  
+            $attachment64 = chunk_split($attachment64, 76, "\r\n");          
+        }
+
+        $result = $mtomHeader;
+        $result .= file_get_contents($xmlPath);
+        $result .= $mtomArchivehead;
+        $result .= "\r\n" . $attachment64 . "\r\n";
+        $result .= "\r\n" . $mtomClose;
+
+        file_put_contents($output, $result);
+    }
+
+
 
     public function beforeAction($action)
     {
