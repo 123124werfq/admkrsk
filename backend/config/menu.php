@@ -275,43 +275,43 @@ return [
         'title' => 'Кадровый резерв',
         'icon' => 'fa fa-address-book',
         'roles' => [
-            'menu.reserve' => ['class' => HrProfile::class],
+            'menu.hrProfile' => ['class' => HrProfile::class],
         ],
         'submenu' => [
             'reserve/profile' => [
                 'title' => 'Анкеты',
                 'roles' => [
-                    'menu.reserve' => ['class' => HrProfile::class],
+                    'menu.hrProfile' => ['class' => HrProfile::class],
                 ],
             ],
             'reserve/contest' => [
                 'title' => 'Голосования',
                 'roles' => [
-                    'menu.reserve' => ['class' => HrProfile::class],
+                    'menu.hrProfile' => ['class' => HrProfile::class],
                 ],
             ],
             'reserve/dynamic' => [
                 'title' => 'Ход голосования',
                 'roles' => [
-                    'menu.reserve' => ['class' => HrProfile::class],
+                    'menu.hrProfile' => ['class' => HrProfile::class],
                 ],
             ],
             'reserve/experts' => [
                 'title' => 'Эксперты',
                 'roles' => [
-                    'menu.reserve' => ['class' => HrProfile::class],
+                    'menu.hrProfile' => ['class' => HrProfile::class],
                 ],
             ],
             'reserve/list' => [
                 'title' => 'Резерв',
                 'roles' => [
-                    'menu.reserve' => ['class' => HrProfile::class],
+                    'menu.hrProfile' => ['class' => HrProfile::class],
                 ],
             ],
             'reserve/archived' => [
                 'title' => 'Архив',
                 'roles' => [
-                    'menu.reserve' => ['class' => HrProfile::class],
+                    'menu.hrProfile' => ['class' => HrProfile::class],
                 ],
             ],
         ],
