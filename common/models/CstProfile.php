@@ -59,4 +59,14 @@ class CstProfile extends \yii\db\ActiveRecord
             'deleted_by' => 'Deleted By',
         ];
     }
+
+    public function getRecord()
+    {
+        return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_record_anketa']);
+    }
+
+    public function getContest()
+    {
+        return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_record_contest']);
+    }      
 }
