@@ -55,27 +55,30 @@ class CollectionValue extends \yii\db\ActiveRecord
         if (empty($value))
             return $value;
 
+        $value = $this->value;
+
         switch ($this->column->type)
         {
             case self::TYPE_DISTRICT:
-                $model = District::findOne((int)$value);
-                return $model??null;
+                return District::findOne((int)$value);
                 break;
             case self::TYPE_REGION:
-                $model = Region::findOne((int)$value);
-                return $model??null;
+                return Region::findOne((int)$value)
                 break;
             case self::TYPE_SUBREGION:
-                $model = Subregion::findOne((int)$value);
-                return $model??null;
+                return Subregion::findOne((int)$value);
                 break;
             case self::TYPE_CITY:
-                $model = City::findOne((int)$value);
-                return $city??null;
+                return City::findOne((int)$value);
+                break;
+            case self::TYPE_COLLECTION:
+                return CollectionRecord::find(['where'=>$value])->one();;
+                break;
+            case self::TYPE_COLLECTIONS:
+                return CollectionRecord::find(['where'=>$value])->all();;
                 break;
             case self::TYPE_STREET:
-                $model = Street::findOne((int)$value);
-                return $city??null;
+                return Street::findOne((int)$value);
                 break;
             case self::TYPE_FILE:
                 if (is_array($value))
@@ -96,27 +99,17 @@ class CollectionValue extends \yii\db\ActiveRecord
                 }
                 else
                     return false;
+
                 break;
             case self::TYPE_FILE_OLD:
                 $slugs = explode('/', $value);
                 return $slugs;
                 break;
             case self::TYPE_IMAGE:
-                if (is_array($value) || is_numeric($value))
-                {
-                    $medias = Media::find()->where(['id_media'=>$value])->all();
 
-                    foreach ($medias as $mkey => $media)
-                        $file_uploaded = $media->showThumb(['w'=>200,'h'=>200]);
-
-                    if (!empty($file_uploaded))
-                        return '<img src="'.$file_uploaded.'" />';
-                }
+                return Media::find()->where(['id_media'=>$value])->one();
                 break;
             default:
-                if (is_array($value))
-                    return implode('<br>', $value);
-
                 return $value;
                 break;
         }
@@ -190,6 +183,59 @@ class CollectionValue extends \yii\db\ActiveRecord
 
     public function __toString()
     {
+        $value = $this->getValue();
+
+        if (empty($value))
+            return $value;
+
+        switch ($this->column->type)
+        {
+            case self::TYPE_DATE:
+                return date('d.m.Y',$value);
+                break;
+            case self::TYPE_DATETIME:
+                return date('d.m.Y H:i',$value);
+                break;
+            case self::TYPE_DISTRICT:
+                return $model->name;
+                break;
+            case self::TYPE_REGION:
+                return $model->name;
+                break;
+            case self::TYPE_SUBREGION:
+                return $model->name;
+                break;
+            case self::TYPE_CITY:
+                return $city->name;
+                break;
+            case self::TYPE_STREET:
+                return $city->name;
+                break;
+            case self::TYPE_FILE:
+                $output = [];
+
+                foreach ($value as $key => $media)
+                    $output[] = '<a href="'.$media->getUrl().'" download><nobr>'.$media->name.'</nobr><a>';
+
+                return implode('<br>', $output);
+                break;
+            case self::TYPE_FILE_OLD:
+                $slugs = explode('/', $value);
+                return '<a href="'.$value.'">'.array_pop($slugs).'<a>';
+                break;
+            case self::TYPE_IMAGE:
+                $file_uploaded = $media->showThumb(['w'=>200,'h'=>200]);
+                return '<img src="'.$file_uploaded.'" />';
+
+                break;
+            default:
+                if (is_array($value))
+                    return implode('<br>', $value);
+
+                return $value;
+                break;
+        }
+
         return $this->value;
     }
 
