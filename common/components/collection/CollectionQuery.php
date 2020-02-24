@@ -205,7 +205,7 @@ class CollectionQuery extends \yii\mongodb\Query
 
     public function getObjects($keyAsAlias=false)
     {
-        $this->getArray
+        //$this->getArray
         foreach ($this->columns as $key => $col)
             $emptyRow[$this->keyAsAlias?$col->alias:$col->id_column] = '';
     }
