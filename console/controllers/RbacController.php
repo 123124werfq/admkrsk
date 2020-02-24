@@ -1467,22 +1467,22 @@ class RbacController extends Controller
 
 
 
-            $backendContestsIndex = $auth->createPermission('backend.contests.index');
-            $backendContestsIndex->description = 'Кадровый резерв';
+            $backendContestsIndex = $auth->createPermission('backend.cstProfile.index');
+            $backendContestsIndex->description = 'Конкурсы';
             $auth->add($backendContestsIndex);
 
-            $backendManageContests = $auth->createPermission('backend.contests');
-            $backendManageContests->description = 'Кадровый резерв';
+            $backendManageContests = $auth->createPermission('backend.cstProfile');
+            $backendManageContests->description = 'Конкурсы';
             $auth->add($backendManageContests);
             $auth->addChild($backendManageContests, $backendContestsIndex);     
 
-            $backendMenuContests = $auth->createPermission('menu.contests');
+            $backendMenuContests = $auth->createPermission('menu.cstProfile');
             $backendMenuContests->description = 'Конкурсы';
             $backendMenuContests->ruleName = $menuAccessRule->name;
             $auth->add($backendMenuContests);
             $auth->addChild($backendManage, $backendMenuContests);
 
-            $backendContests = $auth->createRole('admin.contests');
+            $backendContests = $auth->createRole('admin.cstProfile');
             $backendContests->description = 'Администратор конкурсов';
             $auth->add($backendContests);
             $auth->addChild($backendContests, $backendManage);

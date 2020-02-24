@@ -101,7 +101,7 @@ class HrProfile extends \yii\db\ActiveRecord
             'log' => LogBehavior::class,
             'ac' => [
                 'class' => AccessControlBehavior::class,
-                'permission' => 'backend.reserve',
+                'permission' => 'backend.hrProfile',
             ]
         ];
     }

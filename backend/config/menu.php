@@ -273,7 +273,7 @@ return [
     ],
     'reserve' => [
         'title' => 'Кадровый резерв',
-        'icon' => 'fa fa-address-book',
+        'icon' => 'fa fa-thumbs-o-up',
         'roles' => [
             'menu.hrProfile' => ['class' => HrProfile::class],
         ],
@@ -318,39 +318,39 @@ return [
     ],
     'contest' => [
         'title' => 'Конкурсы',
-        'icon' => 'fa fa-address-book',
+        'icon' => 'fa fa-certificate',
         'roles' => [
-            'menu.contests' => ['class' => CstProfile::class],
+            'menu.cstProfile' => ['class' => CstProfile::class],
         ],
         'submenu' => [
             'contest/profile' => [
                 'title' => 'Анкеты',
                 'roles' => [
-                    'menu.contests' => ['class' => CstProfile::class],
+                    'menu.cstProfile' => ['class' => CstProfile::class],
                 ],
             ],
             'contest/contest' => [
                 'title' => 'Голосования',
                 'roles' => [
-                    'menu.contests' => ['class' => CstProfile::class],
+                    'menu.cstProfile' => ['class' => CstProfile::class],
                 ],
             ],
             'contest/dynamic' => [
                 'title' => 'Ход голосования',
                 'roles' => [
-                    'menu.contests' => ['class' => CstProfile::class],
+                    'menu.cstProfile' => ['class' => CstProfile::class],
                 ],
             ],
             'contest/experts' => [
                 'title' => 'Эксперты',
                 'roles' => [
-                    'menu.contests' => ['class' => CstProfile::class],
+                    'menu.cstProfile' => ['class' => CstProfile::class],
                 ],
             ],
             'contest/archived' => [
                 'title' => 'Архив',
                 'roles' => [
-                    'menu.contests' => ['class' => CstProfile::class],
+                    'menu.cstProfile' => ['class' => CstProfile::class],
                 ],
             ],
         ],

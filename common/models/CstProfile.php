@@ -89,7 +89,7 @@ class CstProfile extends \yii\db\ActiveRecord
             'log' => LogBehavior::class,
             'ac' => [
                 'class' => AccessControlBehavior::class,
-                'permission' => 'backend.contests',
+                'permission' => 'backend.cstProfile',
             ],
         ];
     }
