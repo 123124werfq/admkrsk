@@ -137,8 +137,11 @@ class CollectionQuery extends \yii\mongodb\Query
             parent::orderBy($order);
     }
 
-    public function getArray()
+    public function getArray($keyAsAlias=false)
     {
+        if ($keyAsAlias)
+            $this->keyAsAlias = true;
+
         $output = [];
         $emptyRow = [];
 
