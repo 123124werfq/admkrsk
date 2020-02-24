@@ -2,7 +2,14 @@
 
 namespace common\models;
 
+use common\behaviors\AccessControlBehavior;
+use common\components\softdelete\SoftDeleteTrait;
+use common\modules\log\behaviors\LogBehavior;
+use common\traits\AccessTrait;
+use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
+
 
 /**
  * This is the model class for table "cst_profile".
@@ -21,6 +28,19 @@ use Yii;
  */
 class CstProfile extends \yii\db\ActiveRecord
 {
+
+    use MetaTrait;
+    use ActionTrait;
+    use SoftDeleteTrait;
+    use AccessTrait;
+
+    const VERBOSE_NAME = 'Анкеты';
+    const VERBOSE_NAME_PLURAL = 'Анкеты';
+    const TITLE_ATTRIBUTE = 'id_profile';
+
+    public $access_user_ids;
+    public $access_user_group_ids;
+
     /**
      * {@inheritdoc}
      */
@@ -59,6 +79,21 @@ class CstProfile extends \yii\db\ActiveRecord
             'deleted_by' => 'Deleted By',
         ];
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'log' => LogBehavior::class,
+            'ac' => [
+                'class' => AccessControlBehavior::class,
+                'permission' => 'backend.contests',
+            ],
+        ];
+    }
+
 
     public function getRecord()
     {

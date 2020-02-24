@@ -1444,6 +1444,52 @@ class RbacController extends Controller
             $auth->addChild($backendVars, $backendManageVars);
 
 
+            $backendReserveIndex = $auth->createPermission('backend.reserve.index');
+            $backendReserveIndex->description = 'Кадровый резерв';
+            $auth->add($backendReserveIndex);
+
+            $backendManageReserve = $auth->createPermission('backend.reserve');
+            $backendManageReserve->description = 'Кадровый резерв';
+            $auth->add($backendManageReserve);
+            $auth->addChild($backendManageReserve, $backendReserveIndex);            
+
+            $backendMenuReserve = $auth->createPermission('menu.reserve');
+            $backendMenuReserve->description = 'Кадровый резерв';
+            $backendMenuReserve->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuReserve);
+            $auth->addChild($backendManage, $backendMenuReserve);
+
+            $backendReserve = $auth->createRole('admin.reserve');
+            $backendReserve->description = 'Модератор кадрового резерва';
+            $auth->add($backendReserve);
+            $auth->addChild($backendReserve, $backendManage);
+            $auth->addChild($backendReserve, $backendManageReserve);
+
+
+
+            $backendContestsIndex = $auth->createPermission('backend.contests.index');
+            $backendContestsIndex->description = 'Кадровый резерв';
+            $auth->add($backendContestsIndex);
+
+            $backendManageContests = $auth->createPermission('backend.contests');
+            $backendManageContests->description = 'Кадровый резерв';
+            $auth->add($backendManageContests);
+            $auth->addChild($backendManageContests, $backendContestsIndex);     
+
+            $backendMenuContests = $auth->createPermission('menu.contests');
+            $backendMenuContests->description = 'Конкурсы';
+            $backendMenuContests->ruleName = $menuAccessRule->name;
+            $auth->add($backendMenuContests);
+            $auth->addChild($backendManage, $backendMenuContests);
+
+            $backendContests = $auth->createRole('admin.contests');
+            $backendContests->description = 'Администратор конкурсов';
+            $auth->add($backendContests);
+            $auth->addChild($backendContests, $backendManage);
+            $auth->addChild($backendContests, $backendManageContests);            
+
+
+
             $admin = $auth->createRole('admin');
             $admin->description = 'Администратор';
             $auth->add($admin);
@@ -1471,6 +1517,8 @@ class RbacController extends Controller
             $auth->addChild($admin, $backendUserGroup);
             $auth->addChild($admin, $backendUserRole);
             $auth->addChild($admin, $backendVars);
+            $auth->addChild($admin, $backendReserve);
+            $auth->addChild($admin, $backendContests);
 
 
             $root = $auth->createRole('root');

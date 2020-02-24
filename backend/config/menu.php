@@ -25,6 +25,9 @@ use common\models\User;
 use common\models\UserGroup;
 use common\models\UserRole;
 use common\models\Vars;
+use common\models\CstProfile;
+use common\models\HrProfile;
+
 
 return [
     'address' => [
@@ -272,47 +275,86 @@ return [
         'title' => 'Кадровый резерв',
         'icon' => 'fa fa-address-book',
         'roles' => [
-            'menu.form' => ['class' => Form::class],
+            'menu.reserve' => ['class' => HrProfile::class],
         ],
         'submenu' => [
             'reserve/profile' => [
                 'title' => 'Анкеты',
                 'roles' => [
-                    'menu.form' => ['class' => Form::class],
+                    'menu.reserve' => ['class' => HrProfile::class],
                 ],
             ],
             'reserve/contest' => [
                 'title' => 'Голосования',
                 'roles' => [
-                    'menu.form' => ['class' => Form::class],
+                    'menu.reserve' => ['class' => HrProfile::class],
                 ],
             ],
             'reserve/dynamic' => [
                 'title' => 'Ход голосования',
                 'roles' => [
-                    'menu.form' => ['class' => Form::class],
+                    'menu.reserve' => ['class' => HrProfile::class],
                 ],
             ],
             'reserve/experts' => [
                 'title' => 'Эксперты',
                 'roles' => [
-                    'menu.form' => ['class' => Form::class],
+                    'menu.reserve' => ['class' => HrProfile::class],
                 ],
             ],
             'reserve/list' => [
                 'title' => 'Резерв',
                 'roles' => [
-                    'menu.form' => ['class' => Form::class],
+                    'menu.reserve' => ['class' => HrProfile::class],
                 ],
             ],
             'reserve/archived' => [
                 'title' => 'Архив',
                 'roles' => [
-                    'menu.form' => ['class' => Form::class],
+                    'menu.reserve' => ['class' => HrProfile::class],
                 ],
             ],
         ],
     ],
+    'contest' => [
+        'title' => 'Конкурсы',
+        'icon' => 'fa fa-address-book',
+        'roles' => [
+            'menu.contests' => ['class' => CstProfile::class],
+        ],
+        'submenu' => [
+            'contest/profile' => [
+                'title' => 'Анкеты',
+                'roles' => [
+                    'menu.contests' => ['class' => CstProfile::class],
+                ],
+            ],
+            'contest/contest' => [
+                'title' => 'Голосования',
+                'roles' => [
+                    'menu.contests' => ['class' => CstProfile::class],
+                ],
+            ],
+            'contest/dynamic' => [
+                'title' => 'Ход голосования',
+                'roles' => [
+                    'menu.contests' => ['class' => CstProfile::class],
+                ],
+            ],
+            'contest/experts' => [
+                'title' => 'Эксперты',
+                'roles' => [
+                    'menu.contests' => ['class' => CstProfile::class],
+                ],
+            ],
+            'contest/archived' => [
+                'title' => 'Архив',
+                'roles' => [
+                    'menu.contests' => ['class' => CstProfile::class],
+                ],
+            ],
+        ],
+    ],    
     'setting' => [
         'title' => 'Система',
         'icon' => 'fa fa-gears',

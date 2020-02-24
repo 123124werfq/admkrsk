@@ -8,6 +8,9 @@ use yii\behaviors\TimestampBehavior;
 use common\behaviors\AccessControlBehavior;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
+use common\traits\AccessTrait;
+use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 
 
 
@@ -31,12 +34,23 @@ class HrProfile extends \yii\db\ActiveRecord
 {
 
     use SoftDeleteTrait;
+    use MetaTrait;
+    use ActionTrait;
+    use AccessTrait;
 
     const STATE_ACTIVE = 0;
     const STATE_RESERVED = 1;
     const STATE_HIRED = 2;
     const STATE_BANNED = 3;
     const STATE_ARCHIVED = 99;
+
+    const VERBOSE_NAME = 'Анкеты';
+    const VERBOSE_NAME_PLURAL = 'Анкеты';
+    const TITLE_ATTRIBUTE = 'id_profile';
+
+    public $access_user_ids;
+    public $access_user_group_ids;
+
 
     /**
      * {@inheritdoc}
@@ -84,13 +98,11 @@ class HrProfile extends \yii\db\ActiveRecord
         return [
             'ts' => TimestampBehavior::class,
             'ba' => BlameableBehavior::class,
-            'log' => LogBehavior::class
-            /*
+            'log' => LogBehavior::class,
             'ac' => [
                 'class' => AccessControlBehavior::class,
-                'permission' => 'backend.news',
+                'permission' => 'backend.reserve',
             ]
-            */
         ];
     }
 
