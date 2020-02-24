@@ -227,7 +227,8 @@ class SiteController extends Controller
      */
     public function actionPage($page = null)
     {
-        if (empty($page)) {
+        if (empty($page))
+        {
             $url = Yii::$app->request->url;
             $alias = explode('/', $url);
             $alias = array_pop($alias);
@@ -851,7 +852,7 @@ class SiteController extends Controller
                             $efirm->main_addr_fias = $address['fiasCode2']??null;
                             $efirm->main_addr_fias_alt = $address['fiasCode']??null;
                             break;
-                    }            
+                    }
                 }
 
                 /*

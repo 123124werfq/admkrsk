@@ -136,7 +136,9 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
         // ищем из резервированных
         if ($route = $this->findRouteByURL($domain.'/'.$pathInfo))
         {
-            //$this->makeLayout($route['page']);
+            if ($route['page']->noguest && Yii::$app->user->isGuest)
+                return ['site/login',[]];
+
             return [$route['route'], ['page'=>$route['page']]];
         }
 
@@ -148,6 +150,7 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
             $alias = substr($alias, 0, strpos($alias, '?'));
 
         $page = Page::find()->where(['alias'=>$alias, 'active'=>1])->one();
+
         if (empty($page))
             return false;
 
