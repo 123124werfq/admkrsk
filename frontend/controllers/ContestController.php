@@ -12,6 +12,9 @@ use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 
 
+use common\models\CstProfile;
+
+
 class ContestController extends \yii\web\Controller
 {
 
@@ -81,10 +84,25 @@ class ContestController extends \yii\web\Controller
 
     public function actionSelect($page=null)
     {
-        $profiles = [];
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $user = Yii::$app->user->identity;
+
+        $profiles = CstProfile::find()->where(['id_user' => $user->id])->all();
+
+        $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
+        if(!$contestCollection || !$page)
+            throw new BadRequestHttpException();
+
+        $activeContests = $contestCollection->getDataQuery()->whereByAlias(['<>', 'contest_state', 'Конкурс завершен'])->getArray(true);
+
+        var_dump($activeContests); die();
 
         return $this->render('select', [
             'profiles' => $profiles,
+            'contests' => $activeContests,
             'page' => $page
         ]);
     }

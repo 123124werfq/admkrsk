@@ -35,6 +35,12 @@ if ($user) {
                 <div class="col-2-third order-xs-1">
                     <div class="content searchable">
                         <h1><?= $page->title ?></h1>
+                        <ul>
+                        <?php foreach ($contests as $cstId => $contest) { ?>
+                            <li><?=$contest['name']?></li>
+                        <?php } ?>
+                            <li><a href="">Создать новую заявку</a></li>
+                        </ul>
                         <?=common\components\helper\Helper::runContentWidget($page->content,$page)?>
 
                         <?php if (!empty($page->medias)) { ?>

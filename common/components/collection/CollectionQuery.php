@@ -106,7 +106,7 @@ class CollectionQuery extends \yii\mongodb\Query
             $id_column = $this->GetIDColumnByAlias($alias);
 
             if (!empty($id_column))
-                $this->andWhere([$id_column=>$condition[$alias]]);
+                $this->andWhere(['col'.$id_column=>$condition[$alias]]);
         }
         else
         if (count($condition)==3)
@@ -115,7 +115,7 @@ class CollectionQuery extends \yii\mongodb\Query
             $id_column = $this->GetIDColumnByAlias($alias);
 
             if (!empty($id_column))
-                $this->andWhere([$condition[0],$id_column,$condition[2]]);
+                $this->andWhere([$condition[0],'col'.$id_column,$condition[2]]);
         }
 
         return $this;
