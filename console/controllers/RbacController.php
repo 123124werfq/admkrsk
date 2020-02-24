@@ -1444,22 +1444,22 @@ class RbacController extends Controller
             $auth->addChild($backendVars, $backendManageVars);
 
 
-            $backendReserveIndex = $auth->createPermission('backend.reserve.index');
+            $backendReserveIndex = $auth->createPermission('backend.hrProfile.index');
             $backendReserveIndex->description = 'Кадровый резерв';
             $auth->add($backendReserveIndex);
 
-            $backendManageReserve = $auth->createPermission('backend.reserve');
+            $backendManageReserve = $auth->createPermission('backend.hrProfile');
             $backendManageReserve->description = 'Кадровый резерв';
             $auth->add($backendManageReserve);
             $auth->addChild($backendManageReserve, $backendReserveIndex);            
 
-            $backendMenuReserve = $auth->createPermission('menu.reserve');
+            $backendMenuReserve = $auth->createPermission('menu.hrProfile');
             $backendMenuReserve->description = 'Кадровый резерв';
             $backendMenuReserve->ruleName = $menuAccessRule->name;
             $auth->add($backendMenuReserve);
             $auth->addChild($backendManage, $backendMenuReserve);
 
-            $backendReserve = $auth->createRole('admin.reserve');
+            $backendReserve = $auth->createRole('admin.hrProfile');
             $backendReserve->description = 'Модератор кадрового резерва';
             $auth->add($backendReserve);
             $auth->addChild($backendReserve, $backendManage);
@@ -1544,6 +1544,7 @@ class RbacController extends Controller
             $transaction->commit();
 
             $auth->invalidateCache();
+            User::rbacCacheInvalidate();
         } catch (\Exception $e) {
             $transaction->rollBack();
             throw $e;

@@ -13,8 +13,6 @@ use common\models\AdUser;
 use yii\web\Cookie;
 use yii\web\Response;
 
-use common\models\HrProfile;
-
 /**
  * Site controller
  */
@@ -73,7 +71,6 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        var_dump(HrProfile::getAccessEntityIds()); die();
         return $this->render('index');
     }
 
