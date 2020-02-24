@@ -95,17 +95,16 @@ class CollectionController extends \yii\web\Controller
 
         $allrows = array_merge([$head],$allrows);
 
-        $out = fopen("php://output", 'w');
-        fputs($out, chr(0xEF) . chr(0xBB) . chr(0xBF)); // BOM
-
-        header("Content-Disposition: attachment; filename=\"{$settings->collection->name}.xls\"");
+        header("Content-Disposition: attachment; filename=\"".iconv('UTF-8', 'CP1251', $settings->collection->name).".xls\"");
         header("Content-Type: application/vnd.ms-excel; charset=utf-8");
         header("Pragma: no-cache");
         header("Expires: 0");
+        $out = fopen("php://output", 'w');
 
+        fputs($out, chr(0xEF) . chr(0xBB) . chr(0xBF)); // BOM
         foreach ($allrows as $data)
         {
-            fputcsv($out, $data,"\t");
+            fputcsv($out, $data,",");
         }
         fclose($out);
     }
