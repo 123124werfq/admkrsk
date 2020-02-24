@@ -56,7 +56,7 @@ $defaultColumns = [
         'value' => function ($model) {
             return (!empty($model->box))?$model->box->name:'';
         },
-        'filter'    => ArrayHelper::map(Box::find()->all(),'id_box','name'),
+        'filter' => ArrayHelper::map(Box::find()->all(),'id_box','name'),
     ],
     'created_at' => [
         'attribute' => 'created_at',

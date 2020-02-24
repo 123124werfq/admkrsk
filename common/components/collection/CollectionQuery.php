@@ -203,6 +203,12 @@ class CollectionQuery extends \yii\mongodb\Query
         return $output;
     }
 
+    public function getObjects($keyAsAlias=false)
+    {
+        //$this->getArray
+        foreach ($this->columns as $key => $col)
+            $emptyRow[$this->keyAsAlias?$col->alias:$col->id_column] = '';
+    }
 
     public function getStrinyfyArray()
     {
