@@ -133,26 +133,6 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
             }
         }
 
-        /*$urls = [];
-        $pages = [];
-
-        foreach ($routes as $key => $route)
-        {
-            $urls[$route->controller.'/index'] = substr($route->page->getUrl(),1);
-            $pages[$route->controller.'/index'] = $route->page;
-
-            $actions = explode(',', $route->actions);
-
-            foreach ($actions as $akey => $action)
-            {
-                if ($action!='index' && !empty($action))
-                {
-                    $urls[$route->controller.'/'.$action] = $route->page->getUrl().'/'.$action;
-                    $pages[$route->controller.'/'.$action] = $route->page;
-                }
-            }
-        }*/
-
         // ищем из резервированных
         if ($route = $this->findRouteByURL($domain.'/'.$pathInfo))
         {

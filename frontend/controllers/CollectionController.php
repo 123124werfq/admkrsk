@@ -101,6 +101,7 @@ class CollectionController extends \yii\web\Controller
         header("Expires: 0");
         $out = fopen("php://output", 'w');
 
+        fputs($fp, chr(0xEF) . chr(0xBB) . chr(0xBF)); // BOM
         foreach ($allrows as $data)
         {
             fputcsv($out, $data,"\t");

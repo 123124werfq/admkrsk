@@ -35,9 +35,6 @@ class CollectionValue extends \yii\db\ActiveRecord
             [['id_column', 'id_record'], 'required'],
             [['id_column', 'id_record'], 'integer'],
             [['value'], 'safe'],
-            /*[['id_column', 'id_record'], 'unique', 'targetAttribute' => ['id_column', 'id_record']],
-            [['id_column'], 'exist', 'skipOnError' => true, 'targetClass' => DbCollectionColumn::className(), 'targetAttribute' => ['id_column' => 'id_column']],
-            [['id_record'], 'exist', 'skipOnError' => true, 'targetClass' => DbCollectionRecord::className(), 'targetAttribute' => ['id_record' => 'id_record']],*/
         ];
     }
 
@@ -51,6 +48,80 @@ class CollectionValue extends \yii\db\ActiveRecord
             'id_record' => 'Запись',
             'value' => 'Значение',
         ];
+    }
+
+    public function getValue()
+    {
+        if (empty($value))
+            return $value;
+
+        switch ($this->column->type)
+        {
+            case self::TYPE_DISTRICT:
+                $model = District::findOne((int)$value);
+                return $model??null;
+                break;
+            case self::TYPE_REGION:
+                $model = Region::findOne((int)$value);
+                return $model??null;
+                break;
+            case self::TYPE_SUBREGION:
+                $model = Subregion::findOne((int)$value);
+                return $model??null;
+                break;
+            case self::TYPE_CITY:
+                $model = City::findOne((int)$value);
+                return $city??null;
+                break;
+            case self::TYPE_STREET:
+                $model = Street::findOne((int)$value);
+                return $city??null;
+                break;
+            case self::TYPE_FILE:
+                if (is_array($value))
+                {
+                    $ids = [];
+                    foreach ($value as $key => $data)
+                    {
+                        if (is_numeric($data))
+                            $ids[] = $data;
+                        else if (!empty($data['id']))
+                            $ids[] = $data['id'];
+                    }
+
+                    if (empty($ids))
+                        return false;
+
+                    return Media::find()->where(['id_media'=>$ids])->all();
+                }
+                else
+                    return false;
+                break;
+            case self::TYPE_FILE_OLD:
+                $slugs = explode('/', $value);
+                return $slugs;
+                break;
+            case self::TYPE_IMAGE:
+                if (is_array($value) || is_numeric($value))
+                {
+                    $medias = Media::find()->where(['id_media'=>$value])->all();
+
+                    foreach ($medias as $mkey => $media)
+                        $file_uploaded = $media->showThumb(['w'=>200,'h'=>200]);
+
+                    if (!empty($file_uploaded))
+                        return '<img src="'.$file_uploaded.'" />';
+                }
+                break;
+            default:
+                if (is_array($value))
+                    return implode('<br>', $value);
+
+                return $value;
+                break;
+        }
+
+        return '';
     }
 
     public function save()

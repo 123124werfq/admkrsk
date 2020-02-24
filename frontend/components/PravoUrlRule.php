@@ -32,7 +32,5 @@ class PravoUrlRule extends BaseObject implements UrlRuleInterface
             $alias = substr($alias, 0, strpos($alias, '?'));
 
         return ['pravo/index', []];
-
-      //  return ['site/page', ['page'=>$page]];
     }
 }
