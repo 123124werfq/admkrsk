@@ -10,6 +10,8 @@ class PagenewsWidget extends \yii\base\Widget
 	public $attributes;
     public $page;
 
+    public $objectData = []; // данные CollectionRecord объекста если идет его рендер
+
     public function run()
     {
         if (!empty($this->attributes['id']))
