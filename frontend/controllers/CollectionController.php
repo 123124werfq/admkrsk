@@ -95,7 +95,7 @@ class CollectionController extends \yii\web\Controller
 
         $allrows = array_merge([$head],$allrows);
 
-        header("Content-Disposition: attachment; filename=\"".iconv('UTF-8', 'CP1251', $settings->collection->name).".xls\"");
+        header("Content-Disposition: attachment; filename=\"".iconv('UTF-8', 'CP1251', $settings->collection->name).".csv\"");
         header("Content-Type: application/vnd.ms-excel; charset=utf-8");
         header("Pragma: no-cache");
         header("Expires: 0");
