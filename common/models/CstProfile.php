@@ -8,6 +8,8 @@ use common\modules\log\behaviors\LogBehavior;
 use common\traits\AccessTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 use Yii;
 
 
@@ -40,6 +42,11 @@ class CstProfile extends \yii\db\ActiveRecord
 
     public $access_user_ids;
     public $access_user_group_ids;
+
+    const STATE_DRAFT = 0;
+    const STATE_ACCEPTED = 1;
+    const STATE_REJECTED = 100;
+    const STATE_ARCHIVED = 99;    
 
     /**
      * {@inheritdoc}
@@ -86,6 +93,8 @@ class CstProfile extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
+            'ts' => TimestampBehavior::class,
+            'ba' => BlameableBehavior::class,
             'log' => LogBehavior::class,
             'ac' => [
                 'class' => AccessControlBehavior::class,
@@ -94,14 +103,71 @@ class CstProfile extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'id_user']);
+    }    
 
     public function getRecord()
     {
         return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_record_anketa']);
     }
 
-    public function getContest()
+    public function getContestinfo()
     {
-        return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_record_contest']);
+        //return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_record_contest']);
+
+        $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
+        if(!$contestCollection)
+            return false;
+
+        $contests = $contestCollection->getDataQuery()->getArray(true);
+
+        foreach ($contests as $ackey => $contest) {
+            if(!empty($contest['participant_form']))
+            {
+                $form = Form::find()->where(['alias' => $contest['participant_form']])->one();
+                if(!$form)
+                    continue;
+
+                if($form->id_collection == $this->id_record_contest)
+                    return $contest;
+            }
+        }
+        return false;
+
     }      
+
+    public function getStatename($button = false)
+    {
+        if(!$button) {
+            switch ($this->state) {
+                case CstProfile::STATE_DRAFT:
+                    return 'Черновик';
+                case CstProfile::STATE_ACCEPTED:
+                    return 'Принято к рассмотрению';
+                case CstProfile::STATE_REJECTED:
+                    return 'Отклонено';
+                case CstProfile::STATE_ARCHIVED:
+                    return 'В архиве';
+            }
+            return 'Активно';
+        }
+        else {
+            switch ($this->state) {
+                case CstProfile::STATE_DRAFT:
+                    return '<span class="badge badge-primary">Черновик</span>';
+                case CstProfile::STATE_ACCEPTED:
+                    return '<span class="badge badge-warning">Принято к рассмотрению</span>';
+                case CstProfile::STATE_REJECTED:
+                    return '<span class="badge badge-danger">Отклонено</span>';
+                case CstProfile::STATE_ARCHIVED:
+                    return '<span class="badge badge-secondary">В архиве</span>';
+            }
+            return '<span class="badge badge-primary">Активно</span>';
+
+        }
+    }
+    
+
 }

@@ -112,15 +112,21 @@ class ContestController extends \yii\web\Controller
         foreach ($activeContests as $ackey => $contest) {
             if(!empty($contest['participant_form']))
             {
-                foreach ($profiles as $profile) {
-                    if(!isset($links[$ackey]))
-                        $links[$ackey] = [];
+                $form = Form::find()->where(['alias' => $contest['participant_form']])->one();
+                if(!$form)
+                    continue;
 
-                    $links[$ackey][] = $profile->id_profile;
+                foreach ($profiles as $profile) {
+                    if($form->id_collection == $profile->id_record_contest)
+                    {
+                        if(!isset($links[$ackey]))
+                            $links[$ackey] = [];
+
+                        $links[$ackey][] = $profile->id_profile;
+                    }
                 }
             }
         }
-        //var_dump($links); die();
 
         return $this->render('select', [
             'profiles' => $profiles,
