@@ -78,10 +78,29 @@ class ContestController extends \yii\web\Controller
                 echo "Данные не сохранены";
         }
 
+        $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
+        if(!$contestCollection)
+            return false;
+
+        $contests = $contestCollection->getDataQuery()->getArray(true);
+
+        foreach ($contests as $ackey => $contest) {
+            if(!empty($contest['participant_form']))
+            {
+                $form = Form::find()->where(['alias' => $contest['participant_form']])->one();
+                if(!$form)
+                    continue;
+
+                if($form->id_collection == $collection->id_collection)
+                    $contestname = $contest['name'];
+            }
+        }
+
         return $this->render('form', [
             'form'      => $form,
             'page'      => $page,
             'inputs'    => $inputs,
+            'contestname' => $contestname,
             'record'    => !empty($profile->record)?$profile->record:null
         ]);
     }

@@ -7,6 +7,7 @@
         <div class="row">
             <div class="col-2-third order-xs-1">
                 <h1 class="h2"><?=$page->title?></h1>
+                <h4 class="h4"><?=$contestname?></h4>
                 <?=common\components\helper\Helper::runContentWidget($page->content,$page)?>
 
                 <?=frontend\widgets\FormsWidget::widget(['form'=>$form,'inputs'=>$inputs,'action'=>'', 'collectionRecord' => $record])?>
