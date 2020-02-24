@@ -104,7 +104,7 @@ class CollectionController extends \yii\web\Controller
         fputs($out, chr(0xEF) . chr(0xBB) . chr(0xBF)); // BOM
         foreach ($allrows as $data)
         {
-            fputcsv($out, $data,",");
+            fputcsv($out, $data);
         }
         fclose($out);
     }
