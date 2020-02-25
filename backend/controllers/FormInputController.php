@@ -268,13 +268,19 @@ class FormInputController extends Controller
      */
     public function actionDelete($id)
     {
-        $element = FormElement::findOne(['id_input'=>$id]);
+        $element = FormElement::find(['id_input'=>$id])->all();
 
         $input = $this->findModel($id);
-        $id_form = $input->id_form;
-        if (!empty($input->column))
-            $input->column->delete();
-        $input->delete();
+        $form = $element->row->form;
+        
+        if ($form->isMainForm())
+        {
+            if (!empty($input->column))
+                $input->column->delete();
+
+            $input->delete();
+        }
+        
         $element->delete();
 
         return $this->redirect(['form/view','id'=>$id_form]);
