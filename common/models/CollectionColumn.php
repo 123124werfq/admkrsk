@@ -505,7 +505,12 @@ class CollectionColumn extends \yii\db\ActiveRecord
     public function getValueByType($value)
     {
         if (empty($value))
+        {
+            if (is_array($value))
+                $value = '';
+
             return $value;
+        }
 
         switch ($this->type)
         {
