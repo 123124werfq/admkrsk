@@ -114,10 +114,11 @@ class FormInputController extends Controller
         }
 
         $exist_inputs = $form->collection->form->getInputs()->select(['id_input','name'])->andWhere('id_input NOT IN (
-            SELECT id_input 
+            SELECT id_input
                 FROM form_element as fi
                 INNER JOIN form_row as fr ON fr.id_row = fi.id_row
-            WHERE fr.id_form = '.$form->id_form.')')->all();
+            WHERE id_input IS NOT NULL
+             AND  fr.id_form = '.$form->id_form.')')->all();
 
         if (Yii::$app->request->isAjax)
             return $this->renderAjax('_form_assign',[
