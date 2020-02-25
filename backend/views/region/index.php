@@ -1,7 +1,12 @@
 <?php
 
+use common\models\Country;
+use common\models\Region;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\web\JsExpression;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\search\RegionSearch */
@@ -32,6 +37,27 @@ if (Yii::$app->user->can('admin.address')) {
                 'filterModel' => $searchModel,
                 'columns' => [
                     'id_region',
+                    [
+                        'attribute' => 'id_country',
+                        'filter' => Select2::widget([
+                            'model' => $searchModel,
+                            'attribute' => 'id_country',
+                            'data' => $searchModel->id_country ? ArrayHelper::map([Country::findOne($searchModel->id_country)], 'id_country', 'name') : [],
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                                'minimumInputLength' => 1,
+                                'ajax' => [
+                                    'url' => '/country/list',
+                                    'dataType' => 'json',
+                                    'data' => new JsExpression('function(params) { return {q:params.term}; }')
+                                ],
+                                'placeholder' => 'Выберите страну',
+                            ],
+                        ]),
+                        'value' => function (Region $model) {
+                            return $model->country->name ?? null;
+                        },
+                    ],
                     'name',
                     'is_active:boolean',
                     'is_updatable:boolean',

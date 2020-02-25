@@ -18,6 +18,7 @@ use SoapClient;
 use SoapFault;
 use Yii;
 use yii\base\ErrorException;
+use yii\base\InvalidValueException;
 use yii\console\Controller;
 use yii\db\ActiveRecord;
 use yii\db\Connection;
@@ -45,15 +46,166 @@ class FiasController extends Controller
      */
     public function actionUpdateAddresses()
     {
-        $transaction = Yii::$app->db->beginTransaction();
         try {
-            $this->updateAddresses();
+            $regionQuery = Region::findWithDeleted()
+                ->where(['id_country' => null]);
 
-            $transaction->commit();
+            $count = 0;
+            $regionCount = $regionQuery->count();
+            ProgressHelper::startProgress($count, $regionCount, "Обновление регионов: ");
+            /* @var Region $region */
+            foreach ($regionQuery->each() as $region) {
+                $id_country = House::findWithDeleted()
+                    ->select('id_country')
+                    ->groupBy('id_country')
+                    ->scalar();
 
-            $this->stdout(Yii::t('app', 'Обновлено {count} адресов', ['count' => $count]) . PHP_EOL);
+                if ($id_country) {
+                    $region->updateAttributes(['id_country' => $id_country]);
+                }
+
+                $count++;
+
+                ProgressHelper::updateProgress($count, $regionCount);
+            }
+            ProgressHelper::endProgress("100% ($count/$count) Done." . PHP_EOL);
+
+
+
+            $subregionQuery = Subregion::findWithDeleted()
+                ->where(['id_region' => null]);
+
+            $count = 0;
+            $subregionCount = $subregionQuery->count();
+            ProgressHelper::startProgress($count, $subregionCount, "Обновление районов: ");
+            /* @var Subregion $subregion */
+            foreach ($subregionQuery->each() as $subregion) {
+                $id_region = House::findWithDeleted()
+                    ->select('id_region')
+                    ->where(['id_subregion' => $subregion->id_subregion])
+                    ->groupBy('id_region')
+                    ->scalar();
+
+                if ($id_region) {
+                    $subregion->updateAttributes(['id_region' => $id_region]);
+                }
+
+                $count++;
+
+                ProgressHelper::updateProgress($count, $subregionCount);
+            }
+            ProgressHelper::endProgress("100% ($count/$count) Done." . PHP_EOL);
+
+
+
+            $cityQuery = City::findWithDeleted()
+                ->where([
+                    'or',
+                    ['id_region' => null],
+                    ['id_subregion' => null],
+                ]);
+
+            $count = 0;
+            $cityCount = $cityQuery->count();
+            ProgressHelper::startProgress($count, $cityCount, "Обновление городов: ");
+            /* @var City $city */
+            foreach ($cityQuery->each() as $city) {
+                $id_region = House::findWithDeleted()
+                    ->select('id_region')
+                    ->where(['id_city' => $city->id_city])
+                    ->groupBy('id_region')
+                    ->scalar();
+
+                $id_subregion = House::findWithDeleted()
+                    ->select('id_region')
+                    ->where(['id_city' => $city->id_city])
+                    ->groupBy('id_region')
+                    ->scalar();
+
+                if ($id_region || $id_subregion) {
+                    $city->updateAttributes(['id_region' => $id_region, 'id_subregion' => $id_subregion]);
+                }
+
+                $count++;
+
+                ProgressHelper::updateProgress($count, $cityCount);
+            }
+            ProgressHelper::endProgress("100% ($count/$count) Done." . PHP_EOL);
+
+
+
+            $districtQuery = District::findWithDeleted()
+                ->where(['id_city' => null]);
+
+            $count = 0;
+            $districtCount = $districtQuery->count();
+            ProgressHelper::startProgress($count, $districtCount, "Обновление районов городов: ");
+            /* @var District $district */
+            foreach ($districtQuery->each() as $district) {
+                $id_city = City::findWithDeleted()
+                    ->select('id_city')
+                    ->where(['name' => 'г Красноярск'])
+                    ->scalar();
+
+                if ($id_city) {
+                    $district->updateAttributes(['id_city' => $id_city]);
+                }
+
+                $count++;
+
+                ProgressHelper::updateProgress($count, $districtCount);
+            }
+            ProgressHelper::endProgress("100% ($count/$count) Done." . PHP_EOL);
+
+
+
+            $streetQuery = Street::findWithDeleted()
+                ->joinWith('districts', false)
+                ->where([
+                    'or',
+                    [Street::tableName() . '.id_city' => null],
+                    [District::tableName() . '.id_district' => null],
+                ]);
+
+            $count = 0;
+            $streetCount = $streetQuery->count();
+            $districts = District::findWithDeleted()->indexBy('id_district')->all();
+            ProgressHelper::startProgress($count, $streetCount, "Обновление улиц: ");
+            /* @var Street $street */
+            foreach ($streetQuery->each() as $street) {
+                $id_city = House::findWithDeleted()
+                    ->select('id_city')
+                    ->where(['id_street' => $street->id_street])
+                    ->groupBy('id_city')
+                    ->scalar();
+
+                if ($id_city) {
+                    $street->updateAttributes(['id_city' => $id_city]);
+                }
+
+                $districtIds = House::findWithDeleted()
+                    ->select('id_district')
+                    ->where([
+                        'and',
+                        ['id_street' => $street->id_street],
+                        ['not', ['id_district' => null]],
+                    ])
+                    ->groupBy('id_district')
+                    ->column();
+
+                foreach ($districtIds as $id_district) {
+                    if (isset($districts[$id_district])) {
+                        $street->link('districts', $districts[$id_district]);
+                    }
+                }
+
+                $count++;
+
+                ProgressHelper::updateProgress($count, $streetCount);
+            }
+            ProgressHelper::endProgress("100% ($count/$count) Done." . PHP_EOL);
+
         } catch (\Exception $e) {
-            $transaction->rollBack();
             throw $e;
         }
     }
@@ -80,53 +232,50 @@ class FiasController extends Controller
 
     public function actionUpdate()
     {
-//        $lastVersion = FiasUpdateHistory::find()->max('version');
-//
-//        $client = new SoapClient('https://fias.nalog.ru/WebServices/Public/DownloadService.asmx?WSDL');
-//
-//        try {
-//            $response = $client->GetAllDownloadFileInfo();
-//        } catch (SoapFault $exception) {
-//            $updateHistory = new FiasUpdateHistory(['text' => $exception->getMessage()]);
-//            $updateHistory->save();
-//            echo "<pre>";
-//            print_r($updateHistory->errors);
-//            die();
-//            exit(0);
-//        }
-//
-//        $updates = ArrayHelper::map($response->GetAllDownloadFileInfoResult->DownloadFileInfo, 'VersionId', function (\StdClass $object) use ($lastVersion) {
-//            return [
-//                'version' => $object->VersionId,
-//                'text' => $object->TextVersion,
-//                'file' => $lastVersion ? $object->FiasDeltaDbfUrl : $object->FiasCompleteDbfUrl,
-//            ];
-//        });
+       $lastVersion = FiasUpdateHistory::find()->max('version');
 
-        $lastVersion = null;
+       $client = new SoapClient('https://fias.nalog.ru/WebServices/Public/DownloadService.asmx?WSDL');
 
-        $updates = [
-//            [
-//                'version' => 602,
-//                'text' => 'БД ФИАС от 23.12.2019',
-//                'file' => 'http://data.nalog.ru/Public/Downloads/20191223/fias_dbf.rar',
-//            ],
-            [
-                'version' => 603,
-                'text' => 'БД ФИАС от 26.12.2019',
-                'file' => 'http://data.nalog.ru/Public/Downloads/20191226/fias_delta_dbf.rar',
-            ],
-        ];
+       try {
+           $response = $client->GetAllDownloadFileInfo();
+       } catch (SoapFault $exception) {
+           $updateHistory = new FiasUpdateHistory(['text' => $exception->getMessage()]);
+           $updateHistory->save();
+           exit(0);
+       }
 
-//        if ($lastVersion) {
-//            foreach ($updates as $key => $update) {
-//                if ($update['version'] <= $lastVersion) {
-//                    unset($updates[$key]);
-//                }
-//            }
-//        } else {
-//            $updates = [array_pop($updates)];
-//        }
+       $updates = ArrayHelper::map($response->GetAllDownloadFileInfoResult->DownloadFileInfo, 'VersionId', function (\StdClass $object) use ($lastVersion) {
+           return [
+               'version' => $object->VersionId,
+               'text' => $object->TextVersion,
+               'file' => $lastVersion ? $object->FiasDeltaDbfUrl : $object->FiasCompleteDbfUrl,
+           ];
+       });
+
+//         $lastVersion = null;
+//
+//         $updates = [
+// //            [
+// //                'version' => 602,
+// //                'text' => 'БД ФИАС от 23.12.2019',
+// //                'file' => 'http://data.nalog.ru/Public/Downloads/20191223/fias_dbf.rar',
+// //            ],
+//             [
+//                 'version' => 603,
+//                 'text' => 'БД ФИАС от 26.12.2019',
+//                 'file' => 'http://data.nalog.ru/Public/Downloads/20191226/fias_delta_dbf.rar',
+//             ],
+//         ];
+
+       if ($lastVersion) {
+           foreach ($updates as $key => $update) {
+               if ($update['version'] <= $lastVersion) {
+                   unset($updates[$key]);
+               }
+           }
+       } else {
+           $updates = [array_pop($updates)];
+       }
 
         foreach ($updates as $update) {
             $this->fiasUpdate($update);
@@ -357,7 +506,10 @@ class FiasController extends Controller
 
             if (($districtName = District::getDistrictNameByOKATO($fiasHouse->okato)) !== null) {
                 if (($district = District::findOne(['name' => $districtName])) === null) {
-                    $district = new District(['name' => $districtName]);
+                    $district = new District([
+                        'id_city' => $country->id_country,
+                        'name' => $districtName
+                    ]);
                     $district->save();
                 }
             }
@@ -367,6 +519,7 @@ class FiasController extends Controller
                     if (($region = Region::findOne(['aoguid' => $parent->aoguid])) === null) {
                         $region = new Region([
                             'aoguid' => $parent->aoguid,
+                            'id_country' => $country->id_country,
                             'name' => $parent->addressName,
                         ]);
                         $region->save();
@@ -405,6 +558,28 @@ class FiasController extends Controller
                 'name' => $fiasHouse->houseName,
             ]);
             $address->updateAttributes(['fullname' => $address->getFullName()]);
+
+            if ($region && $country) {
+                $region->updateAttributes(['id_country' => $country->id_country]);
+            }
+
+            if ($subregion && $region) {
+                $subregion->updateAttributes(['id_region' => $region->id_region]);
+            }
+
+            if ($city && ($region || $subregion)) {
+                $city->updateAttributes([
+                    'id_region' => $region->id_region ?? null,
+                    'id_subregion' => $subregion->id_subregion ?? null,
+                ]);
+            }
+
+            if ($street && ($city || $district)) {
+                $street->updateAttributes([
+                    'id_city' => $city->id_city ?? null,
+                    'id_district' => $district->id_district ?? null,
+                ]);
+            }
 
             if ($address->save()) {
                 $count++;

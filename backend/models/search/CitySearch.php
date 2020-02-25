@@ -17,7 +17,7 @@ class CitySearch extends City
     public function rules()
     {
         return [
-            [['id_city'], 'integer'],
+            [['id_city', 'id_region', 'id_subregion'], 'integer'],
             [['is_updatable', 'is_active'], 'boolean'],
             [['aoguid', 'name'], 'safe'],
         ];
@@ -60,6 +60,8 @@ class CitySearch extends City
         // grid filtering conditions
         $query->andFilterWhere([
             'id_city' => $this->id_city,
+            'id_region' => $this->id_region,
+            'id_subregion' => $this->id_subregion,
             'is_active' => $this->is_active,
             'is_updatable' => $this->is_updatable,
         ]);

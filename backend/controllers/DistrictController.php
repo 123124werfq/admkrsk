@@ -8,6 +8,7 @@ use common\models\District;
 use backend\models\search\DistrictSearch;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
+use yii\validators\NumberValidator;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -49,6 +50,37 @@ class DistrictController extends Controller
                 'modelClass' => District::class,
             ],
         ];
+    }
+
+    /**
+     * Search District models.
+     * @param string $q
+     * @return mixed
+     * @throws InvalidConfigException
+     */
+    public function actionList($q)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $query = District::find();
+
+        $q = trim($q);
+        if ((new NumberValidator(['integerOnly' => true]))->validate($q)) {
+            $query->andWhere(['id_district' => $q]);
+        } else {
+            $query->andWhere(['ilike', 'name', $q]);
+        }
+
+        $results = [];
+        foreach ($query->limit(10)->all() as $district) {
+            /* @var District $district */
+            $results[] = [
+                'id' => $district->id_district,
+                'text' => $district->name,
+            ];
+        }
+
+        return ['results' => $results];
     }
 
     /**

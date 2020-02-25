@@ -8,6 +8,7 @@ use common\models\Country;
 use backend\models\search\CountrySearch;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
+use yii\validators\NumberValidator;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -49,6 +50,37 @@ class CountryController extends Controller
                 'modelClass' => Country::class,
             ],
         ];
+    }
+
+    /**
+     * Search Country models.
+     * @param string $q
+     * @return mixed
+     * @throws InvalidConfigException
+     */
+    public function actionList($q)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $query = Country::find();
+
+        $q = trim($q);
+        if ((new NumberValidator(['integerOnly' => true]))->validate($q)) {
+            $query->andWhere(['id_country' => $q]);
+        } else {
+            $query->andWhere(['ilike', 'name', $q]);
+        }
+
+        $results = [];
+        foreach ($query->limit(10)->all() as $country) {
+            /* @var Country $country */
+            $results[] = [
+                'id' => $country->id_country,
+                'text' => $country->name,
+            ];
+        }
+
+        return ['results' => $results];
     }
 
     /**

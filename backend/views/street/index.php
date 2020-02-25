@@ -1,7 +1,13 @@
 <?php
 
+use common\models\City;
+use common\models\District;
+use common\models\Street;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\web\JsExpression;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\search\StreetSearch */
@@ -32,6 +38,48 @@ if (Yii::$app->user->can('admin.address')) {
                 'filterModel' => $searchModel,
                 'columns' => [
                     'id_street',
+                    [
+                        'attribute' => 'id_city',
+                        'filter' => Select2::widget([
+                            'model' => $searchModel,
+                            'attribute' => 'id_city',
+                            'data' => $searchModel->id_city ? ArrayHelper::map([City::findOne($searchModel->id_city)], 'id_city', 'name') : [],
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                                'minimumInputLength' => 1,
+                                'ajax' => [
+                                    'url' => '/city/list',
+                                    'dataType' => 'json',
+                                    'data' => new JsExpression('function(params) { return {q:params.term}; }')
+                                ],
+                                'placeholder' => 'Выберите город',
+                            ],
+                        ]),
+                        'value' => function (Street $model) {
+                            return $model->city->name ?? null;
+                        },
+                    ],
+                    [
+                        'attribute' => 'id_district',
+                        'filter' => Select2::widget([
+                            'model' => $searchModel,
+                            'attribute' => 'id_district',
+                            'data' => $searchModel->id_district ? ArrayHelper::map([District::findOne($searchModel->id_district)], 'id_district', 'name') : [],
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                                'minimumInputLength' => 1,
+                                'ajax' => [
+                                    'url' => '/district/list',
+                                    'dataType' => 'json',
+                                    'data' => new JsExpression('function(params) { return {q:params.term}; }')
+                                ],
+                                'placeholder' => 'Выберите район города',
+                            ],
+                        ]),
+                        'value' => function (Street $model) {
+                            return $model->district->name ?? null;
+                        },
+                    ],
                     'name',
                     'is_active:boolean',
                     'is_updatable:boolean',
