@@ -145,10 +145,17 @@ class FormElementController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        $id_form = $model->row->id_form;
+        $form = $model->row->form;
+
         $model->delete();
 
-        return $this->redirect(['form/view', 'id' => $id_form]);
+        if ($form->isMainForm())
+        {
+            if (!empty($model->input))
+                $model->input->delete();
+        }
+
+        return $this->redirect(['form/view', 'id' => $form->id_form]);
     }
 
     /**

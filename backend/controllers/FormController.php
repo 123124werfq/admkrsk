@@ -343,6 +343,8 @@ class FormController extends Controller
 
         if ($newForm = $formCopy->сopyForm($form))
             return $this->redirect(['view', 'id'=>$newForm->id_form]);
+        else 
+            print_r($formCopy->errors);
     }
 
     /**

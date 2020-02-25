@@ -20,17 +20,29 @@ class ContestController extends \yii\web\Controller
 
     public function actionParticipantForm($page=null)
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome(); // логин?
+        }
+        $user = Yii::$app->user->identity;
         $inputs = [];
 
-        $page = Page::findOne(['alias'=>'candidate-form']);
-        $collection = Collection::findOne(['alias'=>'contest_1']); // предусмотреть выбор конкурса
+        $formAlias = Yii::$app->request->get('contest');
+        $idprofile = Yii::$app->request->get('ida');
+        $form = Form::find()->where(['alias' => $formAlias])->one();
+
+        if(!$form)
+            throw new BadRequestHttpException();
+        
+        $collection = $form->collection;
+
+        $page = Page::findOne(['alias'=>'select']);
 
         if(!$collection || !$page)
             throw new BadRequestHttpException();
 
-        $profile = ContestProfile::findOne(['id_user' => Yii::$app->user->id]);
+        $profile = CstProfile::find()->where(['id_user' => Yii::$app->user->id, 'id_profile' => $idprofile])->one();
 
-        $model = new FormDynamic($collection->form);
+        $model = new FormDynamic($form);
 
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
@@ -38,54 +50,71 @@ class ContestController extends \yii\web\Controller
 
             $record = false;
 
-            if($profile && $profile->id_record)
-                $record = $collection->updateRecord($profile->id_record, $prepare);
+            if($profile && $profile->id_record_anketa)
+                $record = $collection->updateRecord($profile->id_record_anketa, $prepare);
 
             if(!$record)
                 $record = $collection->insertRecord($prepare);
 
             if ($record) {
                 if(!$profile)
-                    $profile = new HrProfile;
+                    $profile = new CstProfile;
 
                 $profile->id_user = Yii::$app->user->id;
-                $profile->id_record = $record->id_record;
+                $profile->id_record_anketa = $record->id_record;
+                $profile->id_record_contest = $collection->id_collection;
                 $profile->save();
 
                 if (Yii::$app->request->isAjax)
-                    return $collection->form->message_success?$collection->form->message_success:'Спасибо, данные отправлены';
+                    return $form->message_success?$collection->form->message_success:'Спасибо, данные отправлены';
 
-                if (!empty($collection->form->url))
-                    return $this->redirect($collection->form->url);
+                if (!empty($form->url))
+                    return $this->redirect($form->url);
 
-                if (!empty($collection->form->id_page) && $url = Page::getUrlByID($collection->form->id_page))
+                if (!empty($form->id_page) && $url = Page::getUrlByID($form->id_page))
                     return $this->redirect($url);
             }
             else
                 echo "Данные не сохранены";
         }
 
+        $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
+        if(!$contestCollection)
+            return false;
+
+        $contests = $contestCollection->getDataQuery()->getArray(true);
+
+        foreach ($contests as $ackey => $contest) {
+            if(!empty($contest['participant_form']))
+            {
+                $form = Form::find()->where(['alias' => $contest['participant_form']])->one();
+                if(!$form)
+                    continue;
+
+                if($form->id_collection == $collection->id_collection)
+                    $contestname = $contest['name'];
+            }
+        }
+
         return $this->render('form', [
-            'form'      => $collection->form,
+            'form'      => $form,
             'page'      => $page,
             'inputs'    => $inputs,
+            'contestname' => $contestname,
             'record'    => !empty($profile->record)?$profile->record:null
         ]);
     }
 
     public function actionIndex($page=null)
     {
-        //$page = Page::findOne(['alias'=>'reserve']);
-        //var_dump($_GET['id']);
-        //echo "Выбор конкурса и анкеты";
-//die();
-        return $this->render('//site/page', ['page'=>$page]);
+        return $this->redirect('/contests/select/select');
+        //return $this->render('//site/page', ['page'=>$page]);
     }
 
     public function actionSelect($page=null)
     {
         if (Yii::$app->user->isGuest) {
-            return $this->goHome();
+            return $this->goHome(); // логин?
         }
 
         $user = Yii::$app->user->identity;
@@ -98,11 +127,30 @@ class ContestController extends \yii\web\Controller
 
         $activeContests = $contestCollection->getDataQuery()->whereByAlias(['<>', 'contest_state', 'Конкурс завершен'])->getArray(true);
 
-        var_dump($activeContests); die();
+        $links = [];
+        foreach ($activeContests as $ackey => $contest) {
+            if(!empty($contest['participant_form']))
+            {
+                $form = Form::find()->where(['alias' => $contest['participant_form']])->one();
+                if(!$form)
+                    continue;
+
+                foreach ($profiles as $profile) {
+                    if($form->id_collection == $profile->id_record_contest)
+                    {
+                        if(!isset($links[$ackey]))
+                            $links[$ackey] = [];
+
+                        $links[$ackey][] = $profile->id_profile;
+                    }
+                }
+            }
+        }
 
         return $this->render('select', [
             'profiles' => $profiles,
             'contests' => $activeContests,
+            'links' => $links,
             'page' => $page
         ]);
     }

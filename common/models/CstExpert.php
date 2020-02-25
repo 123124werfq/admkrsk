@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "cst_expert".
@@ -60,4 +62,28 @@ class CstExpert extends \yii\db\ActiveRecord
             'deleted_by' => 'Deleted By',
         ];
     }
+
+    public function behaviors()
+    {
+        return [
+            'ts' => TimestampBehavior::class,
+            'ba' => BlameableBehavior::class,
+            /*
+            'ac' => [
+                'class' => AccessControlBehavior::class,
+                'permission' => 'backend.news',
+            ]
+            */
+        ];
+    }
+
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'id_user']);
+    }
+
+    public function getName()
+    {
+        return $this->user->getUsername();
+    }    
 }

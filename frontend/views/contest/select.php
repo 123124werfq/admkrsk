@@ -37,9 +37,19 @@ if ($user) {
                         <h1><?= $page->title ?></h1>
                         <ul>
                         <?php foreach ($contests as $cstId => $contest) { ?>
-                            <li><?=$contest['name']?></li>
+                            <li><a href="<?=$contest['contest_page_link']?>"><?=$contest['name']?></a></li>
+                                <ul>
+                                <?php foreach ($profiles as $prId => $profile) { 
+                                        if(!isset($links[$cstId]) || !in_array($profile['id_profile'],$links[$cstId]))
+                                            continue;
+                                    ?>
+                                    <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>&ida=<?=$profile['id_profile']?>">Заявка №<?=$profile['id_profile']?></a></li>
+                                <?php } ?>
+                                <?php if(!empty($contest['participant_form'])){?>
+                                    <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>">Создать новую заявку</a></li>
+                                <?php } ?>
+                                </ul>
                         <?php } ?>
-                            <li><a href="">Создать новую заявку</a></li>
                         </ul>
                         <?=common\components\helper\Helper::runContentWidget($page->content,$page)?>
 
