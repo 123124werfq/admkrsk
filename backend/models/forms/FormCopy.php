@@ -17,7 +17,7 @@ use yii\base\Model;
 
 class FormCopy extends Model
 {
-    public $copydata;
+    public $copydata = false;
 
     public function rules()
     {
@@ -42,6 +42,9 @@ class FormCopy extends Model
             $copyForm = new Form;
             $copyForm->attributes = $form->attributes;
             $copyForm->id_collection = null;
+
+            if (!empty($copyForm->alias))
+                $copyForm->alias .= '_copy';
             $copyForm->name = 'Копия - '.$form->name;
 
             $oldToNewInputs = $visibleInputs = [];
@@ -188,8 +191,6 @@ class FormCopy extends Model
         {
             $transaction->rollBack();
             throw $e;
-
-            return false;
         }
 
         return false;
