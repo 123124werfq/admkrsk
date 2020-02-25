@@ -273,13 +273,10 @@ class AddressController extends Controller
     {
         $query = Subregion::find()
             ->select(['id_subregion', 'name'])
+            ->filterWhere(['id_region' => $id_region])
             ->groupBy('id_subregion')
             ->orderBy(['name' => SORT_ASC])
             ->asArray();
-
-        if (!empty($id_region)) {
-            $query->filterWhere(['id_region' => $id_region]);
-        }
 
         if ($is_active) {
             $query->andFilterWhere(['is_active' => $is_active]);
@@ -313,7 +310,7 @@ class AddressController extends Controller
     {
         if (!$id_region && !$id_subregion) {
             throw new BadRequestHttpException(Yii::t('yii', 'Missing required parameters: {params}', [
-                'params' => 'id_region or id_subregion',
+                'params' => 'id_region или id_subregion',
             ]));
         }
 
@@ -356,13 +353,9 @@ class AddressController extends Controller
     public function actionDistrict($id_city = null, $is_active = 1, $search = '')
     {
         $query = District::find()
-            ->select(['id_district', 'name']);
-
-        if (!empty($id_city)) {
-            $query->filterWhere(['id_city' => $id_city]);
-        }
-
-        $query->groupBy('id_district')
+            ->select(['id_district', 'name'])
+            ->filterWhere(['id_city' => $id_city])
+            ->groupBy('id_district')
             ->orderBy(['name' => SORT_ASC])
             ->limit(20)
             ->asArray();
@@ -388,7 +381,7 @@ class AddressController extends Controller
 
     /**
      * @param int $id_city
-     * @param $id_district
+     * @param int $id_district
      * @param int $is_active
      * @param string $search
      * @return Response
@@ -399,12 +392,12 @@ class AddressController extends Controller
     {
         if (!$id_city && !$id_district) {
             throw new BadRequestHttpException(Yii::t('yii', 'Missing required parameters: {params}', [
-                'params' => 'id_city or id_district',
+                'params' => 'id_city или id_district',
             ]));
         }
 
         $query = Street::find()
-            ->select(['map_street.id_street', 'map_street.name'])
+            ->select([Street::tableName() . '.id_street', Street::tableName() . '.name'])
             ->joinWith('districts', false)
             ->filterWhere([Street::tableName() . '.id_city' => $id_city])
             ->filterWhere([
