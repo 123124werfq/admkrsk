@@ -61,6 +61,8 @@ if (Yii::$app->user->can('admin.address')) {
                     ],
                     [
                         'attribute' => 'id_district',
+                        'label' => 'Район города',
+                        'format' => 'raw',
                         'filter' => Select2::widget([
                             'model' => $searchModel,
                             'attribute' => 'id_district',
@@ -77,7 +79,11 @@ if (Yii::$app->user->can('admin.address')) {
                             ],
                         ]),
                         'value' => function (Street $model) {
-                            return $model->district->name ?? null;
+                            $districts = [];
+                            foreach ($model->districts as $district) {
+                                $districts[] = $district->name;
+                            }
+                            return $districts ? implode('<br>', $districts) : null;
                         },
                     ],
                     'name',

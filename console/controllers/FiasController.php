@@ -46,6 +46,7 @@ class FiasController extends Controller
      */
     public function actionUpdateAddresses()
     {
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             $regionQuery = Region::findWithDeleted()
                 ->where(['id_country' => null]);
@@ -117,9 +118,9 @@ class FiasController extends Controller
                     ->scalar();
 
                 $id_subregion = House::findWithDeleted()
-                    ->select('id_region')
+                    ->select('id_subregion')
                     ->where(['id_city' => $city->id_city])
-                    ->groupBy('id_region')
+                    ->groupBy('id_subregion')
                     ->scalar();
 
                 if ($id_region || $id_subregion) {
@@ -179,10 +180,6 @@ class FiasController extends Controller
                     ->groupBy('id_city')
                     ->scalar();
 
-                if ($id_city) {
-                    $street->updateAttributes(['id_city' => $id_city]);
-                }
-
                 $districtIds = House::findWithDeleted()
                     ->select('id_district')
                     ->where([
@@ -192,6 +189,10 @@ class FiasController extends Controller
                     ])
                     ->groupBy('id_district')
                     ->column();
+
+                if ($id_city) {
+                    $street->updateAttributes(['id_city' => $id_city]);
+                }
 
                 foreach ($districtIds as $id_district) {
                     if (isset($districts[$id_district])) {
@@ -205,7 +206,9 @@ class FiasController extends Controller
             }
             ProgressHelper::endProgress("100% ($count/$count) Done." . PHP_EOL);
 
+            $transaction->commit();
         } catch (\Exception $e) {
+            $transaction->rollBack();
             throw $e;
         }
     }

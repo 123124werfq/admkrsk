@@ -99,7 +99,7 @@ class Street extends \yii\db\ActiveRecord
      */
     public function getStreetDistricts()
     {
-        return $this->hasOne(StreetDistrict::class, ['id_street' => 'id_street']);
+        return $this->hasMany(StreetDistrict::class, ['id_street' => 'id_street']);
     }
 
     /**
@@ -107,7 +107,7 @@ class Street extends \yii\db\ActiveRecord
      */
     public function getDistricts()
     {
-        return $this->hasOne(District::class, ['id_district' => 'id_district'])
+        return $this->hasMany(District::class, ['id_district' => 'id_district'])
             ->via('streetDistricts');
     }
 
