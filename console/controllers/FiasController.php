@@ -32,6 +32,8 @@ class FiasController extends Controller
     public $region;
     public $limit = 1000;
 
+    private $lastVersion = null;
+
     public function options($actionID)
     {
         return array_merge(parent::options($actionID),
@@ -235,50 +237,36 @@ class FiasController extends Controller
 
     public function actionUpdate()
     {
-       $lastVersion = FiasUpdateHistory::find()->max('version');
+        $this->lastVersion = FiasUpdateHistory::find()->max('version');
 
-       $client = new SoapClient('https://fias.nalog.ru/WebServices/Public/DownloadService.asmx?WSDL');
+        $client = new SoapClient('https://fias.nalog.ru/WebServices/Public/DownloadService.asmx?WSDL');
 
-       try {
-           $response = $client->GetAllDownloadFileInfo();
-       } catch (SoapFault $exception) {
-           $updateHistory = new FiasUpdateHistory(['text' => $exception->getMessage()]);
-           $updateHistory->save();
-           exit(0);
-       }
+        try {
+            $response = $client->GetAllDownloadFileInfo();
+        } catch (SoapFault $exception) {
+            $updateHistory = new FiasUpdateHistory(['text' => $exception->getMessage()]);
+            $updateHistory->save();
+            exit(0);
+        }
 
-       $updates = ArrayHelper::map($response->GetAllDownloadFileInfoResult->DownloadFileInfo, 'VersionId', function (\StdClass $object) use ($lastVersion) {
-           return [
-               'version' => $object->VersionId,
-               'text' => $object->TextVersion,
-               'file' => $lastVersion ? $object->FiasDeltaDbfUrl : $object->FiasCompleteDbfUrl,
-           ];
-       });
+        $updates = ArrayHelper::map($response->GetAllDownloadFileInfoResult->DownloadFileInfo, 'VersionId', function (\StdClass $object) {
+            return [
+                'version' => $object->VersionId,
+                'text' => $object->TextVersion,
+                'file' => $this->lastVersion ? $object->FiasDeltaDbfUrl : $object->FiasCompleteDbfUrl,
+            ];
+        });
+        ArrayHelper::multisort($updates, 'version');
 
-//         $lastVersion = null;
-//
-//         $updates = [
-// //            [
-// //                'version' => 602,
-// //                'text' => 'БД ФИАС от 23.12.2019',
-// //                'file' => 'http://data.nalog.ru/Public/Downloads/20191223/fias_dbf.rar',
-// //            ],
-//             [
-//                 'version' => 603,
-//                 'text' => 'БД ФИАС от 26.12.2019',
-//                 'file' => 'http://data.nalog.ru/Public/Downloads/20191226/fias_delta_dbf.rar',
-//             ],
-//         ];
-
-       if ($lastVersion) {
-           foreach ($updates as $key => $update) {
-               if ($update['version'] <= $lastVersion) {
-                   unset($updates[$key]);
-               }
-           }
-       } else {
-           $updates = [array_pop($updates)];
-       }
+        if ($this->lastVersion) {
+            foreach ($updates as $key => $update) {
+                if ($update['version'] <= $this->lastVersion) {
+                    unset($updates[$key]);
+                }
+            }
+        } else {
+            $updates = [array_pop($updates)];
+        }
 
         foreach ($updates as $update) {
             $this->fiasUpdate($update);
@@ -322,7 +310,12 @@ class FiasController extends Controller
      */
     private function downloadFile($updateHistory)
     {
-        $filename = Yii::getAlias('@runtime/fias_update/' . $updateHistory->version . '_' . basename($updateHistory->file));
+        $filename = Yii::getAlias('@runtime/fias_update/' . $updateHistory->version);
+        if ($this->lastVersion) {
+            $filename .= '_fias_delta_dbf.rar';
+        } else {
+            $filename .= '_fias_dbf.rar';
+        }
 
         $client = new Client();
         $client->get($updateHistory->file, ['save_to' => $filename]);

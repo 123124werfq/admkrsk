@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'created_at:datetime:Дата обновления',
                     'text:text:Сообщение',
                     'version:integer:Версия',
-                    'file',
+                    'file:url',
                 ],
             ]); ?>
 
