@@ -41,8 +41,8 @@ if ($user) {
                             <div class="file-list">
                                 <?php foreach ($page->medias as $key => $media) { ?>
                                     <div class="file-item">
-                                        <div class="file-td file-td__date"><?= $media->created_at ?></div>
-                                        <div class="file-td file-td__name"><?= $media->name ?></div>
+                                        <!--div class="file-td file-td__date"><?= $media->created_at ?></div-->
+                                        <div class="file-td file-td__name"><?= empty($media->description)?$media->name:$media->description ?></div>
                                         <div class="file-td file-td__type"><?= $media->extension ?>
                                             , <?= round($media->size / 1024, 2) ?>кБ
                                         </div>

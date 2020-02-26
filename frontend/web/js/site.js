@@ -447,7 +447,8 @@ $(document).ready(function() {
 
         let previewLink = "https://docs.google.com/gview?embedded=true&url="+originalLink;
         //$(el).append('<a href="'+previewLink+'" traget="_blank">просмотр</a>');
-        $(el).attr('href', previewLink).attr('target', '_blank');
+        if(!$(el).hasClass('btn'))
+            $(el).attr('href', previewLink).attr('target', '_blank');
     });
 
     $('#gosbar-search-go, #gosbar-search-go-btn').click(function(){
