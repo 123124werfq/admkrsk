@@ -10,6 +10,12 @@ $this->title = $model->id_record;
 $this->params['breadcrumbs'][] = ['label' => 'Списки', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->collection->name, 'url' => ['collection-record','id'=>$model->id_record]];
 $this->params['breadcrumbs'][] = $this->title;
+
+if (!empty($model->collection->form->template)){
+	$this->params['button-block'][] = Html::a('Скачать .doc', ['form/make-doc','id_record'=>$model->id_record],
+            ['class' => 'btn btn-primary']);
+}
+
 \yii\web\YiiAsset::register($this);
 ?>
 

@@ -54,6 +54,15 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
 <div id="element<?= $element->id_element ?>"
      class="col" <?= (!empty($styles)) ? 'style="' . implode(';', $styles) . '"' : '' ?>>
     <div id="inputGroup<?= $input->id_input ?>" class="form-group <?= $groupClass ?>">
+        <?php if (!empty($input->copyInput)){?>
+            <div class="checkbox-group">
+                <label class="checkbox checkbox__ib">
+                    <input class="checkbox_control copydate" type="checkbox" data-input="<?=$input->copyInput->id_input?>" name="copydate" value="<?=$input->id_input?>"/>
+                    <span class="checkbox_label">Совпадает с <?=$input->copyInput->label?$input->copyInput->label:$input->copyInput->name?></span>
+                </label>
+            </div>
+        <?php }?>
+
         <?php if (!empty($input->label) && $input->type != CollectionColumn::TYPE_CHECKBOX) { ?>
             <label class="form-label"><?= $input->label ?><?= !empty($options['required']) ? ' <span class="red">*</span>' : '' ?></label>
         <?php } ?>
@@ -335,7 +344,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
 
 
                 if (!empty($options['show_room']))
-                    echo $form->field($model, $attribute.'[show_room]')->textInput(['id'=>'show_room'.$attribute,'placeholder'=>'кв.,оф.']);
+                    echo $form->field($model, $attribute.'[room]')->textInput(['id'=>'show_room'.$attribute,'placeholder'=>'кв.,оф.']);
 
                 //echo '<div class="col-md-4">';
 
@@ -839,14 +848,6 @@ JS;
                 break;
         }
         ?>
-        <?php if (!empty($input->copyInput)){?>
-            <div class="checkbox-group">
-                <label class="checkbox checkbox__ib">
-                    <input class="checkbox_control copydate" type="checkbox" data-input="<?=$input->copyInput->id_input?>" name="copydate" value="<?=$input->id_input?>"/>
-                    <span class="checkbox_label">Совпадает с <?=$input->copyInput->label?$input->copyInput->label:$input->copyInput->name?></span>
-                </label>
-            </div>
-        <?php }?>
         <?php if (!empty($input->hint)) { ?>
             <p class="text-help"><?= $input->hint ?></p>
         <?php } ?>

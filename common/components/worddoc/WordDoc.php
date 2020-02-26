@@ -125,7 +125,20 @@ class WordDoc
         {
             $col_alias = $col->alias;
 
-            if (empty($data[$col_alias]))
+            if ($col->type==CollectionColumn::TYPE_CHECKBOXLIST)
+            {
+                $values = $col->input->getArrayValues();
+
+                $output = [];
+
+                foreach ($values as $key => $value)
+                {
+                    $output[] = $value.(!empty($data[$col_alias]) && in_array($value, $data[$col_alias])?' - да':'- нет');
+                }
+
+                $string_output[$col->alias] = implode('<w:br/>', $output);
+            }
+            elseif (empty($data[$col_alias]))
                 $string_output[$col_alias] = '';
             else if ($col->type==CollectionColumn::TYPE_DATE)
                 $string_output[$col_alias] = date('d.m.Y',$data[$col_alias]);
@@ -149,17 +162,6 @@ class WordDoc
 
                 $string_output[$col->alias] = $data[$col_alias];
             }
-            else if ($col->type==CollectionColumn::TYPE_CHECKBOXLIST)
-            {
-                $values = $col->input->getArrayValues();
-
-                $output = [];
-                foreach ($values as $key => $value) {
-                    $output[] = $value.(in_array($value, $data[$col_alias])?' - да':'- нет');
-                }
-
-                $string_output[$col->alias] = implode('<w:br/>', $output);
-            }
             else if ($col->type==CollectionColumn::TYPE_JSON)
             {
                 $string_output[$col->alias] = $data[$col_alias];
@@ -174,8 +176,8 @@ class WordDoc
                 $string_output[$col->alias.'.street'] = $data[$col_alias]['street']??'';
                 $string_output[$col->alias.'.house'] = $data[$col_alias]['house']??'';
                 $string_output[$col->alias.'.room'] = $data[$col_alias]['room']??'';
-                $string_output[$col->alias.'.postalcode'] = $data[$col_alias]['postalcode']??'';
-                $string_output[$col->alias.'.fullname'] = $string_output[$col->alias.'.fulladdress'] = $data[$col_alias]['fulladdress']??'';
+                $string_output[$col->alias.'.postсode'] = $string_output[$col->alias.'.postalcode'] = $data[$col_alias]['postalcode']??'';
+                $string_output[$col->alias.'.fullname'] = $string_output[$col->alias.'.fulladdress'] = $data[$col_alias]['fullname']??'';
                 $string_output[$col->alias.'.lat'] = $data[$col_alias]['lat']??'';
                 $string_output[$col->alias.'.lon'] = $data[$col_alias]['lon']??'';
             }
@@ -209,13 +211,22 @@ class WordDoc
             }
             else if ($col->type==CollectionColumn::TYPE_FILE || $col->type==CollectionColumn::TYPE_IMAGE)
             {
-                $ids = $data[$col_alias];
+                if (is_array($data[$col_alias]))
+                {
+                    $ids = [];
+                    foreach ($data[$col_alias] as $key => $data)
+                    {
+                        $ids[] = $data['id'];
+                    }
+                }
+                else
+                    $ids = $data[$col_alias];
 
                 $medias = \common\models\Media::find()->where(['id_media'=>$ids])->all();
 
                 $output = [];
                 foreach ($medias as $key => $media)
-                    $output[] = $col->name.' '.$media->name.'';
+                    $output[] = $media->name;
 
                 if (count($output)>1)
                     $string_output[$col->alias] = implode('<w:br/>', $output);

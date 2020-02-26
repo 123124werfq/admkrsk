@@ -148,6 +148,15 @@ class FormDynamic extends DynamicModel
 
                         if (empty($address))
                         {
+                            $fulladdress = [];
+
+                            if (!empty($value['postalcode']))
+                            {
+                                $empty['postalcode'] = $value['postalcode'];
+
+                                $fulladdress[] = $empty['postalcode'];
+                            }
+
                             if (!empty($value['country']))
                             {
                                 if (is_numeric($value['country']))
@@ -159,6 +168,9 @@ class FormDynamic extends DynamicModel
                                 }
                                 else
                                     $empty['country'] = $value['country'];
+
+                                if (!empty($empty['country']))
+                                    $fulladdress[] = $empty['country'];
                             }
 
                             if (!empty($value['region']))
@@ -173,6 +185,9 @@ class FormDynamic extends DynamicModel
                                 }
                                 else
                                     $empty['region'] = $value['region'];
+
+                                if (!empty($empty['region']))
+                                    $fulladdress[] = $empty['region'];
                             }
 
                             if (!empty($value['subregion']))
@@ -186,6 +201,9 @@ class FormDynamic extends DynamicModel
                                 }
                                 else
                                     $empty['subregion'] = $value['subregion'];
+
+                                if (!empty($empty['subregion']))
+                                    $fulladdress[] = $empty['subregion'];
                             }
 
                             if (!empty($value['city']))
@@ -199,6 +217,9 @@ class FormDynamic extends DynamicModel
                                 }
                                 else
                                     $empty['city'] = $value['city'];
+
+                                if (!empty($empty['city']))
+                                    $fulladdress[] = $empty['city'];
                             }
 
                             if (!empty($value['district']))
@@ -212,6 +233,9 @@ class FormDynamic extends DynamicModel
                                 }
                                 else
                                     $empty['district'] = $value['district'];
+
+                                if (!empty($empty['district']))
+                                    $fulladdress[] = $empty['district'];
                             }
 
                             if (!empty($value['street']))
@@ -225,19 +249,25 @@ class FormDynamic extends DynamicModel
                                 }
                                 else
                                     $empty['street'] = $value['street'];
+
+                                if (!empty($empty['street']))
+                                    $fulladdress[] = $empty['street'];
                             }
 
                             if (!empty($value['house']))
                             {
                                 if (is_numeric($value['house']))
                                 {
-                                    $addModel = Street::findOne($value['house']);
+                                    $addModel = House::findOne($value['house']);
 
                                     $empty['house'] = $addModel->name??'';
                                     $empty['id_house'] = $addModel->id_house??'';
                                 }
                                 else
                                     $empty['house'] = $value['house'];
+
+                                if (!empty($empty['house']))
+                                    $fulladdress[] = $empty['house'];
                             }
 
                             if (!empty($value['coords'][0]))
@@ -245,9 +275,6 @@ class FormDynamic extends DynamicModel
 
                             if (!empty($value['coords'][1]))
                                 $empty['lon'] = $value['coords'][1];
-
-                            if (!empty($value['postalcode']))
-                                $empty['postalcode'] = $value['postalcode'];
 
                             $data[$index] = $empty;
                         }
