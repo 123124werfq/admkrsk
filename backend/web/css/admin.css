@@ -29,8 +29,6 @@ img {max-width: 100%;}
 .query-builder .rule-value-container input[type=number], .query-builder .rule-value-container input[type=text], .query-builder .rule-value-container select {padding: 10px;}
 .query-builder .rules-group-container {background: transparent; border: 0px;}
 
-.tox {z-index: 2000!important;}
-
 .row-flex .col-close, .col-close {
     align-items: center;
     display: flex;
@@ -229,7 +227,10 @@ ul.menu-container ul .create-menu {display: none;}
 .menu-childs .menu-childs .menu-childs {display: none;}
 .menu-childs li:last-child div{ margin-bottom: 10px;}
 
-.tox.tox-tinymce {z-index: 10;}
+.form-group .tox.tox-tinymce {z-index: 10;}
+.tox, .tox-silver-sink {z-index: 5000;}
+.tox-silver-sink {z-index: 5000!important;}
+
 
 .panel-body .ibox-content, .panel-body .ibox-title {background: #f3f3f4a6;}
 
@@ -376,7 +377,6 @@ td.date {background: #FAFAFA; border-right: 1px solid #eee;}
   list-style: none;
   background-color: #ffffff;
   background: #fff; border:1px solid #eee; border-top: 0px;
-
 
   .ui-menu-item > a.ui-corner-all {
     display: block;
