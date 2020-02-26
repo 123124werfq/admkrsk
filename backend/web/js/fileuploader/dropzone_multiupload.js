@@ -42,7 +42,7 @@
 						    <input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][file_path]" value="'+file+'"/>\
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][id_media]" value="'+id_media+'"/>\
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][ord]" rel="ord" value="'+index+'"/>\
-							<input type="text" class="form-control" placeholder="Название" name="'+settings.relationname+'['+settings.group+']['+index+'][name]" rel="name" value="'+fileName+'"/>\
+							<input type="text" class="form-control" placeholder="Название" name="'+settings.relationname+'['+settings.group+']['+index+'][filename]" rel="name" value="'+fileName+'"/>\
 							<textarea class="form-control" placeholder="Описание" name="'+settings.relationname+'['+settings.group+']['+index+'][description]">'+description+'</textarea>\
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][grouptype]" rel="name" value="'+settings.group+'"/>\
 						</div>\
@@ -154,7 +154,7 @@
 			            $(file.previewElement).find('.media-data').append(
 			        	'<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+new_index+'][file_path]" value="'+response.file+'"/>\
 						<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+new_index+'][ord]" rel="ord" value="'+new_index+'"/>\
-						<input class="form-control" placeholder="Название" type="text" name="'+settings.relationname+'['+settings.group+']['+new_index+'][name]" value="'+file.name+'"/>\
+						<input class="form-control" placeholder="Название" type="text" name="'+settings.relationname+'['+settings.group+']['+new_index+'][filename]" value="'+file.name+'"/>\
 						<textarea class="form-control" placeholder="Описание" name="'+settings.relationname+'['+settings.group+']['+new_index+'][description]" value=""/>\
 						<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+new_index+'][grouptype]" rel="name" value="'+settings.group+'"/>');
 

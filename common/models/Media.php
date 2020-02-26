@@ -102,6 +102,9 @@ class Media extends \yii\db\ActiveRecord
         if (!strpos($file, 'runtime/')>0)
             $file = Yii::getAlias('@webroot').$file;
 
+        $this->name = $post['filename']??$filename;
+        $this->description = $post['description']??null;
+
         // получаем атрибуты изображения
         if (!is_file($file))
             return false;
@@ -122,10 +125,8 @@ class Media extends \yii\db\ActiveRecord
             $this->height = abs($size[1]);
             $this->mime = $size['mime'];
         }
-
-        $this->name = $post['filename']??$filename;
+        
         $this->pagecount = (int)($post['pagecount']??0);
-        $this->description = $post['description']??null;
         $this->extension = $ext;
         $this->size = filesize($file);
         $this->ord = (isset($post['ord']))?(int)$post['ord']:'';
