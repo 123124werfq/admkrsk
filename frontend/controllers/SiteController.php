@@ -660,11 +660,16 @@ class SiteController extends Controller
     {
         $sql = 'EXEC SMEV.get_QueueNumber @lname=:Param1,@fname=:Param2,@mname=:Param3,@docseries=:Param4,@docnumber=:Param5';
         $command = Yii::$app->aisDb->createCommand();
-        $command->bindParam(':Param1', 'малиновская');
-        $command->bindParam(':Param2', 'лилия');
-        $command->bindParam(':Param3', 'юрьевна');
-        $command->bindParam(':Param4', '0403');
-        $command->bindParam(':Param5', '866821');
+        $lname = 'малиновская';
+        $fname = 'лилия';
+        $mname = 'юрьевна';
+        $serie = '0403';
+        $num = '866821';
+        $command->bindParam(':Param1', $lname);
+        $command->bindParam(':Param2', $fname);
+        $command->bindParam(':Param3', $mname);
+        $command->bindParam(':Param4', $serie);
+        $command->bindParam(':Param5', $num);
            
         $res = $command->queryRow(); //queryRow()
 
