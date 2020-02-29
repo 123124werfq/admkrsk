@@ -10,25 +10,21 @@ use common\models\Region;
 use common\models\Street;
 use common\models\Subregion;
 use Yii;
-use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\Response;
 
 class AddressController extends \yii\web\Controller
 {
-    public function beforeAction($action)
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        return parent::beforeAction($action);
-    }
-
     /**
      * @param string $search
-     * @return array
+     * @return Response
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionCountry($search = '')
     {
-        $query = Country::find()->asArray();
+        $query = Country::find()
+            ->select(['id_country', 'name'])
+            ->asArray();
 
         if ($search) {
             $query->filterWhere(['ilike', 'name', $search]);
@@ -42,32 +38,29 @@ class AddressController extends \yii\web\Controller
             ];
         }
 
-        return ['results' => $results];
+        return $this->asJson(['results' => $results]);
     }
 
     /**
      * @param int $id_country
      * @param string $search
-     * @return array
+     * @return Response
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionRegion($id_country = null, $search = '')
     {
-        $region_table = Region::tableName();
+        $id_country = (int) $id_country;
 
         $query = Region::find()
-            ->joinWith('houses', false);
-
-        if (!empty($id_country))
-        {
-            $query->filterWhere([House::tableName() . '.id_country' => (int)$id_country]);
-        }
-
-        $query->groupBy($region_table . '.id_region')
-            ->orderBy([$region_table . '.name' => SORT_ASC])
+            ->select(['id_region', 'name'])
+            ->filterWhere(['id_country' => $id_country ?: null])
+            ->groupBy('id_region')
+            ->orderBy(['name' => SORT_ASC])
             ->asArray();
 
-        if ($search)
-            $query->filterWhere(['ilike', $region_table.'.name', $search]);
+        if ($search) {
+            $query->filterWhere(['ilike', 'name', $search]);
+        }
 
         $results = [];
         foreach ($query->all() as $region) {
@@ -77,29 +70,28 @@ class AddressController extends \yii\web\Controller
             ];
         }
 
-        return ['results' => $results];
+        return $this->asJson(['results' => $results]);
     }
 
     /**
      * @param int $id_region
      * @param string $search
-     * @return array
+     * @return Response
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionSubregion($id_region = null, $search = '')
     {
+        $id_region = (int) $id_region;
+
         $query = Subregion::find()
-            ->joinWith('houses', false);
-
-        if (!empty($id_region)) {
-            $query->filterWhere([House::tableName() . '.id_region' => (int)$id_region]);
-        }
-
-        $query->groupBy(Subregion::tableName() . '.id_subregion')
-            ->orderBy([Subregion::tableName() . '.name' => SORT_ASC])
+            ->select(['id_subregion', 'name'])
+            ->filterWhere(['id_region' => $id_region ?: null])
+            ->groupBy('id_subregion')
+            ->orderBy(['name' => SORT_ASC])
             ->asArray();
 
         if ($search) {
-            $query->andFilterWhere(['ilike', Subregion::tableName() . '.name', $search]);
+            $query->andFilterWhere(['ilike', 'name', $search]);
         }
 
         $results = [];
@@ -110,40 +102,42 @@ class AddressController extends \yii\web\Controller
             ];
         }
 
-        return ['results' => $results];
+        return $this->asJson(['results' => $results]);
     }
 
     /**
      * @param int $id_region
      * @param int $id_subregion
      * @param string $search
-     * @return array
+     * @return Response
      * @throws BadRequestHttpException
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionCity($id_region = null, $id_subregion = null, $search = '')
     {
-        if (!$id_region && !$id_subregion)
-        {
+        if (!$id_region && !$id_subregion) {
             throw new BadRequestHttpException(Yii::t('yii', 'Missing required parameters: {params}', [
                 'params' => 'id_region или id_subregion',
             ]));
         }
 
-        $id_region = (int)$id_region;
-        $id_subregion = (int)$id_subregion;
+        $id_region = (int) $id_region;
+        $id_subregion = (int) $id_subregion;
 
         $query = City::find()
-            ->joinWith('houses', false)
+            ->select(['id_city', 'name'])
             ->filterWhere([
-                House::tableName() . '.id_region' => $id_region?$id_region:null,
-                House::tableName() . '.id_subregion' => $id_subregion?$id_subregion:null,
+                'id_region' => $id_region ?: null,
+                'id_subregion' => $id_subregion ?: null,
             ])
-            ->groupBy(City::tableName() . '.id_city')
-            ->orderBy([City::tableName() . '.name' => SORT_ASC])
+            ->groupBy('id_city')
+            ->orderBy(['name' => SORT_ASC])
+            ->limit(100)
             ->asArray();
 
-        if ($search)
-            $query->andFilterWhere(['ilike', City::tableName() . '.name', $search]);
+        if ($search) {
+            $query->andFilterWhere(['ilike', 'name', $search]);
+        }
 
         $results = [];
         foreach ($query->all() as $city) {
@@ -153,28 +147,29 @@ class AddressController extends \yii\web\Controller
             ];
         }
 
-        return ['results' => $results];
+        return $this->asJson(['results' => $results]);
     }
 
     /**
      * @param int $id_city
      * @param string $search
-     * @return array
+     * @return Response
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionDistrict($id_city, $search = '')
     {
-        $id_city = (int)$id_city;
+        $id_city = (int) $id_city;
 
         $query = District::find()
-            ->joinWith('houses', false)
-            ->filterWhere([House::tableName() . '.id_city' => $id_city?$id_city:null])
-            ->groupBy(District::tableName() . '.id_district')
-            ->orderBy([District::tableName() . '.name' => SORT_ASC])
+            ->select(['id_district', 'name'])
+            ->filterWhere(['id_city' => $id_city ?: null])
+            ->groupBy('id_district')
+            ->orderBy(['name' => SORT_ASC])
             ->limit(20)
             ->asArray();
 
         if ($search) {
-            $query->andFilterWhere(['ilike', District::tableName() . '.name', $search]);
+            $query->andFilterWhere(['ilike', 'name', $search]);
         }
 
         $results = [];
@@ -185,21 +180,36 @@ class AddressController extends \yii\web\Controller
             ];
         }
 
-        return ['results' => $results];
+        return $this->asJson(['results' => $results]);
     }
 
     /**
      * @param int $id_city
+     * @param int $id_district
      * @param string $search
-     * @return array
+     * @return Response
+     * @throws BadRequestHttpException
+     * @throws \yii\base\InvalidConfigException
      */
-    public function actionStreet($id_city, $search = '')
+    public function actionStreet($id_city = null, $id_district = null, $search = '')
     {
-        $id_city = (int)$id_city;
+        if (!$id_city && !$id_district) {
+            throw new BadRequestHttpException(Yii::t('yii', 'Missing required parameters: {params}', [
+                'params' => 'id_city или id_district',
+            ]));
+        }
 
-        $query = Street::find()
-            ->joinWith('houses', false)
-            ->filterWhere([House::tableName() . '.id_city' => $id_city?$id_city:null])
+        $id_city = (int) $id_city;
+        $id_district = (int) $id_district;
+
+         $query = Street::find()
+            ->select([Street::tableName() . '.id_street', Street::tableName() . '.name'])
+            ->joinWith('districts', false)
+            ->filterWhere([Street::tableName() . '.id_city' => $id_city])
+            ->filterWhere([
+                Street::tableName() . '.id_city' => $id_city,
+                District::tableName() . '.id_district' => $id_district,
+            ])
             ->groupBy(Street::tableName() . '.id_street')
             ->orderBy([Street::tableName() . '.name' => SORT_ASC])
             ->limit(20)
@@ -217,23 +227,26 @@ class AddressController extends \yii\web\Controller
             ];
         }
 
-        return ['results' => $results];
+        return $this->asJson(['results' => $results]);
     }
 
     /**
      * @param int $id_street
      * @param string $search
-     * @return array
+     * @return Response
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionHouse($id_street, $search = '')
     {
-        $id_street = (int)$id_street;
+        $id_street = (int) $id_street;
+
         if (empty($id_street)) {
-            return ['results' => []];
+            return $this->asJson(['results' => []]);
         };
 
         $query = House::find()
-            ->filterWhere(['id_street' => $id_street?$id_street:null])
+            ->select(['id_house', 'name', 'postalcode', 'lat', 'lon'])
+            ->filterWhere(['id_street' => $id_street ?: null])
             ->groupBy('id_house')
             ->orderBy(['name' => SORT_ASC])
             ->limit(20)
@@ -254,7 +267,7 @@ class AddressController extends \yii\web\Controller
             ];
         }
 
-        if (empty($results)) {
+        /*if (empty($results)) {
             $results = [
                 'id' => null,
                 'text' => $search,
@@ -262,8 +275,8 @@ class AddressController extends \yii\web\Controller
                 'lat' => '',
                 'lon' => '',
             ];
-        }
+        }*/
 
-        return ['results' => $results];
+        return $this->asJson(['results' => $results]);
     }
 }

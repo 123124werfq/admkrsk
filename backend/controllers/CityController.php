@@ -8,6 +8,7 @@ use common\models\City;
 use backend\models\search\CitySearch;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
+use yii\validators\NumberValidator;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -49,6 +50,37 @@ class CityController extends Controller
                 'modelClass' => City::class,
             ],
         ];
+    }
+
+    /**
+     * Search City models.
+     * @param string $q
+     * @return mixed
+     * @throws InvalidConfigException
+     */
+    public function actionList($q)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $query = City::find();
+
+        $q = trim($q);
+        if ((new NumberValidator(['integerOnly' => true]))->validate($q)) {
+            $query->andWhere(['id_city' => $q]);
+        } else {
+            $query->andWhere(['ilike', 'name', $q]);
+        }
+
+        $results = [];
+        foreach ($query->limit(10)->all() as $city) {
+            /* @var City $city */
+            $results[] = [
+                'id' => $city->id_city,
+                'text' => $city->name,
+            ];
+        }
+
+        return ['results' => $results];
     }
 
     /**

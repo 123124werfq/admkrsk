@@ -11,6 +11,7 @@ use Yii;
  * This is the model class for table "map_district".
  *
  * @property int $id_district
+ * @property string $id_city
  * @property string $name
  * @property bool $is_updatable
  * @property bool $is_active
@@ -21,6 +22,7 @@ use Yii;
  * @property int $deleted_at
  * @property int $deleted_by
  *
+ * @property City $city
  * @property House[] $houses
  */
 class District extends \yii\db\ActiveRecord
@@ -57,6 +59,9 @@ class District extends \yii\db\ActiveRecord
         return [
             [['name'], 'string', 'max' => 255],
             [['is_updatable', 'is_active'], 'boolean'],
+            [['id_city'], 'default', 'value' => null],
+            [['id_city'], 'integer'],
+            [['id_city'], 'exist', 'targetClass' => City::class, 'targetAttribute' => 'id_city'],
         ];
     }
 
@@ -67,10 +72,19 @@ class District extends \yii\db\ActiveRecord
     {
         return [
             'id_district' => '#',
+            'id_city' => 'Город',
             'name' => 'Район',
             'is_updatable' => 'Обновлять из ФИАС',
             'is_active' => 'Активный',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCity()
+    {
+        return $this->hasOne(City::class, ['id_city' => 'id_city']);
     }
 
     /**

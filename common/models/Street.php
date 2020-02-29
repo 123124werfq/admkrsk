@@ -12,6 +12,8 @@ use Yii;
  *
  * @property int $id_street
  * @property string $aoguid
+ * @property string $id_city
+ * @property string $id_district
  * @property string $name
  * @property bool $is_updatable
  * @property bool $is_active
@@ -23,6 +25,9 @@ use Yii;
  * @property int $deleted_by
  *
  * @property FiasAddrObj $addrObj
+ * @property City $city
+ * @property StreetDistrict[] $streetDistricts
+ * @property District[] $districts
  * @property House[] $houses
  */
 class Street extends \yii\db\ActiveRecord
@@ -52,6 +57,9 @@ class Street extends \yii\db\ActiveRecord
             [['aoguid'], 'string'],
             [['name'], 'string', 'max' => 255],
             [['is_updatable', 'is_active'], 'boolean'],
+            [['id_city'], 'default', 'value' => null],
+            [['id_city'], 'integer'],
+            [['id_city'], 'exist', 'targetClass' => City::class, 'targetAttribute' => 'id_city'],
         ];
     }
 
@@ -63,6 +71,7 @@ class Street extends \yii\db\ActiveRecord
         return [
             'id_street' => '#',
             'aoguid' => 'Aoguid',
+            'id_city' => 'Город',
             'name' => 'Улица',
             'is_updatable' => 'Обновлять из ФИАС',
             'is_active' => 'Активный',
@@ -75,6 +84,31 @@ class Street extends \yii\db\ActiveRecord
     public function getAddrObj()
     {
         return $this->hasOne(FiasAddrObj::class, ['aoguid' => 'aoguid']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCity()
+    {
+        return $this->hasOne(City::class, ['id_city' => 'id_city']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getStreetDistricts()
+    {
+        return $this->hasMany(StreetDistrict::class, ['id_street' => 'id_street']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDistricts()
+    {
+        return $this->hasMany(District::class, ['id_district' => 'id_district'])
+            ->via('streetDistricts');
     }
 
     /**

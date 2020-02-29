@@ -214,8 +214,5 @@ use yii\widgets\ActiveForm;
         <?php foreach ($settingForm->nextRunDates as $nextRunDate): ?>
             <br><?= $nextRunDate ?>
         <?php endforeach; ?>
-        <br><?php var_dump($settingForm->isDue()) ?>
-        <br><?php var_dump($settingForm->getCronExpression()->getExpression()) ?>
-        <br><?php var_dump(Yii::$app->formatter->asDatetime('now')) ?>
     </div>
 </div>

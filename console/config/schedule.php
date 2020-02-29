@@ -21,4 +21,4 @@ $schedule->exec('php yii statistic')->everyNMinutes(15); // каждые 15 ми
 
 $schedule->exec('php yii fias/update-location')->hourly(); // каждый час (по 1000 штук)
 
-// $schedule->exec('php yii fias/update')->cron($fiasSetting->getExpression());
+$schedule->exec('php yii fias/update')->cron($fiasSetting->getExpression());
