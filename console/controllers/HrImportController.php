@@ -124,8 +124,8 @@ class HrImportController extends Controller
        echo "\nImporting: ";
        printf( "%c7", ESC );
 
-       $begin = 11;
-        $end = 20;
+       $begin = 21;
+        $end = 2000;
 
 
        foreach ($csv as $anketa) {
