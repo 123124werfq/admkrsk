@@ -185,14 +185,16 @@ class WorkflowController extends \yii\web\Controller
             $binary = fread($fp, filesize($attachment));
             $attachment64 = base64_encode($binary);
             $attachment64 = chunk_split($attachment64, 76, "\r\n"); 
-            //$digest = base64_encode(pack('H*', hash('sha1',$attachment64)));  // считаем дайджест архива: хэш sha1 -> ASCII -> base64
-            $digest = base64_encode(sha1($binary));
+            $digest = base64_encode(pack('H*', hash('sha1',$binary)));  // считаем дайджест архива: хэш sha1 -> ASCII -> base64
+            //$digest = base64_encode(sha1($binary));
 
 
             echo ("Подписываем файл: $sourcePath<br>");
+            echo ("Дайджест: $digest<br>");
+
 
             $sourceText = file_get_contents($sourcePath); 
-            $sourceText = str_replace($toReplace, $attachment64, $sourceText); // заменям ссылку файлоы (возможно, не надо)
+            //$sourceText = str_replace($toReplace, $attachment64, $sourceText); // заменям ссылку файлоы (возможно, не надо)
             $sourceText = str_replace('ATTDIGESTHERE', $digest, $sourceText); // записываем дайджест ФАЙЛа (дайдже xml запишется при подписи)
 
             $tempPath = str_replace('.xml', '_temp.xml', $sourcePath); // формирум файл, который будем подписывать
@@ -209,7 +211,7 @@ class WorkflowController extends \yii\web\Controller
 
         if($attachment && file_exists($attachment)){
             $resultXML = file_get_contents($resultPath);
-            $resultXML = str_replace($attachment64, $toReplace, $resultXML);
+            //$resultXML = str_replace($attachment64, $toReplace, $resultXML);
             file_put_contents($resultPath,$resultXML); // заменили файл на ссылку назад (возмжно, лишнее)
         }
     }
@@ -221,7 +223,7 @@ class WorkflowController extends \yii\web\Controller
 //        $source = Yii::getAlias('@app').'/assets/example.xml';
         $xmlPath = Yii::getAlias('@app').'/assets/signed'.time().'.xml';
         $output = Yii::getAlias('@app').'/assets/tosend'.time().'.txt';
-        $attachment = Yii::getAlias('@app').'/assets/archive.zip';
+        $attachment = Yii::getAlias('@app').'/assets/6978_req_a98d2c75-18c4-4c5d-a8ce-81a3920135a2.zip';
 
         $this->signXML($source, $xmlPath, $attachment);
 //        $this->signXML($source, $xmlPath);

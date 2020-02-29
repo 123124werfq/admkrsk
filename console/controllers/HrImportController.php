@@ -328,7 +328,7 @@ class HrImportController extends Controller
         $subtypes = [];
         $filePath = Yii::getAlias('@app'). '/assets/HR_Files.csv';
 
-
+        //echo "\n\n\n\n\n";
         $fileList = [];
 
         if (($handle = fopen($filePath, 'r')) !== false) {
@@ -345,6 +345,36 @@ class HrImportController extends Controller
             }
         }
 
+        $sourcePath = Yii::getAlias('@app'). '/assets/hrsource';
+
+//        echo "\n\n".$sourcePath."\n\n";
+
+        foreach (new \DirectoryIterator($sourcePath) as $fileInfo) {
+
+            $fname = $fileInfo->getFilename();
+            $fdata = explode('_', $fname);
+
+            if(isset($fileList[mb_strtoupper($fdata[0], 'UTF8')]))
+            {
+                $dirname = $fileList[mb_strtoupper($fdata[0], 'UTF8')]['candidateId'];
+            }
+            else
+                continue;
+
+            $dir = Yii::getAlias('@app'). '/assets/hrimport/'.$dirname;
+
+            if(!is_dir($dir))
+                \mkdir($dir);
+              
+            echo $sourcePath."/".$fname." -> ".$dir."/".$fname."\n";
+
+            if(file_exists($dir."/".$fname))
+                continue;
+
+            rename($sourcePath."/".$fname, $dir."/".$fname);
+        }        
+        echo "\n";
+        die();
 
         $filePath = Yii::getAlias('@app'). '/assets/LK_Files.csv';
 
@@ -386,5 +416,6 @@ class HrImportController extends Controller
         }
 
     }
-    
+
+
 }
