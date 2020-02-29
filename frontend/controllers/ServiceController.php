@@ -232,6 +232,11 @@ class ServiceController extends Controller
         return ['results' => $results];
     }
 
+    protected function processAIS($form)
+    {
+
+    }
+
     /**
      * @param $id_form
      * @param null $page
@@ -253,6 +258,22 @@ class ServiceController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
             $prepare = $model->prepareData(true);
+
+            if($id_form = 53) // хардкод для теста
+            {
+                $aisres = $this->processAIS($form);
+                
+                echo "Данная операция временно недоступна";
+                die();
+                return $this->render('result',[
+                    'number'=> false,
+                    'service' => $service,
+                    'page' => $page,
+                    'date' => date("d.m.Y", time()),
+                    'fio' => Yii::$app->user->identity->username
+                ]);
+            }
+
 
             if ($record = $form->collection->insertRecord($prepare))
             {

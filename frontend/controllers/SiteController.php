@@ -656,6 +656,27 @@ class SiteController extends Controller
         die();
     }
 
+    public function actionMsql()
+    {
+        $sql = 'EXEC SMEV.get_QueueNumber @lname=:Param1,@fname=:Param2,@mname=:Param3,@docseries=:Param4,@docnumber=:Param5';
+        $command = Yii::$app->aisDb->createCommand();
+        $lname = 'малиновская';
+        $fname = 'лилия';
+        $mname = 'юрьевна';
+        $serie = '0403';
+        $num = '866821';
+        $command->bindParam(':Param1', $lname);
+        $command->bindParam(':Param2', $fname);
+        $command->bindParam(':Param3', $mname);
+        $command->bindParam(':Param4', $serie);
+        $command->bindParam(':Param5', $num);
+           
+        $res = $command->queryRow(); //queryRow()
+
+        var_dump($res);
+        die();
+    }
+
     /**
      * @throws NotFoundHttpException
      */
