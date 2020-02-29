@@ -2,6 +2,7 @@
 
 namespace backend\models\search;
 
+use common\models\District;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Street;
@@ -11,13 +12,15 @@ use common\models\Street;
  */
 class StreetSearch extends Street
 {
+    public $id_district;
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id_street'], 'integer'],
+            [['id_street', 'id_city', 'id_district'], 'integer'],
             [['is_updatable', 'is_active'], 'boolean'],
             [['aoguid', 'name'], 'safe'],
         ];
@@ -38,10 +41,12 @@ class StreetSearch extends Street
      * @param array $params
      *
      * @return ActiveDataProvider
+     * @throws \yii\base\InvalidConfigException
      */
     public function search($params)
     {
-        $query = Street::find();
+        $query = Street::find()
+            ->joinWith('districts', false);
 
         // add conditions that should always apply here
 
@@ -59,13 +64,15 @@ class StreetSearch extends Street
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id_street' => $this->id_street,
-            'is_active' => $this->is_active,
-            'is_updatable' => $this->is_updatable,
+            Street::tableName() . '.id_street' => $this->id_street,
+            Street::tableName() . '.id_city' => $this->id_city,
+            District::tableName() . '.id_district' => $this->id_district,
+            Street::tableName() . '.is_active' => $this->is_active,
+            Street::tableName() . '.is_updatable' => $this->is_updatable,
         ]);
 
-        $query->andFilterWhere(['ilike', 'aoguid', $this->aoguid])
-            ->andFilterWhere(['ilike', 'name', $this->name]);
+        $query->andFilterWhere(['ilike', Street::tableName() . '.aoguid', $this->aoguid])
+            ->andFilterWhere(['ilike', Street::tableName() . '.name', $this->name]);
 
         return $dataProvider;
     }

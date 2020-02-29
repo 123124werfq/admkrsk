@@ -8,6 +8,7 @@ use common\models\Subregion;
 use backend\models\search\SubregionSearch;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
+use yii\validators\NumberValidator;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException as NotFoundHttpExceptionAlias;
 use yii\filters\VerbFilter;
@@ -50,6 +51,37 @@ class SubregionController extends Controller
                 'modelClass' => Subregion::class,
             ],
         ];
+    }
+
+    /**
+     * Search Subregion models.
+     * @param string $q
+     * @return mixed
+     * @throws InvalidConfigException
+     */
+    public function actionList($q)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $query = Subregion::find();
+
+        $q = trim($q);
+        if ((new NumberValidator(['integerOnly' => true]))->validate($q)) {
+            $query->andWhere(['id_subregion' => $q]);
+        } else {
+            $query->andWhere(['ilike', 'name', $q]);
+        }
+
+        $results = [];
+        foreach ($query->limit(10)->all() as $subregion) {
+            /* @var Subregion $subregion */
+            $results[] = [
+                'id' => $subregion->id_subregion,
+                'text' => $subregion->name,
+            ];
+        }
+
+        return ['results' => $results];
     }
 
     /**

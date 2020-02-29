@@ -1,7 +1,12 @@
 <?php
 
+use common\models\Region;
+use common\models\Subregion;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\web\JsExpression;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\search\SubregionSearch */
@@ -32,6 +37,27 @@ if (Yii::$app->user->can('admin.address')) {
                 'filterModel' => $searchModel,
                 'columns' => [
                     'id_subregion',
+                    [
+                        'attribute' => 'id_region',
+                        'filter' => Select2::widget([
+                            'model' => $searchModel,
+                            'attribute' => 'id_region',
+                            'data' => $searchModel->id_region ? ArrayHelper::map([Region::findOne($searchModel->id_region)], 'id_region', 'name') : [],
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                                'minimumInputLength' => 1,
+                                'ajax' => [
+                                    'url' => '/region/list',
+                                    'dataType' => 'json',
+                                    'data' => new JsExpression('function(params) { return {q:params.term}; }')
+                                ],
+                                'placeholder' => 'Выберите регион',
+                            ],
+                        ]),
+                        'value' => function (Subregion $model) {
+                            return $model->region->name ?? null;
+                        },
+                    ],
                     'name',
                     'is_active:boolean',
                     'is_updatable:boolean',

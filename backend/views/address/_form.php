@@ -85,7 +85,8 @@ $this->registerJs("$('#lat{$model->id_house}').on('change', function() {
             'url' => Url::toRoute(['/address/country']),
             'dataType' => 'json',
             'data' => new JsExpression('function(params) { return {
-                    search:params.term
+                    search:params.term,
+                    is_active: 0
                 }; }')
         ],
     ],

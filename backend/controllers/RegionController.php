@@ -8,6 +8,7 @@ use common\models\Region;
 use backend\models\search\RegionSearch;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
+use yii\validators\NumberValidator;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -49,6 +50,37 @@ class RegionController extends Controller
                 'modelClass' => Region::class,
             ],
         ];
+    }
+
+    /**
+     * Search Region models.
+     * @param string $q
+     * @return mixed
+     * @throws InvalidConfigException
+     */
+    public function actionList($q)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $query = Region::find();
+
+        $q = trim($q);
+        if ((new NumberValidator(['integerOnly' => true]))->validate($q)) {
+            $query->andWhere(['id_region' => $q]);
+        } else {
+            $query->andWhere(['ilike', 'name', $q]);
+        }
+
+        $results = [];
+        foreach ($query->limit(10)->all() as $region) {
+            /* @var Region $region */
+            $results[] = [
+                'id' => $region->id_region,
+                'text' => $region->name,
+            ];
+        }
+
+        return ['results' => $results];
     }
 
     /**

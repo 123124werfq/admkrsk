@@ -12,6 +12,8 @@ use Yii;
  *
  * @property int $id_city
  * @property string $aoguid
+ * @property string $id_region
+ * @property string $id_subregion
  * @property string $name
  * @property bool $is_updatable
  * @property bool $is_active
@@ -23,6 +25,8 @@ use Yii;
  * @property int $deleted_by
  *
  * @property FiasAddrObj $addrObj
+ * @property Region $region
+ * @property Subregion $subregion
  * @property House[] $houses
  */
 class City extends \yii\db\ActiveRecord
@@ -52,6 +56,10 @@ class City extends \yii\db\ActiveRecord
             [['aoguid'], 'string'],
             [['name'], 'string', 'max' => 255],
             [['is_updatable', 'is_active'], 'boolean'],
+            [['id_region', 'id_subregion'], 'default', 'value' => null],
+            [['id_region', 'id_subregion'], 'integer'],
+            [['id_region'], 'exist', 'targetClass' => Region::class, 'targetAttribute' => 'id_region'],
+            [['id_subregion'], 'exist', 'targetClass' => Subregion::class, 'targetAttribute' => 'id_subregion'],
         ];
     }
 
@@ -63,6 +71,8 @@ class City extends \yii\db\ActiveRecord
         return [
             'id_city' => '#',
             'aoguid' => 'Aoguid',
+            'id_region' => 'Регион',
+            'id_subregion' => 'Район',
             'name' => 'Город',
             'is_updatable' => 'Обновлять из ФИАС',
             'is_active' => 'Активный',
@@ -75,6 +85,22 @@ class City extends \yii\db\ActiveRecord
     public function getAddrObj()
     {
         return $this->hasOne(FiasAddrObj::class, ['aoguid' => 'aoguid']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRegion()
+    {
+        return $this->hasOne(Region::class, ['id_region' => 'id_region']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubregion()
+    {
+        return $this->hasOne(Subregion::class, ['id_subregion' => 'id_subregion']);
     }
 
     /**
