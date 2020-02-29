@@ -132,6 +132,7 @@ class AddressController extends \yii\web\Controller
             ])
             ->groupBy('id_city')
             ->orderBy(['name' => SORT_ASC])
+            ->limit(100)
             ->asArray();
 
         if ($search) {
@@ -201,11 +202,13 @@ class AddressController extends \yii\web\Controller
         $id_city = (int) $id_city;
         $id_district = (int) $id_district;
 
-        $query = Street::find()
+         $query = Street::find()
             ->select([Street::tableName() . '.id_street', Street::tableName() . '.name'])
+            ->joinWith('districts', false)
+            ->filterWhere([Street::tableName() . '.id_city' => $id_city])
             ->filterWhere([
-                House::tableName() . '.id_city' => $id_city ?: null,
-                District::tableName() . '.id_district' => $id_district ?: null,
+                Street::tableName() . '.id_city' => $id_city,
+                District::tableName() . '.id_district' => $id_district,
             ])
             ->groupBy(Street::tableName() . '.id_street')
             ->orderBy([Street::tableName() . '.name' => SORT_ASC])
@@ -264,7 +267,7 @@ class AddressController extends \yii\web\Controller
             ];
         }
 
-        if (empty($results)) {
+        /*if (empty($results)) {
             $results = [
                 'id' => null,
                 'text' => $search,
@@ -272,7 +275,7 @@ class AddressController extends \yii\web\Controller
                 'lat' => '',
                 'lon' => '',
             ];
-        }
+        }*/
 
         return $this->asJson(['results' => $results]);
     }
