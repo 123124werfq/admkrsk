@@ -91,7 +91,7 @@ class CollectionWidget extends \yii\base\Widget
             if (!empty($this->attributes['columns']))
             {
                 if (is_array($this->attributes['columns']))
-                    $this->columns = json_encode($this->attributes['columns']));
+                    $this->columns = json_encode($this->attributes['columns']);
                 else 
                     $this->columns = str_replace("&quot;", '"', $this->attributes['columns']);
 
