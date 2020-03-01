@@ -11,16 +11,18 @@
         <div class="row">
             <div class="col-2-third order-xs-1">
             	<div class="content searchable">
-                    <?php
-                        $loader = new \Twig\Loader\ArrayLoader([
-                            'index' => $template,
-                        ]);
-                        $twig = new \Twig\Environment($loader);
-                    ?>
-                    <?php
-                        $output = str_replace('\n', '', $twig->render('index', $data));
-                        echo common\components\helper\Helper::runContentWidget($output,$page,$data);
-                    ?>
+                    <?php if (!empty($template)){?>
+                        <?php
+                            $loader = new \Twig\Loader\ArrayLoader([
+                                'index' => $template,
+                            ]);
+                            $twig = new \Twig\Environment($loader);
+                        ?>
+                        <?php
+                            $output = str_replace('\n', '', $twig->render('index', $data));
+                            echo common\components\helper\Helper::runContentWidget($output,$page,$data);
+                        ?>
+                    <?php }?>
             	</div>
             </div>
             <div class="col-third order-xs-0">
