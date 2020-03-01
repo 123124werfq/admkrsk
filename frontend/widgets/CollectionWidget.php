@@ -199,8 +199,6 @@ class CollectionWidget extends \yii\base\Widget
         {
             parse_str($url['query'],$url_query);
             unset($url_query['p']);
-            unset($url_query['id_page']);
-            unset($url_query['id']);
             unset($url_query['ps']);
             unset($url_query['_pjax']);
 
