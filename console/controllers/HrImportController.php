@@ -124,13 +124,14 @@ class HrImportController extends Controller
        echo "\nImporting: ";
        printf( "%c7", ESC );
 
-       $begin = 1;
-        $end = 10;
+       $begin = 21;
+        $end = 2000;
 
 
        foreach ($csv as $anketa) {
             if((int)$anketa['deleted'])
                 continue;
+
 
             printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
 
@@ -301,6 +302,23 @@ class HrImportController extends Controller
 
                     if($profile->save())
                     {
+                        $a = strtotime($anketa['created']);
+                        $b = strtotime($anketa['modified']);
+            
+                        if(!$a)
+                        {
+                            $aa = explode(" ",$anketa['created']);
+                            $anketa['created'] = str_replace(".","-", $aa[0]);
+                            $a = strtotime($anketa['created']);   
+                        }
+            
+                        if(!$b)
+                        {
+                            $aa = explode(" ",$anketa['modified']);
+                            $anketa['modified'] = str_replace(".","-", $aa[0]);
+                            $b = strtotime($anketa['modified']);   
+                        }
+
                         $profile->created_at = strtotime($anketa['created']);
                         $profile->updated_at = strtotime($anketa['modified']);
                         $profile->updateAttributes(['created_at', 'updated_at']);
@@ -413,6 +431,25 @@ class HrImportController extends Controller
 
                 if($count==10) die();
             }
+        }
+
+    }
+
+    public function actionAttachAll()
+    {
+        $profiles = HrProfile::find()->where("import_candidateid IS NOT NULL")->all();
+
+        foreach($profiles as $profile)
+        {
+            $dirname = mb_strtoupper($profile->import_candidateid, "UTF8");
+            $dir = Yii::getAlias('@app'). '/assets/hrimport/'.$dirname;
+            echo $dir."\n";
+            if(!is_dir($dir))
+                continue;
+
+            foreach (new \DirectoryIterator($dir) as $fileInfo){
+                echo $fileInfo->getFilename(). "\n";
+            }            
         }
 
     }
