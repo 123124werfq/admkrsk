@@ -260,7 +260,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 if ($column->isCustom())
                 {
                     if (empty($recordData))
-                        $recordData = $this->getData(true);
+                        $recordData = $this->getDataAsString(true,true);
 
                     $dataMongo['col'.$column->id_column] = CollectionColumn::renderCustomValue($column->template,$recordData);
                 }
@@ -278,6 +278,56 @@ class CollectionRecord extends \yii\db\ActiveRecord
         $recordData = $this->getData(true);
     }*/
 
+    public function getDataAsString($keyAsAlias=true,$includeRelation=false)
+    {
+        $record = \common\components\collection\CollectionQuery::getQuery($this->id_collection)
+                    ->select()
+                    ->where(['id_record'=>$this->id_record]);
+
+        $columns = $record->columns;
+
+        $record = $record->getArray();
+
+        $output = [];
+
+        if (!empty($record))
+        {
+            $record = array_shift($record);
+
+            foreach ($columns as $key => $column)
+            {
+                $value = $record[$column->id_column];
+
+                if ($includeRelation && $column->isRelation() && !empty($value))
+                {
+                    if ($column->type == CollectionColumn::TYPE_COLLECTION)
+                    {
+                        $subrecord = CollectionRecord::findOne(key($value));
+                        $output[$column['alias']] = $subrecord->getDataAsString($keyAsAlias,false);
+                    }
+                    else if ($column->type == CollectionColumn::TYPE_COLLECTION)
+                    {
+                        $output[$column['alias']] = [];
+
+                        foreach ($value as $id_record => $label)
+                        {
+                            $subrecord = CollectionRecord::findOne($id_record);
+                            $output[$column['alias']][] = $subrecord->getDataAsString($keyAsAlias,false);
+                        }
+
+                        $output[$column['alias']] = $column->getValueByType($value);
+                    }
+                }
+                else
+                    $output[$column['alias']] = $column->getValueByType($value);
+
+            }
+
+            return $output;
+        }
+        else
+            return [];
+    }
 
     public function getData($keyAsAlias=false,$id_columns=[])
     {
