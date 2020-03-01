@@ -488,7 +488,7 @@ class HrImportController extends Controller
                     if ($media->save())
                     {
                         $media->saveFile();
-                        echo "PHOTO SAVED!";
+                        echo "PHOTO SAVED\n";
                         $fileData = [
                             'id'=>$media->id_media,
                             'name'=>$fileInfo->getFilename(),
@@ -502,8 +502,6 @@ class HrImportController extends Controller
                     {
                         var_dump($media->getErrors());
                     }
-
-
                 }
 
                 if($descriptionPath)
@@ -515,7 +513,7 @@ class HrImportController extends Controller
                     if ($media->save())
                     {
                         $media->saveFile();
-                        echo "DESC SAVED!";
+                        echo "DESCRIPTION SAVED\n";
                         $fileData = [
                             'id'=>$media->id_media,
                             'name'=>$fileInfo->getFilename(),
@@ -528,8 +526,6 @@ class HrImportController extends Controller
                     {
                         var_dump($media->getErrors());
                     }
-
-
                 }                
             }
 
