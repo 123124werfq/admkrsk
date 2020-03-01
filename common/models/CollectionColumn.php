@@ -586,14 +586,12 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     if (empty($ids))
                         return '';
 
-                    $medias = Media::find()->where(['id_media'=>$ids])->all();
+                    $media = Media::find()->where(['id_media'=>$ids])->one();
 
-                    foreach ($medias as $mkey => $media)
-                        $file_uploaded = $media->showThumb(['w'=>200,'h'=>200]);
-
-                    if (!empty($file_uploaded))
-                        return '<img src="'.$file_uploaded.'" />';
-                }
+                    if (!empty($media->height))
+                        return '<img src="'.$media->showThumb(['w'=>200,'h'=>200]).' />';
+                    else
+                        return '<a href="'.$media->getUrl().'">'.$media->name.'<a>';
                 break;
             default:
                 if (is_array($value))
