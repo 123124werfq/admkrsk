@@ -445,15 +445,26 @@ JS;
 
                 $file_uploaded = '';
 
-                if (!empty($id_medias)) {
+                if (!empty($id_medias))
+                {
                     if (is_string($id_medias))
                         $id_medias = json_decode($id_medias, true);
+                    else
+                        if (is_array($id_medias) && !empty($id_medias[0]['id']))
+                        {
+                            $ids = [];
+                            foreach ($id_medias as $key => $data) {
+                                $ids[] = $data['id'];
+                            }
+
+                            $id_medias = $ids;
+                        }
 
                     $medias = Media::find()->where(['id_media' => $id_medias])->all();
-
                     foreach ($medias as $mkey => $media)
-                        $file_uploaded .= $this->render('_file', ['media' => $media, 'attribute' => $attribute, 'index' => $mkey]);
+                        $file_uploaded .= $this->render('_file', ['media' => $media, 'attribute' => $attribute, 'index' => $mkey,'options'=>$options]);
                 }
+
 
                 echo '
 				<div data-input="' . $input->id_input . '" class="fileupload" ' . implode(' ', $dataOptions) . ' >

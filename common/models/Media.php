@@ -217,7 +217,7 @@ class Media extends \yii\db\ActiveRecord
         if (!$this->is_private)
             $url = Yii::$app->publicStorage->getPublicUrl($this->getFilePath());
         else
-            $url = Yii::$app->privateStorage->getPresignedUrl($this->getFilePath(),'03.03.2020');
+            $url = Yii::$app->privateStorage->getPresignedUrl($this->getFilePath(),3600);
 
         $url = str_replace('http://storage.admkrsk.ru', 'https://storage.admkrsk.ru', $this->makePublic($url));
 
