@@ -77,7 +77,7 @@ class CollectionController extends Controller
         }
     }
 
-    protected function actionUpdateCustomColumn($id_column)
+    public function actionUpdateCustomColumn($id_column)
     {
         $column = CollectionColumn::findOne($id_column);
         $collection = $column->collection;
