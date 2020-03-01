@@ -1,5 +1,5 @@
 <div class="table-responsive">
-	<table <?=!empty($table_style)?'class="'.$table_style.'"':''?>>
+	<table class="<?=!empty($table_style)?$table_style:''?>">
 		<thead>
 <?php if (!empty($table_head))
 				echo $table_head;
