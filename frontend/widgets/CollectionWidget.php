@@ -55,8 +55,8 @@ class CollectionWidget extends \yii\base\Widget
             if (!empty($this->attributes['id_collection']))
                 $this->id_collection = (int)$this->attributes['id_collection'];
 
-            if (!empty($this->attributes['template']))
-                $this->template = $this->attributes['template'];
+            if (!empty($this->attributes['template_view']))
+                $this->template = $this->attributes['template_view'];
 
             if (!empty($this->attributes['sort']))
                 $this->sort = (int)$this->attributes['sort'];
