@@ -90,17 +90,16 @@ class CollectionWidget extends \yii\base\Widget
 
             if (!empty($this->attributes['columns']))
             {
-                if (!is_array($this->attributes['columns']))
-                {
+                if (is_array($this->attributes['columns']))
+                    $this->columns = json_encode($this->attributes['columns']));
+                else 
                     $this->columns = str_replace("&quot;", '"', $this->attributes['columns']);
 
-                    foreach ($this->objectData as $key => $value)
-                        $this->columns = str_replace('{{'.$key.'}}', $value, $this->columns);
+                foreach ($this->objectData as $key => $value)
+                    $this->columns = str_replace('{{'.$key.'}}', $value, $this->columns);
 
-                    $this->columns = json_decode($this->columns,true);
-                }
-                else
-                    $this->columns = $this->attributes;
+                $this->columns = json_decode($this->columns,true);
+
             }
 
             if (!empty($this->attributes['link_column']))
@@ -114,6 +113,7 @@ class CollectionWidget extends \yii\base\Widget
 
         // уникальный хэш для виджета PJAX, paginatinon и тп. переделать на более короткий
         $unique_hash = hash('joaat', $this->id_collection.serialize($this->columns));
+
 
         // mongo query
         $query = $model->getDataQueryByOptions($this->columns);
