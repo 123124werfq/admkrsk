@@ -319,7 +319,9 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     }
                 }
                 else
+                {
                     $output[$column['alias']] = $column->getValueByType($value);
+                }
 
             }
 

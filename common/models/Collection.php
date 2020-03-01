@@ -424,7 +424,8 @@ class Collection extends ActiveRecord
 
         $query = CollectionQuery::getQuery($id_collection);
 
-        if (!is_array($options)) {
+        if (!is_array($options))
+        {
             $options = json_decode($this->options, true);
         }
 
@@ -446,12 +447,14 @@ class Collection extends ActiveRecord
             $query->select();
         }
 
-        if (!empty($this->id_parent_collection)) {
+        if (!empty($this->id_parent_collection))
             $options = json_decode($this->options, true);
-        }
 
         if (!empty($options['filters']) && !is_array($options['filters']))
-                $query->where(json_decode($options['filters'],true));
+        {
+            var_dump(json_decode($options['filters'],true));
+            $query->where(json_decode($options['filters'],true));
+        }
 
         return $query;
     }
