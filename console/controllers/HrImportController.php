@@ -435,5 +435,24 @@ class HrImportController extends Controller
 
     }
 
+    public function actionAttachAll()
+    {
+        $profiles = HrProfile::find()->where("import_candidateid IS NOT NULL")->all();
+
+        foreach($profiles as $profile)
+        {
+            $dirname = mb_strtoupper($profile->import_candidateid, "UTF8");
+            $dir = Yii::getAlias('@app'). '/assets/hrimport/'.$dirname;
+            echo $dir."\n";
+            if(!is_dir($dir))
+                continue;
+
+            foreach (new \DirectoryIterator($dir) as $fileInfo){
+                echo $fileInfo->getFilename(). "\n";
+            }            
+        }
+
+    }
+
 
 }
