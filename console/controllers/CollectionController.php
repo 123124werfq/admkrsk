@@ -75,6 +75,25 @@ class CollectionController extends Controller
         }
     }
 
+    protected function updateCustomValues($id_collection)
+    {
+        $collection = Collection::findOne($id_collection);
+
+        $mongoCollection = Yii::$app->mongodb->getCollection('collection'.$collection->id_collection);
+
+        $records = $collection->getData([],true);
+
+        foreach ($records as $id_record => $data)
+        {
+            $modelRecord = CollectionRecord::findOne($id_record);
+            $dataString = $modelRecord->getDataAsString(true,true);
+
+            $dataMongo = ['col'.$model->id_column => CollectionColumn::renderCustomValue($model->template,$dataString)];
+            $mongoCollection->update(['id_record' => $id_record], $dataMongo);
+        }
+    }
+    
+
     public function actionAddressFix()
     {
         set_time_limit(0);
