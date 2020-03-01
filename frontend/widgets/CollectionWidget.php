@@ -88,6 +88,9 @@ class CollectionWidget extends \yii\base\Widget
             if (!empty($this->attributes['group']))
                 $this->group = (int)$this->attributes['group'];
 
+            if (!empty($this->attributes['id_group']))
+                $this->group = (int)$this->attributes['id_group'];
+
             if (!empty($this->attributes['columns']))
             {
                 if (is_array($this->attributes['columns']))
