@@ -442,6 +442,11 @@ class HrImportController extends Controller
 
         foreach($profiles as $profile)
         {
+
+            // тестовый файл Юшковва Н.В.
+            if($profile->id_record != 95438)
+                continue;
+
             $dirname = mb_strtoupper($profile->import_candidateid, "UTF8");
             $dir = Yii::getAlias('@app'). '/assets/hrimport/'.$dirname;
             Yii::setAlias('@webroot', Yii::getAlias('@app'));
@@ -479,11 +484,11 @@ class HrImportController extends Controller
                     $fname = basename($photoPath);
                     $media = new Media;
                     $media->getImageAttributes($photoPath, ['filename' => $fname]);
-                    $media->is_private = true;
+                    //$media->is_private = true;
                     if ($media->save())
                     {
                         $media->saveFile();
-                        echo "\n\PHOTO SAVED!\n";
+                        echo "PHOTO SAVED!";
                         $fileData = [
                             'id'=>$media->id_media,
                             'name'=>$fileInfo->getFilename(),
@@ -510,7 +515,7 @@ class HrImportController extends Controller
                     if ($media->save())
                     {
                         $media->saveFile();
-                        echo "\n\DESC SAVED!\n";
+                        echo "DESC SAVED!";
                         $fileData = [
                             'id'=>$media->id_media,
                             'name'=>$fileInfo->getFilename(),
@@ -526,12 +531,6 @@ class HrImportController extends Controller
 
 
                 }                
-            }
-
-            // тестовый файл Юшковва Н.В.
-            if($profile->id_record == 95438)
-            {
-                //$record = 
             }
 
         }
