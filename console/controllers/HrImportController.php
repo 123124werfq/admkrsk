@@ -447,6 +447,9 @@ class HrImportController extends Controller
             //if($profile->id_record != 95438)
             //    continue;
 
+            if($profile->id_record < 89000)
+                continue;
+
             $dirname = mb_strtoupper($profile->import_candidateid, "UTF8");
             $dir = Yii::getAlias('@app'). '/assets/hrimport/'.$dirname;
             Yii::setAlias('@webroot', Yii::getAlias('@app'));
@@ -462,7 +465,7 @@ class HrImportController extends Controller
                 $ext = mb_strtolower($fileInfo->getExtension());
                 $filename = mb_strtolower($fileInfo->getFilename());
 
-                if(in_array($ext, ['jpg', 'png', 'tif', 'jpeg']))
+                if(in_array($ext, ['jpg', 'png', 'jpeg']))
                     $photoPath =  '/assets/hrimport/'.$dirname . "/" . $fileInfo->getFilename();
                     
                 if(mb_strpos($filename, 'описание', 0, 'UTF8'))
@@ -507,6 +510,7 @@ class HrImportController extends Controller
                 if($descriptionPath)
                 {
                     $fname = basename($descriptionPath);
+                    
                     $media = new Media;
                     $media->getImageAttributes($descriptionPath, ['filename' => $fname]);
                     //$media->is_private = true;
