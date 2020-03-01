@@ -162,9 +162,9 @@ class CollectionColumnController extends Controller
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $query = CollectionColumn::find();
+        $collection = $this->findModelCollection($id_collection);
 
-        $query->andWhere(['id_collection' => $id_collection]);
+        $query = $collection->getColumns();
 
         if (!empty($q))
             $query->andWhere(['or',['ilike', 'name', $q], ['ilike', 'alias', $q]]);
@@ -192,6 +192,15 @@ class CollectionColumnController extends Controller
     protected function findModel($id)
     {
         if (($model = CollectionColumn::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function findModelCollection($id)
+    {
+        if (($model = Collection::findOne($id)) !== null) {
             return $model;
         }
 
