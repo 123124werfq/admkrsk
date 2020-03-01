@@ -446,10 +446,11 @@ class HrImportController extends Controller
             if(!is_dir($dir))
                 continue;
 
+            $descriptionPath = '';
+            $photoPath = '';
+            
             foreach (new \DirectoryIterator($dir) as $fileInfo){
 
-                $descriptionPath = '';
-                $photoPath = '';
 
                 $ext = mb_strtolower($fileInfo->getExtension());
                 $filename = mb_strtolower($fileInfo->getFilename());
@@ -469,6 +470,13 @@ class HrImportController extends Controller
                 echo $profile->id_record.":\n";
                 echo $photoPath . "\n" . $descriptionPath . "\n";
             }
+
+            // тестовый файл Юшковва Н.В.
+            if($profile->id_record == 95438)
+            {
+
+            }
+
         }
     }
 
