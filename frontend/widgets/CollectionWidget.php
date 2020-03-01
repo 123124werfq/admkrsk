@@ -1,4 +1,3 @@
-getDataQueryByOptions
 <?php
 namespace frontend\widgets;
 
