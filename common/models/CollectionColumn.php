@@ -592,6 +592,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                         return '<img src="'.$media->showThumb(['w'=>200,'h'=>200]).' />';
                     else
                         return '<a href="'.$media->getUrl().'">'.$media->name.'<a>';
+                }
                 break;
             default:
                 if (is_array($value))
