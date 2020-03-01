@@ -113,7 +113,7 @@ class CollectionWidget extends \yii\base\Widget
             return '';
 
         // уникальный хэш для виджета PJAX, paginatinon и тп. переделать на более короткий
-        $unique_hash = $this->id_collection.md5(serialize($this->columns));
+        $unique_hash = hash('joaat', $this->id_collection.serialize($this->columns));
 
         // mongo query
         $query = $model->getDataQueryByOptions($this->columns);
@@ -204,7 +204,8 @@ class CollectionWidget extends \yii\base\Widget
             unset($url_query['ps']);
             unset($url_query['_pjax']);
 
-            $url = $url['path'].http_build_query($url_query);
+            $url_query = http_build_query($url_query);
+            $url = $url['path'].(strpos('?', $url_query)!==false?$url_query:'?'.$url_query);
         }
         else
             $url = Yii::$app->request->url;
