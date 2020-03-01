@@ -19,9 +19,11 @@ if (!empty($model->collection->form->template)){
 \yii\web\YiiAsset::register($this);
 ?>
 
-<div class="collectionrecord-view">
+<div class="ibox">
+	<div class="ibox-content">
     <?=frontend\widgets\CollectionRecordWidget::widget([
         'collectionRecord'=>$model,
         //'renderTemplate'=>true,
     ]);?>
+    </div>
 </div>

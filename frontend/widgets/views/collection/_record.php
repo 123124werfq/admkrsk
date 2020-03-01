@@ -2,7 +2,7 @@
     use \common\models\CollectionRecord;
     use \common\models\CollectionColumn;
 ?>
-<table width="100%"  class="table table-striped">
+<table width="100%"  class="table table-striped table-hover">
 <?php
     foreach ($columns as $column){
 ?>
@@ -14,33 +14,18 @@
                     echo 'Не заполнено';
                 else
                 {
-                    echo $column->getValueByType($Record[$column->id_column]);
-                    /*if ($column->type==CollectionColumn::TYPE_CHECKBOX)
+                    if ($column->isRelation())
                     {
-                        if (empty($Record[$column->id_column]))
-                            echo 'Да';
-                        else
-                            echo 'Нет';
-                    }
-                    else if ($column->type==CollectionColumn::TYPE_DATE)
-                    {
-                        echo date('d.m.Y',$Record[$column->id_column]);
-                    }
-                    else if ($column->type==CollectionColumn::TYPE_COLLECTIONS)
-                    {
-                        $records = CollectionRecord::find()->where(['id_record'=>array_keys($Record[$column->id_column])])->all();
-
-                        foreach ($records as $dkey => $data)
-                            echo frontend\widgets\CollectionRecordWidget::widget(['collectionRecord'=>$data]);
-                    }
-                    else if (is_array($Record[$column->id_column]))
-                    {
-                        echo implode('<br>', $Record[$column->id_column]);
+                        foreach ($Record[$column->id_column] as $id_subrecord => $subrecord)
+                        {
+                            echo \frontend\widgets\CollectionRecordWidget::widget([
+                                'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
+                            ]);
+                        }
                     }
                     else
-                        echo $Record[$column->id_column];*/
+                        echo $column->getValueByType($Record[$column->id_column]);
                 }
-
             ?>
         </td>
     </tr>
