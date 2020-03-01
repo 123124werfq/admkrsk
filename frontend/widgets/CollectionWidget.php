@@ -208,7 +208,10 @@ class CollectionWidget extends \yii\base\Widget
             unset($url_query['_pjax']);
 
             $url_query = http_build_query($url_query);
-            $url = $url['path'].(strpos('?', $url_query)!==false?$url_query:'?'.$url_query);
+            if (!empty($url_query))
+                $url = $url['path'].(strpos('?', $url_query)!==false?$url_query:'?'.$url_query);
+            else 
+                $url = $url['path'];
         }
         else
             $url = Yii::$app->request->url;
