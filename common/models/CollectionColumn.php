@@ -405,7 +405,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                    'is_not_empty',
                 ];
                 break;
-            case self::TYPE_INPUT:
+            case self::TYPE_INTEGER:
                 $type = 'integer';
                 $operators = [
                    'equal',

@@ -8,7 +8,7 @@ use yii\helpers\Html;
 $this->title = 'Редактировать представление "'.$model->name.'"';
 $this->params['breadcrumbs'][] = ['label' => $model->parent->name, 'url' => ['collection/view','id'=>$model->id_parent_collection]];
 $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['collection/view','id'=>$model->id_collection]];
 ?>
 <div class="collection-create">
     <div class="ibox">

@@ -26,8 +26,8 @@ $options = $clear;
 
 $options['class'] = 'form-control';
 
-if (!empty($input->required))
-    $options['required'] = true;
+/*if (!empty($input->required))
+    $options['required'] = true;*/
 
 if (!empty($input->readonly))
     $options['readonly'] = true;
@@ -64,7 +64,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
         <?php }?>
 
         <?php if (!empty($input->label) && $input->type != CollectionColumn::TYPE_CHECKBOX) { ?>
-            <label class="form-label"><?= $input->label ?><?= !empty($options['required']) ? ' <span class="red">*</span>' : '' ?></label>
+            <label class="form-label"><?= $input->label ?><?=!empty($input->required)?' <span class="red">*</span>' : '' ?></label>
         <?php } ?>
         <?php switch ($input->type) {
             case CollectionColumn::TYPE_SERVICETARGET:
