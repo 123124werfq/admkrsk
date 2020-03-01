@@ -218,6 +218,8 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     $value = $this->data[$column->alias];
                 elseif (isset($this->data[$column->id_column]))
                     $value = $this->data[$column->id_column];
+                else
+                    continue;
 
                 if (!$insert)
                 {

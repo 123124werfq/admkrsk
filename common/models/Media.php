@@ -52,6 +52,7 @@ class Media extends \yii\db\ActiveRecord
         return [
             [['type', 'size', 'width', 'height', 'duration', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
             [['type', 'size', 'width', 'height', 'duration', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['is_private'],'boolean'],
             [['name'], 'required'],
             [['name', 'mime', 'extension'], 'string', 'max' => 255],
         ];
@@ -73,6 +74,7 @@ class Media extends \yii\db\ActiveRecord
             'mime' => 'MIME',
             'extension' => 'Расширение',
             'ord' => 'Ord',
+            'is_private'=>'Приватный',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
@@ -125,7 +127,7 @@ class Media extends \yii\db\ActiveRecord
             $this->height = abs($size[1]);
             $this->mime = $size['mime'];
         }
-        
+
         $this->pagecount = (int)($post['pagecount']??0);
         $this->extension = $ext;
         $this->size = filesize($file);
@@ -154,7 +156,10 @@ class Media extends \yii\db\ActiveRecord
             if (is_file($path))
             {
                 $stream = fopen($path, 'r+');
-                Yii::$app->publicStorage->writeStream($this->getFilePath(), $stream);
+                if ($this->is_private)
+                    Yii::$app->privateStorage->writeStream($this->getFilePath(), $stream);
+                else
+                    Yii::$app->publicStorage->writeStream($this->getFilePath(), $stream);
                 fclose($stream);
                 //copy($path,$root.$this->getFilePath());
             }
@@ -198,7 +203,12 @@ class Media extends \yii\db\ActiveRecord
 
     public function getUrl()
     {
-        $url = str_replace('http://storage.admkrsk.ru', 'https://storage.admkrsk.ru', $this->makePublic(Yii::$app->publicStorage->getPublicUrl($this->getFilePath())));
+        if (!$this->is_private)
+            $url = Yii::$app->privateStorage->getPublicUrl($this->getFilePath());
+        else
+            $url = Yii::$app->publicStorage->getPresignedUrl($this->getFilePath(),strtotime('+1 day'));
+
+        $url = str_replace('http://storage.admkrsk.ru', 'https://storage.admkrsk.ru', $this->makePublic($url));
 
         return $url;
     }

@@ -56,6 +56,18 @@ class MediaController extends Controller
         ]);
     }
 
+
+    public function actionTest()
+    {
+        $media = new Media;
+        $media->getImageAttributes('/import.xlsx');
+        $media->is_private = 1;
+        $media->save();
+        $media->saveFile();
+
+        echo $media->getUrl();
+    }
+
     /**
      * Displays a single Media model.
      * @param integer $id
