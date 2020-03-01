@@ -589,7 +589,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     $media = Media::find()->where(['id_media'=>$ids])->one();
 
                     if (!empty($media->height))
-                        return '<img src="'.$media->showThumb(['w'=>200,'h'=>200]).' />';
+                        return '<img src="'.$media->showThumb(['w'=>200,'h'=>200]).'"/>';
                     else
                         return '<a href="'.$media->getUrl().'">'.$media->name.'</a>';
                 }
