@@ -2,11 +2,12 @@
 
 namespace common\models\collection;
 
-use common\models\Collection;
 use common\models\CollectionColumn;
+use common\models\Media;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\base\DynamicModel ;
+
 
 class CollectionSearch extends DynamicModel
 {

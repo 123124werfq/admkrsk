@@ -4,6 +4,7 @@ namespace console\controllers;
 
 use common\models\Collection;
 use common\models\HrProfile;
+use common\models\Media;
 
 use Yii;
 use yii\console\Controller;
@@ -443,12 +444,13 @@ class HrImportController extends Controller
         {
             $dirname = mb_strtoupper($profile->import_candidateid, "UTF8");
             $dir = Yii::getAlias('@app'). '/assets/hrimport/'.$dirname;
+            Yii::setAlias('@webroot', Yii::getAlias('@app'));
             if(!is_dir($dir))
                 continue;
 
             $descriptionPath = '';
             $photoPath = '';
-            
+
             foreach (new \DirectoryIterator($dir) as $fileInfo){
 
 
@@ -456,25 +458,80 @@ class HrImportController extends Controller
                 $filename = mb_strtolower($fileInfo->getFilename());
 
                 if(in_array($ext, ['jpg', 'png', 'tif', 'jpeg']))
-                    $photoPath = $dir . "/" . $fileInfo->getFilename();
+                    $photoPath =  '/assets/hrimport/'.$dirname . "/" . $fileInfo->getFilename();
                     
                 if(mb_strpos($filename, 'описание', 0, 'UTF8'))
-                    $descriptionPath = $dir . "/" . $fileInfo->getFilename();
+                    $descriptionPath = '/assets/hrimport/'.$dirname . "/" . $fileInfo->getFilename();
 
                 if(empty($descriptionPath) && in_array($ext, ['doc', 'docx']))
-                    $descriptionPath = $dir . "/" . $fileInfo->getFilename();
+                    $descriptionPath =  '/assets/hrimport/'.$dirname . "/" . $fileInfo->getFilename();
             }
             
             if(!empty($descriptionPath) || !empty($photoPath))
             {
                 echo $profile->id_record.":\n";
                 echo $photoPath . "\n" . $descriptionPath . "\n";
+
+                $record = $profile->record;
+
+                if($photoPath)
+                {
+                    $fname = basename($photoPath);
+                    $media = new Media;
+                    $media->getImageAttributes($photoPath, ['filename' => $fname]);
+                    $media->is_private = true;
+                    if ($media->save())
+                    {
+                        $media->saveFile();
+                        echo "\n\PHOTO SAVED!\n";
+                        $fileData = [
+                            'id'=>$media->id_media,
+                            'name'=>$fileInfo->getFilename(),
+                            'size'=>$media->size,
+                        ];
+
+                        $record->data = ['photo' => [$fileData]];
+                        $record->save();    
+                    }
+                    else
+                    {
+                        var_dump($media->getErrors());
+                    }
+
+
+                }
+
+                if($descriptionPath)
+                {
+                    $fname = basename($descriptionPath);
+                    $media = new Media;
+                    $media->getImageAttributes($descriptionPath, ['filename' => $fname]);
+                    $media->is_private = true;
+                    if ($media->save())
+                    {
+                        $media->saveFile();
+                        echo "\n\DESC SAVED!\n";
+                        $fileData = [
+                            'id'=>$media->id_media,
+                            'name'=>$fileInfo->getFilename(),
+                            'size'=>$media->size,
+                        ];
+                        $record->data = ['results_doc' => [$fileData]];
+                        $record->save();
+                    }
+                    else
+                    {
+                        var_dump($media->getErrors());
+                    }
+
+
+                }                
             }
 
             // тестовый файл Юшковва Н.В.
             if($profile->id_record == 95438)
             {
-
+                //$record = 
             }
 
         }
