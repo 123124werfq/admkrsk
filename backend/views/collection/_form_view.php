@@ -67,33 +67,32 @@ $model->filters = json_encode($model->filters);
 
 <?php ActiveForm::end(); ?>
 
-<?php 
+<?php
     $json_filters = [];
     foreach ($model->parent->columns as $key => $column) {
         $json_filters[] = $column->getJsonQuery();
     }
 
     $json_filters = json_encode($json_filters);
-    
-    if (empty($rules))
-        $rules = [['empty'=>true]];
 
-    $rules = json_encode($rules);
-
-    //var_dump($rules);
+    if (!empty($rules))
+        $rules = json_encode($rules);
+    else
+        $rules = '';
 
 $script = <<< JS
+    $("#collection-view").submit(function(){
+        var rules = $('#querybuilder').queryBuilder('getMongo');
+        $("#collection-filters").val(JSON.stringify(rules));
+    });
+
     $('#querybuilder').queryBuilder({
       lang_code: 'ru',
       filters: $json_filters,
     });
 
-    $('#querybuilder').queryBuilder('setRulesFromMongo',$rules);
-
-    $("#collection-view").submit(function(){
-        var rules = $('#querybuilder').queryBuilder('getMongo');
-        $("#collection-filters").val(JSON.stringify(rules));
-    });
+    if ('$rules'!='')
+        $('#querybuilder').queryBuilder('setRulesFromMongo',$rules);
 JS;
 
 $this->registerJs($script, View::POS_END);

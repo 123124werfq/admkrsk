@@ -747,10 +747,6 @@ class CollectionController extends Controller
 
             return $this->redirect(['update', 'id' => $model->id_collection]);
         }
-        else
-        {
-            print_r($model->errors);
-        }
 
         return $this->render('create_view', [
             'model' => $model,
@@ -763,8 +759,10 @@ class CollectionController extends Controller
      */
     public function actionUpdateView($model)
     {
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             $this->saveView($model);
+
             return $this->redirect(['update', 'id' => $model->id_collection]);
         }
 
@@ -806,18 +804,7 @@ class CollectionController extends Controller
         }
 
         if (!empty($model->filters))
-        {
             $options['filters'] = $model->filters;
-
-            /*foreach (Yii::$app->request->post('ViewFilters') as $key => $data) {
-                if (!empty($data['id_column']))
-                    $options['filters'][] = [
-                        'id_column' => $data['id_column'],
-                        'operator' => isset($data['operator']) ? $data['operator'] : '=',
-                        'value' => (!empty($data['value'])) ? $data['value'] : ''
-                    ];
-            }*/
-        }
         else
             $options['filters'] = '';
 
@@ -841,11 +828,11 @@ class CollectionController extends Controller
         /** @var Collection $model */
         $model = $this->findModel($id);
 
-        if (!empty($model->id_parent_collection)) {
+        if (!empty($model->id_parent_collection))
             return $this->actionUpdateView($model);
-        }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['view', 'id' => $model->id_collection]);
         }
