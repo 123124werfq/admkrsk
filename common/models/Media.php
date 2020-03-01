@@ -97,6 +97,17 @@ class Media extends \yii\db\ActiveRecord
         return (!empty($this->width));
     }
 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert))
+        {
+            if (empty($this->hash))
+                $this->hash = hash('joaat', time().$this->name.$this->extension.$this->size);
+        }
+
+        return true;
+    }
+
     public function getImageAttributes($file,$post=array())
     {
         $filename = $file;
@@ -204,9 +215,9 @@ class Media extends \yii\db\ActiveRecord
     public function getUrl()
     {
         if (!$this->is_private)
-            $url = Yii::$app->privateStorage->getPublicUrl($this->getFilePath());
+            $url = Yii::$app->publicStorage->getPublicUrl($this->getFilePath());
         else
-            $url = Yii::$app->publicStorage->getPresignedUrl($this->getFilePath(),strtotime('+1 day'));
+            $url = Yii::$app->privateStorage->getPresignedUrl($this->getFilePath(),'03.03.2020');
 
         $url = str_replace('http://storage.admkrsk.ru', 'https://storage.admkrsk.ru', $this->makePublic($url));
 
@@ -221,7 +232,7 @@ class Media extends \yii\db\ActiveRecord
         if ($this->isNewRecord)
             return str_replace($root,'',$this->file_path);
 
-        $url_piece = '/content/media/';
+        $url_piece = 'content/media/';
         $dir = $root.$url_piece;
 
         $file = md5($this->id_media);
@@ -235,7 +246,8 @@ class Media extends \yii\db\ActiveRecord
         /*if (!is_dir($dir.$level1.'/'.$level2))
             mkdir($dir.$level1.'/'.$level2);*/
 
-        $filename = $this->id_media.'.'.$this->extension;
+
+        $filename = ($this->hash?:$this->id_media).'.'.$this->extension;
 
         return $url_piece.$level1.'/'.$level2.'/'.$filename;
     }
