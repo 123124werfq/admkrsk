@@ -442,6 +442,7 @@ class Collection extends ActiveRecord
                 }
             }
 
+            //$query->select($id_cols);
             $query->select($id_cols);
         } else {
             $query->select();
@@ -451,10 +452,7 @@ class Collection extends ActiveRecord
             $options = json_decode($this->options, true);
 
         if (!empty($options['filters']) && !is_array($options['filters']))
-        {
-            var_dump(json_decode($options['filters'],true));
             $query->where(json_decode($options['filters'],true));
-        }
 
         return $query;
     }

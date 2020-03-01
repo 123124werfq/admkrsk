@@ -117,7 +117,6 @@ class CollectionWidget extends \yii\base\Widget
         // уникальный хэш для виджета PJAX, paginatinon и тп. переделать на более короткий
         $unique_hash = hash('joaat', $this->id_collection.serialize($this->columns));
 
-
         // mongo query
         $query = $model->getDataQueryByOptions($this->columns);
 
