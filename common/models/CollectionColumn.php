@@ -574,7 +574,19 @@ class CollectionColumn extends \yii\db\ActiveRecord
             case self::TYPE_IMAGE:
                 if (is_array($value) || is_numeric($value))
                 {
-                    $medias = Media::find()->where(['id_media'=>$value])->all();
+                    $ids = [];
+                    foreach ($value as $key => $data)
+                    {
+                        if (is_numeric($data))
+                            $ids[] = $data;
+                        else if (!empty($data['id']))
+                            $ids[] = $data['id'];
+                    }
+
+                    if (empty($ids))
+                        return '';
+
+                    $medias = Media::find()->where(['id_media'=>$ids])->all();
 
                     foreach ($medias as $mkey => $media)
                         $file_uploaded = $media->showThumb(['w'=>200,'h'=>200]);
