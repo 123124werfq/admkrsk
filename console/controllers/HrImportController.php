@@ -443,16 +443,33 @@ class HrImportController extends Controller
         {
             $dirname = mb_strtoupper($profile->import_candidateid, "UTF8");
             $dir = Yii::getAlias('@app'). '/assets/hrimport/'.$dirname;
-            echo $dir."\n";
             if(!is_dir($dir))
                 continue;
 
             foreach (new \DirectoryIterator($dir) as $fileInfo){
-                echo $fileInfo->getFilename(). "\n";
-            }            
+
+                $descriptionPath = '';
+                $photoPath = '';
+
+                $ext = mb_strtolower($fileInfo->getExtension());
+                $filename = mb_strtolower($fileInfo->getFilename());
+
+                if(in_array($ext, ['jpg', 'png', 'tif', 'jpeg']))
+                    $photoPath = $dir . "/" . $fileInfo->getFilename();
+                    
+                if(mb_strpos($filename, 'описание', 0, 'UTF8'))
+                    $descriptionPath = $dir . "/" . $fileInfo->getFilename();
+
+                if(empty($descriptionPath) && in_array($ext, ['doc', 'docx']))
+                    $descriptionPath = $dir . "/" . $fileInfo->getFilename();
+            }
+            
+            if(!empty($descriptionPath) || !empty($photoPath))
+            {
+                echo $profile->id_record.":\n";
+                echo $photoPath . "\n" . $descriptionPath . "\n";
+            }
         }
-
     }
-
 
 }
