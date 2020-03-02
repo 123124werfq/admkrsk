@@ -55,8 +55,8 @@ class CollectionWidget extends \yii\base\Widget
             if (!empty($this->attributes['id_collection']))
                 $this->id_collection = (int)$this->attributes['id_collection'];
 
-            if (!empty($this->attributes['template']))
-                $this->template = $this->attributes['template'];
+            if (!empty($this->attributes['template_view']))
+                $this->template = $this->attributes['template_view'];
 
             if (!empty($this->attributes['sort']))
                 $this->sort = (int)$this->attributes['sort'];
@@ -88,19 +88,24 @@ class CollectionWidget extends \yii\base\Widget
             if (!empty($this->attributes['group']))
                 $this->group = (int)$this->attributes['group'];
 
+            if (!empty($this->attributes['id_group']))
+                $this->group = (int)$this->attributes['id_group'];
+
             if (!empty($this->attributes['columns']))
             {
-                if (!is_array($this->attributes['columns']))
-                {
+                if (is_array($this->attributes['columns']))
+                    $this->columns = json_encode($this->attributes);
+                else 
                     $this->columns = str_replace("&quot;", '"', $this->attributes['columns']);
 
-                    foreach ($this->objectData as $key => $value)
+                foreach ($this->objectData as $key => $value)
+                {
+                    if (!is_array($value))
                         $this->columns = str_replace('{{'.$key.'}}', $value, $this->columns);
-
-                    $this->columns = json_decode($this->columns,true);
                 }
-                else
-                    $this->columns = $this->attributes;
+
+                $this->columns = json_decode($this->columns,true);
+
             }
 
             if (!empty($this->attributes['link_column']))
@@ -113,7 +118,7 @@ class CollectionWidget extends \yii\base\Widget
             return '';
 
         // уникальный хэш для виджета PJAX, paginatinon и тп. переделать на более короткий
-        $unique_hash = $this->id_collection.md5(serialize($this->columns));
+        $unique_hash = hash('joaat', $this->id_collection.serialize($this->columns));
 
         // mongo query
         $query = $model->getDataQueryByOptions($this->columns);
@@ -201,7 +206,12 @@ class CollectionWidget extends \yii\base\Widget
             unset($url_query['p']);
             unset($url_query['ps']);
             unset($url_query['_pjax']);
-            $url = $url['path'].http_build_query($url_query);
+
+            $url_query = http_build_query($url_query);
+            if (!empty($url_query))
+                $url = $url['path'].(strpos('?', $url_query)!==false?$url_query:'?'.$url_query);
+            else 
+                $url = $url['path'];
         }
         else
             $url = Yii::$app->request->url;

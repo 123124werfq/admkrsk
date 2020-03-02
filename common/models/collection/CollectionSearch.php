@@ -265,6 +265,12 @@ class CollectionSearch extends DynamicModel
 
         $this->load($params);
 
+        foreach ($this->attributes as $attr => $value)
+        {
+            if (!empty($value))
+                $query->andWhere(['or',['like',$attr,$value],[$attr=>(is_numeric($value))?(float)$value:$value]]);
+        }
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
@@ -283,13 +289,6 @@ class CollectionSearch extends DynamicModel
             return $dataProvider;
         }
 
-        foreach ($this->attributes as $attr => $value)
-        {
-            if (!empty($value))
-            {
-                $query->andWhere(['like',$attr,$value]);
-            }
-        }
         /*$query->andFilterWhere([
             'id_house' => $this->id_house,
             'is_active' => $this->is_active,

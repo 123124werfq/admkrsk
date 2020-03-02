@@ -12,6 +12,8 @@ use common\models\FormElement;
 use common\models\FormInput;
 use common\models\CollectionColumn;
 
+use common\helpers\ProgressHelper;
+
 use Yii;
 use yii\console\Controller;
 
@@ -74,6 +76,37 @@ class CollectionController extends Controller
             }
         }
     }
+
+    public function actionUpdateCustomColumn($id_column)
+    {
+        $column = CollectionColumn::findOne($id_column);
+        $collection = $column->collection;
+
+        $mongoCollection = Yii::$app->mongodb->getCollection('collection'.$collection->id_collection);
+
+        $records = $collection->getData([],true);
+
+        $total = count($records);
+        ProgressHelper::startProgress(0, $total, "Обновление значенией ");
+
+        $count = 0;
+
+        foreach ($records as $id_record => $data)
+        {
+            $modelRecord = CollectionRecord::findOne($id_record);
+            $dataString = $modelRecord->getDataAsString(true,true);
+
+            $dataMongo = ['col'.$column->id_column => CollectionColumn::renderCustomValue($column->template,$dataString)];
+            $mongoCollection->update(['id_record' => $id_record], $dataMongo);
+
+            ProgressHelper::updateProgress($count, $total);
+
+            $count++;
+        }
+
+        ProgressHelper::endProgress("100% Done." . PHP_EOL);
+    }
+
 
     public function actionAddressFix()
     {
