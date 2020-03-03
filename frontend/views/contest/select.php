@@ -37,7 +37,16 @@ if ($user) {
                         <h1><?= $page->title ?></h1>
                         <ul>
                         <?php foreach ($contests as $cstId => $contest) { 
-                                if(count($profiles)) {
+
+                                $canShow = false;
+                                foreach ($profiles as $prId => $profile) { 
+                                    if(!isset($links[$cstId]) || !in_array($profile['id_profile'],$links[$cstId]))
+                                        continue;
+                                    else
+                                        $canShow = true;
+                                }
+
+                                if($canShow) {
                             ?>
                             <li><a href="<?=$contest['contest_page_link']?>"><?=$contest['name']?></a></li>
                                 <ul>
