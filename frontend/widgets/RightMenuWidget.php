@@ -17,9 +17,9 @@ class RightMenuWidget extends \yii\base\Widget
         $menu = $this->page->menu;
 
         // временно отключаем меню на главной странице личного кабинета для конкурсов
-        if(Url::current([], true) == 'https://grants.admkrsk.ru/personal')
+        if( ($_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']) == 'grants.admkrsk.ru/personal')
             $menu = null;
-var_dump($_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
+
         return $this->render('rightmenu',[
         	'page'=>$this->page,
         	'menu'=>$menu,
