@@ -56,7 +56,7 @@ if ($user) {
                                     ?>
                                     <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>&ida=<?=$profile['id_profile']?>">Редактировать заявку от <?= date("d.m.Y H:i", $profile['created_at'])?></a></li>
                                 <?php } ?>
-                                <?php if(false && !empty($contest['participant_form'])){?>
+                                <?php if(!empty($contest['participant_form'])){?>
                                     <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>">Создать новую заявку</a></li>
                                 <?php } ?>
                                 </ul>
