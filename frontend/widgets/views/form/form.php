@@ -58,7 +58,7 @@
 
 	<div class="form-end">
         <div class="form-end_right">
-            <input type="submit" class="btn btn__secondary" value="Отправить">
+            <input type="submit" class="btn btn__secondary" value="<?=$submitLabel?>">
         </div>
     </div>
 	<?php ActiveForm::end(); ?>

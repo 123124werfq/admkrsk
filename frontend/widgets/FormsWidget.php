@@ -21,6 +21,7 @@ class FormsWidget extends \yii\base\Widget
     public $activeForm = null; // класс эктив форм для подколлекций
     public $nocaptcha=false;
     public $objectData; // данные CollectionRecord объекста если идет его рендер
+    public $submitLabel = 'Отправить';
 
     public $page;
 
@@ -57,6 +58,7 @@ class FormsWidget extends \yii\base\Widget
             'action'=>$this->action,
             'arrayGroup'=>$this->arrayGroup,
             'activeForm'=>$this->activeForm,
+            'submitLabel'=>$this->submitLabel,
         ]);
     }
 }
