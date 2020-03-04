@@ -32,8 +32,6 @@ if (empty($search))
     ]
 ?>
 
-
-
 <?php $form = ActiveForm::begin(['id'=>'collection-redactor']); ?>
 
 <?php if (empty($model->id_parent_collection)){?>
@@ -195,8 +193,8 @@ else
     <script>
         document.getElementById('submit-redactor').addEventListener('click', function (event) {
 
-                $rules = $('#querybuilder').queryBuilder('getRules')
-                $("#collection-filters").val(JSON.stringify($rules));
+                var rules = $('#querybuilder').queryBuilder('getMongo');
+                $("#collection-filters").val(JSON.stringify(rules));
 
                 $form = $("#collection-redactor");
 
@@ -228,17 +226,25 @@ foreach ($model->parent->columns as $key => $column) {
 }
 
 $json_filters = json_encode($json_filters);
+
 if (empty($rules))
     $rules = [['empty'=>true]];
 
 $rules = json_encode($rules);
 
 $script = <<< JS
+    $("#collection-redactor").submit(function(){
+        var rules = $('#querybuilder').queryBuilder('getMongo');
+        $("#collection-filters").val(JSON.stringify(rules));
+    });
+
     $('#querybuilder').queryBuilder({
       lang_code: 'ru',
-      rules: $rules,
       filters: $json_filters,
     });
+
+    if ('$rules'!='')
+        $('#querybuilder').queryBuilder('setRulesFromMongo',$rules);
 JS;
 
     $this->registerJs($script, View::POS_END);

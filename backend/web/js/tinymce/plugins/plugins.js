@@ -1,7 +1,7 @@
 function getTinyContents(editor) {
     /** get iframe nodes */
     let contents = editor.getContainer();
-    let iframe = contents.querySelector(".tox-editor-container .tox-sidebar-wrap .tox-edit-area #page-content_ifr");
+    let iframe = contents.querySelector(".tox-editor-container .tox-sidebar-wrap .tox-edit-area iframe");
     return  iframe.contentDocument.querySelector('html #tinymce').children;
 }
 

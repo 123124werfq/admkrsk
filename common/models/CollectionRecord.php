@@ -288,7 +288,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
         $record = $record->getArray();
 
-        $output = [];
+        $output = ['id_record'=>$this->id_record];
 
         if (!empty($record))
         {
@@ -319,7 +319,9 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     }
                 }
                 else
+                {
                     $output[$column['alias']] = $column->getValueByType($value);
+                }
 
             }
 

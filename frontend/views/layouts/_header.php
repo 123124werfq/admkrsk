@@ -90,6 +90,7 @@ if (!Yii::$app->user->isGuest)
             </a>
 
             <div class="gosbar__right-block">
+                <?php if(!strpos(Yii::$app->request->hostName, 'ants.') ){ ?>
                 <form id="top-search" action="/search"><input class="header-search" name="q"></form>
                 <a href="#" class="gosbar_btn">
                     <span class="material-icons gosbar-icon" id="gosbar-search-go">search</span>
@@ -100,7 +101,7 @@ if (!Yii::$app->user->isGuest)
                     <span class="material-icons gosbar-icon">visibility</span>
                     <span class="gosbar_btn-text"><?=Yii::t('site', 'Версия для слабовидящих')?></span>
                 </a>
-
+                <?php } ?>
                 <?php
                 if (Yii::$app->language != 'en' && !strpos(Yii::$app->request->url, 'new-year2019') && !strpos(Yii::$app->request->hostInfo, 'newyear.')){
                   ?>
@@ -124,9 +125,11 @@ if (!Yii::$app->user->isGuest)
                     <div class="dropdown-menu">
                         <?php if (!Yii::$app->user->isGuest): ?>
                             <a class="dropdown-menu_item" href="/personal">Личный&nbsp;кабинет</a>
+                            <?php if(!strpos(Yii::$app->request->hostName, 'ants.') ){ ?>
                             <a class="dropdown-menu_item" href="/service">Мои&nbsp;запросы&nbsp;услуг</a>
                             <a class="dropdown-menu_item" href="/reception/list">Мои&nbsp;обращения</a>
                             <a class="dropdown-menu_item" href="/reception/request">Написать&nbsp;обращение</a>
+                            <?php } ?>
                             <?= Html::a('Выйти', ['site/logout'], ['class' => 'dropdown-menu_item', 'data' => ['method' => 'post']]) ?>
                         <?php else: ?>
                             <a class="dropdown-menu_item" href="<?= Url::to(['site/login']) ?>">Войти</a>
@@ -172,10 +175,12 @@ if (!Yii::$app->user->isGuest)
                     <span class="material-icons">search</span>
                     <span class="header-menu_btn-text"><?=Yii::t('site', 'Поиск по сайту')?></span>
                 </button>
+                <?php if(!strpos(Yii::$app->request->hostName, 'ants.') ){ ?>
                 <button class="header-menu_link sitemap-toggle">
                     <span class="material-icons"><span class="sitemap-toggle_dots">more_horiz</span><span class="sitemap-toggle_menu">menu</span></span>
                     <span class="material-icons hidden">clear</span>
                 </button>
+                <?php } ?>
             </div>
         </div>
     </div>

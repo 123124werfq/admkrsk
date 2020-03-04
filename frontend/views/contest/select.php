@@ -36,20 +36,33 @@ if ($user) {
                     <div class="content searchable">
                         <h1><?= $page->title ?></h1>
                         <ul>
-                        <?php foreach ($contests as $cstId => $contest) { ?>
+                        <?php foreach ($contests as $cstId => $contest) { 
+
+                                $canShow = false;
+                                foreach ($profiles as $prId => $profile) { 
+                                    if(!isset($links[$cstId]) || !in_array($profile['id_profile'],$links[$cstId]))
+                                        continue;
+                                    else
+                                        $canShow = true;
+                                }
+
+                                if($canShow) {
+                            ?>
                             <li><a href="<?=$contest['contest_page_link']?>"><?=$contest['name']?></a></li>
                                 <ul>
                                 <?php foreach ($profiles as $prId => $profile) { 
                                         if(!isset($links[$cstId]) || !in_array($profile['id_profile'],$links[$cstId]))
                                             continue;
                                     ?>
-                                    <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>&ida=<?=$profile['id_profile']?>">Заявка №<?=$profile['id_profile']?></a></li>
+                                    <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>&ida=<?=$profile['id_profile']?>">Редактировать заявку от <?= date("d.m.Y H:i", $profile['created_at'])?></a></li>
                                 <?php } ?>
-                                <?php if(!empty($contest['participant_form'])){?>
+                                <?php if(false && !empty($contest['participant_form'])){?>
                                     <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>">Создать новую заявку</a></li>
                                 <?php } ?>
                                 </ul>
-                        <?php } ?>
+                        <?php
+                                } 
+                            } ?>
                         </ul>
                         <?=common\components\helper\Helper::runContentWidget($page->content,$page)?>
 

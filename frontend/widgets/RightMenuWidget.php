@@ -3,6 +3,7 @@ namespace frontend\widgets;
 
 use Yii;
 use common\models\News;
+use yii\helpers\Url;
 
 class RightMenuWidget extends \yii\base\Widget
 {
@@ -14,6 +15,10 @@ class RightMenuWidget extends \yii\base\Widget
     		return false;
     	
         $menu = $this->page->menu;
+
+        // временно отключаем меню на главной странице личного кабинета для конкурсов
+        if( ($_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']) == 'grants.admkrsk.ru/personal')
+            return false;
 
         return $this->render('rightmenu',[
         	'page'=>$this->page,

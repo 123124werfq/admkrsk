@@ -368,9 +368,9 @@ class Collection extends ActiveRecord
         if (!empty($this->options)) {
             $options = json_decode($this->options, true);
 
-            if (!empty($options['filters']))
+            if (!empty($options['filters']) && !is_array($options['filters']))
             {
-
+                $query->where(json_decode($options['filters'],true));
             }
         }
 
@@ -424,7 +424,8 @@ class Collection extends ActiveRecord
 
         $query = CollectionQuery::getQuery($id_collection);
 
-        if (!is_array($options)) {
+        if (!is_array($options))
+        {
             $options = json_decode($this->options, true);
         }
 
@@ -441,34 +442,17 @@ class Collection extends ActiveRecord
                 }
             }
 
+            //$query->select($id_cols);
             $query->select($id_cols);
         } else {
             $query->select();
         }
 
-        if (!empty($this->id_parent_collection)) {
+        if (!empty($this->id_parent_collection))
             $options = json_decode($this->options, true);
-        }
 
-        /*if (!empty($options['filters'])) {
-            foreach ($options['filters'] as $key => $filter) {
-
-                if ($filter['operator']=='not')
-                    $where = [
-                        $filter['operator'],
-                        'col' . $filter['id_column'],
-                        null
-                    ];
-                else
-                    $where = [
-                        $filter['operator'],
-                        'col' . $filter['id_column'],
-                        (is_numeric($filter['value'])) ? (float)$filter['value'] : $filter['value']
-                    ];
-
-                $query->andWhere($where);
-            }
-        }*/
+        if (!empty($options['filters']) && !is_array($options['filters']))
+            $query->where(json_decode($options['filters'],true));
 
         return $query;
     }
