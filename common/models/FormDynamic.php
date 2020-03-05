@@ -276,6 +276,8 @@ class FormDynamic extends DynamicModel
                             if (!empty($value['coords'][1]))
                                 $empty['lon'] = $value['coords'][1];
 
+                            $empty['fulladdress'] = implode(', ', $fulladdress);
+
                             $data[$index] = $empty;
                         }
 

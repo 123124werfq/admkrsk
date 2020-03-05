@@ -205,10 +205,9 @@ class AddressController extends \yii\web\Controller
          $query = Street::find()
             ->select([Street::tableName() . '.id_street', Street::tableName() . '.name'])
             ->joinWith('districts', false)
-            ->filterWhere([Street::tableName() . '.id_city' => $id_city])
             ->filterWhere([
                 Street::tableName() . '.id_city' => $id_city,
-                District::tableName() . '.id_district' => $id_district,
+                District::tableName() . '.id_district' => $id_district ?: null,
             ])
             ->groupBy(Street::tableName() . '.id_street')
             ->orderBy([Street::tableName() . '.name' => SORT_ASC])

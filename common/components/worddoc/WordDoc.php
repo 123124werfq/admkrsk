@@ -133,7 +133,7 @@ class WordDoc
 
                 foreach ($values as $key => $value)
                 {
-                    $output[] = $value.(!empty($data[$col_alias]) && in_array($value, $data[$col_alias])?' - да':'- нет');
+                    $output[] = $value.(!empty($data[$col_alias]) && in_array($value, $data[$col_alias])?'  - да':' - нет');
                 }
 
                 $string_output[$col->alias] = implode('<w:br/>', $output);
@@ -159,8 +159,8 @@ class WordDoc
 
                 if (!empty($model))
                     $string_output[$col_alias] = $model->name;
-
-                $string_output[$col->alias] = $data[$col_alias];
+                else
+                    $string_output[$col->alias] = $data[$col_alias];
             }
             else if ($col->type==CollectionColumn::TYPE_JSON)
             {
