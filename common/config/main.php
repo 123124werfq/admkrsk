@@ -12,6 +12,7 @@ return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'bootstrap' => [
         'queue',
+        \common\bootstrap\CommonBootstrap::class,
     ],
     'components' => [
         'sputnik' => [
