@@ -43,7 +43,7 @@
                     <?=$form->field($visibleInput, "[visibleInputs][$key]id_input_visible",['template'=>"{input}"])->dropDownList($visibleInputs,['class'=>'form-control visible-field','prompt'=>'Выберите поле зависимости'])?>
                 </div>
                 <div class="col-sm-6 visibleInputValues">
-                    <?=(!empty($visibleInput->id_input_visible))?$this->render('_input',['visibleInput'=>$visibleInput->visibleInput,'model'=>$visibleInput,'form'=>$form,'rowKey'=>$key]):''?>
+                    <?=(!empty($visibleInput->visibleInput))?$this->render('_input',['visibleInput'=>$visibleInput->visibleInput,'model'=>$visibleInput,'form'=>$form,'rowKey'=>$key]):''?>
                 </div>
                 <div class="col-sm-1">
                     <a class="close" href="javascript:">&times;</a>
