@@ -93,7 +93,7 @@ class Page extends ActiveRecord
             ['id_parent', 'required', 'when' => function($model) {
                 return ($model->lft!=1);
             }],
-            [['content', 'path','notify_message'], 'string'],
+            [['content', 'path', 'notify_message', 'hidden_message'], 'string'],
             [['alias'], 'unique'],
             [['title', 'alias', 'seo_title', 'seo_description', 'seo_keywords'], 'string', 'max' => 255],
             [['partition_domain'], 'url', 'defaultScheme' => 'http'],
@@ -122,6 +122,7 @@ class Page extends ActiveRecord
             'seo_keywords' => 'Ключевые слова',
             'noguest' => 'Доступно только авторизованным',
             'active' => 'Активный',
+            'hidden_message'=>'Сообщение при закрытом разделе',
             'is_partition'=>'Это раздел',
             'partition_domain'=>'Домен раздела',
             'created_at' => 'Создано',

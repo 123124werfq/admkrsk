@@ -247,6 +247,13 @@ class SiteController extends Controller
 
         $blocks = $page->blocks;
 
+        if (!$page->active && !empty($page->hidden_message))
+            return $this->render('page_hidden',[
+                        'page'=>$page
+                   ]);
+        else if (!$page->active)
+            throw new NotFoundHttpException();
+
         $page->createAction();
 
         return $this->render((empty($blocks))?'page':'blocks',[
@@ -672,7 +679,7 @@ class SiteController extends Controller
         $command->bindParam(':Param3', $mname);
         $command->bindParam(':Param4', $serie);
         $command->bindParam(':Param5', $num);
-           
+
         $res = $command->queryRow(); //queryRow()
 
         var_dump($res);

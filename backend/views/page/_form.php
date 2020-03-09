@@ -70,6 +70,10 @@ use yii\widgets\ActiveForm;
 
 <?= $form->field($model, 'partition_domain')->textInput(['maxlength' => 255])->hint('Заполняется если это раздел. Все страницы данного раздела будут строится относительно этого домена. Вводить без "/" на конце') ?>
 
+
+<?= $form->field($model, 'hidden_message')->textarea(['rows' => 6, 'class'=>'redactor'])->hint('Заполняется если страница не активна и требуется вывести сообщение')?>
+
+
 <h3>Файлы внизу страницы</h3>
 
 <?= MultiFileWidget::widget([
