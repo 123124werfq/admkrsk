@@ -371,6 +371,9 @@ class Workflow extends Model
       //if(!file_exists($filename))
       //  return false;
 
+      $d = system('pwd');
+      var_dump($d);
+
       $pemPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.pem');
       $keyPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.key');
       $filePath = escapeshellcmd($filename);
