@@ -376,7 +376,7 @@ class Workflow extends Model
       $path_parts = pathinfo($filename);
       $resultPath = $path_parts['dirname'].'/'.$path_parts['basename'].'.sig';
 
-      $command = "openssl cms -sign -signer $pemPath -inkey $keyPath -binary -in $filePath -outform der -out $resultPath";
+      $command = "sudo openssl cms -sign -signer $pemPath -inkey $keyPath -binary -in $filePath -outform der -out $resultPath";
       //$command = "openssl verion";
       var_dump($command);
       $output = shell_exec($command);
