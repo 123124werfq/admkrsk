@@ -119,18 +119,13 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
 
             // ищем страницу по домену
             $domainPage = Page::find()
-                ->where([
-                    'is_partition' => true,
-                    'active'=>1
-                ])
+                ->where(['is_partition' => true])
                 ->andWhere(['partition_domain'=>$domain])
                 ->one();
 
             if (!empty($domainPage))
-            {
-                //$this->makeLayout($domainPage);
                 return ['site/page', ['page'=>$domainPage]];
-            }
+
         }
 
         // ищем из резервированных
@@ -149,7 +144,7 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
         if (strpos($alias, '?')>0)
             $alias = substr($alias, 0, strpos($alias, '?'));
 
-        $page = Page::find()->where(['alias'=>$alias, 'active'=>1])->one();
+        $page = Page::find()->where(['alias'=>$alias])->one();
 
         if (empty($page))
             return false;
