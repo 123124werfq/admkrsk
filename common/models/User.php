@@ -390,6 +390,8 @@ class User extends ActiveRecord implements IdentityInterface
                 }
             }
         }
+
+        User::rbacCacheInvalidate($this->id);
     }
 
     /**
