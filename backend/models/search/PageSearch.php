@@ -3,11 +3,13 @@
 namespace backend\models\search;
 
 use common\models\AuthEntity;
+use common\models\Statistic;
 use common\traits\ActiveRangeValidateTrait;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\db\Expression;
 use yii\web\NotFoundHttpException;
 
 use common\models\Page;
@@ -60,6 +62,24 @@ class PageSearch extends Page
             $query = Page::find();
         }
 
+        $query->select([
+            '*',
+            'views' => Statistic::find()
+                ->select('views')
+                ->where([
+                    'model_id' => new Expression(Page::tableName() . '.id_page'),
+                    'model' => Page::class,
+                    'year' => null,
+                ]),
+            'viewsYear' => Statistic::find()
+                ->select('views')
+                ->where([
+                    'model_id' => new Expression(Page::tableName() . '.id_page'),
+                    'model' => Page::class,
+                    'year' => (int) Yii::$app->formatter->asDate(time(), 'Y'),
+                ]),
+        ]);
+
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.page')) {
             $query->andFilterWhere(['id_page' => AuthEntity::getEntityIds(Page::class)]);
@@ -88,6 +108,16 @@ class PageSearch extends Page
                 'pageSize' => $params['pageSize'] ?? 10
             ],
         ]);
+
+        $dataProvider->sort->attributes['views'] = [
+            'asc' => new Expression('[[views]] ASC NULLS FIRST'),
+            'desc' => new Expression('[[views]] DESC NULLS LAST'),
+        ];
+
+        $dataProvider->sort->attributes['viewsYear'] = [
+            'asc' => new Expression('[[viewsYear]] ASC NULLS FIRST'),
+            'desc' => new Expression('[[viewsYear]] DESC NULLS LAST'),
+        ];
 
         $this->load($params);
 
