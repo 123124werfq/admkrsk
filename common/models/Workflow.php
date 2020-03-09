@@ -378,7 +378,7 @@ class Workflow extends Model
 
       $command = "openssl cms -sign -signer $pemPath -inkey $keyPath -binary -in $filePath -outform der -out $resultPath";
       //$command = "openssl verion";
-
+      var_dump($command);
       $output = system($command);
       return $output;
 
