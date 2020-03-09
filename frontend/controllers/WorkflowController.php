@@ -174,6 +174,37 @@ class WorkflowController extends \yii\web\Controller
 
     }
 
+    public function actionSigArchive()
+    {
+        $testSource = 'req_7a06c1c5-0218-4672-a6eb-7ef46529803e.docx';
+        $testResult = $testSource.".sig";
+        $cert = "ADMKRSK-TEST-SERVICE-SITE.pem";
+
+        $fullPathSource = Yii::getAlias('@app'). "/assets/";
+
+        if(file_exists($fullPathSource."ADMKRSK-KEY.pem"))
+            echo "key ok!\n";
+        else
+            die();
+
+        $res = openssl_pkcs7_sign($fullPathSource.$testSource, $fullPathSource.$testResult, 'file://'.realpath($fullPathSource.$cert), ['file://'.realpath($fullPathSource."ADMKRSK-KEY.pem"), "CdtDblGfh"],[]);
+        var_dump($res);
+        echo "\n";
+
+        $key = file_get_contents($fullPathSource.$cert);
+        $res2 = openssl_pkcs7_encrypt($fullPathSource.$testSource, $fullPathSource.$testResult.".enc",$key,[]);
+        var_dump($res2);
+    }
+
+    public function actionBcheck()
+    {
+        $binary =  file_get_contents(Yii::getAlias('@app'). "/assets/req_7a06c1c5-0218-4672-a6eb-7ef46529803e.docx.sig.bin");
+        $res = base64_encode($binary);        
+
+        var_dump($res);
+    }
+
+
     protected function signXML($sourcePath, $resultPath, $attachment = null)
     {
         $certName = Yii::getAlias('@app'). "/assets/ADMKRSK-TEST-SERVICE-SITE.pfx";

@@ -31,6 +31,16 @@ class Workflow extends Model
         return $res;
     }
 
+    private function generateGuid()
+    {
+      if (function_exists('com_create_guid') === true)
+      {
+          return trim(com_create_guid(), '{}');
+      }
+      return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));      
+    }
+
+
     private function sendPost($message, $url, $archive = false)
     {
         $this->error = '';
@@ -355,6 +365,25 @@ class Workflow extends Model
 
     }
 
+    public function makeSign($filename)
+    {
+      if(!file_exists($filename))
+        return false;
+
+      $pemPath = '/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.pem';
+      $keyPath = '/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.key';
+      $filePath = $filename;
+      $path_parts = pathinfo($filename);
+      $resultPath = $path_parts['dirname'].'/'.$path_parts['basename'].'.sig';
+
+      $command = "openssl cms -sign -signer $pemPath -inkey $keyPath -binary -in $filePath -outform der -out $resultPath";
+      //$command = "openssl verion";
+
+      $output = system($command);
+      return $output;
+
+    }
+
     public function generateArchive($guid, $attachments = [], $formFile = false)
     {
         $zip_path = Yii::getAlias('@runtime') . $this->path . 'req_' . $guid. '.zip';
@@ -378,12 +407,16 @@ class Workflow extends Model
                 if($ext == 'zip')
                     $ext = 'gz';
 
-                $tpath = Yii::getAlias('@runtime') . $this->path . "req_" . $guid . "-$key-." . $ext;
+                $tpath = Yii::getAlias('@runtime') . $this->path . "req_" . $guid . "." . $ext;
 
                 file_put_contents($tpath, $tfile);
 
                 if (is_file($tpath)) {
-                    $zip->addFile($tpath, 'req_' . $guid . "-$key-." . $ext);
+                    $zip->addFile($tpath, 'req_' . $guid . "." . $ext);
+
+                    //if($signFname = $this->makeSign($tpath))
+                    //   $zip->addFile($tpath, $signFname);
+
                     $filesToUnlink[] = $tpath;
                 }
             }
@@ -457,9 +490,6 @@ class Workflow extends Model
 
 
         $messageDataItems = [];
-
-
-
 
     }
 
