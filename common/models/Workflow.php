@@ -367,6 +367,7 @@ class Workflow extends Model
 
     public function makeSign($filename)
     {
+      /*
       if(!file_exists($filename))
         return false;
 
@@ -375,11 +376,15 @@ class Workflow extends Model
       $filePath = $filename;
       $path_parts = pathinfo($filename);
       $resultPath = $path_parts['dirname'].'/'.$path_parts['basename'].'.sig';
-
-      $command = "sudo openssl cms -sign -signer $pemPath -inkey $keyPath -binary -in $filePath -outform der -out $resultPath";
-      //$command = "openssl verion";
+      */
+      //$command = "sudo openssl cms -sign -signer $pemPath -inkey $keyPath -binary -in $filePath -outform der -out $resultPath";
+      $command = "openssl version";
       var_dump($command);
-      $output = shell_exec($command);
+      exec($command, $output, $return_var);
+      //$output = shell_exec($command);
+      var_dump($output);
+      var_dump($return_var);
+      die();
       return $output;
 
     }
