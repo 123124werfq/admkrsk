@@ -368,18 +368,19 @@ class Workflow extends Model
     public function makeSign($filename)
     {
       
-      if(!file_exists($filename))
-        return false;
+      //if(!file_exists($filename))
+      //  return false;
 
-      $pemPath = '/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.pem';
-      $keyPath = '/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.key';
-      $filePath = $filename;
+      $pemPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.pem');
+      $keyPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.key');
+      $filePath = escapeshellcmd($filename);
       $path_parts = pathinfo($filename);
-      $resultPath = $path_parts['dirname'].'/'.$path_parts['basename'].'.sig';
+      $resultPath = escapeshellcmd($path_parts['dirname'].'/'.$path_parts['basename'].'.sig');
       
       $command = "openssl cms -sign -signer $pemPath -inkey $keyPath -binary -in $filePath -outform der -out $resultPath";
       //$command = "openssl version";
       var_dump($command);
+
       exec($command, $output, $return_var);
       //$output = shell_exec($command);
       var_dump($output);
