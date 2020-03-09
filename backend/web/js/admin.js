@@ -259,7 +259,7 @@ jQuery(document).ready(function()
     });
 
     $('body').delegate(".showdetails",'change',function(){
-      $(this).parent().parent().next().next().toggleClass('hide');
+      $(this).parent().next().toggleClass('hide');
     });
 
     $("#collection-redactor #collection-id_parent_collection").change(function(){
