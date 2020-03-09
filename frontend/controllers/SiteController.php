@@ -652,9 +652,9 @@ class SiteController extends Controller
     public function actionStest()
     {
         $ww = new Workflow;
-        $res = $ww->makeSign('/var/tmp/p7s/test1.docx');
-        echo $res;
-        //$ww->sendMultipartTest();
+        //$res = $ww->makeSign('/var/tmp/p7s/test1.docx');
+        //echo $res;
+        $ww->sendMultipartTest();
         die();
     }
 
