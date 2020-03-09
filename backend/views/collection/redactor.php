@@ -12,24 +12,6 @@ use yii\web\View;
 
 $model->filters = $rules = $model->getViewFilters();
 $model->filters = json_encode($model->filters);
-
-$operators = [
-    '='=>'=',
-    '>'=>'>',
-    '>='=>'>=',
-    '<'=>'<',
-    '<='=>'<=',
-    'not'=>'Не пусто',
-    '<>'=>'Не равно',
-];
-
-if (empty($search))
-    $search = [
-        [
-            'id_column'=>'',
-            'type'=>0,
-        ]
-    ]
 ?>
 
 <?php $form = ActiveForm::begin(['id'=>'collection-redactor']); ?>
@@ -57,8 +39,14 @@ else
 
     $columns_dropdown = [];
 
-    foreach ($columns as $key => $column) {
+    $columns_file = [];
+
+    foreach ($columns as $key => $column)
+    {
         $columns_dropdown[$column->id_column] = $column->name;
+
+        if ($column->isFile())
+            $columns_file[$column->id_column] = $column->name;
     }
 
     $columns = $columns_dropdown;
@@ -119,23 +107,23 @@ else
                     <?=Html::checkBox("ViewColumns[$key][showdetails]",$showDetail,['class'=>'showdetails','id'=>'CollectionColumn_showdetails_'.$key]);?>
                     опции
                 </label>
+
+                <div class="options <?= $showDetail? '' : 'hide'?>"?>
+                    <div class="form-group">
+                        <?=Html::textInput("ViewColumns[$key][group]",$data['group']??'',['class'=>'form-control','id'=>'CollectionColumn_group_'.$key,'placeholder'=>'Введите группу']);?>
+                    </div>
+                    <div class="form-group">
+                        <?=Html::dropDownList("ViewColumns[$key][show_for_searchcolumn]",$data['show_for_searchcolumn'],$columns,['class'=>'form-control','id'=>'CollectionColumn_show_for_searchcolumn_'.$key,'prompt'=>'Показывать если введено','multiple'=>true]);?>
+                    </div>
+                    <?php if (!empty($columns_file)){?>
+                    <div class="form-group">
+                        <?=Html::dropDownList("ViewColumns[$key][filelink]",$data['filelink']??'',$columns_file,['class'=>'form-control','id'=>'CollectionColumn_filelink_'.$key,'prompt'=>'Ссылка на файл']);?>
+                    </div>
+                    <?php }?>
+                </div>
             </div>
             <div class="col-sm-1 col-close">
                 <a class="close btn" href="#">&times;</a>
-            </div>
-            <div class="col-sm-12 <?= $showDetail? 'flex' : 'hide flex' ?>">
-                <div class="row">
-                    <div class="col-sm-5">
-                        <div class="form-group">
-                            <?=Html::textInput("ViewColumns[$key][group]",$data['group']??'',['class'=>'form-control','id'=>'CollectionColumn_group_'.$key,'placeholder'=>'Введите группу']);?>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <?=Html::dropDownList("ViewColumns[$key][show_for_searchcolumn]",$data['show_for_searchcolumn'],$columns,['class'=>'form-control','id'=>'CollectionColumn_show_for_searchcolumn_'.$key,'prompt'=>'Показывать если введено','multiple'=>true]);?>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
         <?php }?>

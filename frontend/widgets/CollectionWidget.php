@@ -95,7 +95,7 @@ class CollectionWidget extends \yii\base\Widget
             {
                 if (is_array($this->attributes['columns']))
                     $this->columns = json_encode($this->attributes);
-                else 
+                else
                     $this->columns = str_replace("&quot;", '"', $this->attributes['columns']);
 
                 foreach ($this->objectData as $key => $value)
@@ -131,6 +131,7 @@ class CollectionWidget extends \yii\base\Widget
 
         // обработка поисковых колонок
         $search_columns = [];
+
         if (!empty($this->columns['search']))
             foreach ($this->columns['search'] as $key => $column_search)
             {
@@ -142,7 +143,6 @@ class CollectionWidget extends \yii\base\Widget
                         $search_columns[$column_search['id_column']]['values'] = $columns[$column_search['id_column']]->input->getArrayValues();
                     else
                         $search_columns[$column_search['id_column']]['values'] = [];
-
                 }
             }
 
@@ -210,7 +210,7 @@ class CollectionWidget extends \yii\base\Widget
             $url_query = http_build_query($url_query);
             if (!empty($url_query))
                 $url = $url['path'].(strpos('?', $url_query)!==false?$url_query:'?'.$url_query);
-            else 
+            else
                 $url = $url['path'];
         }
         else
@@ -275,6 +275,10 @@ class CollectionWidget extends \yii\base\Widget
                     if (!$show)
                         continue;
                 }
+
+                // ставим alias заместо ID для ссылки на файл
+                if (!empty($col['filelink']) && !empty($columns[$col['filelink']]))
+                    $col['filelink'] = $columns[$col['filelink']]->alias;
 
                 $columnsOptions[$columns[$col['id_column']]->alias] = $col;
                 $columnsByAlias[$columns[$col['id_column']]->alias] = $columns[$col['id_column']];

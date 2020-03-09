@@ -485,6 +485,11 @@ class CollectionColumn extends \yii\db\ActiveRecord
         return 'db_collection_column';
     }
 
+    public function isFile()
+    {
+        return ($this->type == self::TYPE_FILE || $this->type == self::TYPE_FILE_OLD);
+    }
+
     /**
      * {@inheritdoc}
      */

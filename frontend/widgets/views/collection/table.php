@@ -26,7 +26,6 @@
 </form>
 
 <div class="collection-controls">
-
 	<?php if (!empty($show_download) && !empty($setting)){?>
 		<a href="/collection/download?key=<?=$setting->key?>&id_page=<?=$page->id_page?>">Скачать</a>
 	<?php }?>
@@ -118,6 +117,8 @@ else {
 
 							if ($column->is_link)
 								echo '<a href="/collection?id='.$id_record.'&id_page='.$page->id_page.'">'.$value.'</a>';
+							elseif (!empty($columnsOptions[$column->alias]['filelink']))
+								echo '<a href="'..'" download>'.$value.'</a>';
 							else
 								echo $column->getValueByType($value);
 						}?>
