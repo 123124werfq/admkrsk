@@ -51,7 +51,7 @@ if (Yii::$app->user->can('admin.collection')) {
                     'value' => function ($model) {
                         return (!empty($model->box))?$model->box->name:'';
                     },
-                    'filter'    => ArrayHelper::map(Box::find()->all(),'id_box','name'),
+                    'filter' => ArrayHelper::map(Box::find()->all(),'id_box','name'),
                 ],
                 //'updated_at',
                 //'updated_by',

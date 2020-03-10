@@ -153,15 +153,41 @@ class CollectionRecordController extends Controller
         $this->redirect(Yii::$app->request->referrer ?: '/');
     }
 
-    public function makeAction($type,$dataProvider)
+    public function makeAction($model,$type,$dataProvider)
     {
-        var_dump($dataProvider->query->all());
-        die();
+        // добавляем фильтр по ID
+        if ($ids = Yii::$app->request->post('ids',[]))
+        {
+            foreach ($ids as $key => $value)
+                $ids[$key] = (int)$value;
+            
+            $dataProvider->query->andWhere(['id_record'=>$ids]);
+        }
+
+        $records = $dataProvider->query->all();
 
         switch ($type)
         {
-            case 1:
-                $records = $query->all();
+            case 1: // archive and copy
+                $collection = Yii::$app->mongodb->getCollection('collection'.$model->id_collection);
+
+                $archiveColumn = $model->makeArchiveColumn();
+
+                foreach ($records as $key => $data)
+                {
+                    $newRecord = new CollectionRecord;
+                    $newRecord->id_collection = $model->id_collection;
+
+                    if ($newRecord->save())
+                    {
+                        unset($data['_id']);
+                        $data['id_record'] = $newRecord->id_record;
+                        $collection->insert($data);
+                    }
+
+                    $collection->update(['id_record'=>$data['id_record']],['col'.$archiveColumn->id_column=>1]);
+                }
+
                 break;
             case 2: // archive
 
@@ -202,7 +228,7 @@ class CollectionRecordController extends Controller
 
         if ($action = Yii::$app->request->post('action'))
         {
-            $this->makeAction($action,$dataProvider);
+            return $this->makeAction($model, $action,$dataProvider);
         }
 
         return $this->render('index', [

@@ -596,6 +596,24 @@ class Collection extends ActiveRecord
         return Url::to(['/api/collection/index', 'alias' => $this->alias], true);
     }
 
+    public function makeArchiveColumn()
+    {
+        foreach ($this->columns as $key => $column)
+            if ($column->type == CollectionColumn::TYPE_ARCHIVE)
+                return $column;
+
+        $archiveColumn = new CollectionColumn;
+        $archiveColumn->id_collection = $this->id_collection;
+        $archiveColumn->name = 'Архив';
+        $archiveColumn->alias = 'is_archive';
+        $archiveColumn->type = CollectionColumn::TYPE_ARCHIVE;
+        
+        if ($archiveColumn->save())
+            return $archiveColumn;
+
+        return false;
+    }
+
     public function createForm()
     {
         $transaction = Yii::$app->db->beginTransaction();

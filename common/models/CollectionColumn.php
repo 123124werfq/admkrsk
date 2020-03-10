@@ -52,6 +52,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
     const TYPE_FILE_OLD = 29;
     const TYPE_ADDRESSES = 30;
     const TYPE_REPEAT = 31;
+    const TYPE_ARCHIVE = 32;
 
     public static function getTypeOptions($type)
     {

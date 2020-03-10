@@ -39,6 +39,9 @@ class CollectionSearch extends DynamicModel
                 case CollectionColumn::TYPE_INPUT:
                     $this->addRule(['col'.$column->id_column], 'string');
                     break;
+                case CollectionColumn::TYPE_ARCHIVE:
+                    $this->addRule(['col'.$column->id_column], 'boolean');
+                    break;
                 default:
                     //$this->addRule(['col'.$column->id_column], 'safe');
                     break;
@@ -54,12 +57,16 @@ class CollectionSearch extends DynamicModel
         $columns = $model->getColumns()->with('input')->all();
 
         $dataProviderColumns = [
+            /*[
+                'class' => 'yii\grid\CheckboxColumn',
+                // you may configure additional properties here
+            ],*/
             [
                 'attribute'=>'id_record',
                 'format'=>'raw',
                 'value'=>function($model)
                 {
-                    return '<span class="hidehover">'.$model['id_record'].'</span><label class="btn btn-default showhover"><input class="records-check" type="checkbox" name="record[]" value='.$model['id_record'].'"/></label>';
+                    return '<span class="hidehover">'.$model['id_record'].'</span><label class="btn btn-default showhover"><input class="records-check" type="checkbox" name="record[]" value="'.$model['id_record'].'"/></label>';
                 },
                 'label'=>'#'
             ],
@@ -124,7 +131,7 @@ class CollectionSearch extends DynamicModel
                     return '';
                 };
             }
-             else if ($col->type==CollectionColumn::TYPE_IMAGE)
+            else if ($col->type==CollectionColumn::TYPE_IMAGE)
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
                 $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias,$col) {
@@ -133,6 +140,19 @@ class CollectionSearch extends DynamicModel
                         return '';
 
                     return $col->getValueByType($model[$col_alias]);
+                };
+            }
+            else if ($col->type==CollectionColumn::TYPE_CHECKBOX || $col->type==CollectionColumn::TYPE_ARCHIVE)
+            {
+                $dataProviderColumns[$col_alias]['format'] = 'raw';
+                //$dataProviderColumns[$col_alias]['filterType'] = \yii\grid\GridView::CHECKBOX;
+                $dataProviderColumns[$col_alias]['filter'] = [true => 'Да', false => 'Нет'];
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias,$col) {
+
+                    if (empty($model[$col_alias]))
+                        return '';
+
+                    return 'Да';
                 };
             }
             else if ($col->type==CollectionColumn::TYPE_FILE)
@@ -205,27 +225,6 @@ class CollectionSearch extends DynamicModel
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
                 $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias)
                 {
-                    /*
-                    if (empty($model[$col_alias]))
-                        return '';
-
-                    $labels = [];
-
-                    if (!empty($model[$col_alias.'_search']))
-                        $labels = explode(';', $model[$col_alias.'_search']);
-
-                    $links = [];
-
-                    if (is_array($model[$col_alias]))
-                        foreach ($model[$col_alias] as $ckey => $label)
-                        {
-                            if (!empty($labels[$ckey]))
-                                $links[] = '<a href="/collection-record/update?id='.$ckey.'">'.$label.'</a>';
-                        }
-
-                    return implode('<br>', $links);
-                    */
-
                     if (empty($model[$col_alias]))
                         return '';
 
@@ -275,8 +274,13 @@ class CollectionSearch extends DynamicModel
 
         foreach ($this->attributes as $attr => $value)
         {
-            if (!empty($value))
-                $query->andWhere(['or',['like',$attr,$value],[$attr=>(is_numeric($value))?(float)$value:$value]]);
+            if ($value!='')
+            {
+                if ($value!=0)
+                    $query->andWhere(['or',['like',$attr,$value],[$attr=>(is_numeric($value))?(float)$value:$value]]);
+                else 
+                    $query->andWhere(['or',['=',$attr,null],[$attr=>(is_numeric($value))?(float)$value:$value]]);
+            }
         }
 
         $dataProvider = new ActiveDataProvider([
