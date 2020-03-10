@@ -153,26 +153,22 @@ class CollectionRecordController extends Controller
         $this->redirect(Yii::$app->request->referrer ?: '/');
     }
 
-    public function makeAction($type,$query)
+    public function makeAction($type,$dataProvider)
     {
+        var_dump($dataProvider->query->all());
+        die();
+
         switch ($type)
         {
-
-            // copy
-            case 0:
+            case 1:
                 $records = $query->all();
                 break;
+            case 2: // archive
 
-            // copy and archive
-            case 1:
-                
                 break;
+            case 3: // copy
 
-            // archive
-            case 2:
-            
                 break;
-            
             default:
                 # code...
                 break;
@@ -203,6 +199,11 @@ class CollectionRecordController extends Controller
 
         $searchModel = new CollectionSearch($model);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        if ($action = Yii::$app->request->post('action'))
+        {
+            $this->makeAction($action,$dataProvider);
+        }
 
         return $this->render('index', [
             'settingForm' => $settingForm,

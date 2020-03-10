@@ -9,9 +9,9 @@
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" aria-labelledby="selectActionDropDown">
-            <li><a href="javascript:" data-action="0">Скопировать и отправить в архив</a></li>
-            <li><a href="javascript:" data-action="1">Отправить в архив</a></li>
-            <li><a href="javascript:" data-action="2">Скопировать</a></li>
+            <li><a href="javascript:" data-action="1">Скопировать и отправить в архив</a></li>
+            <li><a href="javascript:" data-action="2">Отправить в архив</a></li>
+            <li><a href="javascript:" data-action="3">Скопировать</a></li>
         </ul>
       </div>
 		</form>

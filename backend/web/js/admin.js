@@ -255,6 +255,7 @@ jQuery(document).ready(function()
 {
     $(".selectActionDropDown a").click(function(){
 
+      var $link = $(this);
       if ($('.records-check:checked').length==0)
       {
           alert('Вы не выбрали ниодной записи');
@@ -270,7 +271,7 @@ jQuery(document).ready(function()
         $.ajax({
             url: document.location,
             type: 'post',
-            data: {ids:ids},
+            data: {ids:ids,action:$link.data('action')},
             success: function(data)
             {
               toastr.success('Готово', '');
@@ -297,6 +298,7 @@ jQuery(document).ready(function()
       }
 
       $("#selectCount").html($('.records-check:checked').length);
+
     });
     $("#redactor-modal button[type=submit]").click(function(){
       $("#redactor-modal form").submit();
