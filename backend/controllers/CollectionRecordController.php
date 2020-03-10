@@ -153,6 +153,32 @@ class CollectionRecordController extends Controller
         $this->redirect(Yii::$app->request->referrer ?: '/');
     }
 
+    public function makeAction($type,$query)
+    {
+        switch ($type)
+        {
+
+            // copy
+            case 0:
+                $records = $query->all();
+                break;
+
+            // copy and archive
+            case 1:
+                
+                break;
+
+            // archive
+            case 2:
+            
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+    }
+
     /**
      * Lists all CollectionRecord models.
      * @param $id

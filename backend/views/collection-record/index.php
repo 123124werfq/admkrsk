@@ -53,6 +53,8 @@ if ($model->alias == 'institution')
     <?= $this->render('_form_institution_setting', ['settingForm' => $settingForm])?>
 <?php endif; ?>
 
+<?= $this->render('_form_select',['dataProvider'=>$dataProvider])?>
+
 <div class="tabs-container">
     <ul class="nav nav-tabs" role="tablist">
         <li class="active">

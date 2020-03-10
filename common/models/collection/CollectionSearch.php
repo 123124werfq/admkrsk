@@ -54,10 +54,18 @@ class CollectionSearch extends DynamicModel
         $columns = $model->getColumns()->with('input')->all();
 
         $dataProviderColumns = [
-            ['attribute'=>'id_record','label'=>'#'],
+            [
+                'attribute'=>'id_record',
+                'format'=>'raw',
+                'value'=>function($model)
+                {
+                    return '<span class="hidehover">'.$model['id_record'].'</span><label class="btn btn-default showhover"><input class="records-check" type="checkbox" name="record[]" value='.$model['id_record'].'/></label>';
+                },
+                'label'=>'#'
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '<span class="btn btn-default">{view}</span><span class="btn btn-default update-record">{update}</span> <span class="btn btn-default">{delete}</span>',
+                'template' => '<span class="btn btn-default">{view}</span><span class="btn btn-default update-record">{update}</span><span class="btn btn-default">{delete}</span>',
                 'contentOptions'=>['class'=>'button-column'],
                 'urlCreator' => function ($action, $model, $key, $index)
                 {

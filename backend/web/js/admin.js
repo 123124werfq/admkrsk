@@ -253,6 +253,19 @@ function reordModels($block,$data)
 
 jQuery(document).ready(function()
 {
+    $(".records-check").change(function(){
+      if ($(this).is(':checked'))
+      {
+        $('.grid-view table').addClass('hasChecked');
+      }
+      else 
+      {
+        if ($('.records-check:checked').length==0)
+        {
+          $('.grid-view table').removeClass('hasChecked');
+        }
+      }
+    });
     $("#redactor-modal button[type=submit]").click(function(){
       $("#redactor-modal form").submit();
       return false;

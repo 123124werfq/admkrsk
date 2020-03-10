@@ -206,6 +206,13 @@ table th a {    font-weight: 600;
 .treerow .row .button-column {opacity: 0;}
 .treerow:hover .button-column {opacity: 1;}
 
+.showhover {display: none;}
+tr:hover .hidehover, .hasChecked tr .hidehover {display: none;}
+tr:hover .showhover, .hasChecked tr .showhover {display: block;}
+
+
+tr .button-column .btn {opacity: 0; transition: opacity 0.2s;}
+tr:hover .button-column .btn {opacity: 1;}
 
 .menu-childs, .menu-container {list-style-type: none; padding: 0px;}
 .button-column {display: inline-block;}
