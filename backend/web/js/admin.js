@@ -253,18 +253,50 @@ function reordModels($block,$data)
 
 jQuery(document).ready(function()
 {
+    $(".selectActionDropDown a").click(function(){
+
+      if ($('.records-check:checked').length==0)
+      {
+          alert('Вы не выбрали ниодной записи');
+      }
+      else
+      {
+        var ids = [];
+
+        $('.records-check:checked').each(function(i){
+            ids.push($(this).val());
+        });
+
+        $.ajax({
+            url: document.location,
+            type: 'post',
+            data: {ids:ids},
+            success: function(data)
+            {
+              toastr.success('Готово', '');
+            }
+        });
+      }
+
+      return false;
+    });
+
     $(".records-check").change(function(){
       if ($(this).is(':checked'))
       {
         $('.grid-view table').addClass('hasChecked');
+        $(".selectActionForm").removeClass('hide');
       }
-      else 
+      else
       {
         if ($('.records-check:checked').length==0)
         {
           $('.grid-view table').removeClass('hasChecked');
+          $(".selectActionForm").addClass('hide');
         }
       }
+
+      $("#selectCount").html($('.records-check:checked').length);
     });
     $("#redactor-modal button[type=submit]").click(function(){
       $("#redactor-modal form").submit();

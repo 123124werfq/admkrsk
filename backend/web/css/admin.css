@@ -246,6 +246,7 @@ ul.menu-container ul .create-menu {display: none;}
 .ids tr td:first-child {width: 20px;}
 
 .tray.tray-center {padding: 25px 20px 50px!important;}
+.dropdown {display: inline-block;}
 .dropdown-menu>li>a {padding: 10px 16px;}
 
 .form-control {

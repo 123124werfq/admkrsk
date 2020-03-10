@@ -59,7 +59,7 @@ class CollectionSearch extends DynamicModel
                 'format'=>'raw',
                 'value'=>function($model)
                 {
-                    return '<span class="hidehover">'.$model['id_record'].'</span><label class="btn btn-default showhover"><input class="records-check" type="checkbox" name="record[]" value='.$model['id_record'].'/></label>';
+                    return '<span class="hidehover">'.$model['id_record'].'</span><label class="btn btn-default showhover"><input class="records-check" type="checkbox" name="record[]" value='.$model['id_record'].'"/></label>';
                 },
                 'label'=>'#'
             ],
