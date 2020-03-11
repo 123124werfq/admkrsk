@@ -272,13 +272,22 @@ class CollectionSearch extends DynamicModel
 
         $this->load($params);
 
+        $archiveColumn = $this->collection->getArchiveColumn();
+
+        if (!empty($archiveColumn))
+        {
+            $attr = "col".$archiveColumn->id_column;
+            if ($this->$attr=='')
+                $query->andWhere(['or',['=',$attr,null],[$attr=>0]]);
+        }
+
         foreach ($this->attributes as $attr => $value)
         {
             if ($value!='')
             {
                 if ($value!=0)
                     $query->andWhere(['or',['like',$attr,$value],[$attr=>(is_numeric($value))?(float)$value:$value]]);
-                else 
+                else
                     $query->andWhere(['or',['=',$attr,null],[$attr=>(is_numeric($value))?(float)$value:$value]]);
             }
         }

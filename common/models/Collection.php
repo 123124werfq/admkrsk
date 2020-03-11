@@ -596,18 +596,29 @@ class Collection extends ActiveRecord
         return Url::to(['/api/collection/index', 'alias' => $this->alias], true);
     }
 
-    public function makeArchiveColumn()
+
+    public function getArchiveColumn()
     {
         foreach ($this->columns as $key => $column)
             if ($column->type == CollectionColumn::TYPE_ARCHIVE)
                 return $column;
+
+        return false;
+    }
+
+    public function makeArchiveColumn()
+    {
+        $column = $this->getArchiveColumn();
+
+        if (!empty($column))
+            return $column;
 
         $archiveColumn = new CollectionColumn;
         $archiveColumn->id_collection = $this->id_collection;
         $archiveColumn->name = 'Архив';
         $archiveColumn->alias = 'is_archive';
         $archiveColumn->type = CollectionColumn::TYPE_ARCHIVE;
-        
+
         if ($archiveColumn->save())
             return $archiveColumn;
 
