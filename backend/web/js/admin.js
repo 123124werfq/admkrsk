@@ -256,7 +256,7 @@ jQuery(document).ready(function()
     $(".selectActionDropDown a").click(function(){
 
       var $link = $(this);
-      if ($('.records-check:checked').length==0)
+      if ($('input[name="selection[]"]:checked').length==0)
       {
           alert('Вы не выбрали ниодной записи');
       }
@@ -264,7 +264,7 @@ jQuery(document).ready(function()
       {
         var ids = [];
 
-        $('.records-check:checked').each(function(i){
+        $('input[name="selection[]"]:checked').each(function(i){
             ids.push($(this).val());
         });
 
@@ -274,6 +274,7 @@ jQuery(document).ready(function()
             data: {ids:ids,action:$link.data('action')},
             success: function(data)
             {
+              $.pjax.reload({container: '#collection_grid', async: false});
               toastr.success('Готово', '');
             }
         });
@@ -282,7 +283,7 @@ jQuery(document).ready(function()
       return false;
     });
 
-    $(".records-check").change(function(){
+    $('input[name="selection[]"]').change(function(){
       if ($(this).is(':checked'))
       {
         $('.grid-view table').addClass('hasChecked');
@@ -290,14 +291,14 @@ jQuery(document).ready(function()
       }
       else
       {
-        if ($('.records-check:checked').length==0)
+        if ($('input[name="selection[]"]:checked').length==0)
         {
           $('.grid-view table').removeClass('hasChecked');
           $(".selectActionForm").addClass('hide');
         }
       }
 
-      $("#selectCount").html($('.records-check:checked').length);
+      $("#selectCount").html($('input[name="selection[]"]:checked').length);
 
     });
     $("#redactor-modal button[type=submit]").click(function(){

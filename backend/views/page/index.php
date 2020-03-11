@@ -30,7 +30,7 @@ $defaultColumns = [
         'format' => 'html',
         'value' => function ($model) {
             /**@var Page $model */
-            return '<a target="_blank" href="' . $model->getUrl(true) . '">' . $model->getUrl() . '</a>';
+            return '<a class="break-all" target="_blank" href="' . $model->getUrl(true) . '">' . $model->getUrl() . '</a>';
         },
     ],
     'created_at' => [

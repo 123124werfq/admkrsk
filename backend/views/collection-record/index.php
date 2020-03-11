@@ -13,7 +13,7 @@ use yii\widgets\Pjax;
 
 $this->title = $model->pageTitle;
 $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['collection/index']];
-$this->params['breadcrumbs'][] = $model->primaryKey;
+$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['index', 'id' => $model->id_collection]];
 
 $this->params['button-block'][] = Html::a('Добавить', ['create', 'id' => $model->id_collection], ['class' => 'btn btn-success create-collection','data-toggle'=>"modal",'data-target'=>"#CollectionRecord"]);
 
@@ -76,8 +76,9 @@ if ($model->alias == 'institution')
           <div class="table-responsive">
               <?php yii\widgets\Pjax::begin([
                 'id' => 'collection_grid',
-                //'enablePushState' => false,
+                'enablePushState' => false,
                 'scrollTo' => '#collection_grid',
+                'timeout'=>5000,
               ]) ?>
 
               <?= GridView::widget([

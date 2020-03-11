@@ -57,17 +57,20 @@ class CollectionSearch extends DynamicModel
         $columns = $model->getColumns()->with('input')->all();
 
         $dataProviderColumns = [
-            /*[
+            [
                 'class' => 'yii\grid\CheckboxColumn',
                 // you may configure additional properties here
-            ],*/
+                'checkboxOptions' => function ($model, $key, $index, $column) {
+                       return ['value' => $model['id_record']];
+                }
+            ],
             [
                 'attribute'=>'id_record',
                 'format'=>'raw',
-                'value'=>function($model)
+                /*'value'=>function($model)
                 {
-                    return '<span class="hidehover">'.$model['id_record'].'</span><label class="btn btn-default showhover"><input class="records-check" type="checkbox" name="record[]" value="'.$model['id_record'].'"/></label>';
-                },
+                    return '<span class="hidehover">'.$model['id_record'].'</span>';
+                },*/
                 'label'=>'#'
             ],
             [

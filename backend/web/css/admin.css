@@ -35,6 +35,8 @@ img {max-width: 100%;}
     width: 30px;
 }
 
+.break-all {word-break: break-all;}
+
 .partitions {display: flex; justify-content: flex-start; text-align: center; padding: 10px;}
 .partition {display: flex; width: 200px; height: 200px; margin: 0px 20px 20px 0px; background: #fff; align-items: center; justify-content: center;}
 
