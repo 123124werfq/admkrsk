@@ -425,15 +425,18 @@ class Collection extends ActiveRecord
         $query = CollectionQuery::getQuery($id_collection);
 
         if (!is_array($options))
-        {
             $options = json_decode($this->options, true);
-        }
 
         $id_cols = [];
 
         if (!empty($options['columns'])) {
-            foreach ($options['columns'] as $key => $col) {
+
+            foreach ($options['columns'] as $key => $col)
+            {
                 $id_cols[] = $col['id_column'];
+
+                if (!empty($col['filelink']))
+                    $id_cols[] = $col['filelink'];
             }
 
             if (!empty($options['search'])) {
@@ -488,6 +491,7 @@ class Collection extends ActiveRecord
                 'id_column' => $this->parent->columns[0]->id_column,
                 'group' => '',
                 'show_for_searchcolumn' => '',
+                'filelink' => '',
             ]
         ];
     }
@@ -544,6 +548,7 @@ class Collection extends ActiveRecord
                 'id_column' => $column->id_column,
                 'group'=>'',
                 'show_for_searchcolumn'=>'',
+                'filelink' => '',
             ];
         }
 

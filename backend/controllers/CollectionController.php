@@ -787,6 +787,7 @@ class CollectionController extends Controller
                 $options['columns'][] = [
                     'id_column' => $data['id_column'],
                     'show_for_searchcolumn'=> $data['show_for_searchcolumn']??'',
+                    'filelink'=> $data['filelink']??'',
                     'group'=> $data['group']??'',
                 ];
             }

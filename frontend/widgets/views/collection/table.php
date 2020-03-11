@@ -117,8 +117,8 @@ else {
 
 							if ($column->is_link)
 								echo '<a href="/collection?id='.$id_record.'&id_page='.$page->id_page.'">'.$value.'</a>';
-							elseif (!empty($columnsOptions[$column->alias]['filelink']))
-								echo '<a href="'..'" download>'.$value.'</a>';
+							elseif (!empty($columnsOptions[$column->alias]['filelink']) && !empty($row[$columnsOptions[$column->alias]['filelink']]))
+								echo '<a href="'.$row[$columnsOptions[$column->alias]['filelink']].'" download>'.$value.'</a>';
 							else
 								echo $column->getValueByType($value);
 						}?>
