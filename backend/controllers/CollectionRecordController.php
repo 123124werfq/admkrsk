@@ -160,7 +160,7 @@ class CollectionRecordController extends Controller
         {
             foreach ($ids as $key => $value)
                 $ids[$key] = (int)$value;
-            
+
             $dataProvider->query->andWhere(['id_record'=>$ids]);
         }
 
@@ -190,10 +190,28 @@ class CollectionRecordController extends Controller
 
                 break;
             case 2: // archive
+                $collection = Yii::$app->mongodb->getCollection('collection'.$model->id_collection);
+                $archiveColumn = $model->makeArchiveColumn();
+
+                foreach ($records as $key => $data)
+                    $collection->update(['id_record'=>$data['id_record']],['col'.$archiveColumn->id_column=>1]);
 
                 break;
             case 3: // copy
+                $collection = Yii::$app->mongodb->getCollection('collection'.$model->id_collection);
 
+                foreach ($records as $key => $data)
+                {
+                    $newRecord = new CollectionRecord;
+                    $newRecord->id_collection = $model->id_collection;
+
+                    if ($newRecord->save())
+                    {
+                        unset($data['_id']);
+                        $data['id_record'] = $newRecord->id_record;
+                        $collection->insert($data);
+                    }
+                }
                 break;
             default:
                 # code...
