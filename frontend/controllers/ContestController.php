@@ -87,7 +87,7 @@ class ContestController extends \yii\web\Controller
         foreach ($contests as $ackey => $contest) {
             if(!empty($contest['participant_form']))
             {
-                if($form->id_collection == $collection->id_collection)
+                if($form->alias == $contest['participant_form'])
                     $contestname = $contest['name'];
             }
         }
