@@ -445,7 +445,7 @@ $(document).ready(function() {
 
         if(originalLink.indexOf('://')==-1) originalLink = location.origin + originalLink;
 
-        let previewLink = "https://docs.google.com/gview?embedded=true&url="+originalLink;
+        let previewLink = "https://docs.google.com/gview?embedded=false&url="+originalLink;
         //$(el).append('<a href="'+previewLink+'" traget="_blank">просмотр</a>');
         if(!$(el).hasClass('btn'))
             $(el).attr('href', previewLink).attr('target', '_blank');
