@@ -234,8 +234,8 @@ class ServiceController extends Controller
 
     protected function processAIS($data)
     {
-        //var_dump($data);
-        //die();
+        var_dump($data);
+        die();
 
         $lname = urlencode($data[5812]??'');
         $fname = urlencode($data[5813]??'');
