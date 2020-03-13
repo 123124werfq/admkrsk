@@ -234,14 +234,16 @@ class ServiceController extends Controller
 
     protected function processAIS($data)
     {
-        var_dump($data);
-        die();
+        //var_dump($data);
+        //die();
 
-        $lname = urlencode($data[5812]??'');
-        $fname = urlencode($data[5813]??'');
-        $mname = urlencode($data[5843]??'');
-        $serie = urlencode($data[5823]??'');
-        $num = urlencode($data[5824]??'');
+        $lname = urlencode($data[8196]??'');
+        $fname = urlencode($data[8197]??'');
+        $mname = urlencode($data[8198]??'');
+
+        $serie = $data[8203]??'0000';
+        $serie = urlencode($serie[0].$serie[1]." ".$serie[2].$serie[3]);
+        $num = urlencode($data[8204]??'');
 
         $request = "http://10.24.0.195:700/Service.svc/GetQueueNumber?lname=$lname&fname=$fname&mname=$mname&docseries=$serie&docnumber=$num";
         
