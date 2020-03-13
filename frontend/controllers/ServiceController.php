@@ -234,14 +234,14 @@ class ServiceController extends Controller
 
     protected function processAIS($data)
     {
-        var_dump($data);
-        die();
+        //var_dump($data);
+        //die();
 
-        $lname = urlencode('малиновская');
-        $fname = urlencode('лилия');
-        $mname = urlencode('юрьевна');
-        $serie = urlencode('04 03');
-        $num = urlencode('866821');
+        $lname = urlencode($data[5812]??'');
+        $fname = urlencode($data[5813]??'');
+        $mname = urlencode($data[5843]??'');
+        $serie = urlencode($data[5823]??'');
+        $num = urlencode($data[5824]??'');
 
         $request = "http://10.24.0.195:700/Service.svc/GetQueueNumber?lname=$lname&fname=$fname&mname=$mname&docseries=$serie&docnumber=$num";
         
@@ -279,7 +279,10 @@ class ServiceController extends Controller
             {
                 $aisres = $this->processAIS($prepare);
                 
-                echo "Данная операция временно недоступна";
+                if($aisres)
+                    echo "Ваш номер в очереди: $aisres";
+                else
+                    echo "Информация об очередности не обнаружена"; 
                 die();
                 return $this->render('result',[
                     'number'=> false,
