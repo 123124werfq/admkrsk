@@ -247,8 +247,8 @@ class ServiceController extends Controller
         
         $res = @json_decode(file_get_contents($request));
 
-        if(isset($res['Data']))
-            return $res['Data'];
+        if(isset($res->Data))
+            return $res->Data;
         else 
             return false;
     }
