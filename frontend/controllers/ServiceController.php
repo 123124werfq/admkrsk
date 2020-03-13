@@ -232,9 +232,25 @@ class ServiceController extends Controller
         return ['results' => $results];
     }
 
-    protected function processAIS($form)
+    protected function processAIS($data)
     {
+        var_dump($data);
+        die();
 
+        $lname = urlencode('малиновская');
+        $fname = urlencode('лилия');
+        $mname = urlencode('юрьевна');
+        $serie = urlencode('04 03');
+        $num = urlencode('866821');
+
+        $request = "http://10.24.0.195:700/Service.svc/GetQueueNumber?lname=$lname&fname=$fname&mname=$mname&docseries=$serie&docnumber=$num";
+        
+        $res = @json_decode(file_get_contents($request));
+
+        if(isset($res['Data']))
+            return $res['Data'];
+        else 
+            return false;
     }
 
     /**
@@ -261,7 +277,7 @@ class ServiceController extends Controller
 
             if($id_form == 53) // хардкод для теста
             {
-                $aisres = $this->processAIS($form);
+                $aisres = $this->processAIS($prepare);
                 
                 echo "Данная операция временно недоступна";
                 die();
