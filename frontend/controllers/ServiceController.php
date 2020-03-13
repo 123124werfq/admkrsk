@@ -249,7 +249,7 @@ class ServiceController extends Controller
         echo $request;
         $res = file_get_contents($request);
 
-        var_dump($request);
+        var_dump($res);
         $res = @json_decode(file_get_contents($request));
 
         if(isset($res->Data))
