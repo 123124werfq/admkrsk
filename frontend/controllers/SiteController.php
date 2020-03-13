@@ -676,7 +676,7 @@ class SiteController extends Controller
         $serie = '04 03';
         $num = '866821';
 
-        $request = urldecode("http://10.24.0.195:700/Service.svc/GetQueueNumber?lname=$lname&fname=$fname&mname=$mname&docseries=$serie&docnumber=$num");
+        $request = urlencode("http://10.24.0.195:700/Service.svc/GetQueueNumber?lname=$lname&fname=$fname&mname=$mname&docseries=$serie&docnumber=$num");
 
         //$command->bindParam(':Param1', $lname);
         //$command->bindParam(':Param2', $fname);
