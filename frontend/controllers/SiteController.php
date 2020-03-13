@@ -686,7 +686,7 @@ class SiteController extends Controller
 
         //$res = $command->queryRow(); //queryRow()
 
-        $res = file_get_contents($request);
+        $res = @json_decode(file_get_contents($request));
 
         var_dump($res);
         die();
