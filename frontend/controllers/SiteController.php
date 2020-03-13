@@ -670,13 +670,13 @@ class SiteController extends Controller
 
         //$sql = 'EXEC SMEV.get_QueueNumber @lname=:Param1,@fname=:Param2,@mname=:Param3,@docseries=:Param4,@docnumber=:Param5';
         //$command = Yii::$app->aisDb->createCommand();
-        $lname = 'малиновская';
-        $fname = 'лилия';
-        $mname = 'юрьевна';
-        $serie = '04 03';
-        $num = '866821';
+        $lname = urlencode('малиновская');
+        $fname = urlencode('лилия');
+        $mname = urlencode('юрьевна');
+        $serie = urlencode('04 03');
+        $num = urlencode('866821');
 
-        $request = urlencode("http://10.24.0.195:700/Service.svc/GetQueueNumber?lname=$lname&fname=$fname&mname=$mname&docseries=$serie&docnumber=$num");
+        $request = "http://10.24.0.195:700/Service.svc/GetQueueNumber?lname=$lname&fname=$fname&mname=$mname&docseries=$serie&docnumber=$num";
 
         //$command->bindParam(':Param1', $lname);
         //$command->bindParam(':Param2', $fname);
