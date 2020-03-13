@@ -275,7 +275,7 @@ class ServiceController extends Controller
         {
             $prepare = $model->prepareData(true);
 
-            if($id_form == 53) // хардкод для теста
+            if($id_form == 666) // хардкод для теста
             {
                 $aisres = $this->processAIS($prepare);
                 
