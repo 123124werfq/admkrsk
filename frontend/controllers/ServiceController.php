@@ -246,7 +246,10 @@ class ServiceController extends Controller
         $num = urlencode($data[8204]??'');
 
         $request = "http://10.24.0.195:700/Service.svc/GetQueueNumber?lname=$lname&fname=$fname&mname=$mname&docseries=$serie&docnumber=$num";
-        
+        echo $request;
+        $res = file_get_contents($request);
+
+        var_dump($request);
         $res = @json_decode(file_get_contents($request));
 
         if(isset($res->Data))
