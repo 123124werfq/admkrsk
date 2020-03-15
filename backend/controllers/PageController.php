@@ -165,7 +165,7 @@ class PageController extends Controller
      * @return mixed
      * @throws InvalidConfigException
      */
-    public function actionList($q,$partition=0)
+    public function actionList($q='',$partition=0)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -177,13 +177,16 @@ class PageController extends Controller
                 ['id_page' => $q],
                 ['ilike', 'title', $q],
             ]);
+
             $query->andWhere(['id' => $q]);
-        } else {
+        } else if (!empty($q))
             $query->andWhere(['ilike', 'title', $q]);
-        }
 
         if (!empty($partition))
             $query->andWhere(['is_partition' => true]);
+
+        if (!empty(Yii::$app->request->get('type')) && Yii::$app->request->get('type') == 'news')
+            $query->andWhere(['or',['type'=>Page::TYPE_NEWS],['type'=>Page::TYPE_ANONS]]);
 
         if (!empty($_GET['news']))
             $query->andWhere('id_page IN (SELECT id_page FROM db_news)');

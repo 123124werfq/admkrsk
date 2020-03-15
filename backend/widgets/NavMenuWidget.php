@@ -15,10 +15,12 @@ class NavMenuWidget extends Widget
 
         $newsRoles = $menu['news']['roles'] ?? null;
 
-        if (!empty($newsRoles) && Yii::$app->user->identity->can($newsRoles)) {
+        if (!empty($newsRoles) && Yii::$app->user->identity->can($newsRoles))
+        {
             $news_pages = Page::find()
                 ->andFilterWhere(['id_page' => Page::getAccessPageIds()])
-                ->where('id_page IN (SELECT id_page FROM db_news)')->all();
+                ->andWhere(['or',['type'=>Page::TYPE_NEWS],['type'=>Page::TYPE_ANONS]])
+                ->all();
 
             if (!empty($news_pages)) {
 

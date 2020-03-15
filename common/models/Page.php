@@ -55,6 +55,11 @@ class Page extends ActiveRecord
     const VERBOSE_NAME_PLURAL = 'Страницы';
     const TITLE_ATTRIBUTE = 'title';
 
+    const TYPE_PAGE = 1;
+    const TYPE_NEWS = 2;
+    const TYPE_ANONS = 3;
+    const TYPE_LINK = 4;
+
     /**
      * Is need to notify the administrator
      *
@@ -83,7 +88,8 @@ class Page extends ActiveRecord
     {
         return [
             [['id_media', 'active', 'id_parent'], 'default', 'value' => null],
-            [['id_media', 'active', 'id_parent', 'noguest', 'hidemenu','notify_rule'], 'integer'],
+            [['type'], 'default', 'value' => self::TYPE_PAGE],
+            [['id_media', 'active', 'id_parent', 'noguest', 'hidemenu','notify_rule','type'], 'integer'],
             [['is_admin_notify'], 'boolean'],
             [['title', 'alias'], 'required'],
             ['id_parent', 'required', 'when' => function($model) {
@@ -122,6 +128,7 @@ class Page extends ActiveRecord
             'seo_keywords' => 'Ключевые слова',
             'noguest' => 'Доступно только авторизованным',
             'active' => 'Активный',
+            'type' => 'Тип страницы',
             'hidden_message'=>'Сообщение при закрытом разделе',
             'is_partition'=>'Это раздел',
             'partition_domain'=>'Домен раздела',
@@ -132,6 +139,18 @@ class Page extends ActiveRecord
             'deleted_at' => 'Удалено',
             'deleted_by' => 'Удалил',
         ];
+    }
+
+    public function getTypes()
+    {
+        $labels = [
+            self::TYPE_PAGE => "Страница",
+            self::TYPE_NEWS => "Новости",
+            self::TYPE_ANONS => "Анонсы",
+            //self::TYPE_LINK => "Ссылка",
+        ];
+
+        return $labels;
     }
 
     public function getUrl($absolute = false)

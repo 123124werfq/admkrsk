@@ -13,10 +13,8 @@ use yii\web\JsExpression;
 /* @var $model common\models\News */
 /* @var $form yii\widgets\ActiveForm */
 
-
 $rubs = Collection::getArrayByAlias("news_rubs");
 $contacts = Collection::getArrayByAlias("press_people");
-
 ?>
 
 <div class="row">
@@ -44,10 +42,10 @@ $contacts = Collection::getArrayByAlias("press_people");
                     'pluginOptions' => [
                         'multiple' => false,
                         'allowClear' => true,
-                        'minimumInputLength' => 2,
+                        'minimumInputLength' => 0,
                         'placeholder' => 'Начните ввод',
                         'ajax' => [
-                            'url' => '/page/list',
+                            'url' => '/page/list?type=news',
                             'dataType' => 'json',
                             'data' => new JsExpression('function(params) { return {q:params.term}; }')
                         ],

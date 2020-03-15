@@ -37,8 +37,7 @@ use yii\widgets\ActiveForm;
 ]) ?>
 <?php }?>
 
-<?= $form->field($model, 'created_at')->textInput(['type'=>'date','value'=>(!empty($model->created_at))?date('Y-m-d', $model->created_at):'']) ?>
-
+<?= $form->field($model, 'created_at')->textInput(['type'=>'date','value'=>(!empty($model->created_at))?date('Y-m-d', $model->created_at):''])?>
 
 <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
@@ -54,27 +53,21 @@ use yii\widgets\ActiveForm;
 
 <?= $form->field($model, 'content')->textarea(['rows' => 6, 'class'=>'redactor']) ?>
 
-<?= $form->field($model, 'seo_title')->textInput(['maxlength' => true]) ?>
-
-<?= $form->field($model, 'seo_description')->textInput(['maxlength' => true]) ?>
-
-<?= $form->field($model, 'seo_keywords')->textInput(['maxlength' => true]) ?>
-
 <div class="row">
     <div class="col-sm-4"><?= $form->field($model, 'active')->checkBox() ?></div>
     <div class="col-sm-4"><?= $form->field($model, 'hidemenu')->checkBox() ?></div>
     <div class="col-sm-4"><?= $form->field($model, 'noguest')->checkBox() ?></div>
 </div>
 
+<?= $form->field($model, 'type')->dropDownlist($model->getTypes())?>
+
 <?= $form->field($model, 'is_partition')->checkBox()?>
 
 <?= $form->field($model, 'partition_domain')->textInput(['maxlength' => 255])->hint('Заполняется если это раздел. Все страницы данного раздела будут строится относительно этого домена. Вводить без "/" на конце') ?>
 
-
 <?= $form->field($model, 'hidden_message')->textarea(['rows' => 6, 'class'=>'redactor'])->hint('Заполняется если страница не активна и требуется вывести сообщение')?>
 
-
-<h3>Файлы внизу страницы</h3>
+<h3>Прикрепленные файлы внизу страницы</h3>
 
 <?= MultiFileWidget::widget([
     'model'=>$model,
@@ -83,6 +76,15 @@ use yii\widgets\ActiveForm;
     'grouptype'=>1,
     'showPreview'=>true
 ]);?>
+
+<hr>
+
+<?= $form->field($model, 'seo_title')->textInput(['maxlength' => true]) ?>
+
+<?= $form->field($model, 'seo_description')->textInput(['maxlength' => true]) ?>
+
+<?= $form->field($model, 'seo_keywords')->textInput(['maxlength' => true]) ?>
+
 
 <?php if (Yii::$app->user->can('admin.page')): ?>
     <hr>
@@ -114,6 +116,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>
     <?= $form->field($model, 'access_user_group_ids')->label('Группы пользоватей')->widget(UserGroupAccessControl::class) ?>
+
 <?php endif; ?>
 
 <hr>
