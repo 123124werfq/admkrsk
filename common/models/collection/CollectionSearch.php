@@ -203,6 +203,7 @@ class CollectionSearch extends DynamicModel
                     $output[] = $model[$col_alias]['street']??'';
                     $output[] = $model[$col_alias]['house']??'';
 
+
                     return implode(',', $output);
                 };
             }

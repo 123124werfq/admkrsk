@@ -28,7 +28,7 @@ class FormDynamic extends DynamicModel
         foreach ($this->inputs as $input)
         {
             // заполняем данные их ЕСИА
-            if (!Yii::$app->user->isGuest && !empty($input->id_type) && !empty($input->typeOptions->esia))
+            if (!Yii::$app->user->isGuest && !empty($input->id_type) && !empty($input->typeOptions->esia) && empty($_POST['FormDynamic']))
             {
                 $esia = Yii::$app->user->identity->esiainfo;
                 $attr = $input->typeOptions->esia;
@@ -216,7 +216,7 @@ class FormDynamic extends DynamicModel
                                     $empty['id_city'] = $addModel->id_city??'';
                                 }
                                 else
-                                    $empty['city'] = $value['city'];
+                                    $empty['city'] = $value['city']?:'';
 
                                 if (!empty($empty['city']))
                                     $fulladdress[] = $empty['city'];
@@ -232,7 +232,7 @@ class FormDynamic extends DynamicModel
                                     $empty['id_district'] = $addModel->id_district??'';
                                 }
                                 else
-                                    $empty['district'] = $value['district'];
+                                    $empty['district'] = $value['district']?:'';
 
                                 if (!empty($empty['district']))
                                     $fulladdress[] = $empty['district'];
@@ -248,7 +248,7 @@ class FormDynamic extends DynamicModel
                                     $empty['id_street'] = $addModel->id_street??'';
                                 }
                                 else
-                                    $empty['street'] = $value['street'];
+                                    $empty['street'] = $value['street']?:'';
 
                                 if (!empty($empty['street']))
                                     $fulladdress[] = $empty['street'];
@@ -264,22 +264,22 @@ class FormDynamic extends DynamicModel
                                     $empty['id_house'] = $addModel->id_house??'';
                                 }
                                 else
-                                    $empty['house'] = $value['house'];
+                                    $empty['house'] = $value['house']?:'';
 
                                 if (!empty($empty['house']))
                                     $fulladdress[] = $empty['house'];
                             }
 
-                            if (!empty($value['coords'][0]))
-                                $empty['lat'] = $value['coords'][0];
-
-                            if (!empty($value['coords'][1]))
-                                $empty['lon'] = $value['coords'][1];
-
                             $empty['fulladdress'] = implode(', ', $fulladdress);
 
                             $data[$index] = $empty;
                         }
+
+                        if (!empty($value['coords'][0]))
+                            $data[$index]['lat'] = $value['coords'][0];
+
+                        if (!empty($value['coords'][1]))
+                            $data[$index]['lon'] = $value['coords'][1];
 
                         if (!empty($value['room']))
                             $data[$index]['room'] = $value['room'];
