@@ -174,8 +174,10 @@ class MenuController extends Controller
     {
         $model = new Menu();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             $model->createAction(Action::ACTION_CREATE);
+
             if ($model->type <> Menu::TYPE_LIST)
                 return $this->redirect(['menu-link/index', 'id' => $model->id_menu]);
             else

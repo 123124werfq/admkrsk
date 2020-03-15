@@ -108,10 +108,7 @@ class MenuLinkController extends Controller
                 $menu->save();
 
                 foreach ($page->childs as $key => $child)
-                {
                     $menu->addLink($child,$child->ord);
-                }
-
             }
             else
                 $menu = $page->menu;
@@ -159,7 +156,10 @@ class MenuLinkController extends Controller
             if (Yii::$app->request->isAjax)
                 Yii::$app->end();
 
-            return $this->redirect(['index', 'id' => $model->id_menu]);
+            if (!empty($model->menu->page))
+                return $this->redirect(['page/view', 'id' => $model->menu->id_page]);
+            else
+                return $this->redirect(['index', 'id' => $model->id_menu]);
         }
 
         return $this->render('update', [
@@ -176,7 +176,15 @@ class MenuLinkController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if (!empty($model->menu->page))
+            $page = $model->menu->page;
+
+        $model->delete();
+
+        if (!empty($page))
+            return $this->redirect(['page/view', 'id' => $page->id_page]);
 
         return $this->redirect(['index']);
     }

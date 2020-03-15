@@ -12,7 +12,7 @@ $this->title = $model->pageTitle;
 
 if (empty($model->partition))
     $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
-else 
+else
     $this->params['breadcrumbs'][] = ['label' => $model->partition->title, 'url' => ['partition','id'=>$model->partition->id_page]];
 
 if (!empty($model->parent))
@@ -91,8 +91,8 @@ $this->render('_head',['model'=>$model]);
                                         [
                                             'attribute' => 'title',
                                             'format' => 'html',
-                                            'value' => function ($model) {
-                                                return $model->label.'<br><a target="_blank" href="'.$model->getUrl(true).'">'.$model->getUrl(true).'</a>';
+                                            'value' => function ($link) {
+                                                return $link->label.'<br><a target="_blank" href="'.$link->getUrl(true).'">'.$link->getUrl(true).'</a>';
                                             },
                                         ],
                                         [
@@ -100,16 +100,25 @@ $this->render('_head',['model'=>$model]);
                                             'contentOptions'=>['class'=>'button-column'],
                                             'template' => '{hide} {update} {delete}',
                                             'buttons' => [
-                                                'hide' => function ($url, $model, $key) {
-                                                    return Html::a('', ['/menu-link/hide', 'id' => $model->id_link],['class' => ($model->state)?'fa fa-toggle-on':'fa fa-toggle-off']);
+                                                'hide' => function ($url, $link, $key) {
+                                                    return Html::a('', ['/menu-link/hide', 'id' => $link->id_link],['class' => ($link->state)?'fa fa-toggle-on':'fa fa-toggle-off']);
                                                 },
-                                                'update' => function ($url, $model, $key) {
-                                                    return Html::a('', ['/menu-link/update', 'id' => $model->id_link],['class' => 'glyphicon glyphicon-pencil']);
+                                                'update' => function ($url, $link, $key) use ($model) {
+                                                    if (empty($link->page) || $link->page->id_parent != $model->id_page)
+                                                        return Html::a('', ['/menu-link/update', 'id' => $link->id_link],['class' => 'glyphicon glyphicon-pencil']);
+                                                    else
+                                                        return Html::a('', ['/page/update', 'id' => $link->id_page],['class' => 'glyphicon glyphicon-pencil']);
                                                 },
-                                                'delete' => function ($url, $model, $key) {
-                                                      return Html::a('', ['/menu-link/delete', 'id' => $model->id_link],['class' => 'glyphicon glyphicon-trash','data' => [
-                                                    'confirm' => 'Вы уверены что хотите удалить цель?',
-                                                    'method' => 'post',
+                                                'delete' => function ($url, $link, $key) use ($model) {
+                                                    if (empty($link->page) || $link->page->id_parent != $model->id_page)
+                                                        return Html::a('', ['/menu-link/delete', 'id' => $link->id_link],['class' => 'glyphicon glyphicon-trash','data' => [
+                                                                'confirm' => 'Вы уверены что хотите удалить цель?',
+                                                                'method' => 'post',
+                                                        ]]);
+                                                    else
+                                                        return Html::a('', ['/page/delete', 'id' => $link->id_page, 'redirect'=>$model->id_page],['class' => 'glyphicon glyphicon-trash','data' => [
+                                                              'confirm' => 'Вы уверены что хотите удалить цель?',
+                                                              'method' => 'post',
                                                         ]]);
                                                 }
                                             ],

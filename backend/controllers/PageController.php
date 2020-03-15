@@ -5,7 +5,9 @@ namespace backend\controllers;
 use backend\models\forms\CopyPageForm;
 use common\models\Action;
 use common\models\GridSetting;
+use common\models\MenuLink;
 use common\modules\log\models\Log;
+
 use moonland\phpexcel\Excel;
 use Yii;
 use common\models\Page;
@@ -535,13 +537,21 @@ class PageController extends Controller
      * @throws \Throwable
      * @throws StaleObjectException
      */
-    public function actionDelete($id)
+    public function actionDelete($id, $redirect=null)
     {
         $model = $this->findModel($id);
 
-        if ($model->delete()) {
-            $model->createAction(Action::ACTION_DELETE);
+        if (!empty($model->parent->menu))
+        {
+            $link = MenuLink::find()->where(['id_page' => $id,'id_menu'=>$model->parent->menu->id_menu])->one();
+            $link->delete();
         }
+
+        if ($model->delete())
+            $model->createAction(Action::ACTION_DELETE);
+
+        if (!empty($redirect))
+            return $this->redirect(['view','id'=>$redirect]);
 
         return $this->redirect(['index']);
     }
