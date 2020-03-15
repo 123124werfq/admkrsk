@@ -4,6 +4,7 @@
 	use yii\web\JsExpression;
 ?>
 <div class="form-group">
+
 	<?php
 		if ($visibleInput->type==CollectionColumn::TYPE_SELECT ||
 			$visibleInput->type==CollectionColumn::TYPE_CHECKBOX ||

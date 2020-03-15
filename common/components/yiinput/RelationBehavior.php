@@ -94,7 +94,10 @@ class RelationBehavior extends Behavior
 	{
 		// если записи уже загружены например из post
 		if (isset($this->records[$relation]))
+		{
+
             return $this->records[$relation];
+		}
 
         return $this->loadRecords($relation);
 	}
@@ -149,16 +152,17 @@ class RelationBehavior extends Behavior
 			$model_name = $relation['modelname'];
 
 			// берем нужные нам POST
-			$post = $this->getPOST($model_name, $relation_name);
+			$posts = $this->getPOST($model_name, $relation_name);
 
-			if ($post!==false)
+			if ($posts!==false)
 			{
 				// очищаем записи
 				$this->records[$relation_name] = [];
 
-				foreach ($post as $post)
+				foreach ($posts as $post)
 				{
 					$class = "common\models\\".$model_name;
+
 					$object = new $class;
 					$default_attributes = $object->attributes;
 					$pk_field = $object->primaryKey()[0];
@@ -177,8 +181,6 @@ class RelationBehavior extends Behavior
 
 						if (($default_attributes != $find_object->attributes) || !empty($relation['validated']) || !empty($relation['required'])) {
 							$validation = $validation && $find_object->validate();
-							/*if (!$validation)
-								print_r($object->errors);*/
 						}
 					}
 					else

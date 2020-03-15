@@ -144,10 +144,11 @@ class FormInputController extends Controller
 
         $row = FormRow::findOne($id_row);
         $form = $row->form;
-        $model->id_form = $form->id_form;
-        $model->populateRelation('element', new FormElement);
 
         $element = new FormElement;
+
+        $model->id_form = $form->id_form;
+        $model->populateRelation('element', $element);
 
         if (Yii::$app->request->isAjax)
         {
@@ -273,7 +274,7 @@ class FormInputController extends Controller
 
         $input = $this->findModel($id);
         $form = $element->row->form;
-        
+
         if ($form->isMainForm())
         {
             if (!empty($input->column))
@@ -281,7 +282,7 @@ class FormInputController extends Controller
 
             $input->delete();
         }
-        
+
         $element->delete();
 
         return $this->redirect(['form/view','id'=>$id_form]);
