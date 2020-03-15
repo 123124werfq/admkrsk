@@ -199,7 +199,7 @@ class CollectionSearch extends DynamicModel
                     $output[] = $model[$col_alias]['region']??'';
                     $output[] = $model[$col_alias]['subregion']??'';
                     $output[] = $model[$col_alias]['city']??'';
-                    $output[] = $model[$col_alias]['disctrict']??'';
+                    $output[] = $model[$col_alias]['district']??'';
                     $output[] = $model[$col_alias]['street']??'';
                     $output[] = $model[$col_alias]['house']??'';
 
