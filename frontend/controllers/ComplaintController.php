@@ -12,10 +12,11 @@ class ComplaintController extends \yii\web\Controller
     public function actionIndex($page=null)
     {
         $firms = ServiceComplaintForm::find()
+            ->where('id_form IS NOT NULL')
             ->groupBy('id_record_firm')
             ->select('id_record_firm')
-            ->asArray()
             ->indexBy('id_record_firm')
+            ->asArray()
             ->all();
 
         $ids = array_keys($firms);
@@ -26,10 +27,9 @@ class ComplaintController extends \yii\web\Controller
 
         foreach ($records as $key => $record)
             $firms[$record->id_record] = $record->getLineValue();
-        /*$collectionFirm = Colletion::find()->where(['alias'=>'appeal_firms'])->one();
 
-        if (empty($collectionFirm))
-            throw new NotFoundHttpException('Не заполнен справочник организаций');*/
+        if (empty($firms))
+            throw new NotFoundHttpException('Не заполнен справочник организаций');
 
         return $this->render('index',[
             'firms'=>$firms,
@@ -44,7 +44,7 @@ class ComplaintController extends \yii\web\Controller
     				->where(['id_record_firm'=>$id_firm,'id_record_category'=>$id_category])
     				->one();
 
-    	if (empty($form))
+    	if (empty($form) || empty($form->form))
     		throw new NotFoundHttpException('Такой страницы не существует');
 
     	$form = $form->form;

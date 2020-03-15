@@ -27,4 +27,4 @@
     </div>
     <?php }?>
 </div>
-<button class="load-more-block btn btn__primary btn__block show-hidden" data-show-target="#hidden-situations">Показать еще</button>
+<!--button class="load-more-block btn btn__primary btn__block show-hidden" data-show-target="#hidden-situations">Показать еще</button-->
