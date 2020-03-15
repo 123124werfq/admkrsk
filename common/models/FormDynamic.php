@@ -145,6 +145,8 @@ class FormDynamic extends DynamicModel
                             if (!empty($address))
                                 $data[$index] = $address->getArrayData();
                         }
+                        else
+                            $address = null;
 
                         if (empty($address))
                         {
