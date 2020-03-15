@@ -667,20 +667,26 @@ class SiteController extends Controller
 
     public function actionMsql()
     {
-        $sql = 'EXEC SMEV.get_QueueNumber @lname=:Param1,@fname=:Param2,@mname=:Param3,@docseries=:Param4,@docnumber=:Param5';
-        $command = Yii::$app->aisDb->createCommand();
-        $lname = 'малиновская';
-        $fname = 'лилия';
-        $mname = 'юрьевна';
-        $serie = '0403';
-        $num = '866821';
-        $command->bindParam(':Param1', $lname);
-        $command->bindParam(':Param2', $fname);
-        $command->bindParam(':Param3', $mname);
-        $command->bindParam(':Param4', $serie);
-        $command->bindParam(':Param5', $num);
 
-        $res = $command->queryRow(); //queryRow()
+        //$sql = 'EXEC SMEV.get_QueueNumber @lname=:Param1,@fname=:Param2,@mname=:Param3,@docseries=:Param4,@docnumber=:Param5';
+        //$command = Yii::$app->aisDb->createCommand();
+        $lname = urlencode('малиновская');
+        $fname = urlencode('лилия');
+        $mname = urlencode('юрьевна');
+        $serie = urlencode('04 03');
+        $num = urlencode('866821');
+
+        $request = "http://10.24.0.195:700/Service.svc/GetQueueNumber?lname=$lname&fname=$fname&mname=$mname&docseries=$serie&docnumber=$num";
+
+        //$command->bindParam(':Param1', $lname);
+        //$command->bindParam(':Param2', $fname);
+        //$command->bindParam(':Param3', $mname);
+        //$command->bindParam(':Param4', $serie);
+        //$command->bindParam(':Param5', $num);
+
+        //$res = $command->queryRow(); //queryRow()
+
+        $res = @json_decode(file_get_contents($request));
 
         var_dump($res);
         die();
