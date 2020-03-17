@@ -3,7 +3,7 @@
 namespace console\migrations;
 
 use yii\db\Migration;
-
+use Yii;
 /**
  * Class M200315103108Pagetype
  */
