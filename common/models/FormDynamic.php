@@ -124,6 +124,7 @@ class FormDynamic extends DynamicModel
                                     'house'=>'',
                                     'id_house'=>'',
                                     'room'=>'',
+                                    'fullname'=>'',
                                     'houseguid'=>'',
                                     'lat'=>'',
                                     'lon'=>'',
@@ -272,7 +273,7 @@ class FormDynamic extends DynamicModel
                                     $fulladdress[] = $empty['house'];
                             }
 
-                            $empty['fulladdress'] = implode(', ', $fulladdress);
+                            $empty['fullname'] = implode(', ', $fulladdress);
 
                             $data[$index] = $empty;
                         }
