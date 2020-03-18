@@ -483,9 +483,9 @@ class Collection extends ActiveRecord
     public function getViewColumnsOrFirstColumn()
     {
         $options = json_decode($this->options, true);
-        if (isset($options['columns'])) {
+
+        if (isset($options['columns']))
             return $options['columns'];
-        }
         return [
             [
                 'id_column' => $this->parent->columns[0]->id_column,
@@ -562,16 +562,6 @@ class Collection extends ActiveRecord
         if (isset($options['search'])) {
             return $options['search'];
         }
-
-        /*$options = [];
-
-        foreach ($this->parent->columns as $key => $column)
-        {
-            $options[] = [
-                'id_column'=>$column->id_column,
-                'type'=>0,
-            ];
-        }*/
 
         return [
             [

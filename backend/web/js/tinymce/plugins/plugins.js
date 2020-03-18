@@ -676,6 +676,52 @@ tinymce.PluginManager.add("hrreserve", function(editor, url) {
     });
 });
 
+tinymce.PluginManager.add("recordSearch", function(editor, url) {
+    var _dialog = false;
+    var _typeOptions = [];
+
+    function _onAction() {
+        $.ajax({
+            url: '/collection/record-search-redactor',
+            type: 'get',
+            dataType: 'html',
+            success: function(data) {
+                $('#redactor-modal').modal();
+                $('#redactor-modal .modal-body').html(data);
+                $('body').delegate('#redactor-modal form','submit',function(){
+                    $.ajax({
+                        url: '/collection/record-search-redactor',
+                        type: 'post',
+                        dataType: 'json',
+                        data: $('#redactor-modal form').serialize(),
+                        success: function(data) {
+                            editor.insertContent('<p><searchrecord data-encodedata="'+data.attributes+'">Поиск по списку #' + data.id_collection + '.</searchrecord></p>');
+                            $('#redactor-modal').modal('hide');
+                        }
+                    });
+
+                    return false;
+                });
+            }
+        });
+
+
+    }
+
+    // Define the Toolbar button
+    editor.ui.registry.addButton('recordSearch', {
+        text: "Поиск по списку",
+        onAction: _onAction
+    });
+
+    // Define the Menu Item
+    editor.ui.registry.addMenuItem('recordSearch', {
+        text: 'Поиск по списку',
+        context: 'insert',
+        onAction: _onAction
+    });
+});
+
 tinymce.PluginManager.add("faq", function(editor, url) {
     var _dialog = false;
     var _typeOptions = [];

@@ -13,6 +13,7 @@ use common\models\FormInput;
 use common\models\CollectionRecord;
 use common\models\CollectionColumn;
 use backend\models\search\CollectionSearch;
+use backend\models\forms\CollectionRecordSearchForm;
 use backend\models\forms\CollectionImportForm;
 use backend\models\forms\CollectionCombineForm;
 use backend\models\forms\FormCopy;
@@ -96,7 +97,7 @@ class CollectionController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['create', 'record', 'create-view', 'copy', 'assign', 'convert-type', 'record-list'],
+                        'actions' => ['create', 'record', 'record-search-redactor', 'create-view', 'copy', 'assign', 'convert-type', 'record-list'],
                         'roles' => ['backend.collection.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Collection::class,
@@ -607,6 +608,63 @@ class CollectionController extends Controller
             'collection' => $collection,
             'model' => $collectionRecord,
             'data' => $collectionRecord->getData()
+        ]);
+    }
+
+    public function actionRecordSearchRedactor()
+    {
+        $model = new CollectionRecordSearchForm;
+
+        if ($model->load(Yii::$app->request->post()))
+        {
+            if (!empty(Yii::$app->request->post('ViewColumns')))
+            {
+                if (!empty(Yii::$app->request->post('ViewColumns'))) {
+                    $options['columns'] = [];
+
+                    foreach (Yii::$app->request->post('ViewColumns') as $key => $data) {
+                        $options['columns'][] = [
+                            'id_column' => $data['id_column'],
+                            'show_for_searchcolumn'=> $data['show_for_searchcolumn']??'',
+                            'filelink'=> $data['filelink']??'',
+                            'group'=> $data['group']??'',
+                        ];
+                    }
+                }
+
+                if (!empty(Yii::$app->request->post('SearchColumns'))) {
+                    $options['search'] = [];
+
+                    foreach (Yii::$app->request->post('SearchColumns') as $key => $data) {
+                        $options['search'][] = [
+                            'id_column' => $data['id_column'],
+                            'type' => isset($data['type']) ? $data['type'] : '0',
+                        ];
+                    }
+                }
+
+                if (!empty($model->filters))
+                    $options['filters'] = $model->filters;
+                else
+                    $options['filters'] = '';
+
+                $options['id_collection'] = $model->id_collection;
+
+                return json_encode([
+                    'id_collection'=>$model->id_collection,
+                    'attributes'=>base64_encode(json_encode($options))
+                ]);
+            }
+        }
+
+        Yii::$app->assetManager->bundles = [
+            'yii\bootstrap\BootstrapAsset' => false,
+            'yii\web\JqueryAsset'=>false,
+            'yii\web\YiiAsset'=>false,
+        ];
+
+        return $this->renderAjax('search_record_redactor', [
+            'model' => $model,
         ]);
     }
 
