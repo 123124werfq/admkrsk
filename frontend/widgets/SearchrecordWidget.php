@@ -153,10 +153,12 @@ class SearchrecordWidget extends \yii\base\Widget
         if ($runSearch)
         {
             $query->keyAsAlias = false;
-            $record = $query->limit(1)->getArray();
+            $record = $query->getArray();
 
-            if (!empty($record))
+            if (!empty($record) && count($record)==1)
                 $record = array_shift($record);
+            else
+                $record = null;
         }
 
         // переворачиваем колонки на алиас с очередностью выбора
