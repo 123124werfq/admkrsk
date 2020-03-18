@@ -233,21 +233,21 @@ class CollectionController extends Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $collection = $this->findModel($id);
-        $collection = $collection->getArray($id_column);
+        $query = $collection->getDataQuery();
 
         $i = 0;
         $results = [];
 
-        foreach ($collection as $key => $value) {
-            if ($i > 15)
-                break;
-            if (stripos($value, $q)) {
-                $results[] = [
-                    'id' => $key,
-                    'text' => $value,
-                ];
-                $i++;
-            }
+        $id_column = (int)$id_column;
+
+        $query->andWhere(['like','col'.$id_column,$q]);
+
+        foreach ($query->limit(30)->getStrinyfyArray() as $key => $value)
+        {
+            $results[] = [
+                'id' => $key,
+                'text' => $value[$id_column]??'',
+            ];
         }
 
         return ['results' => $results];

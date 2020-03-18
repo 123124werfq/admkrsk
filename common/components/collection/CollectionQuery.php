@@ -218,7 +218,7 @@ class CollectionQuery extends \yii\mongodb\Query
         {
             foreach ($record as $rkey => $value)
             {
-                if (is_array($values))
+                if (is_array($value))
                     $output[$id_record][$rkey] = implode('<br/>', $value);
                 else
                     $output[$id_record][$rkey] = $value;
