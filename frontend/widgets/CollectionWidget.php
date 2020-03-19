@@ -104,8 +104,8 @@ class CollectionWidget extends \yii\base\Widget
                     {
                         if ($key=='id_record')
                         {
-                            $this->columns = str_replace('"{{'.$key.'}}"', $value, $this->columns);
-                            $this->columns = str_replace('{{'.$key.'}}', $value, $this->columns);
+                            $this->columns = str_replace('\"{{'.$key.'}}\"', $value, $this->columns);
+                            //$this->columns = str_replace('{{'.$key.'}}', $value, $this->columns);
                         }
                         else
                             $this->columns = str_replace('{{'.$key.'}}', $value, $this->columns);
