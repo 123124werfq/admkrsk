@@ -37,7 +37,7 @@ class Breadcrumbs extends \yii\base\Widget
                 $url = $partition_domain.$path;
 
             if ($page->active == 1)
-                $output[] = '<li class="breadcrumbs_item"><a href="'.$url.'">'.$page->title.'</a></li>';
+                $output[] = '<li class="breadcrumbs_item"><a href="'.$url.'">'.$page->label?:$page->title.'</a></li>';
         }
 
         return '<ol class="breadcrumbs">'.implode('',$output).'</ol>';
