@@ -48,8 +48,6 @@ $this->render('_head',['model'=>$model]);
                             Меню раздела
                         </h2>
 
-                        <?php Pjax::begin(); ?>
-
                         <?php
                             if (empty($model->menu))
                             {
@@ -132,8 +130,6 @@ $this->render('_head',['model'=>$model]);
                                 ]);
                             }
                         ?>
-
-                        <?php Pjax::end(); ?>
                     </div>
                 </div>
                 <div role="tabpanel" id="tab-2" class="tab-pane">
