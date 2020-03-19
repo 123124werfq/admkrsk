@@ -39,7 +39,7 @@
 			{
 				$url = $link->getUrl();
 ?>
-			<li <?=$url==Yii::$app->request->url?'class="selected active"':''?>><a href="<?=$url?>"><?=$link->label?></a></li>
+			<li <?=$url==Yii::$app->request->url?'class="selected active"':''?>><a href="<?=$url?>"><?=(!empty($link->id_page))?$link->page->getLabel():$link->label?></a></li>
 <?php
 		 	}
 ?>

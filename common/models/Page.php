@@ -154,6 +154,14 @@ class Page extends ActiveRecord
         return $labels;
     }
 
+    public function getLabel()
+    {
+        if (!empty($this->label))
+            return $this->label;
+
+        return $this->title;
+    }
+
     public function getUrl($absolute = false)
     {
         if (!empty($this->existUrl))
