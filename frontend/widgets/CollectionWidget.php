@@ -101,7 +101,15 @@ class CollectionWidget extends \yii\base\Widget
                 foreach ($this->objectData as $key => $value)
                 {
                     if (!is_array($value))
-                        $this->columns = str_replace('{{'.$key.'}}', $value, $this->columns);
+                    {
+                        if ($key=='id_record')
+                        {
+                            $this->columns = str_replace('"{{'.$key.'}}"', $value, $this->columns);
+                            $this->columns = str_replace('{{'.$key.'}}', $value, $this->columns);
+                        }
+                        else
+                            $this->columns = str_replace('{{'.$key.'}}', $value, $this->columns);
+                    }
                 }
 
                 $this->columns = json_decode($this->columns,true);
