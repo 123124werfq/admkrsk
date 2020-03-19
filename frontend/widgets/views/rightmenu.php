@@ -28,7 +28,7 @@
 		{
 			foreach ($submenu as $key => $data) {
 ?>
-			<li <?=$data->id_page==$page->id_page?'class="selected active"':''?>><a href="<?=($siblings)?$data->alias:'/'.Yii::$app->request->getPathInfo().'/'.$data->alias?>"><?=$data->title?></a></li>
+			<li <?=$data->id_page==$page->id_page?'class="selected active"':''?>><a href="<?=($siblings)?$data->alias:'/'.Yii::$app->request->getPathInfo().'/'.$data->alias?>"><?=$data->label?:$data->title?></a></li>
 <?php
 			}
 		}

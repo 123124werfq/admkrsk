@@ -99,7 +99,7 @@ class Page extends ActiveRecord
             ['id_parent', 'required', 'when' => function($model) {
                 return ($model->lft!=1);
             }],
-            [['content', 'path', 'notify_message', 'hidden_message'], 'string'],
+            [['content', 'path', 'notify_message', 'hidden_message','label'], 'string'],
             [['alias'], 'unique'],
             [['title', 'alias', 'seo_title', 'seo_description', 'seo_keywords'], 'string', 'max' => 255],
             [['partition_domain'], 'url', 'defaultScheme' => 'http'],
@@ -121,6 +121,7 @@ class Page extends ActiveRecord
             'title' => 'Название',
             'id_parent' => 'Родительская страница',
             'alias' => 'URL',
+            'label' =>'Заголовок для навигации',
             'hidemenu' => 'Скрыть в меню',
             'content' => 'Содержание',
             'seo_title' => 'Seo Заголовок',

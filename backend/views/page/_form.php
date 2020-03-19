@@ -79,6 +79,8 @@ use yii\widgets\ActiveForm;
 
 <hr>
 
+<?= $form->field($model, 'label')->textInput(['maxlength' => true])->hint('Отображается в хлебных крошках и меню')?>
+
 <?= $form->field($model, 'seo_title')->textInput(['maxlength' => true]) ?>
 
 <?= $form->field($model, 'seo_description')->textInput(['maxlength' => true]) ?>
