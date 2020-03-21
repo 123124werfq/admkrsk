@@ -3,7 +3,7 @@
 use backend\assets\GridAsset;
 use backend\controllers\ReserveController;
 use common\models\GridSetting;
-use common\models\HrProfile;
+use common\models\CstProfile;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\Url;
@@ -56,13 +56,32 @@ $defaultColumns = [
             return $model->getStatename(true);
         },
     ],
+    [
+        'label' => 'Готовность',
+        'format' => 'html',
+        'value' => function ($model) {
+            $readyness = isset($model->recordData['ready'])?(int)$model->recordData['ready']:0;
 
+            $message = $readyness?'Готово к проверке':'Не готово к проверке';
+
+            return $message;
+        },
+    ],
+    'comment:prop' => [
+        'label' => 'Статус',
+        'format' => 'html',
+        'value' => function ($model) {
+            $message = empty($model->comment)?("<a href='/contest/view?id={$model->id_profile}'>Редактировать комментарий</a>"):(htmlspecialchars(strip_tags($model->comment))."<br><a href='/contest/view?id={$model->id_profile}''>Редактировать комментарий</a>");
+
+            return $message;
+        },
+    ],
 ];
 
 list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
     $defaultColumns,
     $customColumns,
-    HrProfile::class
+    CstProfile::class
 );
 
 ?>
@@ -102,7 +121,7 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
         'columns' => array_merge(array_values($gridColumns), [
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {editable} {ban} {archive} ',
+                'template' => '{view} {editable} {ban} {status} ',
                 'buttons' => [
                     'editable' => function ($url, $model, $key) {
                         $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-pencil"]);
@@ -113,6 +132,24 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
                             'data-pjax' => '0',
                         ]);
                     },
+                    'status' => function ($url, $model, $key) {
+                        switch ($model->state) {
+                            case CstProfile::STATE_DRAFT:
+                                $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-ok"]);
+                                $title = 'Принять';
+                                break;
+                            case CstProfile::STATE_ACCEPTED:
+                                $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-remove"]);
+                                $title = 'Отклонить';
+                                break;
+                        }
+                        return Html::a($icon, $url, [
+                            'target' => '_blank',
+                            'title' => $title,
+                            'aria-label' => $title,
+                            'data-pjax' => '0',
+                        ]);
+                    },                                     
                 ],
                 'contentOptions' => ['class' => 'button-column']
             ]

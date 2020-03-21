@@ -38,6 +38,21 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="ibox">
         <div class="ibox-content">
+            <form action="" method="GET">
+                <input type="hidden" name="id" value="<?=$model->id_profile?>">
+                <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>"/>
+                <div class="form-group field-page-content">
+                        <label class="control-label" for="page-content">Комментарий от модератора</label>
+                        <textarea id="page-content" class="redactor" name="comment" rows="6" aria-hidden="true"><?=$model->comment?></textarea>
+                        <div class="help-block"></div>
+                </div>
+                <input type="submit" value="Отправить">                   
+            </form>
+        </div>
+    </div>
+
+    <div class="ibox">
+        <div class="ibox-content">
 
             <?php echo frontend\widgets\CollectionRecordWidget::widget(['collectionRecord'=>$record]);?>
 

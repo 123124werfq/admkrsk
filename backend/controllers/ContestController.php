@@ -60,6 +60,14 @@ class ContestController extends Controller
         if (empty($record))
             throw new NotFoundHttpException('Ошибка чтения данных');
 
+        if(Yii::$app->request->get('_csrf'))
+        {
+            $profile->comment = Yii::$app->request->get('comment');
+            $profile->updateAttributes(['comment']);
+
+            return $this->redirect('/contest/profile');
+        }
+
         $insertedData = $record->getData();
 
         $columns = CollectionColumn::find()->where(['id_collection' => $record->id_collection])->indexBy('id_column')->orderBy('ord')->all();
@@ -81,6 +89,38 @@ class ContestController extends Controller
             'attachments' => $attachments
         ]);
     }
+
+    public function actionEditable($id)
+    {
+        $profile = CstProfile::findOne($id);
+
+        if (empty($profile))
+            throw new NotFoundHttpException('Ошибка чтения данных');
+
+        return $this->redirect('/collection-record/update?id=' . $profile->id_record_anketa);
+    }
+
+    public function  actionStatus($id)
+    {
+        $profile = CstProfile::findOne($id);
+
+        if (empty($profile))
+            throw new NotFoundHttpException('Ошибка чтения данных');
+
+        switch ($profile->state) {
+            case CstProfile::STATE_DRAFT:
+                $profile->state = CstProfile::STATE_ACCEPTED;
+                break;
+            case CstProfile::STATE_ACCEPTED:
+                $profile->state = CstProfile::STATE_DRAFT;
+                break;
+        }
+
+        $profile->updateAttributes(['state']);
+
+        return $this->redirect('/contest/profile');
+    }
+
 
     public function actionExperts()
     {
