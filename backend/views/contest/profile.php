@@ -60,7 +60,9 @@ $defaultColumns = [
         'label' => 'Готовность',
         'format' => 'html',
         'value' => function ($model) {
-            $readyness = isset($model->recordData['ready'])?(int)$model->recordData['ready']:0;
+            $record = $model->getRecord()->one()->getData(true);
+
+            $readyness = !empty($record['ready']);
 
             $message = $readyness?'Готово к проверке':'Не готово к проверке';
 
