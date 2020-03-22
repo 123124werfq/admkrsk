@@ -38,7 +38,7 @@ $defaultColumns = [
         'label' => 'Дата актуальности',
         'format' => 'html',
         'value' => function ($model) {
-            $badge = ($model->updated_at == $model->created_at) ? "<span class='badge badge-danger'>Новая</span>" : "";
+            $badge = ($model->updated_at == $model->created_at) ? "<span class='badge badge-danger'>Новая</span><br>" : "";
             return $badge . " " . date("d-m-Y H:i", $model->updated_at ? $model->updated_at : $model->created_at);
         },
     ],    
@@ -64,7 +64,7 @@ $defaultColumns = [
 
             $readyness = !empty($record['ready']);
 
-            $message = $readyness?'Готово к проверке':'Не готово к проверке';
+            $message = $readyness?'<span class="badge badge-primary">Готово к проверке</span>':'<span class="badge badge-danger">Не готово к проверке</span>';
 
             return $message;
         },
@@ -118,7 +118,11 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
         'rowOptions' => function ($model) {
+            $record = $model->getRecord()->one()->getData(true);
 
+            if (!empty($record['ready'])) {
+                return ['class' => 'success'];
+            }
         },
         'columns' => array_merge(array_values($gridColumns), [
             [

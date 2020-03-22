@@ -158,9 +158,9 @@ class CstProfile extends \yii\db\ActiveRecord
         else {
             switch ($this->state) {
                 case CstProfile::STATE_DRAFT:
-                    return '<span class="badge badge-primary">Черновик</span>';
+                    return '<span class="badge badge-warning">Черновик</span>';
                 case CstProfile::STATE_ACCEPTED:
-                    return '<span class="badge badge-warning">Принято к рассмотрению</span>';
+                    return '<span class="badge badge-primary">Принято к рассмотрению</span>';
                 case CstProfile::STATE_REJECTED:
                     return '<span class="badge badge-danger">Отклонено</span>';
                 case CstProfile::STATE_ARCHIVED:
