@@ -67,11 +67,13 @@ class ContestController extends Controller
 
         $data = $links = [];
         
-        $profiles = CstProfile::find()->where(['state' => CstProfile::STATE_ACCEPTED])->all();
+        //$profiles = CstProfile::find()->where(['state' => CstProfile::STATE_ACCEPTED])->all();
+        $profiles = CstProfile::find()->all();
 
         foreach ($activeContests as $ckey => $cst) {
 
             $count = 0;
+            $countTotal = 0;
 
             if(!empty($cst['participant_form']))
             {
@@ -87,7 +89,9 @@ class ContestController extends Controller
 
                         $links[$ckey][] = $profile->id_profile;
 
-                        $count++;
+                        $countTotal++;
+                        if($profile->state == CstProfile::STATE_ACCEPTED)
+                            $count++;
                     }
                 }
             }
@@ -96,7 +100,8 @@ class ContestController extends Controller
                 'id' => $ckey,
                 'name' => $cst['name'],
                 'state' => $cst['contest_state'],
-                'count' => $count
+                'count' => $count,
+                'countTotal' => $countTotal
             ];
         }
 

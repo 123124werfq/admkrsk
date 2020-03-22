@@ -70,7 +70,7 @@ $defaultColumns = [
         },
     ],
     'comment:prop' => [
-        'label' => 'Статус',
+        'label' => 'Комментарий',
         'format' => 'html',
         'value' => function ($model) {
             $message = empty($model->comment)?("<a href='/contest/view?id={$model->id_profile}'>Редактировать комментарий</a>"):(htmlspecialchars(strip_tags($model->comment))."<br><a href='/contest/view?id={$model->id_profile}''>Редактировать комментарий</a>");

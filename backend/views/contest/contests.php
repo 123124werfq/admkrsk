@@ -40,7 +40,7 @@ GridAsset::register($this);
                 'label' => 'Кол-во заявок',
                 'format' => 'html',
                 'value' => function ($model) {
-                    return $model['count'];
+                    return $model['count']."/".$model['countTotal'];
                 },
             ],
             [
