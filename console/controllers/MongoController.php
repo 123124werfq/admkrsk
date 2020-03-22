@@ -5,6 +5,7 @@ namespace console\controllers;
 use common\models\CollectionRecord;
 use Yii;
 use yii\console\Controller;
+use common\models\Page;
 
 class MongoController extends Controller
 {
@@ -43,6 +44,53 @@ class MongoController extends Controller
             }
 
             $insert['col'.$data['id_column']] = $data['value'];
+        }
+    }
+
+    public function actionPage()
+    {
+        $pages = Page::find()->where("content LIKE '%www.admkrsk.ru%' AND content LIKE '%.aspx%'")->all();
+
+        foreach ($pages as $key => $page)
+        {
+            preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $page->content, $match);
+
+            $urls = [];
+            foreach ($match[0] as $key => $match)
+            {
+                if (strpos($match, 'www.admkrsk.ru') && strrpos($match, '.aspx')==(strlen($match)-5))
+                {
+                    $replace = '';
+                    /*if (strrpos($match, '.')>strrpos($match, '/'))
+                    {
+                        $replace = substr($match, strpos($match, 'www.admkrsk.ru')+14);
+                    }
+                    else
+                    {*/
+
+                        $slugs = explode('/', $match);
+                        $slug = array_pop($slugs);
+
+                        /*if (empty($slug))
+                            $slug = array_pop($slug);*/
+
+                        $slug = str_replace('.aspx', '', $slug);
+
+                        $findPage = Page::find()->where(['alias'=>$slug])->one();
+
+                        if (!empty($findPage))
+                        {
+                            $page->content = str_replace($match, $findPage->getUrl(), $page->content);
+
+                            echo "$match => {$findPage->getUrl()} \r\n";
+
+                            die();
+                        }
+                        else
+                            $urls[$page->getUrl()] = $page->getUrl()."\r\n";
+                   //}
+                }
+            }
         }
     }
 }
