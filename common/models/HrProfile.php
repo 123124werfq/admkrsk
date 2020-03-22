@@ -177,7 +177,10 @@ class HrProfile extends \yii\db\ActiveRecord
 
     public function getName()
     {
-        return $this->user->getUsername();
+        if($this->user)
+            return $this->user->getUsername();
+        else
+            '';
     }
 
     public function canUseInContest()
