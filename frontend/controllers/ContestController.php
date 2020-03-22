@@ -97,6 +97,7 @@ class ContestController extends \yii\web\Controller
             'page'      => $page,
             'inputs'    => $inputs,
             'contestname' => $contestname,
+            'profile' => $profile,
             'record'    => !empty($profile->record)?$profile->record:null
         ]);
     }

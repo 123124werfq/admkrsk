@@ -64,6 +64,7 @@ class CstProfile extends \yii\db\ActiveRecord
         return [
             [['id_user', 'id_record_anketa', 'id_record_contest', 'state', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
             [['id_user', 'id_record_anketa', 'id_record_contest', 'state', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['comment'], 'string'],
         ];
     }
 
@@ -78,6 +79,7 @@ class CstProfile extends \yii\db\ActiveRecord
             'id_record_anketa' => 'Id Record Anketa',
             'id_record_contest' => 'Id Record Contest',
             'state' => 'State',
+            'comment' => 'Комментарий',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
