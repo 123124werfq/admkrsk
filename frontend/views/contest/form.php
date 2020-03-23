@@ -13,14 +13,14 @@
                 <?=common\components\helper\Helper::runContentWidget($page->content,$page)?>
 
                 <?php 
-                    if($profile->state == CstProfile::STATE_ACCEPTED){
+                    if(is_object($profile) && $profile->state == CstProfile::STATE_ACCEPTED){
                 ?>
                     <p>Заявка принята к рассмотрению и не может быть изменена</p>
                 <?php        
                     }
                     else 
                     {
-                        if(!empty($profile->comment)){
+                        if(is_object($profile) && !empty($profile->comment)){
                 ?>
                     <div class="boxed">
                         <p>Замечания для устранения:<br><?=$profile->comment?></p>
