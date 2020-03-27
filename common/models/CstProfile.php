@@ -64,6 +64,7 @@ class CstProfile extends \yii\db\ActiveRecord
         return [
             [['id_user', 'id_record_anketa', 'id_record_contest', 'state', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
             [['id_user', 'id_record_anketa', 'id_record_contest', 'state', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['comment'], 'string'],
         ];
     }
 
@@ -78,6 +79,7 @@ class CstProfile extends \yii\db\ActiveRecord
             'id_record_anketa' => 'Id Record Anketa',
             'id_record_contest' => 'Id Record Contest',
             'state' => 'State',
+            'comment' => 'Комментарий',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
@@ -156,9 +158,9 @@ class CstProfile extends \yii\db\ActiveRecord
         else {
             switch ($this->state) {
                 case CstProfile::STATE_DRAFT:
-                    return '<span class="badge badge-primary">Черновик</span>';
+                    return '<span class="badge badge-warning">Черновик</span>';
                 case CstProfile::STATE_ACCEPTED:
-                    return '<span class="badge badge-warning">Принято к рассмотрению</span>';
+                    return '<span class="badge badge-primary">Принято к рассмотрению</span>';
                 case CstProfile::STATE_REJECTED:
                     return '<span class="badge badge-danger">Отклонено</span>';
                 case CstProfile::STATE_ARCHIVED:

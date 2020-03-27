@@ -1,4 +1,6 @@
 <?php
+    use common\models\CstProfile;
+
     $this->params['page'] = $page;
 ?>
 <div class="main">
@@ -7,9 +9,27 @@
         <div class="row">
             <div class="col-2-third order-xs-1">
                 <h1 class="h2"><?=$page->title?></h1>
-                <h4 class="h4"><?=$contestname?></h4>
+                <h4 class="h4"><?=$contestname?></h4>                
                 <?=common\components\helper\Helper::runContentWidget($page->content,$page)?>
-                <?=frontend\widgets\FormsWidget::widget(['form'=>$form,'inputs'=>$inputs,'action'=>'', 'collectionRecord' => $record, 'submitLabel' => 'Сохранить'])?>
+
+                <?php 
+                    if(is_object($profile) && $profile->state == CstProfile::STATE_ACCEPTED){
+                ?>
+                    <p>Заявка принята к рассмотрению и не может быть изменена</p>
+                <?php        
+                    }
+                    else 
+                    {
+                        if(is_object($profile) && !empty($profile->comment)){
+                ?>
+                    <div class="boxed">
+                        <p>Замечания для устранения:<br><?=$profile->comment?></p>
+                    </div>
+                <?php
+                        }
+                        echo frontend\widgets\FormsWidget::widget(['form'=>$form,'inputs'=>$inputs,'action'=>'', 'collectionRecord' => $record, 'submitLabel' => 'Сохранить']);
+                    }
+                ?>                
 
                 <div class="subscribe">
                     <div class="subscribe_left">
