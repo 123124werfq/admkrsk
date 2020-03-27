@@ -1165,7 +1165,12 @@ class CollectionController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->delete()) {
+        if ($model->delete())
+        {
+            foreach ($model->forms as $key => $form)
+                if ($form->delete())
+                        $form->createAction(Action::ACTION_DELETE);
+
             $model->createAction(Action::ACTION_DELETE);
         }
 

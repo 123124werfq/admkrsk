@@ -535,18 +535,22 @@ class FormController extends Controller
         $model = $this->findModel($id);
 
         // ищем связанную коллекцию
-        if (!empty($model->collection) && $model->id_form == $model->collection->id_form)
+        if (!empty($model->collection) && $model->isMainForm())
             $collection = $model->collection;
 
-        if ($model->delete())
-        {
             if (!empty($collection))
             {
+                foreach ($collection->forms as $key => $form)
+                {
+                    if ($form->delete())
+                        $form->createAction(Action::ACTION_DELETE);
+                }
+
                 $collection->delete();
                 $collection->createAction(Action::ACTION_DELETE);
             }
-
-            $model->createAction(Action::ACTION_DELETE);
+            else if ($model->delete())
+                    $model->createAction(Action::ACTION_DELETE);
         }
 
         return $this->redirect(['index']);
