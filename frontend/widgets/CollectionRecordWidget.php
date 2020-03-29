@@ -26,9 +26,11 @@ class CollectionRecordWidget extends \yii\base\Widget
         else
         	$columns = $this->collectionRecord->collection->columns;
 
+        $recorData = $this->collectionRecord->getData($this->renderTemplate);
+
         return $this->render($this->renderTemplate?'collection/_template':'collection/_record',[
         	'template'=>$template,
-        	'Record'=>$this->collectionRecord->getData($this->renderTemplate),
+        	'recordData'=>$recorData,
             'columns'=>$columns,
         ]);
     }
