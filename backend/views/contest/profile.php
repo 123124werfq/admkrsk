@@ -121,11 +121,16 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
-        'rowOptions' => function ($model) {
-            $record = $model->getRecord()->one()->getData(true);
+        'rowOptions' => function ($model) 
+        {
+            $rr = $model->getRecord()->one();
+            if($rr)
+            {            
+                $record = $model->getRecord()->one()->getData(true);
 
-            if (!empty($record['ready'])) {
-                return ['class' => 'success'];
+                if (!empty($record['ready'])) {
+                    return ['class' => 'success'];
+                }
             }
         },
         'columns' => array_merge(array_values($gridColumns), [
