@@ -41,6 +41,18 @@ class CollectionController extends Controller
         }
     }
 
+    public function actionDeleteForms()
+    {
+        $collection = Collection::findDeleted();
+
+        foreach ($collection as $key => $collection)
+        {
+            foreach ($collection->forms as $key => $form)
+                if ($form->delete())
+                        $form->createAction(Action::ACTION_DELETE);
+        }
+    }
+
     public function actionAlias()
     {
         $inputs = FormInput::find()->where("fieldname IS NULL OR fieldname = ''")->all();

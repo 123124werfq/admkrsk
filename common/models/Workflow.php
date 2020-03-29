@@ -371,20 +371,51 @@ class Workflow extends Model
       //if(!file_exists($filename))
       //  return false;
 
+      /*
       $d = system('pwd');
       var_dump($d);
 
       $d = system('whoami');
       var_dump($d);
+      */
 
+      //$pemPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.pem');
+      //$keyPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.key');
 
-      $pemPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.pem');
-      $keyPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.key');
+      $pemPath = escapeshellcmd('/usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem');
+      $keyPath = escapeshellcmd('/usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem');
+
       $filePath = escapeshellcmd($filename);
       $path_parts = pathinfo($filename);
       $resultPath = escapeshellcmd($path_parts['dirname'].'/'.$path_parts['basename'].'.sig');
       
-      $command = "openssl cms -sign -signer $pemPath -inkey $keyPath -binary -in $filePath -outform der -out $resultPath";
+      /*
+      //openssl_pkcs7_sign($filePath, $resultPath, $pemPath, array($pemPath,"CdtDblGfh"),[], PKCS7_BINARY | PKCS7_DETACHED);
+      $res = openssl_pkcs7_sign($filePath, $resultPath."-mime", 'file://'.realpath($pemPath), ['file://'.realpath($keyPath), "CdtDblGfh"],[], PKCS7_BINARY | PKCS7_DETACHED);
+      var_dump($res);
+
+      if($res)
+      {
+        $signedMime = file_get_contents($resultPath."-mime");
+        $sparts = explode('Content-Disposition: attachment; filename="smime.p7s"',$signedMime);
+
+        //var_dump($sparts[1][0]);
+
+        $cparts = explode('------', $sparts[1]);
+
+        //var_dump($cparts[0]);
+
+        $b64 = str_replace($sparts[1][0], '', $cparts[0]);
+
+        //var_dump($b64);
+
+        $fp = fopen($resultPath, "wb");
+        fwrite($fp,  base64_decode($b64));
+
+      }
+die();
+*/
+      $command = "openssl cms -sign -signer $pemPath -inkey $keyPath -binary -in $filePath -outform der -out $resultPath"; // openssl cms -sign -signer /usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem -inkey /usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem -binary -in /usr/local/var/www/admkrsk.local/admkrsk/frontend/runtime/p7s/req_7a06c1c5-0218-4672-a6eb-7ef46529803e.xml -outform der -out /usr/local/var/www/admkrsk.local/admkrsk/frontend/runtime/p7s/req_7a06c1c5-0218-4672-a6eb-7ef46529803e.xml.sig
       //$command = "openssl version";
       var_dump($command);
 
@@ -413,7 +444,14 @@ class Workflow extends Model
         {
             foreach ($attachments as $key => $att)
             {
-                $tfile = file_get_contents($att);
+
+                $arrContextOptions=array(
+                  "ssl"=>array(
+                      "verify_peer"=>false,
+                      "verify_peer_name"=>false,
+                  ),
+                );  
+                $tfile = file_get_contents($att, false, stream_context_create($arrContextOptions));
                 $ext = explode(".", $att);
 
                 $ext = end($ext);
