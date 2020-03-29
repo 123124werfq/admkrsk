@@ -4,18 +4,20 @@
 
     preg_match_all ("/{(.+?)}/is", $template, $matches);
 
+    $templateValues = [];
+
     if (!empty($matches[1]))
     {
         foreach ($matches[1] as $key => $alias)
         {
-            if (isset($Record[$alias]))
+            if (isset($recorData[$alias]))
             {
                 if (isset($columns[$alias]))
                 {
                     if ($columns[$alias]->isRelation())
                     {
                         $replace = '';
-                        foreach ($Record[$alias] as $id_subrecord => $subrecord)
+                        foreach ($recorData[$alias] as $id_subrecord => $subrecord)
                         {
                             $replace .= frontend\widgets\CollectionRecordWidget::widget([
                                 'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
@@ -25,21 +27,28 @@
                         }
                     }
                     else
-                        $replace = $columns[$alias]->getValueByType($Record[$alias]);
+                        $templateValues[$alias] = $columns[$alias]->getValueByType($recorData[$alias]);
                 }
                 else
-                    $replace = $Record[$alias];
+                    $templateValues[$alias] = $recorData[$alias];
             }
             else
-                $replace = '';
+                $templateValues[$alias] = '';
 
 
-            if (is_array($replace))
-                $replace = implode('', $replace);
+            if (is_array($templateValues[$alias]))
+                $templateValues[$alias] = implode('', $templateValues[$alias]);
 
-            $template = str_replace('{'.$alias.'}', $replace , $template);
+            //$template = str_replace('{'.$alias.'}', $replace , $template);
         }
-    }
-?>
 
-<?=str_replace('\n', '', $template)?>
+        $loader = new \Twig\Loader\ArrayLoader([
+            'index' => $template,
+        ]);
+        $twig = new \Twig\Environment($loader);
+
+        echo $twig->render('index', $templateValues);
+    }
+
+    //str_replace('\n', '', $template)
+?>
