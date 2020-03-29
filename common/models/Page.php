@@ -154,6 +154,14 @@ class Page extends ActiveRecord
         return $labels;
     }
 
+    public function isNews()
+    {
+        if ($this->type == self::TYPE_NEWS || $this->type == self::TYPE_ANONS)
+            return true;
+
+        return false;
+    }
+
     public function getLabel()
     {
         if (!empty($this->label))

@@ -107,6 +107,8 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
         $pathInfo = $request->getPathInfo();
         $domain = \yii\helpers\Url::base(true);
 
+        $fullUrl = $domain.'/'.$pathInfo;
+
         $routes = $this->getRoutes();
 
         // если обратились к корню то проверяем от какого раздела этот домен
@@ -129,7 +131,7 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
         }
 
         // ищем из резервированных
-        if ($route = $this->findRouteByURL($domain.'/'.$pathInfo))
+        if ($route = $this->findRouteByURL($fullUrl))
         {
             if ($route['page']->noguest && Yii::$app->user->isGuest)
                 return ['site/login',[]];
@@ -149,6 +151,9 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
         if (empty($page))
             return false;
 
+        if ($page->getUrl() != $fullUrl)
+            return false;
+
         // ставим хейдер и футер
         //$this->makeLayout($page);
 
@@ -158,7 +163,7 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
         // проверяем новостная ли эта страница
         $news_count = News::find()->where(['id_page'=>$page->id_page])->count();
 
-        if ($news_count>0)
+        if ($page->isNews())
         {
             if (!empty(Yii::$app->request->get('id')))
                 return ['news/view',['id'=>Yii::$app->request->get('id'),'page'=>$page]];
