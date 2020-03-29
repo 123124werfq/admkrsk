@@ -60,13 +60,17 @@ $defaultColumns = [
         'label' => 'Готовность',
         'format' => 'html',
         'value' => function ($model) {
-            $record = $model->getRecord()->one()->getData(true);
+            $rr = $model->getRecord()->one();
+            if($rr)
+            {
+                $record = $model->getRecord()->one()->getData(true);
 
-            $readyness = !empty($record['ready']);
+                $readyness = !empty($record['ready']);
 
-            $message = $readyness?'<span class="badge badge-primary">Готово к проверке</span>':'<span class="badge badge-danger">Не готово к проверке</span>';
+                $message = $readyness?'<span class="badge badge-primary">Готово к проверке</span>':'<span class="badge badge-danger">Не готово к проверке</span>';
 
-            return $message;
+                return $message;
+            }
         },
     ],
     'comment:prop' => [

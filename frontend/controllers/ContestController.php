@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\CollectionRecord;
 use Yii;
 use common\models\Page;
 use common\models\Collection;
@@ -13,7 +14,8 @@ use yii\web\NotFoundHttpException;
 
 
 use common\models\CstProfile;
-
+use common\models\CstExpert;
+use common\models\CstVote;
 
 class ContestController extends \yii\web\Controller
 {
@@ -151,5 +153,80 @@ class ContestController extends \yii\web\Controller
             'page' => $page
         ]);
     }
+
+    public function actionVote($id=null)
+    {            
+        $expert = CstExpert::findOne(['id_user' => Yii::$app->user->id]);
+
+        if(!$expert)
+            throw new BadRequestHttpException();
+
+        $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
+        if(!$contestCollection)
+            throw new BadRequestHttpException();
+    
+        $data = $links = [];
+        
+        $activeContests = $contestCollection->getDataQuery()->whereByAlias(['<>', 'contest_state', 'Конкурс завершен'])->getArray(true);
+
+        $profiles = CstProfile::find()->all();
+
+        foreach ($activeContests as $ckey => $cst) {
+
+            $count = 0;
+            $countTotal = 0;
+
+            if(!empty($cst['participant_form']))
+            {
+                $form = Form::find()->where(['alias' => $cst['participant_form']])->one();
+                if(!$form)
+                    continue;
+
+                foreach ($profiles as $profile) {
+                    if($form->id_collection == $profile->id_record_contest)
+                    {
+                        if(!isset($links[$ckey]))
+                            $links[$ckey] = [];
+
+                        $countTotal++;
+
+                        if($profile->state == CstProfile::STATE_ACCEPTED)
+                        {
+                            $count++;
+                            $profileData = CollectionRecord::findOne($profile->id_record_anketa);
+                            
+                            if($profileData)
+                            {
+                                $profileData = $profileData->getData(true);
+                                $vote = CstVote::find()->where(['id_expert' => $expert->id_expert, 'id_profile' => $profile->id_profile])->one();
+                                
+                                $links[$ckey][] = [
+                                    'id' => $profile->id_profile, 
+                                    'name' => $profileData['project_name'], 
+                                    'vote_value' => $vote->value??false, 
+                                    'vote_comment' => $vote->comment??''
+                                ];
+                            }
+                        }
+                    }
+                }
+            }
+
+            $data[] = [
+                'id' => $ckey,
+                'name' => $cst['name'],
+                'state' => $cst['contest_state'],
+                'count' => $count,
+                'countTotal' => $countTotal,
+                'profiles' => $links[$ckey]??[]
+            ];
+        }
+
+        return $this->render('vote', [
+            'data' => $data,
+            'expert' => $expert,
+        ]);
+        
+    }    
 
 }
