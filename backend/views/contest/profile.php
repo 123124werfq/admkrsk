@@ -71,6 +71,8 @@ $defaultColumns = [
 
                 return $message;
             }
+            else
+                return '<span class="badge badge-secondary">Удалено</span>';
         },
     ],
     'comment:prop' => [
