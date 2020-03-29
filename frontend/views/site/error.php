@@ -26,6 +26,5 @@ $this->title = $name;
         <br/>
         <br/>
         <br/>
-
     </div>
 </div>

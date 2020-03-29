@@ -10,13 +10,13 @@
         <td width="200"><?=$column->name?></td>
         <td>
             <?php
-                if (!isset($Record[$column->id_column]))
+                if (!isset($recordData[$column->id_column]))
                     echo 'Не заполнено';
                 else
                 {
                     if ($column->isRelation())
                     {
-                        foreach ($Record[$column->id_column] as $id_subrecord => $subrecord)
+                        foreach ($recordData[$column->id_column] as $id_subrecord => $subrecord)
                         {
                             echo \frontend\widgets\CollectionRecordWidget::widget([
                                 'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
@@ -24,7 +24,7 @@
                         }
                     }
                     else
-                        echo $column->getValueByType($Record[$column->id_column]);
+                        echo $column->getValueByType($recordData[$column->id_column]);
                 }
             ?>
         </td>
