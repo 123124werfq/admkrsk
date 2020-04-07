@@ -15,6 +15,14 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
+            'trustedHosts' => [
+                '10.24.0.0/24' => [
+                    'X-Forwarded-For',
+                    'X-Forwarded-Proto',
+                    'Front-End-Https',
+                    'HTTP_X_FORWARDED_FOR',
+                ],
+            ],
             'secureHeaders' => [
                 // Common:
                 'X-Forwarded-For',
