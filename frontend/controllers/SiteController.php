@@ -942,4 +942,11 @@ class SiteController extends Controller
         return $this->redirect($backUrl);
     }
 
+    public function actionTestip(){
+        echo(Yii::$app->request->userIP);
+        echo('<br>');
+        echo(Yii::$app->request->remoteIP);
+        die();
+    }
+
 }

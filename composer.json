@@ -41,7 +41,9 @@
         "omnilight/yii2-scheduling": "*",
         "2amigos/yii2-taggable-behavior": "~1.0",
         "phpoffice/phpword": "^0.17.0",
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+        "marcelxyz/php-xml-digital-signature": "^1.0",
+        "selective/xmldsig": "^0.4.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

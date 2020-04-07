@@ -100,7 +100,7 @@ class ReserveController extends \yii\web\Controller
 
         if(!$contest)
             throw new BadRequestHttpException();
-
+            
         $expert = HrExpert::findOne(['id_user' => Yii::$app->user->id]);
 
         if(!$expert)
