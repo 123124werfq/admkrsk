@@ -15,6 +15,22 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
+            'secureHeaders' => [
+                // Common:
+                'X-Forwarded-For',
+                'X-Forwarded-Host',
+                'X-Forwarded-Proto',
+
+                // Microsoft:
+                'Front-End-Https',
+                'X-Rewrite-Url',
+                'Http-X-Forwarded-For',
+            ],
+            'ipHeaders' => [
+                // Common
+                'X-Forwarded-For',
+                'Http-X-Forwarded-For',
+            ],
         ],
         'user' => [
             'identityClass' => 'common\models\User',
