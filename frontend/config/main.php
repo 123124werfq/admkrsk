@@ -49,14 +49,14 @@ return [
         ),
         'request' => [
             'csrfParam' => '_csrf-frontend',
-            'trustedHosts' => [
-                '10.24.0.0/24' => [
-                    'X-Forwarded-For',
-                    'X-Forwarded-Proto',
-                    'Front-End-Https',
-                    'HTTP_X_FORWARDED_FOR',
-                ],
-            ],
+            // 'trustedHosts' => [
+            //     '10.24.0.0/24' => [
+            //         'X-Forwarded-For',
+            //         'X-Forwarded-Proto',
+            //         'Front-End-Https',
+            //         'HTTP_X_FORWARDED_FOR',
+            //     ],
+            // ],
             'secureHeaders' => [
                 // Common:
                 'X-Forwarded-For',
