@@ -10,14 +10,14 @@
     {
         foreach ($matches[1] as $key => $alias)
         {
-            if (isset($recorData[$alias]))
+            if (isset($recordData[$alias]))
             {
                 if (isset($columns[$alias]))
                 {
                     if ($columns[$alias]->isRelation())
                     {
                         $replace = '';
-                        foreach ($recorData[$alias] as $id_subrecord => $subrecord)
+                        foreach ($recordData[$alias] as $id_subrecord => $subrecord)
                         {
                             $replace .= frontend\widgets\CollectionRecordWidget::widget([
                                 'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
@@ -27,10 +27,10 @@
                         }
                     }
                     else
-                        $templateValues[$alias] = $columns[$alias]->getValueByType($recorData[$alias]);
+                        $templateValues[$alias] = $columns[$alias]->getValueByType($recordData[$alias]);
                 }
                 else
-                    $templateValues[$alias] = $recorData[$alias];
+                    $templateValues[$alias] = $recordData[$alias];
             }
             else
                 $templateValues[$alias] = '';

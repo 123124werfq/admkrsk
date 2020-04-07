@@ -343,7 +343,7 @@ class FormController extends Controller
 
         if ($newForm = $formCopy->сopyForm($form))
             return $this->redirect(['view', 'id'=>$newForm->id_form]);
-        else 
+        else
             print_r($formCopy->errors);
     }
 
@@ -536,22 +536,24 @@ class FormController extends Controller
 
         // ищем связанную коллекцию
         if (!empty($model->collection) && $model->isMainForm())
+        {
             $collection = $model->collection;
 
             if (!empty($collection))
             {
                 foreach ($collection->forms as $key => $form)
                 {
-                    if ($form->delete())
+                    if ($form->delete() && $model->id_form != $form->id_form)
                         $form->createAction(Action::ACTION_DELETE);
                 }
 
                 $collection->delete();
                 $collection->createAction(Action::ACTION_DELETE);
             }
-            else if ($model->delete())
-                    $model->createAction(Action::ACTION_DELETE);
         }
+
+        if ($model->delete())
+            $model->createAction(Action::ACTION_DELETE);
 
         return $this->redirect(['index']);
     }

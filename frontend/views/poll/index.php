@@ -3,7 +3,9 @@
 /* @var $this yii\web\View */
 /* @var $searchModel \frontend\models\search\PollSearch */
 /* @var $dataProvider \yii\data\ActiveDataProvider */
+/* @var $page Page */
 
+use common\models\Page;
 use common\models\Poll;
 use yii\helpers\Html;
 use yii\widgets\LinkPager;

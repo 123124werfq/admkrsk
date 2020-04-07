@@ -190,61 +190,65 @@ $this->params['page'] = $page;
 
                     <?php foreach ($poll->questions as $question_index => $question): ?>
 
-                        <h2>Вопрос <?= $question_index + 1 ?>.</h2>
+                        <?php if (!$question->is_hidden): ?>
 
-                        <p class="lead"><?= $question->question ?></p>
+                            <h2>Вопрос <?= $question_index + 1 ?>.</h2>
 
-                        <?php if ($question->type != Question::TYPE_FREE_FORM): ?>
+                            <p class="lead"><?= $question->question ?></p>
 
-                            <?php if ($question->chart_type == Question::CHART_TYPE_GRAPH): ?>
+                            <?php if ($question->type != Question::TYPE_FREE_FORM): ?>
 
-                                <div class="chart-holder">
-                                    <canvas class="chart" data-chart-type="graph" data-y-type="%" data-color-dark
-                                            data-values="<?= $question->dataValues ?>"></canvas>
-                                    <div class="chart-labels"><?= $question->chartLabels ?></div>
-                                </div>
+                                <?php if ($question->chart_type == Question::CHART_TYPE_GRAPH): ?>
 
-                            <?php elseif ($question->chart_type == Question::CHART_TYPE_PIE): ?>
+                                    <div class="chart-holder">
+                                        <canvas class="chart" data-chart-type="graph" data-y-type="%" data-color-dark
+                                                data-values="<?= $question->dataValues ?>"></canvas>
+                                        <div class="chart-labels"><?= $question->chartLabels ?></div>
+                                    </div>
 
-                                <div class="chart-holder chart-holder__pie">
-                                    <canvas class="chart" data-chart-type="pie" data-color-dark
-                                            data-values="<?= $question->dataValues ?>"></canvas>
-                                    <div class="chart-labels"><?= $question->chartLabels ?></div>
-                                </div>
+                                <?php elseif ($question->chart_type == Question::CHART_TYPE_PIE): ?>
 
-                            <?php elseif ($question->chart_type == Question::CHART_TYPE_BAR_H): ?>
+                                    <div class="chart-holder chart-holder__pie">
+                                        <canvas class="chart" data-chart-type="pie" data-color-dark
+                                                data-values="<?= $question->dataValues ?>"></canvas>
+                                        <div class="chart-labels"><?= $question->chartLabels ?></div>
+                                    </div>
 
-                                <div class="chart-holder">
-                                    <canvas class="chart" data-chart-type="bar-h" data-color-dark
-                                            data-values="<?= $question->dataValues ?>"></canvas>
-                                    <div class="chart-labels"><?= $question->chartLabels ?></div>
-                                </div>
+                                <?php elseif ($question->chart_type == Question::CHART_TYPE_BAR_H): ?>
+
+                                    <div class="chart-holder">
+                                        <canvas class="chart" data-chart-type="bar-h" data-color-dark
+                                                data-values="<?= $question->dataValues ?>"></canvas>
+                                        <div class="chart-labels"><?= $question->chartLabels ?></div>
+                                    </div>
+
+                                <?php else: ?>
+
+                                    <div class="chart-holder chart-holder__bar-v" height="270">
+                                        <canvas class="chart" data-chart-type="bar-v" data-color-dark
+                                                data-values="<?= $question->dataValues ?>"></canvas>
+                                        <div class="chart-labels"><?= $question->chartLabels ?></div>
+                                    </div>
+
+                                <?php endif; ?>
+
+                                <p class="text-help">
+
+                                    Ответы:<br>
+
+                                    <?php foreach ($question->answers as $answer_index => $answer): ?>
+
+                                        <?= $answer_index + 1 ?>. <?= $answer->answer ?><br>
+
+                                    <?php endforeach; ?>
+
+                                </p>
 
                             <?php else: ?>
 
-                                <div class="chart-holder chart-holder__bar-v" height="270">
-                                    <canvas class="chart" data-chart-type="bar-v" data-color-dark
-                                            data-values="<?= $question->dataValues ?>"></canvas>
-                                    <div class="chart-labels"><?= $question->chartLabels ?></div>
-                                </div>
+                                Ответило <?= $question->freeVotesCount ?> чел.
 
                             <?php endif; ?>
-
-                            <p class="text-help">
-
-                                Ответы:<br>
-
-                                <?php foreach ($question->answers as $answer_index => $answer): ?>
-
-                                    <?= $answer_index + 1 ?>. <?= $answer->answer ?><br>
-
-                                <?php endforeach; ?>
-
-                            </p>
-
-                        <?php else: ?>
-
-                            Ответило <?= $question->freeVotesCount ?> чел.
 
                         <?php endif; ?>
 

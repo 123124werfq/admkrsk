@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\behaviors\OrderBehavior;
+use common\components\softdelete\SoftDeleteTrait;
 use common\components\yiinput\RelationBehavior;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\ActionTrait;
@@ -53,6 +54,7 @@ class Question extends \yii\db\ActiveRecord
 {
     use MetaTrait;
     use ActionTrait;
+    use SoftDeleteTrait;
 
     const VERBOSE_NAME = 'Вопрос';
     const VERBOSE_NAME_PLURAL = 'Вопросы';
@@ -356,6 +358,7 @@ class Question extends \yii\db\ActiveRecord
         return Vote::find()
             ->select('MAX(id_poll_vote)')
             ->leftJoin(self::tableName(), self::tableName() . '.id_poll_question = ' . Vote::tableName() . '.id_poll_question')
+            ->where([self::tableName() . '.id_poll_question' => $this->id_poll_question])
             ->groupBy(['id_poll_answer', 'ip'])
             ->count();
     }

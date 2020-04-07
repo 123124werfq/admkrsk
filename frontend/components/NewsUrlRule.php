@@ -148,10 +148,7 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
 
         $page = Page::find()->where(['alias'=>$alias])->one();
 
-        if (empty($page))
-            return false;
-
-        if ($page->getUrl() != $fullUrl)
+        if (empty($page) || $page->getUrl() != $fullUrl)
             return false;
 
         // ставим хейдер и футер

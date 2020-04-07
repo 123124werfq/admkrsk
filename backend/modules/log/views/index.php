@@ -14,7 +14,7 @@ $parentModel = !empty($parent) ? $model->{$parent['relation']} : null;
 
 $this->title = 'История';
 $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $parentModel ? $parentModel->pageTitle : $model->pageTitle, 'url' => ['view', 'id' => $model->primaryKey]];
+$this->params['breadcrumbs'][] = ['label' => $parentModel ? $parentModel->pageTitle : $model->pageTitle, 'url' => ['view', 'id' => $parentModel ? $parentModel->primaryKey : $model->primaryKey]];
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->params['button-block'][] = Html::a('Назад', ['view', 'id' => $model->primaryKey], ['class' => 'btn btn-default']);

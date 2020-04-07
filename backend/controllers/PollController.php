@@ -284,7 +284,7 @@ class PollController extends Controller
                 [
                     'attribute' => 'id_poll_answer',
                     'value' => function (Vote $model) {
-                        return $model->answer->answer;
+                        return $model->answer ? $model->answer->answer : null;
                     },
                 ],
                 'option',
@@ -300,6 +300,7 @@ class PollController extends Controller
     /**
      * Lists all Poll models.
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
