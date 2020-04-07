@@ -24,12 +24,12 @@ return [
                 // Microsoft:
                 'Front-End-Https',
                 'X-Rewrite-Url',
-                'Http-X-Forwarded-For',
+                'HTTP_X_FORWARDED_FOR',
             ],
             'ipHeaders' => [
                 // Common
                 'X-Forwarded-For',
-                'Http-X-Forwarded-For',
+                'HTTP_X_FORWARDED_FOR',
             ],
         ],
         'user' => [
