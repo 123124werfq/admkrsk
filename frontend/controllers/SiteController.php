@@ -946,6 +946,10 @@ class SiteController extends Controller
         echo(Yii::$app->request->userIP);
         echo('<br>');
         echo(Yii::$app->request->remoteIP);
+        echo('<br><pre>');
+        print_r(Yii::$app->request->headers);
+        echo('</pre><br>');
+        var_dump($_SERVER);
         die();
     }
 
