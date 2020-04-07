@@ -950,6 +950,9 @@ class SiteController extends Controller
         print_r(Yii::$app->request->headers);
         echo('</pre><br>');
         var_dump($_SERVER);
+        echo('<br><pre>');
+        print_r(Yii::$app->request->ipHeaders);
+        echo('</pre><br>');
         die();
     }
 
