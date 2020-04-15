@@ -280,31 +280,32 @@ class EsiaUser extends \yii\db\ActiveRecord
 
         foreach($addressInfo as $address)
         {
-            switch ($address['type']){
-                case 'PLV':
-                    $addr_components = [];
-                    if(isset($address['zipCode'])) $addr_components[] = $address['zipCode'];
-                    if(isset($address['addressStr'])) $addr_components[] = $address['addressStr'];
-                    if(isset($address['house'])) $addr_components[] = $address['house'];
-                    if(isset($address['flat'])) $addr_components[] = $address['flat'];
+            if(isset($address['type']))
+                switch ($address['type']){
+                    case 'PLV':
+                        $addr_components = [];
+                        if(isset($address['zipCode'])) $addr_components[] = $address['zipCode'];
+                        if(isset($address['addressStr'])) $addr_components[] = $address['addressStr'];
+                        if(isset($address['house'])) $addr_components[] = $address['house'];
+                        if(isset($address['flat'])) $addr_components[] = $address['flat'];
 
-                    $this->living_addr = implode(', ', $addr_components);
+                        $this->living_addr = implode(', ', $addr_components);
 
-                    if(isset($address['fiasCode']))
-                        $this->living_addr_fias = $address['fiasCode'];
-                    break;
-                case 'PRG':
-                    $addr_components = [];
-                    if(isset($address['zipCode'])) $addr_components[] = $address['zipCode'];
-                    if(isset($address['addressStr'])) $addr_components[] = $address['addressStr'];
-                    if(isset($address['house'])) $addr_components[] = $address['house'];
-                    if(isset($address['flat'])) $addr_components[] = $address['flat'];
+                        if(isset($address['fiasCode']))
+                            $this->living_addr_fias = $address['fiasCode'];
+                        break;
+                    case 'PRG':
+                        $addr_components = [];
+                        if(isset($address['zipCode'])) $addr_components[] = $address['zipCode'];
+                        if(isset($address['addressStr'])) $addr_components[] = $address['addressStr'];
+                        if(isset($address['house'])) $addr_components[] = $address['house'];
+                        if(isset($address['flat'])) $addr_components[] = $address['flat'];
 
-                    $this->register_addr = implode(', ', $addr_components);
-                    if(isset($address['fiasCode']))
-                        $this->register_addr_fias = $address['fiasCode'];
-                    break;
-            }            
+                        $this->register_addr = implode(', ', $addr_components);
+                        if(isset($address['fiasCode']))
+                            $this->register_addr_fias = $address['fiasCode'];
+                        break;
+                }            
         }
 /*
         if(isset($addressInfo[0]))
