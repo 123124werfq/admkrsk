@@ -16,7 +16,7 @@ return [
         'request' => [
             'csrfParam' => '_csrf-backend',
             'trustedHosts' => [
-                '10.24.0.0/24',
+                '10.24.0.84',
             ],
         ],
         'user' => [
