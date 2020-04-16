@@ -71,6 +71,10 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        echo "<pre>";
+        var_dump(Yii::$app->request->userIP);
+        print_r(Yii::$app->request->headers);
+        die();
         return $this->render('index');
     }
 
