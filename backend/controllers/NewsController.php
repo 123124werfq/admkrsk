@@ -16,6 +16,7 @@ use yii\db\Exception;
 use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
@@ -129,11 +130,22 @@ class NewsController extends Controller
 
     /**
      * Lists all News models.
+     * @param $id_page
+     * @param int $export
      * @return mixed
      * @throws ExitException
+     * @throws InvalidConfigException
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
      */
-    public function actionIndex($id_page,$export=0)
+    public function actionIndex($id_page, $export = 0)
     {
+        if (!$id_page || ($page = Page::findOne($id_page)) === null) {
+            throw new NotFoundHttpException();
+        } elseif (!Page::hasEntityAccess($page->id_page)) {
+            throw new ForbiddenHttpException();
+        }
+
         $searchModel = new NewsSearch();
         $searchModel->id_page = $id_page;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -146,8 +158,6 @@ class NewsController extends Controller
         if ($grid) {
             $columns = json_decode($grid->settings, true);
         }
-
-        $page = Page::findOne($id_page);
 
         if ($export)
         {
@@ -213,27 +223,27 @@ class NewsController extends Controller
     /**
      * Creates a new News model.
      * If creation is successful, the browser will be redirected to the 'view' page.
+     * @param $id_page
      * @return mixed
      * @throws Exception
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
      */
-    public function actionCreate()
+    public function actionCreate($id_page)
     {
+        if (!$id_page || ($page = Page::findOne($id_page)) === null) {
+            throw new NotFoundHttpException();
+        } elseif (!Page::hasEntityAccess($page->id_page)) {
+            throw new ForbiddenHttpException();
+        }
+
         $model = new News();
         $model->main = $model->state = 1;
-        $model->id_page = Yii::$app->request->get('id_page',null);
+        $model->id_page = $id_page;
         $model->id_user = Yii::$app->user->id;
         $model->date_publish = time();
 
-        $id_page = Yii::$app->request->get('id_page');
-
-        if ($id_page)
-        {
-            $model->id_page = $id_page;
-            $news_pages = Page::findOne($id_page);
-        }
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate())
-        {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             // убираем подсветку
             if ($model->highlight)
                 Yii::$app->db->createCommand()->update('db_news',['highlight'=>0],['highlight'=>1,'id_page'=>$model->id_page])->execute();
@@ -248,7 +258,7 @@ class NewsController extends Controller
 
         return $this->render('create', [
             'model' => $model,
-            'subtitle' => $news_pages->title??'Новости'
+            'subtitle' => $page->title??'Новости'
         ]);
     }
 

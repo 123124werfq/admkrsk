@@ -162,14 +162,20 @@ class PageController extends Controller
     /**
      * Search Page models.
      * @param string $q
+     * @param int $partition
+     * @param null $type
      * @return mixed
      * @throws InvalidConfigException
      */
-    public function actionList($q='',$partition=0)
+    public function actionList($q = '', $partition = 0, $type = null)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $query = Page::find();
+
+        if (!Yii::$app->user->can('admin.page')) {
+            $query->andWhere(['id_page' => Page::getAccessEntityIds()]);
+        }
 
         if ((new NumberValidator(['integerOnly' => true]))->validate($q)) {
             $query->andWhere([
@@ -185,7 +191,7 @@ class PageController extends Controller
         if (!empty($partition))
             $query->andWhere(['is_partition' => true]);
 
-        if (!empty(Yii::$app->request->get('type')) && Yii::$app->request->get('type') == 'news')
+        if (!empty($type) && $type == 'news')
             $query->andWhere(['or',['type'=>Page::TYPE_NEWS],['type'=>Page::TYPE_ANONS]]);
 
         if (!empty($_GET['news']))
