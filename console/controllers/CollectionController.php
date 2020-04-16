@@ -215,6 +215,43 @@ class CollectionController extends Controller
         }
     }
 
+    public function actionFormFix()
+    {
+        $forms = Form::find()->where("name like '%Файл с листами%'")->all();
+
+        foreach ($forms as $fkey => $form)
+            foreach ($form->rows[0]->elements as $key => $element)
+            {
+                if (!empty($element->input) && $element->input->type==CollectionColumn::TYPE_FILE && strpos($element->input->fieldname,'file')!==false)
+                {
+                    foreach ($element->row->elements as $dkey => $deleteelement)
+                    {
+                        if ($deleteelement->id_element != $element->id_element)
+                        {
+                            if (!empty($deleteelement->input))
+                            {
+                                $deleteelement->input->delete();
+                            }
+
+                            $deleteelement->delete();
+                        }
+                    }
+
+                    $input = $element->input;
+                    $options = $input->options;
+                    $options['pagecount'] = 1;
+
+                    $input->options = $options;
+
+                    $input->save();
+
+                    break;
+                }
+            }
+
+        //$input = FormInput::find()->where('type = '.FormInput::TYPE_FILE)->andWhere('')
+    }
+
     public function actionMongofix()
     {
         set_time_limit(0);
