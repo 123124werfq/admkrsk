@@ -27,6 +27,9 @@ class PersonalController extends \yii\web\Controller
 
     public function actionIndex($page = null)
     {
+        if(strpos(Yii::$app->request->hostName, 'ants.'))
+            return $this->redirect('/contests/select/select');
+
         return $this->render('index', ['page' => $page]);
     }
 
