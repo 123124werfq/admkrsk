@@ -53,6 +53,7 @@ img {max-width: 100%;}
     border: 0px;
     background: #efefefbf;
     line-height: 28px;
+    overflow: hidden;
 }
 
 #form-template .form-control.required {background: #ff9a837a;}

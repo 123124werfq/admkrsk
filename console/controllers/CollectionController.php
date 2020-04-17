@@ -230,6 +230,9 @@ class CollectionController extends Controller
                         {
                             if (!empty($deleteelement->input))
                             {
+                                if (!empty($deleteelement->input->column))
+                                    $deleteelement->input->column->delete();
+
                                 $deleteelement->input->delete();
                             }
 
@@ -238,12 +241,41 @@ class CollectionController extends Controller
                     }
 
                     $input = $element->input;
+
+                    $curRow = FormElement::find()->where(['id_form'=>$element->row->id_form])->one();
+                    $prevElement = null ;
+
+                    if (!empty($curRow->row))
+                    {
+                        $prevRow = $curRow->row;
+                        $prevRow = FormRow::find()->where(['ord'=>$prevRow->ord-1,'id_form'=>$prevRow->id_form])->one();
+
+                        if (!empty($prevRow) && count($prevRow->elements)==1 && !empty($prevRow->elements[0]->content))
+                        {
+                            $prevElement = $prevRow->elements[0];
+                            $input->label = $input->name = trim(str_replace('&nbsp;', ' ', strip_tags($prevElement->content)));
+                            $prevElement->id_input = $input->id_input;
+                        }
+                    }
+
                     $options = $input->options;
                     $options['pagecount'] = 1;
 
                     $input->options = $options;
 
-                    $input->save();
+                    if ($input->save())
+                    {
+                        if ($prevElement)
+                        {
+                            $prevElement->content = '';
+                            $prevElement->updateAttributes(['id_input','content']);
+                            $curRow->row->delete();
+                        }
+                        else
+                        {
+                            echo "$input->id_form \r\n";
+                        }
+                    }
 
                     break;
                 }
