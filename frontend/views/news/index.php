@@ -35,22 +35,30 @@
                     </form>
                 </div>
 		        <div class="press-list">
-		            <!--div class="press-item press-item__wide">
+		        	<?php if (!empty($selected_news)){?>
+		            <div class="press-item press-item__wide">
 		                <div class="press_img-holder">
-		                    <img class="press_img img-responsive" src="https://placekitten.com/768/480" alt="Название новости">
+		                	<?php if (!empty($selected_news->media)){?>
+		                    <img class="press_img img-responsive" src="<?=$selected_news->makeThumb(['w'=>768,'h'=>480])?>" alt="<?=Html::encode($selected_news->title)?>">
+		                	<?php }?>
 		                    <div class="press_content">
 		                        <ul class="press_info hidden-xs hidden-accessability">
-		                            <li class="press_info-item press_info-item__place"><a href="#">Событие</a></li>
-		                            <li class="press_info-item">20 декабря 2019 — 31 января 2018</li>
+		                        	<?php if (!empty($selected_news->rub)){?>
+						            <li class="press_info-item press_info-item__place"><a href="?id_rub=<?=$selected_news->id_rub?>"><?=$selected_news->rub->getLineValue()?></a></li>
+						            <?php }?>
+						            <li class="press_info-item"><?=Yii::$app->formatter->asDatetime($selected_news->date_publish,'d MMMM yyyy') ?></li>
 		                        </ul>
-		                        <h3 class="press_title"><a href="#">В Красноярске чествуют Петра Ивановича Пимашкова</a></h3>
+		                        <h3 class="press_title"><a href="<?=$selected_news->getUrl()?>"><?=$selected_news->title?></a></h4>
 		                        <ul class="press_info visible-xs">
-		                            <li class="press_info-item press_info-item__place"><a href="#">Событие</a></li>
-		                            <li class="press_info-item">20 декабря 2019 — 31 января 2018</li>
+		                            <?php if (!empty($selected_news->rub)){?>
+						            <li class="press_info-item press_info-item__place"><a href="?id_rub=<?=$selected_news->id_rub?>"><?=$selected_news->rub->getLineValue()?></a></li>
+						            <?php }?>
+		                            <li class="press_info-item"><?=Yii::$app->formatter->asDatetime($selected_news->date_publish,'d MMMM yyyy') ?></li>
 		                        </ul>
 		                    </div>
 		                </div>
-		            </div-->
+		            </div>
+		        	<?php }?>
 		            <?php foreach ($news as $key => $data) {
 		            	echo $this->render('_news',['data'=>$data]);
 		            }?>
