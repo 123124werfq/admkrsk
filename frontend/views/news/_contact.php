@@ -3,7 +3,7 @@
 
 	$photo = $model->contact->getMedia('photo',true);
 ?>
-<h3>Дополнительная информация для СМИ:</h3>
+<h3><?=Yii::t('site', 'Дополнительная информация для СМИ')?>:</h3>
 <div class="person-card">
     <?php if (!empty($photo)){?>
 	<img class="person-card_img" src="<?=$photo->showThumb(['w'=>160,'h'=>160])?>" alt="<?=$data['name']??''?>">

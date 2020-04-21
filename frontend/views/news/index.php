@@ -17,8 +17,8 @@
                             <div class="btn-group_item">
                                 <div class="custom-select custom-select__placeholder custom-select__inline ui-front">
                                     <select name="id_rub" id="news-rubric">
-                                    	<option value="">Рубрика</option>
-                                    	<option value="">Все рубрики</option>
+                                    	<option value=""><?=Yii::t('site', 'Рубрика')?></option>
+                                    	<option value=""><?=Yii::t('site', 'Все рубрики')?></option>
                                     	<?php foreach ($rubrics as $key => $rub)
                                     		echo '<option value="'.$rub->id_record.'" '.($rub->id_record==$id_rub?'selected':'').'>'.$rub->getLineValue().'</option>';
                                     	?>
@@ -27,7 +27,7 @@
                             </div>
                             <div class="btn-group_item">
                                 <div class="datepicker-holder">
-                                    <input name="date" id="news-date" value="<?=$date?>" type="text" class="form-control form-control_datepicker mb-sm-all-0 datepicker-ajax <?=!empty($date)?'datepicker__filled':''?>" placeholder="Показать новости за период">
+                                    <input name="date" id="news-date" value="<?=$date?>" type="text" class="form-control form-control_datepicker mb-sm-all-0 datepicker-ajax <?=!empty($date)?'datepicker__filled':''?>" placeholder="<?=Yii::t('site', 'Показать новости за период')?>">
                                     <button class="form-control-reset material-icons" type="button">clear</button>
                                 </div>
                             </div>
