@@ -3,8 +3,8 @@
 
 .col {width: 100%; padding: 0px 15px;}
 
-.text-help {margin-top: -25px;}
-.subform .text-help {margin-top: 0px;}
+form .text-help {margin-top: -25px;}
+form .subform .text-help {margin-top: 0px;}
 
 .checkboxlist {margin-bottom: 40px;}
 .checkboxlist .form-label {margin-bottom: 20px;}
