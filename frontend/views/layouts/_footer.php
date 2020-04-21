@@ -18,7 +18,19 @@
                     echo frontend\widgets\MenuWidget::widget(['alias'=>'footer_menu','template'=>'footer_menu']);
             ?>
             <hr class="footer-hr">
-
+<?php if(Yii::$app->language == 'en'){?>
+    <div class="footer-contacts">
+                <div class="footer-phone">
+                    <p class="footer-contacts_label"><?=Yii::t('site', 'Телефон/факс')?>:</p>
+                    <p class="footer-contacts_text"><a href="tel:+73912119876">+7 (391) 226-11-35</a></p>
+                </div>
+                <div class="footer-address">
+                    <p class="footer-contacts_label"><?=Yii::t('site', 'Адрес')?>:</p>
+                    <p class="footer-contacts_text">660049, Krasnoyarsk, Karl Marks str., 93</p>
+                </div>
+                <?= frontend\widgets\MenuWidget::widget(['alias'=>'footer_social_menu','template'=>'footer_social_menu']); ?>
+            </div>
+<?php }else{ ?>
             <div class="footer-contacts">
                 <div class="footer-phone">
                     <p class="footer-contacts_label"><?=Yii::t('site', 'Телефон/факс')?>:</p>
@@ -47,7 +59,7 @@
                     <p class="footer-contacts_text"><a href="tel:+73912261060">+7 (391) 226-10-60</a></p>
                 </div>
             </div>
-
+<?php } ?>
             <hr class="footer-hr">
 
             <div class="footer-end">

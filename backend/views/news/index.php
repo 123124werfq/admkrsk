@@ -4,12 +4,14 @@ use backend\assets\GridAsset;
 use backend\controllers\NewsController;
 use common\models\GridSetting;
 use common\models\News;
+use common\models\Page;
 use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\search\NewsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $page Page */
 /* @var $customColumns array */
 
 $archive = Yii::$app->request->get('archive');
@@ -29,8 +31,8 @@ if (Yii::$app->user->can('admin.news')) {
     } else {
         $this->params['button-block'][] = Html::a('Архив', ['index', 'id_page' => $page->id_page, 'archive' => 1], ['class' => 'btn btn-default']);
     }
-    $this->params['button-block'][] = Html::a('Добавить новость', ['create', 'id_page' => Yii::$app->request->get('id_page', 0)], ['class' => 'btn btn-success']);
 }
+$this->params['button-block'][] = Html::a('Добавить новость', ['create', 'id_page' => $page->id_page], ['class' => 'btn btn-success']);
 
 $defaultColumns = [
     'id_news' => 'id_news',
