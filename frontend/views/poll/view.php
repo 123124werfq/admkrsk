@@ -184,7 +184,7 @@ $this->params['page'] = $page;
 
                     <?php ActiveForm::end(); ?>
 
-                <?php else: ?>
+                <?php elseif($poll->hasResult()): ?>
 
                     Результаты опроса
 
@@ -243,10 +243,6 @@ $this->params['page'] = $page;
                                     <?php endforeach; ?>
 
                                 </p>
-
-                            <?php else: ?>
-
-                                Ответило <?= $question->freeVotesCount ?> чел.
 
                             <?php endif; ?>
 

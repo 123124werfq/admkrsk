@@ -267,4 +267,21 @@ class Poll extends \yii\db\ActiveRecord
     {
         return Yii::$app->request->cookies->getValue($this->cookieName, false);
     }
+
+    public function hasResult()
+    {
+        $hasResult = false;
+
+        if ($this->is_hidden) {
+            return $hasResult;
+        }
+
+        foreach ($this->questions as $question) {
+            if (!$question->is_hidden && $question->type != Question::TYPE_FREE_FORM) {
+                $hasResult = true;
+            }
+        }
+
+        return $hasResult;
+    }
 }

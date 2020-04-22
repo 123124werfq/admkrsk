@@ -268,12 +268,20 @@ class Question extends \yii\db\ActiveRecord
                 'percent' => $percent,
             ];
 
+            // if ($this->chart_type == self::CHART_TYPE_GRAPH) {
+            //     $results[$answer->id_poll_answer]['label'] = '["Ответ ' . ($answer_index + 1) . '"]';
+            // } elseif ($this->chart_type == self::CHART_TYPE_PIE) {
+            //     $results[$answer->id_poll_answer]['label'] = '["Ответ ' . ($answer_index + 1) . ' - ' . $percent . '%, ' . $count. ' чел."]';
+            // } else {
+            //     $results[$answer->id_poll_answer]['label'] = '["Ответ ' . ($answer_index + 1) . '", "' . $count. ' чел."]';
+            // }
+
             if ($this->chart_type == self::CHART_TYPE_GRAPH) {
                 $results[$answer->id_poll_answer]['label'] = '["Ответ ' . ($answer_index + 1) . '"]';
             } elseif ($this->chart_type == self::CHART_TYPE_PIE) {
-                $results[$answer->id_poll_answer]['label'] = '["Ответ ' . ($answer_index + 1) . ' - ' . $percent . '%, ' . $count. ' чел."]';
+                $results[$answer->id_poll_answer]['label'] = '["Ответ ' . ($answer_index + 1) . ' - ' . $percent . '%"]';
             } else {
-                $results[$answer->id_poll_answer]['label'] = '["Ответ ' . ($answer_index + 1) . '", "' . $count. ' чел."]';
+                $results[$answer->id_poll_answer]['label'] = '["Ответ ' . ($answer_index + 1) . '"]';
             }
         }
 
