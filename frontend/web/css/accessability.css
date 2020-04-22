@@ -91,7 +91,7 @@ html[data-acc-imagetype="1"] img {
     -ms-filter: grayscale(100%);
     -o-filter: grayscale(100%);
     filter: grayscale(100%);
-    filter: url(#grayscale);
+    /*filter: url(#grayscale);*/
     filter: gray; /* IE 6-9 */
 }
 html[data-acc-imagetype="-1"] img,

@@ -27,7 +27,7 @@
                             </div>
                             <div class="btn-group_item">
                                 <div class="datepicker-holder">
-                                    <input name="date" id="news-date" value="<?=$date?>" type="text" class="form-control form-control_datepicker mb-sm-all-0 datepicker-ajax <?=!empty($date)?'datepicker__filled':''?>" placeholder="Показать новости за период">
+                                    <input name="date" id="news-date" value="<?=$date?>" type="text" class="form-control form-control_datepicker mb-sm-all-0 datepicker-ajax <?=!empty($date)?'datepicker__filled':''?>" placeholder="Показать за период">
                                     <button class="form-control-reset material-icons" type="button">clear</button>
                                 </div>
                             </div>
