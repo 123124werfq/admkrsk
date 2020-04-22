@@ -12,7 +12,7 @@ class NewsController extends Controller
 {
     public function actionIndex($page=null)
     {
-        $news = News::find()->where(['state'=>1]);
+        $news = News::find()->with(['rub','media'])->where(['state'=>1]);
 
         $rubrics = (new \yii\db\Query())
                 ->select(['id_rub'])
@@ -64,10 +64,24 @@ class NewsController extends Controller
 
         $totalCount = $news->count();
 
+        $p = (int)Yii::$app->request->get('p',0);
+
+        // выделенная новость
+        $selected_news = null;
+        
+        if ($p == 0)
+        {
+            $selected_news = clone $news;
+            // выделенная новость показывется за два дня 
+            $selected_news = $selected_news->andWhere('highlight = 1 AND id_media <> 0 AND date_publish>'.strtotime('-2 days'))->orderBy('date_publish DESC')->one();
+
+            if (!empty($selected_news))
+                $news->andWhere('id_news <> '.$selected_news->id_news);
+        }
+
         $news = $news
-            //->offset($pagination->offset)
-            ->limit(20)//$pagination->limit
-            ->offset((int)Yii::$app->request->get('p',0)*20)
+            ->limit(20)
+            ->offset($p*20)
             ->orderBy('date_publish DESC')
             ->all();
 
@@ -84,6 +98,7 @@ class NewsController extends Controller
             'page'=>$page,
             'id_rub'=>$id_rub,
             'news'=>$news,
+            'selected_news'=>$selected_news,
             'totalCount'=>$totalCount,
             'rubrics'=>$rubrics,
         ]);
