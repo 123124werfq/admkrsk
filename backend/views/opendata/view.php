@@ -41,7 +41,7 @@ if ($model->isDeleted()) {
                     'id_opendata',
                     [
                         'attribute' => 'id_collection',
-                        'value' => $model->collection->pageTitle,
+                        'value' => $model->collection ? $model->collection->pageTitle : null,
                     ],
                     'identifier',
                     'title',
@@ -102,7 +102,7 @@ if ($model->isDeleted()) {
                     ['class' => 'yii\grid\SerialColumn'],
 
                     'structure.url:url:Структура',
-                    'url:url:Структура',
+                    'url:url:Данные',
                     'is_manual:boolean:Загружено вручную',
                     'created_at:datetime:Дата',
 
