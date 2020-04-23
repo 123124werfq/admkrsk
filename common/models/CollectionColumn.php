@@ -638,7 +638,10 @@ class CollectionColumn extends \yii\db\ActiveRecord
     public function getInput()
     {
         if (empty($this->collection))
-            die($this->id_column);
+        {
+            var_dump($this->id_column)
+            die();
+        }
 
         return $this->hasOne(FormInput::class, ['id_column' => 'id_column'])->andWhere(['id_form'=>$this->collection->id_form]);
     }
