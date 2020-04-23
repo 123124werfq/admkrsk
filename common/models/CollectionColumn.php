@@ -639,7 +639,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
     {
         if (empty($this->collection))
         {
-            var_dump($this->id_column)
+            var_dump($this->id_column);
             die();
         }
 
