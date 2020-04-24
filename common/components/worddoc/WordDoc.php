@@ -175,7 +175,7 @@ class WordDoc
                 $string_output[$col->alias.'.house'] = $data[$col_alias]['house']??'';
                 $string_output[$col->alias.'.room'] = $data[$col_alias]['room']??'';
                 $string_output[$col->alias.'.postсode'] = $string_output[$col->alias.'.postalcode'] = $data[$col_alias]['postalcode']??'';
-                $string_output[$col->alias.'.fullname'] = $string_output[$col->alias.'.fulladdress'] = $data[$col_alias]['fullname']??'';
+                $string_output[$col->alias.'.fullname'] = $string_output[$col->alias.'.fulladdress'] = $data[$col_alias]['fullname']??''.' '.$string_output[$col->alias.'.room'];
                 $string_output[$col->alias.'.lat'] = $data[$col_alias]['lat']??'';
                 $string_output[$col->alias.'.lon'] = $data[$col_alias]['lon']??'';
             }
