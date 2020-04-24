@@ -212,26 +212,38 @@ class WordDoc
                 if (is_array($data[$col_alias]))
                 {
                     $ids = [];
-                    foreach ($data[$col_alias] as $key => $data)
-                    {
-                        $ids[] = $data['id'];
-                    }
+                    foreach ($data[$col_alias] as $key => $filedata)
+                        $ids[] = $filedata['id'];
                 }
                 else
-                    $ids = $data[$col_alias];
+                    $ids = $filedata[$col_alias];
 
                 $medias = \common\models\Media::find()->where(['id_media'=>$ids])->all();
 
                 $output = [];
                 foreach ($medias as $key => $media)
-                    $output[] = $media->name;
+                {
+                    $output[] = $col->input->name.' '.$media->name.' ('.$media->size.' байт)'.(!empty($media->pagecount)?'на '.$media->pagecount.'стр.':'');
+                }
+
+                /*${имя_пееменной.pagecount} страницы
+                ${имя_пееменной.name} название файла
+                ${имя_пееменной.size} размер в байтах
+                и еще хотели
+                ${имя_пееменной.full} полная запись по файлу  название размер на страницах*/
+
 
                 if (count($output)>1)
-                    $string_output[$col->alias] = implode('<w:br/>', $output);
+                {
+                    $string_output[$col->alias.'.full'] = $string_output[$col->alias] = implode('<w:br/>', $output);
+                }
                 else if(count($output) == 1)
                 {
-                    $string_output[$col->alias] = $output[0];
-                    $string_output[$col->alias.'_file'] = $media->getUrl();
+                    $string_output[$col->alias.'.full'] = $string_output[$col->alias] = $output[0];
+                    $string_output[$col->alias.'.file'] = $string_output[$col->alias.'_file'] = $media->getUrl();
+                    $string_output[$col->alias.'.size'] = $media->size;
+                    $string_output[$col->alias.'.pagecount'] = $media->pagecount;
+                    $string_output[$col->alias.'.name'] = $media->name());
                 }
             }
             else if (!empty($col->input->id_collection))
