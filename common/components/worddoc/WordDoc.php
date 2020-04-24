@@ -223,7 +223,7 @@ class WordDoc
                 $output = [];
                 foreach ($medias as $key => $media)
                 {
-                    $output[] = $col->input->name.' '.$media->name.' ('.$media->size.' байт)'.(!empty($media->pagecount)?'на '.$media->pagecount.'стр.':'');
+                    $output[] = $media->name.' ('.$media->size.' байт)'.(!empty($media->pagecount)?'на '.$media->pagecount.'стр.':'');
                 }
 
                 /*${имя_пееменной.pagecount} страницы
@@ -235,7 +235,7 @@ class WordDoc
 
                 if (count($output)>1)
                 {
-                    $string_output[$col->alias.'.full'] = $string_output[$col->alias] = implode('<w:br/>', $output);
+                    $string_output[$col->alias.'.full'] = $string_output[$col->alias] = $col->input->name.'<w:br/>'.implode('<w:br/>', $output);
                 }
                 else if(count($output) == 1)
                 {
