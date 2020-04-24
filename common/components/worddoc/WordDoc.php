@@ -243,7 +243,7 @@ class WordDoc
                     $string_output[$col->alias.'.file'] = $string_output[$col->alias.'_file'] = $media->getUrl();
                     $string_output[$col->alias.'.size'] = $media->size;
                     $string_output[$col->alias.'.pagecount'] = $media->pagecount;
-                    $string_output[$col->alias.'.name'] = $media->name();
+                    $string_output[$col->alias.'.name'] = $media->name;
                 }
             }
             else if (!empty($col->input->id_collection))
