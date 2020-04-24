@@ -119,7 +119,7 @@ class WordDoc
     {
         $string_output = [];
 
-        foreach ($columns as $key => $col)
+        foreach ($columns as $ckey => $col)
         {
             $col_alias = $col->alias;
 
