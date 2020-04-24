@@ -119,8 +119,6 @@ class WordDoc
     {
         $string_output = [];
 
-        //print_r($columns);
-
         foreach ($columns as $key => $col)
         {
             $col_alias = $col->alias;
@@ -133,12 +131,12 @@ class WordDoc
 
                 foreach ($values as $key => $value)
                 {
-                    $output[] = $value.(!empty($data[$col_alias]) && in_array($value, $data[$col_alias])?'  - да':' - нет');
+                    $output[] = $value.(!empty($data[$col_alias]) && in_array($value, $data[$col_alias])?' - да':' - нет');
                 }
 
-                $string_output[$col->alias] = implode('<w:br/>', $output);
+                $string_output[$col_alias] = implode('<w:br/>', $output);
             }
-            elseif (empty($data[$col_alias]))
+            else if (!isset($data[$col_alias]))
                 $string_output[$col_alias] = '';
             else if ($col->type==CollectionColumn::TYPE_DATE)
                 $string_output[$col_alias] = date('d.m.Y',$data[$col_alias]);
