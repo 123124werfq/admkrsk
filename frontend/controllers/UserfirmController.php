@@ -3,11 +3,11 @@
 namespace frontend\controllers;
 
 use Yii;
-use common\models\Smev;
 use common\models\User;
+use common\models\FirmUser;
 use yii\filters\AccessControl;
 
-class PersonalController extends \yii\web\Controller
+class UserfirmController extends \yii\web\Controller
 {
     public function behaviors()
     {
@@ -27,6 +27,11 @@ class PersonalController extends \yii\web\Controller
 
     public function actionIndex($page = null)
     {
+        $firm = FirmUser::find()->where(['id_user'=>Yii::$app->user->id])->one();
+
+        if (!empty($firm))
+            return $this->redirect('firm',['id'=>$firm->id_record]);
+
         if(strpos(Yii::$app->request->hostName, 'ants.'))
             return $this->redirect('/contests/select/select');
 
@@ -34,18 +39,12 @@ class PersonalController extends \yii\web\Controller
     }
 
 
-    public function actionStest()
+    public function actionFirm($id)
     {
-       $smev = new Smev;
+        $firm = FirmUser::find()->where(['id_user'=>Yii::$app->user->id])->one();
 
        $smev->testMessage();
-
     }
 
-    public function actionUserProfile($page = null)
-    {
-        $user = User::findOne(Yii::$app->user->id);
 
-        return $this->render('profile', ['page' => $page, 'user' => $user]);
-    }
 }
