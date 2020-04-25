@@ -276,10 +276,14 @@ class ReserveController extends Controller
         if (empty($profile))
             throw new NotFoundHttpException('Ошибка чтения данных');
 
-        $profile->state = HrProfile::STATE_ARCHIVED;
+        if($profile->state == HrProfile::STATE_ARCHIVED)
+            $profile->state = HrProfile::STATE_ACTIVE;
+        else
+            $profile->state = HrProfile::STATE_ARCHIVED;
 
         $profile->updateAttributes(['state']);
 
+        return $this->redirect('/reserve/profile');
     }
 
     public function actionEditable($id)
