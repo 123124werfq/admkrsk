@@ -119,9 +119,7 @@ class WordDoc
     {
         $string_output = [];
 
-        //print_r($columns);
-
-        foreach ($columns as $key => $col)
+        foreach ($columns as $ckey => $col)
         {
             $col_alias = $col->alias;
 
@@ -133,12 +131,12 @@ class WordDoc
 
                 foreach ($values as $key => $value)
                 {
-                    $output[] = $value.(!empty($data[$col_alias]) && in_array($value, $data[$col_alias])?'  - да':' - нет');
+                    $output[] = $value.(!empty($data[$col_alias]) && in_array($value, $data[$col_alias])?' - да':' - нет');
                 }
 
-                $string_output[$col->alias] = implode('<w:br/>', $output);
+                $string_output[$col_alias] = implode('<w:br/>', $output);
             }
-            elseif (empty($data[$col_alias]))
+            else if (!isset($data[$col_alias]))
                 $string_output[$col_alias] = '';
             else if ($col->type==CollectionColumn::TYPE_DATE)
                 $string_output[$col_alias] = date('d.m.Y',$data[$col_alias]);
@@ -177,7 +175,7 @@ class WordDoc
                 $string_output[$col->alias.'.house'] = $data[$col_alias]['house']??'';
                 $string_output[$col->alias.'.room'] = $data[$col_alias]['room']??'';
                 $string_output[$col->alias.'.postсode'] = $string_output[$col->alias.'.postalcode'] = $data[$col_alias]['postalcode']??'';
-                $string_output[$col->alias.'.fullname'] = $string_output[$col->alias.'.fulladdress'] = $data[$col_alias]['fullname']??'';
+                $string_output[$col->alias.'.fullname'] = $string_output[$col->alias.'.fulladdress'] = $data[$col_alias]['fullname']??''.($string_output[$col->alias.'.room']?', '.$string_output[$col->alias.'.room']:'');
                 $string_output[$col->alias.'.lat'] = $data[$col_alias]['lat']??'';
                 $string_output[$col->alias.'.lon'] = $data[$col_alias]['lon']??'';
             }
@@ -214,26 +212,38 @@ class WordDoc
                 if (is_array($data[$col_alias]))
                 {
                     $ids = [];
-                    foreach ($data[$col_alias] as $key => $data)
-                    {
-                        $ids[] = $data['id'];
-                    }
+                    foreach ($data[$col_alias] as $key => $filedata)
+                        $ids[] = $filedata['id'];
                 }
                 else
-                    $ids = $data[$col_alias];
+                    $ids = $filedata[$col_alias];
 
                 $medias = \common\models\Media::find()->where(['id_media'=>$ids])->all();
 
                 $output = [];
                 foreach ($medias as $key => $media)
-                    $output[] = $media->name;
+                {
+                    $output[] = $media->name.' ('.$media->size.' байт)'.(!empty($media->pagecount)?'на '.$media->pagecount.'стр.':'');
+                }
+
+                /*${имя_пееменной.pagecount} страницы
+                ${имя_пееменной.name} название файла
+                ${имя_пееменной.size} размер в байтах
+                и еще хотели
+                ${имя_пееменной.full} полная запись по файлу  название размер на страницах*/
+
 
                 if (count($output)>1)
-                    $string_output[$col->alias] = implode('<w:br/>', $output);
+                {
+                    $string_output[$col->alias.'.full'] = $string_output[$col->alias] = $col->input->name.'<w:br/>'.implode('<w:br/>', $output);
+                }
                 else if(count($output) == 1)
                 {
-                    $string_output[$col->alias] = $output[0];
-                    $string_output[$col->alias.'_file'] = $media->getUrl();
+                    $string_output[$col->alias.'.full'] = $string_output[$col->alias] = $output[0];
+                    $string_output[$col->alias.'.file'] = $string_output[$col->alias.'_file'] = $media->getUrl();
+                    $string_output[$col->alias.'.size'] = $media->size;
+                    $string_output[$col->alias.'.pagecount'] = $media->pagecount;
+                    $string_output[$col->alias.'.name'] = $media->name;
                 }
             }
             else if (!empty($col->input->id_collection))
