@@ -24,7 +24,10 @@ $defaultColumns = [
         'format' => 'html',
         'value' => function ($model) {
             $username = $model->recordData['surname'] . " " . $model->recordData['name'] . " " . $model->recordData['parental_name'];
-            return "<a href='/user/view?id={$model->id_user}'>$username</a>";
+            if(empty($model->id_user))
+                return $username ." <span class='badge badge-danger'>нет ЕСИА</span>";
+            else
+                return "<a href='/user/view?id={$model->id_user}'>$username</a>";
         },
     ],
     'date_create:prop' => [
@@ -38,8 +41,8 @@ $defaultColumns = [
         'label' => 'Дата актуальности',
         'format' => 'html',
         'value' => function ($model) {
-            $badge = ($model->updated_at == $model->created_at) ? "<span class='badge badge-danger'>Новая</span>" : "";
-            return $badge . date("d-m-Y H:i", $model->updated_at ? $model->updated_at : $model->created_at);
+            $badge = ($model->updated_at == $model->created_at) ? " <sup>Новая</sup>" : "";
+            return date("d-m-Y H:i", $model->updated_at ? $model->updated_at : $model->created_at).$badge;
         },
     ],
     'status:prop' => [
