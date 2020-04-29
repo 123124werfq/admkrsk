@@ -138,4 +138,9 @@ class Menu extends \yii\db\ActiveRecord
     {
         return $this->hasMany(MenuLink::class, ['id_menu' => 'id_menu'])->orderBy('ord ASC');
     }
+
+    public function getActiveLinks()
+    {
+        return $this->hasMany(MenuLink::class, ['id_menu' => 'id_menu'])->andWhere(['state'=>1])->orderBy('ord ASC');
+    }
 }
