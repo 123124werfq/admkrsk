@@ -96,7 +96,11 @@ if (!Yii::$app->user->isGuest)
                     <span class="material-icons gosbar-icon" id="gosbar-search-go">search</span>
                     <span class="gosbar_btn-text" id="gosbar-search-go-btn"><?=Yii::t('site', 'Поиск по сайту')?></span>
                 </a>
+                <?php if(Yii::$app->language == 'en'){?>
+                <a href="/" class="gosbar_btn"><span class="material-icons gosbar-icon">g_translate</span><span class="gosbar_btn-text">Русский</span></a>
+                <?php } else { ?>
                 <a href="/en" class="gosbar_btn"><span class="material-icons gosbar-icon">g_translate</span><span class="gosbar_btn-text">English</span></a>
+                <?php } ?>
                 <a href="#" class="gosbar_btn link-accessability">
                     <span class="material-icons gosbar-icon">visibility</span>
                     <span class="gosbar_btn-text"><?=Yii::t('site', 'Версия для слабовидящих')?></span>
