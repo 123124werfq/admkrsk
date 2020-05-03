@@ -92,7 +92,7 @@ if (!Yii::$app->user->isGuest)
             <div class="gosbar__right-block">
                 <?php if(!strpos(Yii::$app->request->hostName, 'ants.') ){ ?>
                 <form id="top-search" action="/search"><input class="header-search" name="q"></form>
-                <a href="#" class="gosbar_btn">
+                <a href="/search" class="gosbar_btn">
                     <span class="material-icons gosbar-icon" id="gosbar-search-go">search</span>
                     <span class="gosbar_btn-text" id="gosbar-search-go-btn"><?=Yii::t('site', 'Поиск по сайту')?></span>
                 </a>
@@ -117,7 +117,7 @@ if (!Yii::$app->user->isGuest)
                                 $userTitle = 'Личный кабинет';
 
                             if (mb_strlen($userTitle) > 20)
-                                $userTitle = mb_substr($userTitle, 0, 17) . '...';                                
+                                $userTitle = mb_substr($userTitle, 0, 17) . '...';
                         ?>
                         <span class="gosbar_btn-text"><?=$userTitle?></span>
                         <span class="material-icons gosbar-icon gosbar-icon__right">arrow_drop_down</span>
@@ -169,7 +169,7 @@ if (!Yii::$app->user->isGuest)
                             'id_menu'=>$header['menu']->value
                         ]);
                     else
-                        echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'header_menu']);
+                        echo \frontend\widgetdgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'header_menu']);
                 ?>
                 <button class="header-menu_link header-menu_search search-toggle">
                     <span class="material-icons">search</span>
