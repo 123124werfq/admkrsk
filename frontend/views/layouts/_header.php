@@ -173,7 +173,7 @@ if (!Yii::$app->user->isGuest)
                             'id_menu'=>$header['menu']->value
                         ]);
                     else
-                        echo \frontend\widgetdgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'header_menu']);
+                        echo \frontend\widgets\MenuWidget::widget(['template'=>'header_menu','alias'=>'header_menu']);
                 ?>
                 <button class="header-menu_link header-menu_search search-toggle">
                     <span class="material-icons">search</span>
