@@ -9,11 +9,10 @@ $submenu = false;
 
 	$menu = $page->menu;
 
-	if (empty($menu))
+	if (empty($menu) || empty($menu->activeLinks))
 	{
-		if (!empty($page->childs))
+		if (!empty($submenu = $page->getChilds()->andWhere(['hidemenu'=>0])->orderBy('ord ASC')->all()))
 		{
-			$submenu = $page->getChilds()->andWhere(['hidemenu'=>0])->orderBy('ord ASC')->all();
 		}
 		else if (!empty($page->parent->menu))
 		{
@@ -40,7 +39,7 @@ $submenu = false;
 ?>
 <?php
 		if (!empty($menu))
-			foreach ($menu->getLinks()->where(['state'=>1])->all() as $key => $link)
+			foreach ($menu->activeLinks as $key => $link)
 			{
 				$url = $link->getUrl();
 ?>
