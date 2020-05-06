@@ -11,6 +11,7 @@ use yii\helpers\FileHelper;
 use yii\helpers\Json;
 
 /**
+ * @property string $url
  * @property string $schedule
  * @property string $minutes
  * @property array $selectedMinutes
@@ -26,6 +27,9 @@ use yii\helpers\Json;
  */
 class InstitutionUpdateSettingForm extends Model
 {
+    /* @var $url */
+    public $url;
+
     /* @var string */
     public $schedule;
 
@@ -172,6 +176,7 @@ class InstitutionUpdateSettingForm extends Model
 
     /* @var array */
     private $_defaultSetting = [
+        'url' => 'https://bus.gov.ru/public-rest/api/passport?id=221',
         'schedule' => '* * * * *',
         'minutes' => 'select',
         'selectedMinutes' => ['0'],
@@ -245,7 +250,7 @@ class InstitutionUpdateSettingForm extends Model
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getNextRunDates()
     {
@@ -259,7 +264,8 @@ class InstitutionUpdateSettingForm extends Model
     {
         return [
             [['schedule', 'minutes', 'hours', 'days', 'months', 'weekdays'], 'required'],
-            [['schedule', 'minutes', 'hours', 'days', 'months', 'weekdays'], 'string'],
+            [['url', 'schedule', 'minutes', 'hours', 'days', 'months', 'weekdays'], 'string'],
+            [['url'], 'url'],
             [['selectedMinutes', 'selectedHours', 'selectedDays', 'selectedMonths', 'selectedWeekdays'], 'each', 'rule' => ['integer']],
             ['selectedMinutes', 'required', 'when' => function() {
                 return $this->minutes == 'select';
@@ -282,6 +288,7 @@ class InstitutionUpdateSettingForm extends Model
     public function attributeLabels()
     {
         return [
+            'url' => 'Ссылка на паспорт муниципальных огранизаций',
             'schedule' => 'Расписание',
             'minutes' => 'Минуты',
             'selectedMinutes' => 'Минуты',

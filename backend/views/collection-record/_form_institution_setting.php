@@ -1,12 +1,13 @@
 <?php
 
 use backend\models\forms\FiasUpdateSettingForm;
+use backend\models\forms\InstitutionUpdateSettingForm;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $settingForm FiasUpdateSettingForm */
+/* @var $settingForm InstitutionUpdateSettingForm */
 
 ?>
 <div class="ibox">
@@ -20,6 +21,8 @@ use yii\widgets\ActiveForm;
     </div>
     <div class="ibox-content"<?= $settingForm->hasErrors() ? '' : ' style="display: none"' ?>>
         <?php $form = ActiveForm::begin(); ?>
+
+        <?php //echo $form->field($settingForm, 'url')->textInput() ?>
 
         <div class="row">
             <div class="col-sm-4">

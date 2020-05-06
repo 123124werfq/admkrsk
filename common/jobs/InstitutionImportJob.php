@@ -2,73 +2,85 @@
 
 namespace common\jobs;
 
+use backend\models\forms\InstitutionUpdateSettingForm;
+use common\base\Job;
 use common\models\Collection;
 use common\models\CollectionColumn;
 use common\models\CollectionRecord;
 use common\models\Institution;
 use Exception;
 use Yii;
-use yii\base\BaseObject;
 use yii\helpers\Console;
 use yii\helpers\FileHelper;
 use yii\helpers\Json;
-use yii\queue\JobInterface;
+use yii\httpclient\Client;
+use yii\queue\RetryableJobInterface;
 
-class InstitutionImportJob extends BaseObject implements JobInterface
+class InstitutionImportJob extends Job implements RetryableJobInterface
 {
-    /* @var string */
-    static $path = '@console/runtime/queue';
-
-    /* @var string */
-    static $filename = '@console/runtime/queue/jobs.txt';
-
-    /**
-     * @return mixed|null
-     */
-    public static function getJobId()
-    {
-        $filename = Yii::getAlias(self::$filename);
-
-        if (is_file($filename)) {
-            $jobs = Json::decode(file_get_contents($filename));
-        } else {
-            $jobs = [];
-        }
-
-        return $jobs['InstitutionImportJob'] ?? null;
-    }
-
-    /**
-     * @param string|null $jobId
-     * @throws \yii\base\Exception
-     */
-    public static function saveJobId(?string $jobId)
-    {
-        $path = Yii::getAlias(self::$path);
-        $filename = Yii::getAlias(self::$filename);
-
-        if (!is_dir($path)) {
-            FileHelper::createDirectory($path);
-        }
-
-        if (is_file($filename)) {
-            $jobs = Json::decode(file_get_contents($filename));
-        } else {
-            $jobs = [];
-        }
-
-        $jobs['InstitutionImportJob'] = $jobId;
-
-        file_put_contents($filename, Json::encode($jobs));
-    }
-
     /**
      * @inheritdoc
+     * @throws Exception
      */
     public function execute($queue)
     {
-        $count = 0;
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $client = new Client();
+            $institutionConfig = new InstitutionUpdateSettingForm();
 
+            $response = $client->createRequest()
+                ->setUrl($institutionConfig->url)
+                ->addHeaders(['User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36'])
+                ->send();
+
+            if ($response->isOk) {
+                $institution_version = Yii::$app->cache->get('institution_version');
+                $passport = Json::decode($response->getContent());
+
+                if ($passport['version'] > $institution_version) {
+                    $archiveUrl = "https://bus.gov.ru/public-rest/api/opendata/{$passport['passCode']}/{$passport['actualDocument']['fileName']}";
+                    $path = Yii::getAlias('@console/runtime/institutions');
+                    $archive = Yii::getAlias('@console/runtime/institutions/data.zip');
+
+                    FileHelper::removeDirectory($path);
+                    FileHelper::createDirectory($path);
+
+                    $this->downloadFile($archiveUrl, $archive);
+
+                    exec("unzip -o $archive -x -d $path");
+
+                    $files = FileHelper::findFiles($path, ['only' => ['*.xml']]);
+
+                    $count = $updateCount = 0;
+                    if ($files) {
+                        foreach ($files as $file) {
+                            $institution = Institution::updateOrCreate($file);
+
+                            if ($institution) {
+                                $updateCount++;
+                            }
+                            $count++;
+                            unlink($file);
+                        }
+                    }
+
+                    Yii::$app->cache->set('institution_version', $passport['version']);
+
+                    Console::stdout(Yii::t('app', 'Обработано {count} организаций', ['count' => $count]) . PHP_EOL);
+                    Console::stdout(Yii::t('app', 'Добавлено/обновлено {updateCount} организаций', ['updateCount' => $updateCount]) . PHP_EOL);
+                } else {
+                    $this->stdout(Yii::t('app', 'Нет обновлений') . PHP_EOL);
+                }
+            } else {
+                $this->stdout(Yii::t('app', 'Паспорт муниципальных организаций не найден') . PHP_EOL);
+            }
+        } catch (Exception $exception) {
+            $transaction->rollBack();
+            throw $exception;
+        }
+
+        $count = 0;
         $transaction = Yii::$app->db->beginTransaction();
         try {
             $institution = new Institution();
@@ -197,5 +209,39 @@ class InstitutionImportJob extends BaseObject implements JobInterface
             $transaction->rollBack();
             throw $exception;
         }
+    }
+
+    /**
+     * @param string $url
+     * @param string $dest
+     */
+    public function downloadFile($url, $dest)
+    {
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_FILE => fopen($dest, 'w'),
+            CURLOPT_TIMEOUT => 28800,
+            CURLOPT_URL => $url
+        ]);
+        curl_exec($ch);
+        curl_close($ch);
+    }
+
+    /**
+     * @return int time to reserve in seconds
+     */
+    public function getTtr()
+    {
+        return 60 * 60;
+    }
+
+    /**
+     * @param int $attempt number
+     * @param Exception|Throwable $error from last execute of the job
+     * @return bool
+     */
+    public function canRetry($attempt, $error)
+    {
+        return false;
     }
 }
