@@ -27,8 +27,10 @@
 	<?php }?>
 
 	<?php $activeForm = ActiveForm::begin([
+		'id'=>'form'.$form->id_form,
 		'action'=>($action===null)?'/form/create?id='.$form->id_form:$action,
 		'enableAjaxValidation'=>false,
+		'enableClientValidation'=>true,
 		'fieldConfig' => [
 	        'template' => '{input}{error}',
 	    ],

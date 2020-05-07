@@ -1,3 +1,10 @@
+toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    showMethod: 'slideDown',
+    timeOut: 5000
+};
+
 function setVisisble()
 {
     $("div[data-visible-field]").each(function(){
@@ -216,13 +223,6 @@ function addInput(block)
 
     return false;
 }
-
-toastr.options = {
-    closeButton: true,
-    progressBar: true,
-    showMethod: 'slideDown',
-    timeOut: 5000
-};
 
 function reordModels($block,$data)
 {
