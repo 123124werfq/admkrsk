@@ -4,6 +4,7 @@ namespace frontend\modules\api\base;
 
 use common\models\Application;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\web\UnauthorizedHttpException;
 
 class Controller extends \yii\rest\Controller
@@ -11,6 +12,7 @@ class Controller extends \yii\rest\Controller
     /**
      * @return void
      * @throws UnauthorizedHttpException
+     * @throws InvalidConfigException
      */
     public function checkAccess(): void
     {

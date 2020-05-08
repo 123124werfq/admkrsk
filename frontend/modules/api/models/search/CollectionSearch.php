@@ -6,6 +6,7 @@ use frontend\modules\api\models\CollectionRecord;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use frontend\modules\api\models\Collection;
+use yii\helpers\ArrayHelper;
 
 /**
  * CollectionSearch represents the model behind the search form of `frontend\modules\api\models\Collection`.
@@ -47,7 +48,7 @@ class CollectionSearch extends Collection
             ->leftJoin(Collection::tableName() . ' c', 'c.id_collection = r.id_collection');
 
         // add conditions that should always apply here
-        $query->andWhere(['c.alias' => $this->alias]);
+        $query->andWhere(['c.id_collection' => $this->id_collection]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

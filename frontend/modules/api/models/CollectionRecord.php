@@ -31,37 +31,28 @@ class CollectionRecord extends \common\models\CollectionRecord
     {
         $record = $this->getRecord();
 
-        return ArrayHelper::merge(['id_record'], array_keys($record));
+        return $record ? ArrayHelper::merge(['id_record'], array_keys($record)) : [];
     }
 
     public function getRecord()
     {
         if (!$this->_record) {
+            $collection = \common\models\Collection::findOne($this->id_collection);
+
             $record = (new Query())
                 ->from('collection' . $this->id_collection)
                 ->where(['id_record' => $this->id_record])
                 ->one();
 
-            if (isset($record['_id'])) {
-                unset($record['_id']);
-            }
-
-            if (isset($record['id_record'])) {
-                unset($record['id_record']);
-            }
-
-            $column_ids = [];
-            foreach (array_keys($record) as $column) {
-                $column_ids[$column] = str_replace('col', '', $column);
-            }
-
-            $this->_record = ArrayHelper::map(CollectionColumn::findAll(['id_column' => $column_ids]), 'alias', function(CollectionColumn $item) use ($record) {
-                $value = $record['col' . $item->id_column];
-                if ($item->type == CollectionColumn::TYPE_JSON) {
-                    $value = Json::decode($value);
+            foreach ($collection->columns as $column) {
+                if (isset($record['col' . $column->id_column])) {
+                    $value = $record['col' . $column->id_column];
+                    if ($column->type == CollectionColumn::TYPE_JSON) {
+                        $value = Json::decode($value);
+                    }
+                    $this->_record[$column->alias] = $value;
                 }
-                return $value;
-            });
+            }
         }
 
         return $this->_record;

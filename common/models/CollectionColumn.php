@@ -14,6 +14,7 @@ use Yii;
  * @property int $type
  * @property int $show_column_admin
  * @property int $ord
+ * @property string $alias
  */
 class CollectionColumn extends \yii\db\ActiveRecord
 {
