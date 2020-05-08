@@ -8,9 +8,11 @@ use common\models\Form;
 use common\models\FormDynamic;
 use common\models\Page;
 use common\models\CollectionRecord;
-
 use common\models\ServiceComplaintForm;
 use common\models\FormInput;
+
+use yii\widgets\ActiveForm;
+use yii\web\Response;
 
 class FormController extends \yii\web\Controller
 {
@@ -45,6 +47,11 @@ class FormController extends \yii\web\Controller
             }
             else
                 echo "Данные не сохранены";
+        }
+        else
+        {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
         }
     }
 

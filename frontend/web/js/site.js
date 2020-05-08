@@ -57,7 +57,7 @@ $(document).ready(function() {
 
     $(".ajax-form").submit(function(e){
 
-        var $form = $(this);
+        /*var $form = $(this);
 
         $.ajax({
             type: "POST",
@@ -70,7 +70,7 @@ $(document).ready(function() {
         });
 
         e.preventDefault();
-        e.stopImmediatePropagation();
+        e.stopImmediatePropagation();*/
         return false;
     });
 

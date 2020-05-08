@@ -33,7 +33,7 @@ if (!empty($input->readonly))
     $options['readonly'] = true;
 
 if (empty($options['id']))
-    $options['id'] = "input" . $input->id_input;
+    $options['id'] = "formdynamic-input" . $input->id_input;
 
 $groupClass = '';
 
@@ -51,8 +51,7 @@ if (!empty($arrayGroup))
 $id_subform = (!empty($subform)) ? $subform->id_form : '';
 ?>
 
-<div id="element<?= $element->id_element ?>"
-     class="col" <?= (!empty($styles)) ? 'style="' . implode(';', $styles) . '"' : '' ?>>
+<div id="element<?= $element->id_element ?>" class="col" <?= (!empty($styles)) ? 'style="' . implode(';', $styles) . '"' : '' ?>>
     <div id="inputGroup<?= $input->id_input ?>" class="form-group <?= $groupClass ?>">
         <?php if (!empty($input->copyInput)){?>
             <div class="checkbox-group">

@@ -129,6 +129,9 @@ img[src*="http://www.admkrsk.ru/_layouts/images/icdocx.png"], .ms-asset-icon {di
 .subform-action-buttons {text-align: right;}
 .collections-action-buttons {text-align: right; padding-right: 120px; margin-top: -48px; margin-bottom: 30px;}
 
+.has-error .help-block {color: #ff0000; margin-top: -25px;
+    margin-bottom: 18px;}
+
 .person-card_content {flex-direction: column;}
 
 .form-inside * {font-size: 16px;}
