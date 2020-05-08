@@ -7,6 +7,9 @@
 		<div class="row">
 		    <div class="col-2-third">
 		        <h1>Городские проекты и события</h1>
+		        <ul class="press_info">
+                    <li class="press_info-item"><?=Yii::$app->formatter->asDatetime($model->date_publish,'d MMMM yyyy HH:mm')?></li>
+                </ul>
 		        <div class="events-list">
 	            <?php foreach ($projects as $key => $data) {?>
 	                <div class="events-item">

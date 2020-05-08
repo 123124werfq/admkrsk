@@ -55,6 +55,9 @@ class FormDynamic extends DynamicModel
 
         foreach ($this->inputs as $input)
         {
+            if ($input->required)
+                $this->addRule(['input'.$input->id_input], 'required');
+
             switch ($input->type) {
                 case CollectionColumn::TYPE_INTEGER:
                     $this->addRule(['input'.$input->id_input], 'number');
