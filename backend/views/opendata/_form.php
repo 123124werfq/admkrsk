@@ -22,6 +22,7 @@ $this->registerJs("$('#opendata-id_collection').change(function () {
             data: { id: id_collection },
             success: function(data) {
                 if (data.results) {
+                    $('#opendata-columns').html('');
                     $.each(data.results, function(id, name) {
                         $('#opendata-columns').append('<option value=\"' + id + '\" selected=\"selected\">' + name + '</option>');
                     });
