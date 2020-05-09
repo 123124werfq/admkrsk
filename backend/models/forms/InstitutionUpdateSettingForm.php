@@ -23,7 +23,7 @@ use yii\helpers\Json;
  * @property array $selectedMonths
  * @property string $weekdays
  * @property array $selectedWeekdays
- * @property string $nextRunDates
+ * @property string[] $nextRunDates
  */
 class InstitutionUpdateSettingForm extends Model
 {
