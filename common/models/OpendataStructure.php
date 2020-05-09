@@ -46,7 +46,7 @@ class OpendataStructure extends \yii\db\ActiveRecord
         return [
             [['id_opendata', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
             [['id_opendata', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
-            [['signature'], 'string', 'max' => 255],
+            [['signature'], 'string'],
             [['id_opendata', 'signature'], 'unique', 'targetAttribute' => ['id_opendata', 'signature']],
             [['id_opendata'], 'exist', 'skipOnError' => true, 'targetClass' => Opendata::class, 'targetAttribute' => ['id_opendata' => 'id_opendata']],
         ];
