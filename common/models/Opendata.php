@@ -8,9 +8,15 @@ use common\modules\log\behaviors\LogBehavior;
 use common\traits\AccessTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
+use Cron\CronExpression;
+use DateTime;
+use Exception;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -26,7 +32,6 @@ use yii\helpers\ArrayHelper;
  * @property string $owner
  * @property string $keywords
  * @property array $columns
- * @property int $period
  * @property int $created_at
  * @property int $created_by
  * @property int $updated_at
@@ -38,6 +43,9 @@ use yii\helpers\ArrayHelper;
  * @property string $filename
  * @property string $url
  * @property array $metadata
+ * @property string $schedule
+ * @property array $schedule_settings
+ * @property string[] $nextRunDates
  *
  * @property Collection $collection
  * @property Page $page
@@ -47,7 +55,7 @@ use yii\helpers\ArrayHelper;
  * @property OpendataData $firstData
  * @property OpendataData $lastData
  */
-class Opendata extends \yii\db\ActiveRecord
+class Opendata extends ActiveRecord
 {
     use MetaTrait;
     use ActionTrait;
@@ -63,6 +71,161 @@ class Opendata extends \yii\db\ActiveRecord
     public $access_user_ids;
     public $access_user_group_ids;
 
+    /* @var string */
+    public $minutes = '*';
+
+    /* @var array */
+    public $selectedMinutes = [];
+
+    /* @var string */
+    public $hours = '*';
+
+    /* @var array */
+    public $selectedHours = [];
+
+    /* @var string */
+    public $days = '*';
+
+    /* @var array */
+    public $selectedDays = [];
+
+    /* @var string */
+    public $months = '*';
+
+    /* @var array */
+    public $selectedMonths = [];
+
+    /* @var string */
+    public $weekdays = '*';
+
+    /* @var array */
+    public $selectedWeekdays = [];
+
+    /* @var string */
+    static $path = '@console/runtime/settings';
+
+    /* @var string */
+    static $filename = '@console/runtime/settings/institution.json';
+
+    /* @var array */
+    private $_nextRunDates;
+
+    /* @var CronExpression */
+    private $_cronExpression;
+
+    /* @var array */
+    private $_defaultSetting = [
+        'minutes' => 'select',
+        'selectedMinutes' => ['0'],
+        'hours' => 'select',
+        'selectedHours' => ['0'],
+        'days' => '*',
+        'selectedDays' => [],
+        'months' => '*',
+        'selectedMonths' => [],
+        'weekdays' => '*',
+        'selectedWeekdays' => [],
+    ];
+
+    const MINUTES = [
+        '*' => 'Каждую минуту',
+        '*/2' => 'Четные минуты',
+        '1-59/2' => 'Нечетные минуты',
+        '*/5' => 'Каждые 5 минут',
+        '*/15' => 'Каждые 15 минут',
+        '*/30' => 'Каждые 30 минут',
+    ];
+
+    const HOURS = [
+        '*' => 'Каждый час',
+        '*/2' => 'Четные часы',
+        '1-23/2' => 'Нечетные часы',
+        '*/6' => 'Каждые 6 часов',
+        '*/12' => 'Каждые 12 часов',
+    ];
+
+    const DAYS = [
+        '*' => 'Каждый день',
+        '*/2' => 'Четные дни',
+        '1-31/2' => 'Нечетные дни',
+        '*/5' => 'Каждые 5 дней',
+        '*/10' => 'Каждые 10 дней',
+        '*/15' => 'Каждые пол месяца',
+    ];
+
+    const MONTHS = [
+        '*' => 'Каждый месяц',
+        '*/2' => 'Четные месяцы',
+        '1-11/2' => 'Нечетные месяцы',
+        '*/4' => 'Каждые 4 месяца',
+        '*/6' => 'Каждые пол года',
+    ];
+
+    const WEEKDAYS = [
+        '*' => 'Каждый день недели',
+        '1-5' => 'Понедельник-пятница',
+        '0,6' => 'Выходные дни',
+    ];
+
+    const SELECTED_DAYS = [
+        1 => 1,
+        2 => 2,
+        3 => 3,
+        4 => 4,
+        5 => 5,
+        6 => 6,
+        7 => 7,
+        8 => 8,
+        9 => 9,
+        10 => 10,
+        11 => 11,
+        12 => 12,
+        13 => 13,
+        14 => 14,
+        15 => 15,
+        16 => 16,
+        17 => 17,
+        18 => 18,
+        19 => 19,
+        20 => 20,
+        21 => 21,
+        22 => 22,
+        23 => 23,
+        24 => 24,
+        25 => 25,
+        26 => 26,
+        27 => 27,
+        28 => 28,
+        29 => 29,
+        30 => 30,
+        31 => 31,
+    ];
+
+    const SELECTED_MONTHS = [
+        1 => 'Январь',
+        2 => 'Февраль',
+        3 => 'Март',
+        4 => 'Апрель',
+        5 => 'Май',
+        6 => 'Июнь',
+        7 => 'Июль',
+        8 => 'Август',
+        9 => 'Сентябрь',
+        10 => 'Октябрь',
+        11 => 'Ноябрь',
+        12 => 'Декабрь',
+    ];
+
+    const SELECTED_WEEKDAYS = [
+        1 => 'Понедельник',
+        2 => 'Вторник',
+        3 => 'Среда',
+        4 => 'Четверг',
+        5 => 'Пятница',
+        6 => 'Суббота',
+        0 => 'Воскресенье',
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -77,9 +240,9 @@ class Opendata extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['identifier', 'title', 'owner', 'period'], 'required'],
-            [['id_collection', 'id_user', 'period'], 'default', 'value' => null],
-            [['id_collection', 'id_user', 'period'], 'integer'],
+            [['identifier', 'title', 'owner'], 'required'],
+            [['id_collection', 'id_user'], 'default', 'value' => null],
+            [['id_collection', 'id_user'], 'integer'],
             [['description'], 'string'],
             [['urls'], 'each', 'rule' => ['url', 'enableIDN' => true]],
             [['columns'], 'safe'],
@@ -90,6 +253,25 @@ class Opendata extends \yii\db\ActiveRecord
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
             ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
+
+            [['minutes', 'hours', 'days', 'months', 'weekdays'], 'required'],
+            [['minutes', 'hours', 'days', 'months', 'weekdays'], 'string'],
+            [['selectedMinutes', 'selectedHours', 'selectedDays', 'selectedMonths', 'selectedWeekdays'], 'each', 'rule' => ['integer']],
+            ['selectedMinutes', 'required', 'when' => function() {
+                return $this->minutes == 'select';
+            }, 'message' => 'Выберите минуты.'],
+            ['selectedHours', 'required', 'when' => function() {
+                return $this->hours == 'select';
+            }, 'message' => 'Выберите часы.'],
+            ['selectedDays', 'required', 'when' => function() {
+                return $this->days == 'select';
+            }, 'message' => 'Выберите дни.'],
+            ['selectedMonths', 'required', 'when' => function() {
+                return $this->months == 'select';
+            }, 'message' => 'Выберите месяцы.'],
+            ['selectedWeekdays', 'required', 'when' => function() {
+                return $this->weekdays == 'select';
+            }, 'message' => 'Выберите дни недели.'],
         ];
     }
 
@@ -109,13 +291,23 @@ class Opendata extends \yii\db\ActiveRecord
             'owner' => 'Владелец набора данных',
             'keywords' => 'Ключевые слова, соответствующие содержанию набора данных',
             'columns' => 'Поля',
-            'period' => 'Период обновления',
             'created_at' => 'Создано',
             'created_by' => 'Создал',
             'updated_at' => 'Обновлено',
             'updated_by' => 'Обновил',
             'deleted_at' => 'Удалено',
             'deleted_by' => 'Удалил',
+            'schedule_settings' => 'Расписание обновления',
+            'minutes' => 'Минуты',
+            'selectedMinutes' => 'Минуты',
+            'hours' => 'Часы',
+            'selectedHours' => 'Часы',
+            'days' => 'Дни',
+            'selectedDays' => 'Дни',
+            'months' => 'Месяцы',
+            'selectedMonths' => 'Месяцы',
+            'weekdays' => 'Дни недели',
+            'selectedWeekdays' => 'Дни недели',
         ];
     }
 
@@ -135,6 +327,36 @@ class Opendata extends \yii\db\ActiveRecord
         ];
     }
 
+    public function init()
+    {
+        parent::init();
+
+        $this->setAttributes($this->schedule_settings ? $this->schedule_settings : $this->_defaultSetting, [
+            'minutes', 'selectedMinutes', 'hours', 'selectedHours', 'days', 'selectedDays',
+            'months', 'selectedMonths', 'weekdays', 'selectedWeekdays',
+        ]);
+    }
+
+    public function afterFind()
+    {
+        parent::afterFind();
+
+        $this->setAttributes($this->schedule_settings ? $this->schedule_settings : $this->_defaultSetting, [
+            'minutes', 'selectedMinutes', 'hours', 'selectedHours', 'days', 'selectedDays',
+            'months', 'selectedMonths', 'weekdays', 'selectedWeekdays',
+        ]);
+    }
+
+    public function beforeSave($insert)
+    {
+        $this->schedule_settings = $this->getAttributes([
+            'minutes', 'selectedMinutes', 'hours', 'selectedHours', 'days', 'selectedDays',
+            'months', 'selectedMonths', 'weekdays', 'selectedWeekdays',
+        ]);
+
+        return parent::beforeSave($insert);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -150,7 +372,7 @@ class Opendata extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCollection()
     {
@@ -158,7 +380,7 @@ class Opendata extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getUser()
     {
@@ -166,7 +388,7 @@ class Opendata extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getStructures()
     {
@@ -174,7 +396,7 @@ class Opendata extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getData()
     {
@@ -183,7 +405,7 @@ class Opendata extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getFirstData()
     {
@@ -193,7 +415,7 @@ class Opendata extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getLastData()
     {
@@ -308,7 +530,7 @@ class Opendata extends \yii\db\ActiveRecord
 
     /**
      * @return string
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function getCreated()
     {
@@ -317,7 +539,7 @@ class Opendata extends \yii\db\ActiveRecord
 
     /**
      * @return string
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function getModified()
     {
@@ -342,7 +564,7 @@ class Opendata extends \yii\db\ActiveRecord
 
     /**
      * @return string
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function getValid()
     {
@@ -374,31 +596,114 @@ class Opendata extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return boolean
-     * @throws \Exception
+     * @return string
      */
-    public function export()
+    public function getSchedule()
     {
-        // добавить проверку расписания
-        if (1) {
-            $transaction = Yii::$app->db->beginTransaction();
-            try {
-                $this->exportData();
+        if ($this->minutes == 'select') {
+            $schedule = implode(',', $this->selectedMinutes) . ' ';
+        } else {
+            $schedule = $this->minutes . ' ';
+            $this->selectedMinutes = [];
+        }
 
-                $transaction->commit();
+        if ($this->hours == 'select') {
+            $schedule .= implode(',', $this->selectedHours) . ' ';
+        } else {
+            $schedule .= $this->hours . ' ';
+            $this->selectedHours = [];
+        }
 
-                return true;
-            } catch (\Exception $e) {
-                $transaction->rollBack();
-                throw $e;
+        if ($this->days == 'select') {
+            $schedule .= implode(',', $this->selectedDays) . ' ';
+        } else {
+            $schedule .= $this->days . ' ';
+            $this->selectedDays = [];
+        }
+
+        if ($this->months == 'select') {
+            $schedule .= implode(',', $this->selectedMonths) . ' ';
+        } else {
+            $schedule .= $this->months . ' ';
+            $this->selectedMonths = [];
+        }
+
+        if ($this->weekdays == 'select') {
+            $schedule .= implode(',', $this->selectedWeekdays);
+        } else {
+            $schedule .= $this->weekdays;
+            $this->selectedWeekdays = [];
+        }
+
+        return $schedule;
+    }
+
+    /**
+     * @return CronExpression
+     */
+    public function getCronExpression()
+    {
+        if (!$this->_cronExpression) {
+            $this->_cronExpression = CronExpression::factory($this->schedule);
+        }
+
+        return $this->_cronExpression;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getExpression()
+    {
+        return $this->getCronExpression()->getExpression();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDue()
+    {
+        return $this->getCronExpression()->isDue();
+    }
+
+    /**
+     * @return string[]
+     * @throws InvalidConfigException
+     */
+    public function getNextRunDates()
+    {
+        if (!$this->_nextRunDates) {
+            foreach ($this->getCronExpression()->getMultipleRunDates(3) as $dateTime) {
+                /* @var DateTime $dateTime */
+                $this->_nextRunDates[] =  Yii::$app->formatter->asDatetime($dateTime->format('U'));
             }
         }
 
-        return false;
+        return $this->_nextRunDates;
+    }
+
+    /**
+     * @return boolean
+     * @throws Exception
+     */
+    public function export()
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $this->exportData();
+
+            $transaction->commit();
+
+            return true;
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
     }
 
     /**
      * @return Opendata
+     * @throws InvalidConfigException
      */
     public function exportMeta()
     {
@@ -521,6 +826,7 @@ class Opendata extends \yii\db\ActiveRecord
 
     /**
      * @return string|null
+     * @throws InvalidConfigException
      */
     public static function exportList()
     {

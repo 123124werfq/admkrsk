@@ -7,7 +7,9 @@ use frontend\modules\api\models\Collection;
 use frontend\modules\api\models\CollectionRecord;
 use frontend\modules\api\models\search\CollectionSearch;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\web\NotFoundHttpException;
+use yii\web\UnauthorizedHttpException;
 
 /**
  * Collection controller for the `api` module
@@ -19,7 +21,8 @@ class CollectionController extends Controller
      * @param $alias
      * @return mixed
      * @throws NotFoundHttpException
-     * @throws \yii\web\UnauthorizedHttpException
+     * @throws UnauthorizedHttpException
+     * @throws InvalidConfigException
      */
     public function actionIndex($alias)
     {
@@ -29,7 +32,7 @@ class CollectionController extends Controller
             $this->checkAccess();
         }
 
-        $searchModel = new CollectionSearch(['alias' => $collection->alias]);
+        $searchModel = new CollectionSearch(['id_collection' => $collection->id_collection]);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $dataProvider;
@@ -41,13 +44,15 @@ class CollectionController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
-     * @throws \yii\web\UnauthorizedHttpException
+     * @throws UnauthorizedHttpException
+     * @throws InvalidConfigException
      */
     public function actionView($alias, $id)
     {
+        $collection = $this->findCollectionModel($alias);
         $record = $this->findCollectionRecordModel($id);
 
-        if ($record->collection->is_authenticate) {
+        if ($collection->is_authenticate) {
             $this->checkAccess();
         }
 
