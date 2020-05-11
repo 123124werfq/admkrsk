@@ -15,6 +15,7 @@ class FormDynamic extends DynamicModel
     public $form;
     public $data;
     public $postData;
+    protected $labels;
 
     //private $_properties;
 
@@ -41,6 +42,8 @@ class FormDynamic extends DynamicModel
                 $attributes['input'.$input->id_input] = $data[$input->fieldname];
             else
                 $attributes['input'.$input->id_input] = '';
+
+            $labels['input'.$input->id_input] = $input->label;
         }
 
         $this->data = $data;
@@ -83,6 +86,12 @@ class FormDynamic extends DynamicModel
             }
         }
     }
+
+    public function attributeLabels()
+    {
+        return $this->labels;
+    }
+
 
     public function prepareData($columnAsIndex=true, $post=null)
     {

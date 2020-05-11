@@ -55,22 +55,34 @@ function addInput(block)
 
 $(document).ready(function() {
 
-    $(".ajax-form").submit(function(e){
+    $(".ajax-form").on('beforeSubmit', function (event) {
+        event.preventDefault();
 
-        /*var $form = $(this);
+//    $(".ajax-form").submit(function(e){
+
+        var $form = $(this);
 
         $.ajax({
             type: "POST",
-            dataType: "html",
+            dataType: "json",
             url: $form.attr('action'),
             data: $form.serialize()
         }).done(function(data){
-            if (data)
-                $form.html(data);
+            
+            if (data.ok)
+                $form.html(data.ok);
+            else
+            {
+                $.each(data,function(index, value){
+                    console.log('My array has at position ' + index + ', this value: ' + value);
+                });
+
+                //$form.html(data.ok);
+            }
         });
 
-        e.preventDefault();
-        e.stopImmediatePropagation();*/
+        //e.preventDefault();
+        //e.stopImmediatePropagation();
         return false;
     });
 

@@ -538,6 +538,8 @@ JS;
 					</div>';
                 }
                 echo '</div>';
+                echo '<div class="help-block"></div>';
+                
                 break;
             case CollectionColumn::TYPE_COLLECTION:
 
