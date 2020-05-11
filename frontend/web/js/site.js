@@ -58,9 +58,10 @@ $(document).ready(function() {
     $(".ajax-form").on('beforeSubmit', function (event) {
         event.preventDefault();
 
-//    $(".ajax-form").submit(function(e){
-
         var $form = $(this);
+
+        $form.find('.has-error .help-block').html('');
+        $form.find('.has-error').removeClass('has-error');
 
         $.ajax({
             type: "POST",
@@ -68,16 +69,18 @@ $(document).ready(function() {
             url: $form.attr('action'),
             data: $form.serialize()
         }).done(function(data){
-            
-            if (data.ok)
-                $form.html(data.ok);
+
+            if (data.success)
+                $form.html(data.success);
             else
             {
                 $.each(data,function(index, value){
-                    console.log('My array has at position ' + index + ', this value: ' + value);
+                    if ($("."+index+' .help-block').length>0)
+                    {
+                        $("."+index).addClass('has-error');
+                        $("."+index+' .help-block').html(value.join('<br>'));
+                    }
                 });
-
-                //$form.html(data.ok);
             }
         });
 

@@ -37,7 +37,12 @@ class FormController extends \yii\web\Controller
             if ($collection->insertRecord($prepare))
             {
                 if (Yii::$app->request->isAjax)
-                    return $form->message_success?$form->message_success:'Спасибо, данные отправлены';
+                {
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    return [
+                        'success'=>$form->message_success?$form->message_success:'Спасибо, данные отправлены'
+                    ];
+                }
 
                 if (!empty($form->url))
                 	return $this->redirect($form->url);

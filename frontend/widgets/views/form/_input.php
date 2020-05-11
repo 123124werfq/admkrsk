@@ -52,7 +52,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
 ?>
 
 <div id="element<?= $element->id_element ?>" class="col" <?= (!empty($styles)) ? 'style="' . implode(';', $styles) . '"' : '' ?>>
-    <div id="inputGroup<?= $input->id_input ?>" class="form-group <?= $groupClass ?>">
+    <div id="inputGroup<?= $input->id_input ?>" class="form-group <?=$groupClass?> <?=$options['id']?>">
         <?php if (!empty($input->copyInput)){?>
             <div class="checkbox-group">
                 <label class="checkbox checkbox__ib">
@@ -429,7 +429,7 @@ JS;
 	                    </div>
 	                </div>
 	                <div class="fileupload_list '.(!empty($options['pagecount'])?'show-pagecount':'').'">' . $file_uploaded . '</div>
-	            </div>';
+	            </div><div class="help-block"></div>';
                 break;
             case CollectionColumn::TYPE_IMAGE:
                 $dataOptions = [];
@@ -521,7 +521,6 @@ JS;
 				</div>';
                 break;
             case CollectionColumn::TYPE_CHECKBOXLIST:
-
                 if (!empty($input->id_collection))
                     $current_values = (is_array($model->$clearAttribute)) ? array_keys($model->$clearAttribute) : [];
                 else
@@ -539,7 +538,6 @@ JS;
                 }
                 echo '</div>';
                 echo '<div class="help-block"></div>';
-                
                 break;
             case CollectionColumn::TYPE_COLLECTION:
 

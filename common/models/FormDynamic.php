@@ -43,7 +43,7 @@ class FormDynamic extends DynamicModel
             else
                 $attributes['input'.$input->id_input] = '';
 
-            $labels['input'.$input->id_input] = $input->label;
+            $this->labels['input'.$input->id_input] = $input->label??'Это поле';
         }
 
         $this->data = $data;
@@ -90,6 +90,11 @@ class FormDynamic extends DynamicModel
     public function attributeLabels()
     {
         return $this->labels;
+    }
+
+    public function getAttributeLabel($name){
+
+        return $this->labels[$name]??$name;
     }
 
 
