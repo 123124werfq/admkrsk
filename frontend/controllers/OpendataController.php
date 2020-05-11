@@ -37,10 +37,7 @@ class OpendataController extends Controller
      */
     public function actionView($id)
     {
-        $model = Opendata::findOne(['identifier' => $id]);
-
-        if (empty($model))
-        {
+        if (($model = Opendata::findOne(['identifier' => $id])) === null) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 

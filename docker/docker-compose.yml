@@ -44,6 +44,7 @@ services:
     env_file: ./../.env
     volumes:
       - mongodata:/data/db
+      - ./mongo/dumps:/dumps
     ports:
       - "27017:27017"
 
