@@ -13,7 +13,10 @@ use common\models\Collection;
 use common\models\FormDynamic;
 use common\models\Form;
 use common\models\HrProfile;
+
 use yii\web\BadRequestHttpException;
+use yii\widgets\ActiveForm;
+use yii\web\Response;
 
 class ReceptionController extends \yii\web\Controller
 {
@@ -33,11 +36,12 @@ class ReceptionController extends \yii\web\Controller
 
         $model = new FormDynamic($collection->form);
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
             $prepare = $model->prepareData(true);
 
-            if ($record = $collection->insertRecord($prepare)) {
-
+            if ($record = $collection->insertRecord($prepare))
+            {
                 $insertedData = $record->getData(true);
 
                 $appeal = new AppealRequest;
@@ -97,8 +101,6 @@ class ReceptionController extends \yii\web\Controller
                 else
                 {
                     return $this->render('error');
-                    //var_dump($appeal->errors);
-                    //die();
                 }
 
                 return $this->render('result', [
@@ -108,7 +110,11 @@ class ReceptionController extends \yii\web\Controller
                     'date' => date( "d.m.Y", $appeal->created_at)
                 ]);
             }
-
+        }
+        else
+        {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
         }
 
         return $this->render('index', [

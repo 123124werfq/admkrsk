@@ -9,9 +9,11 @@ use common\models\Collection;
 use common\models\FormDynamic;
 use common\models\Form;
 use common\models\ContestProfile;
+
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
-
+use yii\widgets\ActiveForm;
+use yii\web\Response;
 
 use common\models\CstProfile;
 use common\models\CstExpert;
@@ -19,7 +21,6 @@ use common\models\CstVote;
 
 class ContestController extends \yii\web\Controller
 {
-
     public function actionParticipantForm($page=null)
     {
         if (Yii::$app->user->isGuest) {
@@ -34,7 +35,7 @@ class ContestController extends \yii\web\Controller
 
         if(!$form)
             throw new BadRequestHttpException();
-        
+
         $collection = $form->collection;
 
         $page = Page::findOne(['alias'=>'select']);
@@ -58,7 +59,8 @@ class ContestController extends \yii\web\Controller
             if(!$record)
                 $record = $collection->insertRecord($prepare);
 
-            if ($record) {
+            if ($record)
+            {
                 if(!$profile)
                     $profile = new CstProfile;
 
@@ -68,7 +70,12 @@ class ContestController extends \yii\web\Controller
                 $profile->save();
 
                 if (Yii::$app->request->isAjax)
-                    return $form->message_success?$collection->form->message_success:'Спасибо, данные отправлены';
+                {
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    return [
+                        'success'=>$form->message_success?$form->message_success:'Спасибо, данные отправлены'
+                    ];
+                }
 
                 if (!empty($form->url))
                     return $this->redirect($form->url);
@@ -78,6 +85,11 @@ class ContestController extends \yii\web\Controller
             }
             else
                 echo "Данные не сохранены";
+        }
+        else
+        {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
         }
 
         $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
@@ -155,7 +167,7 @@ class ContestController extends \yii\web\Controller
     }
 
     public function actionVote($id=null)
-    {            
+    {
         $expert = CstExpert::findOne(['id_user' => Yii::$app->user->id]);
 
         if(!$expert)
@@ -164,9 +176,9 @@ class ContestController extends \yii\web\Controller
         $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
         if(!$contestCollection)
             throw new BadRequestHttpException();
-    
+
         $data = $links = [];
-        
+
         $activeContests = $contestCollection->getDataQuery()->whereByAlias(['<>', 'contest_state', 'Конкурс завершен'])->getArray(true);
 
         $profiles = CstProfile::find()->all();
@@ -194,16 +206,16 @@ class ContestController extends \yii\web\Controller
                         {
                             $count++;
                             $profileData = CollectionRecord::findOne($profile->id_record_anketa);
-                            
+
                             if($profileData)
                             {
                                 $profileData = $profileData->getData(true);
                                 $vote = CstVote::find()->where(['id_expert' => $expert->id_expert, 'id_profile' => $profile->id_profile])->one();
-                                
+
                                 $links[$ckey][] = [
-                                    'id' => $profile->id_profile, 
-                                    'name' => $profileData['project_name'], 
-                                    'vote_value' => $vote->value??false, 
+                                    'id' => $profile->id_profile,
+                                    'name' => $profileData['project_name'],
+                                    'vote_value' => $vote->value??false,
                                     'vote_comment' => $vote->comment??''
                                 ];
                             }
@@ -226,7 +238,7 @@ class ContestController extends \yii\web\Controller
             'data' => $data,
             'expert' => $expert,
         ]);
-        
-    }    
+
+    }
 
 }

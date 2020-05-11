@@ -246,7 +246,7 @@ class ServiceController extends Controller
         $num = urlencode($data[11979]??'');
 
         $request = "http://10.24.0.195:700/Service.svc/GetQueueNumber?lname=$lname&fname=$fname&mname=$mname&docseries=$serie&docnumber=$num";
-        
+
         /*
         echo $request;
         $res = file_get_contents($request);
@@ -257,7 +257,7 @@ class ServiceController extends Controller
 
         if(isset($res->Data))
             return $res->Data;
-        else 
+        else
             return false;
     }
 
@@ -286,11 +286,11 @@ class ServiceController extends Controller
             if($id_form == 666) // хардкод для теста
             {
                 $aisres = $this->processAIS($prepare);
-                
+
                 if($aisres)
                     echo "Ваш номер в очереди: $aisres";
                 else
-                    echo "Информация об очередности не обнаружена"; 
+                    echo "Информация об очередности не обнаружена";
                 die();
                 return $this->render('result',[
                     'number'=> false,
@@ -375,15 +375,6 @@ class ServiceController extends Controller
                 }
             }
 
-            /*
-            print_r($prepare);
-            print_r($_FILES);
-            print_r($model->attributes);
-
-            die();
-
-            return $this->redirect('/service-recieved');
-            */
             return $this->render('result',[
                 'number'=> isset($appeal->number_internal)?$appeal->number_internal:false,
                 //'target' => $target,
@@ -393,6 +384,7 @@ class ServiceController extends Controller
                 'fio' => Yii::$app->user->identity->username
             ]);
         }
+
 
         return $this->render('create',[
             'form'=>$form,

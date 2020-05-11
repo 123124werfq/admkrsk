@@ -10,7 +10,6 @@ use common\models\CollectionColumn;
 use Yii;
 use common\models\Page;
 use common\models\Collection;
-use common\models\FormDynamic;
 use common\models\Form;
 use common\models\HrProfile;
 use yii\web\BadRequestHttpException;
@@ -26,8 +25,6 @@ class CheckController extends \yii\web\Controller
 
         if(!empty($request))
             $result = 'В реестре не содержится информация по запрошенному обращению.';
-
-
 
         return $this->render('check', ['page' => $page, 'result' => $result ]);
     }

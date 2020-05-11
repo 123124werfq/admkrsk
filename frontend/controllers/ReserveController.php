@@ -19,6 +19,8 @@ use common\models\HrProfile;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 
+use yii\widgets\ActiveForm;
+use yii\web\Response;
 
 class ReserveController extends \yii\web\Controller
 {
@@ -64,10 +66,13 @@ class ReserveController extends \yii\web\Controller
                 $profile->id_record = $record->id_record;
                 $profile->save();
 
-                //return $this->render('result', ['page'=>$page, 'form'=>$collection->form]);
-
                 if (Yii::$app->request->isAjax)
-                    return $collection->form->message_success?$collection->form->message_success:'Спасибо, данные отправлены';
+                {
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    return [
+                        'success'=>$form->message_success?$form->message_success:'Спасибо, данные отправлены'
+                    ];
+                }
 
                 if (!empty($collection->form->url))
                     return $this->redirect($collection->form->url);
@@ -77,6 +82,11 @@ class ReserveController extends \yii\web\Controller
             }
             else
                 echo "Данные не сохранены";
+        }
+        else
+        {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
         }
 
         return $this->render('form', [
@@ -100,7 +110,7 @@ class ReserveController extends \yii\web\Controller
 
         if(!$contest)
             throw new BadRequestHttpException();
-            
+
         $expert = HrExpert::findOne(['id_user' => Yii::$app->user->id]);
 
         if(!$expert)
