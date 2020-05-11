@@ -71,7 +71,14 @@ if ($model->isDeleted()) {
                         'attribute' => 'columns',
                         'value' => $model->columns ? implode(', ', ArrayHelper::map(CollectionColumn::findAll($model->columns), 'id_column', 'name')) : null,
                     ],
-                    'period',
+                    [
+                        'attribute' => 'schedule',
+                        'label' => 'Следующий запуск обновления',
+                        'format' => 'raw',
+                        'value' => function (Opendata $opendata) {
+                            return implode('<br>', $opendata->nextRunDates);
+                        },
+                    ],
                 ],
             ]) ?>
 

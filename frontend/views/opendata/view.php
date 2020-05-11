@@ -7,10 +7,10 @@
 use yii\helpers\Html;
 
 $this->params['page'] = $page;
-$meta = $model->lastData->metadata;
-$metaUrl = $model->lastData->url;
-$lastDataUrl = $model->lastData->url;
-$lastDataStructureUrl = $model->lastData->structure->url;
+$meta = $model->lastData->metadata ?? null;
+$metaUrl = $model->lastData->url ?? null;
+$lastDataUrl = $model->lastData->url ?? null;
+$lastDataStructureUrl = $model->lastData->structure->url ?? null;
 ?>
 <div class="main">
     <div class="container">
@@ -97,11 +97,11 @@ $lastDataStructureUrl = $model->lastData->structure->url;
                             <?php endif; ?>
                             <tr>
                                 <td>Дата первой публикации набора данных</td>
-                                <td><?= Yii::$app->formatter->asDate($model->firstData->created_at) ?></td>
+                                <td><?= Yii::$app->formatter->asDate($model->firstData->created_at ?? null) ?></td>
                             </tr>
                             <tr>
                                 <td>Дата последнего внесения изменений</td>
-                                <td><?= Yii::$app->formatter->asDate($model->lastData->created_at) ?></td>
+                                <td><?= Yii::$app->formatter->asDate($model->lastData->created_at ?? null) ?></td>
                             </tr>
                             <tr>
                                 <td>Содержание последних изменений</td>

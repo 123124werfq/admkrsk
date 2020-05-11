@@ -2,6 +2,7 @@
 
 namespace frontend\models\search;
 
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Opendata;
@@ -17,7 +18,7 @@ class OpendataSearch extends Opendata
     public function rules()
     {
         return [
-            [['id_opendata', 'id_collection', 'id_user', 'period', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['id_opendata', 'id_collection', 'id_user', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['identifier', 'title', 'description', 'owner', 'keywords', 'columns'], 'safe'],
         ];
     }
@@ -37,6 +38,7 @@ class OpendataSearch extends Opendata
      * @param array $params
      *
      * @return ActiveDataProvider
+     * @throws InvalidConfigException
      */
     public function search($params)
     {
@@ -61,7 +63,6 @@ class OpendataSearch extends Opendata
             'id_opendata' => $this->id_opendata,
             'id_collection' => $this->id_collection,
             'id_user' => $this->id_user,
-            'period' => $this->period,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,

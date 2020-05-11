@@ -4,10 +4,6 @@ namespace console\controllers;
 
 use common\jobs\InstitutionImportJob;
 use common\models\Answer;
-use common\models\Collection;
-use common\models\CollectionColumn;
-use common\models\CollectionRecord;
-use common\models\Institution;
 use common\models\Poll;
 use common\models\Question;
 use common\models\Vote;
@@ -16,8 +12,6 @@ use yii\base\InvalidConfigException;
 use yii\console\Controller;
 use yii\db\Exception;
 use yii\helpers\Html;
-use yii\helpers\FileHelper;
-use yii\helpers\Json;
 
 class ImportController extends Controller
 {
@@ -168,58 +162,6 @@ class ImportController extends Controller
      * @throws \Exception
      */
     public function actionInstitution()
-    {
-        $archiveUrl = 'https://bus.gov.ru/public-rest/api/opendata/7710568760-Generalinformation/data-20191102T052638-structure001-20151020T000000.xml.zip';
-        $path = Yii::getAlias('@console/runtime/institutions');
-        $archive = Yii::getAlias('@console/runtime/institutions/data.zip');
-
-        FileHelper::removeDirectory($path);
-        FileHelper::createDirectory($path);
-
-        $this->downloadFile($archiveUrl, $archive);
-
-        exec("unzip -o $archive -x -d $path");
-
-        $files = FileHelper::findFiles($path, ['only' => ['*.xml']]);
-
-        $count = $updateCount = 0;
-        if ($files) {
-            foreach ($files as $file) {
-                $institution = Institution::updateOrCreate($file);
-
-                if ($institution) {
-                    $updateCount++;
-                }
-                $count++;
-                unlink($file);
-            }
-        }
-
-        $this->stdout(Yii::t('app', 'Обработано {count} организаций', ['count' => $count]) . PHP_EOL);
-        $this->stdout(Yii::t('app', 'Добавлено/обновлено {updateCount} организаций', ['updateCount' => $updateCount]) . PHP_EOL);
-    }
-
-    /**
-     * @param string $url
-     * @param string $dest
-     */
-    public function downloadFile($url, $dest)
-    {
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_FILE => fopen($dest, 'w'),
-            CURLOPT_TIMEOUT => 28800,
-            CURLOPT_URL => $url
-        ]);
-        curl_exec($ch);
-        curl_close($ch);
-    }
-
-    /**
-     * Импорт организаций в коллекции
-     * @throws \yii\base\Exception
-     */
-    public function actionInstitutionToCollection()
     {
         $jobId = InstitutionImportJob::getJobId();
 

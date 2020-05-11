@@ -1,5 +1,7 @@
 <?php
 
+use elisdn\gii\fixture\Generator;
+
 $config = [
     'components' => [
         'request' => [
@@ -23,7 +25,10 @@ if (!YII_ENV_TEST) {
         'allowedIPs' => ['*'],
         'generators' => [
             'fixture' => [
-                'class' => 'elisdn\gii\fixture\Generator',
+                'class' => elisdn\gii\fixture\Generator::class,
+            ],
+            'job' => [
+                'class' => \yii\queue\gii\Generator::class,
             ],
         ],
     ];

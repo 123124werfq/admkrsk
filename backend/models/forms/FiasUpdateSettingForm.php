@@ -22,7 +22,7 @@ use \DateTime;
  * @property array $selectedMonths
  * @property string $weekdays
  * @property array $selectedWeekdays
- * @property string $nextRunDates
+ * @property string[] $nextRunDates
  */
 class FiasUpdateSettingForm extends Model
 {
