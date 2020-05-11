@@ -11,10 +11,13 @@ use common\models\ServiceAppeal;
 use common\models\ServiceAppealState;
 use common\models\ServiceRubric;
 use common\models\FormDynamic;
+
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\AccessControl;
+use yii\widgets\ActiveForm;
+use yii\web\Response;
 
 class ServiceController extends Controller
 {
@@ -283,24 +286,16 @@ class ServiceController extends Controller
         {
             $prepare = $model->prepareData(true);
 
-            if($id_form == 666) // хардкод для теста
+            if ($id_form == 666) // хардкод для теста
             {
                 $aisres = $this->processAIS($prepare);
 
-                if($aisres)
-                    echo "Ваш номер в очереди: $aisres";
-                else
-                    echo "Информация об очередности не обнаружена";
-                die();
-                return $this->render('result',[
-                    'number'=> false,
-                    'service' => $service,
-                    'page' => $page,
-                    'date' => date("d.m.Y", time()),
-                    'fio' => Yii::$app->user->identity->username
-                ]);
-            }
+                Yii::$app->response->format = Response::FORMAT_JSON;
 
+                return [
+                    'success'=>($aisres)?"Ваш номер в очереди: $aisres":"Информация об очередности не обнаружена";
+                ];
+            }
 
             if ($record = $form->collection->insertRecord($prepare))
             {
@@ -364,25 +359,37 @@ class ServiceController extends Controller
 
                         $integration->created_at = time();
                         $integration->save();
+
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+
+                        return [
+                            'success'=>$form->message_success?$form->renderMessage($record,[
+                                    'appeal_number'=> isset($appeal->number_internal)?$appeal->number_internal:false,
+                                    'service_reestr_number'=>$service->reestr_number,
+                                    'service_reestr_name'=>$service->name,
+                                    'service_date' => date("d.m.Y", $appeal->created_at),
+                                    'service_fio' => Yii::$app->user->identity->username
+                                ]):$this->renderPartial('result',[
+                                'number'=> isset($appeal->number_internal)?$appeal->number_internal:false,
+                                'service'=>$service,
+                                'page' => $page,
+                                'date' => date("d.m.Y", $appeal->created_at),
+                                'fio' => Yii::$app->user->identity->username
+                            ]);
+                        ];
                    }
                 }
                 else
                 {
-
-
                    var_dump($appeal->errors);
                    die();
                 }
             }
-
-            return $this->render('result',[
-                'number'=> isset($appeal->number_internal)?$appeal->number_internal:false,
-                //'target' => $target,
-                'service'=>$service,
-                'page' => $page,
-                'date' => date("d.m.Y", $appeal->created_at),
-                'fio' => Yii::$app->user->identity->username
-            ]);
+        }
+        elseif (Yii::$app->request->isAjax)
+        {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
         }
 
 

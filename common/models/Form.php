@@ -195,6 +195,12 @@ class Form extends \yii\db\ActiveRecord
         return $export_path;
     }
 
+
+    public function renderMessage($record,$add_data=[])
+    {
+
+    }
+
     public function getCollection()
     {
         return $this->hasOne(Collection::class, ['id_collection' => 'id_collection']);
