@@ -150,7 +150,7 @@ return [
                 'press/poll-list-active/poll-archive' => 'poll/archive',
                 'press/poll-list-active/<id>' => 'poll/view',
                 'opendata' => 'opendata/index',
-                'opendata/view/<id>' => 'opendata/view',
+                'opendata/<id>' => 'opendata/view',
                 [
                     'class' => 'frontend\components\NewsUrlRule',
                 ],

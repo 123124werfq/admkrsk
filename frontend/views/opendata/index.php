@@ -48,11 +48,12 @@ $listUrl = Opendata::getListUrl();
                                 <th>Наименование набора данных</th>
                                 <th class="w-20">Формат набора данных</th>
                             </tr>
-                            <?php foreach ($dataProvider->getModels() as $key => $item): ?>
+                            <?php /* @var Opendata $opendata */ ?>
+                            <?php foreach ($dataProvider->getModels() as $key => $opendata): ?>
                                 <tr>
                                     <td><?= $key + 1 ?></td>
                                     <td>
-                                        <?= Html::a($item->title, ['/opendata/view', 'id' => $item->identifier]) ?>
+                                        <?= Html::a($opendata->title, ['opendata/view', 'id' => $opendata->identifier]) ?>
                                     </td>
                                     <td>CSV</td>
                                 </tr>
