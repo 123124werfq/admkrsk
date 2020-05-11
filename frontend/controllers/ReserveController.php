@@ -83,7 +83,7 @@ class ReserveController extends \yii\web\Controller
             else
                 echo "Данные не сохранены";
         }
-        else
+        elseif (Yii::$app->request->isAjax)
         {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($model);
