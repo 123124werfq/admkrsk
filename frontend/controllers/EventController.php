@@ -26,6 +26,26 @@ class EventController extends Controller
         if (!empty(Yii::$app->request->get('type')))
             $projects->andWhere(['type'=>Yii::$app->request->get('type')]);
 
+        $date = Yii::$app->request->get('date');
+
+         // фильтр даты
+        if (!empty($date))
+        {
+            $dates = explode('-', $date);
+
+            if (count($dates)==2)
+            {
+                $date_begin = strtotime(trim($dates[0]));
+                $date_begin = mktime(0,0,0,date('m',$date_begin),date('d',$date_begin),date('Y',$date_begin));
+
+                $date_end = strtotime(trim($dates[1]));
+                $date_end = mktime(24,59,59,date('m',$date_end),date('d',$date_end),date('Y',$date_end));
+
+                $projects->andWhere(['>=','date_begin',$date_begin]);
+                $projects->andWhere(['<=','date_end',$date_end]);
+            }
+        }
+
         $projects = $projects->all();
 
         if (empty($page))
@@ -38,6 +58,7 @@ class EventController extends Controller
 
         return $this->render('index',[
             'page'=>$page,
+            'date'=>$date,
             'projects'=>$projects,
         ]);
     }

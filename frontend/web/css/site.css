@@ -22,6 +22,8 @@ form .subform .text-help {margin-top: 0px;}
     opacity: 0;
 }
 
+.main {min-height: 400px;}
+
 .fileupload_item {padding-right: 26px!important;}
 .fileupload_list  .dz-remove {
     font-size: 30px!important;

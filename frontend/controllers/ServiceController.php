@@ -369,7 +369,7 @@ class ServiceController extends Controller
                                     'service_reestr_name'=>$service->name,
                                     'service_date' => date("d.m.Y", $appeal->created_at),
                                     'service_fio' => Yii::$app->user->identity->username
-                                ]):$this->renderPartial('result',[
+                                ]):$this->renderPartial('_result',[
                                 'number'=> isset($appeal->number_internal)?$appeal->number_internal:false,
                                 'service'=>$service,
                                 'page' => $page,

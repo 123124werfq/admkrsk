@@ -6,10 +6,19 @@
 		<?=frontend\widgets\Breadcrumbs::widget(['page'=>$page])?>
 		<div class="row">
 		    <div class="col-2-third">
-		        <h1>Городские проекты и события</h1>
-		        <ul class="press_info">
-                    <li class="press_info-item"><?=Yii::$app->formatter->asDatetime($model->date_publish,'d MMMM yyyy HH:mm')?></li>
-                </ul>
+		        <h1><?=$page->title?></h1>
+		        <div class="header-controls">
+                    <form id="news-filter" action="" method="get">
+                        <div class="btn-group">
+                            <div class="btn-group_item">
+                                <div class="datepicker-holder">
+                                    <input name="date" id="news-date" value="<?=$date?>" type="text" class="form-control form-control_datepicker mb-sm-all-0 datepicker-ajax <?=!empty($date)?'datepicker__filled':''?>" placeholder="<?=Yii::t('site', 'Показать за период')?>">
+                                    <button class="form-control-reset material-icons" type="button">clear</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
 		        <div class="events-list">
 	            <?php foreach ($projects as $key => $data) {?>
 	                <div class="events-item">
@@ -25,7 +34,10 @@
 	                    </ul>
 	                </div>
 	            <?php }?>
-	        </div>
+	        	</div>
+	        	<?php if (empty($projects)){?>
+	            	<p>Нет событий и проектов за выбранный период</p>
+	            <?php }?>
 		    </div>
 		    <div class="col-third">
 		        <?=$this->render('/site/_rightmenu',['page'=>$page])?>
