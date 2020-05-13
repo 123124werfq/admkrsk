@@ -90,7 +90,6 @@ if ($model->alias == 'institution')
                       'class'=>'table table-striped valign-middle table-hover ids-style'
                   ]
               ]); ?>
-
               <?php Pjax::end(); ?>
           </div>
         </div>

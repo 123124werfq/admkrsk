@@ -277,7 +277,7 @@ $(document).ready(function() {
     {
         function getValue(id_input)
         {
-            var input = $("#input"+id_input);
+            var input = $("#formdynamic-input"+id_input);
 
             if (input.is(':checkbox'))
             {
@@ -300,8 +300,7 @@ $(document).ready(function() {
             {
                 var value = getValue(id_input);
 
-                console.log(value);
-                console.log(id_input);
+                console.log(value+' = '+id_input);
 
                 if (visibleElements[id_element][id_input].indexOf(value)<0)
                 {
@@ -318,9 +317,9 @@ $(document).ready(function() {
 
         for (var id_vinput in visibleInputs)
         {
-            $("#input"+id_vinput).change(function(){
+            $("#formdynamic-input"+id_vinput).change(function(){
 
-                var id = $(this).attr('id').replace('input','');
+                var id = $(this).attr('id').replace('formdynamic-input','');
 
                 for (var id_element in visibleInputs[id])
                     check(id_element);
