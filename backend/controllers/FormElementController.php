@@ -147,13 +147,34 @@ class FormElementController extends Controller
         $model = $this->findModel($id);
         $form = $model->row->form;
 
-        $model->delete();
-
+        // если это главная форма, удаляем input из содержимого элемента
         if ($form->isMainForm())
         {
             if (!empty($model->input))
+            {
+                if (!empty($model->input->column))
+                    $model->input->column->delete();
+
                 $model->input->delete();
+            }
+            else if (!empty($model->subForm))
+            {
+                foreach ($model->subForm->rows as $key => $row) {
+                    foreach ($row->element as $key => $element)
+                    {
+                        if (!empty($element->input))
+                        {
+                            if (!empty($element->input->column))
+                                $element->input->column->delete();
+
+                            $element->input->delete();
+                        }
+                    }
+                }
+            }
         }
+
+        $model->delete();
 
         return $this->redirect(['form/view', 'id' => $form->id_form]);
     }

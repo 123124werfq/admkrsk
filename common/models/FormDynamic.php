@@ -58,7 +58,7 @@ class FormDynamic extends DynamicModel
 
         foreach ($this->inputs as $input)
         {
-            if ($input->required && (empty($_POST['FormDynamic']) || !isset($_POST['FormDynamic']['input'.$input->id_input])))
+            if ($input->required && (empty($_POST['FormDynamic']) || isset($_POST['FormDynamic']['input'.$input->id_input])))
                 $this->addRule(['input'.$input->id_input], 'required');
 
             switch ($input->type) {

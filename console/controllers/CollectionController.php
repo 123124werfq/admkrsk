@@ -215,6 +215,30 @@ class CollectionController extends Controller
         }
     }
 
+    public function actionSubformFix()
+    {
+        $forms = Form::find()->where("is_template = 2 AND id_form NOT IN (SELECT id_form FROM form_element where id_form IS NOT NULL)")->all();
+
+        echo count($forms);
+
+        foreach ($forms as $key => $form)
+        {
+            foreach ($form->rows as $rkey => $row)
+                foreach ($row->elements as $ekey => $element)
+                {
+                    if (!empty($element->input))
+                    {
+                        if (!empty($element->input->column))
+                            $element->input->column->delete();
+
+                        $element->input->delete();
+                    }
+                }
+
+            $form->delete();
+        }
+    }
+
     public function actionFormFix()
     {
         $forms = Form::find()->where("name like '%Файл с листами%'")->all();
