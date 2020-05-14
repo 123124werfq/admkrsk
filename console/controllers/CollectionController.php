@@ -10,6 +10,7 @@ use common\models\Form;
 use common\models\FormRow;
 use common\models\FormElement;
 use common\models\FormInput;
+use common\models\FormVisibleInput;
 use common\models\CollectionColumn;
 
 use common\helpers\ProgressHelper;
@@ -307,6 +308,23 @@ class CollectionController extends Controller
 
         //$input = FormInput::find()->where('type = '.FormInput::TYPE_FILE)->andWhere('')
     }
+
+    public function actionFixFilters()
+    {
+        $models = FormVisibleInput::find()->where('values IS NOT NULL')->all();
+
+        foreach ($models as $key => $model)
+        {
+            $values = [];
+            foreach ($model->values as $key => $value) {
+                $values[] = str_replace("\r\n", '', trim($value));
+            }
+
+            $model->values = $values;
+            $model->update();
+        }
+    }
+
 
     public function actionMongofix()
     {
