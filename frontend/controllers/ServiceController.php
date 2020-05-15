@@ -63,7 +63,7 @@ class ServiceController extends Controller
 
             foreach ($records as $key => $record)
             {
-                if (empty($record['service_firm']))
+                if (empty($record['service_firm']) || !is_array($record['service_firm']))
                     continue;
 
                 $id_firm = key($record['service_firm']);
@@ -293,7 +293,7 @@ class ServiceController extends Controller
                 Yii::$app->response->format = Response::FORMAT_JSON;
 
                 return [
-                    'success'=>($aisres)?"Ваш номер в очереди: $aisres":"Информация об очередности не обнаружена";
+                    'success'=>($aisres)?"Ваш номер в очереди: $aisres":"Информация об очередности не обнаружена"
                 ];
             }
 
@@ -375,7 +375,7 @@ class ServiceController extends Controller
                                 'page' => $page,
                                 'date' => date("d.m.Y", $appeal->created_at),
                                 'fio' => Yii::$app->user->identity->username
-                            ]);
+                            ])
                         ];
                    }
                 }
