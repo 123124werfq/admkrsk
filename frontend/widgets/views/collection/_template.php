@@ -49,6 +49,4 @@
 
         echo $twig->render('index', $templateValues);
     }
-
-    //str_replace('\n', '', $template)
 ?>

@@ -198,7 +198,25 @@ class Form extends \yii\db\ActiveRecord
 
     public function renderMessage($record,$add_data=[])
     {
+        $recorData = $record->getData(true);
 
+        $value = '';
+
+        try {
+            $loader = new \Twig\Loader\ArrayLoader([
+                'template' => $this->message_success,
+            ]);
+            $twig = new \Twig\Environment($loader);
+            $value = $twig->render('template', array_merge($recorData,$add_data));
+
+            unset($loader);
+            unset($twig);
+        }
+        catch (Exception $e) {
+
+        }
+
+        return $value;
     }
 
     public function getCollection()
