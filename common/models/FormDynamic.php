@@ -161,7 +161,10 @@ class FormDynamic extends DynamicModel
                             ])->one();
 
                             if (!empty($address))
+                            {
                                 $data[$index] = $address->getArrayData();
+                                $data['fullname'] = $address->getFullName();
+                            }
                         }
                         else
                             $address = null;
@@ -295,14 +298,17 @@ class FormDynamic extends DynamicModel
                             $data[$index] = $empty;
                         }
 
+                        if (!empty($value['room']))
+                        {
+                            $data[$index]['room'] = $value['room'];
+                            $data['fullname'] = ', кв.'.$value['room'];
+                        }
+
                         if (!empty($value['coords'][0]))
                             $data[$index]['lat'] = $value['coords'][0];
 
                         if (!empty($value['coords'][1]))
                             $data[$index]['lon'] = $value['coords'][1];
-
-                        if (!empty($value['room']))
-                            $data[$index]['room'] = $value['room'];
 
                         break;
                     /*case CollectionColumn::TYPE_CHECKBOXLIST:
