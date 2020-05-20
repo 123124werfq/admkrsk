@@ -178,6 +178,27 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'name'=>'Показывать координаты',
                     'type'=>'checkbox',
                 ],
+
+                /*'valid_country'=>[
+                    'name'=>'Обязательно страна',
+                    'type'=>'checkbox',
+                ],
+                'valid_region'=>[
+                    'name'=>'Обязательно регион',
+                    'type'=>'checkbox',
+                ],
+                'valid_subregion'=>[
+                    'name'=>'Обязательно область',
+                    'type'=>'checkbox',
+                ],
+                'valid_city'=>[
+                    'name'=>'Обязательно город',
+                    'type'=>'checkbox',
+                ],
+                'valid_district'=>[
+                    'name'=>'Обязательно район',
+                    'type'=>'checkbox',
+                ],*/
             ],
             self::TYPE_TEXTAREA => [
                 'maxlength'=>[

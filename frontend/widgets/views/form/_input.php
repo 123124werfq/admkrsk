@@ -143,7 +143,6 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                     ]
                 ]);
                 break;
-
             case CollectionColumn::TYPE_ADDRESS:
 
                 if (empty($model->$attribute))
@@ -273,7 +272,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 ]).'</div>';
 
                 if (!empty($options['show_district']))
-                echo '<div class="col-md-4">'.$form->field($model, $attribute.'[district]')->widget(Select2::class, [
+                echo '<div class="col-md-4">'.$form->field($model, $attribute.'[district]', ['enableClientValidation' => false])->widget(Select2::class, [
                     'data' => [$value['id_district']=>$value['district']],
                     'pluginOptions' => [
                         'multiple' => false,
@@ -341,17 +340,20 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                     ]
                 ]).'</div>';
 
-
                 if (!empty($options['show_room']))
-                    echo $form->field($model, $attribute.'[room]')->textInput(['id'=>'show_room'.$attribute,'placeholder'=>'кв.,оф.']);
-
-                //echo '<div class="col-md-4">';
-
-                //echo '<div class="col-md-12"></div>';
+                {
+                    echo '<div class="col-md-4">';
+                    echo $form->field($model, $attribute.'[room]', ['enableClientValidation' => false])->textInput(['id'=>'show_room'.$attribute,'placeholder'=>'кв.,оф.']);
+                    echo '</div>';
+                }
 
                 if (!empty($options['show_postcode']))
-                echo $form->field($model, $attribute.'[postalcode]')->textInput(['id'=>'postcode'.$attribute,'placeholder'=>'Почтовый индекс']);
-                //echo '</div>';
+                {
+                    echo '<div class="col-md-4">';
+                    echo $form->field($model, $attribute.'[postalcode]', ['enableClientValidation' => false])->textInput(['id'=>'postcode'.$attribute,'placeholder'=>'Почтовый индекс']);
+                    echo '</div>';
+                }
+
 
                 if (!empty($options['show_coords']))
                 {
