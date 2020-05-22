@@ -104,6 +104,11 @@ class CollectionSearch extends DynamicModel
 
             if (!empty($col->options['width']))
                 $options['width'] = $col->options['width'].'px';
+            else
+            {
+                if ($col->type==CollectionColumn::TYPE_TEXTAREA || $col->type==CollectionColumn::TYPE_RICHTEXT)
+                    $options['width'] = '500px';
+            }
 
             $dataProviderColumns[$col_alias] =
             [
@@ -118,6 +123,20 @@ class CollectionSearch extends DynamicModel
 
             if ($col->type==CollectionColumn::TYPE_DATE)
                 $dataProviderColumns[$col_alias]['format'] = ['date', 'php:d.m.Y'];
+            elseif ($col->type==CollectionColumn::TYPE_TEXTAREA)
+            {
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
+                    if (empty($model[$col_alias]))
+                        return '';
+
+                    if (mb_strlen($model[$col_alias])>400)
+                    {
+                        return '<div class="longtext">'.$model[$col_alias].'</div><a data-pjax="0" href="/collection-record/view?id='.$model['id_record'].'">Посмотреть все</';
+                    }
+                    else
+                        return $model[$col_alias];
+                };
+            }
             else if ($col->type==CollectionColumn::TYPE_DATETIME)
                 $dataProviderColumns[$col_alias]['format'] = ['date', 'php:d.m.Y H:i'];
             else if ($col->type==CollectionColumn::TYPE_DISTRICT)

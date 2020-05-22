@@ -35,6 +35,9 @@ img {max-width: 100%;}
     width: 30px;
 }
 
+
+.longtext {max-height: 129px; text-overflow: ellipsis; overflow: hidden;}
+
 .break-all {word-break: break-all;}
 
 .partitions {display: flex; justify-content: flex-start; text-align: center; padding: 10px;}
