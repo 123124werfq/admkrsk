@@ -103,11 +103,13 @@ class CollectionSearch extends DynamicModel
             $options = [];
 
             if (!empty($col->options['width']))
-                $options['width'] = $col->options['width'].'px';
+                $options['style'] = 'min-width:'.$col->options['width'].'px';
             else
             {
                 if ($col->type==CollectionColumn::TYPE_TEXTAREA || $col->type==CollectionColumn::TYPE_RICHTEXT)
-                    $options['width'] = '500px';
+                    $options['style'] = 'min-width:500px';
+                elseif ($col->type==CollectionColumn::TYPE_INPUT)
+                    $options['style'] = 'min-width:200px';
             }
 
             $dataProviderColumns[$col_alias] =
