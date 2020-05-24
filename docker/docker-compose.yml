@@ -30,6 +30,34 @@ services:
       - mongo
       - redis
 
+  queue:
+    image: registry.nonoobs.ru/admkrsk/php-fpm
+    env_file: ./../.env
+    restart: on-failure
+    volumes:
+      - ./../:/src
+      - backend-assets:/src/backend/web/assets
+      - frontend-assets:/src/frontend/web/assets
+    links:
+      - postgres
+      - mongo
+      - redis
+    command: yii queue/listen -v
+
+  schedule:
+    image: registry.nonoobs.ru/admkrsk/php-fpm
+    env_file: ./../.env
+    restart: on-failure
+    volumes:
+      - ./../:/src
+      - backend-assets:/src/backend/web/assets
+      - frontend-assets:/src/frontend/web/assets
+    links:
+      - postgres
+      - mongo
+      - redis
+    command: schedule
+
   postgres:
     image: registry.nonoobs.ru/admkrsk/postgres
     env_file: ./../.env

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+while [ true ]
+do
+  yii schedule/run --scheduleFile=@console/config/schedule.php
+  sleep 60
+done

@@ -2,49 +2,24 @@
 
 namespace console\controllers;
 
-use common\models\Action;
-use common\models\Statistic;
+use common\jobs\StatisticJob;
 use Yii;
 use yii\console\Controller;
-use yii\db\Expression;
 
 class StatisticController extends Controller
 {
     public function actionIndex()
     {
-        $isExists = Statistic::find()->exists();
+        $jobId = StatisticJob::getJobId();
 
-        $query = Action::find()
-            ->select([
-                'model',
-                'model_id',
-                'count' => new Expression('COUNT(id)'),
-            ])
-            ->where(['action' => 'view'])
-            ->groupBy(['model', 'model_id'])
-            ->asArray();
+        if (!$jobId || (!Yii::$app->queue->isWaiting($jobId) && !Yii::$app->queue->isReserved($jobId) && Yii::$app->queue->isDone($jobId))) {
+            $jobId = Yii::$app->queue->push(new StatisticJob());
 
-        foreach ($query->each() as $action) {
-            Statistic::createOrUpdate($action);
-        }
+            StatisticJob::saveJobId($jobId);
 
-        $query = Action::find()
-            ->select([
-                'model',
-                'model_id',
-                'count' => new Expression('COUNT(id)'),
-                'year' => new Expression("date_part('year', to_timestamp(max(created_at)))"),
-            ])
-            ->where([
-                'and',
-                ['action' => 'view'],
-                $isExists ? ['>=', 'created_at', mktime(0, 0 ,0, 1, 1)] : [],
-            ])
-            ->groupBy(['model', 'model_id'])
-            ->asArray();
-
-        foreach ($query->each() as $action) {
-            Statistic::createOrUpdate($action);
+            $this->stdout('Запущено обновление статистики' . PHP_EOL);
+        } else {
+            $this->stdout('Обновление статистики уже выполняется' . PHP_EOL);
         }
     }
 }
