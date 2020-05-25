@@ -53,6 +53,9 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
 
 <div id="element<?= $element->id_element ?>" class="col" <?= (!empty($styles)) ? 'style="' . implode(';', $styles) . '"' : '' ?>>
     <div id="inputGroup<?= $input->id_input ?>" class="form-group <?=$groupClass?> <?=$options['id']?>">
+        <?php if (!empty($input->label) && $input->type != CollectionColumn::TYPE_CHECKBOX) { ?>
+            <label class="form-label"><?= $input->label ?><?=!empty($input->required)?' <span class="red">*</span>' : '' ?></label>
+        <?php } ?>
         <?php if (!empty($input->copyInput)){?>
             <div class="checkbox-group">
                 <label class="checkbox checkbox__ib">
@@ -61,10 +64,6 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 </label>
             </div>
         <?php }?>
-
-        <?php if (!empty($input->label) && $input->type != CollectionColumn::TYPE_CHECKBOX) { ?>
-            <label class="form-label"><?= $input->label ?><?=!empty($input->required)?' <span class="red">*</span>' : '' ?></label>
-        <?php } ?>
         <?php switch ($input->type) {
             case CollectionColumn::TYPE_SERVICETARGET:
                 echo $form->field($model, $attribute)->dropDownList($input->getArrayValues(), $options);
@@ -232,7 +231,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 ]).'</div>';
 
                 if (!empty($options['show_subregion']))
-                echo '<div class="col-md-4">'.$form->field($model, $attribute.'[subregion]')->widget(Select2::class, [
+                echo '<div class="col-md-4">'.$form->field($model, $attribute.'[subregion]', ['enableClientValidation' => false])->widget(Select2::class, [
                     'data' => [$value['id_subregion']=>$value['subregion']],
                     'pluginOptions' => [
                         'multiple' => false,
