@@ -13,7 +13,7 @@ use backend\models\forms\InstitutionUpdateSettingForm;
 $fiasSetting = new FiasUpdateSettingForm();
 $institutionSetting = new InstitutionUpdateSettingForm();
 
-$schedule->exec('php yii opendata')->dailyAt('02:00'); // 9:00 крск
+$schedule->exec('php yii opendata')->everyMinute();
 
 $schedule->exec('php yii import/institution')->cron($institutionSetting->getExpression());
 
