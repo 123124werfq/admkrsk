@@ -209,6 +209,8 @@ class WordDoc
             }
             else if ($col->type==CollectionColumn::TYPE_FILE || $col->type==CollectionColumn::TYPE_IMAGE)
             {
+                $options = $col->input->options;
+
                 if (is_array($data[$col_alias]))
                 {
                     $ids = [];
@@ -222,28 +224,37 @@ class WordDoc
 
                 $output = [];
                 foreach ($medias as $key => $media)
-                {
                     $output[] = $media->name.' ('.$media->size.' байт)'.(!empty($media->pagecount)?'на '.$media->pagecount.'стр.':'');
-                }
 
                 /*${имя_пееменной.pagecount} страницы
                 ${имя_пееменной.name} название файла
                 ${имя_пееменной.size} размер в байтах
-                и еще хотели
                 ${имя_пееменной.full} полная запись по файлу  название размер на страницах*/
 
-
-                if (count($output)>1)
+                if ($options['maxFiles']>1)
                 {
                     $string_output[$col->alias.'.full'] = $string_output[$col->alias] = $col->input->name.'<w:br/>'.implode('<w:br/>', $output);
+
+                    $string_output[$col->alias.'.name'] =
+                    $string_output[$col->alias.'.file'] =
+                    $string_output[$col->alias.'.size'] =
+                    $string_output[$col->alias.'.pagecount'] = '';
                 }
-                else if(count($output) == 1)
+                else if($options['maxFiles'] == 1)
                 {
                     $string_output[$col->alias.'.full'] = $string_output[$col->alias] = $output[0];
                     $string_output[$col->alias.'.file'] = $string_output[$col->alias.'_file'] = $media->getUrl();
                     $string_output[$col->alias.'.size'] = $media->size;
                     $string_output[$col->alias.'.pagecount'] = $media->pagecount;
                     $string_output[$col->alias.'.name'] = $media->name;
+                }
+                else
+                {
+                    $string_output[$col->alias.'.name'] =
+                    $string_output[$col->alias.'.full'] =
+                    $string_output[$col->alias.'.file'] =
+                    $string_output[$col->alias.'.size'] =
+                    $string_output[$col->alias.'.pagecount'] = '';
                 }
             }
             else if (!empty($col->input->id_collection))
