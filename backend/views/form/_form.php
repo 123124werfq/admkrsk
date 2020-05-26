@@ -66,7 +66,7 @@ use common\models\Box;
 
     <?= $form->field($model, 'message_success')->textArea(['maxlength' => true,'class'=>'redactor']) ?>
 
-    <?= $form->field($model, 'maxfilesize')->textInput(['type' => 'number'])->hint('вввод байтах') ?>
+    <?= $form->field($model, 'maxfilesize')->textInput(['type' => 'number'])->hint('вввод в мегабайтах') ?>
 
     <h3>Шаблон документа</h3>
     <?=common\components\multifile\MultiFileWidget::widget([

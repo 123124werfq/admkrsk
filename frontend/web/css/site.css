@@ -39,6 +39,11 @@ form .subform .text-help {margin-top: 0px;}
     border: 1px solid #dde1e6!important;
 }
 
+
+
+.fileupload_content {padding-left: 0px!important;}
+.fileupload_btn {margin-right: 25px; margin-bottom: 5px;}
+
 .content table.table-striped tbody tr:nth-child(even) td
 {
     background: #F4F7FB;
@@ -47,7 +52,8 @@ form .subform .text-help {margin-top: 0px;}
 .content .press_info {padding-left: 0px!important;}
 .content .press-list .press_info-item {margin: 0px 0px 0px 12px!important;}
 
-.red {color: #ff0000};
+.dz-error-message, .red {color: #ff0000};
+.dz-error-message {font-size: 14px;}
 
 .press-list .press_info-item::before {
     display: none!important;

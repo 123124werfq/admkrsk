@@ -36,7 +36,8 @@
 	    ],
 		'options'=>[
 			'enctype'=>'multipart/form-data',
-			'class'=>'ajax-form'
+			'class'=>'ajax-form',
+			'maxfilesize'=>($form->maxfilesize)?$form->maxfilesize*1024*1024:'',
 		]
 	]); ?>
 

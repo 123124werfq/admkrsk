@@ -476,13 +476,19 @@ $(document).ready(function() {
     });
 
     $(".fileupload").each(function(){
+        var form = $(this).closest('form');
         var id_input = $(this).data('input');
         var new_index = $(this).find('.fileupload_item').length+1;
         var maxFiles = $(this).data('maxfiles');
+        var maxFilesize = $(this).data('maxfilesize');
+        var currentFilesize = 0;
         var acceptedFiles = $(this).data('acceptedfiles');
 
         if (!maxFiles)
             maxFiles = null;
+
+        if (!maxFilesize)
+            maxFilesize = null;
 
          if (!acceptedFiles)
             acceptedFiles = null;
@@ -495,6 +501,7 @@ $(document).ready(function() {
             dictRemoveFile: '×',
             dictCancelUpload: '×',
             maxFiles:maxFiles,
+            maxFilesize:maxFilesize,
             acceptedFiles:acceptedFiles,
             resizeWidth: 1920,
             clickable: ".input"+id_input+" .fileupload_control",
@@ -511,14 +518,19 @@ $(document).ready(function() {
                                         <div class="fileupload_item-progress">\
                                             <div class="fileupload_progress-bar" data-dz-uploadprogress></div>\
                                         </div><div class="fileupload_item-progress-value">100%</div>\
+                                        <div class="dz-error-message"><span data-dz-errormessage></span></div>\
                                     </div>\
                                 </div>\
                                 <div class="fileupload_item-pagecount">\
                                 </div>\
                             </div>',
+            dictFileTooBig:'Размер файла ({{filesize}}Mb). Максимальный размер: {{maxFilesize}}Mb.',
             init: function(){
+
+                var plugin = this;
                 this.on("success", function(file, response){
                     response = JSON.parse(response);
+                    
                     $(file.previewElement).append(
                         '<input type="hidden" name="FormDynamic[input'+id_input+']['+new_index+'][file_path]" value="'+response.file+'"/>'
                     );
@@ -534,7 +546,17 @@ $(document).ready(function() {
 
                     new_index++;
                 });
-            }
+
+                this.on("addedfile", function(file){
+                     plugin.removeFile(file);
+                });
+            },
+            accept: function(file, done) {
+                if (file.name == "justinbieber.jpg") {
+                  done("Naha, you don't.");
+                }
+                else { done(); }
+              }
         });
     });
 

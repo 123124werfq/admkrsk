@@ -393,6 +393,9 @@ JS;
                 if (!empty($options['maxFiles']))
                     $dataOptions[] = 'data-maxfiles="' . $options['maxFiles'] . '"';
 
+                if (!empty($options['filesize']))
+                    $dataOptions[] = 'data-maxfilesize="' . $options['filesize'] . '"';
+
                 $file_uploaded = '';
 
                 $id_medias = $model->$clearAttribute;
@@ -426,7 +429,7 @@ JS;
 	                    </div>
 	                    <div class="fileupload_content">
 	                        <p class="fileupload_label">Перетащите сюда файлы для загрузки</p>
-	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — ' . (!empty($options['filesize']) ? $options['filesize'] : '10') . ' Мб</p>
+	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — <span class="maxFormSize">' . (!empty($options['filesize']) ? $options['filesize'] : '10') . '</span> Мб</p>
 	                    </div>
 	                </div>
 	                <div class="fileupload_list '.(!empty($options['pagecount'])?'show-pagecount':'').'">' . $file_uploaded . '</div>
@@ -440,6 +443,9 @@ JS;
 
                 if (!empty($options['maxFiles']))
                     $dataOptions[] = 'data-maxFiles="' . $options['maxFiles'] . '"';
+
+                if (!empty($options['filesize']))
+                    $dataOptions[] = 'data-maxFilesize="' . $options['filesize'] . '"';
 
                 $id_medias = $model->$clearAttribute;
 
