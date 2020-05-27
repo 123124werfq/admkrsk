@@ -31,7 +31,8 @@ class LogBehavior extends Behavior
      */
     public function saveLog($event)
     {
-        if ($this->isAttributesChanged($event)) {
+        if ($this->isAttributesChanged($event))
+        {
             $log = new Log();
             $log->model = get_class($this->owner);
             $log->model_id = $this->owner->primaryKey;

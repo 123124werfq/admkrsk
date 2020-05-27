@@ -41,6 +41,8 @@ class CollectionController extends \yii\web\Controller
 
         if (empty($collection->id_column_map))
             return [];
+
+
         /*$columns = $collection->getColumns()->indexBy('id_column')->all();
 
         if (empty($columns[$id_column]) || $columns[$id_column]->type!=CollectionColumn::TYPE_MAP)
@@ -54,9 +56,8 @@ class CollectionController extends \yii\web\Controller
 
         foreach ($records as $key => $data)
         {
-            if (!empty($data[$collection->id_column_map][0]) && is_array($data[$collection->id_column_map]))
+            if (!empty($data[$collection->id_column_map][0]) /*&& is_array($data[$collection->id_column_map])*/)
             {
-
                 $content = '';
 
                 foreach ($collection->label as $key => $id_column) {

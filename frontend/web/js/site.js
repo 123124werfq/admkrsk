@@ -481,7 +481,6 @@ $(document).ready(function() {
         var new_index = $(this).find('.fileupload_item').length+1;
         var maxFiles = $(this).data('maxfiles');
         var maxFilesize = $(this).data('maxfilesize');
-        var currentFilesize = 0;
         var acceptedFiles = $(this).data('acceptedfiles');
 
         if (!maxFiles)
@@ -530,7 +529,7 @@ $(document).ready(function() {
                 var plugin = this;
                 this.on("success", function(file, response){
                     response = JSON.parse(response);
-                    
+
                     $(file.previewElement).append(
                         '<input type="hidden" name="FormDynamic[input'+id_input+']['+new_index+'][file_path]" value="'+response.file+'"/>'
                     );
@@ -548,15 +547,32 @@ $(document).ready(function() {
                 });
 
                 this.on("addedfile", function(file){
-                     plugin.removeFile(file);
+
+                    $(file.previewElement).data('filesize',file.size);
+
+                    var maxtotalsize = form.data('maxfilesize');
+
+                    if (maxtotalsize>0)
+                    {
+                        var currentSize = 0;
+
+                        form.find('.fileupload_item').each(function(){
+                            currentSize += $(this).data('filesize')*1;
+                        });
+
+                        console.log(maxtotalsize+ ' < '+currentSize);
+
+                        if ((currentSize+file.size)>maxtotalsize)
+                            plugin.removeFile(file);
+                    }
                 });
-            },
-            accept: function(file, done) {
+            }
+            /*accept: function(file, done) {
                 if (file.name == "justinbieber.jpg") {
                   done("Naha, you don't.");
                 }
                 else { done(); }
-              }
+              }*/
         });
     });
 

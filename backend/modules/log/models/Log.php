@@ -17,8 +17,10 @@ class Log extends \common\modules\log\models\Log
     {
         $changeAttributes = array_merge(array_diff($this->data, $this->previous->data ?? []), array_diff($this->previous->data ?? [], $this->data));
 
-        foreach ($changeAttributes as $attribute => $value) {
-            if (!$this->previous && is_null($value)) {
+        foreach ($changeAttributes as $attribute => $value)
+        {
+            if (!$this->previous && is_null($value))
+            {
                 unset($changeAttributes[$attribute]);
             }
         }

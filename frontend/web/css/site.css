@@ -138,7 +138,9 @@ img[src*="http://www.admkrsk.ru/_layouts/images/icdocx.png"], .ms-asset-icon {di
 .collections-action-buttons {text-align: right; padding-right: 120px; margin-top: -48px; margin-bottom: 30px;}
 
 .has-error .help-block {color: #ff0000; margin-top: -25px;
-    margin-bottom: 18px;}
+    margin-bottom: 18px;
+    font-size: 14px;
+}
 
 .person-card_content {flex-direction: column;}
 

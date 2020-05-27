@@ -1,5 +1,5 @@
 <?php use yii\helpers\Html;?>
-<div class="fileupload_item dz-processing dz-image-preview dz-success dz-complete">
+<div class="fileupload_item dz-processing dz-image-preview dz-success dz-complete" data-filesize="<?=$media->size?>">
 	<div class="fileupload_preview">
 		<div class="fileupload_preview-type">
 			<?php if ($media->isImage()){?>
