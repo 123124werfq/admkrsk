@@ -20,7 +20,7 @@ use common\models\ServiceRubric;
                 <?php $form = ActiveForm::begin(); ?>
 
                 <?=$form->field($model, 'id_parent')->widget(Select2::class, [
-                    'data' => ArrayHelper::map(ServiceRubric::find()->where('id_parent IS NULL AND id_rub <> '.(int)$model->id_rub)->all(), 'id_rub', 'name'),
+                    'data' => ArrayHelper::map(ServiceRubric::find()->where('id_rub <> '.(int)$model->id_rub)->all(), 'id_rub', 'name'),
                     'pluginOptions' => [
                         'allowClear' => true,
                         'placeholder' => 'Выберите родительскую рубрику',
