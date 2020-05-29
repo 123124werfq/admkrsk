@@ -6385,7 +6385,7 @@ a.sitemap_header:hover {
 .fileupload_item-name {
     margin-top: 0;
     margin-bottom: 0;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
     overflow: hidden;
     width: 100%;
     font-size: 1.6rem;
