@@ -560,10 +560,10 @@ $(document).ready(function() {
                             currentSize += $(this).data('filesize')*1;
                         });
 
-                        console.log(maxtotalsize+ ' < '+currentSize);
+                        /*console.log(maxtotalsize+ ' < '+currentSize);
 
                         if ((currentSize+file.size)>maxtotalsize)
-                            plugin.removeFile(file);
+                            plugin.removeFile(file);*/
                     }
                 });
             }
