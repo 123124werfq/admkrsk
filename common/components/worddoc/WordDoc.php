@@ -218,7 +218,7 @@ class WordDoc
                         $ids[] = $filedata['id'];
                 }
                 else
-                    $ids = $filedata[$col_alias];
+                    $ids = $data[$col_alias];
 
                 $medias = \common\models\Media::find()->where(['id_media'=>$ids])->all();
 
