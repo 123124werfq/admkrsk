@@ -269,13 +269,13 @@ class FormController extends Controller
         else
             header('Content-Disposition: attachment; filename="Record_'.$id_record.'.docx"');
 
-        header('Content-Disposition: attachment; filename="word_template.docx"');
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
         header('Content-Length: ' . filesize($export_path));
 
         readfile($export_path);
+        unlink($export_path);
     }
 
     /**
