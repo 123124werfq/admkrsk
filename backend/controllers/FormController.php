@@ -256,6 +256,10 @@ class FormController extends Controller
         $record = \common\models\CollectionRecord::findOne($id_record);
         $export_path = $record->collection->form->makeDoc($record);
 
+
+        var_dump(exec('sudo /usr/bin/unoconv -f pdf '.$export_path));
+        die();
+
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
 
