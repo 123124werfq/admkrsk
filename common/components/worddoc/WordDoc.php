@@ -139,9 +139,9 @@ class WordDoc
             else if (!isset($data[$col_alias]))
                 $string_output[$col_alias] = '';
             else if ($col->type==CollectionColumn::TYPE_DATE)
-                $string_output[$col_alias] = date('d.m.Y',$data[$col_alias]);
+                $string_output[$col_alias] = date('d.m.Y',(int)$data[$col_alias]);
             else if ($col->type==CollectionColumn::TYPE_DATETIME)
-                $string_output[$col_alias] = date('d.m.Y H:i',$data[$col_alias]);
+                $string_output[$col_alias] = date('d.m.Y H:i',(int)$data[$col_alias]);
             else if ($col->type==CollectionColumn::TYPE_DISTRICT)
             {
                 $model = \common\models\District::findOne($data[$col_alias]);
