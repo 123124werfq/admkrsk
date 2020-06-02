@@ -264,11 +264,22 @@ class CollectionRecordController extends Controller
 
         if (!empty($model->collection->form->template))
         {
+
             $export_path = $model->collection->form->makeDoc($model);
 
             header('Content-Description: File Transfer');
             header('Content-Type: application/octet-stream');
-            header('Content-Disposition: attachment; filename="Record_'.$id.'.docx"');
+
+            if (!empty($_GET['pdf']))
+            {
+                exec('sudo /usr/bin/unoconv -f pdf '.$export_path);
+                $export_path = str_replace('.docx', '.pdf', $export_path);
+
+                header('Content-Disposition: attachment; filename="Record_'.$id.'.pdf"');
+            }
+            else
+                header('Content-Disposition: attachment; filename="Record_'.$id.'.docx"');
+
             header('Expires: 0');
             header('Cache-Control: must-revalidate');
             header('Pragma: public');
