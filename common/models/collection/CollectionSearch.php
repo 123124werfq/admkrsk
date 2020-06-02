@@ -312,7 +312,7 @@ class CollectionSearch extends DynamicModel
         {
             if ($value!='')
             {
-                if ($value!=0)
+                if (!empty($value))
                     $query->andWhere(['or',['like',$attr,$value],[$attr=>(is_numeric($value))?(float)$value:$value]]);
                 else
                     $query->andWhere(['or',['=',$attr,null],[$attr=>(is_numeric($value))?(float)$value:$value]]);
