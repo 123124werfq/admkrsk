@@ -258,13 +258,51 @@ class CollectionRecordController extends Controller
         ]);
     }
 
+    public function actionAllDoc($id)
+    {
+        $model = $this->findCollection($id);
+
+        if (!empty($model->form->template))
+        {
+            $zip = new \ZipArchive();
+            $zip_path = Yii::getAlias('@runtime').'/'.$model->id_collection.'.zip';
+
+            if (is_file($zip_path))
+                unlink($zip_path);
+
+            if ($zip->open($zip_path,\ZIPARCHIVE::CREATE) === TRUE)
+            {
+                foreach ($model->getData() as $key => $data)
+                {
+                    $export_path = $model->form->makeDocByData($data);
+
+                    if (is_file($export_path))
+                        $zip->addFile($export_path,$key.'.docx');
+                }
+
+                $zip->close();
+
+                header("Content-type: application/zip");
+                header("Content-Disposition: attachment; filename={$model->name}.zip");
+                header("Content-length: " . filesize($zip_path));
+                header("Pragma: no-cache");
+                header("Expires: 0");
+                readfile($zip_path);
+
+                unlink($zip_path);
+                exit;
+            }
+        }
+
+        Yii::$app->end();
+    }
+
     public function actionDownloadDoc($id)
     {
         $model = $this->findModel($id);
 
         if (!empty($model->collection->form->template))
         {
-
             $export_path = $model->collection->form->makeDoc($model);
 
             header('Content-Description: File Transfer');

@@ -165,19 +165,14 @@ class Form extends \yii\db\ActiveRecord
         }
     }
 
-    public function makeDoc($collectionRecord, $addData=[])
+    public function makeDocByData($data,$addData=[])
     {
-        if (empty($this->template) && empty($this->service->template))
-            return false;
-
         if (!empty($this->template))
             $media = $this->template;
         else if (!empty($this->service->template))
             $media = $this->service->template;
 
         $url = $media->getUrl();
-
-        $data = $collectionRecord->getData(true);
 
         $arrContextOptions=array(
             "ssl"=>array(
@@ -194,6 +189,13 @@ class Form extends \yii\db\ActiveRecord
         $export_path = \common\components\worddoc\WordDoc::makeDocByForm($this, $data, $template_path,$addData);
 
         return $export_path;
+    }
+
+    public function makeDoc($collectionRecord, $addData=[])
+    {
+        $data = $collectionRecord->getData(true);
+
+        return $this->makeDocByData($data,$addData);
     }
 
 
