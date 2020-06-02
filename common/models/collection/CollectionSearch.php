@@ -37,6 +37,8 @@ class CollectionSearch extends DynamicModel
                     $this->addRule(['col'.$column->id_column], 'number');
                     break;
                 case CollectionColumn::TYPE_INPUT:
+                case CollectionColumn::TYPE_TEXTAREA:
+                case CollectionColumn::TYPE_RICHTEXT:
                     $this->addRule(['col'.$column->id_column], 'string');
                     break;
                 case CollectionColumn::TYPE_ARCHIVE:
@@ -125,7 +127,7 @@ class CollectionSearch extends DynamicModel
 
             if ($col->type==CollectionColumn::TYPE_DATE)
                 $dataProviderColumns[$col_alias]['format'] = ['date', 'php:d.m.Y'];
-            elseif ($col->type==CollectionColumn::TYPE_TEXTAREA)
+            elseif ($col->type==CollectionColumn::TYPE_TEXTAREA || $col->type==CollectionColumn::TYPE_RICHTEXT)
             {
                 $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias) {
                     if (empty($model[$col_alias]))
@@ -133,7 +135,7 @@ class CollectionSearch extends DynamicModel
 
                     if (mb_strlen($model[$col_alias])>400)
                     {
-                        return '<div class="longtext">'.$model[$col_alias].'</div><a data-pjax="0" href="/collection-record/view?id='.$model['id_record'].'">Посмотреть все</';
+                        return '<div class="longtext">'.strip_tags($model[$col_alias]).'</div><a data-pjax="0" href="/collection-record/view?id='.$model['id_record'].'">Посмотреть все</';
                     }
                     else
                         return $model[$col_alias];
