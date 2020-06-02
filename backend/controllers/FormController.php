@@ -258,6 +258,17 @@ class FormController extends Controller
 
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
+
+        if (!empty($_GET['pdf']))
+        {
+            exec('sudo /usr/bin/unoconv -f pdf '.$export_path);
+            $export_path = str_replace('.docx', '.pdf', $export_path);
+
+            header('Content-Disposition: attachment; filename="Record_'.$id_record.'.pdf"');
+        }
+        else
+            header('Content-Disposition: attachment; filename="Record_'.$id_record.'.docx"');
+
         header('Content-Disposition: attachment; filename="word_template.docx"');
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
