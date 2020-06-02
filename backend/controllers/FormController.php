@@ -257,7 +257,8 @@ class FormController extends Controller
         $export_path = $record->collection->form->makeDoc($record);
 
 
-        var_dump(exec('sudo /usr/bin/unoconv -f pdf '.$export_path));
+        exec('sudo /usr/bin/unoconv -f pdf '.$export_path,$output);
+        var_dump($output);
         die();
 
         header('Content-Description: File Transfer');
