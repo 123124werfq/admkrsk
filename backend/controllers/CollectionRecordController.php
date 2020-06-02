@@ -59,7 +59,7 @@ class CollectionRecordController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['download-doc'],
+                        'actions' => ['download-doc','all-doc'],
                         'roles' => ['backend.collection.view', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
