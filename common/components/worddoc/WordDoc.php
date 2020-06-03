@@ -249,7 +249,7 @@ class WordDoc
                 else if($options['maxFiles'] == 1 && !empty($output))
                 {
                     $string_output[$col->alias.'.full'] = $string_output[$col->alias] = $output[0];
-                    $string_output[$col->alias.'.file'] = $string_output[$col->alias.'_file'] = $output_links[0]??'';
+                    $string_output[$col->alias.'.file'] = $string_output[$col->alias.'_file'] = $output_links[0];
                     $string_output[$col->alias.'.size'] = $media->size;
                     $string_output[$col->alias.'.pagecount'] = $media->pagecount;
                     $string_output[$col->alias.'.name'] = $media->name;

@@ -262,7 +262,9 @@ class CollectionRecordController extends Controller
     {
         $model = $this->findCollection($id);
 
-        if (!empty($model->form->template))
+        $form = (!empty($model->parent))?$model->parent->form:$model->form;
+
+        if (!empty($form->template))
         {
             $zip = new \ZipArchive();
             $zip_path = Yii::getAlias('@runtime').'/'.$model->id_collection.'.zip';
@@ -274,7 +276,7 @@ class CollectionRecordController extends Controller
             {
                 foreach ($model->getData([],true) as $key => $data)
                 {
-                    $export_path = $model->form->makeDocByData($data);
+                    $export_path = $form->makeDocByData($data);
 
                     if (is_file($export_path))
                         $zip->addFile($export_path,$key.'.docx');
