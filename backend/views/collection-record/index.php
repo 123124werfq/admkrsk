@@ -37,7 +37,7 @@ $this->params['action-block'][] = Html::a('Конвертировать данн
 
 $this->params['action-block'][] = Html::a('Импортировать данные', ['/collection/import', 'id' => $model->id_collection]);
 
-if (!empty($model->collection->form->template))
+if (!empty($model->form->template))
   $this->params['action-block'][] = Html::a('Скачать архив документов', ['/collection-record/all-doc', 'id' => $model->id_collection]);
 
 if ($model->alias == 'institution')
