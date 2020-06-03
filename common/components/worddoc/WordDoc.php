@@ -224,7 +224,9 @@ class WordDoc
 
                 $output = [];
                 foreach ($medias as $key => $media)
+                {
                     $output[] = $media->name.' ('.$media->size.' байт)'.(!empty($media->pagecount)?'на '.$media->pagecount.'стр.':'');
+                }
 
                 /*${имя_пееменной.pagecount} страницы
                 ${имя_пееменной.name} название файла
@@ -234,7 +236,6 @@ class WordDoc
                 if ($options['maxFiles']>1)
                 {
                     $string_output[$col->alias.'.full'] = $string_output[$col->alias] = $col->input->name.'<w:br/>'.implode('<w:br/>', $output);
-
                     $string_output[$col->alias.'.name'] =
                     $string_output[$col->alias.'.file'] =
                     $string_output[$col->alias.'.size'] =
@@ -245,6 +246,7 @@ class WordDoc
                     $string_output[$col->alias.'.full'] = $string_output[$col->alias] = $output[0];
                     $string_output[$col->alias.'.file'] = $string_output[$col->alias.'_file'] = $media->getUrl();
                     $string_output[$col->alias.'.size'] = $media->size;
+                    $string_output[$col->alias.'.link'] = $media->getUrl();
                     $string_output[$col->alias.'.pagecount'] = $media->pagecount;
                     $string_output[$col->alias.'.name'] = $media->name;
                 }

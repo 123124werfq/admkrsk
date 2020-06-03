@@ -8,7 +8,7 @@ use yii\widgets\DetailView;
 
 $this->title = $model->id_record;
 $this->params['breadcrumbs'][] = ['label' => 'Списки', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->collection->name, 'url' => ['collection-record','id'=>$model->id_record]];
+$this->params['breadcrumbs'][] = ['label' => $model->collection->name, 'url' => ['collection-record','id'=>$model->id_collection]];
 $this->params['breadcrumbs'][] = $this->title;
 
 if (!empty($model->collection->form->template)){
