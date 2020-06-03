@@ -223,9 +223,11 @@ class WordDoc
                 $medias = \common\models\Media::find()->where(['id_media'=>$ids])->all();
 
                 $output = [];
+                $output_links = [];
                 foreach ($medias as $key => $media)
                 {
                     $output[] = $media->name.' ('.$media->size.' байт)'.(!empty($media->pagecount)?'на '.$media->pagecount.'стр.':'');
+                    $output_links = $media->getUrl();
                 }
 
                 /*${имя_пееменной.pagecount} страницы
@@ -240,6 +242,9 @@ class WordDoc
                     $string_output[$col->alias.'.file'] =
                     $string_output[$col->alias.'.size'] =
                     $string_output[$col->alias.'.pagecount'] = '';
+
+                    // ссылки на документы
+                    $string_output[$col->alias.'.link'] = implode('<w:br/>', $output_links);
                 }
                 else if($options['maxFiles'] == 1 && !empty($output))
                 {
