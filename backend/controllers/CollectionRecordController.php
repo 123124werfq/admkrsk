@@ -282,8 +282,9 @@ class CollectionRecordController extends Controller
 
                 $zip->close();
 
-                header("Content-type: application/zip");
-                header("Content-Disposition: attachment; filename={$model->name}.zip");
+                header('Content-Description: File Transfer');
+                header("Content-type: application/zip; charset=utf-8");
+                header('Content-Disposition: attachment; filename="'.$model->name.'.zip"');
                 header("Content-length: " . filesize($zip_path));
                 header("Pragma: no-cache");
                 header("Expires: 0");
