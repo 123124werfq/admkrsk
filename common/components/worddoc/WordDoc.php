@@ -244,14 +244,13 @@ class WordDoc
                     $string_output[$col->alias.'.pagecount'] = '';
 
                     // ссылки на документы
-                    $string_output[$col->alias.'.links'] = implode('<w:br/>', $output_links);
+                    $string_output[$col->alias.'.files'] = implode('<w:br/>', $output_links);
                 }
                 else if($options['maxFiles'] == 1 && !empty($output))
                 {
                     $string_output[$col->alias.'.full'] = $string_output[$col->alias] = $output[0];
-                    $string_output[$col->alias.'.file'] = $string_output[$col->alias.'_file'] = $media->getUrl();
+                    $string_output[$col->alias.'.file'] = $string_output[$col->alias.'_file'] = $output_links[0]??'';
                     $string_output[$col->alias.'.size'] = $media->size;
-                    $string_output[$col->alias.'.link'] = $media->getUrl();
                     $string_output[$col->alias.'.pagecount'] = $media->pagecount;
                     $string_output[$col->alias.'.name'] = $media->name;
                 }
