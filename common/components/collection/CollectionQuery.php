@@ -30,8 +30,7 @@ class CollectionQuery extends \yii\mongodb\Query
         if (!empty($archiveColumn))
         {
             $attr = "col".$archiveColumn->id_column;
-            if ($this->$attr=='')
-                $query->andWhere(['or',['=',$attr,null],[$attr=>0]]);
+            $query->andWhere(['or',['=',$attr,null],[$attr=>0]]);
         }
 
         if (!empty($pagesize))
