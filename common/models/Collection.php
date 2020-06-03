@@ -359,11 +359,10 @@ class Collection extends ActiveRecord
 
     public function getData($id_columns = [], $keyAsAlias = false)
     {
-        if (!empty($this->id_parent_collection)) {
+        if (!empty($this->id_parent_collection))
             $id_collection = $this->id_parent_collection;
-        } else {
+        else
             $id_collection = $this->id_collection;
-        }
 
         $query = CollectionQuery::getQuery($id_collection);
 
@@ -379,6 +378,16 @@ class Collection extends ActiveRecord
         $query->keyAsAlias = $keyAsAlias;
 
         return $query->select($id_columns)->getArray();
+    }
+
+    public function getID()
+    {
+        if (!empty($this->id_parent_collection))
+            $id_collection = $this->id_parent_collection;
+        else
+            $id_collection = $this->id_collection;
+
+        return $id_collection;
     }
 
     public function getDataQuery()
@@ -596,11 +605,8 @@ class Collection extends ActiveRecord
 
     public function getArchiveColumn()
     {
-        foreach ($this->columns as $key => $column)
-            if ($column->type == CollectionColumn::TYPE_ARCHIVE)
-                return $column;
-
-        return false;
+        $column = CollectionColumn::find()->where(['type'=>CollectionColumn::TYPE_ARCHIVE,'id_collection'=>$this->getID()])->one();
+        return $column;
     }
 
     public function makeArchiveColumn()

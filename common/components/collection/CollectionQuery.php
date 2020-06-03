@@ -24,6 +24,15 @@ class CollectionQuery extends \yii\mongodb\Query
         $query = new CollectionQuery;
         $query->collection = Collection::findOneWithDeleted($id_collection);
         $query->from('collection'.$id_collection);
+        //$query->andWhere(['=','date_delete',null]);
+
+        $archiveColumn = $query->collection->getArchiveColumn();
+        if (!empty($archiveColumn))
+        {
+            $attr = "col".$archiveColumn->id_column;
+            if ($this->$attr=='')
+                $query->andWhere(['or',['=',$attr,null],[$attr=>0]]);
+        }
 
         if (!empty($pagesize))
             $query->pagesize = $pagesize;
