@@ -272,7 +272,7 @@ class CollectionRecordController extends Controller
 
             if ($zip->open($zip_path,\ZIPARCHIVE::CREATE) === TRUE)
             {
-                foreach ($model->getData() as $key => $data)
+                foreach ($model->getData([],true) as $key => $data)
                 {
                     $export_path = $model->form->makeDocByData($data);
 
