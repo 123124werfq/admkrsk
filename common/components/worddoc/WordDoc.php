@@ -227,7 +227,7 @@ class WordDoc
                 foreach ($medias as $key => $media)
                 {
                     $output[] = $media->name.' ('.$media->size.' байт)'.(!empty($media->pagecount)?'на '.$media->pagecount.'стр.':'');
-                    $output_links = $media->getUrl();
+                    $output_links[] = $media->getUrl();
                 }
 
                 /*${имя_пееменной.pagecount} страницы
