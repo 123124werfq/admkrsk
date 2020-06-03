@@ -244,7 +244,7 @@ class WordDoc
                     $string_output[$col->alias.'.pagecount'] = '';
 
                     // ссылки на документы
-                    $string_output[$col->alias.'.link'] = implode('<w:br/>', $output_links);
+                    $string_output[$col->alias.'.links'] = implode('<w:br/>', $output_links);
                 }
                 else if($options['maxFiles'] == 1 && !empty($output))
                 {
