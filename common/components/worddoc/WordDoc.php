@@ -240,7 +240,7 @@ class WordDoc
                     $string_output[$col->alias.'.size'] =
                     $string_output[$col->alias.'.pagecount'] = '';
                 }
-                else if($options['maxFiles'] == 1)
+                else if($options['maxFiles'] == 1 && !empty($output))
                 {
                     $string_output[$col->alias.'.full'] = $string_output[$col->alias] = $output[0];
                     $string_output[$col->alias.'.file'] = $string_output[$col->alias.'_file'] = $media->getUrl();
