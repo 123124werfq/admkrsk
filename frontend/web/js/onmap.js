@@ -15,6 +15,7 @@ function updatePoints(mapObject, pointsArray)
     {
         let pointTemp  = new ymaps.Placemark([pointsArray[counter]['x'], pointsArray[counter]['y']], {
                 balloonContentBody: pointsArray[counter]['content'],
+                clusterCaption: pointsArray[counter]['title']
             }, {
                 preset: pointsArray[counter]['icon']
             });

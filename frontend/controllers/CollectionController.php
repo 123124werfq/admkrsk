@@ -59,17 +59,22 @@ class CollectionController extends \yii\web\Controller
             if (!empty($data[$collection->id_column_map][0]) /*&& is_array($data[$collection->id_column_map])*/)
             {
                 $content = '';
+                $title = '';
 
                 foreach ($collection->label as $key => $id_column) {
                     if (!empty($data[$id_column]) && !empty($columns[$id_column]))
+                    {
                         $content .= '<tr><th>'.$columns[$id_column]->name.'</th><td>'.$data[$id_column].'</td></tr>';
+                        if(mb_strtolower($columns[$id_column]->name, 'UTF8') == 'название') $title = $data[$id_column];
+                    }
                 }
 
                 $points[] = [
                     'x' => str_replace(',', '.', $data[$collection->id_column_map][0]),
                     'y' => str_replace(',', '.', $data[$collection->id_column_map][1]),
                     'icon' => '',
-                    'content' => '<table>'.$content.'</table>'
+                    'content' => '<table>'.$content.'</table>',
+                    'title' => $title
                 ];
             }
         }
