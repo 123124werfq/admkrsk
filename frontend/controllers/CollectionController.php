@@ -65,17 +65,25 @@ class CollectionController extends \yii\web\Controller
                     if (!empty($data[$id_column]) && !empty($columns[$id_column]))
                     {
                         $content .= '<tr><th>'.$columns[$id_column]->name.'</th><td>'.$data[$id_column].'</td></tr>';
-                        if(mb_strtolower($columns[$id_column]->name, 'UTF8') == 'название') $title = $data[$id_column];
+                        if(in_array(mb_strtolower($columns[$id_column]->name, 'UTF8'), ['название', 'наименование'])) $title = $data[$id_column];
                     }
                 }
 
+                // защита от перепутанных координат
+                $x = (float)str_replace(',', '.', $data[$collection->id_column_map][0]);
+                $y = (float)str_replace(',', '.', $data[$collection->id_column_map][1]);
+
+                if($x>$y)
+                    [$x, $y] = [$y, $x];
+
                 $points[] = [
-                    'x' => str_replace(',', '.', $data[$collection->id_column_map][0]),
-                    'y' => str_replace(',', '.', $data[$collection->id_column_map][1]),
+                    'x' => $x, //str_replace(',', '.', $data[$collection->id_column_map][0]),
+                    'y' => $y, //str_replace(',', '.', $data[$collection->id_column_map][1]),
                     'icon' => '',
                     'content' => '<table>'.$content.'</table>',
                     'title' => $title
                 ];
+
             }
         }
 
