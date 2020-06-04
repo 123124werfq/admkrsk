@@ -427,6 +427,14 @@ class CollectionRecord extends \yii\db\ActiveRecord
         return null;
     }
 
+    /*public function afterDelete()
+    {
+        $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
+        $collection->update(['id_record'=>$this->id_record],['date_delete'=>$this->date_delete]);
+        
+        return true;
+    }*/
+
     protected function getLoadData()
     {
         if (empty($this->loadData))
