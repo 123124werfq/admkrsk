@@ -19,7 +19,6 @@ use yii\web\JsExpression;
         ]
     ]); ?>
 
-    <?=$form->field($model, 'id_input_copy')->dropDownList(ArrayHelper::map($exist_inputs,'id_input','name'), ['prompt'=>'Выберите поле']);?>
 
     <h3>Настройка отображения</h3>
     <?php

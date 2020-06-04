@@ -132,7 +132,7 @@ class FormInputController extends Controller
                 'exist_inputs'=>$exist_inputs
             ]);
 
-        return $this->render('create', [
+        return $this->render('_form_assign', [
             'model' => $model,
         ]);
     }

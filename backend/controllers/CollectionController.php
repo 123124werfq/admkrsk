@@ -10,6 +10,7 @@ use Throwable;
 use Yii;
 use common\models\Collection;
 use common\models\FormInput;
+use common\models\Form;
 use common\models\CollectionRecord;
 use common\models\CollectionColumn;
 use backend\models\search\CollectionSearch;
@@ -803,8 +804,14 @@ class CollectionController extends Controller
 
             $form = new Form();
             $form->state = 1;
+            $form->name = $model->name;
             $form->id_collection = $model->id_collection;
-            $form->save();
+            
+            if ($form->save())
+            {
+                $model->id_form = $form->id_form;
+                $model->updateAttributes(['id_form']);
+            }
 
             return $this->redirect(['update', 'id' => $model->id_collection]);
         }
