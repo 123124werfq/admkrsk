@@ -133,7 +133,7 @@ use yii\web\JsExpression;
         ?>
     </div>
 
-    <?php if ($model->isCopyable()){
+    <?php if ($model->isCopyable()) {
        echo $form->field($model, 'id_input_copy')->dropDownList(ArrayHelper::map($model->form->getInputs()->select(['id_input','name'])->where(['type'=>$model->type])->andWhere('id_input <> '.(int)$model->id_input)->all(),'id_input','name'),['prompt'=>'Выберите поле']);
     }?>
     <br/>

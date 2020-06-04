@@ -23,6 +23,7 @@ class CollectionQuery extends \yii\mongodb\Query
     {
         $query = new CollectionQuery;
         $query->collection = Collection::findOneWithDeleted($id_collection);
+        
         $query->from('collection'.$id_collection);
         //$query->andWhere(['=','date_delete',null]);
 

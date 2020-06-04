@@ -113,7 +113,13 @@ class FormInputController extends Controller
             }
         }
 
-        $exist_inputs = $form->collection->form->getInputs()->select(['id_input','name'])->andWhere('id_input NOT IN (
+        // определяем коллекцию из которой будем брать доступные инпуты
+        if (empty($form->collection->parent))
+            $collection = $form->collection;
+        else 
+            $collection = $form->collection->parent;
+
+        $exist_inputs = $collection->form->getInputs()->select(['id_input','name'])->andWhere('id_input NOT IN (
             SELECT id_input
                 FROM form_element as fi
                 INNER JOIN form_row as fr ON fr.id_row = fi.id_row
