@@ -56,6 +56,8 @@ use kartik\select2\Select2;
 					//->andWhere('id_column_map IS NOT NULL')->all()
 					$collections = ArrayHelper::map(Collection::find()->all(), 'id_collection', 'name');
 
+					$var->value = json_decode($var->value,true);
+
 					echo $form->field($var, "[$ckey]value")->widget(Select2::class, [
 	                    'data' => $collections,
 	                    'pluginOptions' => [
@@ -65,7 +67,6 @@ use kartik\select2\Select2;
 	                    ],
 	                    'options'=>[
 	                    	'multiple'=>true,
-	                    	'value' => array_keys($collections)
 	                	]
                 	])->label(false);
 					break;
