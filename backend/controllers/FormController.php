@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\Action;
+use common\models\CollectionRecord;
 use common\models\GridSetting;
 use common\modules\log\models\Log;
 use Exception;
@@ -64,7 +65,21 @@ class FormController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['create','create-service','copy','make-doc'],
+                        'actions' => ['make-doc'],
+                        'roles' => ['backend.collection.view', 'backend.entityAccess'],
+                        'roleParams' => [
+                            'entity_id' => function () {
+                                if (($collectionRecord = CollectionRecord::findOne(Yii::$app->request->get('id_record'))) === null) {
+                                    throw new NotFoundHttpException('The requested page does not exist.');
+                                }
+                                return $collectionRecord->id_collection;
+                            },
+                            'class' => Collection::class,
+                        ],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create','create-service','copy'],
                         'roles' => ['backend.form.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Form::class,
