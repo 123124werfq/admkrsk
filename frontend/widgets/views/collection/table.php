@@ -52,7 +52,7 @@
 <div class="table-responsive">
 	<table>
 		<thead>
-			<?php if (!empty($table_head))
+			<?php if (!empty($table_head)){
 				echo $table_head;
 			}
 	}
