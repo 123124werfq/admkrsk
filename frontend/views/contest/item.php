@@ -13,7 +13,7 @@ use common\models\CollectionColumn;
                 <hr class="hr hr__md"/>
                 <?php
                     if (!empty($collectionRecord->collection->form->template)){
-                        echo '<a href="/collection/word?id_record='.$collectionRecord->id_record.'" class="btn btn-danger">Скачать информацию о проекте</a>';
+                        echo '<a class="btn btn-danger" download="'.$collectionRecord->id_record.'.docx" href="/collection/word?id_record='.$collectionRecord->id_record.'">Скачать информацию о проекте</a>';
                     }
                 ?>
                 <?php echo frontend\widgets\CollectionRecordWidget::widget([
