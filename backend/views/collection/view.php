@@ -9,7 +9,9 @@ use yii\grid\GridView;
 
 $this->title = $model->pageTitle;
 $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['index']];
-$this->params['breadcrumbs'][] = $model->primaryKey;
+
+if (!empty($model->parent))
+    $this->params['breadcrumbs'][] = ['label' => $model->parent->name, 'url' => ['view', 'id' => $model->parent->id_collection]];
 
 $this->params['button-block'][] = Html::a('Добавить', ['record', 'id' => $model->id_collection], ['class' => 'btn btn-success create-collection','data-toggle'=>"modal",'data-target'=>"#CollectionRecord"]);
 

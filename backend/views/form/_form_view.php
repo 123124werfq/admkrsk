@@ -3,7 +3,7 @@
 		<?php foreach ($row->elements as $ikey => $element) {?>
 		<?php
             if (!empty($element->input))
-                echo $this->render('_input',['element'=>$element]);
+                echo $this->render('_input',['element'=>$element,'form'=>$form]);
             else if (!empty($element->subForm))
                 echo $this->render('_subform',['element'=>$element,'form'=>$form]);
             else
