@@ -154,7 +154,8 @@ return [
                 [
                     'class' => 'frontend\components\NewsUrlRule',
                 ],
-
+                //'contest/list/<id>' => 'contest/list',
+                'contest/item/<id>' => 'contest/item'
                 /*'<news|traffice|announce>'=>'news/index',
                 '<news|traffice|a1nnounce>/<id>'=>'news/view',*/
                 //'<alias:[.*]>'=>'site/page',
