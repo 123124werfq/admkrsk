@@ -115,7 +115,7 @@ else {
 						if (isset($row[$column->alias]))
 						{
 							if (is_array($row[$column->alias]))
-								$value = implode('<br>', $row[$column->alias]);
+								$value = '<span>'.implode('</span><br></span>', $row[$column->alias]).'</span>';
 							else
 								$value = $row[$column->alias];
 
