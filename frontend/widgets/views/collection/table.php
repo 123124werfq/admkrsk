@@ -55,7 +55,6 @@
 			<?php if (!empty($table_head)){
 				echo $table_head;
 			}
-	}
 else {
 	$rowspan = 1;
 	$tr_1 = [];
