@@ -216,7 +216,8 @@ class ContestController extends \yii\web\Controller
                                     'id' => $profile->id_profile,
                                     'name' => $profileData['project_name'],
                                     'vote_value' => $vote->value??false,
-                                    'vote_comment' => $vote->comment??''
+                                    'vote_comment' => $vote->comment??'',
+                                    'project_id' => $profile->id_record_anketa
                                 ];
                             }
                         }
@@ -237,6 +238,33 @@ class ContestController extends \yii\web\Controller
         return $this->render('vote', [
             'data' => $data,
             'expert' => $expert,
+        ]);
+
+    }
+
+    public function actionItem($id)
+    {
+        $expert = CstExpert::findOne(['id_user' => Yii::$app->user->id]);
+
+        if(!$expert)
+            throw new BadRequestHttpException();
+
+        $profileData = CollectionRecord::findOne($id);
+
+        if(!$profileData)
+            throw new BadRequestHttpException();
+
+        $profile = CstProfile::find()->where(['id_record_anketa' => $profileData->id_record])->one();
+
+        if(!$profile || $profile->state != CstProfile::STATE_ACCEPTED)
+            throw new BadRequestHttpException();
+
+        //$profileData = $profileData->getData(true);
+        //var_dump($profileData);
+
+
+        return $this->render('item', [
+            'collectionRecord' => $profileData
         ]);
 
     }

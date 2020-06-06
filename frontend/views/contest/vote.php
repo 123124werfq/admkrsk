@@ -28,8 +28,7 @@
                                         default: $currentResult = '<span class="badge badge-warning">Вы ещё не выставили оценку</span>';
                                     }
 
-
-                                    echo "<li><a href=''>{$profile['name']} $currentResult</a></li>";
+                                    echo "<li><a href='/contest/item/{$profile['project_id']}'>{$profile['name']} $currentResult</a></li>";
                                 }
                                 echo "</ul>";
                             }
