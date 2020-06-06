@@ -206,7 +206,7 @@ class ContestController extends \yii\web\Controller
                         {
                             $count++;
                             $profileData = CollectionRecord::findOne($profile->id_record_anketa);
-
+var_dump($profileData); die();
                             if($profileData)
                             {
                                 $profileData = $profileData->getData(true);
