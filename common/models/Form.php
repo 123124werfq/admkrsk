@@ -139,7 +139,7 @@ class Form extends \yii\db\ActiveRecord
 
     public function isMainForm()
     {
-        return (!empty($this->collection) && ($this->id_form == $this->collection->id_form));
+        return (!empty($this->collection) && ($this->id_form == $this->collection->id_form) && empty($this->collection->id_parent_collection));
     }
 
     public function createInput($attributes)
@@ -197,7 +197,6 @@ class Form extends \yii\db\ActiveRecord
 
         return $this->makeDocByData($data,$addData);
     }
-
 
     public function renderMessage($record,$add_data=[])
     {

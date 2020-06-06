@@ -19,7 +19,7 @@ use yii\web\JsExpression;
         ]
     ]); ?>
 
-    <?=$form->field($model, 'id_input')->dropDownList(ArrayHelper::map($exist_inputs,'id_input','name'), ['prompt'=>'Выберите поле']);?>
+    <?=$form->field($model, 'id_input')->dropDownList(ArrayHelper::map($exist_inputs,'id_input','name'), ['prompt'=>'Выберите поле'])->label('Доступные поля');?>
 
     <h3>Настройка отображения</h3>
     <?php

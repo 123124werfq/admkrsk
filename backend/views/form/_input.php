@@ -10,7 +10,11 @@
 	        ...
 	    </button>
 	    <ul class="dropdown-menu">
-	    	<li><a class="update-input" href="/form-input/update?id=<?=$element->id_input?>">Редактировать</a></li>
+	    	<?php if ($form->isMainForm()){?>
+	    		<li><a class="update-input" href="/form-input/update?id=<?=$element->id_input?>">Редактировать</a></li>
+	    	<?php }else {?>
+	    		<li><a class="update-input" href="/form-element/update?id=<?=$element->id_element?>">Редактировать</a></li>
+	    	<?php }?>
 	    	<li><a href="/form-element/delete?id=<?=$element->id_element?>" title="Удалить" aria-label="Удалить" data-pjax="0" data-confirm="Вы уверены, что хотите удалить этот элемент?" data-method="post" >Удалить элемент</a></li>
 	    </ul>
 	</div>

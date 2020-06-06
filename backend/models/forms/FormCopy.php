@@ -45,6 +45,7 @@ class FormCopy extends Model
 
             if (!empty($copyForm->alias))
                 $copyForm->alias .= '_copy';
+            
             $copyForm->name = 'Копия - '.$form->name;
 
             $oldToNewInputs = $visibleInputs = [];

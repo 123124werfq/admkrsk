@@ -281,6 +281,11 @@ class Collection extends ActiveRecord
         return $this->hasOne(Form::class, ['id_form' => 'id_form']);
     }
 
+    public function getForms()
+    {
+        return $this->hasMany(Form::class, ['id_collection' => 'id_collection']);
+    }
+
     public function getPartitions()
     {
         return $this->hasMany(Page::class, ['id_page' => 'id_page'])->viaTable('dbl_collection_page',['id_collection'=>'id_collection']);
@@ -404,7 +409,7 @@ class Collection extends ActiveRecord
             $options = json_decode($this->options, true);
 
             if (!empty($options['filters']))
-                $query->where(json_decode($options['filters'],true));
+                $query->andWhere(json_decode($options['filters'],true));
         }
 
         return $query;
