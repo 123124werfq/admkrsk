@@ -206,10 +206,12 @@ class ContestController extends \yii\web\Controller
                         {
                             $count++;
                             $profileData = CollectionRecord::findOne($profile->id_record_anketa);
-var_dump($profileData); die();
+
                             if($profileData)
                             {
                                 $profileData = $profileData->getData(true);
+                                var_dump($profileData); die();
+
                                 $vote = CstVote::find()->where(['id_expert' => $expert->id_expert, 'id_profile' => $profile->id_profile])->one();
 
                                 $links[$ckey][] = [
