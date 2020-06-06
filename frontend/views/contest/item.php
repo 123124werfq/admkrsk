@@ -18,7 +18,7 @@ use common\models\CollectionColumn;
                 ?>
                 <?php echo frontend\widgets\CollectionRecordWidget::widget([
                     'collectionRecord'=>$collectionRecord,
-                    'renderTemplate'=>true,
+                    'renderTemplate'=>false,
                 ]);?>
 
             </div>
