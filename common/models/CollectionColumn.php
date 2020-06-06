@@ -625,7 +625,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             default:
 
                 if (is_array($value))
-                    return '<span>'.implode('</span><span>', $value).'</span>';
+                    return '<span>'.implode('</span><br/><span>', $value).'</span>';
 
                 return $value;
                 break;
