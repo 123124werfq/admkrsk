@@ -45,7 +45,7 @@
 	//'enablePushState' => false,
 ]) ?>
 <?php
-	if empty($table_style){
+	if (empty($table_style)){
 		echo "<style>$table_style</style>";
 	}
 ?>
@@ -53,7 +53,6 @@
 	<table>
 		<thead>
 			<?php if (!empty($table_head))
-			{
 				echo $table_head;
 			}
 	}
