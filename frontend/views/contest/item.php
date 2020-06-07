@@ -20,7 +20,10 @@ use common\models\CollectionColumn;
                     'collectionRecord'=>$collectionRecord,
                     'renderTemplate'=>true,
                 ]);?>
-
+                <?php echo frontend\widgets\CollectionRecordWidget::widget([
+                    'collectionRecord'=>$collectionRecord,
+                    'renderTemplate'=>false,
+                ]);?>
             </div>
         </div>
     </div>
