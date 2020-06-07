@@ -9,8 +9,9 @@ use common\models\CollectionColumn;
     <div class="container content">
         <div class="row">
             <div class="col-3-third">
+                <h1>Интерактивное голосование</h1>
                 <div style="margin-bottom: 40px;">
-                    <a href="/contest/vote">&larr; Вернуться к общему списку</a>
+                    <a href="/contest/vote/<?= Yii::$app->session->get('voteback')?>">&larr; Вернуться к общему списку</a>
                     <?php if($tvote) {?>
                         <p>Вы уже проголосовали <?=($tvote->value==1)?'<span class="badge badge-success">ЗА</span>':'<span class="badge badge-danger">ПРОТИВ</span>'?>, но вы можете изменить своё решение</p>
                     <?php }?>

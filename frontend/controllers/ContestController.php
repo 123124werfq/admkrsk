@@ -181,6 +181,24 @@ class ContestController extends \yii\web\Controller
 
         $activeContests = $contestCollection->getDataQuery()->whereByAlias(['<>', 'contest_state', 'Конкурс завершен'])->getArray(true);
 
+        if($id)
+        {
+            foreach($activeContests as $ckey => $cst)
+            {
+                if(md5($ckey) == $id)
+                {
+                    $tmp = $activeContests[$ckey];
+                    $activeContests = [];
+                    $activeContests[$ckey] = $tmp;
+                    Yii::$app->session->set('voteback', $id);
+                    break;                    
+                }
+            }
+
+            if(!isset($tmp))
+                throw new BadRequestHttpException();
+        }
+
         $profiles = CstProfile::find()->all();
 
         foreach ($activeContests as $ckey => $cst) {
@@ -281,13 +299,15 @@ class ContestController extends \yii\web\Controller
 
             $tvote->save();
 
-            return $this->redirect('/contest/vote');
+            return $this->redirect('/contest/vote/'.Yii::$app->session->get('voteback'));
 
         }
-    
 
+
+        //$contest = CollectionRecord::findOne($profile->id_record_contest);
+        //$contest = $contest->getData(true);
         //$profileData = $profileData->getData(true);
-        //var_dump($profileData);
+        //var_dump($contest); die();
 
 
         return $this->render('item', [

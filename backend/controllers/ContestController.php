@@ -20,7 +20,7 @@ use backend\models\forms\CstExpertForm;
 use common\models\Form;
 
 use common\models\CollectionColumn;
-
+use common\models\CstContestExpert;
 use yii\web\BadRequestHttpException;
 
 class ContestController extends Controller
@@ -313,6 +313,122 @@ class ContestController extends Controller
             $expert->delete();
 
         return $this->redirect('/contest/experts');
+    }
+
+    
+    public function actionDynamic($id = 0)
+    {
+        $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
+        if(!$contestCollection)
+            throw new BadRequestHttpException();
+
+        $data = $links = $experts = [];
+
+        $activeContests = $contestCollection->getDataQuery()->whereByAlias(['<>', 'contest_state', 'Конкурс завершен'])->getArray(true);
+
+        if($id)
+        {
+            if(!isset($activeContests[$id]))
+                throw new BadRequestHttpException();
+
+            $tmp = $activeContests[$id];
+            $activeContests = [];
+            $activeContests[$id] = $tmp;            
+        }
+
+        $profiles = CstProfile::find()->all();
+
+        foreach ($activeContests as $ckey => $cst) 
+        {
+            $experts[$ckey] = [];
+
+            $contestExperts = CstContestExpert::find()->where(['id_record_contest' => $ckey])->all();
+
+            foreach($contestExperts as $ce)
+            {
+                $ex = CstExpert::findOne($ce->id_expert);
+                $experts[$ckey][$ce->id_expert] = $ex->name;
+            }
+
+            $count = 0;
+            $countTotal = 0;
+
+            if(!empty($cst['participant_form']))
+            {
+                $form = Form::find()->where(['alias' => $cst['participant_form']])->one();
+                if(!$form)
+                    continue;
+
+                foreach ($profiles as $profile) 
+                {
+                    if($form->id_collection == $profile->id_record_contest)
+                    {
+                        if(!isset($links[$ckey]))
+                            $links[$ckey] = [];
+
+                        $countTotal++;
+
+                        if($profile->state == CstProfile::STATE_ACCEPTED)
+                        {
+                            $count++;
+                            $profileData = CollectionRecord::findOne($profile->id_record_anketa);
+
+                            if($profileData)
+                            {
+                                $profileData = $profileData->getData(true);
+                                //var_dump($profileData); die();
+
+                                $votes = CstVote::find()->where(['id_profile' => $profile->id_profile])->all();
+
+                                $tvotes = [];
+
+                                foreach($votes as $vote)
+                                {
+                                    $tvotes[$vote->id_expert] = $vote->value;                                    
+                                }
+
+                                $links[$ckey][$profile->id_profile] = [
+                                    'name' => $profileData['project_name']??$profileData['name'],
+                                    'votebyexpert' => $tvotes,
+                                    //'project_id' => $profile->id_record_anketa
+                                ];
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        return $this->render('dynamic',[
+            'votelist' => $links,
+            'experts' => $experts
+        ]);
+
+    }
+
+    public function actionSpreadsheet($id)
+    {
+        $votes = [];
+        $contest = HrContest::findOne($id);
+
+        if ($contest)
+            $votes = CstVote::find()->where(['id_contest' => $contest->id_contest])->all();
+        else
+            Yii::$app->end();
+
+        header('Content-type: application/excel');
+        header('Content-Disposition: attachment; filename=Итоги голосования ' . date('d-m-Y H:i', $contest->begin) . ' - ' . date('d-m-Y H:i', $contest->end) . '.xls');
+
+        $body = $this->renderPartial('dynamic_excel', [
+            'data' => $contest,
+            'votes' => $votes
+        ]);
+
+        //echo iconv( "utf-8", "windows-1251",$body);
+        echo $body;
+
+        Yii::$app->end();
     }    
 
 }
