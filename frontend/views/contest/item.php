@@ -10,10 +10,9 @@ use common\models\CollectionColumn;
 
         <div class="row">
             <div class="col-3-third">
-                <hr class="hr hr__md"/>
                 <?php
                     if (!empty($collectionRecord->collection->form->template)){
-                        echo '<a class="btn btn-danger" download="'.$collectionRecord->id_record.'.docx" href="/collection/word?id_record='.$collectionRecord->id_record.'">Скачать информацию о проекте</a>';
+                        echo '<a class="btn btn__border" style="background: #8F1A1E !important; color: #fff !important;" download="'.$collectionRecord->id_record.'.docx" href="/collection/word?id_record='.$collectionRecord->id_record.'">Скачать информацию о проекте</a>';
                     }
                 ?>
                 <?php echo frontend\widgets\CollectionRecordWidget::widget([
