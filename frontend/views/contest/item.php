@@ -13,7 +13,7 @@ use common\models\CollectionColumn;
                     <a href="/contest/vote">&larr; Вернуться к общему списку</a>
                     <?php if($tvote) {?>
                         <p>Вы уже проголосовали <?=($vote->value==1)?'ЗА':'ПРОТИВ'?>, но вы можете изменить своё решение</p>
-                    <?}?>
+                    <?php }?>
 
                 </div>
                 <a class="btn btn__border" style="background: green !important; color: #fff !important; float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=yes">Проголосовать ЗА</a>
