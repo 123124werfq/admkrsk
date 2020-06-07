@@ -2,7 +2,7 @@
     use \common\models\CollectionColumn;
     use \common\models\CollectionRecord;
 
-    preg_match_all ("/{(.+?)}/is", $template, $matches);
+    preg_match_all ("/{{(.+?)}/is", $template, $matches);
 
     $templateValues = [];
 
@@ -34,7 +34,6 @@
             }
             else
                 $templateValues[$alias] = '';
-
 
             if (is_array($templateValues[$alias]))
                 $templateValues[$alias] = implode('', $templateValues[$alias]);
