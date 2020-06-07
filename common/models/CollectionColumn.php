@@ -568,6 +568,9 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 $model = Street::findOne((int)$value);
                 return $city->name??null;
                 break;
+            case self::TYPE_COLLECTIONS:
+                return '<span>'.implode('</span><br/><span>', $value).'</span>';
+                break;
             case self::TYPE_FILE:
                 if (is_array($value))
                 {

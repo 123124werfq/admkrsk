@@ -2,38 +2,36 @@
     use \common\models\CollectionColumn;
     use \common\models\CollectionRecord;
 
-    preg_match_all ("/{{(.+?)}/is", $template, $matches);
+    //preg_match_all ("/{{(.+?)}/is", $template, $matches);
 
     $templateValues = [];
 
-    if (!empty($matches[1]))
-    {
-        foreach ($matches[1] as $key => $alias)
+    /*if (!empty($matches[1]))
+    {*/
+        foreach ($recordData as $alias => $value)
         {
-            if (isset($recordData[$alias]))
+            /*if (strpos($alias, '|'))
+                $alias = substr($alias, 0, $alias, '|'));*/
+
+            if (isset($columns[$alias]))
             {
-                if (isset($columns[$alias]))
+                if ($columns[$alias]->isRelation())
                 {
-                    if ($columns[$alias]->isRelation())
+                    $replace = '';
+                    foreach ($recordData[$alias] as $id_subrecord => $subrecord)
                     {
-                        $replace = '';
-                        foreach ($recordData[$alias] as $id_subrecord => $subrecord)
-                        {
-                            $replace .= frontend\widgets\CollectionRecordWidget::widget([
-                                'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
-                                'renderTemplate'=>true,
-                                'templateAsElement'=>true,
-                            ]);
-                        }
+                        $replace .= frontend\widgets\CollectionRecordWidget::widget([
+                            'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
+                            'renderTemplate'=>true,
+                            'templateAsElement'=>true,
+                        ]);
                     }
-                    else
-                        $templateValues[$alias] = $columns[$alias]->getValueByType($recordData[$alias]);
                 }
                 else
-                    $templateValues[$alias] = $recordData[$alias];
+                    $templateValues[$alias] = $columns[$alias]->getValueByType($value);
             }
             else
-                $templateValues[$alias] = '';
+                $templateValues[$alias] = $value;
 
             if (is_array($templateValues[$alias]))
                 $templateValues[$alias] = implode('', $templateValues[$alias]);
