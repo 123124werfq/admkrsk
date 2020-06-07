@@ -6,10 +6,10 @@ use common\models\CollectionColumn;
 
 ?>
 <div class="main">
-    <div class="container">
+    <div class="container content">
 
         <div class="row">
-            <div class="col-2-third">
+            <div class="col-3-third">
                 <hr class="hr hr__md"/>
                 <?php
                     if (!empty($collectionRecord->collection->form->template)){
@@ -19,10 +19,6 @@ use common\models\CollectionColumn;
                 <?php echo frontend\widgets\CollectionRecordWidget::widget([
                     'collectionRecord'=>$collectionRecord,
                     'renderTemplate'=>true,
-                ]);?>
-                <?php echo frontend\widgets\CollectionRecordWidget::widget([
-                    'collectionRecord'=>$collectionRecord,
-                    'renderTemplate'=>false,
                 ]);?>
             </div>
         </div>
