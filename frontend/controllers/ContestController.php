@@ -262,11 +262,12 @@ class ContestController extends \yii\web\Controller
             throw new BadRequestHttpException();
 
 
+        $tvote = CstVote::find()->where(['id_expert' => $expert->id_expert, 'id_profile' => $profile->id_profile])->one();
+        
         $vote = Yii::$app->request->get('vote');
 
         if($vote)
         {
-            $tvote = CstVote::find()->where(['id_expert' => $expert->id_expert, 'id_profile' => $profile->id_profile])->one();
             if(!$tvote)
             {
                 $tvote = new CstVote();
@@ -290,7 +291,8 @@ class ContestController extends \yii\web\Controller
 
 
         return $this->render('item', [
-            'collectionRecord' => $profileData
+            'collectionRecord' => $profileData,
+            'tvote' => $tvote
         ]);
 
     }

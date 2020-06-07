@@ -9,7 +9,13 @@ use common\models\CollectionColumn;
     <div class="container content">
         <div class="row">
             <div class="col-3-third">
-                <div style="margin-bottom: 40px;"><a href="/contest/vote">&larr; Вернуться к общему списку</a></div>
+                <div style="margin-bottom: 40px;">
+                    <a href="/contest/vote">&larr; Вернуться к общему списку</a>
+                    <?php if($tvote) {?>
+                        <p>Вы уже проголосовали <?=($vote->value==1)?'ЗА':'ПРОТИВ'?>, но вы можете изменить своё решение</p>
+                    <?}?>
+
+                </div>
                 <a class="btn btn__border" style="background: green !important; color: #fff !important; float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=yes">Проголосовать ЗА</a>
                 &nbsp;
                 <a class="btn btn__border" style="background: red !important; color: #fff !important; float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=no">Проголосовать ПРОТИВ</a>
