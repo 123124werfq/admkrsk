@@ -246,13 +246,11 @@ class ContestController extends \yii\web\Controller
 
     public function actionItem($id)
     {
-        /*
         $expert = CstExpert::findOne(['id_user' => Yii::$app->user->id]);
 
         if(!$expert)
             throw new BadRequestHttpException();
-        */
-        
+
         $profileData = CollectionRecord::findOne($id);
 
         if(!$profileData)
@@ -262,6 +260,30 @@ class ContestController extends \yii\web\Controller
 
         if(!$profile || $profile->state != CstProfile::STATE_ACCEPTED)
             throw new BadRequestHttpException();
+
+
+        $vote = Yii::$app->request->get('vote');
+
+        if($vote)
+        {
+            $tvote = CstVote::find()->where(['id_expert' => $expert->id_expert, 'id_profile' => $profile->id_profile])->one();
+            if(!$tvote)
+            {
+                $tvote = new CstVote();
+                $tvote->id_expert = $expert->id_expert;
+                $tvote->id_profile = $profile->id_profile;
+            }
+            if($vote == 'yes')
+                $tvote->value = 1;
+            else
+                $tvote->value = -1;
+
+            $tvote->save();
+
+            return $this->redirect('/contest/vote');
+
+        }
+    
 
         //$profileData = $profileData->getData(true);
         //var_dump($profileData);
