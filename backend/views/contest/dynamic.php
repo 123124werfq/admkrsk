@@ -36,6 +36,8 @@ if (Yii::$app->user->can('admin.service')) {
 
 <?php 
     foreach($votelist as $cindex => $votes){
+        if(!count($votes))
+            continue;
 ?>
 
     <form action="" method="POST">
