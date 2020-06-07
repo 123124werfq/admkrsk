@@ -9,6 +9,7 @@ use common\models\CollectionColumn;
     <div class="container content">
         <div class="row">
             <div class="col-3-third">
+                <div><a href="/contest/vote">&larr; Вернуться к общему списку</a></div>
                 <a class="btn btn__border" style="background: green !important; color: #fff !important; float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=yes">Проголосовать ЗА</a>
                 &nbsp;
                 <a class="btn btn__border" style="background: red !important; color: #fff !important; float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=no">Проголосовать ПРОТИВ</a>
@@ -22,7 +23,6 @@ use common\models\CollectionColumn;
                     'collectionRecord'=>$collectionRecord,
                     'renderTemplate'=>true,
                 ]);?>
-                <hr class="hr hr__md"/>
                 <a class="btn btn__border" style="background: green !important; color: #fff !important; float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=yes">Проголосовать ЗА</a>
                 &nbsp;
                 <a class="btn btn__border" style="background: red !important; color: #fff !important; float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=no">Проголосовать ПРОТИВ</a>
@@ -31,6 +31,7 @@ use common\models\CollectionColumn;
                         echo '<a class="btn btn__border" style="background: #8F1A1E !important; color: #fff !important;" download="'.$collectionRecord->id_record.'.docx" href="/collection/word?id_record='.$collectionRecord->id_record.'">Скачать информацию о проекте</a>';
                     }
                 ?>
+                <hr class="hr hr__md"/>
             </div>
         </div>
     </div>
