@@ -6,7 +6,7 @@ use common\models\CollectionColumn;
 
 ?>
 <div class="main">
-    <div class="container сщтеуте">
+    <div class="container content">
         <div class="row">
             <div class="col-3-third">
                 <a class="btn btn__border" style="background: green !important; color: #fff !important;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=yes">Проголосовать ЗА</a>
