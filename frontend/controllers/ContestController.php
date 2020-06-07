@@ -246,11 +246,13 @@ class ContestController extends \yii\web\Controller
 
     public function actionItem($id)
     {
+        /*
         $expert = CstExpert::findOne(['id_user' => Yii::$app->user->id]);
 
         if(!$expert)
             throw new BadRequestHttpException();
-
+        */
+        
         $profileData = CollectionRecord::findOne($id);
 
         if(!$profileData)
