@@ -12,7 +12,7 @@ use common\models\CollectionColumn;
                 <div style="margin-bottom: 40px;">
                     <a href="/contest/vote">&larr; Вернуться к общему списку</a>
                     <?php if($tvote) {?>
-                        <p>Вы уже проголосовали <?=($vote->value==1)?'ЗА':'ПРОТИВ'?>, но вы можете изменить своё решение</p>
+                        <p>Вы уже проголосовали <?=($tvote->value==1)?'ЗА':'ПРОТИВ'?>, но вы можете изменить своё решение</p>
                     <?php }?>
 
                 </div>
