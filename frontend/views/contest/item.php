@@ -6,10 +6,12 @@ use common\models\CollectionColumn;
 
 ?>
 <div class="main">
-    <div class="container content">
-
+    <div class="container сщтеуте">
         <div class="row">
             <div class="col-3-third">
+                <a class="btn btn__border" style="background: green !important; color: #fff !important;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=yes">Проголосовать ЗА</a>
+                <a class="btn btn__border" style="background: red !important; color: #fff !important;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=no">Проголосовать ПРОТИВ</a>
+                <hr class="hr hr__md"/>
                 <?php
                     if (!empty($collectionRecord->collection->form->template)){
                         echo '<a class="btn btn__border" style="background: #8F1A1E !important; color: #fff !important;" download="'.$collectionRecord->id_record.'.docx" href="/collection/word?id_record='.$collectionRecord->id_record.'">Скачать информацию о проекте</a>';
