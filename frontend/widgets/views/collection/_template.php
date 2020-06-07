@@ -8,42 +8,41 @@
 
     /*if (!empty($matches[1]))
     {*/
-        foreach ($recordData as $alias => $value)
-        {
-            /*if (strpos($alias, '|'))
-                $alias = substr($alias, 0, $alias, '|'));*/
+    foreach ($recordData as $alias => $value)
+    {
+        /*if (strpos($alias, '|'))
+            $alias = substr($alias, 0, $alias, '|'));*/
 
-            if (isset($columns[$alias]))
+        if (isset($columns[$alias]))
+        {
+            if ($columns[$alias]->isRelation())
             {
-                if ($columns[$alias]->isRelation())
+                $replace = '';
+                foreach ($recordData[$alias] as $id_subrecord => $subrecord)
                 {
-                    $replace = '';
-                    foreach ($recordData[$alias] as $id_subrecord => $subrecord)
-                    {
-                        $replace .= frontend\widgets\CollectionRecordWidget::widget([
-                            'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
-                            'renderTemplate'=>true,
-                            'templateAsElement'=>true,
-                        ]);
-                    }
+                    $replace .= frontend\widgets\CollectionRecordWidget::widget([
+                        'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
+                        'renderTemplate'=>true,
+                        'templateAsElement'=>true,
+                    ]);
                 }
-                else
-                    $templateValues[$alias] = $columns[$alias]->getValueByType($value);
             }
             else
-                $templateValues[$alias] = $value;
-
-            if (is_array($templateValues[$alias]))
-                $templateValues[$alias] = implode('', $templateValues[$alias]);
-
-            //$template = str_replace('{'.$alias.'}', $replace , $template);
+                $templateValues[$alias] = $columns[$alias]->getValueByType($value);
         }
+        else
+            $templateValues[$alias] = $value;
 
-        $loader = new \Twig\Loader\ArrayLoader([
-            'index' => $template,
-        ]);
-        $twig = new \Twig\Environment($loader);
+        if (is_array($templateValues[$alias]))
+            $templateValues[$alias] = implode('', $templateValues[$alias]);
 
-        echo $twig->render('index', $templateValues);
+        //$template = str_replace('{'.$alias.'}', $replace , $template);
     }
+
+    $loader = new \Twig\Loader\ArrayLoader([
+        'index' => $template,
+    ]);
+    $twig = new \Twig\Environment($loader);
+
+    echo $twig->render('index', $templateValues);
 ?>
