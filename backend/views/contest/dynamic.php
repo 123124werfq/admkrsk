@@ -26,24 +26,21 @@ if (Yii::$app->user->can('admin.service')) {
     $this->params['button-block'][] = Html::a('Добавить', ['create'], ['class' => 'btn btn-success']);
 }
 */
-if($data)
-    $this->params['button-block'][] = Html::a('Скачать таблицу', ['spreadsheet','id'=>$data->id_contest], ['class' => 'btn btn-success']);
+//if(isset($_GET['id']))
+//    $this->params['button-block'][] = Html::a('Скачать таблицу', ['spreadsheet','id'=>(int)$_GET['id']], ['class' => 'btn btn-success']);
 
 
 ?>
 
 <div class="service-index" style="overflow-x: scroll">
 
-<?php if(!$data){ ?>
-    <h3>Ни одного голосования в данный момент не проводится</h3>
-<?php } else {?>
-    <p>Период проведения: <?= date('d-m-Y H:i', $data->begin)?> - <?= date('d-m-Y H:i', $data->end)?></p>
+<?php 
+    foreach($votelist as $cindex => $votes){
+        if(!count($votes))
+            continue;
+?>
 
-    <?php if($data->state == \common\models\HrContest::STATE_FINISHED ){?>
-        <h2>ИТОГИ ПОДВЕДЕНЫ</h2>
-    <?php } ?>
-
-    <form actio="" method="POST">
+    <form action="" method="POST">
         <?= Html::hiddenInput(\Yii::$app->getRequest()->csrfParam, \Yii::$app->getRequest()->getCsrfToken(), []);?>
     <table class="table table-striped vote">
         <thead>
@@ -52,14 +49,11 @@ if($data)
                 №
             </td>
             <td>
-                ФИО кандидата
+                Наименование проекта
             </td>
-            <td style="min-width: 500px;">
-                Группы должностей
-            </td>
-            <?php foreach($data->experts as $expert){?>
+            <?php foreach($experts[$cindex] as $expertId => $expertName){?>
                 <td style="min-width: 100px;">
-                    <?=$expert->name?>
+                    <?=$expertName?>
                 </td>
             <?php } ?>
             <td style="min-width: 200px;">
@@ -67,96 +61,51 @@ if($data)
             </td>
         </tr>
         </thead>
-        <?php
-        $count = 1;
-        $positionTotal = [];
-        foreach ($data->profiles as $profile)
-        {
-            $positionTotal[$profile->id_profile] = [];
-            ?>
-            <tr>
-                <th scope="row">
-                    <?=$count++?>
-                </th>
-                <td>
-                    <a href="/reserve/profile?id=<?=$profile->id_profile?>"><?=$profile->name?></a>
-                </td>
-                <td>
-                    <?php
-                    foreach ($profile->positions as $position)
-                        echo $position->positionName . "<br>";
-                    ?>
-                </td>
-                <?php
+        <?php foreach($votes as $profileId => $vl){ 
+            $result = 0;
+        ?>
+        <tr>
+            <td><?=$profileId?></td>
+            <td><?=$vl['name']?></td>
+            <?php foreach($experts[$cindex] as $expertId => $expertName){
+                $currentVal = $vl['votebyexpert'][$expertId]??0;
+                $result += $currentVal;
 
-                foreach ($data->experts as $expert)
-                {
-                    echo "<td>";
+                $voteName = 'не голосовал';
 
-                    foreach ($profile->positions as $position)
-                    {
-                        if(!isset($positionTotal[$profile->id_profile][$position->id_profile_position]))
-                            $positionTotal[$profile->id_profile][$position->id_profile_position] = 0;
-
-                        $result = false;
-                        $comment = '';
-                        foreach ($votes as $vote)
-                            if ($vote->id_expert == $expert->id_expert && $vote->id_profile == $profile->id_profile && $vote->id_record == $position->id_profile_position) {
-                                $result = $vote->value;
-                                $rr = $vote->id_record;
-                                $positionTotal[$profile->id_profile][$position->id_profile_position] += $vote->value;
-
-                                $comment = $vote->comment;
-                            }
-
-                        switch ($result) {
-                            case 0:
-                                echo '<span class="badge secondary">нет оценки</span>';
-                                break;
-                            case -1:
-                                echo '<span class="badge badge-danger">отказать</span>';
-                                break;
-                            case 1:
-                                echo '<span class="badge badge-success">включить</span>';
-                                break;
-                        }
-
-                        echo "<br>$comment";
-                    }
-                    echo "</td>";
-                }
+                if($currentVal>0)
+                    $voteName = '<span class="badge badge-success">ЗА</span>';
+                else if($currentVal<0)
+                    $voteName = '<span class="badge badge-danger">ПРОТИВ</span>';
 
                 ?>
-                <td>
-                    <?php foreach ($positionTotal[$profile->id_profile] as $posid => $result){
-                        if($result<0)
-                            $final = 'отказать';
-                        else if($result>0)
-                            $final = 'включить';
-                        else
-                            $final = 'спорная';
-
-
-                        // если голосование уже завершено, то будут реальные результаты. подгрузим их напрямую
-                        $rp = \common\models\HrProfilePositions::findOne($posid);
-                        $fixedResult = \common\models\HrResult::find()->where(['id_contest' =>  $data->id_contest,'id_profile' => $profile->id_profile, 'id_record' => $rp->id_record_position])->one();
-
-                        $ref = $fixedResult?$fixedResult->result:0;
-
-                        ?>
-                        <select name="results[<?=$profile->id_profile?>][<?=$posid?>]">
-                            <option value="0"></option>
-                            <option value="-1" <?=($ref==-1)?'selected':''?>>отказать</option>
-                            <option value="1" <?=($ref==1)?'selected':''?>>включить</option>
-                        </select>&nbsp;<?=$final?><br>
-                    <?php }?>
+                <td style="min-width: 100px;">
+                    <?=$voteName?>
                 </td>
-            </tr>
-            <?php
-        }
-        ?>
+            <?php } ?>  
+            <td>
+                <?php 
+                    if($result<0)
+                        $final = '<span class="badge badge-danger">ПРОТИВ</span>';
+                    else if($result>0)
+                        $final = '<span class="badge badge-success">ЗА</span>';
+                    else
+                        $final = 'спорная';
+                    $ref = 0;
+                    ?>
+                    <!--select name="results">
+                        <option value="0"></option>
+                        <option value="-1" <?=($ref==-1)?'selected':''?>>ПРОТИВ</option>
+                        <option value="1" <?=($ref==1)?'selected':''?>>ЗА</option>
+                    </select-->&nbsp;<?=$final?><br>
+                </td>         
+        </tr>
+        <?php } ?>
     </table>
-        <button class="btn btn-danger">Сохранить результаты</button>
+        <!--button class="btn btn-danger">Сохранить результаты</button-->
     </form>
-<?php } ?>
+
+<?php 
+    }
+?>
 </div>

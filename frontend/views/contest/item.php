@@ -6,24 +6,39 @@ use common\models\CollectionColumn;
 
 ?>
 <div class="main">
-    <div class="container">
-
+    <div class="container content">
         <div class="row">
-            <div class="col-2-third">
-                <hr class="hr hr__md"/>
+            <div class="col-3-third">
+                <h1>Интерактивное голосование</h1>
+                <div style="margin-bottom: 40px;">
+                    <a href="/contest/vote/<?= Yii::$app->session->get('voteback')?>">&larr; Вернуться к общему списку</a>
+                    <?php if($tvote) {?>
+                        <p>Вы уже проголосовали <?=($tvote->value==1)?'<span class="badge badge-success">ЗА</span>':'<span class="badge badge-danger">ПРОТИВ</span>'?>, но вы можете изменить своё решение</p>
+                    <?php }?>
+
+                </div>
+                <a class="btn btn__border" style="background: green !important; color: #fff !important; float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=yes">Проголосовать ЗА</a>
+                &nbsp;
+                <a class="btn btn__border" style="background: red !important; color: #fff !important; float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=no">Проголосовать ПРОТИВ</a>
                 <?php
                     if (!empty($collectionRecord->collection->form->template)){
-                        echo '<a class="btn btn-danger" download="'.$collectionRecord->id_record.'.docx" href="/collection/word?id_record='.$collectionRecord->id_record.'">Скачать информацию о проекте</a>';
+                        echo '<a class="btn btn__border" style="background: #8F1A1E !important; color: #fff !important;" download="'.$collectionRecord->id_record.'.docx" href="/collection/word?id_record='.$collectionRecord->id_record.'">Скачать информацию о проекте</a>';
                     }
                 ?>
+                <hr class="hr hr__md"/>
                 <?php echo frontend\widgets\CollectionRecordWidget::widget([
                     'collectionRecord'=>$collectionRecord,
                     'renderTemplate'=>true,
                 ]);?>
-                <?php echo frontend\widgets\CollectionRecordWidget::widget([
-                    'collectionRecord'=>$collectionRecord,
-                    'renderTemplate'=>false,
-                ]);?>
+                <a class="btn btn__border" style="background: green !important; color: #fff !important; float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=yes">Проголосовать ЗА</a>
+                &nbsp;
+                <a class="btn btn__border" style="background: red !important; color: #fff !important; float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=no">Проголосовать ПРОТИВ</a>
+                <?php
+                    if (!empty($collectionRecord->collection->form->template)){
+                        echo '<a class="btn btn__border" style="background: #8F1A1E !important; color: #fff !important;" download="'.$collectionRecord->id_record.'.docx" href="/collection/word?id_record='.$collectionRecord->id_record.'">Скачать информацию о проекте</a>';
+                    }
+                ?>
+                <hr class="hr hr__md"/>
             </div>
         </div>
     </div>
