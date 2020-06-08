@@ -301,6 +301,11 @@ class Collection extends ActiveRecord
         return $this->hasMany(CollectionRecord::class, ['id_collection' => 'id_collection'])->orderBy('ord ASC');
     }
 
+    public function getPages()
+    {
+        return $this->hasMany(Page::class, ['id_page' => 'id_page'])->viaTable('settings_plugin_collection',['id_collection'=>'id_collection']);
+    }
+
     /**
      * @return ActiveQuery
      */

@@ -31,6 +31,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <li>
             <?=Html::a('Форма', ['form/view', 'id' => $collection->id_form], ['class' => 'nav-link'])?>
         </li>
+        <li>
+            <?=Html::a('Страницы', ['collection/pages', 'id' => $collection->id_collection], ['class' => 'nav-link'])?>
+        </li>
     </ul>
     <div class="tab-content">
       <div class="tab-pane active">

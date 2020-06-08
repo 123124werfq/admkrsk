@@ -61,6 +61,7 @@ class CollectionColumnController extends Controller
         ]);
     }
 
+
     /**
      * Displays a single CollectionColumn model.
      * @param integer $id

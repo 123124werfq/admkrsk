@@ -47,6 +47,9 @@ if ($model->isDeleted()) {
         <li>
             <?=Html::a('Формы', ['form/collection', 'id' => $model->id_collection], ['class' => 'nav-link'])?>
         </li>
+        <li>
+            <?=Html::a('Страницы', ['collection/pages', 'id' => $model->id_collection], ['class' => 'nav-link'])?>
+        </li>
     </ul>
     <div class="tab-content">
       <div class="tab-pane active">

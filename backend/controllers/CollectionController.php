@@ -18,6 +18,8 @@ use backend\models\forms\CollectionRecordSearchForm;
 use backend\models\forms\CollectionImportForm;
 use backend\models\forms\CollectionCombineForm;
 use backend\models\forms\FormCopy;
+
+use yii\data\ActiveDataProvider;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
 use yii\helpers\ArrayHelper;
@@ -73,7 +75,7 @@ class CollectionController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'redactor', 'partition'],
+                        'actions' => ['index', 'redactor', 'partition', 'pages'],
                         'roles' => ['backend.collection.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Collection::class,
@@ -564,6 +566,31 @@ class CollectionController extends Controller
         ]);
     }
 
+    public function actionPages($id)
+    {
+        $collection = $this->findModel($id);
+
+        if (empty($collection))
+            throw new NotFoundHttpException('The requested page does not exist.');
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $collection->getPages(),
+            'sort' => [
+                'defaultOrder' => [
+                    'ord' => SORT_ASC
+                ]
+            ],
+            'pagination' => [
+                'pageSize' => 9000,
+            ]
+        ]);
+
+        return $this->render('pages', [
+            'dataProvider' => $dataProvider,
+            'collection'=>$collection,
+        ]);
+    }
+
     /**
      * Displays a single Collection model.
      * @param integer $id
@@ -806,7 +833,7 @@ class CollectionController extends Controller
             $form->state = 1;
             $form->name = $model->name;
             $form->id_collection = $model->id_collection;
-            
+
             if ($form->save())
             {
                 $model->id_form = $form->id_form;
