@@ -22,63 +22,72 @@ $this->params['breadcrumbs'][] = $this->title;
       <div class="tab-pane active">
         <div class="panel-body">
           <div class="table-responsive">
-            <div class="ibox">
-                <div class="ibox-content">
-                    <?= GridView::widget([
-                        'dataProvider' => $dataProvider,
-                        //'filterModel' => $searchModel,
-                        'columns' => [
-                            'id_page' => 'id_page',
-                            'title' => 'title',
-                            'alias' => [
-                                'attribute' => 'alias',
-                                'format' => 'html',
-                                'value' => function ($model) {
-                                    /**@var Page $model */
-                                    return '<a class="break-all" target="_blank" href="' . $model->getUrl(true) . '">' . $model->getUrl() . '</a>';
-                                },
+                <?= GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    //'filterModel' => $searchModel,
+                    'columns' => [
+                        'id_page' => 'id_page',
+                        'title' => 'title',
+                        'alias' => [
+                            'attribute' => 'alias',
+                            'format' => 'html',
+                            'value' => function ($model) {
+                                /**@var Page $model */
+                                return '<a class="break-all" target="_blank" href="' . $model->getUrl(true) . '">' . $model->getUrl() . '</a>';
+                            },
+                        ],
+                        'created_at' => [
+                            'attribute' => 'created_at',
+                            'format' => [
+                                'date',
+                                'php:Y-m-d'
                             ],
-                            'created_at' => [
-                                'attribute' => 'created_at',
-                                'format' => [
-                                    'date',
-                                    'php:Y-m-d'
-                                ],
-                                'filterInputOptions' => [
-                                    'class' => 'datepicker form-control',
-                                ],
-                            ],
-                            'updated_at' => [
-                                'attribute' => 'updated_at',
-                                'format' => [
-                                    'date',
-                                    'php:Y-m-d'
-                                ],
-                                'filterInputOptions' => [
-                                    'class' => 'datepicker form-control',
-                                ],
-                            ],
-                            'viewsYear:prop' => [
-                                'attribute' => 'viewsYear',
-                                'label' => 'За год',
-                                'format' => 'integer',
-
-                            ],
-                            'views:prop' => [
-                                'attribute' => 'views',
-                                'label' => 'Всего',
-                                'format' => 'integer',
-
+                            'filterInputOptions' => [
+                                'class' => 'datepicker form-control',
                             ],
                         ],
-                        'tableOptions'=>[
-                            'emptyCell '=>'',
-                            'class'=>'table table-striped ids-style valign-middle table-hover'
-                        ]
-                    ]); ?>
+                        'updated_at' => [
+                            'attribute' => 'updated_at',
+                            'format' => [
+                                'date',
+                                'php:Y-m-d'
+                            ],
+                            'filterInputOptions' => [
+                                'class' => 'datepicker form-control',
+                            ],
+                        ],
+                        'viewsYear:prop' => [
+                            'attribute' => 'viewsYear',
+                            'label' => 'За год',
+                            'format' => 'integer',
 
-                </div>
-            </div>
+                        ],
+                        'views:prop' => [
+                            'attribute' => 'views',
+                            'label' => 'Всего',
+                            'format' => 'integer',
+
+                        ],
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'contentOptions'=>['class'=>'button-column'],
+                            'buttons' => [
+                                'template' => '{update} {view}',
+                                'update' => function ($url, $model, $key) {
+                                    return Html::a('', ['/page/update', 'id' => $model->id_page],['class' => 'glyphicon glyphicon-pencil']);
+                                },
+                                'view' => function ($url, $model, $key) {
+                                    return Html::a('', ['/page/view', 'id' => $model->id_page],['class' => 'glyphicon glyphicon-eye']);
+                                },
+                            ]
+                        ],
+                    ],
+                    'tableOptions'=>[
+                        'emptyCell '=>'',
+                        'class'=>'table table-striped ids-style valign-middle table-hover'
+
+                    ]
+                ]); ?>
         </div>
     </div>
 </div>
