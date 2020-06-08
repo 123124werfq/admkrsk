@@ -71,13 +71,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         [
                             'class' => 'yii\grid\ActionColumn',
                             'contentOptions'=>['class'=>'button-column'],
+                            'template' => '{update} {view}',
                             'buttons' => [
-                                'template' => '{update} {view}',
                                 'update' => function ($url, $model, $key) {
                                     return Html::a('', ['/page/update', 'id' => $model->id_page],['class' => 'glyphicon glyphicon-pencil']);
                                 },
                                 'view' => function ($url, $model, $key) {
-                                    return Html::a('', ['/page/view', 'id' => $model->id_page],['class' => 'glyphicon glyphicon-eye']);
+                                    return Html::a('', ['/page/view', 'id' => $model->id_page],['class' => 'glyphicon glyphicon-eye-open']);
                                 },
                             ]
                         ],
