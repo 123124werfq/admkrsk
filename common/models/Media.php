@@ -152,7 +152,7 @@ class Media extends \yii\db\ActiveRecord
 
     public function downloadName()
     {
-        return $this->name.'.'.$this->extension;
+        return str_replace(' ', '_', $this->name);
     }
 
     /**
