@@ -590,7 +590,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
                     $output = [];
                     foreach ($medias as $key => $media) {
-                        $output[] = '<a href="'.$media->getUrl().'" download><nobr>'.$media->name.'</nobr><a>';
+                        $output[] = '<a href="'.$media->getUrl().'" download="'.$media->downloadName().'"><nobr>'.$media->name.'</nobr><a>';
                     }
 
                     return implode('<br>', $output);
