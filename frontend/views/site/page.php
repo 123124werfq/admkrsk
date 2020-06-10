@@ -47,9 +47,7 @@ if ($user) {
                                             , <?= round($media->size / 1024, 2) ?>кБ
                                         </div>
                                         <div class="file-td file-td__control">
-                                            <a href="<?= $media->getUrl() ?>" class="btn btn__secondary btn__block-sm"
-                                               download="<?=$media->downloadName()?>">Скачать <i
-                                                        class="material-icons btn-icon btn-icon__right btn-icon__sm">get_app</i></a>
+                                            <a href="<?=$media->getUrl()?>" class="btn btn__secondary btn__block-sm" download="<?=$media->downloadName()?>">Скачать <i class="material-icons btn-icon btn-icon__right btn-icon__sm">get_app</i></a>
                                         </div>
                                     </div>
                                 <?php } ?>
