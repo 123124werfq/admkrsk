@@ -36,85 +36,88 @@ class ReceptionController extends \yii\web\Controller
 
         $model = new FormDynamic($collection->form);
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        if ($model->load(Yii::$app->request->post()))
         {
-            $prepare = $model->prepareData(true);
-
-            if ($record = $collection->insertRecord($prepare))
+            if ($model->validate())
             {
-                $insertedData = $record->getData(true);
+                $prepare = $model->prepareData(true);
 
-                $appeal = new AppealRequest;
-
-                if(Yii::$app->user->isGuest)
-                    $appeal->is_anonimus = 1;
-                else
-                    $appeal->id_user = Yii::$app->user->id;
-
-                $appeal->id_record = $record->id_record;
-
-                if ($appeal->save())
+                if ($record = $collection->insertRecord($prepare))
                 {
-                    $state = new AppealState;
-                    $state->id_request = $appeal->id_request;
+                    $insertedData = $record->getData(true);
 
-                    $state->state = (string)AppealState::STATE_INIT;
+                    $appeal = new AppealRequest;
 
-                    if ($state->save())
+                    if(Yii::$app->user->isGuest)
+                        $appeal->is_anonimus = 1;
+                    else
+                        $appeal->id_user = Yii::$app->user->id;
+
+                    $appeal->id_record = $record->id_record;
+
+                    if ($appeal->save())
                     {
-                        $appeal->number_internal = "ВП-".date("Y")."-".str_pad($appeal->id_request, 6, '0', STR_PAD_LEFT);
-                        $appeal->updateAttributes(['state', 'number_internal']);
+                        $state = new AppealState;
+                        $state->id_request = $appeal->id_request;
 
-                        // запрос к СЭД
-                        /*
-                        $attachments = $record->getAllMedias();
+                        $state->state = (string)AppealState::STATE_INIT;
 
-                        $export_path = $record->collection->form->makeDoc($record);
+                        if ($state->save())
+                        {
+                            $appeal->number_internal = "ВП-".date("Y")."-".str_pad($appeal->id_request, 6, '0', STR_PAD_LEFT);
+                            $appeal->updateAttributes(['state', 'number_internal']);
 
-                        $wf = new Workflow;
-                        $wf->generateArchive($idents['guid'], $attachments, $export_path);
+                            // запрос к СЭД
+                            /*
+                            $attachments = $record->getAllMedias();
 
-                        // ... тут XML
-                        $opres = $wf->sendServiceMessage($appeal);
-                        $integration = new Integration;
-                        $integration->system = Integration::SYSTEM_SED;
-                        $integration->direction = Integration::DIRECTION_OUTPUT;
-                        if($opres)
-                            $integration->status = Integration::STATUS_OK;
-                        else
-                            $integration->status = Integration::STATUS_ERROR;
+                            $export_path = $record->collection->form->makeDoc($record);
 
-                        $integration->description = ' Запрос услуги ' . $appeal->number_internal;
+                            $wf = new Workflow;
+                            $wf->generateArchive($idents['guid'], $attachments, $export_path);
 
-                        $integration->data = json_encode([
-                            'appeal' => $appeal->number_internal ?? null,
-                            'user' => $appeal->id_user ?? null,
-                            'target' => $appeal->id_target ?? null,
-                            'record' => $appeal->record ?? null
-                        ]);
+                            // ... тут XML
+                            $opres = $wf->sendServiceMessage($appeal);
+                            $integration = new Integration;
+                            $integration->system = Integration::SYSTEM_SED;
+                            $integration->direction = Integration::DIRECTION_OUTPUT;
+                            if($opres)
+                                $integration->status = Integration::STATUS_OK;
+                            else
+                                $integration->status = Integration::STATUS_ERROR;
 
-                        $integration->created_at = time();
-                        $integration->save();
-                        */
+                            $integration->description = ' Запрос услуги ' . $appeal->number_internal;
+
+                            $integration->data = json_encode([
+                                'appeal' => $appeal->number_internal ?? null,
+                                'user' => $appeal->id_user ?? null,
+                                'target' => $appeal->id_target ?? null,
+                                'record' => $appeal->record ?? null
+                            ]);
+
+                            $integration->created_at = time();
+                            $integration->save();
+                            */
+                        }
                     }
-                }
-                else
-                {
-                    return $this->render('error');
-                }
+                    else
+                    {
+                        return $this->render('error');
+                    }
 
-                return $this->render('result', [
-                    'page' => $page,
-                    'fio' => $insertedData['surname'] . " " . $insertedData['name'] . " " . $insertedData['parental_name'],
-                    'number' => $appeal->number_internal,
-                    'date' => date( "d.m.Y", $appeal->created_at)
-                ]);
+                    return $this->render('result', [
+                        'page' => $page,
+                        'fio' => $insertedData['surname'] . " " . $insertedData['name'] . " " . $insertedData['parental_name'],
+                        'number' => $appeal->number_internal,
+                        'date' => date( "d.m.Y", $appeal->created_at)
+                    ]);
+                }
             }
-        }
-        else
-        {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validate($model);
+            else
+            {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ActiveForm::validate($model);
+            }
         }
 
         return $this->render('index', [

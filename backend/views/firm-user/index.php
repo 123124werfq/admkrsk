@@ -7,16 +7,10 @@ use yii\grid\GridView;
 /* @var $searchModel backend\models\search\FirmUserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Firm Users';
+$this->title = 'Запросы на редактирование';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="firm-user-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Firm User', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -24,8 +18,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             'id_record',
             'id_user',
             'state',
@@ -39,6 +31,4 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
-
-
 </div>

@@ -94,7 +94,7 @@ class Helper
 
                 $class = 'frontend\widgets\\' . ucwords($matches[1][$key]) . 'Widget';
 
-                $content = '<div class="widget-wrapper">'.str_replace($match, $class::widget(['attributes' => $attributes, 'page' => $page, 'objectData'=>$recordData]), $content).'</div>';
+                $content = str_replace($match, '<div class="widget-wrapper">'.$class::widget(['attributes' => $attributes, 'page' => $page, 'objectData'=>$recordData]).'</div>', $content);
 
 	            /*else if($matches[1][$key] == 'hrreserve')
 	            {
