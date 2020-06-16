@@ -56,4 +56,14 @@ class FirmUser extends \yii\db\ActiveRecord
             'deleted_by' => 'Deleted By',
         ];
     }
+
+    public function getRecord()
+    {
+        return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_record']);
+    }
+
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id_user' => 'id_user']);
+    }
 }

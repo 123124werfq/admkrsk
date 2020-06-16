@@ -186,8 +186,10 @@ class ControllerPageController extends Controller
     {
         $model = new ControllerPage();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             $model->createAction(Action::ACTION_CREATE);
+            Yii::$app->cache->delete('route_urls');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -208,11 +210,10 @@ class ControllerPageController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             $model->createAction(Action::ACTION_UPDATE);
-            
-            Yii::$app->cache->flush();
-
+            Yii::$app->cache->delete('route_urls');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

@@ -35,11 +35,10 @@ class UserfirmController extends \yii\web\Controller
         $form = new UserFirmForm;
 
         return $this->render('index', [
-            'page' => $page
+            'page' => $page,
             'form' => $form,
         ]);
     }
-
 
     public function actionFirm($id)
     {

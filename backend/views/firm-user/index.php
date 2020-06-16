@@ -10,25 +10,33 @@ use yii\grid\GridView;
 $this->title = 'Запросы на редактирование';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="firm-user-index">
+<?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            'id_record',
-            'id_user',
-            'state',
-            'created_at',
-            'created_by',
-            //'updated_at',
-            //'updated_by',
-            //'deleted_at',
-            //'deleted_by',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+<div class="ibox">
+    <div class="ibox-content">
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
+            'columns' => [
+                'record.label',
+                'user.username',
+                'state',
+                'created_at',
+                //'updated_at',
+                //'updated_by',
+                //'deleted_at',
+                //'deleted_by',
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'template' => '{update} {delete}',
+                    'contentOptions' => ['class' => 'button-column']
+                ],
+            ],
+            'tableOptions' => [
+                    'emptyCell ' => '',
+                    'class' => 'table table-striped ids-style valign-middle table-hover',
+                    'id' => 'grid',
+                ]
+        ]); ?>
+    </div>
 </div>

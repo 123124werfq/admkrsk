@@ -112,6 +112,9 @@ return [
                     'menu.userRole' => ['class' => UserRole::class],
                 ],
             ],
+            'firm-user' => [
+                'title' => 'Заявки на редактирование',
+            ],
         ],
     ],
     'collection' => [
@@ -354,7 +357,7 @@ return [
                 ],
             ],
         ],
-    ],    
+    ],
     'setting' => [
         'title' => 'Система',
         'icon' => 'fa fa-gears',
