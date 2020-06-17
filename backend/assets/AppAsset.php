@@ -21,7 +21,7 @@ class AppAsset extends AssetBundle
         'inspinia/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css',
         "inspinia/css/plugins/jasny/jasny-bootstrap.min.css",
         "js/jquerybuilder/css/query-builder.default.min.css",
-        "css/admin.css?v=2"
+        "css/admin.css?v=3"
     ];
     public $js = [
         "https://api-maps.yandex.ru/2.1/?lang=ru_RU",
