@@ -24,6 +24,7 @@ $this->params['breadcrumbs'][] = ['label' => $model->pageTitle, 'url' => ['view'
 
             <?=$form->field($formConvert, 'type')->dropDownList([
                 CollectionColumn::TYPE_MAP=>'Координаты',
+                CollectionColumn::TYPE_ADDRESS=>'Адрес',
                 //CollectionColumn::TYPE_COLLECTIONS=>'Данные из списка, несколько элементов',
             ])?>
 
@@ -39,6 +40,14 @@ $this->params['breadcrumbs'][] = ['label' => $model->pageTitle, 'url' => ['view'
                 <?=Html::dropDownList('y','',
                     ArrayHelper::map($columns,'alias','name'),
                     ['class'=>'form-control']
+                )?>
+            </div>
+
+            <div class="form-group">
+                <label>Адрес</label>
+                <?=Html::dropDownList('address','',
+                    ArrayHelper::map($columns,'alias','name'),
+                    ['class'=>'form-control','prompt'=>'Выберите колонку']
                 )?>
             </div>
 

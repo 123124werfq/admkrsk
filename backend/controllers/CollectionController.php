@@ -326,6 +326,116 @@ class CollectionController extends Controller
 
                     break;
 
+                case CollectionColumn::TYPE_ADDRESS:
+
+                    $col = Yii::$app->request->post('address');
+                    $x = Yii::$app->request->post('x');
+                    $y = Yii::$app->request->post('y');
+
+                    if (!empty($col))
+                    {
+                        $newColumn = $collection->createColumn([
+                            'name' => 'Адрес',
+                            'alias' => 'address',
+                            'type' => CollectionColumn::TYPE_ADDRESS,
+                        ]);
+
+                        $alldata = $collection->getData([], true);
+
+                        foreach ($alldata as $id_record => $data)
+                        {
+                            $address = new \SimpleXMLElement($data[$col]);
+
+                            $empty = [
+                                'country'=>'',
+                                'id_country'=>'',
+                                'region'=>'',
+                                'id_region'=>'',
+                                'subregion'=>'',
+                                'id_subregion'=>'',
+                                'city'=>'',
+                                'id_city'=>'',
+                                'district'=>'',
+                                'id_district'=>'',
+                                'street'=>'',
+                                'id_street'=>'',
+                                'house'=>'',
+                                'id_house'=>'',
+                                'room'=>'',
+                                'fullname'=>'',
+                                'houseguid'=>'',
+                                'lat'=>'',
+                                'lon'=>'',
+                                'postalcode'=>'',
+                            ];
+
+                            foreach ($address->level as $key => $level) {
+                                $attrs = $level->attributes();
+                                $id = (int)$attrs->id;
+
+                                $level = (string)$level[0];
+
+                                switch ($id) {
+                                    case 0:
+                                        $empty['country'] = $level;
+                                        break;
+                                    case 1:
+                                        $empty['region'] = $level;
+                                        break;
+                                    case 2:
+                                        $empty['subregion'] = $level;
+                                        break;
+                                    case 3:
+                                        $empty['city'] = $level;
+                                        break;
+                                    case 5:
+                                        $empty['district'] = $level;
+                                        break;
+                                    case 7:
+                                        $empty['street'] = $level;
+                                        break;
+                                    case 8:
+                                        $empty['house'] = $level;
+                                        break;
+                                    case 11:
+                                        $empty['room'] = (string)($attrs->type).$level;
+                                        break;
+                                    case 12:
+                                        $empty['postalcode'] = $level;
+                                        break;
+
+                                    default:
+                                        # code...
+                                        break;
+                                }
+                            }
+
+                            $empty['fullname'] = implode(', ', array_filter($empty));
+
+                            if (!empty($x) && !empty($y) && !empty($data[$x]))
+                            {
+                                $empty['lat'] = $data[$x];
+                                $empty['lon'] = $data[$y];
+                            }
+
+                            $record = CollectionRecord::findOne($id_record);
+                            $record->data = [$newColumn->id_column => $empty];
+                            $record->update();
+                        }
+
+                        // добавляем инпут в форму
+                        $newColumn->collection->form->createInput([
+                            'type' => $newColumn->type,
+                            'name' => $newColumn->name,
+                            'label' => $newColumn->name,
+                            'fieldname' => $newColumn->alias,
+                            'id_column' => $newColumn->id_column,
+                        ]);
+
+                    }
+
+                    break;
+
                 case CollectionColumn::TYPE_CHECKBOXES:
 
                     $col = Yii::$app->request->post('column');
