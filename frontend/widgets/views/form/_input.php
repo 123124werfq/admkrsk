@@ -828,46 +828,34 @@ JS;
                     </tr>
                     </thead>
                     <tbody id="inputs<?= $input->id_input ?>">
-                        <?php
-                        /*if (empty($data))
+                    <?php
+                        foreach ($data as $rkey => $row)
                         {
+                            echo "<tr>";
                             $i = 0;
-                            foreach ($columns as $key => $column)
+                            foreach ($columns as $ckey => $column)
                             {
-                                echo '<td><input id="' . $attribute . '_col' . $i . '" type="' . ($column['type'] ?? 'text') . '" name="FormDynamic[input' . $input->id_input . '][0][' . $i . ']" class="form-control"/></td>';
+                                $alias = $column['alias'];
+
+                                if (!empty($column['type']) && $column['type']=='list')
+                                {
+                                    $values = [];
+
+                                    foreach ((!empty($column['values']))?explode(';', $column['values']):[] as $vkey => $value)
+                                        $values[$value] = $value;
+
+                                    echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::dropDownList($inputname.'['.$rkey.']['.$alias.']',$row[$alias]??'',$values,['id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
+                                }
+                                else
+                                    echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::textINput($inputname.'['.$rkey.']['.$alias.']',$row[$alias]??'',['type'=>$column['type'],'id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
                                 $i++;
                             }
+                            echo '<td width="10" class="td-close">
+                                        <a class="close" onclick="return removeRow(this)" href="javascript:">&times;</a>
+                                  </td>
+                                  </tr>';
                         }
-                        else
-                        {*/
-                            foreach ($data as $rkey => $row)
-                            {
-                                echo "<tr>";
-                                $i = 0;
-                                foreach ($columns as $ckey => $column)
-                                {
-                                    $alias = $column['alias'];
-
-                                    if (!empty($column['type']) && $column['type']=='list')
-                                    {
-                                        $values = [];
-
-                                        foreach ((!empty($column['values']))?explode(';', $column['values']):[] as $vkey => $value)
-                                            $values[$value] = $value;
-
-                                        echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::dropDownList($inputname.'['.$rkey.']['.$alias.']',$row[$alias]??'',$values,['id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
-                                    }
-                                    else
-                                        echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::textINput($inputname.'['.$rkey.']['.$alias.']',$row[$alias]??'',['type'=>$column['type'],'id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
-                                    $i++;
-                                }
-                                echo '<td width="10" class="td-close">
-                                            <a class="close" onclick="return removeRow(this)" href="javascript:">&times;</a>
-                                      </td>
-                                      </tr>';
-                            }
-                        //}
-                        ?>
+                    ?>
                     </tbody>
                     <tfoot>
                     <td colspan="<?= count($columns) + 1 ?>">
