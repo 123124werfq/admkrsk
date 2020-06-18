@@ -155,7 +155,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 break;
             case CollectionColumn::TYPE_ADDRESS:
 
-                if (empty($model->$attribute))
+                if (empty($model->$clearAttribute))
                 {
                     $value = [
                         'country'=>'',
@@ -194,10 +194,10 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         $value['id_region'] = $house->region->id_region??'';
                     }
 
-                    $model->$attribute = $value;
+                    $model->$clearAttribute = $value;
                 }
                 else
-                    $value = $model->$attribute;
+                    $value = $model->$clearAttribute;
 
                 echo '<div class="flex-wrap">';
 
@@ -561,8 +561,8 @@ JS;
 
                 $value = [];
 
-                if (!empty($model->$attribute))
-                    $value = $model->$attribute;
+                if (!empty($model->$clearAttribute))
+                    $value = $model->$clearAttribute;
 
                 echo $form->field($model, $attribute)->widget(Select2::class, [
                     'data' => $value,
@@ -671,8 +671,8 @@ JS;
 
                 $value = [];
 
-                if (!empty($model->$attribute)) {
-                    $district = District::findOne($model->$attribute);
+                if (!empty($model->$clearAttribute)) {
+                    $district = District::findOne($model->$clearAttribute);
                     if (!empty($district))
                         $value = [$district->id_district => $district->name];
                 }
@@ -800,7 +800,7 @@ JS;
                 if (!is_array($columns) && !empty($columns))
                     break;
 
-                $data = json_decode($model->$attribute,true);
+                $data = json_decode($model->$clearAttribute,true);
 
                 if (!is_array($columns) && !empty($data))
                 {
