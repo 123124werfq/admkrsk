@@ -46,7 +46,12 @@ if ($input->type == CollectionColumn::TYPE_SELECT)
 $clearAttribute = $attribute = "input$input->id_input";
 
 if (!empty($arrayGroup))
+{
     $attribute = "[$arrayGroup]" . $attribute;
+    $inputname = "FormDynamic[$arrayGroup][$attribute]";
+}
+else
+    $inputname = "FormDynamic[$attribute]";
 
 $id_subform = (!empty($subform)) ? $subform->id_form : '';
 ?>
@@ -75,7 +80,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 echo $form->field($model, $attribute)->dropDownList($input->getArrayValues(), $options);
                 break;
             case CollectionColumn::TYPE_MAP:
-                echo MapInputWidget::widget(['name' => 'FormDynamic[' . $attribute . ']', 'index' => $options['id'], 'value' => $model->$clearAttribute]);
+                echo MapInputWidget::widget(['name' => $inputname, 'index' => $options['id'], 'value' => $model->$clearAttribute]);
                 break;
             case CollectionColumn::TYPE_DATE:
                 $options['type'] = 'date';
@@ -116,7 +121,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
             case CollectionColumn::TYPE_REPEAT:
                 echo '<div class="checkbox-group">
                             <label class="checkbox checkbox__ib">
-                                ' . Html::checkBox('FormDynamic[' . $attribute . '][active]', (!empty($model->$clearAttribute)), ['class'=>'checkbox_control']) . '
+                                ' . Html::checkBox($inputname.'[active]', (!empty($model->$clearAttribute)), ['class'=>'checkbox_control']) . '
                                 <span class="checkbox_label">' . ($input->label ?? $input->name) . '</span>
                             </label>
                       </div>';
@@ -127,7 +132,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 {
                     echo '<div class="radio-group">
                                 <label class="radio">
-                                    <input type="radio" name="FormDynamic[' . $attribute . ']" value="' . Html::encode($key) . '" class="radio_control">
+                                    <input type="radio" name="'.$inputname.'" value="' . Html::encode($key) . '" class="radio_control">
                                     <span class="radio_label">' . $value . '</span>
                                 </label>
                           </div>';
@@ -368,7 +373,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 if (!empty($options['show_coords']))
                 {
                     echo '<div class="col-md-12">';
-                    echo MapInputWidget::widget(['name' => 'FormDynamic[' . $attribute . '][coords]', 'index' => $options['id'], /*'value' => $model->$clearAttribute*/]);
+                    echo MapInputWidget::widget(['name' => $inputname.'[coords]', 'index' => $options['id'], /*'value' => $model->$clearAttribute*/]);
                     echo '</div>';
                 }
                 echo '</div>';
@@ -502,7 +507,7 @@ JS;
                 foreach ($input->getArrayValues() as $key => $value) {
                     echo '<div class="radio-group">
 								<label class="radio">
-									<input data-id="'.$input->id_input.'" type="radio" name="FormDynamic[' . $attribute . ']" value="' . Html::encode($key) . '" class="radio_control">
+									<input data-id="'.$input->id_input.'" type="radio" name="'.$inputname.'" value="' . Html::encode($key) . '" class="radio_control">
 									<span class="radio_label">' . $value . '</span>
 								</label>
 						  </div>';
@@ -533,7 +538,7 @@ JS;
 
                 echo '<div class="checkbox-group">
 					<label class="checkbox checkbox__ib">
-						' . Html::checkBox('FormDynamic[' . $attribute . ']', (!empty($model->$clearAttribute)), $options) . '
+						' . Html::checkBox($inputname, (!empty($model->$clearAttribute)), $options) . '
 						<span class="checkbox_label">' . ($input->label ?? $input->name) . '</span>
 					</label>
 				</div>';
@@ -549,7 +554,7 @@ JS;
                     echo '
 					<div class="checkbox-group">
 						<label class="checkbox checkbox__ib">
-							<input type="checkbox" ' . (in_array($key, $current_values) ? 'checked' : '') . ' name="FormDynamic[' . $attribute . '][]" value="' . Html::encode($key) . '" class="checkbox_control">
+							<input type="checkbox" ' . (in_array($key, $current_values) ? 'checked' : '') . ' name="'.$inputname.'[]" value="' . Html::encode($key) . '" class="checkbox_control">
 							<span class="checkbox_label">' . $value . '</span>
 						</label>
 					</div>';
@@ -850,10 +855,10 @@ JS;
                                         foreach ((!empty($column['values']))?explode(';', $column['values']):[] as $vkey => $value)
                                             $values[$value] = $value;
 
-                                        echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::dropDownList('FormDynamic['.$attribute.']['.$rkey.']['.$alias.']',$row[$alias]??'',$values,['id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
+                                        echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::dropDownList($inputname.'['.$rkey.']['.$alias.']',$row[$alias]??'',$values,['id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
                                     }
                                     else
-                                        echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::textINput('FormDynamic['.$attribute.']['.$rkey.']['.$alias.']',$row[$alias]??'',['type'=>$column['type'],'id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
+                                        echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::textINput($inputname.'['.$rkey.']['.$alias.']',$row[$alias]??'',['type'=>$column['type'],'id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
                                     $i++;
                                 }
                                 echo '<td width="10" class="td-close">

@@ -322,8 +322,6 @@ $(document).ready(function() {
                 else
                     var id = $(this).attr('id').replace('formdynamic-input','');
 
-                console.log(id+'<<<<<');
-
                 for (var id_element in visibleInputs[id])
                     check(id_element);
             });
