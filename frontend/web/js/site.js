@@ -206,8 +206,6 @@ $(document).ready(function() {
         return false;
     });
 
-
-
     $(".modal-checkbox").change(function(){
         if ($(this).is(':checked'))
         {
@@ -277,7 +275,7 @@ $(document).ready(function() {
     {
         function getValue(id_input)
         {
-            var input = $("#formdynamic-input"+id_input);
+            var input = $("#formdynamic-input"+id_input+", .formdynamic-input"+id_input+" input[name*='input"+id_input+"']:checked");
 
             if (input.is(':checkbox'))
             {
@@ -317,9 +315,14 @@ $(document).ready(function() {
 
         for (var id_vinput in visibleInputs)
         {
-            $("#formdynamic-input"+id_vinput).change(function(){
+            $("#formdynamic-input"+id_vinput+", .formdynamic-input"+id_vinput+" input[name*='input"+id_vinput+"']").change(function(){
 
-                var id = $(this).attr('id').replace('formdynamic-input','');
+                if ($(this).data('id'))
+                    var id = $(this).data('id');
+                else
+                    var id = $(this).attr('id').replace('formdynamic-input','');
+
+                console.log(id+'<<<<<');
 
                 for (var id_element in visibleInputs[id])
                     check(id_element);

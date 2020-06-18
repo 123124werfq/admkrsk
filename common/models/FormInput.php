@@ -231,6 +231,7 @@ class FormInput extends \yii\db\ActiveRecord
                     'email'=>"Емейл",
                     'number'=>"Число",
                     'url'=>"Ссылка",
+                    'time'=>"Время",
                     'datetime'=>"Дата+Время",
                     'date'=>"Дата",
                     'list'=>"Список",

@@ -76,6 +76,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                         'email'=>"Емейл",
                         'number'=>"Число",
                         'url'=>"Ссылка",
+                        'time'=>"Время",
                         'datetime'=>"Дата+Время",
                         'date'=>"Дата",
                     ],
@@ -113,16 +114,41 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'type'=>'richtext',
                 ],
             ],
-            self::TYPE_REPEAT => [
+            /*self::TYPE_REPEAT => [
                 'begin'=>[
                     'name'=>'Дата начала',
-                    'type'=>'column',
+                    'type'=>'input',
                 ],
                 'end'=>[
                     'name'=>'Дата конца',
-                    'type'=>'column',
+                    'type'=>'input',
                 ],
-            ],
+                'is_repeat'=>[
+                    'name'=>'Повторяющееся событие',
+                    'type'=>'checkbox',
+                ],
+                'repeat_count'=>[
+                    'name'=>'Число повторов',
+                    'type'=>'input',
+                ],
+                'time_begin'=>[
+                    'name'=>'Время начала',
+                    'type'=>'time',
+                ],
+                'time_end'=>[
+                    'name'=>'Время конца',
+                    'type'=>'time',
+                ],
+                'type'=>[
+                    'name'=>'Трубется дополнительное подтверждение',
+                    'type'=>'radio',
+                    'values'=>[
+                        '1'=>"Ежедневно",
+                        '2'=>"Еженедельно",
+                        '3'=>"Ежемесячно",
+                    ]
+                ],
+            ],*/
             self::TYPE_INTEGER => [
                 'min'=>[
                     'name'=>'Минимум',
@@ -291,7 +317,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_SERVICETARGET => "Цель муниципальной услуги",
             self::TYPE_SERVICE => "Услуги для обжалования",
 
-            self::TYPE_REPEAT => 'Повторяющаяся строка по дате',
+            self::TYPE_REPEAT => 'Дата / Период',
             self::TYPE_CUSTOM => 'Составная колонка',
         ];
 
@@ -475,8 +501,6 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
         return $json;
     }
-
-
 
     public function getOptionsData()
     {

@@ -122,6 +122,17 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                       </div>';
                 echo $form->field($model, $attribute.'[repeat]')->radioList([1=>'Ежедневно',7=>'Еженедельно',31=>"Ежемесячно"], $options);
                 echo $form->field($model, $attribute.'[days]')->textinput(['placeholder'=>'Дней между повторами']);
+
+                foreach ($input->getArrayValues() as $key => $value)
+                {
+                    echo '<div class="radio-group">
+                                <label class="radio">
+                                    <input type="radio" name="FormDynamic[' . $attribute . ']" value="' . Html::encode($key) . '" class="radio_control">
+                                    <span class="radio_label">' . $value . '</span>
+                                </label>
+                          </div>';
+                }
+
                 break;
             case CollectionColumn::TYPE_ADDRESSES:
                 echo $form->field($model, $attribute)->widget(Select2::class, [
@@ -491,7 +502,7 @@ JS;
                 foreach ($input->getArrayValues() as $key => $value) {
                     echo '<div class="radio-group">
 								<label class="radio">
-									<input type="radio" name="FormDynamic[' . $attribute . ']" value="' . Html::encode($key) . '" class="radio_control">
+									<input data-id="'.$input->id_input.'" type="radio" name="FormDynamic[' . $attribute . ']" value="' . Html::encode($key) . '" class="radio_control">
 									<span class="radio_label">' . $value . '</span>
 								</label>
 						  </div>';
@@ -842,7 +853,7 @@ JS;
                                         echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::dropDownList('FormDynamic['.$attribute.']['.$rkey.']['.$alias.']',$row[$alias]??'',$values,['id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
                                     }
                                     else
-                                        echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::textINput('FormDynamic['.$attribute.']['.$rkey.']['.$alias.']',$row[$alias]??'',['id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
+                                        echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::textINput('FormDynamic['.$attribute.']['.$rkey.']['.$alias.']',$row[$alias]??'',['type'=>$column['type'],'id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
                                     $i++;
                                 }
                                 echo '<td width="10" class="td-close">

@@ -12,6 +12,7 @@
 				'id_form'=>$id_form,
 				'type'=>[CollectionColumn::TYPE_SELECT,
 						 CollectionColumn::TYPE_CHECKBOX,
+						 CollectionColumn::TYPE_RADIO,
 						 CollectionColumn::TYPE_SERVICETARGET]
 			  ]);
 
