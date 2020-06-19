@@ -48,13 +48,13 @@ class UserfirmController extends \yii\web\Controller
             {
                 $record = $collection->getDataQuery()->whereByAlias([
                     'name'=>$model->name,
-                    'inn'=>$model->inn
-                ])->limit(1)->getArray();
+                ])->whereByAlias(['inn'=>$model->inn])->limit(1)->getArray();
 
                 if (!empty($record))
                     $record = CollectionRecord::findOne(key($record));
 
                 $id_record = Yii::$app->request->post('id_record');
+
                 if (!empty($id_record) && $id_record==$record->id_record)
                 {
                     $FirmUser = new FirmUser;
@@ -63,7 +63,7 @@ class UserfirmController extends \yii\web\Controller
                     $FirmUser->id_record = $id_record;
                     $FirmUser->save();
 
-                    return $this->redirect('firm')
+                    return $this->redirect('firm');
                 }
             }
         }
@@ -84,7 +84,7 @@ class UserfirmController extends \yii\web\Controller
 
         if ($firm->state == FirmUser::STATE_NEW)
         {
-            
+
         }
 
         return $this->render('firm', [

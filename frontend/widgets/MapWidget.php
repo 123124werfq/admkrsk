@@ -18,7 +18,11 @@ class MapWidget extends Widget
         'zoom' => 12,
         'center_x' => '56.010563',
         'center_y' => '92.852572'
+
+
     ];
+
+    public $objectData;
 
     public function run()
     {
@@ -36,7 +40,7 @@ class MapWidget extends Widget
                 $this->id_collection = (int)$this->attributes['id'];
         }
 
-        return $this->render('/collection/map',[
+        return $this->render('collection/map',[
             'id_collection' => $this->id_collection,
             'page'=>$this->page,
             'uniq_id'=>time().rand(0,9999),

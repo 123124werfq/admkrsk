@@ -48,7 +48,7 @@ var tinymceConfig = {
         'link image imagetools table autoresize collections gallery code paste media lists fullscreen stickytoolbar form hrreserve pagenews faq recordSearch map'
     ],
     menu: {
-        custom: { title: 'Плагины', items: 'form gallery collections hrreserve pagenews faq recordSearch'}
+        custom: { title: 'Плагины', items: 'form gallery collections hrreserve pagenews faq recordSearch map'}
     },
     menubar: 'file edit view insert format tools table custom',
     contextmenu: "link image imagetools table spellchecker",

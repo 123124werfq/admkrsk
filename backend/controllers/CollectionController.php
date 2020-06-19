@@ -650,9 +650,15 @@ class CollectionController extends Controller
         return ['results' => $results];
     }
 
-    public function actionGetCollections()
+    public function actionGetCollections($map=null)
     {
-        $collections = Collection::find()->where('is_dictionary IS NULL')->all();
+        $collections = Collection::find()->where('is_dictionary IS NULL');
+
+        if (!empty($map))
+            $collections->andWhere('id_column_map IS NOT NULL');
+
+        $collections = $collections->all();
+
         $output = [];
         foreach ($collections as $key => $data) {
             $output[] = ['text' => $data->name, 'value' => (string)$data->id_collection];

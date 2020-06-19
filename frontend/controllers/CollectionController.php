@@ -56,7 +56,7 @@ class CollectionController extends \yii\web\Controller
 
         foreach ($records as $key => $data)
         {
-            if (!empty($data[$collection->id_column_map][0]) /*&& is_array($data[$collection->id_column_map])*/)
+            if (!empty($data[$collection->id_column_map][0]) || !empty($data[$collection->id_column_map]['lat'])) /*&& is_array($data[$collection->id_column_map])*/
             {
                 $content = '';
                 $title = '';
@@ -70,15 +70,26 @@ class CollectionController extends \yii\web\Controller
                 }
 
                 // защита от перепутанных координат
-                $x = (float)str_replace(',', '.', $data[$collection->id_column_map][0]);
-                $y = (float)str_replace(',', '.', $data[$collection->id_column_map][1]);
 
-                if($x>$y)
+                if ($columns[$collection->id_column_map]->type == CollectionColumn::TYPE_ADDRESS)
+                {
+
+                    $x = (float)str_replace(',', '.', $data[$collection->id_column_map]['lat']??'');
+                    $y = (float)str_replace(',', '.', $data[$collection->id_column_map]['lon']??'');
+                }
+                else
+                {
+
+                    $x = (float)str_replace(',', '.', $data[$collection->id_column_map][0]);
+                    $y = (float)str_replace(',', '.', $data[$collection->id_column_map][1]);
+                }
+
+                if ($x>$y)
                     [$x, $y] = [$y, $x];
 
                 $points[] = [
-                    'x' => $x, //str_replace(',', '.', $data[$collection->id_column_map][0]),
-                    'y' => $y, //str_replace(',', '.', $data[$collection->id_column_map][1]),
+                    'x' => $x,
+                    'y' => $y,
                     'icon' => '',
                     'content' => '<table>'.$content.'</table>',
                     'title' => $title

@@ -887,7 +887,7 @@ tinymce.PluginManager.add("map", function(editor, url) {
             _forms = [];
 
             $.ajax({
-                url: '/collection/get-collection',
+                url: '/collection/get-collections',
                 type: 'get',
                 dataType: 'json',
                 data: {map: 1},

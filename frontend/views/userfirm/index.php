@@ -23,10 +23,10 @@ $this->params['page'] = $page;
                     <h1><?= $page->title ?></h1>
 
                     <h1><?= $page->content ?></h1>
-                    
+
                     <div class="boxed form-inside">
                         <?php $form = ActiveForm::begin(['scrollToError' => true]); ?>
-                            
+
                             <?= $form->field($model, 'name')->textInput(['class' => 'form-control']) ?>
                             <div class="row">
                                 <div class="col" style="width: 100%">
@@ -58,11 +58,11 @@ $this->params['page'] = $page;
                             ]
                         ]);?>
 
-                        <form action="">
+                        <?php $form = ActiveForm::begin(['scrollToError' => true]); ?>
                             <?= $form->field($model, 'name')->hiddenInput()->label(false) ?>
                             <?= $form->field($model, 'inn')->hiddenInput()->label(false) ?>
                             <button type="submit" class="btn btn__secondary" name="id_record" value="<?=$record->id_record?>">Отправить запрос на редактирование</button>
-                        </form>
+                        <?php ActiveForm::end(); ?>
                     <?php }?>
 
                     <?php if (!empty($page->medias)) { ?>

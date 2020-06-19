@@ -3,14 +3,13 @@
 
 	$this->registerJsFile('/js/onmap.js',['depends'=>[\yii\web\JqueryAsset::className()],'position'=>\yii\web\View::POS_END]);
 
-	$script = <<< JS
-		$(document).ready(function() {
-	       showMap($id_collectom,'map$uniq_id');
-		});
-	JS;
+$script = <<< JS
+	$(document).ready(function() {
+       showMap($id_collection,'map$uniq_id');
+	});
+JS;
 
 	$this->registerJs($script, yii\web\View::POS_END);
-
 ?>
 
 <div class="collection-map">
