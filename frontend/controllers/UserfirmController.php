@@ -92,7 +92,7 @@ class UserfirmController extends \yii\web\Controller
 
             $form = Form::find()->where(['alias'=>'municipal_firms_user_form'])->one();
 
-            if (!empty($form)
+            if (!empty($form))
             {
                 $modelForm = new FormDynamic($form);
 
