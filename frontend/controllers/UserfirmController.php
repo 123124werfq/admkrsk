@@ -86,7 +86,7 @@ class UserfirmController extends \yii\web\Controller
 
         $modelForm = null;
 
-        if ($firm->state == FirmUser::STATE_ACCEPT)
+        if ($firm->state == $firm::STATE_ACCEPT)
         {
             $collection = Collection::find()->where(['alias'=>'municipal_firms'])->one();
 
@@ -104,7 +104,7 @@ class UserfirmController extends \yii\web\Controller
         return $this->render('firm', [
             'page' => $page,
             'firm'=>$firm,
-            'modelForm'=>$modelForm,
+            'form'=>$collection->form,
             'record'=>$firm->record,
         ]);
     }

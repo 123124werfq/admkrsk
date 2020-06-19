@@ -18,10 +18,24 @@ $this->params['breadcrumbs'][] = $this->title;
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
             'columns' => [
-                'record.label',
+                [
+                    'label'=>'#',
+                    'attribute'=>'id_record',
+                ],
+                [
+                    'label'=>'Учреждение',
+                    'attribute'=>'record.label',
+                ],
                 'user.username',
-                'state',
-                'created_at',
+                [
+                    'label'=>'Учреждение',
+                    'attribute'=>'state',
+                    'value'=>function($model){
+                        return $model->stateLabel;
+                    }
+                ],
+
+                'created_at:date:Создано',
                 //'updated_at',
                 //'updated_by',
                 //'deleted_at',

@@ -8,32 +8,20 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="firm-user-form">
+<div class="ibox">
+    <div class="ibox-content">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'id_record')->textInput() ?>
+        <?= $form->field($model, 'id_record')->textInput(['value'=>$model->record->label,'disabled'=>true]) ?>
 
-    <?= $form->field($model, 'id_user')->textInput() ?>
+        <?= $form->field($model, 'id_user')->textInput(['value'=>$model->user->username,'disabled'=>true]) ?>
 
-    <?= $form->field($model, 'state')->textInput() ?>
+        <?= $form->field($model, 'state')->dropDownList($model->getStateLabels()) ?>
 
-    <?= $form->field($model, 'created_at')->textInput() ?>
-
-    <?= $form->field($model, 'created_by')->textInput() ?>
-
-    <?= $form->field($model, 'updated_at')->textInput() ?>
-
-    <?= $form->field($model, 'updated_by')->textInput() ?>
-
-    <?= $form->field($model, 'deleted_at')->textInput() ?>
-
-    <?= $form->field($model, 'deleted_by')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
+        <hr>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
 
     <?php ActiveForm::end(); ?>
-
+    </div>
 </div>

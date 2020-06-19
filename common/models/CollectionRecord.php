@@ -128,6 +128,22 @@ class CollectionRecord extends \yii\db\ActiveRecord
         return $mongoLabels;
     }
 
+    public function getLabel()
+    {
+        $label = (!empty($this->collection->label)) ? $this->collection->label : [];
+
+        $data = $this->getData(false);
+
+        $output = [];
+
+        foreach ($label as $key => $id_column) {
+            if (!empty($data[$id_column]))
+                $output[] = $data[$id_column];
+        }
+
+        return implode(', ',$output);
+    }
+
     protected function getMongoDate($value, $column)
     {
         $output = [];
@@ -431,7 +447,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
     {
         $collection = Yii::$app->mongodb->getCollection('collection'.$this->id_collection);
         $collection->update(['id_record'=>$this->id_record],['date_delete'=>$this->date_delete]);
-        
+
         return true;
     }*/
 

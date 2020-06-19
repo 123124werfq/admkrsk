@@ -89,7 +89,7 @@ class FirmUserController extends Controller
         $model = $this->findModel($id_record, $id_user);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id_record' => $model->id_record, 'id_user' => $model->id_user]);
+            return $this->redirect(['index', 'id_record' => $model->id_record, 'id_user' => $model->id_user]);
         }
 
         return $this->render('update', [

@@ -43,6 +43,24 @@ class FirmUser extends \yii\db\ActiveRecord
         ];
     }
 
+
+    public function getStateLabels()
+    {
+        return  [
+            self::STATE_NEW=>'Новый',
+            self::STATE_ACCEPT=>'Подтвержден',
+            self::STATE_DECLINE=>'Отклонен',
+        ];
+    }
+
+
+    public function getStateLabel()
+    {
+        $labels = $this->getStateLabels();
+
+        return $labels[$this->state]??'';
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -51,7 +69,7 @@ class FirmUser extends \yii\db\ActiveRecord
         return [
             'id_record' => 'Id Record',
             'id_user' => 'Id User',
-            'state' => 'State',
+            'state' => 'Статус',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
@@ -68,6 +86,6 @@ class FirmUser extends \yii\db\ActiveRecord
 
     public function getUser()
     {
-        return $this->hasOne(User::class, ['id_user' => 'id_user']);
+        return $this->hasOne(User::class, ['id' => 'id_user']);
     }
 }

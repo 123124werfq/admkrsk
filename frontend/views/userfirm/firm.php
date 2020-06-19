@@ -40,7 +40,7 @@ $this->params['page'] = $page;
                     <?php }
                     else
                     {
-
+                        echo frontend\widgets\FormsWidget::widget(['form'=>$form, 'collectionRecord' => $record, 'submitLabel' => 'Сохранить']);
                     }?>
 
                     <?php if (!empty($page->medias)) { ?>
