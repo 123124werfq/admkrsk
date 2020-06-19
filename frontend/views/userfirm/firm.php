@@ -24,7 +24,7 @@ $this->params['page'] = $page;
 
                     <?php if (!empty($firm->state == $firm::STATE_NEW)){?>
 
-                        <p>Ожидайте когда проверят ваши данные</p>
+                        <p class="accent">Ожидайте когда проверят ваши данные</p>
 
                         <?= frontend\widgets\CollectionRecordWidget::widget([
                             'collectionRecord'=>$record,
@@ -40,7 +40,7 @@ $this->params['page'] = $page;
                     <?php }
                     else
                     {
-                        echo '<a class="btn" href="'.$page->getUrl().'/file">Документы организация</a>';
+                        echo '<a class="btn btn__secondary btn__block-sm" href="'.$page->getUrl().'/file">Документы организация</a>';
                         echo frontend\widgets\FormsWidget::widget(['form'=>$form, 'collectionRecord' => $record, 'submitLabel' => 'Сохранить']);
                     }?>
 
