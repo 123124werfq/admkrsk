@@ -130,7 +130,7 @@ class UserfirmController extends \yii\web\Controller
             }
         }
 
-        $files = $collection->getDataQuery()->whereByAlias(['id_record'=>$firm->id_record])->getArray();
+        $files = $collection->getDataQuery()->whereByAlias(['id_firm'=>$firm->id_record])->getArray(true);
 
         return $this->render('file', [
             'page' => $page,
