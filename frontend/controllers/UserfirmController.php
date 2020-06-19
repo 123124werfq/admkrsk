@@ -6,8 +6,10 @@ use Yii;
 use common\models\User;
 use common\models\FirmUser;
 use common\models\Collection;
+use common\models\FormDynamic;
 use common\models\CollectionRecord;
 use frontend\models\UserFirmForm;
+use yii\web\NotFoundHttpException;
 
 use yii\filters\AccessControl;
 
@@ -34,7 +36,7 @@ class UserfirmController extends \yii\web\Controller
         $firm = $this->getFirm();
 
         if (!empty($firm))
-            return $this->redirect('firm');
+            return $this->redirect($page->getUrl().'/firm');
 
         $model = new UserFirmForm;
 
@@ -61,9 +63,9 @@ class UserfirmController extends \yii\web\Controller
                     $FirmUser->id_user = Yii::$app->user->id;
                     $FirmUser->state = 0;
                     $FirmUser->id_record = $id_record;
-                    $FirmUser->save();
 
-                    return $this->redirect('firm');
+                    if ($FirmUser->save())
+                        return $this->redirect($page->getUrl().'/firm');
                 }
             }
         }
@@ -75,27 +77,42 @@ class UserfirmController extends \yii\web\Controller
         ]);
     }
 
-    public function actionFirm()
+    public function actionFirm($page)
     {
         $firm = $this->getFirm();
 
         if (empty($firm))
             throw new NotFoundHttpException('The requested page does not exist.');
 
-        if ($firm->state == FirmUser::STATE_NEW)
-        {
+        $modelForm = null;
 
+        if ($firm->state == FirmUser::STATE_ACCEPT)
+        {
+            $collection = Collection::find()->where(['alias'=>'municipal_firms'])->one();
+
+            $modelForm = new FormDynamic($collection->form);
+
+            if ($modelForm->load(Yii::$app->request->post()) && $modelForm->validate())
+            {
+                $prepare = $modelForm->prepareData(true);
+                $record = $collection->updateRecord($firm->id_record, $prepare);
+
+                $this->redirect('');
+            }
         }
 
         return $this->render('firm', [
             'page' => $page,
-            'record'=>$record,
-            'model' => $model,
+            'firm'=>$firm,
+            'modelForm'=>$modelForm,
+            'record'=>$firm->record,
         ]);
     }
 
     protected function getFirm()
     {
         $firm = FirmUser::find()->where(['id_user'=>Yii::$app->user->id])->one();
+
+        return $firm;
     }
 }

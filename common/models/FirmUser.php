@@ -19,6 +19,10 @@ use Yii;
  */
 class FirmUser extends \yii\db\ActiveRecord
 {
+    const STATE_NEW = 0;
+    const STATE_ACCEPT = 1;
+    const STATE_DECLINE = 2;
+
     /**
      * {@inheritdoc}
      */

@@ -53,10 +53,10 @@ class ContestController extends \yii\web\Controller
 
             $record = false;
 
-            if($profile && $profile->id_record_anketa)
+            if ($profile && $profile->id_record_anketa)
                 $record = $collection->updateRecord($profile->id_record_anketa, $prepare);
 
-            if(!$record)
+            if (!$record)
                 $record = $collection->insertRecord($prepare);
 
             if ($record)
@@ -191,7 +191,7 @@ class ContestController extends \yii\web\Controller
                     $activeContests = [];
                     $activeContests[$ckey] = $tmp;
                     Yii::$app->session->set('voteback', $id);
-                    break;                    
+                    break;
                 }
             }
 
@@ -281,7 +281,7 @@ class ContestController extends \yii\web\Controller
 
 
         $tvote = CstVote::find()->where(['id_expert' => $expert->id_expert, 'id_profile' => $profile->id_profile])->one();
-        
+
         $vote = Yii::$app->request->get('vote');
 
         if($vote)
