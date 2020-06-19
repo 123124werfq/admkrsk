@@ -246,7 +246,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                     ],
                     'options' => [
                         'value'=>empty($value['id_region'])?$value['region']:$value['id_region'],
-                        'id' => 'input-region' . $attribute
+                        'id' => 'input-region' . $id_input
                     ]
                 ]).'</div>';
 
