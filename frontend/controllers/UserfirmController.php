@@ -78,6 +78,46 @@ class UserfirmController extends \yii\web\Controller
         ]);
     }
 
+    public function actionFile($page)
+    {
+        $firm = $this->getFirm();
+
+        if (empty($firm))
+            throw new NotFoundHttpException('The requested page does not exist.');
+
+        $form = null;
+
+        if ($firm->state == $firm::STATE_ACCEPT)
+        {
+            $collection = Collection::find()->where(['alias'=>'firm_documents'])->one();
+
+            $form = Form::find()->where(['alias'=>'firm_documents_user_form'])->one();
+
+            if (!empty($form))
+            {
+                $modelForm = new FormDynamic($form);
+
+                if ($modelForm->load(Yii::$app->request->post()) && $modelForm->validate())
+                {
+                    $prepare = $modelForm->prepareData(true);
+                    $record = $collection->updateRecord($firm->id_record, $prepare);
+
+                    $this->redirect('');
+                }
+            }
+        }
+
+        $files = $collection->getDataQuery()->whereByAlias(['id_record'=>$firm->id_record])->getArray();
+
+        return $this->render('file', [
+            'page' => $page,
+            'firm'=>$firm,
+            'form'=>$form,
+            'files'=>$files,
+            'record'=>$firm->record,
+        ]);
+    }
+
     public function actionFirm($page)
     {
         $firm = $this->getFirm();
