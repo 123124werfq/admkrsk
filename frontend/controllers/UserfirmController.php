@@ -48,9 +48,9 @@ class UserfirmController extends \yii\web\Controller
 
             if (!empty($collection))
             {
-                $record = $collection->getDataQuery()->whereByAlias([
-                    'name'=>$model->name,
-                ])->whereByAlias(['inn'=>$model->inn])->limit(1)->getArray();
+                $record = $collection->getDataQuery()
+                    //->whereByAlias(['name'=>$model->name])
+                    ->whereByAlias(['inn'=>$model->inn])->limit(1)->getArray();
 
                 if (!empty($record))
                     $record = CollectionRecord::findOne(key($record));
