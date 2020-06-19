@@ -50,7 +50,7 @@ class UserfirmController extends \yii\web\Controller
             {
                 $record = $collection->getDataQuery()
                     //->whereByAlias(['name'=>$model->name])
-                    ->whereByAlias(['inn'=>$model->inn])->limit(1)->getArray();
+                    ->whereByAlias(['inn'=>(int)$model->inn])->limit(1)->getArray();
 
                 if (!empty($record))
                     $record = CollectionRecord::findOne(key($record));
@@ -84,7 +84,7 @@ class UserfirmController extends \yii\web\Controller
         if (empty($firm))
             throw new NotFoundHttpException('The requested page does not exist.');
 
-        $modelForm = null;
+        $form = null;
 
         if ($firm->state == $firm::STATE_ACCEPT)
         {
@@ -109,7 +109,7 @@ class UserfirmController extends \yii\web\Controller
         return $this->render('firm', [
             'page' => $page,
             'firm'=>$firm,
-            'form'=>$collection->form,
+            'form'=>$form,
             'record'=>$firm->record,
         ]);
     }
