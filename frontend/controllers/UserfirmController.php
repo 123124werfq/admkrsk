@@ -104,7 +104,7 @@ class UserfirmController extends \yii\web\Controller
                     {
                         $prepare = $modelForm->prepareData(true);
 
-                        $prepare['id_record'] = $firm->id_record;
+                        $prepare['id_firm'] = $firm->id_record;
 
                         if ($collection->insertRecord($prepare))
                         {
