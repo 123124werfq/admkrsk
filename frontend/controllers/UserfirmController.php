@@ -13,6 +13,7 @@ use frontend\models\UserFirmForm;
 use yii\web\NotFoundHttpException;
 
 use yii\filters\AccessControl;
+use yii\web\Response;
 
 class UserfirmController extends \yii\web\Controller
 {
