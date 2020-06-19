@@ -58,11 +58,11 @@ class CollectionWidget extends \yii\base\Widget
             if (!empty($this->attributes['template_view']))
                 $this->template = $this->attributes['template_view'];
 
-            if (!empty($this->attributes['sort']))
-                $this->sort = (int)$this->attributes['sort'];
+            if (!empty($this->attributes['id_column_order']))
+                $this->sort = (int)$this->attributes['id_column_order'];
 
-            if (!empty($this->attributes['dir']))
-                $this->dir = (int)$this->attributes['dir'];
+            if (!empty($this->attributes['order_direction']))
+                $this->dir = (int)$this->attributes['order_direction'];
 
             if (!empty($this->attributes['pagesize']))
                 $this->pagesize = (int)$this->attributes['pagesize'];
