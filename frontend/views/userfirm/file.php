@@ -20,7 +20,7 @@ $this->params['page'] = $page;
         <div class="row">
             <div class="col-2-third order-xs-1">
                 <div class="content searchable">
-                    <h1>Документв организации</h1>
+                    <h1>Документы организации</h1>
 
                     <?=frontend\widgets\FormsWidget::widget(['form'=>$form, 'submitLabel' => 'Добавить']);?>
                 </div>

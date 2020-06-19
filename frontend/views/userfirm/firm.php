@@ -40,6 +40,7 @@ $this->params['page'] = $page;
                     <?php }
                     else
                     {
+                        echo '<a class="btn" href="'.$page->getUrl().'/file">Документы организация</a>';
                         echo frontend\widgets\FormsWidget::widget(['form'=>$form, 'collectionRecord' => $record, 'submitLabel' => 'Сохранить']);
                     }?>
 
