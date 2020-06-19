@@ -22,7 +22,7 @@ $this->params['page'] = $page;
                 <div class="content searchable">
                     <h1>Документы организации</h1>
 
-                    <?=frontend\widgets\FormsWidget::widget(['form'=>$form, 'submitLabel' => 'Добавить']);?>
+                    <?=frontend\widgets\FormsWidget::widget(['form'=>$form, 'action'=>'', 'submitLabel' => 'Добавить']);?>
                 </div>
             </div>
             <div class="col-third order-xs-0">
