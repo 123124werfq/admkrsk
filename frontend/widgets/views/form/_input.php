@@ -49,9 +49,13 @@ if (!empty($arrayGroup))
 {
     $attribute = "[$arrayGroup]" . $attribute;
     $inputname = "FormDynamic[$arrayGroup][$attribute]";
+    $id_input = str_replace(['[',']'], '_', $attribute);
 }
 else
+{
+    $id_input = $attribute;
     $inputname = "FormDynamic[$attribute]";
+}
 
 $id_subform = (!empty($subform)) ? $subform->id_form : '';
 ?>
@@ -222,7 +226,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                     ],
                     'options' => [
                         'value'=>empty($value['id_country'])?$value['country']:$value['id_country'],
-                        'id' => 'input-country' . $attribute
+                        'id' => 'input-country' . $id_input
                     ]
                 ]).'</div>';
 
@@ -237,7 +241,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         'ajax' => [
                             'url' => '/address/region',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_country:getValueById("input-country' . $attribute . '")};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_country:getValueById("input-country' . $id_input . '")};}')
                         ],
                     ],
                     'options' => [
@@ -257,12 +261,12 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         'ajax' => [
                             'url' => '/address/subregion',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_region:getValueById("input-region' . $attribute . '")};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_region:getValueById("input-region' . $id_input . '")};}')
                         ],
                     ],
                     'options' => [
                         'value'=>empty($value['id_subregion'])?$value['subregion']:$value['id_subregion'],
-                        'id' => 'input-subregion' . $attribute
+                        'id' => 'input-subregion' . $id_input
                     ]
                 ]).'</div>';
 
@@ -277,12 +281,12 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         'ajax' => [
                             'url' => '/address/city',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_region:getValueById("input-region' . $attribute . '"),id_subregion:getValueById("input-subregion' . $attribute . '")};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_region:getValueById("input-region' . $id_input . '"),id_subregion:getValueById("input-subregion' . $attribute . '")};}')
                         ],
                     ],
                     'options' => [
                         'value'=>empty($value['id_city'])?$value['city']:$value['id_city'],
-                        'id' => 'input-city'.$attribute
+                        'id' => 'input-city'.$id_input
                     ]
                 ]).'</div>';
 
@@ -296,12 +300,12 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         'ajax' => [
                             'url' => '/address/district',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:getValueById("input-city' . $attribute . '")};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:getValueById("input-city' . $id_input . '")};}')
                         ],
                     ],
                     'options' => [
                         'value'=>empty($value['id_district'])?$value['district']:$value['id_district'],
-                        'id' => 'input-district' . $attribute
+                        'id' => 'input-district' . $id_input
                     ]
                 ]).'</div>';
 
@@ -319,12 +323,12 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         'ajax' => [
                             'url' => '/address/street',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:getValueById("input-city' . $attribute . '"),id_district:getValueById("input-district' . $attribute . '")};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_city:getValueById("input-city' . $id_input . '"),id_district:getValueById("input-district' . $attribute . '")};}')
                         ],
                     ],
                     'options' => [
                         'value'=>empty($value['id_street'])?$value['street']:$value['id_street'],
-                        'id' => 'input-street' . $attribute
+                        'id' => 'input-street' . $id_input
                     ]
                 ]).'</div>';
 
@@ -340,17 +344,17 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                         'ajax' => [
                             'url' => '/address/house',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {search:params.term,id_street:getValueById("input-street' . $attribute . '")};}')
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_street:getValueById("input-street' . $id_input . '")};}')
                         ],
                     ],
                     'options' => [
                         'value'=>empty($value['id_house'])?$value['house']:$value['id_house'],
-                        'id' => 'input-house' . $attribute
+                        'id' => 'input-house' . $id_input
                     ],
                     'pluginEvents' => [
                         "select2:select" => "function(e) {
-                            if ($('#postcode" . $attribute . "').length>0)
-                                $('#postcode" . $attribute . "').val(e.params.data.postalcode);
+                            if ($('#postcode" . $id_input . "').length>0)
+                                $('#postcode" . $id_input . "').val(e.params.data.postalcode);
                         }",
                     ]
                 ]).'</div>';
@@ -365,7 +369,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 if (!empty($options['show_postcode']))
                 {
                     echo '<div class="col-md-4">';
-                    echo $form->field($model, $attribute.'[postalcode]', ['enableClientValidation' => false])->textInput(['id'=>'postcode'.$attribute,'placeholder'=>'Почтовый индекс']);
+                    echo $form->field($model, $attribute.'[postalcode]', ['enableClientValidation' => false])->textInput(['id'=>'postcode'.$id_input,'placeholder'=>'Почтовый индекс']);
                     echo '</div>';
                 }
 
