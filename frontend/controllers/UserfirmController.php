@@ -90,14 +90,19 @@ class UserfirmController extends \yii\web\Controller
         {
             $collection = Collection::find()->where(['alias'=>'municipal_firms'])->one();
 
-            $modelForm = new FormDynamic($collection->form);
+            $form = Form::find()->where(['alias'=>'municipal_firms_user_form'])->one();
 
-            if ($modelForm->load(Yii::$app->request->post()) && $modelForm->validate())
+            if (!empty($form)
             {
-                $prepare = $modelForm->prepareData(true);
-                $record = $collection->updateRecord($firm->id_record, $prepare);
+                $modelForm = new FormDynamic($form);
 
-                $this->redirect('');
+                if ($modelForm->load(Yii::$app->request->post()) && $modelForm->validate())
+                {
+                    $prepare = $modelForm->prepareData(true);
+                    $record = $collection->updateRecord($firm->id_record, $prepare);
+
+                    $this->redirect('');
+                }
             }
         }
 
