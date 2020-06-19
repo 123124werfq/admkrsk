@@ -5,7 +5,7 @@ namespace frontend\models;
 use Yii;
 use yii\base\Model;
 
-class WorkflowForm extends Model
+class UserFirmForm extends Model
 {
     /**
      * @var UploadedFile|Null file attribute
@@ -20,9 +20,9 @@ class WorkflowForm extends Model
     public function rules()
     {
         return [
-            ['inn', 'integer']
-            [['ogrn','name'], 'string']
-            ['name', 'required']
+            ['inn', 'integer'],
+            [['ogrn','name'], 'string'],
+            ['name', 'required'],
         ];
     }
 

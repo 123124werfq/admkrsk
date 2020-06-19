@@ -9,6 +9,7 @@ class CollectionRecordWidget extends \yii\base\Widget
     public $collectionRecord;
     public $renderTemplate = false;
     public $templateAsElement = false;
+    public $columnsAlias = [];
 
     public function run()
     {
@@ -24,7 +25,12 @@ class CollectionRecordWidget extends \yii\base\Widget
         	$columns = $this->collectionRecord->collection->getColumns()->indexBy('alias')->all();
     	}
         else
-        	$columns = $this->collectionRecord->collection->columns;
+        {
+            if (!empty($this->columnsAlias))
+                $columns = $this->collectionRecord->collection->getColumns()->where(['alias'=>$this->columnsAlias])->all();
+        	else 
+                $columns = $this->collectionRecord->collection->columns;
+        }
 
         $recorData = $this->collectionRecord->getData($this->renderTemplate);
 

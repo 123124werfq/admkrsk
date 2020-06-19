@@ -1,0 +1,95 @@
+<?php
+use yii\bootstrap\ActiveForm;
+
+/* @var common\models\Page $page */
+
+/**
+ * @param string $tag
+ * @return array
+ */
+$this->params['page'] = $page;
+
+?>
+<div class="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-2-third">
+                <?= frontend\widgets\Breadcrumbs::widget(['page' => $page]) ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2-third order-xs-1">
+                <div class="content searchable">
+                    <h1><?= $page->title ?></h1>
+
+                    <h1><?= $page->content ?></h1>
+                    
+                    <div class="boxed form-inside">
+                        <?php $form = ActiveForm::begin(['scrollToError' => true]); ?>
+                            
+                            <?= $form->field($model, 'name')->textInput(['class' => 'form-control']) ?>
+                            <div class="row">
+                                <div class="col" style="width: 100%">
+                                    <?= $form->field($model, 'inn')->textInput(['class' => 'form-control']) ?>
+                                </div>
+                                <!--div class="col" style="width: 50%">
+                                    <?= $form->field($model, 'ogrn')->textInput(['class' => 'form-control']) ?>
+                                </div-->
+                            </div>
+
+                            <div class="form-end">
+                                <div class="form-end_right">
+                                    <input type="submit" class="btn btn__secondary" value="Найти">
+                                </div>
+                            </div>
+                        <?php ActiveForm::end(); ?>
+                    </div>
+
+                    <?php if (!empty($record)){?>
+                        <h3>Найденная организация</h3>
+                        <?= frontend\widgets\CollectionRecordWidget::widget([
+                            'collectionRecord'=>$record,
+                            'renderTemplate'=>false,
+                            'columnsAlias'=>[
+                                'name',
+                                'inn',
+                                'orgn',
+                                'telefon',
+                            ]
+                        ]);?>
+
+                        <form action="">
+                            <?= $form->field($model, 'name')->hiddenInput()->label(false) ?>
+                            <?= $form->field($model, 'inn')->hiddenInput()->label(false) ?>
+                            <button type="submit" class="btn btn__secondary" name="id_record" value="<?=$record->id_record?>">Отправить запрос на редактирование</button>
+                        </form>
+                    <?php }?>
+
+                    <?php if (!empty($page->medias)) { ?>
+                        <div class="file-list">
+                            <?php foreach ($page->medias as $key => $media) { ?>
+                                <div class="file-item">
+                                    <!--div class="file-td file-td__date"></div-->
+                                    <div class="file-td file-td__name"><?= empty($media->description)?$media->name:$media->description ?></div>
+                                    <div class="file-td file-td__type"><?= $media->extension ?>
+                                        , <?= round($media->size / 1024, 2) ?>кБ
+                                    </div>
+                                    <div class="file-td file-td__control">
+                                        <a href="<?=$media->getUrl()?>" class="btn btn__secondary btn__block-sm" download="<?=$media->downloadName()?>">Скачать <i class="material-icons btn-icon btn-icon__right btn-icon__sm">get_app</i></a>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+            <div class="col-third order-xs-0">
+                <?= frontend\widgets\RightMenuWidget::widget(['page' => $page]) ?>
+            </div>
+        </div>
+        <hr class="hr hr__md"/>
+        <?= $this->render('//site/_pagestat', ['data' => $page])?>
+    </div>
+</div>
+
+<?= frontend\widgets\AlertWidget::widget(['page' => $page]) ?>
