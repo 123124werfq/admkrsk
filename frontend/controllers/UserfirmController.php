@@ -7,6 +7,7 @@ use common\models\User;
 use common\models\FirmUser;
 use common\models\Collection;
 use common\models\FormDynamic;
+use common\models\Form;
 use common\models\CollectionRecord;
 use frontend\models\UserFirmForm;
 use yii\web\NotFoundHttpException;
