@@ -54,7 +54,15 @@ if ($user) {
                                         if(!isset($links[$cstId]) || !in_array($profile['id_profile'],$links[$cstId]))
                                             continue;
                                     ?>
-                                    <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>&ida=<?=$profile['id_profile']?>">Редактировать заявку от <?= date("d.m.Y H:i", $profile['created_at'])?></a></li>
+                                    <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>&ida=<?=$profile['id_profile']?>">Редактировать заявку от <?= date("d.m.Y H:i", $profile['created_at'])?></a>
+                                        <?php
+                                            if(!empty($profile['comment'])){
+                                        ?>
+                                            <strong><?=$profile['comment']?></strong>
+                                        <?php
+                                            }
+                                        ?>
+                                    </li>
                                 <?php } ?>
                                 <?php if(!empty($contest['participant_form'])){?>
                                     <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>">Создать новую заявку</a></li>

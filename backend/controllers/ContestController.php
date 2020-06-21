@@ -218,7 +218,14 @@ class ContestController extends Controller
         if(Yii::$app->request->get('_csrf'))
         {
             $profile->comment = Yii::$app->request->get('comment');
+
             $profile->updateAttributes(['comment']);
+
+            if(isset($record->ready))
+            {
+                $record->ready = 0;
+                $record->updateAttributes(['ready']);
+            }
 
             return $this->redirect('/contest/profile');
         }
