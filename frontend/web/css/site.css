@@ -194,7 +194,7 @@ ul.pagination {text-align: center;}
 .form-table th {background: #fff!important;}
 .page .form-table .form-control {margin-bottom: 0px;}
 
-.subform .subform {padding: 10px; border: 1px solid #dde1e6;}
+.subform-container .subform-container {padding: 10px; border: 1px solid #dde1e6;}
 
 .fileupload_list .dz-remove, {
     cursor: pointer;
