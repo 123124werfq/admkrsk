@@ -113,6 +113,16 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 echo $form->field($model, $attribute)->textInput($options);
                 break;
             case CollectionColumn::TYPE_INPUT:
+
+                if ($options['type']=='date')
+                {
+                    if (!is_numeric($model->$clearAttribute) && (!empty($model->$clearAttribute)))
+                        $model->$clearAttribute = strtotime($model->$clearAttribute);
+
+                    if (!empty($model->$clearAttribute))
+                        $model->$clearAttribute = date('Y-m-d', $model->$clearAttribute);
+                }
+
                 echo $form->field($model, $attribute)->textInput($options);
                 break;
             case CollectionColumn::TYPE_TEXTAREA:
