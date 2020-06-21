@@ -49,10 +49,20 @@ class ContestController extends Controller
             $columns = json_decode($grid->settings, true);
         }
 
+        $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
+        if(!$contestCollection)
+            throw new BadRequestHttpException();
+
+        $allContests = $contestCollection->getDataQuery()->getArray(true);
+
+        //print_r($allContests); die();
+
         return $this->render('profile', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'customColumns' => $columns,
+            'allContests' => $allContests,
+            'activecontest' => isset($_GET['cont'])?(int)$_GET['cont']:0
         ]);
     }
 

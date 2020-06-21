@@ -49,11 +49,12 @@ class CprofileSearch extends CstProfile
             'query' => $query,
             'sort'=> ['defaultOrder' => ['updated_at'=>SORT_DESC]],
             'pagination' => [
-                'pageSize' => $params['pageSize'] ?? 10
+                'pageSize' => $params['pageSize'] ?? 200
             ],
         ]);
 
         $this->load($params);
+        
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
@@ -62,6 +63,9 @@ class CprofileSearch extends CstProfile
         }
 
         // grid filtering conditions
+        $query->andFilterWhere([
+            //'contestinfo' => ,
+        ]);
 
         return $dataProvider;
     }
