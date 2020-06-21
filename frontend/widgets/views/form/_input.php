@@ -841,7 +841,7 @@ JS;
                         <th></th>
                     </tr>
                     </thead>
-                    <tbody id="inputs<?= $input->id_input ?>">
+                    <tbody id="table<?=$id_input?>">
                     <?php
                         foreach ($data as $rkey => $row)
                         {
@@ -873,7 +873,7 @@ JS;
                     </tbody>
                     <tfoot>
                     <td colspan="<?= count($columns) + 1 ?>">
-                        <a onclick="addInput('inputs<?= $input->id_input ?>')" class="btn btn__gray" href="javascript:">Добавить</a>
+                        <a onclick="addInput('table<?=$id_input?>')" class="btn btn__gray" href="javascript:">Добавить</a>
                     </td>
                     </tfoot>
                 </table>
