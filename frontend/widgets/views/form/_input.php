@@ -612,7 +612,7 @@ JS;
 
                 if (!empty($options['accept_add']))
                 {
-                    echo '<div id="subforms' . $input->id_input . '">';
+                    echo '<div class="subform" id="subforms' . $input->id_input . '">';
 
                     if (empty($records))
                         $records = [null];
