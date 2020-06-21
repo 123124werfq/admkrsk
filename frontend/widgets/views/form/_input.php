@@ -47,8 +47,8 @@ $clearAttribute = $attribute = "input$input->id_input";
 
 if (!empty($arrayGroup))
 {
-    $attribute = "[$arrayGroup]" . $attribute;
     $inputname = "FormDynamic[$arrayGroup][$attribute]";
+    $attribute = "[$arrayGroup]" . $attribute;
     $id_input = str_replace(['[',']'], '_', $attribute);
 }
 else
@@ -617,7 +617,8 @@ JS;
                     if (empty($records))
                         $records = [null];
 
-                    foreach ($records as $key => $record) {
+                    foreach ($records as $key => $record)
+                    {
                         $arrayGroup = md5(rand(0, 10000) . time());
 
                         $inputs[$attribute . '[]'] = $arrayGroup;
@@ -861,7 +862,7 @@ JS;
                                     echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::dropDownList($inputname.'['.$rkey.']['.$alias.']',$row[$alias]??'',$values,['id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
                                 }
                                 else
-                                    echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::textINput($inputname.'['.$rkey.']['.$alias.']',$row[$alias]??'',['type'=>$column['type'],'id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
+                                    echo '<td '.(!empty($column['width'])?'width="'.$column['width'].'"':'').'>'.Html::textInput($inputname.'['.$rkey.']['.$alias.']',$row[$alias]??'',['type'=>$column['type'],'id'=>'input'.$input->id_input.'_col','class'=>"form-control"]).'</td>';
                                 $i++;
                             }
                             echo '<td width="10" class="td-close">
