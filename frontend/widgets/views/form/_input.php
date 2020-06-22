@@ -621,7 +621,7 @@ JS;
                     {
                         $arrayGroup = md5(rand(0, 1000000) . time());
 
-                        $inputs['FormDynamic[group]'.$attribute . '[]'] = $arrayGroup;
+                        $inputs[$clearAttribute . '[]'] = $arrayGroup;
 
                         if (!empty($record))
                             $inputs[$attribute . '_id_record[]'] = $record->id_record;

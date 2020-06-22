@@ -16,6 +16,8 @@ class FormDynamic extends DynamicModel
     public $data;
     public $postData;
     public $group;
+    public $arrayGroup;
+
     protected $labels;
 
     //private $_properties;
