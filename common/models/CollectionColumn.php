@@ -593,7 +593,10 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 return $city->name??null;
                 break;
             case self::TYPE_COLLECTIONS:
-                return '<span>'.implode('</span><br/><span>', $value).'</span>';
+                if (is_array($value))
+                    return '<span>'.implode('</span><br/><span>', $value).'</span>';
+                else
+                    return $value;
                 break;
             case self::TYPE_FILE:
                 if (is_array($value))
