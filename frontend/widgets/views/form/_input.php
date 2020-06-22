@@ -619,9 +619,9 @@ JS;
 
                     foreach ($records as $key => $record)
                     {
-                        $arrayGroup = md5(rand(0, 10000) . time());
+                        $arrayGroup = md5(rand(0, 1000000) . time());
 
-                        $inputs[$attribute . '[]'] = $arrayGroup;
+                        $inputs[$clearAttribute . '[]'] = $arrayGroup;
 
                         if (!empty($record))
                             $inputs[$attribute . '_id_record[]'] = $record->id_record;
