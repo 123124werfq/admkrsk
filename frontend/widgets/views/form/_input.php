@@ -114,7 +114,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
                 break;
             case CollectionColumn::TYPE_INPUT:
 
-                if ($options['type']=='date')
+                if (!empty($options['type']) && $options['type']=='date')
                 {
                     if (!is_numeric($model->$clearAttribute) && (!empty($model->$clearAttribute)))
                         $model->$clearAttribute = strtotime($model->$clearAttribute);
