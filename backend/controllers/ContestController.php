@@ -221,10 +221,10 @@ class ContestController extends Controller
 
             $profile->updateAttributes(['comment']);
 
-            if(isset($record->ready))
+            if(!empty($profile->comment))
             {
-                $record->ready = 0;
-                $record->updateAttributes(['ready']);
+                $record->data = ['ready' => 0];
+                $record->save();
             }
 
             return $this->redirect('/contest/profile');
