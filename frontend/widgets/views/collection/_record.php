@@ -16,12 +16,13 @@
                 {
                     if ($column->isRelation())
                     {
-                        foreach ($recordData[$column->id_column] as $id_subrecord => $subrecord)
-                        {
-                            echo \frontend\widgets\CollectionRecordWidget::widget([
-                                'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
-                            ]);
-                        }
+                        if (!empty($recordData[$column->id_column]) && is_array($recordData[$column->id_column]))
+                            foreach ($recordData[$column->id_column] as $id_subrecord => $subrecord)
+                            {
+                                echo \frontend\widgets\CollectionRecordWidget::widget([
+                                    'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
+                                ]);
+                            }
                     }
                     else
                         echo $column->getValueByType($recordData[$column->id_column]);
