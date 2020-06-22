@@ -15,6 +15,7 @@ class FormDynamic extends DynamicModel
     public $form;
     public $data;
     public $postData;
+    public $group;
     protected $labels;
 
     //private $_properties;
@@ -73,6 +74,9 @@ class FormDynamic extends DynamicModel
                     break;
             }
         }
+
+        // для подформ
+        $this->addRule(['group'], 'safe');
     }
 
     public function loadDataFromRecord($data)
