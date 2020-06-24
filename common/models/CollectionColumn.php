@@ -592,6 +592,12 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 $model = Street::findOne((int)$value);
                 return $city->name??null;
                 break;
+            case self::TYPE_JSON:
+                if (is_array($value))
+                    return $value
+
+                return json_decode($value,true);
+                break;
             case self::TYPE_COLLECTIONS:
                 if (is_array($value))
                     return '<span>'.implode('</span><br/><span>', $value).'</span>';
