@@ -130,7 +130,7 @@ if (!Yii::$app->user->isGuest)
                         <?php if (!Yii::$app->user->isGuest): ?>
                             <a class="dropdown-menu_item" href="/personal">Личный&nbsp;кабинет</a>
                             <?php if(!strpos(Yii::$app->request->hostName, 'ants.') ){ ?>
-                            <a class="dropdown-menu_item" href="/service">Мои&nbsp;запросы&nbsp;услуг</a>
+                            <a class="dropdown-menu_item" href="/administration/service/userhistory">Мои&nbsp;запросы&nbsp;услуг</a>
                             <a class="dropdown-menu_item" href="/reception/list">Мои&nbsp;обращения</a>
                             <a class="dropdown-menu_item" href="/reception/request">Написать&nbsp;обращение</a>
                             <?php } ?>
