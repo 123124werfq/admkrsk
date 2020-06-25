@@ -5,6 +5,14 @@ toastr.options = {
     timeOut: 5000
 };
 
+function getValueById(id)
+{
+    if ($("#"+id).length>0)
+        return $("#"+id).val();
+
+    return '';
+}
+
 function setVisisble()
 {
     $("div[data-visible-field]").each(function(){

@@ -564,6 +564,111 @@ class CollectionColumn extends \yii\db\ActiveRecord
             return $value;
         }
 
+
+        /*class ValueClass
+        {
+            public $value;
+
+            public function __construct($value)
+            {
+                $this->foo = $value;
+            }
+
+            public function __toString()
+            {
+                $value = $this->$value;
+
+                case self::TYPE_DATE:
+                    return date('d.m.Y',$value);
+                    break;
+                case self::TYPE_DATETIME:
+                    return date('d.m.Y H:i',$value);
+                    break;
+                case self::TYPE_DISTRICT:
+                    $model = District::findOne((int)$value);
+                    return $model->name??null;
+                    break;
+                case self::TYPE_REGION:
+                    $model = Region::findOne((int)$value);
+                    return $model->name??null;
+                    break;
+                case self::TYPE_SUBREGION:
+                    $model = Subregion::findOne((int)$value);
+                    return $model->name??null;
+                    break;
+                case self::TYPE_CITY:
+                    $model = City::findOne((int)$value);
+                    return $city->name??null;
+                    break;
+                case self::TYPE_STREET:
+                    $model = Street::findOne((int)$value);
+                    return $city->name??null;
+                    break;
+
+                case self::TYPE_COLLECTIONS:
+                    if (is_array($value))
+                        return '<span>'.implode('</span><br/><span>', $value).'</span>';
+                    else
+                        return $value;
+                    break;
+
+                case self::TYPE_FILE:
+                    if (is_array($value))
+                    {
+                        $ids = [];
+                        foreach ($value as $key => $data)
+                        {
+                            if (is_numeric($data))
+                                $ids[] = $data;
+                            else if (!empty($data['id']))
+                                $ids[] = $data['id'];
+                        }
+
+                        if (empty($ids))
+                            return '';
+
+                        $medias = Media::find()->where(['id_media'=>$ids])->all();
+
+                        $output = [];
+                        foreach ($medias as $key => $media) {
+                            $output[] = '<a href="'.$media->getUrl().'" download="'.$media->downloadName().'"><nobr>'.$media->name.'</nobr><a>';
+                        }
+
+                        return implode('<br>', $output);
+                    }
+                    else
+                        return '';
+                    break;
+                case self::TYPE_FILE_OLD:
+                    $slugs = explode('/', $value);
+                    return '<a href="'.$value.'">'.array_pop($slugs).'<a>';
+                    break;
+                case self::TYPE_IMAGE:
+                    if (is_array($value) || is_numeric($value))
+                    {
+                        $ids = [];
+                        foreach ($value as $key => $data)
+                        {
+                            if (is_numeric($data))
+                                $ids[] = $data;
+                            else if (!empty($data['id']))
+                                $ids[] = $data['id'];
+                        }
+
+                        if (empty($ids))
+                            return '';
+
+                        $media = Media::find()->where(['id_media'=>$ids])->one();
+
+                        if (!empty($media->height))
+                            return '<img src="'.$media->showThumb(['w'=>200,'h'=>200]).'"/>';
+                        else
+                            return '<a href="'.$media->getUrl().'">'.$media->name.'</a>';
+                    }
+                    break;
+            }
+        }*/
+
         switch ($this->type)
         {
             case self::TYPE_DATE:
