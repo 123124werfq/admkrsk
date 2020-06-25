@@ -11,6 +11,7 @@ use Yii;
 use common\models\Collection;
 use common\models\FormInput;
 use common\models\Form;
+use common\models\House;
 use common\models\CollectionRecord;
 use common\models\CollectionColumn;
 use backend\models\search\CollectionSearch;
@@ -344,6 +345,9 @@ class CollectionController extends Controller
 
                         foreach ($alldata as $id_record => $data)
                         {
+                            if (empty($data[$col]))
+                                continue;
+
                             $address = new \SimpleXMLElement($data[$col]);
 
                             $empty = [
@@ -410,6 +414,8 @@ class CollectionController extends Controller
                                         break;
                                 }
                             }
+
+                            $empty = House::fillID($empty);
 
                             $empty['fullname'] = implode(', ', array_filter($empty));
 

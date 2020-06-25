@@ -216,6 +216,29 @@ class House extends \yii\db\ActiveRecord
         }
     }
 
+    public static function fillID($address)
+    {
+        $addModel = Country::findOne(['name'=>$address['country']]);
+        $address['id_country'] = $addModel->id_country??'';
+
+        $addModel = Region::findOne(['name'=>$address['region']]);
+        $address['id_region'] = $addModel->id_region??'';
+
+        $addModel = Subregion::findOne(['name'=>$address['subregion'],'id_region'=>$address['id_region']]);
+        $address['id_subregion'] = $addModel->id_subregion??'';
+
+        $addModel = City::findOne(['name'=>$address['city'],'id_region'=>$address['id_region']]);
+        $address['id_city'] = $addModel->id_city??'';
+
+        $addModel = City::findOne(['name'=>$address['district'],'id_city'=>$address['id_city']]);
+        $address['id_district'] = $addModel->id_district??'';
+
+        $addModel = Street::findOne(['name'=>$address['street'],'id_city'=>$address['id_city']]);
+        $address['id_street'] = $addModel->id_street??'';
+
+        return $address;
+    }
+
     public function getArrayData()
     {
         return [
