@@ -86,54 +86,81 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
     Form::class
 );
 ?>
-<div id="accordion">
-    <h3 id="grid-setting">Настройки таблицы</h3>
-    <div id="sortable">
-        <?php foreach ($visibleColumns as $name => $isVisible): ?>
-            <div class="ui-state-default">
-                <input type="checkbox" <?= $isVisible ? 'checked' : null ?> />
-                <span><?= $name ?></span></div>
-        <?php endforeach; ?>
-        <div class="ibox">
-            <div style="
-            padding-top: 5px;
-            padding-left: 10px;">
-                <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary', 'id' => 'sb']) ?>
-            </div>
+<div class="tabs-container">
+        <ul class="nav nav-tabs" role="tablist">
+            <li>
+                <?=Html::a('Данные', ['collection-record/index', 'id' => $collection->id_collection], ['class' => 'nav-link'])?>
+            </li>
+            <li>
+                <?=Html::a('Колонки', ['collection-column/index', 'id' => $collection->id_collection], ['class' => 'nav-link'])?>
+            </li>
+            <li>
+                <?=Html::a('Главная форма', ['form/view', 'id' => $collection->id_form], ['class' => 'nav-link'])?>
+            </li>
+            <li class="active">
+                <?=Html::a('Формы', ['form/collection', 'id' => $collection->id_collection], ['class' => 'nav-link'])?>
+            </li>
+            <li>
+                <?=Html::a('Страницы', ['collection/pages', 'id' => $collection->id_collection], ['class' => 'nav-link'])?>
+            </li>
+        </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane active">
+        <div class="panel-body">    
+
+                    <div id="accordion">
+                        <h3 id="grid-setting">Настройки таблицы</h3>
+                        <div id="sortable">
+                            <?php foreach ($visibleColumns as $name => $isVisible): ?>
+                                <div class="ui-state-default">
+                                    <input type="checkbox" <?= $isVisible ? 'checked' : null ?> />
+                                    <span><?= $name ?></span></div>
+                            <?php endforeach; ?>
+                            <div class="ibox">
+                                <div style="
+                                padding-top: 5px;
+                                padding-left: 10px;">
+                                    <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary', 'id' => 'sb']) ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ibox">
+                        <div class="ibox-content">
+                        <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
+
+                        <?= GridView::widget([
+                            'dataProvider' => $dataProvider,
+                            'filterModel' => $searchModel,
+                            'columns' => array_merge(array_values($gridColumns), [
+                                [
+                                    'class' => 'yii\grid\ActionColumn',
+                                    'template' => '{view} {update} ' . ($archive ? '{undelete}' : '{delete}'),
+                                    'buttons' => [
+                                        'undelete' => function ($url, $model, $key) {
+                                            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-floppy-disk"]);
+                                            return Html::a($icon, $url, [
+                                                'title' => 'Восстановить',
+                                                'aria-label' => 'Восстановить',
+                                                'data-pjax' => '0',
+                                            ]);
+                                        },
+                                    ],
+                                    'contentOptions' => ['class' => 'button-column']
+                                ],
+                            ]),
+                            'tableOptions' => [
+                                'emptyCell ' => '',
+                                'class' => 'table table-striped ids-style valign-middle table-hover',
+                                'data-grid' => FormController::grid,
+                                'id' => 'grid',
+                            ]
+                        ]); ?>
+                        </div>
+                    </div>
         </div>
-    </div>
-</div>
-
-<div class="ibox">
-    <div class="ibox-content">
-    <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => array_merge(array_values($gridColumns), [
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {update} ' . ($archive ? '{undelete}' : '{delete}'),
-                'buttons' => [
-                    'undelete' => function ($url, $model, $key) {
-                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-floppy-disk"]);
-                        return Html::a($icon, $url, [
-                            'title' => 'Восстановить',
-                            'aria-label' => 'Восстановить',
-                            'data-pjax' => '0',
-                        ]);
-                    },
-                ],
-                'contentOptions' => ['class' => 'button-column']
-            ],
-        ]),
-        'tableOptions' => [
-            'emptyCell ' => '',
-            'class' => 'table table-striped ids-style valign-middle table-hover',
-            'data-grid' => FormController::grid,
-            'id' => 'grid',
-        ]
-    ]); ?>
+      </div>
     </div>
 </div>

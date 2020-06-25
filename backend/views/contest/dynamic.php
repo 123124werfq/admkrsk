@@ -73,11 +73,17 @@ if (Yii::$app->user->can('admin.service')) {
 
                 $voteName = 'не голосовал';
 
-                if($currentVal>0)
-                    $voteName = '<span class="badge badge-success">ЗА</span>';
-                else if($currentVal<0)
-                    $voteName = '<span class="badge badge-danger">ПРОТИВ</span>';
-
+                if($vote_type == 'Баллы')
+                {
+                    $voteName = $currentVal;
+                }
+                else
+                {
+                    if($currentVal>0)
+                        $voteName = '<span class="badge badge-success">ЗА</span>';
+                    else if($currentVal<0)
+                        $voteName = '<span class="badge badge-danger">ПРОТИВ</span>';
+                }
                 ?>
                 <td style="min-width: 100px;">
                     <?=$voteName?>
@@ -85,19 +91,28 @@ if (Yii::$app->user->can('admin.service')) {
             <?php } ?>  
             <td>
                 <?php 
-                    if($result<0)
-                        $final = '<span class="badge badge-danger">ПРОТИВ</span>';
-                    else if($result>0)
-                        $final = '<span class="badge badge-success">ЗА</span>';
+                    if($vote_type == 'Баллы')
+                    {
+                        echo $result;
+                    }
                     else
-                        $final = 'спорная';
-                    $ref = 0;
+                    {
+                        if($result<0)
+                            $final = '<span class="badge badge-danger">ПРОТИВ</span>';
+                        else if($result>0)
+                            $final = '<span class="badge badge-success">ЗА</span>';
+                        else
+                            $final = 'спорная';
+                        $ref = 0;
                     ?>
                     <!--select name="results">
                         <option value="0"></option>
                         <option value="-1" <?=($ref==-1)?'selected':''?>>ПРОТИВ</option>
                         <option value="1" <?=($ref==1)?'selected':''?>>ЗА</option>
                     </select-->&nbsp;<?=$final?><br>
+                <?php
+                    }
+                ?>
                 </td>         
         </tr>
         <?php } ?>

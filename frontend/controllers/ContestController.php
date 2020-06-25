@@ -249,6 +249,7 @@ class ContestController extends \yii\web\Controller
                 'id' => $ckey,
                 'name' => $cst['name'],
                 'state' => $cst['contest_state'],
+                'vote_type' => isset($cst['vote_type'])?$cst['vote_type']:0,
                 'count' => $count,
                 'countTotal' => $countTotal,
                 'profiles' => $links[$ckey]??[]
@@ -279,6 +280,30 @@ class ContestController extends \yii\web\Controller
         if(!$profile || $profile->state != CstProfile::STATE_ACCEPTED)
             throw new BadRequestHttpException();
 
+        $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
+        if(!$contestCollection)
+            throw new BadRequestHttpException();
+    
+        $activeContests = $contestCollection->getDataQuery()->whereByAlias(['<>', 'contest_state', 'Конкурс завершен'])->getArray(true);
+        $currentContest = null;
+
+        foreach ($activeContests as $ckey => $cst) {
+            if(!empty($cst['participant_form']))
+            {
+                $form = Form::find()->where(['alias' => $cst['participant_form']])->one();
+                if(!$form)
+                    continue;
+
+                if($form->id_collection == $profile->id_record_contest)                    
+                {
+                    $currentContest = $cst;
+                    break;
+                }
+
+            }
+        }
+
+//        var_dump($currentContest); die();
 
         $tvote = CstVote::find()->where(['id_expert' => $expert->id_expert, 'id_profile' => $profile->id_profile])->one();
 
@@ -292,10 +317,18 @@ class ContestController extends \yii\web\Controller
                 $tvote->id_expert = $expert->id_expert;
                 $tvote->id_profile = $profile->id_profile;
             }
-            if($vote == 'yes')
-                $tvote->value = 1;
+
+            if(isset($currentContest['vote_type']) && $currentContest['vote_type']=='Баллы')
+            {
+                $tvote->value = (int)$vote;
+            }
             else
-                $tvote->value = -1;
+            {
+                if($vote == 'yes')
+                    $tvote->value = 1;
+                else
+                    $tvote->value = -1;
+            }
 
             $tvote->save();
 
@@ -312,7 +345,8 @@ class ContestController extends \yii\web\Controller
 
         return $this->render('item', [
             'collectionRecord' => $profileData,
-            'tvote' => $tvote
+            'tvote' => $tvote,
+            'contest' => $currentContest
         ]);
 
     }

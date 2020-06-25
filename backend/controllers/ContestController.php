@@ -340,6 +340,7 @@ class ContestController extends Controller
             throw new BadRequestHttpException();
 
         $data = $links = $experts = [];
+        $vote_type = 0;
 
         $activeContests = $contestCollection->getDataQuery()->whereByAlias(['<>', 'contest_state', 'Конкурс завершен'])->getArray(true);
 
@@ -350,7 +351,8 @@ class ContestController extends Controller
 
             $tmp = $activeContests[$id];
             $activeContests = [];
-            $activeContests[$id] = $tmp;            
+            $activeContests[$id] = $tmp; 
+            $vote_type = isset($activeContests[$id]['vote_type'])?$activeContests[$id]['vote_type']:0;
         }
 
         $profiles = CstProfile::find()->all();
@@ -419,7 +421,8 @@ class ContestController extends Controller
 
         return $this->render('dynamic',[
             'votelist' => $links,
-            'experts' => $experts
+            'experts' => $experts,
+            'vote_type' => $vote_type
         ]);
 
     }
