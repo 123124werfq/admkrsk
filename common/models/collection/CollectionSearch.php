@@ -240,7 +240,14 @@ class CollectionSearch extends DynamicModel
                         $labels = json_decode($model[$col_alias.'_search'],true);
 
                         if (is_array($labels))
-                            return implode('<br>', $labels);
+                        {
+                            $links = [];
+                            foreach ($model[$col_alias] as $key => $id_record) {
+                                $links[] = '<a data-pjax="0" target="_blank" href="/collection-record/view?id='.$id_record.'">'.$labels[$id_record].'</a>';
+                            }
+
+                            return implode('<br>', $links);
+                        }
                     }
 
                     //$labels = json_decode($model[$col_alias],true);
@@ -266,7 +273,7 @@ class CollectionSearch extends DynamicModel
                         foreach ($model[$col_alias] as $ckey => $id)
                         {
                             if (!empty($labels[$ckey]))
-                                $links[] = '<a href="/collection-record/update?id='.$id.'">'.$labels[$ckey].'</a>';
+                                $links[] = '<a data-pjax="0" target="_blank" href="/collection-record/view?id='.$id.'">'.$labels[$ckey].'</a>';
                         }
                     else
                         $links = $labels;
