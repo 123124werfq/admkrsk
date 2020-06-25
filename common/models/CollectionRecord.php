@@ -321,7 +321,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                         $subrecord = CollectionRecord::findOne(key($value));
                         $output[$column['alias']] = $subrecord->getDataAsString($keyAsAlias,false);
                     }
-                    else if ($column->type == CollectionColumn::TYPE_COLLECTION)
+                    else if ($column->type == CollectionColumn::TYPE_COLLECTIONS)
                     {
                         $output[$column['alias']] = [];
 
