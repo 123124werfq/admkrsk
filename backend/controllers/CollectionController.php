@@ -386,6 +386,7 @@ class CollectionController extends Controller
                                         $empty['subregion'] = $level;
                                         break;
                                     case 3:
+                                        $level = str_replace('Красноярск г', 'г Красноярск', $level);
                                         $empty['city'] = $level;
                                         break;
                                     case 5:
