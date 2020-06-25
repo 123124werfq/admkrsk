@@ -222,7 +222,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
 
                 if (!empty($options['show_country']))
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[country]')->widget(Select2::class, [
-                    'data' => [$value['id_country']=>$value['country']],
+                    'data' => [$value['id_country']?:$value['country']=>$value['country']],
                     'pluginOptions' => [
                         'multiple' => false,
                         'tags' => true,
@@ -242,7 +242,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
 
                 if (!empty($options['show_region']))
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[region]')->widget(Select2::class, [
-                    'data' => [$value['id_region']=>$value['region']],
+                    'data' => [$value['id_region']?:$value['region']=>$value['region']],
                     'pluginOptions' => [
                         'multiple' => false,
                         'minimumInputLength' => 0,
@@ -262,7 +262,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
 
                 if (!empty($options['show_subregion']))
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[subregion]', ['enableClientValidation' => false])->widget(Select2::class, [
-                    'data' => [$value['id_subregion']=>$value['subregion']],
+                    'data' => [$value['id_subregion']?:$value['subregion']=>$value['subregion']],
                     'pluginOptions' => [
                         'multiple' => false,
                         'minimumInputLength' => 0,
@@ -282,7 +282,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
 
                 if (!empty($options['show_city']))
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[city]')->widget(Select2::class, [
-                    'data' => [$value['id_city']=>$value['city']],
+                    'data' => [$value['id_city']?:$value['city']=>$value['city']],
                     'pluginOptions' => [
                         'multiple' => false,
                         'minimumInputLength' => 0,
@@ -302,7 +302,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
 
                 if (!empty($options['show_district']))
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[district]', ['enableClientValidation' => false])->widget(Select2::class, [
-                    'data' => [$value['id_district']=>$value['district']],
+                    'data' => [$value['id_district']?:$value['district']=>$value['district']],
                     'pluginOptions' => [
                         'multiple' => false,
                         'tags' => true,
@@ -323,7 +323,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
 
                 if (!empty($options['show_street']))
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[street]')->widget(Select2::class, [
-                    'data' => [$value['id_street']=>$value['street']],
+                    'data' => [$value['id_street']?:$value['street']=>$value['street']],
                     'pluginOptions' => [
                         'multiple' => false,
                         //'allowClear' => true,
@@ -344,7 +344,7 @@ $id_subform = (!empty($subform)) ? $subform->id_form : '';
 
                 if (!empty($options['show_house']))
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[house]')->widget(Select2::class, [
-                    'data' => [$value['id_house']=>$value['house']],
+                    'data' => [$value['id_house']?:$value['house']=>$value['house']],
                     'pluginOptions' => [
                         'multiple' => false,
                         //'allowClear' => true,
