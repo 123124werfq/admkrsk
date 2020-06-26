@@ -30,8 +30,8 @@
 
                         $ths = json_decode($column->input->values, true);
 
-                        if (!is_array($values) && !empty($values))
-                            echo json_encode($array);
+                        if (!is_array($values) || empty($values))
+                            echo json_encode($values);
                         else
                         {
                             echo '<table><tr>';
