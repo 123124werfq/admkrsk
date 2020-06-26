@@ -110,10 +110,24 @@ class CollectionController extends \yii\web\Controller
 
         $options = json_decode($settings->settings,true);
 
+        if (!empty($options['download_columns']))
+        {
+            $options['columns'] = [];
+            foreach ($options['download_columns'] as $key => $id_column) {
+                   $options['columns'][] = ['id_column'=>$id_column];
+            }
+
+            $settings->settings = json_encode($options);
+        }
+
         $head = [];
+        $columns = [];
 
         foreach ($settings->columns as $key => $column)
+        {
+            $columns[$column->id_column] = $column;
             $head[] = $column->name;
+        }
 
         $query = $settings->collection->getDataQueryByOptions($options);
         $allrows = $query->getArray();

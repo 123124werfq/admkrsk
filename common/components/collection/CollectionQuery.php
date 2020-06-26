@@ -19,11 +19,13 @@ class CollectionQuery extends \yii\mongodb\Query
     public $ids = [];
     public $keyAsAlias;
 
+    public $id_columns_search;
+
     public static function getQuery($id_collection)
     {
         $query = new CollectionQuery;
         $query->collection = Collection::findOneWithDeleted($id_collection);
-        
+
         $query->from('collection'.$id_collection);
         //$query->andWhere(['=','date_delete',null]);
 
@@ -43,9 +45,15 @@ class CollectionQuery extends \yii\mongodb\Query
         return $query;
     }
 
-    public function select(array $id_columns=[])
+    public function select(array $id_columns=[], array $id_columns_search=[])
     {
         $columns = $this->collection->getColumns()->with('input')->select(['alias','id_column','name','type','id_collection']);
+
+        if (!empty($id_columns_search))
+        {
+            $this->id_columns_search = array_diff($id_columns_search, $id_columns);
+            $id_columns = array_merge($id_columns,$id_columns_search);
+        }
 
         if (!empty($id_columns))
             $columns->where(['id_column'=>$id_columns]);
@@ -155,7 +163,10 @@ class CollectionQuery extends \yii\mongodb\Query
         $emptyRow = [];
 
         foreach ($this->columns as $key => $col)
-            $emptyRow[$this->keyAsAlias?$col->alias:$col->id_column] = '';
+        {
+            if (!in_array($col->id_column, $this->id_columns_search))
+                $emptyRow[$this->keyAsAlias?$col->alias:$col->id_column] = '';
+        }
 
         foreach ($this->all() as $key => $record)
         {
@@ -165,7 +176,7 @@ class CollectionQuery extends \yii\mongodb\Query
             {
                 $id_column = str_replace('col', '', $vkey);
 
-                if (!isset($this->columns[$id_column]))
+                if (!isset($this->columns[$id_column]) || in_array($id_column, $this->id_columns_search))
                     continue;
 
                 if (!empty($value))

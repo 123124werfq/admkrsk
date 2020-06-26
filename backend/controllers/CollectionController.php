@@ -897,6 +897,7 @@ class CollectionController extends Controller
         $collectionPluginSettings['pagesize'] = $model->pagesize;
         $collectionPluginSettings['table_head'] = $model->table_head;
         $collectionPluginSettings['table_style'] = $model->table_style;
+        $collectionPluginSettings['download_columns'] = $model->download_columns;
         $collectionPluginSettings['show_download'] = $model->show_download;
         $collectionPluginSettings['show_row_num'] = $model->show_row_num;
         $collectionPluginSettings['show_on_map'] = $model->show_on_map;
