@@ -142,7 +142,15 @@ class CollectionController extends \yii\web\Controller
 
         fputs($out, chr(0xEF) . chr(0xBB) . chr(0xBF)); // BOM
         foreach ($allrows as $data)
+        {
+            foreach ($data as $dkey => $value)
+            {
+                if (is_array($value))
+                    $data[$dkey] = implode(', ', $value);
+            }
+
             fputcsv($out, $data,';');
+        }
 
         fclose($out);
     }

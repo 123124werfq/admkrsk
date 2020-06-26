@@ -19,7 +19,7 @@ class CollectionQuery extends \yii\mongodb\Query
     public $ids = [];
     public $keyAsAlias;
 
-    public $id_columns_search=[];
+    public $id_columns_search = [];
 
     public static function getQuery($id_collection)
     {
@@ -38,9 +38,6 @@ class CollectionQuery extends \yii\mongodb\Query
 
         if (!empty($pagesize))
             $query->pagesize = $pagesize;
-
-        // сортировка по умолчанию
-        //$query->orderBy('id_record ASC');
 
         return $query;
     }
