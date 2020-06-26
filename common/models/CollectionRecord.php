@@ -6,6 +6,7 @@ use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use common\modules\log\behaviors\LogBehavior;
+use common\components\helper\Helper;
 use yii\mongodb\Query;
 
 /**
@@ -269,17 +270,26 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
             // Это надо оптимизировать, перенесено под инсерт потомучто не работает при CREATE / MSD
             $dataMongo = [];
+            $columnsAlias = [];
 
+            $hasCustom = false;
             // собираем кастомные колонки
             foreach ($columns as $key => $column)
             {
                 if ($column->isCustom())
                 {
-                    if (empty($recordData))
-                        $recordData = $this->getDataAsString(true,true);
-
-                    $dataMongo['col'.$column->id_column] = CollectionColumn::renderCustomValue($column->template,$recordData);
+                    $hasCustom = true;
+                    $columnsAlias = array_merge(Helper::getTwigVars($column->template),$columnsAlias);
                 }
+            }
+
+            if ($hasCustom)
+            {
+                $recordData = $this->getDataAsString(true,true,$columnsAlias);
+
+                foreach ($columns as $key => $column)
+                    if ($column->isCustom())
+                        $dataMongo['col'.$column->id_column] = CollectionColumn::renderCustomValue($column->template,$recordData,$columnsAlias);
             }
 
             if (!empty($dataMongo))
@@ -294,7 +304,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
         $recordData = $this->getData(true);
     }*/
 
-    public function getDataAsString($keyAsAlias=true,$includeRelation=false)
+    public function getDataAsString($keyAsAlias=true,$includeRelation=false,$onlyColumns=[])
     {
         $record = \common\components\collection\CollectionQuery::getQuery($this->id_collection)
                     ->select()
@@ -312,6 +322,9 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
             foreach ($columns as $key => $column)
             {
+                if (!empty($onlyColumns) && !in_array($column->alias, $onlyColumns))
+                    continue;
+
                 $value = $record[$column->id_column];
 
                 if ($includeRelation && $column->isRelation() && !empty($value))
@@ -321,7 +334,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                         $subrecord = CollectionRecord::findOne(key($value));
                         $output[$column['alias']] = $subrecord->getDataAsString($keyAsAlias,false);
                     }
-                    else if ($column->type == CollectionColumn::TYPE_COLLECTION)
+                    else if ($column->type == CollectionColumn::TYPE_COLLECTIONS)
                     {
                         $output[$column['alias']] = [];
 
@@ -330,9 +343,9 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             $subrecord = CollectionRecord::findOne($id_record);
                             $output[$column['alias']][] = $subrecord->getDataAsString($keyAsAlias,false);
                         }
-
-                        $output[$column['alias']] = $column->getValueByType($value);
                     }
+                    else 
+                        $output[$column['alias']] = $column->getValueByType($value);
                 }
                 else
                 {
