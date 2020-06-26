@@ -19,7 +19,7 @@ class CollectionQuery extends \yii\mongodb\Query
     public $ids = [];
     public $keyAsAlias;
 
-    public $id_columns_search;
+    public $id_columns_search=[];
 
     public static function getQuery($id_collection)
     {
