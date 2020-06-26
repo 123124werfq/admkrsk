@@ -450,6 +450,9 @@ JS;
                         $file_uploaded .= $this->render('_file', ['media' => $media, 'attribute' => $attribute, 'index' => $mkey,'options'=>$options]);
                 }
 
+                if (empty($options['filesize']))
+                    $options['filesize'] = 10;
+
                 echo '
 				<div data-input="' . $input->id_input . '" class="fileupload" ' . implode(' ', $dataOptions) . '>
 	                <div class="fileupload_dropzone">
@@ -459,7 +462,7 @@ JS;
 	                    </div>
 	                    <div class="fileupload_content">
 	                        <p class="fileupload_label">Перетащите сюда файлы для загрузки</p>
-	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — <span class="maxFormSize">' . (!empty($options['filesize']) ? $options['filesize'] : '10') . '</span> Мб</p>
+	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — <span class="maxFormSize">' . $options['filesize'] . '</span> Мб</p>
 	                    </div>
 	                </div>
 	                <div class="fileupload_list '.(!empty($options['pagecount'])?'show-pagecount':'').'">' . $file_uploaded . '</div>
