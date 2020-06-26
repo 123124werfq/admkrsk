@@ -51,7 +51,12 @@
                         }
                     }
                     else
-                        echo $column->getValueByType($recordData[$column->id_column]);
+                    {
+                        $value = $column->getValueByType($recordData[$column->id_column]);
+                        if (is_array($value))
+                            var_dump($value);
+                        else echo $value;
+                    }
                 }
             ?>
         </td>
