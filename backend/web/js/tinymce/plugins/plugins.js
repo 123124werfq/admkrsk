@@ -285,6 +285,7 @@ tinymce.PluginManager.add("form", function(editor, url) {
     });
 });
 
+
 tinymce.PluginManager.add("pagenews", function(editor, url) {
     var _dialog = false;
     var _forms = [];
@@ -722,6 +723,50 @@ tinymce.PluginManager.add("recordSearch", function(editor, url) {
     });
 });
 
+/*tinymce.PluginManager.add("subcollection", function(editor, url) {
+    var _dialog = false;
+    var _typeOptions = [];
+
+    function _onAction() {
+        $.ajax({
+            url: '/faq/redactor',
+            type: 'get',
+            dataType: 'html',
+            success: function(data) {
+                $('#redactor-modal').modal();
+                $('#redactor-modal .modal-body').html(data);
+                $('#redactor-modal form').submit(function(){
+                    $.ajax({
+                        url: '/faq/redactor',
+                        type: 'post',
+                        dataType: 'json',
+                        data: $('#redactor-modal form').serialize(),
+                        success: function(data) {
+                            editor.insertContent('<p><subcollection data-id_column="'+data.id_column+'">Подсписок #' + data.id_column + '.</subcollection></p>');
+                            $('#redactor-modal').modal('hide');
+                        }
+                    });
+
+                    return false;
+                });
+            }
+        });
+    }
+
+    // Define the Toolbar button
+    editor.ui.registry.addButton('subcollection', {
+        text: "Подсписок",
+        onAction: _onAction
+    });
+
+    // Define the Menu Item
+    editor.ui.registry.addMenuItem('subcollection', {
+        text: 'Подсписок',
+        context: 'insert',
+        onAction: _onAction
+    });
+});
+*/
 tinymce.PluginManager.add("faq", function(editor, url) {
     var _dialog = false;
     var _typeOptions = [];
@@ -734,7 +779,6 @@ tinymce.PluginManager.add("faq", function(editor, url) {
             success: function(data) {
                 $('#redactor-modal').modal();
                 $('#redactor-modal .modal-body').html(data);
-
                 $('#redactor-modal form').submit(function(){
                     $.ajax({
                         url: '/faq/redactor',
@@ -751,8 +795,6 @@ tinymce.PluginManager.add("faq", function(editor, url) {
                 });
             }
         });
-
-
     }
 
     // Define the Toolbar button
@@ -765,6 +807,154 @@ tinymce.PluginManager.add("faq", function(editor, url) {
     editor.ui.registry.addMenuItem('faq', {
         text: 'Вопрос-Ответ',
         context: 'insert',
+        onAction: _onAction
+    });
+});
+
+
+tinymce.PluginManager.add("map", function(editor, url) {
+    var _dialog = false;
+    var _forms = [];
+
+    setTimeout(function () {
+        setElementsEditable(editor, 'maps', editableForm);
+    }, 100);
+
+    let editDialog = {
+        title: 'Изменить форму',
+        body: {},
+        buttons: [
+            {
+                text: 'Close',
+                type: 'cancel',
+                onclick: 'close'
+            },
+            {
+                text: 'Insert',
+                type: 'submit',
+                primary: true,
+                enabled: false
+            }
+        ]
+    };
+
+    function editableForm(form) {
+        let formId = form.getAttribute('data-id');
+        $.ajax({
+            url: '/form/get-form?form-id=' + formId,
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                editDialog.body = {
+                    type: 'panel',
+                    items: [{
+                        type: 'selectbox',
+                        name: 'id_form',
+                        label: 'Форма',
+                        items: data,
+                        flex: true
+                    }]
+                };
+                editDialog.onSubmit = function (api) {
+                    let editFormId = api.getData().id_form;
+                    form.setAttribute('data-id', editFormId);
+                    form.innerText = 'Форма #' + editFormId + '.';
+                    form.ondblclick = function () {
+                        editableForm(form)
+                    };
+                    api.close();
+                };
+                _dialog = editor.windowManager.open(editDialog);
+                _dialog.block('Loading...');
+                _dialog.redial(editDialog);
+                _dialog.unblock();
+            }
+        });
+    }
+
+    function _getDialogConfig() {
+        return {
+            title: 'Вставить карту',
+            body: {
+                type: 'panel',
+                items: [{
+                    type: 'selectbox',
+                    name: 'id_collection',
+                    label: 'Форма',
+                    items: _forms,
+                    flex: true
+                }, ]
+            },
+            onSubmit: function(api) {
+                // insert markup
+                editor.insertContent('<map data-id="' + api.getData().id_collection + '">Карта списка #' + api.getData().id_collection + '.</map>');
+
+                setElementsEditable(editor, 'map', editableForm);
+                // close the dialog
+                api.close();
+            },
+            buttons: [{
+                    text: 'Close',
+                    type: 'cancel',
+                    onclick: 'close'
+                },
+                {
+                    text: 'Insert',
+                    type: 'submit',
+                    primary: true,
+                    enabled: false
+                }
+            ]
+        };
+    }
+
+    /**
+     * Plugin behaviour for when the Toolbar or Menu item is selected
+     *
+     * @private
+     */
+    function _onAction() {
+        // Open a Dialog, and update the dialog instance var
+        _dialog = editor.windowManager.open(_getDialogConfig());
+
+        // block the Dialog, and commence the data update
+        // Message is used for accessibility
+        _dialog.block('Loading...');
+
+        // We'll pretend using a setTimeout call
+        setTimeout(function() {
+
+            _forms = [];
+
+            $.ajax({
+                url: '/collection/get-collections',
+                type: 'get',
+                dataType: 'json',
+                data: {map: 1},
+                success: function(data) {
+                    _forms = data;
+                    _dialog.redial(_getDialogConfig());
+                    // unblock the dialog
+                    _dialog.unblock();
+                }
+            });
+
+
+        }, 100);
+    }
+
+    // Define the Toolbar button
+    editor.ui.registry.addButton('map', {
+        text: "Карта списка",
+        //icon: 'bubbles',
+        onAction: _onAction
+    });
+
+    // Define the Menu Item
+    editor.ui.registry.addMenuItem('map', {
+        text: 'Карта списка',
+        context: 'insert',
+        //icon: 'bubbles',
         onAction: _onAction
     });
 });

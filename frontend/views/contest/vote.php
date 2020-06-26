@@ -21,15 +21,21 @@
                                 echo "<ul>";
                                 foreach($contest['profiles'] as $profile)
                                 {
-                                    switch($profile['vote_value'])
+                                    if($contest['vote_type'] == 'Баллы')
                                     {
-                                        case 1: $currentResult = '<span class="badge badge-success">за</span>'; break;
-                                        case -1: $currentResult = '<span class="badge badge-danger">против</span>'; break;
-                                        default: $currentResult = '<span class="badge badge-warning">Вы ещё не выставили оценку</span>';
+                                        $currentResult =  '<span class="badge badge-success">'.(int)$profile['vote_value'].'</span>';
+                                    }
+                                    else
+                                    {
+                                        switch($profile['vote_value'])
+                                        {
+                                            case 1: $currentResult = '<span class="badge badge-success">за</span>'; break;
+                                            case -1: $currentResult = '<span class="badge badge-danger">против</span>'; break;
+                                            default: $currentResult = '<span class="badge badge-warning">Вы ещё не выставили оценку</span>';
+                                        }
                                     }
 
-
-                                    echo "<li><a href=''>{$profile['name']} $currentResult</a></li>";
+                                    echo "<li><a href='/contest/item/{$profile['project_id']}'>{$profile['name']} $currentResult</a></li>";
                                 }
                                 echo "</ul>";
                             }

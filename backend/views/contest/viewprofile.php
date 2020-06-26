@@ -30,7 +30,14 @@ $this->params['breadcrumbs'][] = $this->title;
                         'value' => function($model){
                                 return $model->statename;
                         }
-                    ]
+                    ],
+                    [
+                        'attribute' => 'state',
+                        'label' => 'Дополнительный статус',
+                        'value' => function($model){
+                                return $model->additional_status;
+                        }
+                    ]                    
                 ],
             ]) ?>
         </div>
@@ -46,6 +53,22 @@ $this->params['breadcrumbs'][] = $this->title;
                         <textarea id="page-content" class="redactor" name="comment" rows="6" aria-hidden="true"><?=$model->comment?></textarea>
                         <div class="help-block"></div>
                 </div>
+                <?php 
+                    if(!empty($extraStatuses))
+                    {
+                ?>
+                    <select name="additional_status">
+                        <option></option>
+                        <?php 
+                            foreach($extraStatuses as $status)
+                            {
+                                echo "<option>{$status['status']}</option>";
+                            }
+                        ?>
+                    </select>
+                <?php
+                    }
+                ?>
                 <input type="submit" value="Отправить">                   
             </form>
         </div>

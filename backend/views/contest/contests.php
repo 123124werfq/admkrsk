@@ -44,6 +44,13 @@ GridAsset::register($this);
                 },
             ],
             [
+                'label' => 'Ссылка на голосование',
+                'format' => 'html',
+                'value' => function ($model) {
+                    return 'https://grants.admkrsk.ru/contest/vote/'.md5($model['id']);
+                },
+            ],            
+            [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{dynamic} {edit}',
                 'buttons' => [

@@ -13,7 +13,7 @@ use yii\helpers\Url;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $customColumns array */
 
-$this->title = 'Анкеты кандидатов в кадровый резерв';
+$this->title = 'Анкеты, поданные для учстия в конкурсах';
 $this->params['breadcrumbs'][] = $this->title;
 GridAsset::register($this);
 
@@ -53,7 +53,11 @@ $defaultColumns = [
         'label' => 'Статус',
         'format' => 'html',
         'value' => function ($model) {
-            return $model->getStatename(true);
+            if(!empty($model->additional_status))
+                $extra = '<br>Доп. статус: '.$model->additional_status;
+            else
+                $extra = '';
+            return $model->getStatename(true).$extra;
         },
     ],
     [
@@ -114,26 +118,50 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
 
 <div class="service-index">
 
+    <!--
     <div class="ibox">
         <a style="color: white" href="<?= Url::to(['', 'pageSize' => 10]) ?>"><button class="btn btn-primary">10</button></a>
         <a style="color: white" href="<?= Url::to(['', 'pageSize' => 20]) ?>"><button class="btn btn-primary">20</button></a>
         <a style="color: white" href="<?= Url::to(['', 'pageSize' => 40]) ?>"><button class="btn btn-primary">40</button></a>
     </div>
+    -->
 
+    <select id="contestselect" onchange="filterContest()">
+        <option value="0">Все</option>
+    <?php 
+        foreach($allContests as $contId => $contName){
+    ?>
+        <option value="<?=$contId?>" <?=$contId==$activecontest?'selected':''?>><?=$contName['name']?></option>
+    <?php
+        }
+    ?>
+    </select> 
+<script>
+    let filterContest = function(){
+
+         let newContestId = $('#contestselect').val();
+         document.location.href = '/contest/profile?cont='+newContestId;
+    } 
+</script> 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
-        'rowOptions' => function ($model) 
+        'rowOptions' => function ($model) use($allContests, $activecontest)
         {
             $rr = $model->getRecord()->one();
             if($rr)
             {            
                 $record = $model->getRecord()->one()->getData(true);
+//                echo $allContests[$activecontest];
+                if($activecontest!=0 && $model->getContestinfo()['name'] != $allContests[$activecontest]['name'])
+                    return ['class' => 'hidden'];
 
                 if (!empty($record['ready'])) {
                     return ['class' => 'success'];
                 }
             }
+            else 
+                return ['class' => 'hidden'];
         },
         'columns' => array_merge(array_values($gridColumns), [
             [

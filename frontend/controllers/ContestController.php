@@ -53,10 +53,10 @@ class ContestController extends \yii\web\Controller
 
             $record = false;
 
-            if($profile && $profile->id_record_anketa)
+            if ($profile && $profile->id_record_anketa)
                 $record = $collection->updateRecord($profile->id_record_anketa, $prepare);
 
-            if(!$record)
+            if (!$record)
                 $record = $collection->insertRecord($prepare);
 
             if ($record)
@@ -181,6 +181,24 @@ class ContestController extends \yii\web\Controller
 
         $activeContests = $contestCollection->getDataQuery()->whereByAlias(['<>', 'contest_state', 'Конкурс завершен'])->getArray(true);
 
+        if($id)
+        {
+            foreach($activeContests as $ckey => $cst)
+            {
+                if(md5($ckey) == $id)
+                {
+                    $tmp = $activeContests[$ckey];
+                    $activeContests = [];
+                    $activeContests[$ckey] = $tmp;
+                    Yii::$app->session->set('voteback', $id);
+                    break;
+                }
+            }
+
+            if(!isset($tmp))
+                throw new BadRequestHttpException();
+        }
+
         $profiles = CstProfile::find()->all();
 
         foreach ($activeContests as $ckey => $cst) {
@@ -210,13 +228,16 @@ class ContestController extends \yii\web\Controller
                             if($profileData)
                             {
                                 $profileData = $profileData->getData(true);
+                                //var_dump($profileData); die();
+
                                 $vote = CstVote::find()->where(['id_expert' => $expert->id_expert, 'id_profile' => $profile->id_profile])->one();
 
                                 $links[$ckey][] = [
                                     'id' => $profile->id_profile,
-                                    'name' => $profileData['project_name'],
+                                    'name' => $profileData['project_name']??$profileData['name'],
                                     'vote_value' => $vote->value??false,
-                                    'vote_comment' => $vote->comment??''
+                                    'vote_comment' => $vote->comment??'',
+                                    'project_id' => $profile->id_record_anketa
                                 ];
                             }
                         }
@@ -228,6 +249,7 @@ class ContestController extends \yii\web\Controller
                 'id' => $ckey,
                 'name' => $cst['name'],
                 'state' => $cst['contest_state'],
+                'vote_type' => isset($cst['vote_type'])?$cst['vote_type']:0,
                 'count' => $count,
                 'countTotal' => $countTotal,
                 'profiles' => $links[$ckey]??[]
@@ -237,6 +259,94 @@ class ContestController extends \yii\web\Controller
         return $this->render('vote', [
             'data' => $data,
             'expert' => $expert,
+        ]);
+
+    }
+
+    public function actionItem($id)
+    {
+        $expert = CstExpert::findOne(['id_user' => Yii::$app->user->id]);
+
+        if(!$expert)
+            throw new BadRequestHttpException();
+
+        $profileData = CollectionRecord::findOne($id);
+
+        if(!$profileData)
+            throw new BadRequestHttpException();
+
+        $profile = CstProfile::find()->where(['id_record_anketa' => $profileData->id_record])->one();
+
+        if(!$profile || $profile->state != CstProfile::STATE_ACCEPTED)
+            throw new BadRequestHttpException();
+
+        $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
+        if(!$contestCollection)
+            throw new BadRequestHttpException();
+    
+        $activeContests = $contestCollection->getDataQuery()->whereByAlias(['<>', 'contest_state', 'Конкурс завершен'])->getArray(true);
+        $currentContest = null;
+
+        foreach ($activeContests as $ckey => $cst) {
+            if(!empty($cst['participant_form']))
+            {
+                $form = Form::find()->where(['alias' => $cst['participant_form']])->one();
+                if(!$form)
+                    continue;
+
+                if($form->id_collection == $profile->id_record_contest)                    
+                {
+                    $currentContest = $cst;
+                    break;
+                }
+
+            }
+        }
+
+//        var_dump($currentContest); die();
+
+        $tvote = CstVote::find()->where(['id_expert' => $expert->id_expert, 'id_profile' => $profile->id_profile])->one();
+
+        $vote = Yii::$app->request->get('vote');
+
+        if($vote)
+        {
+            if(!$tvote)
+            {
+                $tvote = new CstVote();
+                $tvote->id_expert = $expert->id_expert;
+                $tvote->id_profile = $profile->id_profile;
+            }
+
+            if(isset($currentContest['vote_type']) && $currentContest['vote_type']=='Баллы')
+            {
+                $tvote->value = (int)$vote;
+            }
+            else
+            {
+                if($vote == 'yes')
+                    $tvote->value = 1;
+                else
+                    $tvote->value = -1;
+            }
+
+            $tvote->save();
+
+            return $this->redirect('/contest/vote/'.Yii::$app->session->get('voteback'));
+
+        }
+
+
+        //$contest = CollectionRecord::findOne($profile->id_record_contest);
+        //$contest = $contest->getData(true);
+        //$profileData = $profileData->getData(true);
+        //var_dump($contest); die();
+
+
+        return $this->render('item', [
+            'collectionRecord' => $profileData,
+            'tvote' => $tvote,
+            'contest' => $currentContest
         ]);
 
     }

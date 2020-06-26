@@ -51,6 +51,25 @@ class Helper
 	}
 
 
+	public static function getTwigVars($template)
+	{
+		preg_match_all('/\{\{(?!%)\s*((?:(?!\.)[^\s])*)\s*(?<!%)\}\}|\{%\s*(?:\s(?!endfor)(\w+))+\s*%\}/i', $template, $m);
+		$m = array_map('array_filter', $m);
+
+		$vars = array_merge($m[1],$m[2]); 
+
+		foreach ($vars as $key => $var) {
+			if (strpos($var, '|'))
+			{
+				$var = explode('|', $var);
+				$vars[$key] = $var[0];
+			}
+		}
+
+		return $vars;
+		//return $m[2]??[];
+	}
+
 	public static function runContentWidget($content, $page, $recordData=[])
 	{
 		function parseAttributesFromTag($tag, $recordData=[])
@@ -85,7 +104,7 @@ class Helper
 		    return $result;
 		}
 
-		preg_match_all("/<(hrreserve|searchrecord|faq|collection|gallery|forms|pagenews)\s(.+?)>(.+?)<\/(hrreserve|searchrecord|faq|collection|gallery|forms|pagenews)>/is", $content, $matches);
+		preg_match_all("/<(hrreserve|searchrecord|map|faq|collection|gallery|forms|pagenews)\s(.+?)>(.+?)<\/(hrreserve|searchrecord|faq|collection|gallery|forms|pagenews|map)>/is", $content, $matches);
 
         if (!empty($matches[0]))
 	        foreach ($matches[0] as $key => $match)
@@ -94,7 +113,7 @@ class Helper
 
                 $class = 'frontend\widgets\\' . ucwords($matches[1][$key]) . 'Widget';
 
-                $content = '<div class="widget-wrapper">'.str_replace($match, $class::widget(['attributes' => $attributes, 'page' => $page, 'objectData'=>$recordData]), $content).'</div>';
+                $content = str_replace($match, '<div class="widget-wrapper">'.$class::widget(['attributes' => $attributes, 'page' => $page, 'objectData'=>$recordData]).'</div>', $content);
 
 	            /*else if($matches[1][$key] == 'hrreserve')
 	            {

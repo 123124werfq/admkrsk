@@ -598,4 +598,14 @@ class PageController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    public function actionHide($id)
+    {
+        $model = $this->findModel($id);
+
+        $model->hidemenu = ($model->hidemenu)?0:1;
+        $model->updateAttributes(['hidemenu']);
+
+        return $this->redirect(['view', 'id' => $model->id_parent]);
+    }
 }

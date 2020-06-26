@@ -5,6 +5,14 @@ toastr.options = {
     timeOut: 5000
 };
 
+function getValueById(id)
+{
+    if ($("#"+id).length>0)
+        return $("#"+id).val();
+
+    return '';
+}
+
 function setVisisble()
 {
     $("div[data-visible-field]").each(function(){
@@ -45,16 +53,16 @@ function filePicker(callback, value, meta) {
 var tinymceConfig = {
     selector:'.redactor',
     plugins: [
-        'link image imagetools table autoresize collections gallery code paste media lists fullscreen stickytoolbar form hrreserve pagenews faq recordSearch'
+        'link image imagetools table autoresize collections gallery code paste media lists fullscreen stickytoolbar form hrreserve pagenews faq recordSearch map'
     ],
     menu: {
-        custom: { title: 'Плагины', items: 'form gallery collections hrreserve pagenews faq recordSearch'}
+        custom: { title: 'Плагины', items: 'form gallery collections hrreserve pagenews faq recordSearch map'}
     },
     menubar: 'file edit view insert format tools table custom',
     contextmenu: "link image imagetools table spellchecker",
     toolbar: "code fullscreen | undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist blockquote | link image media",
     language: 'ru',
-    extended_valid_elements : "faq[data-ids|data-category],searchrecord[data-encodedata],pagenews[data-id],hrreserve[pagesize],collection[data-id|data-encodedata],gallery[data-id|data-limit|data-type],forms[data-id|data-data]",
+    extended_valid_elements : "faq[data-ids|data-category],map[data-id],searchrecord[data-encodedata],pagenews[data-id],hrreserve[pagesize],collection[data-id|data-encodedata],gallery[data-id|data-limit|data-type],forms[data-id|data-data]",
     content_css : "/js/tinymce/admin.css",
     image_title: true,
     images_upload_url: '/media/tinymce',

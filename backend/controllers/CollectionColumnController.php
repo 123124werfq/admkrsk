@@ -7,6 +7,8 @@ use common\models\CollectionColumn;
 use common\models\CollectionRecord;
 use common\models\Collection;
 
+use common\components\helper\Helper;
+
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -60,6 +62,7 @@ class CollectionColumnController extends Controller
             'collection'=>$collection,
         ]);
     }
+
 
     /**
      * Displays a single CollectionColumn model.
@@ -133,7 +136,10 @@ class CollectionColumnController extends Controller
         foreach ($records as $id_record => $data)
         {
             $modelRecord = CollectionRecord::findOne($id_record);
-            $dataString = $modelRecord->getDataAsString(true,true);
+
+            $columns = Helper::getTwigVars($model->template);
+
+            $dataString = $modelRecord->getDataAsString(true,true,$columns);
 
             $dataMongo = ['col'.$model->id_column => CollectionColumn::renderCustomValue($model->template,$dataString)];
             $mongoCollection->update(['id_record' => $id_record], $dataMongo);

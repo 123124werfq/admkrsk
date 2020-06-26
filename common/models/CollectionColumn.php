@@ -76,6 +76,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                         'email'=>"Емейл",
                         'number'=>"Число",
                         'url'=>"Ссылка",
+                        'time'=>"Время",
                         'datetime'=>"Дата+Время",
                         'date'=>"Дата",
                     ],
@@ -98,6 +99,10 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'name'=>'Сортировка элементов',
                     'type'=>'checkbox',
                 ],
+                'button_label'=>[
+                    'name'=>'Подпись добавить',
+                    'type'=>'input',
+                ],
             ],
             self::TYPE_CHECKBOX => [
                 'popup'=>[
@@ -113,16 +118,41 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'type'=>'richtext',
                 ],
             ],
-            self::TYPE_REPEAT => [
+            /*self::TYPE_REPEAT => [
                 'begin'=>[
                     'name'=>'Дата начала',
-                    'type'=>'column',
+                    'type'=>'input',
                 ],
                 'end'=>[
                     'name'=>'Дата конца',
-                    'type'=>'column',
+                    'type'=>'input',
                 ],
-            ],
+                'is_repeat'=>[
+                    'name'=>'Повторяющееся событие',
+                    'type'=>'checkbox',
+                ],
+                'repeat_count'=>[
+                    'name'=>'Число повторов',
+                    'type'=>'input',
+                ],
+                'time_begin'=>[
+                    'name'=>'Время начала',
+                    'type'=>'time',
+                ],
+                'time_end'=>[
+                    'name'=>'Время конца',
+                    'type'=>'time',
+                ],
+                'type'=>[
+                    'name'=>'Трубется дополнительное подтверждение',
+                    'type'=>'radio',
+                    'values'=>[
+                        '1'=>"Ежедневно",
+                        '2'=>"Еженедельно",
+                        '3'=>"Ежемесячно",
+                    ]
+                ],
+            ],*/
             self::TYPE_INTEGER => [
                 'min'=>[
                     'name'=>'Минимум',
@@ -291,7 +321,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_SERVICETARGET => "Цель муниципальной услуги",
             self::TYPE_SERVICE => "Услуги для обжалования",
 
-            self::TYPE_REPEAT => 'Повторяющаяся строка по дате',
+            self::TYPE_REPEAT => 'Дата / Период',
             self::TYPE_CUSTOM => 'Составная колонка',
         ];
 
@@ -476,8 +506,6 @@ class CollectionColumn extends \yii\db\ActiveRecord
         return $json;
     }
 
-
-
     public function getOptionsData()
     {
         $options = [
@@ -540,6 +568,111 @@ class CollectionColumn extends \yii\db\ActiveRecord
             return $value;
         }
 
+
+        /*class ValueClass
+        {
+            public $value;
+
+            public function __construct($value)
+            {
+                $this->foo = $value;
+            }
+
+            public function __toString()
+            {
+                $value = $this->$value;
+
+                case self::TYPE_DATE:
+                    return date('d.m.Y',$value);
+                    break;
+                case self::TYPE_DATETIME:
+                    return date('d.m.Y H:i',$value);
+                    break;
+                case self::TYPE_DISTRICT:
+                    $model = District::findOne((int)$value);
+                    return $model->name??null;
+                    break;
+                case self::TYPE_REGION:
+                    $model = Region::findOne((int)$value);
+                    return $model->name??null;
+                    break;
+                case self::TYPE_SUBREGION:
+                    $model = Subregion::findOne((int)$value);
+                    return $model->name??null;
+                    break;
+                case self::TYPE_CITY:
+                    $model = City::findOne((int)$value);
+                    return $city->name??null;
+                    break;
+                case self::TYPE_STREET:
+                    $model = Street::findOne((int)$value);
+                    return $city->name??null;
+                    break;
+
+                case self::TYPE_COLLECTIONS:
+                    if (is_array($value))
+                        return '<span>'.implode('</span><br/><span>', $value).'</span>';
+                    else
+                        return $value;
+                    break;
+
+                case self::TYPE_FILE:
+                    if (is_array($value))
+                    {
+                        $ids = [];
+                        foreach ($value as $key => $data)
+                        {
+                            if (is_numeric($data))
+                                $ids[] = $data;
+                            else if (!empty($data['id']))
+                                $ids[] = $data['id'];
+                        }
+
+                        if (empty($ids))
+                            return '';
+
+                        $medias = Media::find()->where(['id_media'=>$ids])->all();
+
+                        $output = [];
+                        foreach ($medias as $key => $media) {
+                            $output[] = '<a href="'.$media->getUrl().'" download="'.$media->downloadName().'"><nobr>'.$media->name.'</nobr><a>';
+                        }
+
+                        return implode('<br>', $output);
+                    }
+                    else
+                        return '';
+                    break;
+                case self::TYPE_FILE_OLD:
+                    $slugs = explode('/', $value);
+                    return '<a href="'.$value.'">'.array_pop($slugs).'<a>';
+                    break;
+                case self::TYPE_IMAGE:
+                    if (is_array($value) || is_numeric($value))
+                    {
+                        $ids = [];
+                        foreach ($value as $key => $data)
+                        {
+                            if (is_numeric($data))
+                                $ids[] = $data;
+                            else if (!empty($data['id']))
+                                $ids[] = $data['id'];
+                        }
+
+                        if (empty($ids))
+                            return '';
+
+                        $media = Media::find()->where(['id_media'=>$ids])->one();
+
+                        if (!empty($media->height))
+                            return '<img src="'.$media->showThumb(['w'=>200,'h'=>200]).'"/>';
+                        else
+                            return '<a href="'.$media->getUrl().'">'.$media->name.'</a>';
+                    }
+                    break;
+            }
+        }*/
+
         switch ($this->type)
         {
             case self::TYPE_DATE:
@@ -568,6 +701,18 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 $model = Street::findOne((int)$value);
                 return $city->name??null;
                 break;
+            case self::TYPE_JSON:
+                if (is_array($value))
+                    return $value;
+
+                return json_decode($value,true);
+                break;
+            case self::TYPE_COLLECTIONS:
+                if (is_array($value))
+                    return '<span>'.implode('</span><br/><span>', $value).'</span>';
+                else
+                    return $value;
+                break;
             case self::TYPE_FILE:
                 if (is_array($value))
                 {
@@ -587,7 +732,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
                     $output = [];
                     foreach ($medias as $key => $media) {
-                        $output[] = '<a href="'.$media->getUrl().'" download><nobr>'.$media->name.'</nobr><a>';
+                        $output[] = '<a href="'.$media->getUrl().'" download="'.$media->downloadName().'"><nobr>'.$media->name.'</nobr><a>';
                     }
 
                     return implode('<br>', $output);
@@ -623,8 +768,9 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 }
                 break;
             default:
+
                 if (is_array($value))
-                    return implode('<br>', $value);
+                    return '<span>'.implode('</span><br/><span>', $value).'</span>';
 
                 return $value;
                 break;

@@ -150,6 +150,11 @@ class Media extends \yii\db\ActiveRecord
         $this->file_path = $file;
     }
 
+    public function downloadName()
+    {
+        return str_replace(' ', '_', $this->name);
+    }
+
     /**
     *   Сохраняет файл в папку согласно хешу
     **/

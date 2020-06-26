@@ -21,7 +21,7 @@ class AppAsset extends AssetBundle
         'inspinia/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css',
         "inspinia/css/plugins/jasny/jasny-bootstrap.min.css",
         "js/jquerybuilder/css/query-builder.default.min.css",
-        "css/admin.css?v=2"
+        "css/admin.css?v=3"
     ];
     public $js = [
         "https://api-maps.yandex.ru/2.1/?lang=ru_RU",
@@ -40,7 +40,7 @@ class AppAsset extends AssetBundle
         "/js/tinymce/plugins/plugins.js",
         "js/jquerybuilder/query-builder.standalone.min.js",
         "js/jquerybuilder/i18n/query-builder.ru.js",
-        "js/admin.js?v=4"
+        "js/admin.js?v=5"
 //        'js/select2/js/select2.js', // если миша захочет раскомментить, надо сначала файл туда положить
     ];
     public $depends = [

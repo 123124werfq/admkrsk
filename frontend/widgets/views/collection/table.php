@@ -44,11 +44,15 @@
 	'timeout'=>5000
 	//'enablePushState' => false,
 ]) ?>
+<?php
+	if (!empty($table_style)){
+		echo "<style>$table_style</style>";
+	}
+?>
 <div class="table-responsive">
-	<table <?=!empty($table_style)?'class="'.$table_style.'"':''?>>
+	<table>
 		<thead>
-			<?php if (!empty($table_head))
-			{
+			<?php if (!empty($table_head)){
 				echo $table_head;
 			}
 else {
@@ -111,7 +115,7 @@ else {
 						if (isset($row[$column->alias]))
 						{
 							if (is_array($row[$column->alias]))
-								$value = implode('<br>', $row[$column->alias]);
+								$value = '<span>'.implode('</span><br><span>', $row[$column->alias]).'</span>';
 							else
 								$value = $row[$column->alias];
 

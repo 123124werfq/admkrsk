@@ -19,6 +19,10 @@ use Yii;
  */
 class FirmUser extends \yii\db\ActiveRecord
 {
+    const STATE_NEW = 0;
+    const STATE_ACCEPT = 1;
+    const STATE_DECLINE = 2;
+
     /**
      * {@inheritdoc}
      */
@@ -39,6 +43,24 @@ class FirmUser extends \yii\db\ActiveRecord
         ];
     }
 
+
+    public function getStateLabels()
+    {
+        return  [
+            self::STATE_NEW=>'Новый',
+            self::STATE_ACCEPT=>'Подтвержден',
+            self::STATE_DECLINE=>'Отклонен',
+        ];
+    }
+
+
+    public function getStateLabel()
+    {
+        $labels = $this->getStateLabels();
+
+        return $labels[$this->state]??'';
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -47,7 +69,7 @@ class FirmUser extends \yii\db\ActiveRecord
         return [
             'id_record' => 'Id Record',
             'id_user' => 'Id User',
-            'state' => 'State',
+            'state' => 'Статус',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
@@ -55,5 +77,15 @@ class FirmUser extends \yii\db\ActiveRecord
             'deleted_at' => 'Deleted At',
             'deleted_by' => 'Deleted By',
         ];
+    }
+
+    public function getRecord()
+    {
+        return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_record']);
+    }
+
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'id_user']);
     }
 }

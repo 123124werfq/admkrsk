@@ -16,15 +16,48 @@
                 {
                     if ($column->isRelation())
                     {
-                        foreach ($recordData[$column->id_column] as $id_subrecord => $subrecord)
+                        if (!empty($recordData[$column->id_column]) && is_array($recordData[$column->id_column]))
+                            foreach ($recordData[$column->id_column] as $id_subrecord => $subrecord)
+                            {
+                                echo \frontend\widgets\CollectionRecordWidget::widget([
+                                    'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
+                                ]);
+                            }
+                    }
+                    elseif ($column->type == CollectionColumn::TYPE_JSON)
+                    {
+                        $values = $column->getValueByType($recordData[$column->id_column]);
+
+                        $ths = json_decode($column->input->values, true);
+
+                        if (!is_array($values) || empty($values))
+                            echo json_encode($values);
+                        else
                         {
-                            echo \frontend\widgets\CollectionRecordWidget::widget([
-                                'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
-                            ]);
+                            echo '<table><tr>';
+                            foreach ($ths as $key => $th)
+                                echo '<th ' . (!empty($th['width']) ? 'style="width:' . $th['width'] . '%"' : '') . ' >' . $th['name'] . '</th>';
+                            echo '</tr>';
+
+                            foreach ($values as $key => $row)
+                            {
+                                echo '<tr>';
+                                foreach ($row as $vkey => $value)
+                                    echo '<td>'.$value.'</td>';
+                                echo '</tr>';
+                            }
+
+                            echo '</tr>';
+                            echo '</table>';
                         }
                     }
                     else
-                        echo $column->getValueByType($recordData[$column->id_column]);
+                    {
+                        $value = $column->getValueByType($recordData[$column->id_column]);
+                        if (is_array($value))
+                            var_dump($value);
+                        else echo $value;
+                    }
                 }
             ?>
         </td>

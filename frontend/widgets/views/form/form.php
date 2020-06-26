@@ -19,12 +19,22 @@
 	}
 ?>
 <div class="boxed form-inside">
-	<?php if (!empty($visibleInputs)){?>
-	<script>
-		var visibleInputs = <?=json_encode($visibleInputs)?>;
-		var visibleElements = <?=json_encode($visibleElements)?>;
-	</script>
-	<?php }?>
+<?php if (!empty($visibleInputs)){
+
+$visibleInputs = json_encode($visibleInputs);
+$visibleElements = json_encode($visibleElements);
+
+$script = <<< JS
+var visibleInputs = $visibleInputs;
+var visibleElements = $visibleElements;
+
+$(document).ready(function() {
+	visibleForm(visibleInputs,visibleElements,'#form$form->id_form');
+});
+JS;
+
+$this->registerJs($script, yii\web\View::POS_END);
+}?>
 
 	<?php $activeForm = ActiveForm::begin([
 		'id'=>'form'.$form->id_form,

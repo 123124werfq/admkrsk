@@ -3,27 +3,34 @@
 	use yii\helpers\Html;
 	use common\models\FormVisibleInput;
 
-	$this->registerJsFile('/js/dropzone/dropzone.js',['depends'=>[\yii\web\JqueryAsset::className()],'position'=>\yii\web\View::POS_END]);
-	$this->registerCssFile('/js/dropzone/dropzone.min.css');
-
 	$visibleElements = [];
 	$visibleInputs = [];
 
-	/*$visibleInputs = FormVisibleInput::find()->joinWith(['visibleInput'])->where(['id_form'=>$form->id_form])->all();
+	$visibleInputsModels = FormVisibleInput::find()->joinWith(['visibleInput'])->where(['id_form'=>$form->id_form])->all();
 
-	foreach ($visibleInputs as $vkey => $vinput)
+	foreach ($visibleInputsModels as $vkey => $vinput)
 	{
 		$visibleInputs[$vinput->id_input_visible][$vinput->id_element] = $vinput->id_element;
 		$visibleElements[$vinput->id_element][$vinput->id_input_visible] = $vinput->values;
-	}*/
+	}
 ?>
 
-<?php /*if (!empty($visibleInputs)){?>
-<script>
-	var visibleInputs = <?=json_encode($visibleInputs)?>;
-	var visibleElements = <?=json_encode($visibleElements)?>;
-</script>
-<?php }*/?>
+<?php if (!empty($visibleInputs)){
+
+$visibleInputs = json_encode($visibleInputs);
+$visibleElements = json_encode($visibleElements);
+
+$script = <<< JS
+var visibleInputs = $visibleInputs;
+var visibleElements = $visibleElements;
+
+$(document).ready(function() {
+	visibleForm(visibleInputs,visibleElements,'#$arrayGroup');
+});
+JS;
+
+$this->registerJs($script, yii\web\View::POS_END);
+}?>
 
 <div id="<?=$arrayGroup?>" class="subform">
 	<?php foreach ($inputs as $name => $value)

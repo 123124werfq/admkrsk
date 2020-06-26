@@ -20,33 +20,12 @@ $this->params['page'] = $page;
         <div class="row">
             <div class="col-2-third order-xs-1">
                 <div class="content searchable">
-                    <h1><?= $page->title ?></h1>
+                    <h1>Ваша организация</h1>
 
-                    <h1><?= $page->content ?></h1>
+                    <?php if (!empty($firm->state == $firm::STATE_NEW)){?>
 
-                    <div class="boxed form-inside">
-                        <?php $form = ActiveForm::begin(['scrollToError' => true]); ?>
+                        <p class="accent">Ожидайте когда проверят ваши данные</p>
 
-                            <?= $form->field($model, 'name')->textInput(['class' => 'form-control']) ?>
-                            <div class="row">
-                                <div class="col" style="width: 100%">
-                                    <?= $form->field($model, 'inn')->textInput(['class' => 'form-control']) ?>
-                                </div>
-                                <!--div class="col" style="width: 50%">
-                                    <?= $form->field($model, 'ogrn')->textInput(['class' => 'form-control']) ?>
-                                </div-->
-                            </div>
-
-                            <div class="form-end">
-                                <div class="form-end_right">
-                                    <input type="submit" class="btn btn__secondary" value="Найти">
-                                </div>
-                            </div>
-                        <?php ActiveForm::end(); ?>
-                    </div>
-
-                    <?php if (!empty($record)){?>
-                        <h3>Найденная организация</h3>
                         <?= frontend\widgets\CollectionRecordWidget::widget([
                             'collectionRecord'=>$record,
                             'renderTemplate'=>false,
@@ -58,12 +37,12 @@ $this->params['page'] = $page;
                             ]
                         ]);?>
 
-                        <?php $form = ActiveForm::begin(['scrollToError' => true]); ?>
-                            <?= $form->field($model, 'name')->hiddenInput()->label(false) ?>
-                            <?= $form->field($model, 'inn')->hiddenInput()->label(false) ?>
-                            <button type="submit" class="btn btn__secondary" name="id_record" value="<?=$record->id_record?>">Отправить запрос на редактирование</button>
-                        <?php ActiveForm::end(); ?>
-                    <?php }?>
+                    <?php }
+                    else
+                    {
+                        echo '<a class="btn btn__secondary btn__block-sm" href="'.$page->getUrl().'/file">Документы организация</a>';
+                        echo frontend\widgets\FormsWidget::widget(['form'=>$form, 'collectionRecord' => $record, 'submitLabel' => 'Сохранить']);
+                    }?>
 
                     <?php if (!empty($page->medias)) { ?>
                         <div class="file-list">

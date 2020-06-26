@@ -7,38 +7,50 @@ use yii\grid\GridView;
 /* @var $searchModel backend\models\search\FirmUserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Firm Users';
+$this->title = 'Запросы на редактирование';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="firm-user-index">
+<?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="ibox">
+    <div class="ibox-content">
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
+            'columns' => [
+                [
+                    'label'=>'#',
+                    'attribute'=>'id_record',
+                ],
+                [
+                    'label'=>'Учреждение',
+                    'attribute'=>'record.label',
+                ],
+                'user.username',
+                [
+                    'label'=>'Учреждение',
+                    'attribute'=>'state',
+                    'value'=>function($model){
+                        return $model->stateLabel;
+                    }
+                ],
 
-    <p>
-        <?= Html::a('Create Firm User', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id_record',
-            'id_user',
-            'state',
-            'created_at',
-            'created_by',
-            //'updated_at',
-            //'updated_by',
-            //'deleted_at',
-            //'deleted_by',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-
-
+                'created_at:date:Создано',
+                //'updated_at',
+                //'updated_by',
+                //'deleted_at',
+                //'deleted_by',
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'template' => '{update} {delete}',
+                    'contentOptions' => ['class' => 'button-column']
+                ],
+            ],
+            'tableOptions' => [
+                    'emptyCell ' => '',
+                    'class' => 'table table-striped ids-style valign-middle table-hover',
+                    'id' => 'grid',
+                ]
+        ]); ?>
+    </div>
 </div>

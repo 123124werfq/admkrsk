@@ -173,6 +173,16 @@ else
 
     <?=$form->field($model, 'table_style')->textArea();?>
 
+    <?= $form->field($model, 'download_columns')->widget(Select2::class, [
+        'data' => $columns_dropdown,
+        'pluginOptions' => [
+            'multiple' => true,
+            'allowClear' => true,
+            'minimumInputLength' => 0,
+            'placeholder' => 'Начните ввод',
+        ],
+    ])->label('Колонки для скачивания')->hint('Если не указано то будут поля для отображения')?>
+
     <br/><br/>
     <center>
         <button class="btn btn-primary" id="submit-redactor"><?= $model->isEdit ? 'Изменить' : 'Вставить'?></button>
@@ -231,7 +241,7 @@ $script = <<< JS
       filters: $json_filters,
     });
 
-    if ('$rules'!='')
+    if ('$rules'!='' && '$rules'!='[{"empty":true}]')
         $('#querybuilder').queryBuilder('setRulesFromMongo',$rules);
 JS;
 

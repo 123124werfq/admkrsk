@@ -29,7 +29,13 @@ $this->params['breadcrumbs'][] = $this->title;
             <?=Html::a('Колонки', ['collection-column/index', 'id' => $collection->id_collection], ['class' => 'nav-link'])?>
         </li>
         <li>
-            <?=Html::a('Форма', ['form/view', 'id' => $collection->id_form], ['class' => 'nav-link'])?>
+            <?=Html::a('Главная форма', ['form/view', 'id' => $collection->id_form], ['class' => 'nav-link'])?>
+        </li>
+        <li>
+            <?=Html::a('Формы', ['form/collection', 'id' => $collection->id_collection], ['class' => 'nav-link'])?>
+        </li>
+        <li>
+            <?=Html::a('Страницы', ['collection/pages', 'id' => $collection->id_collection], ['class' => 'nav-link'])?>
         </li>
     </ul>
     <div class="tab-content">

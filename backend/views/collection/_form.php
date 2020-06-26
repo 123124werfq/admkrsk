@@ -63,8 +63,7 @@ use yii\web\JsExpression;
         <?= $form->field($model, 'id_column_map')->dropDownList(
             ArrayHelper::map($model->getColumns()->andWhere([
                     'id_collection' => $model->id_collection,
-                    'type' => CollectionColumn::TYPE_MAP
-            ])->all(),'id_column','name'),['prompt'=>'Выберите колонку']);
+            ])->andWhere(['or',['type' => CollectionColumn::TYPE_MAP],['type' => CollectionColumn::TYPE_ADDRESS]])->all(),'id_column','name'),['prompt'=>'Выберите колонку'])->hint('В колонки должны содержаться координаты');
         ?>
     <?php } ?>
     <hr>

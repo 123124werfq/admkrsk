@@ -504,7 +504,6 @@ class User extends ActiveRecord implements IdentityInterface
         return EsiaFirm::find()->where(['id_user' => $this->id, 'active' => 1])->all();
     }
 
-
     /**
      * Проверка доступа
      * @param array|string $permissions

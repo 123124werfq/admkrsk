@@ -11,6 +11,7 @@ use Yii;
 use common\models\Collection;
 use common\models\FormInput;
 use common\models\Form;
+use common\models\House;
 use common\models\CollectionRecord;
 use common\models\CollectionColumn;
 use backend\models\search\CollectionSearch;
@@ -18,6 +19,8 @@ use backend\models\forms\CollectionRecordSearchForm;
 use backend\models\forms\CollectionImportForm;
 use backend\models\forms\CollectionCombineForm;
 use backend\models\forms\FormCopy;
+
+use yii\data\ActiveDataProvider;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
 use yii\helpers\ArrayHelper;
@@ -73,7 +76,7 @@ class CollectionController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'redactor', 'partition'],
+                        'actions' => ['index', 'redactor', 'partition', 'pages'],
                         'roles' => ['backend.collection.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Collection::class,
@@ -324,6 +327,122 @@ class CollectionController extends Controller
 
                     break;
 
+                case CollectionColumn::TYPE_ADDRESS:
+
+                    $col = Yii::$app->request->post('address');
+                    $x = Yii::$app->request->post('x');
+                    $y = Yii::$app->request->post('y');
+
+                    if (!empty($col))
+                    {
+                        $newColumn = $collection->createColumn([
+                            'name' => 'Адрес',
+                            'alias' => 'address',
+                            'type' => CollectionColumn::TYPE_ADDRESS,
+                        ]);
+
+                        $alldata = $collection->getData([], true);
+
+                        foreach ($alldata as $id_record => $data)
+                        {
+                            if (empty($data[$col]))
+                                continue;
+
+                            $address = new \SimpleXMLElement($data[$col]);
+
+                            $empty = [
+                                'country'=>'',
+                                'id_country'=>'',
+                                'region'=>'',
+                                'id_region'=>'',
+                                'subregion'=>'',
+                                'id_subregion'=>'',
+                                'city'=>'',
+                                'id_city'=>'',
+                                'district'=>'',
+                                'id_district'=>'',
+                                'street'=>'',
+                                'id_street'=>'',
+                                'house'=>'',
+                                'id_house'=>'',
+                                'room'=>'',
+                                'fullname'=>'',
+                                'houseguid'=>'',
+                                'lat'=>'',
+                                'lon'=>'',
+                                'postalcode'=>'',
+                            ];
+
+                            foreach ($address->level as $key => $level) {
+                                $attrs = $level->attributes();
+                                $id = (int)$attrs->id;
+
+                                $level = (string)$level[0];
+
+                                switch ($id) {
+                                    case 0:
+                                        $empty['country'] = $level;
+                                        break;
+                                    case 1:
+                                        $empty['region'] = $level;
+                                        break;
+                                    case 2:
+                                        $empty['subregion'] = $level;
+                                        break;
+                                    case 3:
+                                        $level = str_replace('Красноярск г', 'г Красноярск', $level);
+                                        $empty['city'] = $level;
+                                        break;
+                                    case 5:
+                                        $empty['district'] = $level;
+                                        break;
+                                    case 7:
+                                        $empty['street'] = $level;
+                                        break;
+                                    case 8:
+                                        $empty['house'] = $level;
+                                        break;
+                                    case 11:
+                                        $empty['room'] = (string)($attrs->type).$level;
+                                        break;
+                                    case 12:
+                                        $empty['postalcode'] = $level;
+                                        break;
+
+                                    default:
+                                        # code...
+                                        break;
+                                }
+                            }
+
+                            $empty = House::fillID($empty);
+
+                            $empty['fullname'] = implode(', ', array_filter($empty));
+
+                            if (!empty($x) && !empty($y) && !empty($data[$x]))
+                            {
+                                $empty['lat'] = $data[$x];
+                                $empty['lon'] = $data[$y];
+                            }
+
+                            $record = CollectionRecord::findOne($id_record);
+                            $record->data = [$newColumn->id_column => $empty];
+                            $record->update();
+                        }
+
+                        // добавляем инпут в форму
+                        $newColumn->collection->form->createInput([
+                            'type' => $newColumn->type,
+                            'name' => $newColumn->name,
+                            'label' => $newColumn->name,
+                            'fieldname' => $newColumn->alias,
+                            'id_column' => $newColumn->id_column,
+                        ]);
+
+                    }
+
+                    break;
+
                 case CollectionColumn::TYPE_CHECKBOXES:
 
                     $col = Yii::$app->request->post('column');
@@ -538,9 +657,15 @@ class CollectionController extends Controller
         return ['results' => $results];
     }
 
-    public function actionGetCollections()
+    public function actionGetCollections($map=null)
     {
-        $collections = Collection::find()->where('is_dictionary IS NULL')->all();
+        $collections = Collection::find()->where('is_dictionary IS NULL');
+
+        if (!empty($map))
+            $collections->andWhere('id_column_map IS NOT NULL');
+
+        $collections = $collections->all();
+
         $output = [];
         foreach ($collections as $key => $data) {
             $output[] = ['text' => $data->name, 'value' => (string)$data->id_collection];
@@ -561,6 +686,31 @@ class CollectionController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionPages($id)
+    {
+        $collection = $this->findModel($id);
+
+        if (empty($collection))
+            throw new NotFoundHttpException('The requested page does not exist.');
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $collection->getPages(),
+            'sort' => [
+                'defaultOrder' => [
+                    'ord' => SORT_ASC
+                ]
+            ],
+            'pagination' => [
+                'pageSize' => 9000,
+            ]
+        ]);
+
+        return $this->render('pages', [
+            'dataProvider' => $dataProvider,
+            'collection'=>$collection,
         ]);
     }
 
@@ -747,6 +897,7 @@ class CollectionController extends Controller
         $collectionPluginSettings['pagesize'] = $model->pagesize;
         $collectionPluginSettings['table_head'] = $model->table_head;
         $collectionPluginSettings['table_style'] = $model->table_style;
+        $collectionPluginSettings['download_columns'] = $model->download_columns;
         $collectionPluginSettings['show_download'] = $model->show_download;
         $collectionPluginSettings['show_row_num'] = $model->show_row_num;
         $collectionPluginSettings['show_on_map'] = $model->show_on_map;
@@ -806,7 +957,7 @@ class CollectionController extends Controller
             $form->state = 1;
             $form->name = $model->name;
             $form->id_collection = $model->id_collection;
-            
+
             if ($form->save())
             {
                 $model->id_form = $form->id_form;

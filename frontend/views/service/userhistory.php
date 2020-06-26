@@ -5,13 +5,46 @@
     <div class="container">
         <?=frontend\widgets\Breadcrumbs::widget(['page'=>$page])?>
         <div class="row">
-            <div class="col-2-third order-xs-1">
+            <div class="col-2-third order-xs-1 content">
                 <h1 class="h2"><?=$page->title?></h1>
 
                 <?php if(empty($appeals)) { ?>
                     <p>Запросов предоставления муниципальных услуг не поступало.</p>
                 <?php } else { ?>
-
+                    <div class="table-responsive">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th width="25%">Номер и дата запроса</th>
+                            <th width="50%">Услуга</th>
+                            <th width="25%">Состояние заявки</th>
+                            <th>Оценка рассмотрения заявки на предоставление услуги</th>
+                        </tr>  
+                        </thead>           
+                        <?php foreach ($appeals as $appeal){  ?>
+                        <tr>
+                            <td><?=$appeal->target->reestr_number?>-<?=$appeal->number_internal?><br><?=date("d.m.Y", $appeal->created_at)?></td>
+                            <td>
+                                <?=$appeal->target->reestr_number?><br>
+                                <?=$appeal->target->name?><br><br>
+                                Номер: <?=$appeal->target->target_code?><br>
+                                Дата регистрации: -<br>
+                            </td>
+                            <td><?=$appeal->statusName?></td>
+                            <td>
+                                <select>
+                                    <option>5</option>
+                                    <option>4</option>
+                                    <option>3</option>
+                                    <option>2</option>
+                                    <option>1</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <?php }?>
+                    </table>
+                    </div>
+                    <!--
                     <ul>
                         <?php foreach ($appeals as $appeal){  ?>
                             <li>
@@ -24,6 +57,8 @@
                             </li>
                         <?php }?>
                     </ul>
+
+                    -->
                 <?php } ?>
                 <div class="subscribe">
                     <div class="subscribe_left">
