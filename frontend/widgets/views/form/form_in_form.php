@@ -36,7 +36,7 @@ $this->registerJs($script, yii\web\View::POS_END);
 	<?php foreach ($inputs as $name => $value)
 			echo Html::hiddenInput($name,$value);
 	?>
-	<?=$this->render('_rows',['rows'=>$form->rows,'model'=>$model,'activeForm'=>$activeForm,'arrayGroup'=>$arrayGroup])?>
+	<?=$this->render('_rows',['rows'=>$form->rows,'model'=>$model,'activeForm'=>$activeForm,'arrayGroup'=>$arrayGroup,'modelForm'=>$form])?>
 
 	<div class="subform-action-buttons">
 		<a class="btn btn-default btn__secondary delete-subform" href="javascript:">Удалить</a>

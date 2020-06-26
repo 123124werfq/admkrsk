@@ -17,6 +17,7 @@ class FormDynamic extends DynamicModel
     public $postData;
     public $group;
     public $arrayGroup;
+    public $maxfilesize;
 
     protected $labels;
 
@@ -27,6 +28,7 @@ class FormDynamic extends DynamicModel
         $attributes = [];
 
         $this->form = $form;
+        $this->maxfilesize = $form->maxfilesize;
         $this->inputs = $form->getInputs()->indexBy('id_input')->all();
 
         foreach ($this->inputs as $input)

@@ -6,6 +6,7 @@
 		if (!empty($element->input))
 			echo $this->render('_input',[
 				'input'=>$element->input,
+				'modelForm'=>$modelForm,
 				'element'=>$element,
 				'model'=>$model,
 				'form'=>$activeForm,
@@ -15,6 +16,7 @@
 			echo $this->render('_subform',[
 				'element'=>$element,
 				'model'=>$model,
+				'modelForm'=>$modelForm,
 				'activeForm'=>$activeForm,
 				'arrayGroup'=>$arrayGroup
 			]);

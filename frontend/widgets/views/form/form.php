@@ -47,7 +47,7 @@ $this->registerJs($script, yii\web\View::POS_END);
 		'options'=>[
 			'enctype'=>'multipart/form-data',
 			'class'=>'ajax-form',
-			'data-maxfilesize'=>($form->maxfilesize)?$form->maxfilesize*1024*1024:'',
+			'data-maxfilesize'=>($form->maxfilesize)?$form->maxfilesize*1024*1024:10*1024*1024,
 		]
 	]); ?>
 
@@ -59,6 +59,7 @@ $this->registerJs($script, yii\web\View::POS_END);
 		'rows'=>$form->rows,
 		'model'=>$model,
 		'activeForm'=>$activeForm,
+		'modelForm'=>$form,
 		'arrayGroup'=>$arrayGroup
 	])?>
 

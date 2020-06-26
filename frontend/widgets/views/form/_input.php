@@ -58,6 +58,9 @@ else
 }
 
 $id_subform = (!empty($subform)) ? $subform->id_form : '';
+
+if (empty($modelForm->maxfilesize))
+    $modelForm->maxfilesize = 10;
 ?>
 
 <div id="element<?= $element->id_element ?>" class="col" <?= (!empty($styles)) ? 'style="' . implode(';', $styles) . '"' : '' ?>>
@@ -462,7 +465,7 @@ JS;
 	                    </div>
 	                    <div class="fileupload_content">
 	                        <p class="fileupload_label">Перетащите сюда файлы для загрузки</p>
-	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — <span class="maxFormSize">' . $options['filesize'] . '</span> Мб</p>
+	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — <span class="maxFormSize">' . $modelForm->maxfilesize . '</span> Мб <span class="currentFormSize"></span></p>
 	                    </div>
 	                </div>
 	                <div class="fileupload_list '.(!empty($options['pagecount'])?'show-pagecount':'').'">' . $file_uploaded . '</div>
@@ -514,7 +517,7 @@ JS;
 	                    </div>
 	                    <div class="fileupload_content">
 	                        <p class="fileupload_label">Перетащите сюда файлы для загрузки</p>
-	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — ' . (!empty($options['filesize']) ? $options['filesize'] : '10') . ' Мб</p>
+	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — ' . $modelForm->maxfilesize . ' Мб <span class="currentFormSize"></span></p>
 	                    </div>
 	                </div>
 	                <div class="fileupload_list">' . $file_uploaded . '</div>

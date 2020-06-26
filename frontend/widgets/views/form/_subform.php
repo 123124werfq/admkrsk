@@ -11,6 +11,7 @@
 				'element'=>$rowelement,
 				'subform'=>$element->subForm,
 				'model'=>$model,
+				'modelForm'=>$modelForm,
 				'form'=>$activeForm,
 				'arrayGroup'=>$arrayGroup
 			]);
