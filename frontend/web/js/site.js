@@ -52,6 +52,22 @@ function addInput(block)
     return false;
 }
 
+function recalculateFormSize(form)
+{
+    var maxtotalsize = form.data('maxfilesize');
+
+    var currentSize = 0;
+    form.find('.fileupload_item').each(function(){
+        currentSize += $(this).data('filesize')*1;
+    });
+
+    console.log(maxtotalsize+ ' < '+currentSize);
+
+    $(".currentFormSize").html(' вы загрузили '+(currentSize/(1024*1024)).toFixed(2)+'Мб');
+
+    return currentSize;
+}
+
 function visibleForm(visibleInputs,visibleElements,dom)
 {
     var $dom = $(dom);
@@ -260,7 +276,7 @@ $(document).ready(function() {
 
     $('body').delegate(".accept-checkbox",'click',function(){
         var inputID = $(this).data('id');
-        $("#"+inputID).prop('checked','true');
+        $("#formdynamic-"+inputID).prop('checked','true');
         $.fancybox.close();
         return false;
     });
@@ -468,7 +484,9 @@ $(document).ready(function() {
     });
 
     $(".dz-remove").click(function(){
+        var form = $(this).closest('form');
         $(this).closest('.fileupload_item').remove();
+        recalculateFormSize(form);
         return false;
     });
 
@@ -545,22 +563,18 @@ $(document).ready(function() {
 
                 this.on("addedfile", function(file){
 
-                    $(file.previewElement).data('filesize',file.size);
+                    $(file.previewElement).attr('data-filesize',file.size);
 
                     var maxtotalsize = form.data('maxfilesize');
+                    var currentSize = recalculateFormSize(form);
 
-                    if (maxtotalsize>0)
+                    //console.log(maxtotalsize+ ' < '+currentSize);
+
+                    if ((currentSize+file.size)>maxtotalsize)
                     {
-                        var currentSize = 0;
-
-                        form.find('.fileupload_item').each(function(){
-                            currentSize += $(this).data('filesize')*1;
-                        });
-
-                        /*console.log(maxtotalsize+ ' < '+currentSize);
-
-                        if ((currentSize+file.size)>maxtotalsize)
-                            plugin.removeFile(file);*/
+                        plugin.removeFile(file);
+                        alert('Вы превысили лимит максимального размера приложенных документов');
+                        recalculateFormSize(form);
                     }
                 });
             }

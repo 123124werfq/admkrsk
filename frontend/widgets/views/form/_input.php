@@ -462,7 +462,7 @@ JS;
 	                    </div>
 	                    <div class="fileupload_content">
 	                        <p class="fileupload_label">Перетащите сюда файлы для загрузки</p>
-	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — <span class="maxFormSize">' . $options['filesize'] . '</span> Мб</p>
+	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — <span class="maxFormSize">' . $modelForm->maxfilesize . '</span> Мб <span class="currentFormSize"></span></p>
 	                    </div>
 	                </div>
 	                <div class="fileupload_list '.(!empty($options['pagecount'])?'show-pagecount':'').'">' . $file_uploaded . '</div>
