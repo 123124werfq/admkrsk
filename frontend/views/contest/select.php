@@ -56,9 +56,16 @@ if ($user) {
                                     ?>
                                     <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>&ida=<?=$profile['id_profile']?>">Редактировать заявку от <?= date("d.m.Y H:i", $profile['created_at'])?></a>
                                         <?php
+                                            if(!empty($profile['additional_status'])){
+                                        ?>
+                                            <strong><?=$profile['additional_status']?></strong><br>
+                                        <?php
+                                            }
+                                        ?>
+                                        <?php
                                             if(!empty($profile['comment'])){
                                         ?>
-                                            <strong><?=$profile['comment']?></strong>
+                                            <em><?=$profile['comment']?></em>
                                         <?php
                                             }
                                         ?>
