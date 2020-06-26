@@ -286,7 +286,6 @@ tinymce.PluginManager.add("form", function(editor, url) {
 });
 
 
-
 tinymce.PluginManager.add("pagenews", function(editor, url) {
     var _dialog = false;
     var _forms = [];
@@ -724,6 +723,50 @@ tinymce.PluginManager.add("recordSearch", function(editor, url) {
     });
 });
 
+/*tinymce.PluginManager.add("subcollection", function(editor, url) {
+    var _dialog = false;
+    var _typeOptions = [];
+
+    function _onAction() {
+        $.ajax({
+            url: '/faq/redactor',
+            type: 'get',
+            dataType: 'html',
+            success: function(data) {
+                $('#redactor-modal').modal();
+                $('#redactor-modal .modal-body').html(data);
+                $('#redactor-modal form').submit(function(){
+                    $.ajax({
+                        url: '/faq/redactor',
+                        type: 'post',
+                        dataType: 'json',
+                        data: $('#redactor-modal form').serialize(),
+                        success: function(data) {
+                            editor.insertContent('<p><subcollection data-id_column="'+data.id_column+'">Подсписок #' + data.id_column + '.</subcollection></p>');
+                            $('#redactor-modal').modal('hide');
+                        }
+                    });
+
+                    return false;
+                });
+            }
+        });
+    }
+
+    // Define the Toolbar button
+    editor.ui.registry.addButton('subcollection', {
+        text: "Подсписок",
+        onAction: _onAction
+    });
+
+    // Define the Menu Item
+    editor.ui.registry.addMenuItem('subcollection', {
+        text: 'Подсписок',
+        context: 'insert',
+        onAction: _onAction
+    });
+});
+*/
 tinymce.PluginManager.add("faq", function(editor, url) {
     var _dialog = false;
     var _typeOptions = [];
@@ -736,7 +779,6 @@ tinymce.PluginManager.add("faq", function(editor, url) {
             success: function(data) {
                 $('#redactor-modal').modal();
                 $('#redactor-modal .modal-body').html(data);
-
                 $('#redactor-modal form').submit(function(){
                     $.ajax({
                         url: '/faq/redactor',
@@ -753,8 +795,6 @@ tinymce.PluginManager.add("faq", function(editor, url) {
                 });
             }
         });
-
-
     }
 
     // Define the Toolbar button

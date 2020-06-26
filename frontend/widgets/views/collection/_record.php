@@ -24,6 +24,32 @@
                                 ]);
                             }
                     }
+                    elseif ($column->type == CollectionColumn::TYPE_JSON)
+                    {
+                        $array = $column->getValueByType($recordData[$column->id_column]);
+
+                        $ths = json_decode($column->input->values, true);
+
+                        if (!is_array($columns) && !empty($columns))
+                            echo json_encode($array);
+                        else
+                        {
+                            echo '<table><tr>';
+                            foreach ($ths as $key => $th)
+                                echo '<th ' . (!empty($th['width']) ? 'style="width:' . $th['width'] . '%"' : '') . ' >' . $th['name'] . '</th>';
+                            echo '</tr>';
+                            foreach ($array as $key => $row)
+                            {
+                                echo '<tr>';
+                                foreach ($row as $key => $value)
+                                    echo '<td>'.$value.'</td>';
+                                echo '</tr>';
+                            }
+
+                            echo '</tr>';
+                            echo '</table>';
+                        }
+                    }
                     else
                         echo $column->getValueByType($recordData[$column->id_column]);
                 }
