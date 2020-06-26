@@ -146,7 +146,9 @@ class CollectionController extends \yii\web\Controller
             foreach ($data as $dkey => $value)
             {
                 if (is_array($value))
-                    $data[$dkey] = htmlspecialchars_decode(strip_tags(implode(', ', $value)));
+                    $data[$dkey] = implode(', ', $value);
+
+                $data[$dkey] = htmlspecialchars_decode(strip_tags($data[$dkey]));
             }
 
             fputcsv($out, $data,';');
