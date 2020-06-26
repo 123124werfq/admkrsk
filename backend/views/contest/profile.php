@@ -53,7 +53,11 @@ $defaultColumns = [
         'label' => 'Статус',
         'format' => 'html',
         'value' => function ($model) {
-            return $model->getStatename(true);
+            if(!empty($model->additional_status))
+                $extra = '<br>Доп. статус: '.$model->additional_status;
+            else
+                $extra = '';
+            return $model->getStatename(true).$extra;
         },
     ],
     [

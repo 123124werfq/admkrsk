@@ -218,8 +218,9 @@ class ContestController extends Controller
         if(Yii::$app->request->get('_csrf'))
         {
             $profile->comment = Yii::$app->request->get('comment');
+            $profile->additional_status = Yii::$app->request->get('additional_status');
 
-            $profile->updateAttributes(['comment']);
+            $profile->updateAttributes(['comment', 'additional_status']);
 
             if(!empty($profile->comment))
             {
@@ -244,11 +245,21 @@ class ContestController extends Controller
 
         $attachments = $record->getAllMedias();
 
+        // экстра статусы
+        $extraStatusesCollection = Collection::find()->where(['alias'=>'contest_additional_statuses'])->one();
+        if($extraStatusesCollection)
+        {
+            $extraStatuses = $extraStatusesCollection->getDataQuery()->getArray(true);        
+        }
+        else 
+            $extraStatuses = [];
+
         return $this->render('viewprofile', [
             'model' => $profile,
             'record' => $record,
             'formFields' => $formFields,
-            'attachments' => $attachments
+            'attachments' => $attachments,
+            'extraStatuses' => $extraStatuses
         ]);
     }
 
