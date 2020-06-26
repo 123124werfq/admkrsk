@@ -317,8 +317,9 @@ class AddressController extends Controller
         $query = City::find()
             ->select(['id_city', 'name'])
             ->filterWhere([
-                'id_region' => $id_region,
-                'id_subregion' => $id_subregion,
+                'or',
+                ['id_region' => $id_region],
+                ['id_subregion' => $id_subregion],
             ])
             ->groupBy('id_city')
             ->orderBy(['name' => SORT_ASC])
@@ -401,8 +402,9 @@ class AddressController extends Controller
             ->joinWith('districts', false)
             ->filterWhere([Street::tableName() . '.id_city' => $id_city])
             ->filterWhere([
-                Street::tableName() . '.id_city' => $id_city,
-                District::tableName() . '.id_district' => $id_district,
+                'or',
+                [Street::tableName() . '.id_city' => $id_city],
+                [District::tableName() . '.id_district' => $id_district],
             ])
             ->groupBy(Street::tableName() . '.id_street')
             ->orderBy([Street::tableName() . '.name' => SORT_ASC])

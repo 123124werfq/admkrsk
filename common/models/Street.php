@@ -40,6 +40,8 @@ class Street extends \yii\db\ActiveRecord
     const VERBOSE_NAME_PLURAL = 'Улицы';
     const TITLE_ATTRIBUTE = 'name';
 
+    public $district_ids;
+
     /**
      * {@inheritdoc}
      */
@@ -60,6 +62,7 @@ class Street extends \yii\db\ActiveRecord
             [['id_city'], 'default', 'value' => null],
             [['id_city'], 'integer'],
             [['id_city'], 'exist', 'targetClass' => City::class, 'targetAttribute' => 'id_city'],
+            [['district_ids'], 'each', 'rule' => ['exist', 'targetClass' => District::class, 'targetAttribute' => 'id_district']],
         ];
     }
 
@@ -75,7 +78,23 @@ class Street extends \yii\db\ActiveRecord
             'name' => 'Улица',
             'is_updatable' => 'Обновлять из ФИАС',
             'is_active' => 'Активный',
+            'district_ids' => 'Районы города',
         ];
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        $this->unlinkAll('districts', true);
+
+        if ($this->district_ids) {
+            foreach ($this->district_ids as $district_id) {
+                if (($district = District::findOne($district_id)) !== null) {
+                    $this->link('districts', $district);
+                }
+            }
+        }
     }
 
     /**

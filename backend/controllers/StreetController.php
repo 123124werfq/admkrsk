@@ -8,6 +8,7 @@ use common\models\Street;
 use backend\models\search\StreetSearch;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -110,6 +111,8 @@ class StreetController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+
+        $model->district_ids = ArrayHelper::getColumn($model->districts, 'id_district');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->createAction(Action::ACTION_UPDATE);
