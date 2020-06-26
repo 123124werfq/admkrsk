@@ -452,6 +452,8 @@ JS;
 
                 if (empty($options['filesize']))
                     $options['filesize'] = 10;
+                if (empty($modelForm->maxfilesize))
+                    $modelForm->maxfilesize = 10;
 
                 echo '
 				<div data-input="' . $input->id_input . '" class="fileupload" ' . implode(' ', $dataOptions) . '>
