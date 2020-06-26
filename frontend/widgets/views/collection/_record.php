@@ -26,11 +26,11 @@
                     }
                     elseif ($column->type == CollectionColumn::TYPE_JSON)
                     {
-                        $array = $column->getValueByType($recordData[$column->id_column]);
+                        $values = $column->getValueByType($recordData[$column->id_column]);
 
                         $ths = json_decode($column->input->values, true);
 
-                        if (!is_array($columns) && !empty($columns))
+                        if (!is_array($values) && !empty($values))
                             echo json_encode($array);
                         else
                         {
@@ -38,10 +38,11 @@
                             foreach ($ths as $key => $th)
                                 echo '<th ' . (!empty($th['width']) ? 'style="width:' . $th['width'] . '%"' : '') . ' >' . $th['name'] . '</th>';
                             echo '</tr>';
-                            foreach ($array as $key => $row)
+
+                            foreach ($values as $key => $row)
                             {
                                 echo '<tr>';
-                                foreach ($row as $key => $value)
+                                foreach ($row as $vkey => $value)
                                     echo '<td>'.$value.'</td>';
                                 echo '</tr>';
                             }
