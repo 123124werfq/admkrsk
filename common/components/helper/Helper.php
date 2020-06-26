@@ -51,6 +51,25 @@ class Helper
 	}
 
 
+	public static function getTwigVars($template)
+	{
+		preg_match_all('/\{\{(?!%)\s*((?:(?!\.)[^\s])*)\s*(?<!%)\}\}|\{%\s*(?:\s(?!endfor)(\w+))+\s*%\}/i', $template, $m);
+		$m = array_map('array_filter', $m);
+
+		$vars = array_merge($m[1],$m[2]); 
+
+		foreach ($vars as $key => $var) {
+			if (strpos($var, '|'))
+			{
+				$var = explode('|', $var);
+				$vars[$key] = $var[0];
+			}
+		}
+
+		return $vars;
+		//return $m[2]??[];
+	}
+
 	public static function runContentWidget($content, $page, $recordData=[])
 	{
 		function parseAttributesFromTag($tag, $recordData=[])
