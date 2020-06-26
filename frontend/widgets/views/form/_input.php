@@ -517,7 +517,7 @@ JS;
 	                    </div>
 	                    <div class="fileupload_content">
 	                        <p class="fileupload_label">Перетащите сюда файлы для загрузки</p>
-	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — ' . $modelForm->maxfilesize . ' Мб</p>
+	                        <p class="text-help mt-0 mb-0">Максимальный размер файлов — ' . $modelForm->maxfilesize . ' Мб <span class="currentFormSize"></span></p>
 	                    </div>
 	                </div>
 	                <div class="fileupload_list">' . $file_uploaded . '</div>
