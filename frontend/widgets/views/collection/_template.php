@@ -18,8 +18,8 @@
             if ($columns[$alias]->isRelation())
             {
                 //$replace = '';
-                foreach ($recordData[$alias] as $id_subrecord => $subrecord)
-                {
+                //foreach ($recordData[$alias] as $id_subrecord => $subrecord)
+                //{
                     /*$replace .= frontend\widgets\CollectionRecordWidget::widget([
                         'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
                         'renderTemplate'=>true,
@@ -27,7 +27,7 @@
                     ]);*/
 
                     $templateValues[$alias] = $value;
-                }
+                //}
             }
             else
                 $templateValues[$alias] = $columns[$alias]->getValueByType($value);
@@ -35,8 +35,8 @@
         else
             $templateValues[$alias] = $value;
 
-        if (isset($templateValues[$alias]) && is_array($templateValues[$alias]))
-            if(is_string(reset($templateValues[$alias])))
+        if (isset($templateValues[$alias]) && is_array($templateValues[$alias]) && !$columns[$alias]->isRelation())
+            if (is_string(reset($templateValues[$alias])))
                 $templateValues[$alias] = implode('', $templateValues[$alias]);
 
         //$template = str_replace('{'.$alias.'}', $replace , $template);
