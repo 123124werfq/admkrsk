@@ -33,7 +33,7 @@
         else
             $templateValues[$alias] = $value;
 
-        if (is_array($templateValues[$alias]))
+        if (isset($templateValues[$alias]) && is_array($templateValues[$alias]))
             $templateValues[$alias] = implode('', $templateValues[$alias]);
 
         //$template = str_replace('{'.$alias.'}', $replace , $template);
