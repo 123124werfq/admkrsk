@@ -156,6 +156,14 @@ class AdImportController extends Controller
             if($company == "[no company]")
                 continue;
 
+            if(!isset($attr['email'][0]))
+                continue;
+
+            $alreadyUser = AdUser::find()->where(['email' => $attr['email'][0]])->one();
+
+            if($alreadyUser)
+                continue;
+
             $aduser = new AdUser();
             $aduser->sn = isset($attr['samaccountname'][0]) ? $attr['samaccountname'][0] : null;
             $aduser->name = isset($attr['name'][0]) ? $attr['name'][0] : null;
