@@ -160,12 +160,27 @@ class UserfirmController extends \yii\web\Controller
             {
                 $modelForm = new FormDynamic($form);
 
-                if ($modelForm->load(Yii::$app->request->post()) && $modelForm->validate())
+                if ($modelForm->load(Yii::$app->request->post()))
                 {
-                    $prepare = $modelForm->prepareData(true);
-                    $record = $collection->updateRecord($firm->id_record, $prepare);
+                    if ($modelForm->validate())
+                    {
+                        $prepare = $modelForm->prepareData(true);
+                        $record = $collection->updateRecord($firm->id_record, $prepare);
 
-                    $this->redirect('');
+                        if (Yii::$app->request->isAjax)
+                        {
+                            Yii::$app->response->format = Response::FORMAT_JSON;
+
+                            return [
+                                'success'=>$form->message_success?$form->message_success:'Спасибо, данные отправлены'
+                            ];
+                        }
+                    }
+                    else
+                    {
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        return ActiveForm::validate($model);
+                    }
                 }
             }
         }
