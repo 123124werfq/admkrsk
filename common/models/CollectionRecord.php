@@ -341,7 +341,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                         foreach ($value as $id_record => $label)
                         {
                             $subrecord = CollectionRecord::findOne($id_record);
-                            $output[$column['alias']][] = $subrecord->getDataAsString($keyAsAlias,false);
+                            $output[$column['alias']][$id_record] = $subrecord->getDataAsString($keyAsAlias,false);
                         }
                     }
                     else 
