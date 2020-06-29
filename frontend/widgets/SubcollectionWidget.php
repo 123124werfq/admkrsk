@@ -35,6 +35,10 @@ class SubcollectionWidget extends \yii\base\Widget
             return '';
 
         $collection = current($records);
+
+        if (empty($collection))
+            return '';
+
         $template = $collection->collection->template_element;
 
         if (empty($template))
