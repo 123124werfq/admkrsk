@@ -347,10 +347,10 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
         try {
             $loader = new \Twig\Loader\ArrayLoader([
-                'template' => $template,
+                'customtemplate' => $template,
             ]);
             $twig = new \Twig\Environment($loader);
-            $value = $twig->render('template', $data);
+            $value = $twig->render('customtemplate', $data);
 
             unset($loader);
             unset($twig);

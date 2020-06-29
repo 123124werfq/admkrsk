@@ -43,7 +43,7 @@
     $loader = new \Twig\Loader\ArrayLoader([
         'index' => $template,
     ]);
-    $twig = new \Twig\Environment($loader);
+
 
     echo $twig->render('index', $templateValues);
 ?>
