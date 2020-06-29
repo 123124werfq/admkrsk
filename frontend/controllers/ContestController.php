@@ -228,7 +228,7 @@ class ContestController extends \yii\web\Controller
                             if($profileData)
                             {
                                 $profileData = $profileData->getData(true);
-                                //var_dump($profileData); die();
+                                var_dump($profileData); die();
 
                                 $vote = CstVote::find()->where(['id_expert' => $expert->id_expert, 'id_profile' => $profile->id_profile])->one();
 
