@@ -26,6 +26,9 @@ class SubcollectionWidget extends \yii\base\Widget
     	//$model = Collection::find()->where(['id_collection'=>$this->id_collection])->one();
         //$column = CollectionColumn::find()->where(['id_collection'=>$model->id_collection,'alias'=>$this->column_alias])->one();
 
+        if (empty($this->data) || !is_array($this->data))
+            return '';
+
         $records = CollectionRecord::find()->where(['id_record' => array_keys($this->data)])->indexBy('id_record')->all();
 
         if (empty($records))
