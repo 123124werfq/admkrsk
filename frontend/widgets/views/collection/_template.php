@@ -45,5 +45,7 @@
     ]);
 
 
+    $twig = new \Twig\Environment($loader);
+
     echo $twig->render('index', $templateValues);
 ?>
