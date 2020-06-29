@@ -19,7 +19,7 @@ use common\models\CollectionColumn;
                     <a href="/contest/vote/<?= Yii::$app->session->get('voteback')?>">&larr; Вернуться к общему списку</a>
 
                     <?php
-                        if(isset($contest['vote_type']) && $contest['vote_type']=='Баллы')
+                        if($tvote && isset($contest['vote_type']) && $contest['vote_type']=='Баллы')
                         {
                     ?>
                         <p>Вы уже поставили оценку <strong><?=(int)$tvote->value?></strong>, но вы можете изменить своё решение</p>
