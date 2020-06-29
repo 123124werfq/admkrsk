@@ -418,7 +418,7 @@ class ContestController extends Controller
                                 }
 
                                 $links[$ckey][$profile->id_profile] = [
-                                    'name' => $profileData['project_name']??$profileData['name'],
+                                    'name' => $profileData['project_name']??$profileData['name']?? "Заявка {$profile->id_record_anketa}",
                                     'votebyexpert' => $tvotes,
                                     //'project_id' => $profile->id_record_anketa
                                 ];
