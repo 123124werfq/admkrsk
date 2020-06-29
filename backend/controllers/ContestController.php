@@ -377,7 +377,10 @@ class ContestController extends Controller
             foreach($contestExperts as $ce)
             {
                 $ex = CstExpert::findOne($ce->id_expert);
-                $experts[$ckey][$ce->id_expert] = $ex->name;
+                if(isset($ex->name))
+                    $experts[$ckey][$ce->id_expert] = $ex->name;
+                else
+                $experts[$ckey][$ce->id_expert] = 'Не заполнено';
             }
 
             $count = 0;
@@ -440,8 +443,9 @@ class ContestController extends Controller
 
     public function actionSpreadsheet($id)
     {
+        /*
         $votes = [];
-        $contest = HrContest::findOne($id);
+        $contest = CstContest::findOne($id);
 
         if ($contest)
             $votes = CstVote::find()->where(['id_contest' => $contest->id_contest])->all();
@@ -458,6 +462,7 @@ class ContestController extends Controller
 
         //echo iconv( "utf-8", "windows-1251",$body);
         echo $body;
+        */
 
         Yii::$app->end();
     }    
