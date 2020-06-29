@@ -41,7 +41,7 @@ $this->params['page'] = $page;
                     else
                     {
                         echo '<a class="btn btn__secondary btn__block-sm" href="'.$page->getUrl().'/file">Документы организация</a>';
-                        echo frontend\widgets\FormsWidget::widget(['form'=>$form, 'collectionRecord' => $record, 'submitLabel' => 'Сохранить']);
+                        echo frontend\widgets\FormsWidget::widget(['form'=>$form, 'action'=>'','collectionRecord' => $record, 'submitLabel' => 'Сохранить']);
                     }?>
 
                     <?php if (!empty($page->medias)) { ?>
