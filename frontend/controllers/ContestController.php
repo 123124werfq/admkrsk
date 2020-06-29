@@ -228,13 +228,13 @@ class ContestController extends \yii\web\Controller
                             if($profileData)
                             {
                                 $profileData = $profileData->getData(true);
-                                var_dump($profileData); die();
+                                //var_dump($profileData); die();
 
                                 $vote = CstVote::find()->where(['id_expert' => $expert->id_expert, 'id_profile' => $profile->id_profile])->one();
 
                                 $links[$ckey][] = [
                                     'id' => $profile->id_profile,
-                                    'name' => $profileData['project_name']??$profileData['name'],
+                                    'name' => $profileData['project_name']??$profileData['name']??"Заявка {$profile->id_record_anketa}",
                                     'vote_value' => $vote->value??false,
                                     'vote_comment' => $vote->comment??'',
                                     'project_id' => $profile->id_record_anketa
