@@ -17,14 +17,16 @@
         {
             if ($columns[$alias]->isRelation())
             {
-                $replace = '';
+                //$replace = '';
                 foreach ($recordData[$alias] as $id_subrecord => $subrecord)
                 {
-                    $replace .= frontend\widgets\CollectionRecordWidget::widget([
+                    /*$replace .= frontend\widgets\CollectionRecordWidget::widget([
                         'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
                         'renderTemplate'=>true,
                         'templateAsElement'=>true,
-                    ]);
+                    ]);*/
+
+                    $templateValues[$alias] = $value;
                 }
             }
             else
