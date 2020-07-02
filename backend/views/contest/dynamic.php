@@ -26,8 +26,8 @@ if (Yii::$app->user->can('admin.service')) {
     $this->params['button-block'][] = Html::a('Добавить', ['create'], ['class' => 'btn btn-success']);
 }
 */
-//if(isset($_GET['id']))
-//    $this->params['button-block'][] = Html::a('Скачать таблицу', ['spreadsheet','id'=>(int)$_GET['id']], ['class' => 'btn btn-success']);
+if(isset($_GET['id']))
+    $this->params['button-block'][] = Html::a('Скачать таблицу', ['spreadsheet','id'=>(int)$_GET['id']], ['class' => 'btn btn-success']);
 
 
 ?>

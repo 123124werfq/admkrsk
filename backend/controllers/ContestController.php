@@ -464,6 +464,105 @@ class ContestController extends Controller
         echo $body;
         */
 
+        $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
+        if(!$contestCollection)
+            throw new BadRequestHttpException();
+
+        $data = $links = $experts = [];
+        $vote_type = 0;
+
+        $activeContests = $contestCollection->getDataQuery()->whereByAlias(['<>', 'contest_state', 'Конкурс завершен'])->getArray(true);
+
+        if($id)
+        {
+            if(!isset($activeContests[$id]))
+                throw new BadRequestHttpException();
+
+            $tmp = $activeContests[$id];
+            $activeContests = [];
+            $activeContests[$id] = $tmp; 
+            $vote_type = isset($activeContests[$id]['vote_type'])?$activeContests[$id]['vote_type']:0;
+        }
+
+        $profiles = CstProfile::find()->all();
+
+        foreach ($activeContests as $ckey => $cst) 
+        {
+            $experts[$ckey] = [];
+
+            $contestExperts = CstContestExpert::find()->where(['id_record_contest' => $ckey])->all();
+
+            foreach($contestExperts as $ce)
+            {
+                $ex = CstExpert::findOne($ce->id_expert);
+                if(isset($ex->name))
+                    $experts[$ckey][$ce->id_expert] = $ex->name;
+                else
+                $experts[$ckey][$ce->id_expert] = 'Не заполнено';
+            }
+
+            $count = 0;
+            $countTotal = 0;
+
+            if(!empty($cst['participant_form']))
+            {
+                $form = Form::find()->where(['alias' => $cst['participant_form']])->one();
+                if(!$form)
+                    continue;
+
+                foreach ($profiles as $profile) 
+                {
+                    if($form->id_collection == $profile->id_record_contest)
+                    {
+                        if(!isset($links[$ckey]))
+                            $links[$ckey] = [];
+
+                        $countTotal++;
+
+                        if($profile->state == CstProfile::STATE_ACCEPTED)
+                        {
+                            $count++;
+                            $profileData = CollectionRecord::findOne($profile->id_record_anketa);
+
+                            if($profileData)
+                            {
+                                $profileData = $profileData->getData(true);
+                                //var_dump($profileData); die();
+
+                                $votes = CstVote::find()->where(['id_profile' => $profile->id_profile])->all();
+
+                                $tvotes = [];
+
+                                foreach($votes as $vote)
+                                {
+                                    $tvotes[$vote->id_expert] = $vote->value;                                    
+                                }
+
+                                $links[$ckey][$profile->id_profile] = [
+                                    'name' => $profileData['project_name']??$profileData['name']?? "Заявка {$profile->id_record_anketa}",
+                                    'votebyexpert' => $tvotes,
+                                    //'project_id' => $profile->id_record_anketa
+                                ];
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        header('Content-type: application/excel');
+        header('Content-Disposition: attachment; filename=Итоги голосования ' . $id. '.xls');
+
+        $body = $this->renderPartial('dynamic_excel', [
+            'votelist' => $links,
+            'experts' => $experts,
+            'vote_type' => $vote_type
+        ]);
+
+        //echo iconv( "utf-8", "windows-1251",$body);
+        echo $body;
+
         Yii::$app->end();
     }    
 
