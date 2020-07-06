@@ -126,7 +126,7 @@ else {
 							elseif (!empty($columnsOptions[$column->alias]['filelink']) && !empty($row[$columnsOptions[$column->alias]['filelink']]))
 								echo '<a href="'.$row[$columnsOptions[$column->alias]['filelink']].'" download>'.$value.'</a>';
 							else
-								echo $column->getValueByType($value);
+								echo $value;
 						}?>
 					</td>
 				<?php }?>
