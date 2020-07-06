@@ -114,10 +114,12 @@ else {
 					<td><?php
 						if (isset($row[$column->alias]))
 						{
-							if (is_array($row[$column->alias]))
+							$value = $column->getValueByType($value);
+
+							/*if (is_array($row[$column->alias]))
 								$value = '<span>'.implode('</span><br><span>', $row[$column->alias]).'</span>';
 							else
-								$value = $row[$column->alias];
+								$value = $row[$column->alias];*/
 
 							if ($column->is_link)
 								echo '<a href="/collection?id='.$id_record.'&id_page='.$page->id_page.'">'.$value.'</a>';
