@@ -114,7 +114,7 @@ else {
 					<td><?php
 						if (isset($row[$column->alias]))
 						{
-							$value = $column->getValueByType($value);
+							$value = $column->getValueByType($row[$column->alias]);
 
 							/*if (is_array($row[$column->alias]))
 								$value = '<span>'.implode('</span><br><span>', $row[$column->alias]).'</span>';
