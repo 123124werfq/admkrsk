@@ -180,18 +180,11 @@ class MultiUploadBehavior extends Behavior
 
 					$mediaModel->attributes = $post;
 
-					// устанавливаем обложку
-					/*if ($settings['cover']) так нельзя
-					{
-						$coverclass = $settings['cover'];
-						$this->owner->$coverclass = $mediaModel;
-					}*/
-
 					// берем информацию с файла или с модели
-					if (!empty($post['file_path']))
+					if (!empty($post['file_path']) && $mediaModel->isNewRecord)
 						$mediaModel->getImageAttributes($post['file_path'],$post); // загружаем всю информацию c файла в объект
-					elseif (!$mediaModel->isNewRecord)
-						$mediaModel->getImageAttributes($mediaModel->getFilePath(),$post); // надо переделать
+					/*elseif (!$mediaModel->isNewRecord)
+						$mediaModel->getImageAttributes($mediaModel->getFilePath(),$post); // надо переделать*/
 
 					$this->records[$relation_name][] = $mediaModel;
 				}

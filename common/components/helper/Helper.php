@@ -50,13 +50,12 @@ class Helper
 		return 'Январь';
 	}
 
-
 	public static function getTwigVars($template)
 	{
 		preg_match_all('/\{\{(?!%)\s*((?:(?!\.)[^\s])*)\s*(?<!%)\}\}|\{%\s*(?:\s(?!endfor)(\w+))+\s*%\}/i', $template, $m);
 		$m = array_map('array_filter', $m);
 
-		$vars = array_merge($m[1],$m[2]); 
+		$vars = array_merge($m[1],$m[2]);
 
 		foreach ($vars as $key => $var) {
 			if (strpos($var, '|'))
@@ -68,6 +67,23 @@ class Helper
 
 		return $vars;
 		//return $m[2]??[];
+	}
+
+	public static function renderTwig($template, $data)
+	{
+		$loader = new \Twig\Loader\ArrayLoader([
+		    'index' => $template,
+		]);
+
+		$twig = new \Twig\Environment($loader);
+
+	    $filter = new \Twig\TwigFilter('render', function ($string) {
+	    	return \frontend\widgets\SubcollectionWidget::widget(['data'=>$string]);
+	    },['is_safe' => ['html']]);
+
+	    $twig->addFilter($filter);
+
+		return $twig->render('index', $row);
 	}
 
 	public static function runContentWidget($content, $page, $recordData=[])

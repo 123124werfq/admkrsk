@@ -9,21 +9,16 @@ use yii\grid\GridView;
 
 $this->title = 'Группы галлерей';
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['button-block'][] = Html::a('Добавить', ['create'], ['class' => 'btn btn-success']);
 ?>
-<div class="gallery-group-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Создать группы галлерей', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+<div class="ibox">
+        <div class="ibox-content">
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
         'columns' => [
+            'id',
             'name',
             [
                 'class' => 'yii\grid\ActionColumn',
@@ -31,11 +26,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
         'tableOptions' => [
-            'emptyCell' => '',
+            'emptyCell ' => '',
             'class' => 'table table-striped ids-style valign-middle table-hover',
             'id' => 'grid',
         ]
     ]); ?>
-
-
+</div>
 </div>
