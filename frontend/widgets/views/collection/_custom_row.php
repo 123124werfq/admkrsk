@@ -1,3 +1,4 @@
+<div class="collection-element">
 <?php
 	$row['link'] = '/collection?id='.$id_record.'&id_page='.$id_page;
 
@@ -12,6 +13,5 @@
     },['is_safe' => ['html']]);
     $twig->addFilter($filter);
 ?>
-<div class="collection-element">
 	<?=$twig->render('index', $row);?>
 </div>
