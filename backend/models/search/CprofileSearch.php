@@ -2,23 +2,29 @@
 
 namespace backend\models\search;
 
+use Yii;
+
 use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\data\SqlDataProvider;
 use common\models\CstProfile;
+use common\models\Collection;
+use yii\web\BadRequestHttpException;
 
 /**
  * TagSearch represents the model behind the search form of `common\models\Tag`.
  */
 class CprofileSearch extends CstProfile
 {
+    public $id_contest;
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-
+            [['id_contest'], 'integer']
         ];
     }
 
@@ -41,7 +47,10 @@ class CprofileSearch extends CstProfile
      */
     public function search($params)
     {
+        /*
         $query = CstProfile::find();
+
+        // var_dump($query); die();
 
         // add conditions that should always apply here
 
@@ -52,20 +61,53 @@ class CprofileSearch extends CstProfile
                 'pageSize' => $params['pageSize'] ?? 200
             ],
         ]);
+        */
 
-        $this->load($params);
+        
+        $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
+        if(!$contestCollection)
+            throw new BadRequestHttpException();
+
+        $contests = $contestCollection->getDataQuery()->getArray(true);
+        
+        if(isset($contests[$this->id_contest]))
+            $sql = "SELECT * FROM cst_profile cp 
+                LEFT JOIN form_form ff ON cp.id_record_contest = ff.id_collection
+                WHERE ff.alias = '{$contests[$this->id_contest]['participant_form']}'";
+        else
+            $sql = "SELECT * FROM cst_profile cp";
+
+        $count = Yii::$app->db->createCommand("SELECT COUNT(*) FROM ($sql) t1")->queryScalar();
+    
+        $dataProvider = new SqlDataProvider([
+            'sql' => $sql,
+            'params' => [],
+            'totalCount' => $count,
+            'pagination' => [
+                'pageSize' => 20,
+            ],
+            'sort' => [
+                'attributes' => [
+                    'title',
+                    'view_count',
+                    'created_at',
+                ],
+            ],
+        ]);        
+
+        //$this->load($params);
         
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
         // grid filtering conditions
+        /*
         $query->andFilterWhere([
             //'contestinfo' => ,
         ]);
+        */
 
         return $dataProvider;
     }

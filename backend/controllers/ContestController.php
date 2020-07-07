@@ -39,6 +39,7 @@ class ContestController extends Controller
     public function actionProfile()
     {
         $searchModel = new CprofileSearch();
+        $searchModel->id_contest =  Yii::$app->request->get('cont', 0);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $grid = GridSetting::findOne([
             'class' => static::gridProfile,
@@ -48,6 +49,7 @@ class ContestController extends Controller
         if ($grid) {
             $columns = json_decode($grid->settings, true);
         }
+
 
         $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
         if(!$contestCollection)
