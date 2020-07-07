@@ -87,10 +87,11 @@ class CprofileSearch extends CstProfile
                 'pageSize' => 20,
             ],
             'sort' => [
+                'defaultOrder'=> ['id_profile'=>SORT_DESC],
                 'attributes' => [
-                    'title',
-                    'view_count',
-                    'created_at',
+                    'id_profile',
+                    'cp.updated_at',
+                    'cp.created_at',
                 ],
             ],
         ]);        
