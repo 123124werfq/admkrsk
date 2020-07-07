@@ -27,7 +27,6 @@ $this->params['button-block'][] = Html::a('Добавить', ['create'], ['clas
         'tableOptions' => [
             'emptyCell ' => '',
             'class' => 'table table-striped ids-style valign-middle table-hover',
-            'data-grid' => GalleryController::grid,
             'id' => 'grid',
         ]
     ]); ?>
