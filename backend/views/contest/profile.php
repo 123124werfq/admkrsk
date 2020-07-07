@@ -156,7 +156,21 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view} {editable} {ban} {status} ',
                 'buttons' => [
+                    'view' => function ($url, $model, $key) {
+                        $url = str_replace("=$key", "={$model['id_profile']}", $url);
+    
+                            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-eye-open"]);
+                            return Html::a($icon, $url, [
+                                'target' => '_blank',
+                                'title' => 'Редактировать',
+                                'aria-label' => 'Редактировать',
+                                'data-pjax' => '0',
+                            ]);
+                        },
+
                     'editable' => function ($url, $model, $key) {
+                    $url = str_replace("=$key", "={$model['id_profile']}", $url);
+
                         $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-pencil"]);
                         return Html::a($icon, $url, [
                             'target' => '_blank',
@@ -166,6 +180,7 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
                         ]);
                     },
                     'status' => function ($url, $model, $key) {
+                        $url = str_replace("=$key", "={$model['id_profile']}", $url);
                         switch ($model['state']) {
                             case CstProfile::STATE_DRAFT:
                                 $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-ok"]);
