@@ -21,7 +21,11 @@ $model->filters = json_encode($model->filters);
 <?php $form = ActiveForm::begin(['id'=>'collection-view']); ?>
 
 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-<br/>
+
+<hr>
+<?= $form->field($model, 'template')->textInput(['class' => 'form-control redactor']) ?>
+
+<?= $form->field($model, 'template_element')->textInput(['class' => 'form-control redactor']) ?>
 
 <br/><br/>
 <h3>Поля</h3>
@@ -60,6 +64,7 @@ $model->filters = json_encode($model->filters);
 
     <?= $form->field($model, 'access_user_ids')->widget(UserAccessControl::class) ?>
 <?php endif; ?>
+
 
 <hr>
 
