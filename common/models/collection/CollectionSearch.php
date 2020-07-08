@@ -112,6 +112,8 @@ class CollectionSearch extends DynamicModel
                     $options['style'] = 'min-width:500px';
                 elseif ($col->type==CollectionColumn::TYPE_INPUT)
                     $options['style'] = 'min-width:200px';
+                elseif ($col->type==CollectionColumn::TYPE_IMAGE)
+                    $options['style'] = 'width:200px';
             }
 
             $dataProviderColumns[$col_alias] =

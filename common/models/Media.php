@@ -32,6 +32,10 @@ use yii\imagine\Image;
  */
 class Media extends \yii\db\ActiveRecord
 {
+    const SIZE_SMALL = 0;
+    const SIZE_MEDIUM = 1;
+    const SIZE_BIG = 2;
+
     public $file_path;
     public $cover;
     public $crop;
@@ -268,9 +272,29 @@ class Media extends \yii\db\ActiveRecord
             return $this->getUrl();
     }
 
+    public static function thumb($id_media, $size=0)
+    {
+        $media = Media::findOne($id_media);
+
+        if (empty($media))
+            return '';
+
+        $options = [];
+
+        if ($size == Media::SIZE_MEDIUM)
+            $options['w'] = 600;
+        elseif ($size == Media::SIZE_BIG)
+            $options['w'] = 1900;
+        else
+            $options['w'] = 300;
+
+        return $media->showThumb($options);
+    }
+
+
     public function makeThumb($source, $options)
     {
-        if (empty($options) || $this->extension == 'svg' || $this->extension == 'tif' || ($this->height<=$options['h'] && $this->width<=$options['w']))
+        if (empty($options) || $this->extension == 'svg' || $this->extension == 'tif' || $this->width<=$options['w'])
             return $this->getUrl();
 
         $path = str_replace($this->extension, implode('_', $options).'.'.$this->extension, $source);
@@ -334,9 +358,10 @@ class Media extends \yii\db\ActiveRecord
         }*/
 
         if (!Yii::$app->publicStorage->has($source))
-        {
             return false;
-        }
+
+        if (empty($options['h']))
+            $options['h'] = $this->height*$options['w']/$this->width;
 
         $stream = Yii::$app->publicStorage->readStream($source);
         Image::thumbnail(Image::autorotate($stream), $options['w'], $options['h'])->save(Yii::getAlias('@runtime').'/'.$path,['quality' => 80]);

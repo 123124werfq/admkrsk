@@ -83,7 +83,47 @@ class Helper
 
 	    $twig->addFilter($filter);
 
-		return $twig->render('index', $row);
+	    $filter = new \Twig\TwigFilter('thumb', function ($data) {
+	    	if (is_array($data))
+	    		$data = array_shift($data);
+
+	    	if (empty($data))
+	    		return '';
+
+	    	$url =  \common\models\Media::thumb($data['id']);
+
+	    	return '<img src="'.$url.'" alt=""/>';
+	    },['is_safe' => ['html']]);
+
+	    $twig->addFilter($filter);
+
+	    $filter = new \Twig\TwigFilter('thumb_medium', function ($string) {
+	    	if (is_array($data))
+	    		$data = array_shift($data);
+
+	    	if (empty($data))
+	    		return '';
+
+	    	$url = \common\models\Media::thumb($data['id'],\common\models\Media::SIZE_MEDIUM);
+	    	return '<img src="'.$url.'" alt=""/>';
+	    },['is_safe' => ['html']]);
+
+	    $twig->addFilter($filter);
+
+	    $filter = new \Twig\TwigFilter('thumb_big', function ($string) {
+	    	if (is_array($data))
+	    		$data = array_shift($data);
+
+	    	if (empty($data))
+	    		return '';
+
+	    	$url = \common\models\Media::thumb($data['id'],\common\models\Media::SIZE_BIG);
+	    	return '<img src="'.$url.'" alt=""/>';
+	    },['is_safe' => ['html']]);
+
+	    $twig->addFilter($filter);
+
+		return $twig->render('index', $data);
 	}
 
 	public static function runContentWidget($content, $page, $recordData=[])
