@@ -222,7 +222,11 @@ class ContestController extends Controller
             $profile->comment = Yii::$app->request->get('comment');
             $profile->additional_status = Yii::$app->request->get('additional_status');
 
-            $profile->updateAttributes(['comment', 'additional_status']);
+            if($profile->updateAttributes(['comment', 'additional_status']))
+            {
+                $record->data = ['status' => $profile->additional_status];
+                $record->update();
+            }
 
             if(!empty($profile->comment))
             {
