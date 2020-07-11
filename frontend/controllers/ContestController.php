@@ -36,6 +36,7 @@ class ContestController extends \yii\web\Controller
         if(!$form)
             throw new BadRequestHttpException();
 
+
         $collection = $form->collection;
 
         $page = Page::findOne(['alias'=>'select']);
@@ -106,6 +107,21 @@ class ContestController extends \yii\web\Controller
             }
         }
 
+        $currentContest = $contestCollection->getDataQuery()->whereByAlias(['=', 'participant_form', $formAlias])->getArray(true);
+        $profiles = CstProfile::find()->where(['id_user' => $user->id])->all();
+        $total_ord = 0;
+        foreach ($profiles as $tprofile) {
+            if($form->id_collection == $tprofile->id_record_contest)
+            {
+                $total_ord++;
+            }
+        }        
+
+        $cc = reset($currentContest);
+
+        if(isset($cc['max_orders']) && $cc['max_orders']>=$total_ord)
+            $this->redirect("/contests/select/select");
+
         return $this->render('form', [
             'form'      => $form,
             'page'      => $page,
@@ -138,8 +154,10 @@ class ContestController extends \yii\web\Controller
 
         $activeContests = $contestCollection->getDataQuery()->whereByAlias(['<>', 'contest_state', 'Конкурс завершен'])->getArray(true);
 
+
         $links = [];
-        foreach ($activeContests as $ackey => $contest) {
+        foreach ($activeContests as $ackey => $contest) 
+        {
             if(!empty($contest['participant_form']))
             {
                 $form = Form::find()->where(['alias' => $contest['participant_form']])->one();
@@ -157,6 +175,10 @@ class ContestController extends \yii\web\Controller
                 }
             }
         }
+        //var_dump($activeContests);die();
+
+        ksort($activeContests, SORT_NUMERIC);
+        $activeContests = array_reverse($activeContests, true);
 
         return $this->render('select', [
             'profiles' => $profiles,
