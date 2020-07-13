@@ -3,7 +3,9 @@ namespace frontend\widgets;
 
 use Yii;
 use common\models\Collection;
+use common\models\CollectionColumn;
 use common\models\SettingPluginCollection;
+use common\components\helper\Helper;
 use yii\data\Pagination;
 
 class CollectionWidget extends \yii\base\Widget
@@ -124,6 +126,19 @@ class CollectionWidget extends \yii\base\Widget
 
         if (empty($model) || empty($this->columns))
             return '';
+
+        if ($this->template!='table' && !empty($model->template_element))
+        {
+            $columns_alias = Helper::getTwigVars($model->template_element);
+
+            if (!empty($columns_alias))
+            {
+                $addColumn = CollectionColumn::find()->where(['alias'=>$columns_alias])->indexBy('id_column')->all();
+
+                foreach ($addColumn as $key => $column)
+                    $this->columns['columns'][] = ['id_column'=>$column];
+            }
+        }
 
         // уникальный хэш для виджета PJAX, paginatinon и тп. переделать на более короткий
         $unique_hash = hash('joaat', $this->id_collection.serialize($this->columns));
