@@ -127,7 +127,7 @@ class CollectionWidget extends \yii\base\Widget
         if (empty($model) || empty($this->columns))
             return '';
 
-        if ($this->template!='table' && !empty($model->template_element))
+        /*if ($this->template!='table' && !empty($model->template_element))
         {
             $columns_alias = Helper::getTwigVars($model->template_element);
 
@@ -138,7 +138,7 @@ class CollectionWidget extends \yii\base\Widget
                 foreach ($addColumn as $key => $column)
                     $this->columns['columns'][] = ['id_column'=>$column];
             }
-        }
+        }*/
 
         // уникальный хэш для виджета PJAX, paginatinon и тп. переделать на более короткий
         $unique_hash = hash('joaat', $this->id_collection.serialize($this->columns));
