@@ -85,7 +85,7 @@ class UserfirmController extends \yii\web\Controller
                     $FirmUser->id_record = $id_record;
 
                     if ($FirmUser->save())
-                        return $this->redirect($page->getUrl().'/firm',['id_firm'=>$FirmUser->id_record]);
+                        return $this->redirect([$page->getUrl().'/firm','id_firm'=>$FirmUser->id_record]);
                 }
             }
         }
