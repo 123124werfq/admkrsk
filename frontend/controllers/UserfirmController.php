@@ -33,26 +33,44 @@ class UserfirmController extends \yii\web\Controller
     }
 
 
+    public function actionSearch($q)
+    {
+        $collection = $this->getCollection();
+
+        $records = $collection->getDataQuery()
+            ->whereByAlias(['like','name',$q])
+            ->getArray(true);
+
+        $results = [];
+        foreach ($records as $id_record=>$data) {
+            $results[] = [
+                'id' => $id_record,
+                'text' => $data['name'],
+            ];
+        }
+
+        return $this->asJson(['results' => $results]);
+    }
+
     public function actionIndex($page = null)
     {
-        $firm = $this->getFirm();
-
-        if (!empty($firm))
-            return $this->redirect($page->getUrl().'/firm');
-
         $model = new UserFirmForm;
 
         $record = null;
 
+        $collection = $this->getCollection();
+
         if ($model->load(Yii::$app->request->post()))
         {
-            $collection = Collection::find()->where(['alias'=>'municipal_firms'])->one();
+
+            //$collection = Collection::find()->where(['alias'=>'municipal_firms'])->one();
 
             if (!empty($collection))
             {
                 $record = $collection->getDataQuery()
-                    //->whereByAlias(['name'=>$model->name])
-                    ->whereByAlias(['inn'=>(int)$model->inn])->limit(1)->getArray();
+                    ->whereByAlias(['inn'=>$model->inn])
+                    ->andWhere(['id_record'=>(int)$model->name])
+                    ->limit(1)->getArray();
 
                 if (!empty($record))
                     $record = CollectionRecord::findOne(key($record));
@@ -67,21 +85,32 @@ class UserfirmController extends \yii\web\Controller
                     $FirmUser->id_record = $id_record;
 
                     if ($FirmUser->save())
-                        return $this->redirect($page->getUrl().'/firm');
+                        return $this->redirect($page->getUrl().'/firm',['id_firm'=>$FirmUser->id_record]);
                 }
             }
         }
+
+        $firms = $this->getFirms();
+
+        $ids = [];
+        foreach ($firms as $key => $data)
+            $ids[] = $data['id_record'];
+
+        $firms = $collection->getDataQuery()
+                    ->andWhere(['id_record'=>$ids])
+                    ->getArray(true);
 
         return $this->render('index', [
             'page' => $page,
             'record'=>$record,
             'model' => $model,
+            'firms' => $firms,
         ]);
     }
 
-    public function actionFile($page)
+    public function actionFile($page,$id_firm)
     {
-        $firm = $this->getFirm();
+        $firm = $this->getFirm($id_firm);
 
         if (empty($firm))
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -141,12 +170,9 @@ class UserfirmController extends \yii\web\Controller
         ]);
     }
 
-    public function actionFirm($page)
+    public function actionFirm($page,$id_firm)
     {
-        $firm = $this->getFirm();
-
-        if (empty($firm))
-            throw new NotFoundHttpException('The requested page does not exist.');
+        $firm = $this->getFirm($id_firm);
 
         $form = null;
 
@@ -193,9 +219,29 @@ class UserfirmController extends \yii\web\Controller
         ]);
     }
 
-    protected function getFirm()
+    protected function getCollection()
     {
-        $firm = FirmUser::find()->where(['id_user'=>Yii::$app->user->id])->one();
+        $collection = Collection::find()->where(['alias'=>'municipal_firms'])->one();
+
+        if (empty($collection))
+            throw new NotFoundHttpException();
+
+        return $collection;
+    }
+
+    protected function getFirms()
+    {
+        $firms = FirmUser::find()->where(['id_user'=>Yii::$app->user->id])->all();
+
+        return $firms;
+    }
+
+    protected function getFirm($id_firm)
+    {
+        $firm = FirmUser::find()->where(['id_user'=>Yii::$app->user->id,'id_record'=>$id_firm])->one();
+
+        if (empty($firm))
+            throw new NotFoundHttpException();
 
         return $firm;
     }
