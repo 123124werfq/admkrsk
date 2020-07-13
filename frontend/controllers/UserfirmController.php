@@ -44,7 +44,7 @@ class UserfirmController extends \yii\web\Controller
         $results = [];
         foreach ($records as $id_record=>$data) {
             $results[] = [
-                'id' => $id_record,
+                'id' => $data['name'],
                 'text' => $data['name'],
             ];
         }
@@ -69,7 +69,7 @@ class UserfirmController extends \yii\web\Controller
             {
                 $record = $collection->getDataQuery()
                     ->whereByAlias(['inn'=>$model->inn])
-                    ->andWhere(['id_record'=>(int)$model->name])
+                    ->andWhere(['name'=>$model->name])
                     ->limit(1)->getArray();
 
                 if (!empty($record))

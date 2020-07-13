@@ -20,8 +20,8 @@ class UserFirmForm extends Model
     public function rules()
     {
         return [
-            [['inn','name'], 'integer'],
-            [['ogrn'], 'string'],
+            [['inn'], 'integer'],
+            [['ogrn','name'], 'string'],
             ['name', 'required'],
         ];
     }
