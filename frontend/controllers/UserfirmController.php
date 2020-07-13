@@ -79,13 +79,20 @@ class UserfirmController extends \yii\web\Controller
 
                 if (!empty($id_record) && $id_record==$record->id_record)
                 {
-                    $FirmUser = new FirmUser;
-                    $FirmUser->id_user = Yii::$app->user->id;
-                    $FirmUser->state = 0;
-                    $FirmUser->id_record = $id_record;
+                    $FirmUser = FirmUser::find()->where(['id_record'=>$record->id_record])->one();
 
-                    if ($FirmUser->save())
-                        return $this->redirect([$page->getUrl().'/firm','id_firm'=>$FirmUser->id_record]);
+                    if (empty($FirmUser))
+                    {
+                        $FirmUser = new FirmUser;
+                        $FirmUser->id_user = Yii::$app->user->id;
+                        $FirmUser->state = 0;
+                        $FirmUser->id_record = $id_record;
+
+                        if ($FirmUser->save())
+                            return $this->redirect([$page->getUrl().'/firm','id_firm'=>$FirmUser->id_record]);
+                    }
+                    else
+                        $model->addError('name','Данная организация уже привязана к пользователю');
                 }
             }
         }
