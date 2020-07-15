@@ -81,7 +81,7 @@ if ($user) {
                         </ul>
 
                     <?php if(count($finishedContests)) {?>
-                        <h2>Завершенные</h2>
+                        <h3>Завершенные</h3>
                         <ul>
                         <?php foreach ($finishedContests as $cstId => $contest) { 
 
@@ -117,9 +117,6 @@ if ($user) {
                                             }
                                         ?>
                                     </li>
-                                <?php } ?>
-                                <?php if(!empty($contest['participant_form'])){?>
-                                    <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>">Создать новую заявку</a></li>
                                 <?php } ?>
                                 </ul>
                         <?php
