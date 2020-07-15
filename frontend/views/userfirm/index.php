@@ -1,5 +1,7 @@
 <?php
 use yii\bootstrap\ActiveForm;
+use yii\web\JsExpression;
+use kartik\select2\Select2;
 
 /* @var common\models\Page $page */
 
@@ -27,7 +29,21 @@ $this->params['page'] = $page;
                     <div class="boxed form-inside">
                         <?php $form = ActiveForm::begin(['scrollToError' => true]); ?>
 
-                            <?= $form->field($model, 'name')->textInput(['class' => 'form-control']) ?>
+
+                            <?= $form->field($model, 'name')->widget(Select2::class, [
+                                'data' => [],
+                                'pluginOptions' => [
+                                    'minimumInputLength' => 2,
+                                    'placeholder' => 'Введите название',
+                                    'ajax' => [
+                                        'url' => '/userfirm/search',
+                                        'dataType' => 'json',
+                                        'data' => new JsExpression('function(params) { return {q:params.term};}')
+                                    ],
+                                ],
+                            ]);?>
+
+
                             <div class="row">
                                 <div class="col" style="width: 100%">
                                     <?= $form->field($model, 'inn')->textInput(['class' => 'form-control']) ?>
@@ -81,6 +97,23 @@ $this->params['page'] = $page;
                             <?php } ?>
                         </div>
                     <?php } ?>
+
+
+                    <?php if (!empty($firms)){?>
+                        <h3>Привязанные организации</h3>
+                        <table>
+                            <thead>
+                                <th>Организация</th>
+                                <th>ИНН</th>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($firms as $id_record => $data)
+                                {
+                                    echo '<tr><td><a href="publishrequest/firm?id_firm='.$id_record.'">'.$data['name'].'</a></td><td>'.$data['inn'].'</td></tr>';
+                                }?>
+                            </tbody>
+                        </table>
+                    <?php }?>
                 </div>
             </div>
             <div class="col-third order-xs-0">

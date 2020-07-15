@@ -15,7 +15,7 @@ class CollectionImportForm extends Model
     public $skip = '';
     public $keyrow = '';
     public $name;
-    public $erase=true;
+    public $erase=false;
     public $filepath;
     public $firstRowAsName = false;
     public $columns = [];

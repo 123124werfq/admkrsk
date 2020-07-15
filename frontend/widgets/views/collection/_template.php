@@ -1,7 +1,4 @@
 <?php
-    use \common\models\CollectionColumn;
-    use \common\models\CollectionRecord;
-
     //preg_match_all ("/{{(.+?)}/is", $template, $matches);
 
     $templateValues = [];
@@ -42,16 +39,5 @@
         //$template = str_replace('{'.$alias.'}', $replace , $template);
     }
 
-    $loader = new \Twig\Loader\ArrayLoader([
-        'index' => $template,
-    ]);
-
-    $twig = new \Twig\Environment($loader);
-
-    $filter = new \Twig\TwigFilter('render', function ($string) {
-        return \frontend\widgets\SubcollectionWidget::widget(['data'=>$string]);
-    },['is_safe' => ['html']]);
-    $twig->addFilter($filter);
-
-    echo $twig->render('index', $templateValues);
+    return \common\components\helper\Helper::renderTwig($template,$templateValues);
 ?>
