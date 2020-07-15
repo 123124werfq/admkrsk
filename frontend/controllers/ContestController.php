@@ -152,8 +152,7 @@ class ContestController extends \yii\web\Controller
         if(!$contestCollection || !$page)
             throw new BadRequestHttpException();
 
-        $activeContests = $contestCollection->getDataQuery()->whereByAlias(['<>', 'contest_state', 'Конкурс завершен'])->getArray(true);
-
+        $activeContests = $contestCollection->getDataQuery()->getArray(true);
 
         $links = [];
         foreach ($activeContests as $ackey => $contest) 
@@ -177,12 +176,19 @@ class ContestController extends \yii\web\Controller
         }
         //var_dump($activeContests);die();
 
+        $activeContests = $contestCollection->getDataQuery()->whereByAlias(['<>', 'contest_state', 'Конкурс завершен'])->getArray(true);
         ksort($activeContests, SORT_NUMERIC);
         $activeContests = array_reverse($activeContests, true);
+
+        $finishedContests = $contestCollection->getDataQuery()->whereByAlias(['<>', 'contest_state', 'Конкурс завершен'])->getArray(true);
+        ksort($finishedContests, SORT_NUMERIC);
+        $finishedContests = array_reverse($activeContests, true);
+        
 
         return $this->render('select', [
             'profiles' => $profiles,
             'contests' => $activeContests,
+            'finishedContests' => $finishedContests,
             'links' => $links,
             'page' => $page
         ]);

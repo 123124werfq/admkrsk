@@ -79,6 +79,54 @@ if ($user) {
                                 } 
                             } ?>
                         </ul>
+
+                    <?php if(count($finishedContests)) {?>
+                        <h2>Завершенные</h2>
+                        <ul>
+                        <?php foreach ($finishedContests as $cstId => $contest) { 
+
+                                $canShow = false;
+                                foreach ($profiles as $prId => $profile) { 
+                                    if(!isset($links[$cstId]) || !in_array($profile['id_profile'],$links[$cstId]))
+                                        continue;
+                                    else
+                                        $canShow = true;
+                                }
+
+                                if($canShow) {
+                            ?>
+                            <li><a href="<?=$contest['contest_page_link']?>"><?=$contest['name']?></a></li>
+                                <ul>
+                                <?php foreach ($profiles as $prId => $profile) { 
+                                        if(!isset($links[$cstId]) || !in_array($profile['id_profile'],$links[$cstId]))
+                                            continue;
+                                    ?>
+                                    <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>&ida=<?=$profile['id_profile']?>">Редактировать заявку от <?= date("d.m.Y H:i", $profile['created_at'])?></a>
+                                        <?php
+                                            if(!empty($profile['additional_status'])){
+                                        ?>
+                                            <strong><?=$profile['additional_status']?></strong><br>
+                                        <?php
+                                            }
+                                        ?>
+                                        <?php
+                                            if(!empty($profile['comment'])){
+                                        ?>
+                                            <em><?=$profile['comment']?></em>
+                                        <?php
+                                            }
+                                        ?>
+                                    </li>
+                                <?php } ?>
+                                <?php if(!empty($contest['participant_form'])){?>
+                                    <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>">Создать новую заявку</a></li>
+                                <?php } ?>
+                                </ul>
+                        <?php
+                                } 
+                            } ?>
+                        </ul> 
+                    <?php } ?>                      
                         <?=common\components\helper\Helper::runContentWidget($page->content,$page)?>
 
                         <?php if (!empty($page->medias)) { ?>
