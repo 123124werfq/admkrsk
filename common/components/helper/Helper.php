@@ -50,13 +50,12 @@ class Helper
 		return 'Январь';
 	}
 
-
 	public static function getTwigVars($template)
 	{
 		preg_match_all('/\{\{(?!%)\s*((?:(?!\.)[^\s])*)\s*(?<!%)\}\}|\{%\s*(?:\s(?!endfor)(\w+))+\s*%\}/i', $template, $m);
 		$m = array_map('array_filter', $m);
 
-		$vars = array_merge($m[1],$m[2]); 
+		$vars = array_merge($m[1],$m[2]);
 
 		foreach ($vars as $key => $var) {
 			if (strpos($var, '|'))
@@ -68,6 +67,63 @@ class Helper
 
 		return $vars;
 		//return $m[2]??[];
+	}
+
+	public static function renderTwig($template, $data)
+	{
+		$loader = new \Twig\Loader\ArrayLoader([
+		    'index' => $template,
+		]);
+
+		$twig = new \Twig\Environment($loader);
+
+	    $filter = new \Twig\TwigFilter('render', function ($string) {
+	    	return \frontend\widgets\SubcollectionWidget::widget(['data'=>$string]);
+	    },['is_safe' => ['html']]);
+
+	    $twig->addFilter($filter);
+
+	    $filter = new \Twig\TwigFilter('thumb', function ($data) {
+	    	if (is_array($data))
+	    		$data = array_shift($data);
+
+	    	if (empty($data))
+	    		return '';
+
+	    	$url =  \common\models\Media::thumb($data['id']);
+
+	    	return '<img src="'.$url.'" alt=""/>';
+	    },['is_safe' => ['html']]);
+
+	    $twig->addFilter($filter);
+
+	    $filter = new \Twig\TwigFilter('thumb_medium', function ($string) {
+	    	if (is_array($data))
+	    		$data = array_shift($data);
+
+	    	if (empty($data))
+	    		return '';
+
+	    	$url = \common\models\Media::thumb($data['id'],\common\models\Media::SIZE_MEDIUM);
+	    	return '<img src="'.$url.'" alt=""/>';
+	    },['is_safe' => ['html']]);
+
+	    $twig->addFilter($filter);
+
+	    $filter = new \Twig\TwigFilter('thumb_big', function ($string) {
+	    	if (is_array($data))
+	    		$data = array_shift($data);
+
+	    	if (empty($data))
+	    		return '';
+
+	    	$url = \common\models\Media::thumb($data['id'],\common\models\Media::SIZE_BIG);
+	    	return '<img src="'.$url.'" alt=""/>';
+	    },['is_safe' => ['html']]);
+
+	    $twig->addFilter($filter);
+
+		return $twig->render('index', $data);
 	}
 
 	public static function runContentWidget($content, $page, $recordData=[])

@@ -356,7 +356,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             },['is_safe' => ['html']]);
             $twig->addFilter($filter);
 
-            
+
             $value = $twig->render('customtemplate', $data);
 
             unset($loader);
@@ -769,7 +769,9 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     $media = Media::find()->where(['id_media'=>$ids])->one();
 
                     if (!empty($media->height))
-                        return '<img src="'.$media->showThumb(['w'=>200,'h'=>200]).'"/>';
+                    {
+                        return '<img src="'.$media->showThumb(['w'=>300]).'"/>';
+                    }
                     else
                         return '<a href="'.$media->getUrl().'">'.$media->name.'</a>';
                 }

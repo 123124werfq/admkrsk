@@ -23,47 +23,51 @@ $defaultColumns = [
         'label' => 'Пользователь',
         'format' => 'html',
         'value' => function ($model) {
-            $username = $model->user->getUsername();
-            return "<a href='/user/view?id={$model->id_user}'>$username</a>";
+            $pmod = CstProfile::findOne($model['id_profile']);
+            $username = $pmod->user->getUsername();
+            return "<a href='/user/view?id={$pmod->id_user}'>$username</a>";
         },
     ],
     'date_create:prop' => [
         'label' => 'Дата создания',
         'format' => 'html',
         'value' => function ($model) {
-            return date("d-m-Y H:i", $model->created_at);
+            return date("d-m-Y H:i", $model['created_at']);
         },
     ],
     'actual_date:prop' => [
         'label' => 'Дата актуальности',
         'format' => 'html',
         'value' => function ($model) {
-            $badge = ($model->updated_at == $model->created_at) ? "<span class='badge badge-danger'>Новая</span><br>" : "";
-            return $badge . " " . date("d-m-Y H:i", $model->updated_at ? $model->updated_at : $model->created_at);
+            $badge = ($model['updated_at'] == $model['created_at']) ? "<span class='badge badge-danger'>Новая</span><br>" : "";
+            return $badge . " " . date("d-m-Y H:i", $model['updated_at'] ? $model['updated_at'] : $model['created_at']);
         },
     ],    
     'contest:prop' => [
         'label' => 'Конкурс',
         'format' => 'html',
         'value' => function ($model) {
-            return $model->getContestinfo()['name'];
+            $pmod = CstProfile::findOne($model['id_profile']);
+            return $pmod->getContestinfo()['name'];
         },
     ],    
     'status:prop' => [
         'label' => 'Статус',
         'format' => 'html',
         'value' => function ($model) {
-            if(!empty($model->additional_status))
-                $extra = '<br>Доп. статус: '.$model->additional_status;
+            if(!empty($model['additional_status']))
+                $extra = '<br>Доп. статус: '.$model['additional_status'];
             else
                 $extra = '';
-            return $model->getStatename(true).$extra;
+            $pmod = CstProfile::findOne($model['id_profile']);
+            return $pmod->getStatename(true).$extra;
         },
     ],
     [
         'label' => 'Готовность',
         'format' => 'html',
         'value' => function ($model) {
+            $model = CstProfile::findOne($model['id_profile']);
             $rr = $model->getRecord()->one();
             if($rr)
             {
@@ -83,6 +87,7 @@ $defaultColumns = [
         'label' => 'Комментарий',
         'format' => 'html',
         'value' => function ($model) {
+            $model = CstProfile::findOne($model['id_profile']);
             $message = empty($model->comment)?("<a href='/contest/view?id={$model->id_profile}'>Редактировать комментарий</a>"):(htmlspecialchars(strip_tags($model->comment))."<br><a href='/contest/view?id={$model->id_profile}''>Редактировать комментарий</a>");
 
             return $message;
@@ -146,29 +151,26 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
-        'rowOptions' => function ($model) use($allContests, $activecontest)
-        {
-            $rr = $model->getRecord()->one();
-            if($rr)
-            {            
-                $record = $model->getRecord()->one()->getData(true);
-//                echo $allContests[$activecontest];
-                if($activecontest!=0 && $model->getContestinfo()['name'] != $allContests[$activecontest]['name'])
-                    return ['class' => 'hidden'];
-
-                if (!empty($record['ready'])) {
-                    return ['class' => 'success'];
-                }
-            }
-            else 
-                return ['class' => 'hidden'];
-        },
         'columns' => array_merge(array_values($gridColumns), [
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view} {editable} {ban} {status} ',
                 'buttons' => [
+                    'view' => function ($url, $model, $key) {
+                        $url = str_replace("=$key", "={$model['id_profile']}", $url);
+    
+                            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-eye-open"]);
+                            return Html::a($icon, $url, [
+                                'target' => '_blank',
+                                'title' => 'Редактировать',
+                                'aria-label' => 'Редактировать',
+                                'data-pjax' => '0',
+                            ]);
+                        },
+
                     'editable' => function ($url, $model, $key) {
+                    $url = str_replace("=$key", "={$model['id_profile']}", $url);
+
                         $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-pencil"]);
                         return Html::a($icon, $url, [
                             'target' => '_blank',
@@ -178,7 +180,8 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
                         ]);
                     },
                     'status' => function ($url, $model, $key) {
-                        switch ($model->state) {
+                        $url = str_replace("=$key", "={$model['id_profile']}", $url);
+                        switch ($model['state']) {
                             case CstProfile::STATE_DRAFT:
                                 $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-ok"]);
                                 $title = 'Принять';
@@ -206,6 +209,5 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
             'id' => 'grid',
         ]
     ]); ?>
-
 
 </div>

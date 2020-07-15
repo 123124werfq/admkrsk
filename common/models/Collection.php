@@ -462,7 +462,8 @@ class Collection extends ActiveRecord
                     $id_cols[] = $col['filelink'];
             }
 
-            if (!empty($options['search'])) {
+            if (!empty($options['search']))
+            {
                 foreach ($options['search'] as $key => $col) {
                     $id_cols_search[] = $col['id_column'];
                 }

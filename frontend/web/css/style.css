@@ -741,7 +741,7 @@ p {
     font-size: 2.4rem;
     line-height: 3.2rem;
 }
-.content a[href]:not([data-fancybox]):not(.events_img-holder) {
+.content a[href]:not([data-fancybox]):not(.events_img-holder):not(.btn) {
     -webkit-transition: color 0.2s linear 0s;
        -moz-transition: color 0.2s linear 0s;
         -ms-transition: color 0.2s linear 0s;
