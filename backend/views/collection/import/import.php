@@ -27,6 +27,8 @@ if (empty($table))
 ?>
 <div class="ibox m-t">
     <div class="ibox-content">
+        <?=Html::activeCheckBox($model, "erase",['class'=>'form-control'])?>
+
         <div class="fileinput fileinput-new input-group" data-provides="fileinput">
             <div class="form-control" data-trigger="fileinput">
                 <i class="glyphicon glyphicon-file fileinput-exists"></i>
