@@ -119,7 +119,7 @@ class ContestController extends \yii\web\Controller
 
         $cc = reset($currentContest);
 
-        if(isset($cc['max_orders']) && $cc['max_orders']>=$total_ord)
+        if(isset($cc['max_orders']) && $cc['max_orders']<=$total_ord && $cc['max_orders']>0)
             $this->redirect("/contests/select/select");
 
         return $this->render('form', [
