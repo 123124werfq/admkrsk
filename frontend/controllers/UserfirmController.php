@@ -62,9 +62,6 @@ class UserfirmController extends \yii\web\Controller
 
         if ($model->load(Yii::$app->request->post()))
         {
-
-            //$collection = Collection::find()->where(['alias'=>'municipal_firms'])->one();
-
             if (!empty($collection))
             {
                 $record = $collection->getDataQuery()
@@ -89,7 +86,7 @@ class UserfirmController extends \yii\web\Controller
                         $FirmUser->id_record = $id_record;
 
                         if ($FirmUser->save())
-                            return $this->redirect([$page->getUrl().'/firm','id_firm'=>$FirmUser->id_record]);
+                            return $this->redirect($page->getUrl().'/firm?id_firm='.$FirmUser->id_record);
                     }
                     else
                         $model->addError('name','Данная организация уже привязана к пользователю');
@@ -174,6 +171,47 @@ class UserfirmController extends \yii\web\Controller
             'form'=>$form,
             'files'=>$files,
             'record'=>$firm->record,
+        ]);
+    }
+
+    public function actionFirmCreate($page)
+    {
+        $form = null;
+
+        $form = Form::find()->where(['alias'=>'municipal_firms_user_form'])->one();
+
+        if (!empty($form))
+        {
+            $modelForm = new FormDynamic($form);
+
+            if ($modelForm->load(Yii::$app->request->post()))
+            {
+                if ($modelForm->validate())
+                {
+                    $collection = Collection::find()->where(['alias'=>'municipal_firms'])->one();
+
+                    $prepare = $modelForm->prepareData(true);
+                    $record = $collection->insertRecord($prepare);
+
+                    $FirmUser = new FirmUser;
+                    $FirmUser->id_user = Yii::$app->user->id;
+                    $FirmUser->state = 0;
+                    $FirmUser->id_record = $record->id_record;
+
+                    if ($FirmUser->save())
+                        return $this->redirect($page->getUrl().'/firm?id_firm='.$FirmUser->id_record);
+                }
+                else
+                {
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    return ActiveForm::validate($model);
+                }
+            }
+        }
+
+        return $this->render('firm_create', [
+            'page' => $page,
+            'form'=>$form,
         ]);
     }
 
