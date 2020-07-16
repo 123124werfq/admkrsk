@@ -213,6 +213,13 @@ class CollectionRecordController extends Controller
                     }
                 }
                 break;
+            case 4: // delete
+                $collection = Yii::$app->mongodb->getCollection('collection'.$model->id_collection);
+
+                foreach ($records as $key => $data)
+                    $data->delete();
+
+                break;
             default:
                 # code...
                 break;

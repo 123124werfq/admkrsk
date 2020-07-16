@@ -12,6 +12,7 @@
             <li><a href="javascript:" data-action="1">Скопировать и отправить в архив</a></li>
             <li><a href="javascript:" data-action="2">Отправить в архив</a></li>
             <li><a href="javascript:" data-action="3">Скопировать</a></li>
+            <li><a href="javascript:" data-action="4">Удалить</a></li>
         </ul>
       </div>
 		</form>
