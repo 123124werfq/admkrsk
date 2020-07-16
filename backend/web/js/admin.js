@@ -291,7 +291,7 @@ jQuery(document).ready(function()
       return false;
     });
 
-    $('input[name="selection[]"]').change(function(){
+    $("body").delegate('input[name="selection[]"]','change',function(){
       if ($(this).is(':checked'))
       {
         $('.grid-view table').addClass('hasChecked');
