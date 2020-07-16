@@ -50,6 +50,8 @@ if (empty($table))
                 <?=Html::submitButton('Импортировать', ['class' => 'btn btn-primary']) ?>
             </div>
         </div>
+
+        <?=Html::activeCheckBox($model, "erase")?>
     </div>
 </div>
 <?php }

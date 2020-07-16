@@ -29,7 +29,6 @@ $this->params['page'] = $page;
                     <div class="boxed form-inside">
                         <?php $form = ActiveForm::begin(['scrollToError' => true]); ?>
 
-
                             <?= $form->field($model, 'name')->widget(Select2::class, [
                                 'data' => [],
                                 'pluginOptions' => [
@@ -79,6 +78,10 @@ $this->params['page'] = $page;
                             <?= $form->field($model, 'inn')->hiddenInput()->label(false) ?>
                             <button type="submit" class="btn btn__secondary" name="id_record" value="<?=$record->id_record?>">Отправить запрос на редактирование</button>
                         <?php ActiveForm::end(); ?>
+                    <?php } else if (!empty($_POST)){?>
+                        <h3>Организация не найдена</h3>
+
+                        <p class="accent">Возможно вы неправильно ввели Название или ИНН, или вашей организации нет в нашей базе данных. Вы можете <a href="publishrequest/firm-create">оставить заявку</a> на добавление вашей организации. После проверки она будет довлена.</p>
                     <?php }?>
 
                     <?php if (!empty($page->medias)) { ?>

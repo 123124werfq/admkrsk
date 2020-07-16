@@ -23,6 +23,11 @@ use common\models\CollectionColumn;
 use common\models\CstContestExpert;
 use yii\web\BadRequestHttpException;
 
+use common\models\User;
+
+use yii\validators\NumberValidator;
+use yii\web\Response;
+
 class ContestController extends Controller
 {
     const gridProfile = 'profile-grid';
@@ -571,5 +576,37 @@ class ContestController extends Controller
 
         Yii::$app->end();
     }    
+
+    public function actionList($q)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $query = User::find()
+            ->joinWith('adinfo');
+
+        $q = trim($q);
+        if ((new NumberValidator(['integerOnly' => true]))->validate($q)) {
+            $query->andWhere(['id' => $q]);
+        } else {
+            $query->andWhere([
+                'or',
+                ['ilike', 'user.username', $q],
+                ['ilike', 'user.email', $q],
+                ['ilike', 'user.fullname', $q],
+                ['ilike', 'auth_ad_user.name', $q],
+            ]);
+        }
+
+        $results = [];
+        foreach ($query->limit(10)->all() as $user) {
+            /* @var User $user */
+            $results[] = [
+                'id' => $user->id,
+                'text' => $user->getUsername() . ' (' . $user->email . ')',
+            ];
+        }
+
+        return ['results' => $results];
+    }
 
 }
