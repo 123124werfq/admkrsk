@@ -70,10 +70,10 @@ class InstitutionImportJob extends Job implements RetryableJobInterface
                     Console::stdout(Yii::t('app', 'Обработано {count} организаций', ['count' => $count]) . PHP_EOL);
                     Console::stdout(Yii::t('app', 'Добавлено/обновлено {updateCount} организаций', ['updateCount' => $updateCount]) . PHP_EOL);
                 } else {
-                    $this->stdout(Yii::t('app', 'Нет обновлений') . PHP_EOL);
+                    Console::stdout(Yii::t('app', 'Нет обновлений') . PHP_EOL);
                 }
             } else {
-                $this->stdout(Yii::t('app', 'Паспорт муниципальных организаций не найден') . PHP_EOL);
+                Console::stdout(Yii::t('app', 'Паспорт муниципальных организаций не найден') . PHP_EOL);
             }
         } catch (Exception $exception) {
             $transaction->rollBack();
