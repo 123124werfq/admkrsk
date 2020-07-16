@@ -214,10 +214,16 @@ class CollectionRecordController extends Controller
                 }
                 break;
             case 4: // delete
-                $collection = Yii::$app->mongodb->getCollection('collection'.$model->id_collection);
+                /*$collection = Yii::$app->mongodb->getCollection('collection'.$model->id_collection);
 
                 foreach ($records as $key => $data)
-                    $data->delete();
+                    $data->delete();*/
+
+                $models = CollectionRecord::find()->where(['id_record'=>$ids])->all();
+
+                foreach ($models as $key => $model) {
+                    $model->delete();
+                }
 
                 break;
             default:
@@ -252,9 +258,7 @@ class CollectionRecordController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         if ($action = Yii::$app->request->post('action'))
-        {
             return $this->makeAction($model, $action,$dataProvider);
-        }
 
         return $this->render('index', [
             'settingForm' => $settingForm,
