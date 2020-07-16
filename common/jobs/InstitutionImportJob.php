@@ -38,7 +38,7 @@ class InstitutionImportJob extends Job implements RetryableJobInterface
                 $institution_version = Yii::$app->cache->get('institution_version');
                 $passport = Json::decode($response->getContent());
 
-                if ($passport['version'] > $institution_version) {
+                if (true || $passport['version'] > $institution_version) {
                     $archiveUrl = "https://bus.gov.ru/public-rest/api/opendata/{$passport['passCode']}/{$passport['actualDocument']['fileName']}";
                     $path = Yii::getAlias('@console/runtime/institutions');
                     $archive = Yii::getAlias('@console/runtime/institutions/data.zip');
