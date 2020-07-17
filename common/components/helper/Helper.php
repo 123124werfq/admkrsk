@@ -133,6 +133,10 @@ class Helper
 
 	    $twig->addFilter($filter);
 		var_dump($data); die();
+
+		if(isset($data['attachments']) && is_array($data['attachments'])) // костыль! исправить, не допуская прохождения массивов
+			unset($data['attachments']);
+
 		return $twig->render('index', $data);
 	}
 
