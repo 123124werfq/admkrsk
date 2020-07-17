@@ -13,16 +13,10 @@
             	<div class="content searchable">
                     <?php if (!empty($template)){?>
                         <?php
-                            $loader = new \Twig\Loader\ArrayLoader([
-                                'index' => $template,
-                            ]);
-                            $twig = new \Twig\Environment($loader);
-                        ?>
-                        <?php
-                            $output = str_replace('\n', '', $twig->render('index', $data));
+                            $output = str_replace('\n', '', common\components\helper\Helper::renderTwig($template,$data));
                             echo common\components\helper\Helper::runContentWidget($output,$page,$data);
                         ?>
-                    <?php }?>
+                    <?php } else echo 'Не установлен шаблон для вывода страницы'?>
             	</div>
             </div>
             <div class="col-third order-xs-0">
