@@ -90,13 +90,23 @@ class CprofileSearch extends CstProfile
                 'defaultOrder'=> ['id_profile'=>SORT_DESC],
                 'attributes' => [
                     'id_profile',
-                    'cp.updated_at',
-                    'cp.created_at',
+                    'updated_at',
+                    'created_at' => [
+                        'asc' => ['created_at' => SORT_ASC],
+                        'desc' => ['created_at' => SORT_DESC],
+                        'default' => SORT_ASC
+                    ],
+                    'state' => [
+                        'asc' => ['state' => SORT_ASC],
+                        'desc' => ['state' => SORT_DESC],
+                        'default' => SORT_ASC
+                    ],
+                    
                 ],
             ],
         ]);        
 
-        //$this->load($params);
+        $this->load($params);
         
 
         if (!$this->validate()) {

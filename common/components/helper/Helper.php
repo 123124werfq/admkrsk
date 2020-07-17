@@ -75,7 +75,6 @@ class Helper
 			}
 		}
 
-
 		return $vars;
 		//return $m[2]??[];
 	}
@@ -108,7 +107,7 @@ class Helper
 
 	    $twig->addFilter($filter);
 
-	    $filter = new \Twig\TwigFilter('thumb_medium', function ($string) {
+	    $filter = new \Twig\TwigFilter('thumb_medium', function ($data) {
 	    	if (is_array($data))
 	    		$data = array_shift($data);
 
@@ -121,7 +120,7 @@ class Helper
 
 	    $twig->addFilter($filter);
 
-	    $filter = new \Twig\TwigFilter('thumb_big', function ($string) {
+	    $filter = new \Twig\TwigFilter('thumb_big', function ($data) {
 	    	if (is_array($data))
 	    		$data = array_shift($data);
 
