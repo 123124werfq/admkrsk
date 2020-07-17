@@ -38,7 +38,7 @@ class InstitutionImportJob extends Job implements RetryableJobInterface
                 $institution_version = Yii::$app->cache->get('institution_version');
                 $passport = Json::decode($response->getContent());
 
-                if ($passport['version'] > $institution_version) {
+                if (true || $passport['version'] > $institution_version) {
                     $archiveUrl = "https://bus.gov.ru/public-rest/api/opendata/{$passport['passCode']}/{$passport['actualDocument']['fileName']}";
                     $path = Yii::getAlias('@console/runtime/institutions');
                     $archive = Yii::getAlias('@console/runtime/institutions/data.zip');
@@ -70,10 +70,10 @@ class InstitutionImportJob extends Job implements RetryableJobInterface
                     Console::stdout(Yii::t('app', 'Обработано {count} организаций', ['count' => $count]) . PHP_EOL);
                     Console::stdout(Yii::t('app', 'Добавлено/обновлено {updateCount} организаций', ['updateCount' => $updateCount]) . PHP_EOL);
                 } else {
-                    $this->stdout(Yii::t('app', 'Нет обновлений') . PHP_EOL);
+                    Console::stdout(Yii::t('app', 'Нет обновлений') . PHP_EOL);
                 }
             } else {
-                $this->stdout(Yii::t('app', 'Паспорт муниципальных организаций не найден') . PHP_EOL);
+                Console::stdout(Yii::t('app', 'Паспорт муниципальных организаций не найден') . PHP_EOL);
             }
         } catch (Exception $exception) {
             $transaction->rollBack();
