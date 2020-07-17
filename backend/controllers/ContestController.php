@@ -64,6 +64,9 @@ class ContestController extends Controller
 
         //print_r($allContests); die();
 
+        $_SESSION['fparams'] = serialize($_GET);
+        
+
         return $this->render('profile', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -302,7 +305,17 @@ class ContestController extends Controller
 
         $profile->updateAttributes(['state']);
 
-        return $this->redirect('/contest/profile');
+
+        $query = '';
+        if(isset($_SESSION['fparams']))
+        {
+            $fparams = unserialize($_SESSION['fparams']);
+            $query = http_build_query($fparams);
+            $query = '?'.$query;
+        }
+
+
+        return $this->redirect('/contest/profile'.$query);
     }
 
 
