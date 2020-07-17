@@ -132,7 +132,7 @@ class Helper
 	    },['is_safe' => ['html']]);
 
 	    $twig->addFilter($filter);
-
+		var_dump($data); die();
 		return $twig->render('index', $data);
 	}
 
