@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use common\models\GridSetting;
 use \common\models\Box;
 use yii\helpers\ArrayHelper;
 
@@ -23,7 +24,54 @@ if (Yii::$app->user->can('admin.collection')) {
     $this->params['button-block'][] = Html::a('Импортировать', ['import'], ['class' => 'btn btn-default']);
     $this->params['button-block'][] = Html::a('Добавить список', ['create'], ['class' => 'btn btn-success']);
 }
+
+GridAsset::register($this);
+$defaultColumns = [
+    'id_collection',
+    'name',
+    'alias',
+    [
+        'label'=>'Записей',
+        'value'=>function($model) {
+            return $model->getItems()->count();
+        }
+    ],
+    'created_at:date',
+    [
+        'attribute' => 'id_box',
+        'value' => function ($model) {
+            return (!empty($model->box))?$model->box->name:'';
+        },
+        'filter' => ArrayHelper::map(Box::find()->all(),'id_box','name'),
+    ],
+    [
+        'class' => 'yii\grid\ActionColumn',
+        'contentOptions'=>['class'=>'button-column'],
+        'template' => '{view} {update} ' . ($archive ? '{undelete}' : '{delete}'),
+        'buttons' => [
+            'undelete' => function($url, $model, $key) {
+                $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-floppy-disk"]);
+                return Html::a($icon, $url, [
+                    'title' => 'Восстановить',
+                    'aria-label' => 'Восстановить',
+                    'data-pjax' => '0',
+                ]);
+            },
+            'view' => function ($url, $model, $key) {
+                return Html::a('', ['/collection-record/index', 'id' => $model->id_collection],['class' => 'glyphicon glyphicon-eye-open']);
+            },
+        ],
+    ],
+];
+
+list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
+    $defaultColumns,
+    $customColumns,
+    Page::class
+);
 ?>
+
+
 
 <div class="ibox">
     <div class="ibox-content">
@@ -35,29 +83,8 @@ if (Yii::$app->user->can('admin.collection')) {
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             //'filterModel' => $searchModel,
-            'columns' => [
-                'id_collection',
-                'name',
-                'alias',
-                [
-                    'label'=>'Записей',
-                    'value'=>function($model) {
-                        return $model->getItems()->count();
-                    }
-                ],
-                'created_at:date',
-                [
-                    'attribute' => 'id_box',
-                    'value' => function ($model) {
-                        return (!empty($model->box))?$model->box->name:'';
-                    },
-                    'filter' => ArrayHelper::map(Box::find()->all(),'id_box','name'),
-                ],
-                //'updated_at',
-                //'updated_by',
-                //'deleted_at',
-                //'deleted_by',
-                [
+            'columns' => array_merge(array_values($gridColumns), [
+                    [
                     'class' => 'yii\grid\ActionColumn',
                     'contentOptions'=>['class'=>'button-column'],
                     'template' => '{view} {update} ' . ($archive ? '{undelete}' : '{delete}'),
@@ -75,7 +102,7 @@ if (Yii::$app->user->can('admin.collection')) {
                         },
                     ],
                 ],
-            ],
+            ]),
             'tableOptions'=>[
                 'emptyCell '=>'',
                 'class'=>'table table-striped ids-style valign-middle table-hover'
