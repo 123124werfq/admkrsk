@@ -19,7 +19,7 @@ class CollectionSearch extends Collection
     public function rules()
     {
         return [
-            [['id_collection', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['id_collection', 'id_box', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['name', 'alias', 'is_dictionary'], 'safe'],
         ];
     }
