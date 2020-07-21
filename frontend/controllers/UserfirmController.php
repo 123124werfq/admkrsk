@@ -52,13 +52,14 @@ class UserfirmController extends \yii\web\Controller
         return $this->asJson(['results' => $results]);
     }
 
-    public function actionIndex($page = null)
+    public function actionIndex($page = null,$type='firm')
     {
         $model = new UserFirmForm;
+        $model->type  = $type;
 
         $record = null;
 
-        $collection = $this->getCollection();
+        $collection = $this->getCollection($type);
 
         if ($model->load(Yii::$app->request->post()))
         {
@@ -264,9 +265,9 @@ class UserfirmController extends \yii\web\Controller
         ]);
     }
 
-    protected function getCollection()
-    {
-        $collection = Collection::find()->where(['alias'=>'municipal_firms'])->one();
+    protected function getCollection($type)
+    {//uk_firms
+        $collection = Collection::find()->where(['alias'=>($type=='firm')?'municipal_firms':'institution'])->one();
 
         if (empty($collection))
             throw new NotFoundHttpException();

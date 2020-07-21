@@ -44,12 +44,15 @@ $this->params['page'] = $page;
 
 
                             <div class="row">
-                                <div class="col" style="width: 100%">
+                                <?php if ($model->type=='firm'){?>
+                                <div class="col">
                                     <?= $form->field($model, 'inn')->textInput(['class' => 'form-control']) ?>
                                 </div>
-                                <!--div class="col" style="width: 50%">
+                                <?php }else {?>
+                                <div class="col">
                                     <?= $form->field($model, 'ogrn')->textInput(['class' => 'form-control']) ?>
-                                </div-->
+                                </div>
+                                <?php }?>
                             </div>
 
                             <div class="form-end">

@@ -298,6 +298,11 @@ class Collection extends ActiveRecord
         return $this->hasOne(Collection::class, ['id_collection' => 'id_parent_collection']);
     }
 
+    public function getBox()
+    {
+        return $this->hasOne(Box::class, ['id_box' => 'id_box']);
+    }
+
     public function getItems()
     {
         return $this->hasMany(CollectionRecord::class, ['id_collection' => 'id_collection'])->orderBy('ord ASC');

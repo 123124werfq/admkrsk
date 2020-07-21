@@ -71,6 +71,7 @@ class CollectionSearch extends Collection
         // grid filtering conditions
         $query->andFilterWhere([
             'db_collection.id_collection' => $this->id_collection,
+            'db_collection.id_box' => $this->id_box,
             'db_collection.created_at' => $this->created_at,
             'db_collection.created_by' => $this->created_by,
             'db_collection.updated_at' => $this->updated_at,
