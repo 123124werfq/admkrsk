@@ -249,11 +249,11 @@ $(document).ready(function() {
             container: '#'+$form.data('hash'),
             data: $form.serialize(),
             timeout:10000,
+            scrollTo:false,
         });
     });
 
     $("#Complaint_id_firm").change(function(){
-
         $.ajax({
             type: "GET",
             dataType: "html",
