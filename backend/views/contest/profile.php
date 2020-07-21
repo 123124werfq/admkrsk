@@ -30,6 +30,7 @@ $defaultColumns = [
     ],
     'date_create:prop' => [
         'label' => 'Дата создания',
+        'attribute' => 'created_at',
         'format' => 'html',
         'value' => function ($model) {
             return date("d-m-Y H:i", $model['created_at']);
@@ -37,6 +38,7 @@ $defaultColumns = [
     ],
     'actual_date:prop' => [
         'label' => 'Дата актуальности',
+        'attribute' => 'updated_at',
         'format' => 'html',
         'value' => function ($model) {
             $badge = ($model['updated_at'] == $model['created_at']) ? "<span class='badge badge-danger'>Новая</span><br>" : "";
@@ -53,6 +55,7 @@ $defaultColumns = [
     ],    
     'status:prop' => [
         'label' => 'Статус',
+        'attribute' => 'state',
         'format' => 'html',
         'value' => function ($model) {
             if(!empty($model['additional_status']))
