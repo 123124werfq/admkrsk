@@ -81,6 +81,7 @@ $this->params['page'] = $page;
                         <?php $form = ActiveForm::begin(['scrollToError' => true]); ?>
                             <?= $form->field($model, 'name')->hiddenInput()->label(false) ?>
                             <?= $form->field($model, 'inn')->hiddenInput()->label(false) ?>
+                            <?= $form->field($model, 'ogrn')->hiddenInput()->label(false) ?>
                             <button type="submit" class="btn btn__secondary" name="id_record" value="<?=$record->id_record?>">Отправить запрос на редактирование</button>
                         <?php ActiveForm::end(); ?>
                     <?php } else if (!empty($_POST)){?>
