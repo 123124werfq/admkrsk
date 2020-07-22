@@ -346,7 +346,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
         $value = '';
 
         try {
-            $value = common\components\helper\Helper::renderTwig($template,$data);
+            $value = \common\components\helper\Helper::renderTwig($template,$data);
         }
         catch (Exception $e) {
 
