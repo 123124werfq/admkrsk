@@ -27,6 +27,27 @@ $model->filters = json_encode($model->filters);
 
 <?= $form->field($model, 'template_element')->textInput(['class' => 'form-control redactor']) ?>
 
+<?php if (!$model->isNewRecord) { ?>
+    <?= $form->field($model, 'label')->widget(Select2::class, [
+        'data' => ArrayHelper::map($model->getColumns()->andWhere([
+            'id_collection' => $model->id_collection,
+            'type' => [CollectionColumn::TYPE_INPUT, CollectionColumn::TYPE_INTEGER]
+        ])->all(), 'id_column', 'name'),
+        'pluginOptions' => [
+            'allowClear' => true,
+            'multiple' => true,
+            'placeholder' => 'Выберите колонки',
+        ],
+        'options' => ['multiple' => true,]
+    ])->hint('Выберите колонки из которых будет составляться представление для отображения в списках') ?>
+
+    <?= $form->field($model, 'id_column_map')->dropDownList(
+        ArrayHelper::map($model->getColumns()->andWhere([
+                'id_collection' => $model->id_collection,
+        ])->andWhere(['or',['type' => CollectionColumn::TYPE_MAP],['type' => CollectionColumn::TYPE_ADDRESS]])->all(),'id_column','name'),['prompt'=>'Выберите колонку'])->hint('В колонки должны содержаться координаты');
+    ?>
+<?php } ?>
+
 <br/><br/>
 <h3>Поля</h3>
 <br/>
