@@ -53,6 +53,9 @@ class UserfirmController extends \yii\web\Controller
 
     public function actionIndex($page = null,$type='firm')
     {
+        if ($type!='firm')
+            $type = 'uk';
+
         $model = new UserFirmForm;
         $model->type  = $type;
 

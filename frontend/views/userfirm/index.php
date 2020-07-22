@@ -26,7 +26,7 @@ $this->params['page'] = $page;
 
                     <h1><?= $page->content ?></h1>
 
-                    <a class="btn btn__secondary" href="?type=firm">Муниципальные учреждения</a> <a class="btn btn__secondary" href="?type=uk">Управляющие организации</a>
+                    <a class="btn <?=$type='uk'?'btn__gray':'btn__secondary'?>" href="?type=firm">Муниципальные учреждения</a> <a class="btn <?=$type='firm'?'btn__gray':'btn__secondary'?>" href="?type=uk">Управляющие организации</a>
 
                     <div class="boxed form-inside">
                         <?php $form = ActiveForm::begin(['scrollToError' => true]); ?>
