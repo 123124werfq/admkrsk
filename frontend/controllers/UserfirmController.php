@@ -175,11 +175,11 @@ class UserfirmController extends \yii\web\Controller
         ]);
     }
 
-    public function actionFirmCreate($page)
+    public function actionFirmCreate($page,$type='firm')
     {
         $form = null;
 
-        $form = Form::find()->where(['alias'=>'municipal_firms_user_form'])->one();
+        $form = Form::find()->where(['alias'=>($type=='firm')?'municipal_firms_user_form':'uk_user_form'])->one();
 
         if (!empty($form))
         {
@@ -189,10 +189,9 @@ class UserfirmController extends \yii\web\Controller
             {
                 if ($modelForm->validate())
                 {
-                    $collection = Collection::find()->where(['alias'=>'municipal_firms'])->one();
-
+                    //= Collection::find()->where(['alias'=>'municipal_firms'])->one();
                     $prepare = $modelForm->prepareData(true);
-                    $record = $collection->insertRecord($prepare);
+                    $record = $form->collection->insertRecord($prepare);
 
                     $FirmUser = new FirmUser;
                     $FirmUser->id_user = Yii::$app->user->id;
@@ -266,8 +265,8 @@ class UserfirmController extends \yii\web\Controller
     }
 
     protected function getCollection($type)
-    {//uk_firms
-        $collection = Collection::find()->where(['alias'=>($type=='firm')?'municipal_firms':'institution'])->one();
+    {
+        $collection = Collection::find()->where(['alias'=>($type=='firm')?'municipal_firms':'uk_firms'])->one();
 
         if (empty($collection))
             throw new NotFoundHttpException();
