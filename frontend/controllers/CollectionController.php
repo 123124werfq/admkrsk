@@ -157,7 +157,7 @@ class CollectionController extends \yii\web\Controller
         fclose($out);
     }
 
-	public function actionRecordList($id,$q)
+	public function actionRecordList($id,$q='')
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -176,7 +176,7 @@ class CollectionController extends \yii\web\Controller
             if ($i>15)
                 break;
 
-            if (stripos($value, $q))
+            if ($q=='' || stripos($value, $q))
             {
                 $results[] = [
                     'id' => $key,
