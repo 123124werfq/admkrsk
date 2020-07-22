@@ -24,11 +24,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 [
                     'label'=>'Учреждение',
-                    'attribute'=>'record.label',
+                    'attribute'=>'',
+                    'value'=>function($model){
+                        return '<a href="/collection-record/view?id='.$model->id_record.'">'.$model->record->label.'</a>';
+                    }
                 ],
                 'user.username',
                 [
-                    'label'=>'Учреждение',
+                    'label'=>'Статус',
                     'attribute'=>'state',
                     'value'=>function($model){
                         return $model->stateLabel;
