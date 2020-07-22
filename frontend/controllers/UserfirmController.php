@@ -32,9 +32,9 @@ class UserfirmController extends \yii\web\Controller
         ];
     }
 
-    public function actionSearch($q)
+    public function actionSearch($q,$type=='firm')
     {
-        $collection = $this->getCollection();
+        $collection = $this->getCollection($type);
 
         $records = $collection->getDataQuery()
             ->whereByAlias(['like','name',$q])

@@ -37,7 +37,7 @@ $this->params['page'] = $page;
                                     'minimumInputLength' => 2,
                                     'placeholder' => 'Введите название',
                                     'ajax' => [
-                                        'url' => '/userfirm/search',
+                                        'url' => '/userfirm/search?type='.$type,
                                         'dataType' => 'json',
                                         'data' => new JsExpression('function(params) { return {q:params.term};}')
                                     ],
