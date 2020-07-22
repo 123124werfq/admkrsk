@@ -32,7 +32,6 @@ class UserfirmController extends \yii\web\Controller
         ];
     }
 
-
     public function actionSearch($q)
     {
         $collection = $this->getCollection();
@@ -110,6 +109,7 @@ class UserfirmController extends \yii\web\Controller
             'record'=>$record,
             'model' => $model,
             'firms' => $firms,
+            'type' => $type,
         ]);
     }
 
