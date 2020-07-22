@@ -59,6 +59,15 @@ class Helper
 
 		foreach ($vars as $key => $var)
 		{
+			if (strpos($var, '?'))
+			{
+				$var = explode('?', $var);
+				$vars[$key] = $var[1];
+			}
+		}
+
+		foreach ($vars as $key => $var)
+		{
 			if (strpos($var, '|'))
 			{
 				$var = explode('|', $var);
@@ -76,7 +85,6 @@ class Helper
 		}
 
 		return $vars;
-		//return $m[2]??[];
 	}
 
 	public static function renderTwig($template, $data)
