@@ -16,7 +16,7 @@ class Breadcrumbs extends \yii\base\Widget
         $pages = $this->page->parents()->all();
         array_shift($pages);
 
-        $pages[] = $this->page;
+        //$pages[] = $this->page;
 
         $homeTitle = (Yii::$app->language == 'en')?'Home':'Главная';
 
