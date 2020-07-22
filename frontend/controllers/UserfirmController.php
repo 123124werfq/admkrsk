@@ -67,8 +67,9 @@ class UserfirmController extends \yii\web\Controller
         {
             if (!empty($collection))
             {
+
                 $record = $collection->getDataQuery()
-                    ->whereByAlias(['inn'=>(int)$model->inn])
+                    ->whereByAlias($firm=='uk'?['ogrn'=>$model->ogrn]:['inn'=>(int)$model->inn])
                     ->whereByAlias(['name'=>$model->name])
                     ->limit(1)->getArray();
 
@@ -226,9 +227,9 @@ class UserfirmController extends \yii\web\Controller
 
         if ($firm->state == $firm::STATE_ACCEPT)
         {
-            $collection = Collection::find()->where(['alias'=>'municipal_firms'])->one();
+            $collection = $firm->record->collection;//Collection::find()->where(['alias'=>'municipal_firms'])->one();
 
-            $form = Form::find()->where(['alias'=>'municipal_firms_user_form'])->one();
+            $form = Form::find()->where(['alias'=>($collection->alias=='municipal_firms')?'municipal_firms_user_form':'uk_user_form'])->one();
 
             if (!empty($form))
             {
