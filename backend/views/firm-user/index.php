@@ -25,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'label'=>'Учреждение',
                     'attribute'=>'',
+                    'format'=>'raw',
                     'value'=>function($model){
                         return '<a href="/collection-record/view?id='.$model->id_record.'">'.$model->record->label.'</a>';
                     }
