@@ -162,7 +162,11 @@ class CollectionController extends \yii\web\Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $collection = $this->findModel($id);
-        $collection = $stripos->getArray();
+
+        if (empty($collection))
+            throw new NotFoundHttpException('The requested page does not exist.');
+
+        $collection = $collection->getArray();
 
         $i = 0;
         $results = [];
