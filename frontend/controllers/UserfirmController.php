@@ -68,7 +68,7 @@ class UserfirmController extends \yii\web\Controller
             if (!empty($collection))
             {
                 $record = $collection->getDataQuery()
-                    ->whereByAlias($type=='uk'?['ogrn'=>$model->ogrn]:['inn'=>(int)$model->inn])
+                    ->whereByAlias($type=='uk'?['ogrn'=>(int)$model->ogrn]:['inn'=>(int)$model->inn])
                     ->whereByAlias(['name'=>$model->name])
                     ->limit(1)->getArray();
 

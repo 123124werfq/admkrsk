@@ -72,7 +72,7 @@ $this->params['page'] = $page;
                             'columnsAlias'=>[
                                 'name',
                                 'inn',
-                                'orgn',
+                                'ogrn',
                                 'telefon',
                                 'phone',
                             ]
