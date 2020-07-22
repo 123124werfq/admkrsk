@@ -74,6 +74,7 @@ $this->params['page'] = $page;
                                 'inn',
                                 'orgn',
                                 'telefon',
+                                'phone',
                             ]
                         ]);?>
 
