@@ -141,6 +141,35 @@ class Helper
 
 	    $twig->addFilter($filter);
 
+	    $filter = new \Twig\TwigFilter('table', function ($data) {
+	    	//$ths = json_decode($data, true);
+
+	    	$data = json_decode($data,true);
+
+            if (!is_array($data) || empty($data))
+                echo json_encode($data);
+            else
+            {
+                echo '<table width="100%">';//<tr>
+                /*foreach ($ths as $key => $th)
+                    echo '<th ' . (!empty($th['width']) ? 'style="width:' . $th['width'] . '%"' : '') . ' >' . $th['name'] . '</th>';
+                echo '</tr>';*/
+
+                foreach ($data as $key => $row)
+                {
+                    echo '<tr>';
+                    foreach ($row as $vkey => $value)
+                        echo '<td>'.$value.'</td>';
+                    echo '</tr>';
+                }
+
+                echo '</tr>';
+                echo '</table>';
+            }
+	    },['is_safe' => ['html']]);
+
+	    $twig->addFilter($filter);
+
 		if(isset($data['attachments']) && is_array($data['attachments'])) // костыль! исправить, не допуская прохождения массивов
 			unset($data['attachments']);
 
