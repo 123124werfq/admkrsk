@@ -78,7 +78,11 @@ class WordDoc
             }
             else if (isset($stringData[$alias.'_file']) && $columns[$alias]->type==CollectionColumn::TYPE_IMAGE)
             {
-                $template->setImageValue($alias.'_image', $stringData[$alias.'_file']);
+                $tmp_file_path = Yii::getAlias('@runtime').'/'.md5($stringData[$alias.'_file']).substr($stringData[$alias.'_file'], strrpos($stringData[$alias.'_file'], '.'));
+
+                if (@copy($stringData[$alias.'_file'], $tmp_file_path))
+                    $template->setImageValue($alias.'_image', $tmp_file_path);
+
                 $template->setValue($alias, $value);
             }
             elseif (isset($columns[$alias]) && $columns[$alias]->type==CollectionColumn::TYPE_COLLECTIONS)
