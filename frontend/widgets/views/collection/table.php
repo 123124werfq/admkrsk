@@ -122,7 +122,7 @@ else {
 								$value = $row[$column->alias];*/
 
 							if ($column->is_link)
-								echo '<a href="/collection?id='.$id_record.'&id_page='.$page->id_page.'">'.$value.'</a>';
+								echo Html::a($value, ['collection','id'=>$id_record,'id_page'=>$page->id_page,'id_collection'=>$id_collection]);
 							elseif (!empty($columnsOptions[$column->alias]['filelink']) && !empty($row[$columnsOptions[$column->alias]['filelink']]))
 								echo '<a href="'.$row[$columnsOptions[$column->alias]['filelink']].'" download>'.$value.'</a>';
 							else

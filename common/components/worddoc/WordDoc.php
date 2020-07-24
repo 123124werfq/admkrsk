@@ -90,7 +90,9 @@ class WordDoc
                     $tmp_file_path = Yii::getAlias('@runtime').'/'.md5($stringData[$alias.'_file']).substr($stringData[$alias.'_file'], strrpos($stringData[$alias.'_file'], '.'));
 
                     if (@file_put_contents($tmp_file_path,file_get_contents($stringData[$alias.'_file'], false, stream_context_create($arrContextOptions))))
+                    {
                         $template->setImageValue($alias.'_image', $tmp_file_path);
+                    }
                 }
                 else
                     $template->setImageValue($alias.'_image', $stringData[$alias.'_file']);
