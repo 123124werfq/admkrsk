@@ -78,10 +78,22 @@ class WordDoc
             }
             else if (isset($stringData[$alias.'_file']) && $columns[$alias]->type==CollectionColumn::TYPE_IMAGE)
             {
-                $tmp_file_path = Yii::getAlias('@runtime').'/'.md5($stringData[$alias.'_file']).substr($stringData[$alias.'_file'], strrpos($stringData[$alias.'_file'], '.'));
+                if (!is_file($stringData[$alias.'_file']))
+                {
+                    $arrContextOptions=array(
+                        "ssl"=>array(
+                            "verify_peer"=>false,
+                            "verify_peer_name"=>false,
+                        ),
+                    );
 
-                if (@copy($stringData[$alias.'_file'], $tmp_file_path))
-                    $template->setImageValue($alias.'_image', $tmp_file_path);
+                    $tmp_file_path = Yii::getAlias('@runtime').'/'.md5($stringData[$alias.'_file']).substr($stringData[$alias.'_file'], strrpos($stringData[$alias.'_file'], '.'));
+
+                    if (@file_put_contents($tmp_file_path,file_get_contents($stringData[$alias.'_file'], false, stream_context_create($arrContextOptions))))
+                        $template->setImageValue($alias.'_image', $tmp_file_path);
+                }
+                else
+                    $template->setImageValue($alias.'_image', $stringData[$alias.'_file']);
 
                 $template->setValue($alias, $value);
             }
