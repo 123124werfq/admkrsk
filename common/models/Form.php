@@ -12,6 +12,8 @@ use common\traits\MetaTrait;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
+use yii\helpers\StringHelper;
 
 /**
  * This is the model class for table "form_form".
@@ -261,5 +263,99 @@ class Form extends \yii\db\ActiveRecord
     public function getPartitions()
     {
         return $this->hasMany(Page::class, ['id_page' => 'id_page'])->viaTable('dbl_form_page',['id_form'=>'id_form']);
+    }
+
+    public static function hasAccess()
+    {
+        $cacheKey = self::hasAccessCacheKey();
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $hasAccess = true;
+            } else {
+                $hasAccess = !empty(self::getAccessFormsIds());
+            }
+
+            Yii::$app->cache->set(
+                $cacheKey,
+                $hasAccess,
+                0,
+                User::rbacCacheTag()
+            );
+        } else {
+            $hasAccess = Yii::$app->cache->get($cacheKey);
+        }
+
+        return $hasAccess;
+    }
+
+    public static function hasEntityAccess($entity_id)
+    {
+        $cacheKey = self::hasEntityAccessCacheKey($entity_id);
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $hasEntityAccess = true;
+            } elseif ($entity_id) {
+                $hasEntityAccess = in_array($entity_id, self::getAccessFormsIds());
+            } else {
+                $hasEntityAccess = !empty(self::getAccessFormsIds());
+            }
+
+            Yii::$app->cache->set(
+                $cacheKey,
+                $hasEntityAccess,
+                0,
+                User::rbacCacheTag()
+            );
+        } else {
+            $hasEntityAccess = Yii::$app->cache->get($cacheKey);
+        }
+
+        return $hasEntityAccess;
+    }
+
+    public static function getAccessFormsIds()
+    {
+        $cacheKey = self::entityIdsCacheKey();
+
+        if (User::rbacCacheIsChanged($cacheKey)) {
+            $userId = Yii::$app->user->identity->id;
+            $permissionName = 'admin.' . mb_strtolower(StringHelper::basename(self::class));
+
+            if (Yii::$app->authManager->checkAccess($userId, $permissionName)) {
+                $entityIds = null;
+            } else {
+                $formQuery = Form::find()
+                    ->select('id_form');
+
+                $collectionIds = Collection::getAccessCollectionIds();
+
+                if (is_array($collectionIds) && !empty($collectionIds)) {
+                    $formQuery->andFilterWhere(['id_collection' => $collectionIds]);
+                } else {
+                    $formQuery->andWhere(['id_collection' => $collectionIds]);
+                }
+
+                $entityIds = array_unique(ArrayHelper::merge($formQuery->column(), self::getAccessEntityIds()));
+            }
+
+            Yii::$app->cache->set(
+                $cacheKey,
+                $entityIds,
+                0,
+                User::rbacCacheTag()
+            );
+        } else {
+            $entityIds = Yii::$app->cache->get($cacheKey);
+        }
+
+        return $entityIds;
     }
 }

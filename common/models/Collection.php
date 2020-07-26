@@ -7,7 +7,6 @@ use common\behaviors\MailNotifyBehaviour;
 use common\components\collection\CollectionQuery;
 use common\components\yiinput\RelationBehavior;
 use common\components\softdelete\SoftDeleteTrait;
-use common\components\collection\Translator;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\AccessTrait;
 use common\traits\ActionTrait;
@@ -781,6 +780,16 @@ class Collection extends ActiveRecord
                 }
 
                 $entityIds = array_unique(ArrayHelper::merge($collectionQuery->column(), self::getAccessEntityIds()));
+
+                if (Yii::$app->authManager->checkAccess($userId, 'admin.cstProfile')
+                    && ($box = Box::findOne(['name' => 'Конкурсы'])) !== null
+                ) {
+                    $collectionQuery = Collection::find()
+                        ->select('id_collection')
+                        ->where(['id_box' => $box->id_box]);
+
+                    $entityIds = array_unique(ArrayHelper::merge($collectionQuery->column(), $entityIds));
+                }
             }
 
             Yii::$app->cache->set(
