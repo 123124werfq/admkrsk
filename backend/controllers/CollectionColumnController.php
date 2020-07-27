@@ -139,7 +139,7 @@ class CollectionColumnController extends Controller
 
             $columns = Helper::getTwigVars($model->template);
 
-            $dataString = $modelRecord->getDataAsString(true,true,$columns);
+            $dataString = $modelRecord->getDataAsString(true,true);//,$columns);
 
             $dataMongo = ['col'.$model->id_column => CollectionColumn::renderCustomValue($model->template,$dataString)];
             $mongoCollection->update(['id_record' => $id_record], $dataMongo);
