@@ -23,6 +23,11 @@ if (Yii::$app->user->can('admin.collection')) {
     } else {
         $this->params['button-block'][] = Html::a('Архив', ['index', 'archive' => 1], ['class' => 'btn btn-default']);
     }
+}
+
+if (Yii::$app->user->can('admin.collection')
+    || Yii::$app->user->can('admin.cstProfile')
+) {
     $this->params['button-block'][] = Html::a('Импортировать', ['import'], ['class' => 'btn btn-default']);
     $this->params['button-block'][] = Html::a('Добавить список', ['create'], ['class' => 'btn btn-success']);
 }

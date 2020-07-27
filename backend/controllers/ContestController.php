@@ -294,6 +294,8 @@ class ContestController extends Controller
         if (empty($profile))
             throw new NotFoundHttpException('Ошибка чтения данных');
 
+        $record = CollectionRecord::findOne($profile->id_record_anketa);         
+
         switch ($profile->state) {
             case CstProfile::STATE_DRAFT:
                 $profile->state = CstProfile::STATE_ACCEPTED;
@@ -305,6 +307,11 @@ class ContestController extends Controller
 
         $profile->updateAttributes(['state']);
 
+        if(!empty($record))
+        {
+            $record->data = ['main_status' => $profile->state];
+            $record->update();
+        }   
 
         $query = '';
         if(isset($_SESSION['fparams']))

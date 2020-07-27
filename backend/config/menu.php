@@ -122,6 +122,7 @@ return [
         'icon' => 'fa fa-bars',
         'roles' => [
             'menu.collection' => ['class' => Collection::class],
+            'admin.cstProfile',
         ],
     ],
     'form' => [
@@ -130,18 +131,21 @@ return [
         'roles' => [
             'menu.form' => ['class' => Form::class],
             'menu.formInputType' => ['class' => FormInputType::class],
+            'admin.cstProfile',
         ],
         'submenu' => [
             'form' => [
                 'title' => 'Формы',
                 'roles' => [
                     'menu.form' => ['class' => Form::class],
+                    'admin.cstProfile',
                 ],
             ],
             'form?is_template=1' => [
                 'title' => 'Шаблоны форм',
                 'roles' => [
                     'menu.form' => ['class' => Form::class],
+                    'admin.cstProfile',
                 ],
             ],
             'form-input-type' => [
@@ -171,6 +175,7 @@ return [
         'icon' => 'fa fa-sitemap',
         'roles' => [
             'menu.page' => ['class' => Page::class],
+            'admin.cstProfile',
         ],
     ],
     'gallery' => [
