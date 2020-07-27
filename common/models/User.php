@@ -511,7 +511,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function can($permissions)
     {
-        var_dump($permissions); die();
+        //var_dump($permissions); die();
         if (is_string($permissions)) {
             return Yii::$app->authManager->checkAccess($this->id, $permissions);
         }
