@@ -295,6 +295,11 @@ class FormInput extends \yii\db\ActiveRecord
         return $this->hasOne(CollectionColumn::class, ['id_column' => 'id_column']);
     }
 
+    public function getCollectionColumn()
+    {
+        return $this->hasOne(CollectionColumn::class, ['id_column' => 'id_collection_column']);
+    }
+
     public function getTypeOptions()
     {
         return $this->hasOne(FormInputType::class, ['id_type' => 'id_type']);

@@ -99,6 +99,9 @@ use yii\web\JsExpression;
                     'data' => new JsExpression('function(params) {return {q:params.term,id_collection:$("#forminput-id_collection").val()}}')
                 ],
             ],
+            'options' => [
+                'value'=>$model->id_collection_column,
+            ]
         ])->label('Выберите колонку для отображения')?>
         </div>
     </div>
