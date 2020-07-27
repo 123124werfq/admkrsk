@@ -59,7 +59,20 @@ use yii\web\JsExpression;
               $model->type == CollectionColumn::TYPE_RADIO ||
               $model->type == CollectionColumn::TYPE_CHECKBOXLIST ||
               $model->type == CollectionColumn::TYPE_CHECKBOX){?>
-        <?=$form->field($model, 'values')->textarea(['rows' => 6,'required'=>($model->type==CollectionColumn::TYPE_CHECKBOX)])->hint('Вводить через ;')?>
+        <?=$form->field($model, 'values')->widget(Select2::class, [
+            'data' => $model->getArrayValues(),
+            /*'multiple'=>true,*/
+            'pluginOptions' => [
+                'allowClear' => true,
+                'multiple'=>true,
+                'tags'=> true,
+                'placeholder' => 'Введите значения',
+            ],
+            'options' => [
+                'value'=>$model->getArrayValues(),
+            ]
+        ])?>
+        <?=''/*$form->field($model, 'values')->textarea(['rows' => 6,'required'=>($model->type==CollectionColumn::TYPE_CHECKBOX)])->hint('Вводить через ;')*/?>
     <?php }?>
 
     <?php if ($model->supportCollectionSource()){?>

@@ -126,7 +126,7 @@ class FormInput extends \yii\db\ActiveRecord
 
     public function beforeValidate()
     {
-        if ($this->type==CollectionColumn::TYPE_JSON && is_array($this->values))
+        if (is_array($this->values))
             $this->values = json_encode($this->values);
 
         //если сменили тип на неподдерживаемый коллекции
@@ -186,7 +186,7 @@ class FormInput extends \yii\db\ActiveRecord
 
         if (!empty($this->values))
         {
-            $vars = explode(';', $this->values);
+            $vars = json_decode($this->values,true);
 
             foreach ($vars as $key => $value)
                 $values[$value] = $value;
