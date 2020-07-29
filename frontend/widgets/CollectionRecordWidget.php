@@ -24,7 +24,7 @@ class CollectionRecordWidget extends \yii\base\Widget
     			$template = $this->collectionRecord->collection->template;
 
             if (empty($this->columns))
-        	$columns = $this->collectionRecord->collection->getColumns()->indexBy('alias')->all();
+        	   $columns = $this->collectionRecord->collection->getColumns()->indexBy('alias')->all();
     	}
         else
         {
@@ -37,7 +37,7 @@ class CollectionRecordWidget extends \yii\base\Widget
             }
         }
 
-        if (empty($this->columns))
+        if (!empty($this->columns))
             $columns = $this->columns;
 
         $recorData = $this->collectionRecord->getData($this->renderTemplate);
