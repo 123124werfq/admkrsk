@@ -350,10 +350,17 @@ class CollectionRecordController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionView($id,$id_collection=null)
     {
+        $model = $this->findModel($id);
+        if (!empty($id_collection))
+            $collection = Collection::findOne($id_collection);
+        else
+            $collection = $model->collection;
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'collection'=>$collection,
         ]);
     }
 

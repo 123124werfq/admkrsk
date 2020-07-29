@@ -266,14 +266,17 @@ class FormController extends Controller
     }
 
 
-    public function actionMakeDoc($id_record)
+    public function actionMakeDoc($id_record,$id_collection=null)
     {
         $record = \common\models\CollectionRecord::findOne($id_record);
-        $export_path = $record->collection->form->makeDoc($record);
 
-        /*exec('sudo /usr/bin/unoconv -f pdf '.$export_path,$output);
-        var_dump($output);
-        die();*/
+        if (empty($id_collection))
+            $export_path = $record->collection->form->makeDoc($record);
+        else
+        {
+            $collection = Collection::findOne($id_collection);
+            $export_path = $collection->form->makeDoc($record);
+        }
 
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');

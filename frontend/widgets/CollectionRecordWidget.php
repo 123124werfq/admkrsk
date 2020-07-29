@@ -10,6 +10,7 @@ class CollectionRecordWidget extends \yii\base\Widget
     public $renderTemplate = false;
     public $templateAsElement = false;
     public $columnsAlias = [];
+    public $columns = [];
 
     public function run()
     {
@@ -26,10 +27,13 @@ class CollectionRecordWidget extends \yii\base\Widget
     	}
         else
         {
-            if (!empty($this->columnsAlias))
-                $columns = $this->collectionRecord->collection->getColumns()->where(['alias'=>$this->columnsAlias])->all();
-        	else 
-                $columns = $this->collectionRecord->collection->columns;
+            if (empty($columns))
+            {
+                if (!empty($this->columnsAlias))
+                    $columns = $this->collectionRecord->collection->getColumns()->where(['alias'=>$this->columnsAlias])->all();
+            	else
+                    $columns = $this->collectionRecord->collection->columns;
+            }
         }
 
         $recorData = $this->collectionRecord->getData($this->renderTemplate);

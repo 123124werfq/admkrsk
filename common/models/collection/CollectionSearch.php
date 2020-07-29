@@ -79,18 +79,18 @@ class CollectionSearch extends DynamicModel
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '<span class="btn btn-default">{view}</span><span class="btn btn-default update-record">{update}</span><span class="btn btn-default">{delete}</span>',
                 'contentOptions'=>['class'=>'button-column'],
-                'urlCreator' => function ($action, $model, $key, $index)
+                'urlCreator' => function ($action, $record, $key, $index) use ($model)
                 {
                     if ($action === 'update') {
-                        $url ='update?id='.$model['id_record'];
+                        $url ='update?id='.$record['id_record'];
                         return $url;
                     }
                     if ($action === 'view') {
-                        $url ='view?id='.$model['id_record'];
+                        $url ='view?id='.$record['id_record'].'&id_collection='.$model->id_collection;
                         return $url;
                     }
                     if ($action === 'delete') {
-                        $url ='delete?id='.$model['id_record'];
+                        $url ='delete?id='.$record['id_record'];
                         return $url;
                     }
                 }

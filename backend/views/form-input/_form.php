@@ -56,7 +56,7 @@ use yii\web\JsExpression;
     ?>
 
     <?php if ($model->type == CollectionColumn::TYPE_CHECKBOX){?>
-        <?=$form->field($model, 'values')->textarea(['rows' => 6,'required'=>($model->type==CollectionColumn::TYPE_CHECKBOX)])->label('Ввелите значение, если чекбокс выбран')?>
+        <?=$form->field($model, 'values')->textarea(['rows' => 6,'required'=>($model->type==CollectionColumn::TYPE_CHECKBOX)])->label('Введите значение, если чекбокс выбран')?>
     <?php }?>
 
     <?php if ($model->type == CollectionColumn::TYPE_SELECT ||
