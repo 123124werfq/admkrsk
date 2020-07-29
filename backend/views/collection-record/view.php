@@ -25,7 +25,7 @@ if (!empty($collection->form->template))
     <?=frontend\widgets\CollectionRecordWidget::widget([
         'collectionRecord'=>$model,
         //'renderTemplate'=>true,
-        'columns'=>$collection->columns,
+        'columns'=>$collection->getColumns()->indexBy('alias')->all(),
     ]);?>
     </div>
 </div>
