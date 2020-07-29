@@ -964,7 +964,7 @@ class CollectionController extends Controller
                 $model->updateAttributes(['id_form']);
             }
 
-            return $this->redirect(['update', 'id' => $model->id_collection]);
+            return $this->redirect(['view', 'id' => $model->id_collection]);
         }
 
         return $this->render('create_view', [
