@@ -982,7 +982,7 @@ class CollectionController extends Controller
         {
             $this->saveView($model);
 
-            return $this->redirect(['update', 'id' => $model->id_collection]);
+            return $this->redirect(['view', 'id' => $model->id_collection]);
         }
 
         return $this->render('update_view', [
