@@ -8,6 +8,7 @@ use kartik\select2\Select2;
 
 use common\models\CollectionColumn;
 use common\models\Collection;
+use common\models\Box;
 use yii\web\View;
 /* @var $this yii\web\View */
 /* @var $model common\models\Collection */

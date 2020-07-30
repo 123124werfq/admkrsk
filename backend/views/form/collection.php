@@ -20,10 +20,14 @@ $this->title = 'Формы к списку';
 $this->params['breadcrumbs'][] = $this->title;
 GridAsset::register($this);
 
-if (Yii::$app->user->can('admin.form')) {
-    if ($archive) {
+if (Yii::$app->user->can('admin.form'))
+{
+    if ($archive)
+    {
         $this->params['button-block'][] = Html::a('Все записи', ['index'], ['class' => 'btn btn-default']);
-    } else {
+    }
+    else
+    {
         $this->params['button-block'][] = Html::a('Архив', ['index', 'archive' => 1], ['class' => 'btn btn-default']);
     }
     $this->params['button-block'][] = Html::a('Добавить дополнительную форму', ['create','id_collection'=>$collection->id_collection], ['class' => 'btn btn-success']);
