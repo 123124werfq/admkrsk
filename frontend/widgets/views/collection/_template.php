@@ -39,5 +39,5 @@
         //$template = str_replace('{'.$alias.'}', $replace , $template);
     }
 
-    return \common\components\helper\Helper::renderTwig($template,$templateValues);
+    echo \common\components\helper\Helper::renderTwig($template,$templateValues);
 ?>
