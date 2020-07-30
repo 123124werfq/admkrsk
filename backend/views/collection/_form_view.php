@@ -21,6 +21,8 @@ $model->filters = json_encode($model->filters);
 
 <?php $form = ActiveForm::begin(['id'=>'collection-view']); ?>
 
+<?= $form->field($model, 'id_box')->dropDownList(ArrayHelper::map(Box::find()->all(), 'id_box', 'name'),['prompt'=>'Выберите группу']) ?>
+
 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
 <hr>
