@@ -59,7 +59,7 @@ use common\models\CollectionColumn;
                 <hr class="hr hr__md"/>
                 <?php echo frontend\widgets\CollectionRecordWidget::widget([
                     'collectionRecord'=>$collectionRecord,
-                    'renderTemplate'=>true,
+                    'renderTemplate'=>false,
                 ]);?>
                 <?php
                     if(isset($contest['vote_type']) && $contest['vote_type']=='Баллы')
