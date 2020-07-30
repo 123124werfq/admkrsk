@@ -18,8 +18,8 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
-
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 /**
  * CollectionRecordController implements the CRUD actions for CollectionRecord model.
  */
@@ -377,12 +377,30 @@ class CollectionRecordController extends Controller
 
         $form = new FormDynamic($collection->form);
 
-        if ($form->load(Yii::$app->request->post()) && $form->validate())
+        if ($form->load(Yii::$app->request->post()))
         {
-            $prepare = $form->prepareData(true);
+            if ($form->validate())
+            {
+                $prepare = $form->prepareData(true);
 
-            if ($model = $collection->insertRecord($prepare))
-                return $this->redirect(['index', 'id' => $model->id_collection]);
+                if ($model = $collection->insertRecord($prepare))
+                {
+                    if (!Yii::$app->request->isAjax)
+                        return $this->redirect(['index', 'id' => $model->id_collection]);
+                    else
+                    {
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        return [
+                            'success'=>true
+                        ];
+                    }
+                }
+            }
+            else
+            {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ActiveForm::validate($form);
+            }
         }
 
         if (Yii::$app->request->isAjax)
@@ -408,15 +426,28 @@ class CollectionRecordController extends Controller
 
         $form = new FormDynamic($collection->form);
 
-        if ($form->load(Yii::$app->request->post()) && $form->validate())
+        if ($form->load(Yii::$app->request->post()))
         {
-            $prepare = $form->prepareData(true);
-
-            $model->data = $form->prepareData(true);
-
-            if ($model->save())
+            if ($form->validate())
             {
-                return $this->redirect(['index', 'id' => $model->id_collection]);
+                $prepare = $form->prepareData(true);
+                $model->data = $form->prepareData(true);
+
+                if ($model->save())
+                    if (!Yii::$app->request->isAjax)
+                        return $this->redirect(['index', 'id' => $model->id_collection]);
+                    else
+                    {
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        return [
+                            'success'=>true
+                        ];
+                    }
+            }
+            else
+            {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ActiveForm::validate($form);
             }
         }
 

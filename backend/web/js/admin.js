@@ -516,7 +516,39 @@ jQuery(document).ready(function()
     });
 
     $("#CollectionRecord button.btn-primary").click(function(){
-        $("#CollectionRecord form input[type=submit]").click();
+
+        event.preventDefault();
+
+        var $form = $("#CollectionRecord form");
+
+        $form.find('.has-error .help-block').html('');
+        $form.find('.has-error').removeClass('has-error');
+
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: $form.attr('action'),
+            data: $form.serialize()
+        }).done(function(data){
+
+            if (data.success)
+            {
+              $.pjax.reload({container: '#collection_grid', async: false});
+
+              $("#CollectionRecord").modal('hide');
+            }
+            else
+            {
+                $.each(data,function(index, value){
+                    if ($("."+index+' .help-block').length>0)
+                    {
+                        $("."+index).addClass('has-error');
+                        $("."+index+' .help-block').html(value.join('<br>'));
+                    }
+                });
+            }
+        });
+
         return false;
     });
 
