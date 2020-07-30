@@ -36,6 +36,9 @@ class UserfirmController extends \yii\web\Controller
     {
         $collection = $this->getCollection($type);
 
+        if (empty($collection))
+            throw new NotFoundHttpException();
+
         $records = $collection->getDataQuery()
             ->whereByAlias(['like','name',$q])
             ->getArray(true);
@@ -47,6 +50,23 @@ class UserfirmController extends \yii\web\Controller
                 'text' => $data['name'],
             ];
         }
+
+/*        $collection = Collection::find()->where(['alias'=>'uk_firms'])->one();
+
+        if (empty($collection))
+        {
+            $records = $collection->getDataQuery()
+                ->whereByAlias(['like','name',$q])
+                ->getArray(true);
+
+            $results = [];
+            foreach ($records as $id_record=>$data) {
+                $results[] = [
+                    'id' => $data['name'],
+                    'text' => $data['name'],
+                ];
+            }
+        }*/
 
         return $this->asJson(['results' => $results]);
     }

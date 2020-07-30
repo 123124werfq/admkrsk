@@ -20,7 +20,7 @@ $this->title = 'Формы';
 $this->params['breadcrumbs'][] = $this->title;
 GridAsset::register($this);
 
-if (Yii::$app->user->can('admin.form')) {
+if (Yii::$app->user->can('admin.form') || Yii::$app->user->can('admin.cstProfile')) {
     if ($archive) {
         $this->params['button-block'][] = Html::a('Все записи', ['index'], ['class' => 'btn btn-default']);
     } else {
