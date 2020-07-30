@@ -20,7 +20,7 @@ $this->title = 'Формы к списку';
 $this->params['breadcrumbs'][] = $this->title;
 GridAsset::register($this);
 
-if (Yii::$app->user->can('admin.form'))
+if (Yii::$app->user->can('admin.form') || Yii::$app->user->can('admin.cstProfile'))
 {
     if ($archive)
     {
