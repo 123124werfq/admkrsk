@@ -19,7 +19,7 @@ class CollectionSearch extends Collection
     public function rules()
     {
         return [
-            [['id_collection', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['id_collection', 'id_box', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['name', 'alias', 'is_dictionary'], 'safe'],
         ];
     }
@@ -71,6 +71,7 @@ class CollectionSearch extends Collection
         // grid filtering conditions
         $query->andFilterWhere([
             'db_collection.id_collection' => $this->id_collection,
+            'db_collection.id_box' => $this->id_box,
             'db_collection.created_at' => $this->created_at,
             'db_collection.created_by' => $this->created_by,
             'db_collection.updated_at' => $this->updated_at,

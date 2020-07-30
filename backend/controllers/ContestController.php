@@ -64,6 +64,13 @@ class ContestController extends Controller
 
         //print_r($allContests); die();
 
+        if(isset($_GET['cont']) && isset($allContests[(int)$_GET['cont']]) && !empty($allContests[(int)$_GET['cont']]['participant_form'])) 
+        {
+            $formname = $allContests[(int)$_GET['cont']]['participant_form'];
+            $sql_form = "select id_collection from form_form where alias ='".$formname."'";
+            $fcol_id = Yii::$app->db->createCommand($sql_form)->queryScalar();
+        }
+
         $_SESSION['fparams'] = serialize($_GET);
         
 
@@ -72,7 +79,8 @@ class ContestController extends Controller
             'dataProvider' => $dataProvider,
             'customColumns' => $columns,
             'allContests' => $allContests,
-            'activecontest' => isset($_GET['cont'])?(int)$_GET['cont']:0
+            'activecontest' => isset($_GET['cont'])?(int)$_GET['cont']:0,
+            'contestid' => isset($fcol_id)?(int)$fcol_id:-1
         ]);
     }
 
@@ -294,6 +302,8 @@ class ContestController extends Controller
         if (empty($profile))
             throw new NotFoundHttpException('Ошибка чтения данных');
 
+        $record = CollectionRecord::findOne($profile->id_record_anketa);         
+
         switch ($profile->state) {
             case CstProfile::STATE_DRAFT:
                 $profile->state = CstProfile::STATE_ACCEPTED;
@@ -305,6 +315,14 @@ class ContestController extends Controller
 
         $profile->updateAttributes(['state']);
 
+        if(!empty($record))
+        {
+            if($profile->state != 1)
+                $record->data = ['main_status' => ""];
+            else
+                $record->data = ['main_status' => "1"];
+            $record->update();
+        }   
 
         $query = '';
         if(isset($_SESSION['fparams']))

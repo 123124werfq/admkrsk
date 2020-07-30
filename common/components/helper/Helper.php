@@ -59,6 +59,15 @@ class Helper
 
 		foreach ($vars as $key => $var)
 		{
+			if (strpos($var, '?'))
+			{
+				$var = explode('?', $var);
+				$vars[$key] = $var[1];
+			}
+		}
+
+		foreach ($vars as $key => $var)
+		{
 			if (strpos($var, '|'))
 			{
 				$var = explode('|', $var);
@@ -76,7 +85,6 @@ class Helper
 		}
 
 		return $vars;
-		//return $m[2]??[];
 	}
 
 	public static function renderTwig($template, $data)
@@ -129,6 +137,35 @@ class Helper
 
 	    	$url = \common\models\Media::thumb($data['id'],\common\models\Media::SIZE_BIG);
 	    	return '<img src="'.$url.'" alt=""/>';
+	    },['is_safe' => ['html']]);
+
+	    $twig->addFilter($filter);
+
+	    $filter = new \Twig\TwigFilter('table', function ($data) {
+	    	//$ths = json_decode($data, true);
+
+	    	$data = json_decode($data,true);
+
+            if (!is_array($data) || empty($data))
+                echo json_encode($data);
+            else
+            {
+                echo '<table width="100%">';//<tr>
+                /*foreach ($ths as $key => $th)
+                    echo '<th ' . (!empty($th['width']) ? 'style="width:' . $th['width'] . '%"' : '') . ' >' . $th['name'] . '</th>';
+                echo '</tr>';*/
+
+                foreach ($data as $key => $row)
+                {
+                    echo '<tr>';
+                    foreach ($row as $vkey => $value)
+                        echo '<td>'.$value.'</td>';
+                    echo '</tr>';
+                }
+
+                echo '</tr>';
+                echo '</table>';
+            }
 	    },['is_safe' => ['html']]);
 
 	    $twig->addFilter($filter);

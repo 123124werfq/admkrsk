@@ -1,6 +1,8 @@
 <?php
 	foreach ($allrows as $id_record => $row)
 	{
+		$row['link'] = '/collection?id='.$id_record.'&id_page='.$page->id_page.'&id_collection='.$model->id_collection;
+
 		if (empty($model->template_element))
 		{
 			echo $this->render('_default_template_row',[

@@ -593,7 +593,7 @@ JS;
                     'data' => $value,
                     'pluginOptions' => [
                         'multiple' => false,
-                        'minimumInputLength' => 1,
+                        'minimumInputLength' => 0,
                         'placeholder' => 'Выберите запись',
                         'ajax' => [
                             'url' => '/collection/record-list',

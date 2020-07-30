@@ -50,7 +50,7 @@ class SubcollectionWidget extends \yii\base\Widget
         {
             if (isset($records[$id_record]))
             {
-                $data = $records[$id_record]->getDataAsString(true,true);
+                $data = $records[$id_record]->getData(true);
                 $output .= CollectionColumn::renderCustomValue($template,$data);
             }
         }

@@ -346,21 +346,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
         $value = '';
 
         try {
-            $loader = new \Twig\Loader\ArrayLoader([
-                'customtemplate' => $template,
-            ]);
-
-            $twig = new \Twig\Environment($loader);
-            $filter = new \Twig\TwigFilter('render', function ($string) {
-                return \frontend\widgets\SubcollectionWidget::widget(['data'=>$string]);
-            },['is_safe' => ['html']]);
-            $twig->addFilter($filter);
-
-
-            $value = $twig->render('customtemplate', $data);
-
-            unset($loader);
-            unset($twig);
+            $value = \common\components\helper\Helper::renderTwig($template,$data);
         }
         catch (Exception $e) {
 

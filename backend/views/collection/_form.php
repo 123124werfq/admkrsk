@@ -24,48 +24,51 @@ use yii\web\JsExpression;
 
 <?= $form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
 
+<hr>
+<?= $form->field($model, 'template')->textInput(['class' => 'form-control redactor']) ?>
+
+<?= $form->field($model, 'template_element')->textInput(['class' => 'form-control redactor']) ?>
+
+<table class="table">
+    <?php foreach ($model->columns as $key => $column) {
+        echo '<tr><th width="100">' . ($column->alias ? $column->alias : 'column_' . $column->id_column) . '</th><td>' . $column->name . '</td></tr>';
+    } ?>
+</table>
+
+<?php if (!$model->isNewRecord) { ?>
+    <?= $form->field($model, 'label')->widget(Select2::class, [
+        'data' => ArrayHelper::map($model->getColumns()->andWhere([
+            'id_collection' => $model->id_collection,
+            'type' => [CollectionColumn::TYPE_INPUT, CollectionColumn::TYPE_INTEGER]
+        ])->all(), 'id_column', 'name'),
+        'pluginOptions' => [
+            'allowClear' => true,
+            'multiple' => true,
+            'placeholder' => 'Выберите колонки',
+        ],
+        'options' => ['multiple' => true,]
+    ])->hint('Выберите колонки из которых будет составляться представление для отображения в списках') ?>
+
+    <?= $form->field($model, 'id_column_map')->dropDownList(
+        ArrayHelper::map($model->getColumns()->andWhere([
+                'id_collection' => $model->id_collection,
+        ])->andWhere(['or',['type' => CollectionColumn::TYPE_MAP],['type' => CollectionColumn::TYPE_ADDRESS]])->all(),'id_column','name'),['prompt'=>'Выберите колонку'])->hint('В колонки должны содержаться координаты');
+    ?>
+<?php } ?>
+
+<?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
+
+<?= $form->field($model, 'is_authenticate')->checkbox() ?>
+
 <?php if (Yii::$app->user->can('admin.collection')): ?>
 
-    <hr>
-    <?= $form->field($model, 'template')->textInput(['class' => 'form-control redactor']) ?>
 
-    <?= $form->field($model, 'template_element')->textInput(['class' => 'form-control redactor']) ?>
-
-    <table class="table">
-        <?php foreach ($model->columns as $key => $column) {
-            echo '<tr><th width="100">' . ($column->alias ? $column->alias : 'column_' . $column->id_column) . '</th><td>' . $column->name . '</td></tr>';
-        } ?>
-    </table>
-
-    <?= $form->field($model, 'is_authenticate')->checkbox() ?>
-
-    <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
 
     <?php if ($model->isNewRecord){?>
     <?= $form->field($model, 'id_type')->dropDownList(ArrayHelper::map(CollectionType::find()->all(), 'id_type', 'name')
         ,['prompt'=>'Выберите тип'])->hint('Заполняется только для создания специальных типов списков') ?>
     <?php }?>
 
-    <?php if (!$model->isNewRecord) { ?>
-        <?= $form->field($model, 'label')->widget(Select2::class, [
-            'data' => ArrayHelper::map($model->getColumns()->andWhere([
-                'id_collection' => $model->id_collection,
-                'type' => [CollectionColumn::TYPE_INPUT, CollectionColumn::TYPE_INTEGER]
-            ])->all(), 'id_column', 'name'),
-            'pluginOptions' => [
-                'allowClear' => true,
-                'multiple' => true,
-                'placeholder' => 'Выберите колонки',
-            ],
-            'options' => ['multiple' => true,]
-        ])->hint('Выберите колонки из которых будет составляться представление для отображения в списках') ?>
-
-        <?= $form->field($model, 'id_column_map')->dropDownList(
-            ArrayHelper::map($model->getColumns()->andWhere([
-                    'id_collection' => $model->id_collection,
-            ])->andWhere(['or',['type' => CollectionColumn::TYPE_MAP],['type' => CollectionColumn::TYPE_ADDRESS]])->all(),'id_column','name'),['prompt'=>'Выберите колонку'])->hint('В колонки должны содержаться координаты');
-        ?>
-    <?php } ?>
     <hr>
 
     <h3>Настройка уведомлений</h3>

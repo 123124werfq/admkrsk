@@ -13,6 +13,7 @@ class UserFirmForm extends Model
     public $inn;
     public $ogrn;
     public $name;
+    public $type;
 
     /**
      * @return array the validation rules.
@@ -21,7 +22,7 @@ class UserFirmForm extends Model
     {
         return [
             [['inn'], 'integer'],
-            [['ogrn','name'], 'string'],
+            [['ogrn','name', 'type'], 'string'],
             ['name', 'required'],
         ];
     }

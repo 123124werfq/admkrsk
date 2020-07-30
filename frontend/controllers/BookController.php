@@ -193,7 +193,8 @@ class BookController extends \yii\web\Controller
         $id_user = Yii::$app->user->id;
 
         $b0 = new Book;
-        $cn = $b0->connect(0);
+//        $cn = $b0->connect(0);
+        $cn = $b0->connect(1);
         $res = $b0->deleteTime($pin);
 
         if($res)

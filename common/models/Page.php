@@ -12,9 +12,11 @@ use common\traits\AccessTrait;
 use common\traits\ActionTrait;
 use common\traits\MetaTrait;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
 use yii\helpers\StringHelper;
 use yii\db\ActiveRecord;
 
@@ -406,7 +408,7 @@ class Page extends ActiveRecord
 
     /**
      * @return ActiveQuery
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function getCollections()
     {
@@ -472,6 +474,7 @@ class Page extends ActiveRecord
 
     /**
      * @return array
+     * @throws InvalidConfigException
      */
     public static function getAccessPageIds()
     {
@@ -494,6 +497,15 @@ class Page extends ActiveRecord
                     $pageQuery->andFilterWhere(['id_page' => $pageIds]);
                 } else {
                     $pageQuery->andWhere(['id_page' => $pageIds]);
+                }
+
+                if (Yii::$app->authManager->checkAccess($userId, 'admin.cstProfile')) {
+                    if ($contests = Page::findOne(['alias' => 'contests'])) {
+                        $pageQuery->orWhere([
+                            ['id_page' => $contests->id_page],
+                            ['id_page' => $contests->children()->select('id_page')]
+                        ]);
+                    }
                 }
 
                 foreach ($pageQuery->each() as $page) {

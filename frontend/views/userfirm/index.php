@@ -26,6 +26,8 @@ $this->params['page'] = $page;
 
                     <h1><?= $page->content ?></h1>
 
+                    <a class="btn <?=$type=='uk'?'btn__gray':'btn__secondary'?>" href="?type=firm">Муниципальные учреждения</a> <a class="btn <?=$type=='firm'?'btn__gray':'btn__secondary'?>" href="?type=uk">Управляющие организации</a>
+
                     <div class="boxed form-inside">
                         <?php $form = ActiveForm::begin(['scrollToError' => true]); ?>
 
@@ -35,21 +37,23 @@ $this->params['page'] = $page;
                                     'minimumInputLength' => 2,
                                     'placeholder' => 'Введите название',
                                     'ajax' => [
-                                        'url' => '/userfirm/search',
+                                        'url' => '/userfirm/search?type='.$type,
                                         'dataType' => 'json',
                                         'data' => new JsExpression('function(params) { return {q:params.term};}')
                                     ],
                                 ],
                             ]);?>
 
-
                             <div class="row">
-                                <div class="col" style="width: 100%">
+                                <?php if ($model->type=='firm'){?>
+                                <div class="col">
                                     <?= $form->field($model, 'inn')->textInput(['class' => 'form-control']) ?>
                                 </div>
-                                <!--div class="col" style="width: 50%">
+                                <?php }else {?>
+                                <div class="col">
                                     <?= $form->field($model, 'ogrn')->textInput(['class' => 'form-control']) ?>
-                                </div-->
+                                </div>
+                                <?php }?>
                             </div>
 
                             <div class="form-end">
@@ -68,20 +72,22 @@ $this->params['page'] = $page;
                             'columnsAlias'=>[
                                 'name',
                                 'inn',
-                                'orgn',
+                                'ogrn',
                                 'telefon',
+                                'phone',
                             ]
                         ]);?>
 
                         <?php $form = ActiveForm::begin(['scrollToError' => true]); ?>
                             <?= $form->field($model, 'name')->hiddenInput()->label(false) ?>
                             <?= $form->field($model, 'inn')->hiddenInput()->label(false) ?>
+                            <?= $form->field($model, 'ogrn')->hiddenInput()->label(false) ?>
                             <button type="submit" class="btn btn__secondary" name="id_record" value="<?=$record->id_record?>">Отправить запрос на редактирование</button>
                         <?php ActiveForm::end(); ?>
                     <?php } else if (!empty($_POST)){?>
                         <h3>Организация не найдена</h3>
 
-                        <p class="accent">Возможно вы неправильно ввели Название или ИНН, или вашей организации нет в нашей базе данных. Вы можете <a href="publishrequest/firm-create">оставить заявку</a> на добавление вашей организации. После проверки она будет довлена.</p>
+                        <p class="accent">Возможно вы неправильно ввели Название или ИНН, или вашей организации нет в нашей базе данных. Вы можете <a href="publishrequest/firm-create?type=<?=$type?>">оставить заявку</a> на добавление вашей организации. После проверки она будет довлена.</p>
                     <?php }?>
 
                     <?php if (!empty($page->medias)) { ?>

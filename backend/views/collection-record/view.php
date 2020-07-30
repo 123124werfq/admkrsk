@@ -11,8 +11,9 @@ $this->params['breadcrumbs'][] = ['label' => 'Списки', 'url' => ['index']]
 $this->params['breadcrumbs'][] = ['label' => $model->collection->name, 'url' => ['collection-record/index','id'=>$model->id_collection]];
 $this->params['breadcrumbs'][] = $this->title;
 
-if (!empty($model->collection->form->template)){
-	$this->params['button-block'][] = Html::a('Скачать .doc', ['form/make-doc','id_record'=>$model->id_record],
+if (!empty($collection->form->template))
+{
+	$this->params['button-block'][] = Html::a('Скачать .doc', ['form/make-doc','id_record'=>$model->id_record,'id_collection'=>$collection->id_collection],
             ['class' => 'btn btn-primary']);
 }
 
@@ -24,6 +25,7 @@ if (!empty($model->collection->form->template)){
     <?=frontend\widgets\CollectionRecordWidget::widget([
         'collectionRecord'=>$model,
         //'renderTemplate'=>true,
+        'columns'=>$collection->getColumns()->indexBy('alias')->all(),
     ]);?>
     </div>
 </div>

@@ -12,7 +12,7 @@ use Yii;
 
 class CollectionController extends \yii\web\Controller
 {
-	public function actionView($id,$id_page)
+	public function actionView($id,$id_page,$id_collection=null)
 	{
 		$page  = Page::findOne($id_page);
 		$model = CollectionRecord::findOne($id);
@@ -25,10 +25,18 @@ class CollectionController extends \yii\web\Controller
         $data['created_at'] = $model->created_at;
         $data['updated_at'] = $model->updated_at;
 
+        if (empty($id_collection))
+            $collection = $model->collection;
+        else
+            $collection = Collection::findOne($id_collection);
+
+        if (empty($collection))
+            throw new NotFoundHttpException('The requested page does not exist.');
+
 		return $this->render('view', [
 			'data' => $data,
-			'columns'=> $model->collection->getColumns()->indexBy('alias')->all(),
-			'template'=>$model->collection->template,
+			'columns'=> $collection->getColumns()->indexBy('alias')->all(),
+			'template'=> $collection->template,
 			'page'=>$page,
 		]);
 	}
@@ -41,7 +49,6 @@ class CollectionController extends \yii\web\Controller
 
         if (empty($collection->id_column_map))
             return [];
-
 
         /*$columns = $collection->getColumns()->indexBy('id_column')->all();
 
@@ -157,12 +164,16 @@ class CollectionController extends \yii\web\Controller
         fclose($out);
     }
 
-	public function actionRecordList($id,$q)
+	public function actionRecordList($id,$q='')
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $collection = $this->findModel($id);
-        $collection = $stripos->getArray();
+
+        if (empty($collection))
+            throw new NotFoundHttpException('The requested page does not exist.');
+
+        $collection = $collection->getArray();
 
         $i = 0;
         $results = [];
@@ -172,7 +183,7 @@ class CollectionController extends \yii\web\Controller
             if ($i>15)
                 break;
 
-            if (stripos($value, $q))
+            if ($q=='' || stripos($value, $q))
             {
                 $results[] = [
                     'id' => $key,

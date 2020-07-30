@@ -7,7 +7,6 @@ use common\behaviors\MailNotifyBehaviour;
 use common\components\collection\CollectionQuery;
 use common\components\yiinput\RelationBehavior;
 use common\components\softdelete\SoftDeleteTrait;
-use common\components\collection\Translator;
 use common\modules\log\behaviors\LogBehavior;
 use common\traits\AccessTrait;
 use common\traits\ActionTrait;
@@ -298,6 +297,11 @@ class Collection extends ActiveRecord
         return $this->hasOne(Collection::class, ['id_collection' => 'id_parent_collection']);
     }
 
+    public function getBox()
+    {
+        return $this->hasOne(Box::class, ['id_box' => 'id_box']);
+    }
+
     public function getItems()
     {
         return $this->hasMany(CollectionRecord::class, ['id_collection' => 'id_collection'])->orderBy('ord ASC');
@@ -329,7 +333,7 @@ class Collection extends ActiveRecord
                     $id_cols[] = $col['id_column'];
                 }
 
-            $query =$this->hasMany(CollectionColumn::class, ['id_collection' => 'id_parent_collection'])->orderBy('ord ASC');
+            $query = $this->hasMany(CollectionColumn::class, ['id_collection' => 'id_parent_collection'])->orderBy('ord ASC');
 
             if (!empty($id_cols))
                 return $query->where(['id_column'=>$id_cols]);
@@ -776,6 +780,16 @@ class Collection extends ActiveRecord
                 }
 
                 $entityIds = array_unique(ArrayHelper::merge($collectionQuery->column(), self::getAccessEntityIds()));
+
+                if (Yii::$app->authManager->checkAccess($userId, 'admin.cstProfile')
+                    && ($box = Box::findOne(['name' => 'Конкурсы'])) !== null
+                ) {
+                    $collectionQuery = Collection::find()
+                        ->select('id_collection')
+                        ->where(['id_box' => $box->id_box]);
+
+                    $entityIds = array_unique(ArrayHelper::merge($collectionQuery->column(), $entityIds));
+                }
             }
 
             Yii::$app->cache->set(

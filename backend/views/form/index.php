@@ -26,6 +26,11 @@ if (Yii::$app->user->can('admin.form')) {
     } else {
         $this->params['button-block'][] = Html::a('Архив', ['index', 'archive' => 1], ['class' => 'btn btn-default']);
     }
+}
+
+if (Yii::$app->user->can('admin.form')
+    || Yii::$app->user->can('admin.cstProfile')
+) {
     $this->params['button-block'][] = Html::a('Добавить', ['create'], ['class' => 'btn btn-success']);
 }
 

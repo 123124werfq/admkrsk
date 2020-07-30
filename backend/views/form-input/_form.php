@@ -55,11 +55,27 @@ use yii\web\JsExpression;
         echo $form->field($model, 'fieldname')->textInput(['maxlength' => 255]);
     ?>
 
+    <?php if ($model->type == CollectionColumn::TYPE_CHECKBOX){?>
+        <?=$form->field($model, 'values')->textarea(['rows' => 6,'required'=>($model->type==CollectionColumn::TYPE_CHECKBOX)])->label('Введите значение, если чекбокс выбран')?>
+    <?php }?>
+
     <?php if ($model->type == CollectionColumn::TYPE_SELECT ||
               $model->type == CollectionColumn::TYPE_RADIO ||
-              $model->type == CollectionColumn::TYPE_CHECKBOXLIST ||
-              $model->type == CollectionColumn::TYPE_CHECKBOX){?>
-        <?=$form->field($model, 'values')->textarea(['rows' => 6,'required'=>($model->type==CollectionColumn::TYPE_CHECKBOX)])->hint('Вводить через ;')?>
+              $model->type == CollectionColumn::TYPE_CHECKBOXLIST){?>
+        <?=$form->field($model, 'values')->widget(Select2::class, [
+            'data' => $model->getArrayValues(),
+            /*'multiple'=>true,*/
+            'pluginOptions' => [
+                'allowClear' => true,
+                'multiple'=>true,
+                'tags'=> true,
+                'placeholder' => 'Введите значения',
+            ],
+            'options' => [
+                'value'=>$model->getArrayValues(),
+            ]
+        ])?>
+
     <?php }?>
 
     <?php if ($model->supportCollectionSource()){?>
@@ -86,6 +102,9 @@ use yii\web\JsExpression;
                     'data' => new JsExpression('function(params) {return {q:params.term,id_collection:$("#forminput-id_collection").val()}}')
                 ],
             ],
+            'options' => [
+                'value'=>$model->id_collection_column,
+            ]
         ])->label('Выберите колонку для отображения')?>
         </div>
     </div>

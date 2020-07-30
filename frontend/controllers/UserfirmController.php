@@ -32,9 +32,9 @@ class UserfirmController extends \yii\web\Controller
         ];
     }
 
-    public function actionSearch($q)
+    public function actionSearch($q,$type='firm')
     {
-        $collection = Collection::find()->where(['alias'=>'municipal_firms'])->one();
+        $collection = $this->getCollection($type);
 
         if (empty($collection))
             throw new NotFoundHttpException();
@@ -71,44 +71,50 @@ class UserfirmController extends \yii\web\Controller
         return $this->asJson(['results' => $results]);
     }
 
-    public function actionIndex($page = null)
+    public function actionIndex($page = null,$type='firm')
     {
+        if ($type!='firm')
+            $type = 'uk';
+
         $model = new UserFirmForm;
+        $model->type  = $type;
 
         $record = null;
 
-        $collection = $this->getCollection();
+        $collection = $this->getCollection($type);
 
         if ($model->load(Yii::$app->request->post()))
         {
             if (!empty($collection))
             {
                 $record = $collection->getDataQuery()
-                    ->whereByAlias(['inn'=>(int)$model->inn])
+                    ->whereByAlias($type=='uk'?['ogrn'=>(int)$model->ogrn]:['inn'=>(int)$model->inn])
                     ->whereByAlias(['name'=>$model->name])
                     ->limit(1)->getArray();
 
                 if (!empty($record))
+                {
                     $record = CollectionRecord::findOne(key($record));
 
-                $id_record = Yii::$app->request->post('id_record');
+                    $id_record = Yii::$app->request->post('id_record');
 
-                if (!empty($id_record) && $id_record==$record->id_record)
-                {
-                    $FirmUser = FirmUser::find()->where(['id_record'=>$record->id_record])->one();
-
-                    if (empty($FirmUser))
+                    if (!empty($id_record) && $id_record==$record->id_record)
                     {
-                        $FirmUser = new FirmUser;
-                        $FirmUser->id_user = Yii::$app->user->id;
-                        $FirmUser->state = 0;
-                        $FirmUser->id_record = $id_record;
+                        $FirmUser = FirmUser::find()->where(['id_record'=>$record->id_record])->one();
 
-                        if ($FirmUser->save())
-                            return $this->redirect($page->getUrl().'/firm?id_firm='.$FirmUser->id_record);
+                        if (empty($FirmUser))
+                        {
+                            $FirmUser = new FirmUser;
+                            $FirmUser->id_user = Yii::$app->user->id;
+                            $FirmUser->state = 0;
+                            $FirmUser->id_record = $id_record;
+
+                            if ($FirmUser->save())
+                                return $this->redirect($page->getUrl().'/firm?id_firm='.$FirmUser->id_record);
+                        }
+                        else
+                            $model->addError('name','Данная организация уже привязана к пользователю');
                     }
-                    else
-                        $model->addError('name','Данная организация уже привязана к пользователю');
                 }
             }
         }
@@ -128,6 +134,7 @@ class UserfirmController extends \yii\web\Controller
             'record'=>$record,
             'model' => $model,
             'firms' => $firms,
+            'type' => $type,
         ]);
     }
 
@@ -193,11 +200,11 @@ class UserfirmController extends \yii\web\Controller
         ]);
     }
 
-    public function actionFirmCreate($page)
+    public function actionFirmCreate($page,$type='firm')
     {
         $form = null;
 
-        $form = Form::find()->where(['alias'=>'municipal_firms_user_form'])->one();
+        $form = Form::find()->where(['alias'=>($type=='firm')?'municipal_firms_user_form':'uk_user_form'])->one();
 
         if (!empty($form))
         {
@@ -207,10 +214,9 @@ class UserfirmController extends \yii\web\Controller
             {
                 if ($modelForm->validate())
                 {
-                    $collection = Collection::find()->where(['alias'=>'municipal_firms'])->one();
-
+                    //= Collection::find()->where(['alias'=>'municipal_firms'])->one();
                     $prepare = $modelForm->prepareData(true);
-                    $record = $collection->insertRecord($prepare);
+                    $record = $form->collection->insertRecord($prepare);
 
                     $FirmUser = new FirmUser;
                     $FirmUser->id_user = Yii::$app->user->id;
@@ -242,9 +248,9 @@ class UserfirmController extends \yii\web\Controller
 
         if ($firm->state == $firm::STATE_ACCEPT)
         {
-            $collection = Collection::find()->where(['alias'=>'municipal_firms'])->one();
+            $collection = $firm->record->collection;//Collection::find()->where(['alias'=>'municipal_firms'])->one();
 
-            $form = Form::find()->where(['alias'=>'municipal_firms_user_form'])->one();
+            $form = Form::find()->where(['alias'=>($collection->alias=='municipal_firms')?'municipal_firms_user_form':'uk_user_form'])->one();
 
             if (!empty($form))
             {
@@ -283,9 +289,9 @@ class UserfirmController extends \yii\web\Controller
         ]);
     }
 
-    protected function getCollection()
+    protected function getCollection($type)
     {
-        $collection = Collection::find()->where(['alias'=>'municipal_firms'])->one();
+        $collection = Collection::find()->where(['alias'=>($type=='firm')?'municipal_firms':'uk_firms'])->one();
 
         if (empty($collection))
             throw new NotFoundHttpException();
