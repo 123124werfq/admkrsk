@@ -22,7 +22,7 @@ form .subform .text-help {margin-top: 0px;}
     opacity: 0;
 }
 
-.content-gallery_img img {object-fit: cover;}
+.content-gallery_img img {object-fit: cover; height: 140px;}
 
 .main {min-height: 400px;}
 
