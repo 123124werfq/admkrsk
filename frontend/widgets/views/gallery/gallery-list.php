@@ -27,6 +27,5 @@ use common\models\Media;
                 <?php endforeach; ?>
             </div>
         </div>
-
     <?php endforeach; ?>
 </div>

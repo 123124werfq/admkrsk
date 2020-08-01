@@ -42,7 +42,7 @@ class GalleryWidget extends Widget
             }
         }
 
-        if (!$this->groupGalleryId)
+        if (!empty($this->groupGalleryId))
         {
             $groupGalleries = GalleryGroup::find()
                 ->where(['id' => $this->groupGalleryId])
