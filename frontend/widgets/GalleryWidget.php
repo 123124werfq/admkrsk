@@ -27,7 +27,8 @@ class GalleryWidget extends Widget
      */
     public function run()
     {
-        if (!empty($this->attributes)) {
+        if (!empty($this->attributes))
+        {
             if (!empty($this->attributes['id'])) {
                 $this->id_gallery = (int)$this->attributes['id'];
             }
@@ -41,11 +42,13 @@ class GalleryWidget extends Widget
             }
         }
 
-        if (!$this->id_gallery) {
+        if (!$this->groupGalleryId)
+        {
             $groupGalleries = GalleryGroup::find()
                 ->where(['id' => $this->groupGalleryId])
                 ->with('galleries.medias')
                 ->one();
+
             return $this->render('gallery/gallery-list', [
                 'galleries' => $groupGalleries->galleries,
                 'limit' => $this->limit,

@@ -7,6 +7,7 @@ use common\models\Media;
 /** @var  Media[] $medias */
 
 $cover = array_shift($medias);
+
 if (empty($limit))
     $limit = 3;
 
@@ -19,7 +20,7 @@ if (empty($limit))
     <div class="content-gallery_list">
         <?php foreach ($medias as $key => $media) {
             if ($key >= $limit)
-                continue;
+                break;
             ?>
             <div class="content-gallery_item">
                 <a href="<?= $media->getUrl() ?>" data-fancybox="gallery-<?= $gallery->id_gallery ?>">
@@ -33,12 +34,12 @@ if (empty($limit))
     </div>
     <div class="hidden">
         <?php
-        foreach ($medias as $key => $media) {
+        foreach ($medias as $key => $media)
+        {
             if ($key < $limit)
                 continue;
             ?>
-            <a href="<?= $media->getUrl() ?>" data-fancybox="gallery-<?= $gallery->id_gallery ?>"><img
-                        src="<?= $media->showThumb(['w' => 768, 'h' => 450]) ?>" alt=""></a>
+            <a href="<?= $media->showThumb(['w'=>1280]) ?>" data-fancybox="gallery-<?= $gallery->id_gallery ?>"></a>
         <?php } ?>
     </div>
 </div>
