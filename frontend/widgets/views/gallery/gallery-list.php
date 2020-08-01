@@ -15,10 +15,10 @@ use common\models\Media;
             <a href="<?=$firstMedia->showThumb(['w'=>1280])?>" data-fancybox="gallery-<?= $gallery->id_gallery ?>">
                 <div class="content-gallery_img">
                     <img src="<?= $firstMedia->showThumb(['w' => 768, 'h' => 450]) ?>" alt="">
-                    <span class="content-gallery_count">+ <?= $ ?></span>
+                    <span class="content-gallery_count">+ <?= count($medias) ?></span>
                 </div>
                 <?php if (!empty($medias)){?>
-                <p class="content-gallery_item-title">+ <?= count($medias) ?></p>
+                <p class="content-gallery_item-title"> <?= $gallery->name ?></p>
                 <?php }?>
             </a>
             <div class="hidden">
