@@ -14,7 +14,7 @@ use common\models\Media;
         <div class="content-gallery_item content-gallery_item__single">
             <a href="<?=$firstMedia->showThumb(['w'=>1280])?>" data-fancybox="gallery-<?= $gallery->id_gallery ?>">
                 <div class="content-gallery_img">
-                    <img src="<?= $firstMedia->showThumb(['w' => 768, 'h' => 450]) ?>" alt="">
+                    <img width="240" height="140" src="<?= $firstMedia->showThumb(['w' => 768, 'h' => 450]) ?>" alt="">
                     <span class="content-gallery_count">+ <?= count($medias) ?></span>
                 </div>
                 <?php if (!empty($medias)){?>

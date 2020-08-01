@@ -22,6 +22,8 @@ form .subform .text-help {margin-top: 0px;}
     opacity: 0;
 }
 
+.content-gallery_img {object-fit: cover;}
+
 .main {min-height: 400px;}
 
 .fileupload_item {padding-right: 26px!important;}
