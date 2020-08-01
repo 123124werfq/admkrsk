@@ -1,3 +1,12 @@
+@import url("normalize.css");
+@import url("slick.css");
+@import url("slick-theme.css");
+@import url("jquery.fancybox.css");
+@import url("jquery-ui.css");
+@import url("tipso.css");
+@import url("daterangepicker.css");
+@import url("style.css");
+
 .ui-autocomplete {background: #fff; max-width: 800px;}
 .content table {width: 100%;}
 
