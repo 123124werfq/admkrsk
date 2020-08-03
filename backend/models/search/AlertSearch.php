@@ -52,7 +52,11 @@ class AlertSearch extends Alert
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.alert')) {
-            $query->andFilterWhere(['id_alert' => AuthEntity::getEntityIds(Alert::class)]);
+            if (!empty($entityIds = AuthEntity::getEntityIds(Alert::class))) {
+                $query->andFilterWhere(['id_alert' => $entityIds]);
+            } else {
+                $query->andWhere('0=1');
+            }
         }
 
         $dataProvider = new ActiveDataProvider([
