@@ -276,7 +276,7 @@ $(document).ready(function() {
 
     $('body').delegate(".accept-checkbox",'click',function(){
         var inputID = $(this).data('id');
-        $("#formdynamic-"+inputID).prop('checked','true');
+        $("#formdynamic-"+inputID).prop('checked','true').change();
         $.fancybox.close();
         return false;
     });

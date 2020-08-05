@@ -102,7 +102,7 @@ class Helper
 	    $twig->addFilter($filter);
 
 	    $filter = new \Twig\TwigFilter('thumb', function ($data) {
-	    	if (is_array($data))
+	    	if (is_array($data) && empty($data['id']))
 	    		$data = array_shift($data);
 
 	    	if (empty($data['id']))
