@@ -1,0 +1,1 @@
+<?=(!empty($blockVars['html']))?$blockVars['html']->value:''?>
