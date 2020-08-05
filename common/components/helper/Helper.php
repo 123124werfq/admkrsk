@@ -105,7 +105,7 @@ class Helper
 	    	if (is_array($data))
 	    		$data = array_shift($data);
 
-	    	if (empty($data))
+	    	if (empty($data['id']))
 	    		return '';
 
 	    	$url =  \common\models\Media::thumb($data['id']);
