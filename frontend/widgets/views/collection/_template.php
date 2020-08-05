@@ -32,9 +32,9 @@
         else
             $templateValues[$alias] = $value;
 
-        /*if (isset($templateValues[$alias]) && is_array($templateValues[$alias]) && !$columns[$alias]->isRelation())
+        if (isset($templateValues[$alias]) && is_array($templateValues[$alias]) && !$columns[$alias]->isRelation())
             if (is_string(reset($templateValues[$alias])))
-                $templateValues[$alias] = implode('', $templateValues[$alias]);*/
+                $templateValues[$alias] = implode('', $templateValues[$alias]);
 
         //$template = str_replace('{'.$alias.'}', $replace , $template);
     }

@@ -188,8 +188,13 @@ class FormInput extends \yii\db\ActiveRecord
         {
             $vars = json_decode($this->values,true);
 
-            foreach ($vars as $key => $value)
-                $values[$value] = $value;
+            if (is_array($vars))
+            {
+                foreach ($vars as $key => $value)
+                    $values[$value] = $value;
+            }
+            elseif (!empty($this->values))
+                $values[$this->values] = $this->values;
         }
 
         return $values;
