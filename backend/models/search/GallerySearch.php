@@ -56,7 +56,11 @@ class GallerySearch extends GalleryModel
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.gallery')) {
-            $query->andFilterWhere(['id_gallery' => AuthEntity::getEntityIds(Gallery::class)]);
+            if (!empty($entityIds = AuthEntity::getEntityIds(Gallery::class))) {
+                $query->andFilterWhere(['id_gallery' => $entityIds]);
+            } else {
+                $query->andWhere('0=1');
+            }
         }
 
         $dataProvider = new ActiveDataProvider([

@@ -55,7 +55,11 @@ class ProjectSearch extends Project
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.project')) {
-            $query->andFilterWhere(['id_project' => AuthEntity::getEntityIds(Project::class)]);
+            if (!empty($entityIds = AuthEntity::getEntityIds(Project::class))) {
+                $query->andFilterWhere(['id_project' => $entityIds]);
+            } else {
+                $query->andWhere('0=1');
+            }
         }
 
         $dataProvider = new ActiveDataProvider([

@@ -52,7 +52,11 @@ class OpendataSearch extends Opendata
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.opendata')) {
-            $query->andFilterWhere(['id_opendata' => AuthEntity::getEntityIds(Opendata::class)]);
+            if (!empty($entityIds = AuthEntity::getEntityIds(Opendata::class))) {
+                $query->andFilterWhere(['id_opendata' => $entityIds]);
+            } else {
+                $query->andWhere('0=1');
+            }
         }
 
         $dataProvider = new ActiveDataProvider([

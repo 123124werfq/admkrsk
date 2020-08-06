@@ -59,7 +59,11 @@ class NewsSearch extends News
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.news')) {
-            $query->andFilterWhere(['id_news' => AuthEntity::getEntityIds(News::class)]);
+            if (!empty($entityIds = AuthEntity::getEntityIds(News::class))) {
+                $query->andFilterWhere(['id_news' => $entityIds]);
+            } else {
+                $query->andWhere('0=1');
+            }
         }
 
         $id_page = Yii::$app->request->get('id_page');

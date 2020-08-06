@@ -52,7 +52,11 @@ class FormInputTypeSearch extends FormInputType
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.formInputType')) {
-            $query->andFilterWhere(['id_type' => AuthEntity::getEntityIds(FormInputType::class)]);
+            if (!empty($entityIds = AuthEntity::getEntityIds(FormInputType::class))) {
+                $query->andFilterWhere(['id_type' => $entityIds]);
+            } else {
+                $query->andWhere('0=1');
+            }
         }
 
         $dataProvider = new ActiveDataProvider([

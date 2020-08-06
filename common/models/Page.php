@@ -502,6 +502,7 @@ class Page extends ActiveRecord
                 if (Yii::$app->authManager->checkAccess($userId, 'admin.cstProfile')) {
                     if ($contests = Page::findOne(['alias' => 'contests'])) {
                         $pageQuery->orWhere([
+                            'or',
                             ['id_page' => $contests->id_page],
                             ['id_page' => $contests->children()->select('id_page')]
                         ]);
