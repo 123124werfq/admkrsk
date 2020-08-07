@@ -40,7 +40,7 @@
 	            <?php }?>
 		    </div>
 		    <div class="col-third">
-		        <?=$this->render('/site/_rightmenu',['page'=>$page])?>
+		        <?= frontend\widgets\RightMenuWidget::widget(['page' => $page]) ?>
 		    </div>
 		</div>
 	</div>
