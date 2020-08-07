@@ -46,7 +46,7 @@
                                 'label' => 'Дата и время',
                                 'format' => 'raw',
                                 'value' => function($model) {
-                                    $str = $model->date . ' ' . sprintf("%02d", (int)$model->time/60 ) .':' . sprintf("%02d", (int)$model->time%60 );
+                                    $str = date("d.m.Y", strtotime($model->date)) . ' ' . sprintf("%02d", (int)$model->time/60 ) .':' . sprintf("%02d", (int)$model->time%60 );
                                     return "<nobr>".$str."</nobr>";
                                 }
                             ],
