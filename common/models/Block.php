@@ -310,6 +310,12 @@ class Block extends \yii\db\ActiveRecord
         ],
         'html'=> [
             'label'=>'HTML блок',
+            'vars'=>[
+                'html'=>[
+                    'name'=>'HTML',
+                    'type'=>BlockVar::TYPE_RICHTEXT,
+                ],
+            ]
         ],
     ];
 

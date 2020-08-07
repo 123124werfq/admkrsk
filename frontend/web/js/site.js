@@ -112,7 +112,7 @@ function visibleForm(visibleInputs,visibleElements,dom)
 
     for (var id_vinput in visibleInputs)
     {
-        $dom.find("#formdynamic-input"+id_vinput+", .formdynamic-input"+id_vinput+" input[name*='input"+id_vinput+"']").change(function(){
+        $dom.find("#formdynamic-input"+id_vinput+", .formdynamic-input"+id_vinput+" input[name*='input"+id_vinput+"']").on("change changeaccept",function(){
 
             if ($(this).data('id'))
                 var id = $(this).data('id');
@@ -275,18 +275,22 @@ $(document).ready(function() {
     });
 
     $('body').delegate(".accept-checkbox",'click',function(){
+
         var inputID = $(this).data('id');
-        $("#formdynamic-"+inputID).prop('checked','true').change();
+        $("#formdynamic-"+inputID).prop('checked','true').trigger('changeaccept');
         $.fancybox.close();
+
         return false;
     });
 
     $(".modal-checkbox").change(function(){
+
         if ($(this).is(':checked'))
         {
             $(this).prop('checked',false);
 
             var modal = $(this).data('modal');
+
             $.fancybox.open({
                 src: '#'+modal,
                 modal: true

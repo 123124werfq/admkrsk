@@ -13,3 +13,5 @@ foreach ($page->getBlocks()->where(['state'=>1])->all() as $key => $block)
 		echo frontend\widgets\Block::widget(['page' => $page,'block'=>$block]);
 }
 ?>
+
+<?= frontend\widgets\AlertWidget::widget(['page' => $page]) ?>

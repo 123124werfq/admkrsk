@@ -53,6 +53,7 @@ class PageSearch extends Page
      *
      * @return ActiveDataProvider
      * @throws InvalidConfigException
+     * @throws NotFoundHttpException
      */
     public function search($params)
     {
@@ -82,7 +83,11 @@ class PageSearch extends Page
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.page')) {
-            $query->andFilterWhere(['id_page' => AuthEntity::getEntityIds(Page::class)]);
+            if (!empty($entityIds = AuthEntity::getEntityIds(Page::class))) {
+                $query->andFilterWhere(['id_page' => $entityIds]);
+            } else {
+                $query->andWhere('0=1');
+            }
         }
 
         $id_partition = Yii::$app->request->get('id_partition',null);

@@ -52,7 +52,11 @@ class MenuSearch extends Menu
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.menu')) {
-            $query->andFilterWhere(['id_menu' => AuthEntity::getEntityIds(Menu::class)]);
+            if (!empty($entityIds = AuthEntity::getEntityIds(Menu::class))) {
+                $query->andFilterWhere(['id_menu' => $entityIds]);
+            } else {
+                $query->andWhere('0=1');
+            }
         }
 
         $dataProvider = new ActiveDataProvider([

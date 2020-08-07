@@ -50,7 +50,11 @@ class UserSearch extends User
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.user')) {
-            $query->andFilterWhere(['id' => AuthEntity::getEntityIds(User::class)]);
+            if (!empty($entityIds = AuthEntity::getEntityIds(User::class))) {
+                $query->andFilterWhere(['id' => $entityIds]);
+            } else {
+                $query->andWhere('0=1');
+            }
         }
 
         $dataProvider = new ActiveDataProvider([
