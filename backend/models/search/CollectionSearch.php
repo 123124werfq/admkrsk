@@ -52,7 +52,11 @@ class CollectionSearch extends Collection
 
         // add conditions that should always apply here
         if (!Yii::$app->user->can('admin.collection')) {
-            $query->andFilterWhere(['db_collection.id_collection' => AuthEntity::getEntityIds(Collection::class)]);
+            if (!empty($entityIds = AuthEntity::getEntityIds(Collection::class))) {
+                $query->andFilterWhere(['db_collection.id_collection' => $entityIds]);
+            } else {
+                $query->andWhere('0=1');
+            }
         }
 
         $dataProvider = new ActiveDataProvider([
