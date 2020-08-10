@@ -472,6 +472,7 @@ class Workflow extends Model
                     {
                       $path_parts = pathinfo($signFname);                
                       $zip->addFile($signFname, $path_parts['basename']);
+                      $filesToUnlink[] = $signFname;
                     }
 
                     $filesToUnlink[] = $docPath;
@@ -493,6 +494,7 @@ class Workflow extends Model
                     {
                       $path_parts = pathinfo($signFname);                
                       $zip->addFile($signFname, $path_parts['basename']);
+                      $filesToUnlink[] = $signFname;
                     }
 
                     $filesToUnlink[] = $docPath;
