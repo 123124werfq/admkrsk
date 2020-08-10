@@ -468,7 +468,7 @@ class Workflow extends Model
                     if($signFname = $this->makeSign($docPath))
                     {
                       $path_parts = pathinfo($signFname);                
-                      $zip->addFile($docPath, $path_parts['basename'].'.sig');
+                      $zip->addFile($signFname, $path_parts['basename']);
                     }
 
                     $filesToUnlink[] = $docPath;
