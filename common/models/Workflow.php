@@ -368,26 +368,11 @@ class Workflow extends Model
     public function makeSign($filename)
     {
       
-      //if(!file_exists($filename))
-      //  return false;
-
-      /*
-      $d = system('pwd');
-      var_dump($d);
-
-      $d = system('whoami');
-      var_dump($d);
-      */
-
-      //$pemPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.pem');
-      //$keyPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.key');
-
-      //$pemPath = escapeshellcmd('/usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem');
-      //$keyPath = escapeshellcmd('/usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem');
+      if(!file_exists($filename))
+        return false;
 
       $pemPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem');
       $keyPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem');
-
 
       $filePath = escapeshellcmd($filename);
       $path_parts = pathinfo($filename);
@@ -417,22 +402,13 @@ class Workflow extends Model
         fwrite($fp,  base64_decode($b64));
 
       }
-die();
-*/
-      //$command = "openssl cms -sign -signer $pemPath -inkey $keyPath -binary -in $filePath -outform der -out $resultPath"; // openssl cms -sign -signer /usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem -inkey /usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem -binary -in /usr/local/var/www/admkrsk.local/admkrsk/frontend/runtime/p7s/req_7a06c1c5-0218-4672-a6eb-7ef46529803e.xml -outform der -out /usr/local/var/www/admkrsk.local/admkrsk/frontend/runtime/p7s/req_7a06c1c5-0218-4672-a6eb-7ef46529803e.xml.sig
-      //$command = "openssl version";
+      */
       $command = "openssl cms -sign -signer $pemPath -inkey $keyPath -binary -in $filePath  -nosmimecap -md sha1 -outform der -out $resultPath";
-echo $command;
       exec($command, $output, $return_var);
 
       $result =  file_exists($resultPath);
 
-      var_dump($result);
-      return $result;
-      //$output = shell_exec($command);
-      //var_dump($output);
-      //var_dump($return_var);
-      //return $output;
+      return $result?$resultPath:false;
     }
 
     public function generateArchive($guid, $attachments = [], $formFile = false)
