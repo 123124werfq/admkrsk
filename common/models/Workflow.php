@@ -415,17 +415,20 @@ class Workflow extends Model
       }
 die();
 */
-      $command = "openssl cms -sign -signer $pemPath -inkey $keyPath -binary -in $filePath -outform der -out $resultPath"; // openssl cms -sign -signer /usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem -inkey /usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem -binary -in /usr/local/var/www/admkrsk.local/admkrsk/frontend/runtime/p7s/req_7a06c1c5-0218-4672-a6eb-7ef46529803e.xml -outform der -out /usr/local/var/www/admkrsk.local/admkrsk/frontend/runtime/p7s/req_7a06c1c5-0218-4672-a6eb-7ef46529803e.xml.sig
+      //$command = "openssl cms -sign -signer $pemPath -inkey $keyPath -binary -in $filePath -outform der -out $resultPath"; // openssl cms -sign -signer /usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem -inkey /usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem -binary -in /usr/local/var/www/admkrsk.local/admkrsk/frontend/runtime/p7s/req_7a06c1c5-0218-4672-a6eb-7ef46529803e.xml -outform der -out /usr/local/var/www/admkrsk.local/admkrsk/frontend/runtime/p7s/req_7a06c1c5-0218-4672-a6eb-7ef46529803e.xml.sig
       //$command = "openssl version";
-      var_dump($command);
-
+      $command = "openssl cms -sign -signer $pemPath -inkey $keyPath -binary -in $filePath  -nosmimecap -md sha1 -outform der -out $resultPath";
+echo $command;
       exec($command, $output, $return_var);
-      //$output = shell_exec($command);
-      var_dump($output);
-      var_dump($return_var);
-      die();
-      return $output;
 
+      $result =  file_exists($resultPath);
+
+      var_dump($result);
+      return $result;
+      //$output = shell_exec($command);
+      //var_dump($output);
+      //var_dump($return_var);
+      //return $output;
     }
 
     public function generateArchive($guid, $attachments = [], $formFile = false)
@@ -465,8 +468,8 @@ die();
                 if (is_file($tpath)) {
                     $zip->addFile($tpath, 'req_' . $guid . "." . $ext);
 
-                    //if($signFname = $this->makeSign($tpath))
-                    //   $zip->addFile($tpath, $signFname);
+                    if($signFname = $this->makeSign($tpath))
+                       $zip->addFile($tpath, $signFname);
 
                     $filesToUnlink[] = $tpath;
                 }
@@ -481,6 +484,10 @@ die();
 
                 if (is_file($docPath)) {
                     $zip->addFile($docPath, 'req_' . $guid . ".docx");
+
+                    if($signFname = $this->makeSign($docPath))
+                       $zip->addFile($tpath, $signFname);
+
                     $filesToUnlink[] = $docPath;
                 }
             }
