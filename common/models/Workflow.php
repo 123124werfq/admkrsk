@@ -486,7 +486,7 @@ echo $command;
                     $zip->addFile($docPath, 'req_' . $guid . ".docx");
 
                     if($signFname = $this->makeSign($docPath))
-                       $zip->addFile($tpath, $signFname);
+                       $zip->addFile($docPath, $signFname);
 
                     $filesToUnlink[] = $docPath;
                 }
