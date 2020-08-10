@@ -382,8 +382,12 @@ class Workflow extends Model
       //$pemPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.pem');
       //$keyPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.key');
 
-      $pemPath = escapeshellcmd('/usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem');
-      $keyPath = escapeshellcmd('/usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem');
+      //$pemPath = escapeshellcmd('/usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem');
+      //$keyPath = escapeshellcmd('/usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem');
+
+      $pemPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem');
+      $keyPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem');
+
 
       $filePath = escapeshellcmd($filename);
       $path_parts = pathinfo($filename);
