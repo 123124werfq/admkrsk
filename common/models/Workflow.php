@@ -408,7 +408,7 @@ class Workflow extends Model
 
       $result =  file_exists($resultPath);
 
-      return $result?$resultPath:false;
+      return $result?($path_parts['basename'].'.sig'):false;
     }
 
     public function generateArchive($guid, $attachments = [], $formFile = false)
