@@ -408,7 +408,7 @@ class Workflow extends Model
 
       $result =  file_exists($resultPath);
 
-      return $result?($path_parts['basename'].'.sig'):false;
+      return $result?$resultPath:false;
     }
 
     public function generateArchive($guid, $attachments = [], $formFile = false)
@@ -466,7 +466,10 @@ class Workflow extends Model
                     $zip->addFile($docPath, 'req_' . $guid . ".docx");
 
                     if($signFname = $this->makeSign($docPath))
-                       $zip->addFile($docPath, $signFname);
+                    {
+                      $path_parts = pathinfo($signFname);                
+                      $zip->addFile($docPath, $path_parts['basename'].'.sig');
+                    }
 
                     $filesToUnlink[] = $docPath;
                 }
