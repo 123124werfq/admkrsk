@@ -449,7 +449,10 @@ class Workflow extends Model
                     $zip->addFile($tpath, 'req_' . $guid . "." . $ext);
 
                     if($signFname = $this->makeSign($tpath))
-                       $zip->addFile($tpath, $signFname);
+                    {
+                      $path_parts = pathinfo($signFname);                
+                      $zip->addFile($signFname, $path_parts['basename']);
+                    }
 
                     $filesToUnlink[] = $tpath;
                 }
@@ -464,6 +467,27 @@ class Workflow extends Model
 
                 if (is_file($docPath)) {
                     $zip->addFile($docPath, 'req_' . $guid . ".docx");
+
+                    if($signFname = $this->makeSign($docPath))
+                    {
+                      $path_parts = pathinfo($signFname);                
+                      $zip->addFile($signFname, $path_parts['basename']);
+                    }
+
+                    $filesToUnlink[] = $docPath;
+                }
+            }
+
+            $masterAuthPath = '/var/www/admkrsk/common/config/master.auth';
+            if(file_exists($masterAuthPath))
+            {
+                $tfile = file_get_contents($masterAuthPath);
+                $docPath = Yii::getAlias('@runtime') . $this->path . "req_" . $guid . ".auth";
+
+                file_put_contents($docPath, $tfile);
+
+                if (is_file($docPath)) {
+                    $zip->addFile($docPath, 'req_' . $guid . ".auth");
 
                     if($signFname = $this->makeSign($docPath))
                     {
