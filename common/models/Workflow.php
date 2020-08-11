@@ -457,6 +457,8 @@ class Workflow extends Model
 
         $filesToUnlink = [];
 
+        $xmlParts = [];
+
         if ($zip->open($zip_path,\ZIPARCHIVE::CREATE) === TRUE)
         {
             foreach ($attachments as $key => $att)
@@ -489,6 +491,18 @@ class Workflow extends Model
                     }
 
                     $filesToUnlink[] = $tpath;
+
+                    $dg = $this->generateDigestForFile($tpath);
+                    $fn = $path_parts['basename'];
+
+                    $xmlParts[] = <<<XMLPARTS1
+<rev:AppliedDocument>
+  <rev:Name>$fn</rev:Name>
+  <rev:URL>/$fn</rev:URL>
+  <rev:DigestValue>$dg</rev:DigestValue>
+  <Description>ПРИЛОЖЕНИЕ $key</Description>
+</rev:AppliedDocument>                    
+XMLPARTS1;
                 }
             }
 
@@ -510,6 +524,18 @@ class Workflow extends Model
                     }
 
                     $filesToUnlink[] = $docPath;
+
+                    $dg = $this->generateDigestForFile($docPath);
+                    $fn = $path_parts['basename'];
+
+                    $xmlParts[] = <<<XMLPARTS2
+      <rev:AppliedDocument>
+        <rev:Name>$fn</rev:Name>
+        <rev:URL>/$fn</rev:URL>
+        <rev:DigestValue>$dg</rev:DigestValue>
+        <Description>ПРИЛОЖЕНИЕ $key</Description>
+      </rev:AppliedDocument>                    
+XMLPARTS2;                   
                 }
             }
 
@@ -532,8 +558,34 @@ class Workflow extends Model
                     }
 
                     $filesToUnlink[] = $docPath;
+
+                    $dg = $this->generateDigestForFile($docPath);
+                    $fn = $path_parts['basename'];
+
+                    $xmlParts[] = <<<XMLPARTS2
+      <rev:AppliedDocument>
+        <rev:Name>$fn</rev:Name>
+        <rev:URL>/$fn</rev:URL>
+        <rev:DigestValue>$dg</rev:DigestValue>
+        <Description>ПРИЛОЖЕНИЕ $key</Description>
+      </rev:AppliedDocument>                    
+XMLPARTS2;                      
                 }
             }
+
+            // теперь надо составить список всех файлов и его тоже подписать
+            $xmlPath = Yii::getAlias('@runtime') . $this->path . "req_" . $guid . ".xml";
+            $xmlContents = '<rev:AppliedDocuments xmlns:rev="http://smev.gosuslugi.ru/rev120315">\n'.implode('\n', $xmlParts).'\n</rev:AppliedDocuments>';
+            file_put_contents($xmlPath, $xmlContents);
+
+            $zip->addFile($xmlPath, 'req_' . $guid . ".xml");
+
+            if($signFname = $this->makeSign($xmlPath))
+            {
+              $path_parts = pathinfo($signFname);                
+              $zip->addFile($signFname, $path_parts['basename']);
+              $filesToUnlink[] = $signFname;
+            }   
 
             $zip->close();
 
@@ -543,6 +595,19 @@ class Workflow extends Model
 
             return $zip_path;
         }
+    }
+
+    private function generateDigestForFile($filePath)
+    {
+      if(!file_exists($filePath))
+        return false;
+      $fp = fopen($filePath, "rb");
+      $binary = fread($fp, filesize($filePath));
+      $attachment64 = base64_encode($binary);
+      $attachment64 = chunk_split($attachment64, 76, "\r\n"); 
+      $digest = base64_encode(pack('H*', hash('sha1',$binary)));       
+
+      return $digest;
     }
 
     public function generateServiceRequest(CollectionRecord $record)
