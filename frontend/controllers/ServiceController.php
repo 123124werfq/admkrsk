@@ -343,17 +343,18 @@ class ServiceController extends Controller
 
                         $rawResult = $wf->sendServiceMultipartMessage($archivePath);
                         
-                        echo $rawResult;
-
-                        die();
+                        //echo $rawResult;
+                        //die();
                         
                         //$opres = $wf->sendServiceMessage($appeal);
+
+                        $opres = strpos($rawResult, "IVALID");
 
 
                         $integration = new Integration;
                         $integration->system = Integration::SYSTEM_SED;
                         $integration->direction = Integration::DIRECTION_OUTPUT;
-                        if($opres)
+                        if($opres < 0)
                             $integration->status = Integration::STATUS_OK;
                         else
                             $integration->status = Integration::STATUS_ERROR;
@@ -365,7 +366,8 @@ class ServiceController extends Controller
                             'appeal' => $appeal->number_internal ?? null,
                             'user' => $appeal->id_user ?? null,
                             'target' => $appeal->id_target ?? null,
-                            'record' => $appeal->record ?? null
+                            'record' => $appeal->record ?? null,
+                            'rawResponse' => $rawResult
                         ]);
 
                         $integration->created_at = time();
