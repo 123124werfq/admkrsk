@@ -574,7 +574,7 @@ XMLPARTS2;
 
             // теперь надо составить список всех файлов и его тоже подписать
             $xmlPath = Yii::getAlias('@runtime') . $this->path . "req_" . $guid . ".xml";
-            $xmlContents = '<rev:AppliedDocuments xmlns:rev="http://smev.gosuslugi.ru/rev120315">\n'.implode('\n', $xmlParts).'\n</rev:AppliedDocuments>';
+            $xmlContents = "<rev:AppliedDocuments xmlns:rev=\"http://smev.gosuslugi.ru/rev120315\">\n".implode("\n", $xmlParts)."\n</rev:AppliedDocuments>";
             file_put_contents($xmlPath, $xmlContents);
 
             $zip->addFile($xmlPath, 'req_' . $guid . ".xml");
