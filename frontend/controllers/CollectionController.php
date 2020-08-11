@@ -164,7 +164,7 @@ class CollectionController extends \yii\web\Controller
         fclose($out);
     }
 
-	public function actionRecordList($id,$q='')
+	public function actionRecordList($id,$q='',$id_column=null)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -173,7 +173,7 @@ class CollectionController extends \yii\web\Controller
         if (empty($collection))
             throw new NotFoundHttpException('The requested page does not exist.');
 
-        $collection = $collection->getArray();
+        $collection = $collection->getArray($id_column);
 
         $i = 0;
         $results = [];
