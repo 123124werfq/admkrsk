@@ -533,7 +533,7 @@ XMLPARTS1;
         <rev:Name>$fn</rev:Name>
         <rev:URL>/$fn</rev:URL>
         <rev:DigestValue>$dg</rev:DigestValue>
-        <Description>ПРИЛОЖЕНИЕ $key</Description>
+        <Description>ЗАЯВЛЕНИЕ</Description>
       </rev:AppliedDocument>                    
 XMLPARTS2;                   
                 }
