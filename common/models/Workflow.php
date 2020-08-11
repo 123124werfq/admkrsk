@@ -564,10 +564,9 @@ XMLPARTS2;
 
                     $xmlParts[] = <<<XMLPARTS2
       <rev:AppliedDocument>
-        <rev:Name>$fn</rev:Name>
+        <rev:Name>Удостоверение пользователя (ЕСИА).auth</rev:Name>
         <rev:URL>/$fn</rev:URL>
         <rev:DigestValue>$dg</rev:DigestValue>
-        <Description>ПРИЛОЖЕНИЕ $key</Description>
       </rev:AppliedDocument>                    
 XMLPARTS2;                      
                 }
