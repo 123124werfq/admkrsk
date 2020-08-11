@@ -363,6 +363,37 @@ class Workflow extends Model
         return $this->sendPost($opres, $this->sendServiceURL);
     }
 
+
+    public function sendServiceMultipartMessage($fliePathToSend)
+    {
+      $url = $this->sendServiceURL;
+
+      if(!file_exists($fliePathToSend))
+        return false;
+
+      $body = file_get_contents($fliePathToSend);
+
+      $headers = [
+        //'SOAPAction:urn:#Operation_03_00_004FL',
+        'Content-Type: multipart/related; charset=utf-8',
+        'Content-Length: '.strlen($body),
+        'Content-Transfer-Encoding: text'
+      ];
+
+      if( $curl = curl_init() ) {
+          curl_setopt($curl, CURLOPT_URL, $url);
+          curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+          curl_setopt($curl, CURLOPT_POST, true);
+          curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
+          curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+          curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+          $server_output = curl_exec($curl);
+
+        return $server_output;
+      }      
+    }
+
     public function getServiceMessage($raw)
     {
 

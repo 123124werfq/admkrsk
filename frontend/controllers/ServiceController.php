@@ -341,9 +341,13 @@ class ServiceController extends Controller
                         if($archivePath)
                             $wf->xopCreate($archivePath);
 
+                        $rawResult = $wf->sendServiceMultipartMessage($appeal);
+                        
+                        echo $rawResult;
+
                         die();
                         
-                        $opres = $wf->sendServiceMessage($appeal);
+                        //$opres = $wf->sendServiceMessage($appeal);
 
 
                         $integration = new Integration;
