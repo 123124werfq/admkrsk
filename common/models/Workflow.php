@@ -493,7 +493,7 @@ class Workflow extends Model
                     $filesToUnlink[] = $tpath;
 
                     $dg = $this->generateDigestForFile($tpath);
-                    $fn = $path_parts['basename'];
+                    $fn = "req_" . $guid . "." . $ext;
 
                     $xmlParts[] = <<<XMLPARTS1
 <rev:AppliedDocument>
@@ -526,7 +526,7 @@ XMLPARTS1;
                     $filesToUnlink[] = $docPath;
 
                     $dg = $this->generateDigestForFile($docPath);
-                    $fn = $path_parts['basename'];
+                    $fn = "req_" . $guid . ".docx";
 
                     $xmlParts[] = <<<XMLPARTS2
       <rev:AppliedDocument>
@@ -560,7 +560,7 @@ XMLPARTS2;
                     $filesToUnlink[] = $docPath;
 
                     $dg = $this->generateDigestForFile($docPath);
-                    $fn = $path_parts['basename'];
+                    $fn = "req_" . $guid . ".auth";
 
                     $xmlParts[] = <<<XMLPARTS2
       <rev:AppliedDocument>
