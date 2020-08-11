@@ -336,11 +336,20 @@ class ServiceController extends Controller
                         $export_path = $record->collection->form->makeDoc($record, ['number_internal' => (string)$appeal->number_internal, 'date' => date("d.m.Y", $appeal->date)]);
 
                         $wf = new Workflow;
-                        $wf->generateArchive($idents['guid'], $attachments, $export_path);
-                        die();
+                        $archivePath = $wf->generateArchive($idents['guid'], $attachments, $export_path);
                         // ... тут XML
+                        if($archivePath)
+                            $wf->xopCreate($archivePath);
+
+                        $rawResult = $wf->sendServiceMultipartMessage($appeal);
+                        
+                        echo $rawResult;
+
+                        die();
                         
                         //$opres = $wf->sendServiceMessage($appeal);
+
+
                         $integration = new Integration;
                         $integration->system = Integration::SYSTEM_SED;
                         $integration->direction = Integration::DIRECTION_OUTPUT;

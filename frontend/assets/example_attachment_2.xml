@@ -1,0 +1,58 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:int="http://intertrust.ru/" xmlns:rev="http://smev.gosuslugi.ru/rev120315" xmlns:admkrsk="http://smev.admkrsk.ru/v1.0">
+  <soapenv:Header>		
+    <wsse:Security soapenv:actor="http://smev.gosuslugi.ru/actors/smev">
+		<wsse:BinarySecurityToken EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary" ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3" wsu:Id="SenderCertificate">MIIEJzCCAxOgAwIBAgIQLRPgc19QHIJIfqrdlOJ/rjAJBgUrDgMCHQUAMIGXMQsw CQYDVQQGEwJSVTEbMBkGA1UECBMSS3Jhc25veWFyc2tpeSBrcmF5MRQwEgYDVQQH EwtLcmFzbm95YXJzazEoMCYGA1UEChMfS3Jhc25veWFyc2sgQ2l0eSBBZG1pbmlz dHJhdGlvbjEMMAoGA1UECxMDVUlTMR0wGwYDVQQDExRBRE1LUlNLLVRFU1QtUk9P VC1DQTAgFw0xMjEyMzExNjAwMDBaGA8yMDk5MTIzMTE2MDAwMFowgZwxCzAJBgNV BAYTAlJVMRswGQYDVQQIExJLcmFzbm95YXJza2l5IGtyYXkxFDASBgNVBAcTC0ty YXNub3lhcnNrMSgwJgYDVQQKEx9LcmFzbm95YXJzayBDaXR5IEFkbWluaXN0cmF0 aW9uMQwwCgYDVQQLEwNVSVMxIjAgBgNVBAMTGUFETUtSU0stVEVTVC1TRVJWSUNF LVNJVEUwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAN1NinggsY6Q6EcaWJLe rxu9a4IyaEDejwcDWxuhYkBVYVsbFDtNu5cYWIZH0gLmm3KlnVYwV2jSTQ6o0r1z TKQcwvqd1PboXFUJzFY9jrnEUGNHsUmZH7vFM4jRGZFAVlapmBCOqSI29PiosAzY basf8XR5Wn9cRJ5vooo7QzS5AgMBAAGjgfEwge4wHQYDVR0lBBYwFAYIKwYBBQUH AwEGCCsGAQUFBwMCMIHMBgNVHQEEgcQwgcGAEHU9JD0e1ZppnIyZpG+NLMKhgZow gZcxCzAJBgNVBAYTAlJVMRswGQYDVQQIExJLcmFzbm95YXJza2l5IGtyYXkxFDAS BgNVBAcTC0tyYXNub3lhcnNrMSgwJgYDVQQKEx9LcmFzbm95YXJzayBDaXR5IEFk bWluaXN0cmF0aW9uMQwwCgYDVQQLEwNVSVMxHTAbBgNVBAMTFEFETUtSU0stVEVT VC1ST09ULUNBghCSz/d+rLh4lUjnZPCGJYOmMAkGBSsOAwIdBQADggEBABkdZ9na W0M+AW9XAWTLTApUrju/gRevzAIY8XbwSkmIAO0ljXQeR0RFeYF5AI0+70w/lFYP yTNFmJh5GAgdNUIPsWbKI4WE8dZKUY91jkj/U9fX4vLMFK6rKrF9ZXwyS3Nxs0QT gloPZSPibd/OlYuzrZc6v/RMxS8ezRpZ9qS2GtB+I4w7CudGDD32uaWWMnZQRwH2 wtciRk+p3vCylyvGtEoKRc4HWMjCtf0/BcglxXEWyy7K/frzq0YJ8w5qgv7lSrFE /2jYQCrVONPqTNEcFkap/ToZMv5jRxXoJN7G7iRqWPu29M4XBnBBv7MEDNHa/gOc eroYoVOZ0rSZ444=</wsse:BinarySecurityToken>
+    </wsse:Security>
+  </soapenv:Header>
+  <soapenv:Body wsu:Id="BodyId-F01F22D69F264C8CB33F8E5C95DDE883" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+    <int:Input_03_00_004FL>
+      <rev:Message>
+        <rev:Sender>
+          <rev:Code>OSAK01241</rev:Code>
+          <rev:Name>Официальный сайт администрации города Красноярска</rev:Name>
+        </rev:Sender>
+        <rev:Recipient>
+          <rev:Code>236402241</rev:Code>
+          <rev:Name>Электронный документооборот администрации города Красноярска</rev:Name>
+        </rev:Recipient>
+        <rev:Originator>
+          <rev:Code>OSAK01241</rev:Code>
+          <rev:Name>Официальный сайт администрации города Красноярска</rev:Name>
+        </rev:Originator>
+        <rev:ServiceName>{target-reestr_number}</rev:ServiceName>
+        <rev:TypeCode>GSRV</rev:TypeCode>
+        <rev:Status>REQUEST</rev:Status>
+        <rev:Date>06-02-2020</rev:Date>
+        <rev:ExchangeType>1</rev:ExchangeType>
+        <rev:ServiceCode>01/00/01</rev:ServiceCode>
+        <rev:CaseNumber>100</rev:CaseNumber>
+      </rev:Message>
+      <rev:MessageData>
+        <rev:AppData>
+          <OrderID>100</OrderID>
+          <ServiceCode>01/00/01</ServiceCode>
+          <ServiceTarget>ТЕСТ С ВЛОЖЕНИЕМ</ServiceTarget>
+          <ServicePlace>Город</ServicePlace>
+          <DocDate>06-02-2020</DocDate>
+          <FL_FIO LastName="ИВАНОВ" FirstName="ИВАН" MiddleName="ИВАНОВИЧ" />
+          <FL_SNILS>{snils}</FL_SNILS>
+          <FL_PASSPORT PassportSeriesAndNum="{passport_serie} {passport_number}" PassportWhoIssued="{passport_issued}" PassportWhenIssued="{passport_date}" />
+          <ADR ADR_Country="{addr_country}" ADR_Region_Code="{addr_region_code}" ADR_Region="{addr_region}" ADR_City_Code="{addr_city_code}" ADR_City="{addr_city}" ADR_City_District="{addr_district}" ADR_Street_Code="{addr_street_code}" ADR_Street="{addr_street}" ADR_House="{addr_house}" ADR_Zip="{addr_zip}" />
+          <FL_ContactInfo Tel="000000000" />
+          <FL_SUBJECT>TEST</FL_SUBJECT>
+          <FIELDS>
+            {fields_list}
+          </FIELDS>
+          <AuthorProfile ConfidenceLevel="{confidence_level}" Login="{esialogin}" RequestRegNum="{regnum}" />
+        </rev:AppData>
+        <rev:AppDocument>
+          <rev:RequestCode>req_ccc15b6d-41bb-47b1-b0b0-b5dbc97d13cb</rev:RequestCode>
+          <rev:Reference>
+            <xop:Include href="cid:5aeaa450-17f0-4484-b845-a8480c363444" xmlns:xop="http://www.w3.org/2004/08/xop/include" />
+          </rev:Reference>
+          <rev:DigestValue>S/3WvbzesLpRqxGzbO6AZvJN0tA=</rev:DigestValue>
+        </rev:AppDocument>
+      </rev:MessageData>
+    </int:Input_03_00_004FL>
+  </soapenv:Body>
+</soapenv:Envelope>
