@@ -40,7 +40,7 @@ class AppAsset extends AssetBundle
         "/js/tinymce/plugins/plugins.js",
         "js/jquerybuilder/query-builder.standalone.min.js",
         "js/jquerybuilder/i18n/query-builder.ru.js",
-        "js/admin.js?v=7"
+        "js/admin.js?v=8"
 //        'js/select2/js/select2.js', // если миша захочет раскомментить, надо сначала файл туда положить
     ];
     public $depends = [

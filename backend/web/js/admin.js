@@ -321,6 +321,15 @@ function reordModels($block,$data)
 
 jQuery(document).ready(function()
 {
+    $("body").delegate('.dz-remove','click',function(){
+
+        var form = $(this).closest('form');
+        $(this).closest('.fileupload_item').remove();
+        recalculateFormSize(form);
+        return false;
+
+    });
+
     $(".selectActionDropDown a").click(function(){
 
       var $link = $(this);

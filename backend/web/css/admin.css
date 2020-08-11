@@ -35,6 +35,8 @@ img {max-width: 100%;}
     width: 30px;
 }
 
+.dz-remove {font-size: 20px; display: inline-block; padding: 10px;}
+
 .tox-dialog__disable-scroll #FormElement {display: none!important;}
 
 .longtext {max-height: 129px; text-overflow: ellipsis; overflow: hidden;}
