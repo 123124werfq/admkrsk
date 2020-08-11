@@ -368,22 +368,11 @@ class Workflow extends Model
     public function makeSign($filename)
     {
       
-      //if(!file_exists($filename))
-      //  return false;
+      if(!file_exists($filename))
+        return false;
 
-      /*
-      $d = system('pwd');
-      var_dump($d);
-
-      $d = system('whoami');
-      var_dump($d);
-      */
-
-      //$pemPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.pem');
-      //$keyPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSK-TEST-ESIA.key');
-
-      $pemPath = escapeshellcmd('/usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem');
-      $keyPath = escapeshellcmd('/usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem');
+      $pemPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem');
+      $keyPath = escapeshellcmd('/var/www/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem');
 
       $filePath = escapeshellcmd($filename);
       $path_parts = pathinfo($filename);
@@ -413,19 +402,13 @@ class Workflow extends Model
         fwrite($fp,  base64_decode($b64));
 
       }
-die();
-*/
-      $command = "openssl cms -sign -signer $pemPath -inkey $keyPath -binary -in $filePath -outform der -out $resultPath"; // openssl cms -sign -signer /usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem -inkey /usr/local/var/www/admkrsk.local/admkrsk/common/config/ADMKRSKTESTSERVICESITE_cert_out.pem -binary -in /usr/local/var/www/admkrsk.local/admkrsk/frontend/runtime/p7s/req_7a06c1c5-0218-4672-a6eb-7ef46529803e.xml -outform der -out /usr/local/var/www/admkrsk.local/admkrsk/frontend/runtime/p7s/req_7a06c1c5-0218-4672-a6eb-7ef46529803e.xml.sig
-      //$command = "openssl version";
-      var_dump($command);
-
+      */
+      $command = "openssl cms -sign -signer $pemPath -inkey $keyPath -binary -in $filePath  -nosmimecap -md sha1 -outform der -out $resultPath";
       exec($command, $output, $return_var);
-      //$output = shell_exec($command);
-      var_dump($output);
-      var_dump($return_var);
-      die();
-      return $output;
 
+      $result =  file_exists($resultPath);
+
+      return $result?$resultPath:false;
     }
 
     public function generateArchive($guid, $attachments = [], $formFile = false)
@@ -465,8 +448,11 @@ die();
                 if (is_file($tpath)) {
                     $zip->addFile($tpath, 'req_' . $guid . "." . $ext);
 
-                    //if($signFname = $this->makeSign($tpath))
-                    //   $zip->addFile($tpath, $signFname);
+                    if($signFname = $this->makeSign($tpath))
+                    {
+                      $path_parts = pathinfo($signFname);                
+                      $zip->addFile($signFname, $path_parts['basename']);
+                    }
 
                     $filesToUnlink[] = $tpath;
                 }
@@ -481,13 +467,43 @@ die();
 
                 if (is_file($docPath)) {
                     $zip->addFile($docPath, 'req_' . $guid . ".docx");
+
+                    if($signFname = $this->makeSign($docPath))
+                    {
+                      $path_parts = pathinfo($signFname);                
+                      $zip->addFile($signFname, $path_parts['basename']);
+                      $filesToUnlink[] = $signFname;
+                    }
+
+                    $filesToUnlink[] = $docPath;
+                }
+            }
+
+            $masterAuthPath = '/var/www/admkrsk/common/config/master.auth';
+            if(file_exists($masterAuthPath))
+            {
+                $tfile = file_get_contents($masterAuthPath);
+                $docPath = Yii::getAlias('@runtime') . $this->path . "req_" . $guid . ".auth";
+
+                file_put_contents($docPath, $tfile);
+
+                if (is_file($docPath)) {
+                    $zip->addFile($docPath, 'req_' . $guid . ".auth");
+
+                    if($signFname = $this->makeSign($docPath))
+                    {
+                      $path_parts = pathinfo($signFname);                
+                      $zip->addFile($signFname, $path_parts['basename']);
+                      $filesToUnlink[] = $signFname;
+                    }
+
                     $filesToUnlink[] = $docPath;
                 }
             }
 
             $zip->close();
 
-            $filesToUnlink = []; //временно
+            //$filesToUnlink = []; //временно
             foreach ($filesToUnlink as $ufile)
                 if(is_file($ufile)) unlink($ufile);
 

@@ -337,9 +337,10 @@ class ServiceController extends Controller
 
                         $wf = new Workflow;
                         $wf->generateArchive($idents['guid'], $attachments, $export_path);
-
+                        die();
                         // ... тут XML
-                        $opres = $wf->sendServiceMessage($appeal);
+                        
+                        //$opres = $wf->sendServiceMessage($appeal);
                         $integration = new Integration;
                         $integration->system = Integration::SYSTEM_SED;
                         $integration->direction = Integration::DIRECTION_OUTPUT;
@@ -347,6 +348,7 @@ class ServiceController extends Controller
                             $integration->status = Integration::STATUS_OK;
                         else
                             $integration->status = Integration::STATUS_ERROR;
+                        
 
                         $integration->description = ' Запрос услуги ' . $appeal->number_internal;
 
