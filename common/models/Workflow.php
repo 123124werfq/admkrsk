@@ -494,6 +494,7 @@ class Workflow extends Model
 
                     $dg = $this->generateDigestForFile($tpath);
                     $fn = "req_" . $guid . "." . $ext;
+                    $afn = "Приложение_" . "_". $key . "_" . $guid . "." . $ext;
 
                     $xmlParts[] = <<<XMLPARTS1
 <rev:AppliedDocument>
@@ -527,10 +528,11 @@ XMLPARTS1;
 
                     $dg = $this->generateDigestForFile($docPath);
                     $fn = "req_" . $guid . ".docx";
+                    $afn = "Форма_" . $guid . ".docx";
 
                     $xmlParts[] = <<<XMLPARTS2
       <rev:AppliedDocument>
-        <rev:Name>$fn</rev:Name>
+        <rev:Name>$afn</rev:Name>
         <rev:URL>/$fn</rev:URL>
         <rev:DigestValue>$dg</rev:DigestValue>
         <Description>ЗАЯВЛЕНИЕ</Description>

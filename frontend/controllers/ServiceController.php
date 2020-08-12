@@ -348,13 +348,13 @@ class ServiceController extends Controller
                         
                         //$opres = $wf->sendServiceMessage($appeal);
 
-                        $opres = strpos($rawResult, "IVALID");
+                        $opres = strpos($rawResult, "INVALID");
 
 
                         $integration = new Integration;
                         $integration->system = Integration::SYSTEM_SED;
                         $integration->direction = Integration::DIRECTION_OUTPUT;
-                        if($opres < 0)
+                        if($opres <= 0)
                             $integration->status = Integration::STATUS_OK;
                         else
                             $integration->status = Integration::STATUS_ERROR;
