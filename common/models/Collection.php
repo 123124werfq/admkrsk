@@ -346,7 +346,7 @@ class Collection extends ActiveRecord
     {
         if (!empty($id_column))
             $label = [$id_column];
-        else {
+        else
             $label = (!empty($this->label)) ? $this->label : [];
 
         $data = $this->getData($label);

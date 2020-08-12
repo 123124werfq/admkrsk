@@ -16,7 +16,6 @@ if (!empty($model->collectionRecord->collection->form->template) || !empty($mode
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="service-appeal-view">
-
     <div class="ibox">
         <div class="ibox-content">
             <?= DetailView::widget([
@@ -46,31 +45,9 @@ if (!empty($model->collectionRecord->collection->form->template) || !empty($mode
 
     <div class="ibox">
         <div class="ibox-content">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <td><strong>Поле</strong></td>
-                <td><strong>Значение</strong></td>
-            </tr>
-            </thead>
-            <tbody>
-        <?php foreach ($formFields as $alias => $field) {
-
-            foreach ($attachments as $filename)
-            {
-                $pi = pathinfo($filename);
-
-                if("[{$pi['filename']}]" == $field['value'])
-                    $field['value'] = "<a href=$filename target='_blank'>Скачать</a>";
-            }
-            ?>
-            <tr>
-                <td><?=$field['name']?></td>
-                <td><?=$field['value']?></td>
-            </tr>
-        <?php } ?>
-            </tbody>
-        </table>
+            <?=frontend\widgets\CollectionRecordWidget::widget([
+                'collectionRecord'=>$collectionRecord,
+            ]);?>
         </div>
     </div>
 </div>

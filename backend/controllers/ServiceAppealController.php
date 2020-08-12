@@ -59,28 +59,13 @@ class ServiceAppealController extends Controller
         if (empty($sa->collectionRecord))
             throw new NotFoundHttpException('Ошибка чтения данных');
 
-        $insertedData = $sa->collectionRecord->getData();
+        $collectionRecord = $sa->collectionRecord;//->getData();
 
         $columns = CollectionColumn::find()->where(['id_collection' => $sa->collectionRecord->id_collection])->indexBy('id_column')->orderBy('ord')->all();
 
-        foreach ($insertedData as $rkey => $ritem)
-        {
-            if($columns[$rkey]->alias == 'id_target') {
-                $target = ServiceTarget::findOne($ritem);
-                $formFields[$columns[$rkey]->alias] = ['value' => $target->reestr_number." ".$target->name, 'name' => $columns[$rkey]->name, 'ord' => $columns[$rkey]->ord];
-            }
-            else
-                $formFields[$columns[$rkey]->alias] = ['value' => empty($ritem)?"[не заполнено]":$ritem, 'name' => $columns[$rkey]->name, 'ord' => $columns[$rkey]->ord];
-        }
-
-        usort($formFields, function($a, $b){return ($a['ord']<$b["ord"])?-1:1;});
-
-        $attachments = $sa->collectionRecord->getAllMedias();
-
         return $this->render('view', [
             'model' => $sa,
-            'formFields' => $formFields,
-            'attachments' => $attachments
+            'collectionRecord' => $collectionRecord,
         ]);
     }
 
