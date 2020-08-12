@@ -344,7 +344,7 @@ class ServiceController extends Controller
                         echo($toSend);
                         
                         if($toSend)
-                            $rawResult = $wf->sendServiceMultipartMessage($archivePath);
+                            $rawResult = $wf->sendServiceMultipartMessage($toSend);
                         
                         echo $rawResult;
                         die();
