@@ -343,8 +343,8 @@ class ServiceController extends Controller
 
                         $rawResult = $wf->sendServiceMultipartMessage($archivePath);
                         
-                        //echo $rawResult;
-                        //die();
+                        echo $rawResult;
+                        die();
                         
                         //$opres = $wf->sendServiceMessage($appeal);
 
