@@ -205,7 +205,7 @@ class ContestController extends Controller
         }
         */
 
-        $expertsSql = "SELECT id_expert FROM cst_contest_expert WHERE id_record_contest = {$id}";
+        $expertsSql = "SELECT id_expert FROM cst_contest_expert WHERE id_record_contest = {$id} ";
         $res = Yii::$app->db->createCommand($expertsSql)->queryAll();
 
         $experts = [];

@@ -113,14 +113,18 @@ class ContestController extends \yii\web\Controller
         foreach ($profiles as $tprofile) {
             if($form->id_collection == $tprofile->id_record_contest)
             {
-                $total_ord++;
+                $rr = $tprofile->getRecord()->one();
+                if($rr)
+                    $total_ord++;
             }
         }        
 
         $cc = reset($currentContest);
 
-        if(isset($cc['max_orders']) && $cc['max_orders']<=$total_ord && $cc['max_orders']>0)
+        if(!$idprofile && isset($cc['max_orders']) && $cc['max_orders']<=$total_ord && $cc['max_orders']>0)
             $this->redirect("/contests/select/select");
+
+//        $canAdd = !(isset($cc['max_orders']) && $cc['max_orders']>0 && $cc['max_orders']<=$total_ord);
 
         return $this->render('form', [
             'form'      => $form,
@@ -128,7 +132,8 @@ class ContestController extends \yii\web\Controller
             'inputs'    => $inputs,
             'contestname' => $contestname,
             'profile' => $profile,
-            'record'    => !empty($profile->record)?$profile->record:null
+            'record'    => !empty($profile->record)?$profile->record:null,
+//            'canAdd' =>  $canAdd
         ]);
     }
 
@@ -166,10 +171,14 @@ class ContestController extends \yii\web\Controller
                 foreach ($profiles as $profile) {
                     if($form->id_collection == $profile->id_record_contest)
                     {
-                        if(!isset($links[$ackey]))
-                            $links[$ackey] = [];
+                        $rr = $profile->getRecord()->one();
+                        if($rr)
+                        {
+                            if(!isset($links[$ackey]))
+                                $links[$ackey] = [];
 
-                        $links[$ackey][] = $profile->id_profile;
+                            $links[$ackey][] = $profile->id_profile;
+                        }
                     }
                 }
             }
@@ -180,9 +189,9 @@ class ContestController extends \yii\web\Controller
         ksort($activeContests, SORT_NUMERIC);
         $activeContests = array_reverse($activeContests, true);
 
-        $finishedContests = $contestCollection->getDataQuery()->whereByAlias(['<>', 'contest_state', 'Конкурс завершен'])->getArray(true);
+        $finishedContests = $contestCollection->getDataQuery()->whereByAlias(['=', 'contest_state', 'Конкурс завершен'])->getArray(true);
         ksort($finishedContests, SORT_NUMERIC);
-        $finishedContests = array_reverse($activeContests, true);
+        $finishedContests = array_reverse($finishedContests, true);
         
 
         return $this->render('select', [
@@ -199,7 +208,7 @@ class ContestController extends \yii\web\Controller
         $expert = CstExpert::findOne(['id_user' => Yii::$app->user->id]);
 
         if(!$expert)
-            throw new BadRequestHttpException();
+            return $this->redirect('/login');
 
         $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
         if(!$contestCollection)

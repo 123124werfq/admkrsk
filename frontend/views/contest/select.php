@@ -37,7 +37,7 @@ if ($user) {
                         <h1><?= $page->title ?></h1>
                         <ul>
                         <?php foreach ($contests as $cstId => $contest) { 
-
+                                $availableProfilesCount = 0;
                                 $canShow = false;
                                 foreach ($profiles as $prId => $profile) { 
                                     if(!isset($links[$cstId]) || !in_array($profile['id_profile'],$links[$cstId]))
@@ -53,6 +53,8 @@ if ($user) {
                                 <?php foreach ($profiles as $prId => $profile) { 
                                         if(!isset($links[$cstId]) || !in_array($profile['id_profile'],$links[$cstId]))
                                             continue;
+
+                                        $availableProfilesCount++;
                                     ?>
                                     <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>&ida=<?=$profile['id_profile']?>">Редактировать заявку от <?= date("d.m.Y H:i", $profile['created_at'])?></a>
                                         <?php
@@ -71,7 +73,7 @@ if ($user) {
                                         ?>
                                     </li>
                                 <?php } ?>
-                                <?php if(!empty($contest['participant_form'])){?>
+                                <?php if(!empty($contest['participant_form']) && isset($contest['max_orders']) && $contest['max_orders']>$availableProfilesCount){?>
                                     <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>">Создать новую заявку</a></li>
                                 <?php } ?>
                                 </ul>
