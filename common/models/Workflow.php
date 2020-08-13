@@ -679,6 +679,13 @@ XMLPARTS2;
               $sourceText = str_replace('CASENUMBERHERE', $appeal->number_internal, $sourceText);
               $sourceText = str_replace('SERVICECODEHERE', $appeal->target->service_code, $sourceText);
               $sourceText = str_replace('REESTRNUMBERHERE', $appeal->target->reestr_number, $sourceText);
+
+              $tagparts = explode("/", $appeal->target->reestr_number);
+              if(count($tagparts)>=3)
+              {
+                $tagstring = "Input_{$tagparts[0]}_{$tagparts[1]}_{$tagparts[2]}FL";
+                $sourceText = str_replace('TAGSERVICEHERE', $tagstring, $sourceText);
+              }
             }
 
             $tempPath = str_replace('.xml', '_temp.xml', $sourcePath); // формирум файл, который будем подписывать
