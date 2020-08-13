@@ -339,25 +339,25 @@ class ServiceController extends Controller
                         $archivePath = $wf->generateArchive($idents['guid'], $attachments, $export_path);
                         // ... тут XML
                         if($archivePath)
-                            $toSend = $wf->xopCreate($archivePath);
+                            $toSend = $wf->xopCreate($archivePath, $appeal);
 
-                        echo($toSend);
+                        //echo($toSend);
                         
                         if($toSend)
                             $rawResult = $wf->sendServiceMultipartMessage($toSend);
                         
-                        echo $rawResult;
-                        die();
+                        //echo $rawResult;
+                        //die();
                         
                         //$opres = $wf->sendServiceMessage($appeal);
 
-                        $opres = strpos($rawResult, "INVALID");
+                        $opres = strpos($rawResult, "ACCEPT");
 
 
                         $integration = new Integration;
                         $integration->system = Integration::SYSTEM_SED;
                         $integration->direction = Integration::DIRECTION_OUTPUT;
-                        if($opres <= 0)
+                        if($opres > 0)
                             $integration->status = Integration::STATUS_OK;
                         else
                             $integration->status = Integration::STATUS_ERROR;

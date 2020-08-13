@@ -5,10 +5,10 @@
     </wsse:Security>
   </soapenv:Header>
   <soapenv:Body wsu:Id="BodyId-F01F22D69F264C8CB33F8E5C95DDE883" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
-    <int:Input_03_00_004FL>
+    <int:TAGSERVICEHERE>
       <rev:Message>
         <rev:Sender>
-          <rev:Code>OSAK01241</rev:Code>
+          <rev:Code>TEST001</rev:Code>
           <rev:Name>Официальный сайт администрации города Красноярска</rev:Name>
         </rev:Sender>
         <rev:Recipient>
@@ -16,24 +16,24 @@
           <rev:Name>Электронный документооборот администрации города Красноярска</rev:Name>
         </rev:Recipient>
         <rev:Originator>
-          <rev:Code>OSAK01241</rev:Code>
+          <rev:Code>TEST001</rev:Code>
           <rev:Name>Официальный сайт администрации города Красноярска</rev:Name>
         </rev:Originator>
-        <rev:ServiceName>{target-reestr_number}</rev:ServiceName>
+        <rev:ServiceName>REESTRNUMBERHERE</rev:ServiceName>
         <rev:TypeCode>GSRV</rev:TypeCode>
         <rev:Status>REQUEST</rev:Status>
-        <rev:Date>06-02-2020</rev:Date>
+        <rev:Date>REQDATEHERE</rev:Date>
         <rev:ExchangeType>1</rev:ExchangeType>
-        <rev:ServiceCode>2400000010000000000</rev:ServiceCode>
-        <rev:CaseNumber>7A06C1C502184672A6EB7EF46529803E</rev:CaseNumber>
+        <rev:ServiceCode>SERVICECODEHERE</rev:ServiceCode>
+        <rev:CaseNumber>CASENUMBERHERE</rev:CaseNumber>
       </rev:Message>
       <rev:MessageData>
         <rev:AppData>
           <OrderID>100</OrderID>
-          <ServiceCode>01/00/01</ServiceCode>
+          <ServiceCode>REESTRNUMBERHERE</ServiceCode>
           <ServiceTarget>ТЕСТ С ВЛОЖЕНИЕМ</ServiceTarget>
           <ServicePlace>Город</ServicePlace>
-          <DocDate>06-02-2020</DocDate>
+          <DocDate>REQDATEHERE</DocDate>
           <FL_FIO LastName="ИВАНОВ" FirstName="ИВАН" MiddleName="ИВАНОВИЧ" />
           <FL_SNILS>{snils}</FL_SNILS>
           <FL_PASSPORT PassportSeriesAndNum="{passport_serie} {passport_number}" PassportWhoIssued="{passport_issued}" PassportWhenIssued="{passport_date}" />
@@ -51,6 +51,6 @@
           <rev:DigestValue>ATTDIGESTHERE</rev:DigestValue>
         </rev:AppDocument>
       </rev:MessageData>
-    </int:Input_03_00_004FL>
+    </int:TAGSERVICEHERE>
   </soapenv:Body>
 </soapenv:Envelope>

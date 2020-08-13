@@ -648,7 +648,7 @@ XMLPARTS2;
 
 
     // метод подписи XML, протестирован руками
-    protected function signServiceXML($sourcePath, $resultPath, $attachment = null)
+    protected function signServiceXML($sourcePath, $resultPath, $attachment = null, $appeal = null)
     {
         $certName = "/var/www/admkrsk/common/config/ADMKRSK-TEST-SERVICE-SITE.pfx";
 
@@ -671,6 +671,23 @@ XMLPARTS2;
             $idreq = str_replace('.zip', '', $path_parts['basename']);
             $sourceText = str_replace('ATREQCODEHERE', $idreq, $sourceText);
 
+
+            //  заменяем в шаблоне фактические данные
+            if($appeal)
+            {
+              $sourceText = str_replace('REQDATEHERE', date("d-m-Y"), $sourceText);
+              $sourceText = str_replace('CASENUMBERHERE', $appeal->number_internal, $sourceText);
+              $sourceText = str_replace('SERVICECODEHERE', $appeal->target->service_code, $sourceText);
+              $sourceText = str_replace('REESTRNUMBERHERE', $appeal->target->reestr_number, $sourceText);
+
+              $tagparts = explode("/", $appeal->target->reestr_number);
+              if(count($tagparts)>=3)
+              {
+                $tagstring = "Input_{$tagparts[0]}_{$tagparts[1]}_{$tagparts[2]}FL";
+                $sourceText = str_replace('TAGSERVICEHERE', $tagstring, $sourceText);
+              }
+            }
+
             $tempPath = str_replace('.xml', '_temp.xml', $sourcePath); // формирум файл, который будем подписывать
             file_put_contents($tempPath,$sourceText);
             $sourcePath = $tempPath;
@@ -690,7 +707,7 @@ XMLPARTS2;
         }
     }
 
-    public function xopCreate($archivePath)
+    public function xopCreate($archivePath, $appeal = null)
     {
         $source = '/var/www/admkrsk/common/config/template_attachment_ref.xml';
         $xmlPath = '/var/www/admkrsk/frontend/runtime/tmp/signed'.time().'.xml';
@@ -698,7 +715,7 @@ XMLPARTS2;
         //$attachment = Yii::getAlias('@app').'/assets/6995_req_7a06c1c5-0218-4672-a6eb-7ef46529803e.zip';
         $attachment = $archivePath;
 
-        $this->signServiceXML($source, $xmlPath, $attachment);
+        $this->signServiceXML($source, $xmlPath, $attachment, $appeal);
 
         if(!file_exists($xmlPath))
             return false;
