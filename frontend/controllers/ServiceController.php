@@ -341,7 +341,7 @@ class ServiceController extends Controller
                         if($archivePath)
                             $toSend = $wf->xopCreate($archivePath, $appeal);
 
-                        echo($toSend);
+                        //echo($toSend);
                         
                         if($toSend)
                             $rawResult = $wf->sendServiceMultipartMessage($toSend);
