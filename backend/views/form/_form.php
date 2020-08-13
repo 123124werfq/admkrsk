@@ -21,7 +21,6 @@ use common\models\Box;
 
     <div class="row">
         <div class="col-sm-4"><?= $form->field($model, 'is_template')->checkBox()?></div>
-        <div class="col-sm-4"><?= $form->field($model, 'captcha')->checkBox()?></div>
         <div class="col-sm-4"><?= $form->field($model, 'state')->checkBox()?></div>
     </div>
 
@@ -67,6 +66,12 @@ use common\models\Box;
     <?= $form->field($model, 'message_success')->textArea(['maxlength' => true,'class'=>'redactor']) ?>
 
     <?= $form->field($model, 'maxfilesize')->textInput(['type' => 'number'])->hint('вввод в мегабайтах') ?>
+
+    <?= $form->field($model, 'captcha')->dropDownList([
+            $model::CAPTCHA_NO=>'Без каптчи',
+            $model::CAPTCHA_YES=>'Требовать ввод каптчи',
+            $model::CAPTCHA_AUTH=>'Требовать ввод каптчи для неавторизованных',
+    ])?>
 
     <h3>Шаблон документа</h3>
     <?=common\components\multifile\MultiFileWidget::widget([

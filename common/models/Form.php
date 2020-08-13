@@ -39,10 +39,13 @@ class Form extends \yii\db\ActiveRecord
     const VERBOSE_NAME_PLURAL = 'Формы';
     const TITLE_ATTRIBUTE = 'name';
 
+    const CAPTCHA_AUTH = 2;
+    const CAPTCHA_YES = 1;
+    const CAPTCHA_NO = 0;
+
     public $access_user_ids;
     public $access_user_group_ids;
     public $client_type; // для формы услуг
-
     /**
      * {@inheritdoc}
      */
@@ -59,10 +62,9 @@ class Form extends \yii\db\ActiveRecord
         return [
             [['id_collection','id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_box','maxfilesize'], 'default', 'value' => null],
             [['state'], 'default', 'value' => 1],
-            [['id_collection', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_page','id_box','state','is_template','maxfilesize'], 'integer'],
+            [['id_collection', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_page','id_box','state','is_template','maxfilesize','captcha'], 'integer'],
             [['alias'], 'unique'],
             [['name'], 'required'],
-            [['captcha'], 'boolean'],
             [['message_success'], 'string'],
             [['client_type'], 'safe'],
             [['name','url','fullname','alias'], 'string', 'max' => 255],
