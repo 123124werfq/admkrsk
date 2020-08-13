@@ -339,7 +339,7 @@ class ServiceController extends Controller
                         $archivePath = $wf->generateArchive($idents['guid'], $attachments, $export_path);
                         // ... тут XML
                         if($archivePath)
-                            $toSend = $wf->xopCreate($archivePath);
+                            $toSend = $wf->xopCreate($archivePath, $appeal);
 
                         echo($toSend);
                         
