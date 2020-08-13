@@ -667,6 +667,10 @@ XMLPARTS2;
             //$sourceText = str_replace($toReplace, $attachment64, $sourceText); // заменям ссылку файлоы (возможно, не надо)
             $sourceText = str_replace('ATTDIGESTHERE', $digest, $sourceText); // записываем дайджест ФАЙЛа (дайдже xml запишется при подписи)
 
+            $path_parts = pathinfo($attachment);                
+            $idreq = str_replace('.zip', '', $path_parts['basename']);
+            $sourceText = str_replace('ATREQCODEHERE', $idreq, $sourceText);
+
             $tempPath = str_replace('.xml', '_temp.xml', $sourcePath); // формирум файл, который будем подписывать
             file_put_contents($tempPath,$sourceText);
             $sourcePath = $tempPath;
@@ -688,7 +692,7 @@ XMLPARTS2;
 
     public function xopCreate($archivePath)
     {
-        $source = '/var/www/admkrsk/common/config/template_attachment_2.xml';
+        $source = '/var/www/admkrsk/common/config/template_attachment_ref.xml';
         $xmlPath = '/var/www/admkrsk/frontend/runtime/tmp/signed'.time().'.xml';
         $output = '/var/www/admkrsk/frontend/runtime/tmp/tosend'.time().'.txt';
         //$attachment = Yii::getAlias('@app').'/assets/6995_req_7a06c1c5-0218-4672-a6eb-7ef46529803e.zip';
