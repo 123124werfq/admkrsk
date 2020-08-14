@@ -11,7 +11,8 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => [
         'log',
-        //'queue',
+        'queue',
+        'syncQueue',
     ],
     'controllerNamespace' => 'console\controllers',
     'aliases' => [
@@ -28,7 +29,6 @@ return [
             'migrationPath' => null,
             'migrationNamespaces' => [
                 'console\migrations',
-                //'yii\queue\db\migrations',
             ],
         ],
         'migrate-log' => [

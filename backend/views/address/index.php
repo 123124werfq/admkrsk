@@ -47,6 +47,13 @@ if (Yii::$app->user->can('admin.address')) {
                             return $model->getFullName();
                         },
                     ],
+                    [
+                        'attribute' => 'placeCount',
+                        'label' => 'Количество мест',
+                        'value' => function (House $model) {
+                            return $model->placeCount;
+                        },
+                    ],
                     'is_active:boolean',
                     'is_updatable:boolean',
 

@@ -33,6 +33,7 @@ use Yii;
  * @property int $deleted_at
  * @property int $deleted_by
  * @property array $location
+ * @property int $placeCount
  *
  * @property FiasHouse $house
  * @property Country $country
@@ -41,6 +42,7 @@ use Yii;
  * @property City $city
  * @property District $district
  * @property Street $street
+ * @property Place $places
  */
 class House extends \yii\db\ActiveRecord
 {
@@ -51,6 +53,8 @@ class House extends \yii\db\ActiveRecord
     const VERBOSE_NAME = 'Адрес';
     const VERBOSE_NAME_PLURAL = 'Адреса';
     const TITLE_ATTRIBUTE = 'fullName';
+
+    public $placeCount;
 
     /**
      * {@inheritdoc}
@@ -170,6 +174,14 @@ class House extends \yii\db\ActiveRecord
     public function getStreet()
     {
         return $this->hasOne(Street::class, ['id_street' => 'id_street']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlaces()
+    {
+        return $this->hasMany(Place::class, ['id_house' => 'id_house']);
     }
 
     /**

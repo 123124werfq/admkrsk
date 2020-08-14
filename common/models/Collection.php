@@ -344,17 +344,19 @@ class Collection extends ActiveRecord
 
     public function getArray($id_column = null)
     {
-        if (!empty($id_column))
+        if (!empty($id_column)) {
             $label = [$id_column];
-        else {
+        } else {
             $label = (!empty($this->label)) ? $this->label : [];
+        }
 
         $data = $this->getData($label);
 
         $output = [];
 
-        foreach ($data as $key => $row)
+        foreach ($data as $key => $row) {
             $output[$key] = implode(' ', $row);
+        }
 
         return $output;
     }
