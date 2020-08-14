@@ -457,6 +457,8 @@ class Workflow extends Model
 
         $filesToUnlink = [];
 
+        $xmlParts = [];
+
         if ($zip->open($zip_path,\ZIPARCHIVE::CREATE) === TRUE)
         {
             foreach ($attachments as $key => $att)
@@ -489,6 +491,19 @@ class Workflow extends Model
                     }
 
                     $filesToUnlink[] = $tpath;
+
+                    $dg = $this->generateDigestForFile($tpath);
+                    $fn = "req_" . $guid . "." . $ext;
+                    $afn = "Приложение_" . "_". $key . "_" . $guid . "." . $ext;
+
+                    $xmlParts[] = <<<XMLPARTS1
+<rev:AppliedDocument>
+  <rev:Name>$fn</rev:Name>
+  <rev:URL>/$fn</rev:URL>
+  <rev:DigestValue>$dg</rev:DigestValue>
+  <Description>ПРИЛОЖЕНИЕ $key</Description>
+</rev:AppliedDocument>                    
+XMLPARTS1;
                 }
             }
 
@@ -510,6 +525,19 @@ class Workflow extends Model
                     }
 
                     $filesToUnlink[] = $docPath;
+
+                    $dg = $this->generateDigestForFile($docPath);
+                    $fn = "req_" . $guid . ".docx";
+                    $afn = "Форма_" . $guid . ".docx";
+
+                    $xmlParts[] = <<<XMLPARTS2
+      <rev:AppliedDocument>
+        <rev:Name>$afn</rev:Name>
+        <rev:URL>/$fn</rev:URL>
+        <rev:DigestValue>$dg</rev:DigestValue>
+        <Description>ЗАЯВЛЕНИЕ</Description>
+      </rev:AppliedDocument>                    
+XMLPARTS2;                   
                 }
             }
 
@@ -532,8 +560,33 @@ class Workflow extends Model
                     }
 
                     $filesToUnlink[] = $docPath;
+
+                    $dg = $this->generateDigestForFile($docPath);
+                    $fn = "req_" . $guid . ".auth";
+
+                    $xmlParts[] = <<<XMLPARTS2
+      <rev:AppliedDocument>
+        <rev:Name>Удостоверение пользователя (ЕСИА).auth</rev:Name>
+        <rev:URL>/$fn</rev:URL>
+        <rev:DigestValue>$dg</rev:DigestValue>
+      </rev:AppliedDocument>                    
+XMLPARTS2;                      
                 }
             }
+
+            // теперь надо составить список всех файлов и его тоже подписать
+            $xmlPath = Yii::getAlias('@runtime') . $this->path . "req_" . $guid . ".xml";
+            $xmlContents = "<rev:AppliedDocuments xmlns:rev=\"http://smev.gosuslugi.ru/rev120315\">\n".implode("\n", $xmlParts)."\n</rev:AppliedDocuments>";
+            file_put_contents($xmlPath, $xmlContents);
+
+            $zip->addFile($xmlPath, 'req_' . $guid . ".xml");
+
+            if($signFname = $this->makeSign($xmlPath))
+            {
+              $path_parts = pathinfo($signFname);                
+              $zip->addFile($signFname, $path_parts['basename']);
+              $filesToUnlink[] = $signFname;
+            }   
 
             $zip->close();
 
@@ -543,6 +596,19 @@ class Workflow extends Model
 
             return $zip_path;
         }
+    }
+
+    private function generateDigestForFile($filePath)
+    {
+      if(!file_exists($filePath))
+        return false;
+      $fp = fopen($filePath, "rb");
+      $binary = fread($fp, filesize($filePath));
+      $attachment64 = base64_encode($binary);
+      $attachment64 = chunk_split($attachment64, 76, "\r\n"); 
+      $digest = base64_encode(pack('H*', hash('sha1',$binary)));       
+
+      return $digest;
     }
 
     public function generateServiceRequest(CollectionRecord $record)
@@ -582,7 +648,7 @@ class Workflow extends Model
 
 
     // метод подписи XML, протестирован руками
-    protected function signServiceXML($sourcePath, $resultPath, $attachment = null)
+    protected function signServiceXML($sourcePath, $resultPath, $attachment = null, $appeal = null)
     {
         $certName = "/var/www/admkrsk/common/config/ADMKRSK-TEST-SERVICE-SITE.pfx";
 
@@ -600,6 +666,27 @@ class Workflow extends Model
             $sourceText = file_get_contents($sourcePath); 
             //$sourceText = str_replace($toReplace, $attachment64, $sourceText); // заменям ссылку файлоы (возможно, не надо)
             $sourceText = str_replace('ATTDIGESTHERE', $digest, $sourceText); // записываем дайджест ФАЙЛа (дайдже xml запишется при подписи)
+
+            $path_parts = pathinfo($attachment);                
+            $idreq = str_replace('.zip', '', $path_parts['basename']);
+            $sourceText = str_replace('ATREQCODEHERE', $idreq, $sourceText);
+
+
+            //  заменяем в шаблоне фактические данные
+            if($appeal)
+            {
+              $sourceText = str_replace('REQDATEHERE', date("d-m-Y"), $sourceText);
+              $sourceText = str_replace('CASENUMBERHERE', $appeal->number_internal, $sourceText);
+              $sourceText = str_replace('SERVICECODEHERE', $appeal->target->service_code, $sourceText);
+              $sourceText = str_replace('REESTRNUMBERHERE', $appeal->target->reestr_number, $sourceText);
+
+              $tagparts = explode("/", $appeal->target->reestr_number);
+              if(count($tagparts)>=3)
+              {
+                $tagstring = "Input_{$tagparts[0]}_{$tagparts[1]}_{$tagparts[2]}FL";
+                $sourceText = str_replace('TAGSERVICEHERE', $tagstring, $sourceText);
+              }
+            }
 
             $tempPath = str_replace('.xml', '_temp.xml', $sourcePath); // формирум файл, который будем подписывать
             file_put_contents($tempPath,$sourceText);
@@ -620,15 +707,15 @@ class Workflow extends Model
         }
     }
 
-    public function xopCreate($archivePath)
+    public function xopCreate($archivePath, $appeal = null)
     {
-        $source = '/var/www/admkrsk/common/config/template_attachment_2.xml';
+        $source = '/var/www/admkrsk/common/config/template_attachment_ref.xml';
         $xmlPath = '/var/www/admkrsk/frontend/runtime/tmp/signed'.time().'.xml';
         $output = '/var/www/admkrsk/frontend/runtime/tmp/tosend'.time().'.txt';
         //$attachment = Yii::getAlias('@app').'/assets/6995_req_7a06c1c5-0218-4672-a6eb-7ef46529803e.zip';
         $attachment = $archivePath;
 
-        $this->signServiceXML($source, $xmlPath, $attachment);
+        $this->signServiceXML($source, $xmlPath, $attachment, $appeal);
 
         if(!file_exists($xmlPath))
             return false;

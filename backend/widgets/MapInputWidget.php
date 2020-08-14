@@ -16,8 +16,9 @@ class MapInputWidget extends Widget
     	if (!empty($this->value) && is_array($this->value) && isset($this->value[0]) && isset($this->value[1]))
     		$coords = $this->value;
 
+            
         return $this->render('mapinput', [
-            'cid' => $this->index,
+            'cid' => str_replace('-','_',$this->index),
             'value' => $coords,
             'fname' => $this->name,
         ]);
