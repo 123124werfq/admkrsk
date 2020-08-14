@@ -59,6 +59,7 @@ class Media extends \yii\db\ActiveRecord
             [['is_private'],'boolean'],
             [['name'], 'required'],
             [['name', 'mime', 'extension'], 'string', 'max' => 255],
+            [['description'], 'safe'],
         ];
     }
 
