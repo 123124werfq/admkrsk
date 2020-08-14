@@ -55,7 +55,8 @@ class MultiFileWidget extends Widget
 
 						$records[$key]['file_path'] = $data->getFilePath();
 						$records[$key]['size'] = round($data->size/1024/1024,3).'MB';
-						$records[$key]['preview'] =  $data->showThumb(['w'=>200,'h'=>150]);
+						if ($data->isImage())
+							$records[$key]['preview'] =  $data->showThumb(['w'=>300]);
 						$records[$key]['id'] = $data->getPrimaryKey();
 					}
 				}

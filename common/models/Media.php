@@ -294,7 +294,7 @@ class Media extends \yii\db\ActiveRecord
 
     public function makeThumb($source, $options)
     {
-        if (empty($options) || $this->extension == 'svg' || $this->extension == 'tif' || $this->width<=$options['w'])
+        if (empty($options) || $this->extension == 'svg' || $this->extension == 'tif' || $this->extension == 'tiff' || $this->width<=$options['w'])
             return $this->getUrl();
 
         $path = str_replace($this->extension, implode('_', $options).'.'.$this->extension, $source);
