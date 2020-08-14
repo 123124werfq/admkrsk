@@ -10,6 +10,7 @@ use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use kartik\datetime\DateTimePicker;
 use common\models\CstExpert;
+use yii\web\JsExpression;
 
 
 ?>
@@ -29,14 +30,21 @@ use common\models\CstExpert;
 
         <div class="form-group field-hrcontest-experts">
             <label class="control-label" for="hrcontest-experts">Эксперты</label>
+            <?php 
 
-            <?=
-                Html::dropDownList('experts', $experts, ArrayHelper::map(CstExpert::find()->where(['state' => 1])->all(),'id_expert','name'),
-                        [
-                            'class'=>"form-control",
-                            'multiple'=>'multiple',
-                            //'options' => $expertsSelected
-                        ]);
+                echo Select2::widget([
+                    'data' => ArrayHelper::map(CstExpert::find()->where(['state' => 1])->all(),'id_expert','name'),
+                    'name'=>'experts',
+                    'value' => $experts,
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                        'multiple' => true,
+                        'placeholder' => 'Выберите экспертов',
+                    ],
+                    'options' => [
+                        'multiple' => true,
+                    ]
+                ]);
             ?>
 
         </div>

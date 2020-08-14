@@ -31,7 +31,6 @@ return [
             ],
         ],
         'cache' => [
-            //'class' => 'yii\caching\FileCache',
             'class' => 'yii\redis\Cache',
             'redis' => 'redisCache',
         ],
@@ -41,6 +40,11 @@ return [
         'queue' => [
             'class' => 'yii\queue\redis\Queue',
             'as log' => 'yii\queue\LogBehavior',
+        ],
+        'syncQueue' => [
+            'class' => 'yii\queue\sync\Queue',
+            'as log' => 'yii\queue\LogBehavior',
+            'handle' => true,
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
@@ -58,13 +62,6 @@ return [
             'datetimeFormat' => 'dd.MM.yyyy HH:mm',
             'sizeFormatBase' => 1000,
         ],
-        /*'queue' => [
-            'class' => 'yii\queue\db\Queue',
-            'db' => 'db',
-            'tableName' => '{{%queue}}',
-            'channel' => 'default',
-            'mutex' => 'yii\mutex\PgsqlMutex',
-        ],*/
         'authClientCollection' => [
             'class' => 'yii\authclient\Collection',
             'clients' => [

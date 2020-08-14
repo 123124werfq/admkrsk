@@ -2,9 +2,11 @@
 
 namespace backend\models\search;
 
+use common\models\Place;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\House;
+use yii\db\Expression;
 
 /**
  * HouseSearch represents the model behind the search form of `common\models\House`.
@@ -43,11 +45,25 @@ class HouseSearch extends House
     {
         $query = House::find();
 
+        $query->select([
+            '*',
+            'placeCount' => Place::find()
+                ->select(['count' => new Expression('COUNT(' . Place::tableName() . '.id_house)')])
+                ->where([
+                    'id_house' => new Expression(House::tableName() . '.id_house'),
+                ]),
+        ]);
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        $dataProvider->sort->attributes['placeCount'] = [
+            'asc' => new Expression('[[placeCount]] ASC'),
+            'desc' => new Expression('[[placeCount]] DESC'),
+        ];
 
         $this->load($params);
 
