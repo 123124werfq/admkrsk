@@ -202,6 +202,14 @@ class Form extends \yii\db\ActiveRecord
         return $this->makeDocByData($data,$addData);
     }
 
+    public function needCaptcha()
+    {
+        if ($this->captcha == self::CAPTCHA_YES || ($this->captcha == self::CAPTCHA_AUTH && Yii::$app->user->isGuest))
+            return true;
+
+        return false;
+    }
+
     public function renderMessage($record,$add_data=[])
     {
         $recorData = $record->getData(true);

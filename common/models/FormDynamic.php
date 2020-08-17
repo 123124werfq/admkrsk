@@ -53,12 +53,12 @@ class FormDynamic extends DynamicModel
 
         $this->data = $data;
 
-        if ($form->captcha)
+        if ($form->needCaptcha())
             $attributes['captcha'] = '';
 
         parent::__construct($attributes, $config);
 
-        if ($form->captcha)
+        if ($form->needCaptcha())
             $this->addRule(['captcha'], 'captcha');
 
         foreach ($this->inputs as $input)

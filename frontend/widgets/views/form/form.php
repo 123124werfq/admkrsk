@@ -63,7 +63,7 @@ $this->registerJs($script, yii\web\View::POS_END);
 		'arrayGroup'=>$arrayGroup
 	])?>
 
-	<?php if ($form->captcha)
+	<?php if ($form->needCaptcha())
 	{
 		echo '<label class="form-label form-label__second">Защита от спама<span class="red">*</span></label>';
 		echo $activeForm->field($model, 'captcha')->widget(\yii\captcha\Captcha::classname(), ['template'=>'<div class="row"><div style="width:50%; text-align:center;">{image}</div><div style="width:50%;">{input}<p class="text-help mb-3">пожалуйста, введите символы на картинке</p></div></div>']);

@@ -527,7 +527,7 @@ JS;
                 foreach ($input->getArrayValues() as $key => $value) {
                     echo '<div class="radio-group">
 								<label class="radio">
-									<input data-id="'.$input->id_input.'" type="radio" name="'.$inputname.'" value="' . Html::encode($key) . '" class="radio_control">
+									<input data-id="'.$input->id_input.'" type="radio" name="'.$inputname.'" '.($value==$model->$clearAttribute?' checked ':'').' value="' . Html::encode($key) . '" class="radio_control">
 									<span class="radio_label">' . $value . '</span>
 								</label>
 						  </div>';
