@@ -96,7 +96,7 @@ else
     <div id="view-columns" class="multiyiinput sortable">
         <?php foreach ($model->getViewColumnsOrFirstColumn() as $key => $data) {?>
             <?php $showDetail = !empty($data['showdetails'])? true : false; ?>
-        <div class="row">
+        <div data-row="<?=$key?>" class="row">
             <div class="col-sm-5">
                 <div class="form-group">
                     <?=Html::dropDownList("ViewColumns[$key][id_column]",$data['id_column'],$columns,['class'=>'form-control','id'=>'CollectionColumn_id_column_'.$key]);?>
@@ -140,7 +140,7 @@ else
     </div>
     <div id="search-columns" class="multiyiinput sortable">
     <?php foreach ($model->getSearchColumns() as $key => $data) {?>
-        <div class="row">
+        <div class="row" data-row="<?=$key?>">
             <div class="col-sm-5">
                 <div class="form-group">
                     <?=Html::dropDownList("SearchColumns[$key][id_column]",$data['id_column'],$columns,['class'=>'form-control','id'=>'SearchColumns_id_column_'.$key,'placeholder'=>'Выберите колонку']);?>

@@ -239,40 +239,37 @@ function formTemplateSortable()
 
 function addInput(block)
 {
-    //var id = $("#"+block+" input").eq(-1).attr("id");
-
     // находим сколько строк
     var count = $("#"+block+">div,#"+block+">tr").length;
     count++;
 
     // клонируем первую строку
-    var input_row = $("#"+block+">div:eq(0),#"+block+">tr:eq(0)").clone();
+    var input_row = $("#"+block+">div:eq(-1),#"+block+">tr:eq(-1)").clone();
+    var data_row = input_row.data('row');
     input_row.find('.tox-tinymce').remove();
+    input_row.attr('data-row',++data_row);
 
     // добавляем в конец блока и меням ID у input
     input_row.appendTo("#"+block);
 
-    input_row.find(".visibleInputValues").html('');
-
     input_row.find("input, select, textarea").each(function(i)
     {
         var clone_input = $(this);
-        //id = parseInt(id.replace(/\D+/g,""),10);
+
         var input_id    = clone_input.attr("id");
         var input_name  = clone_input.attr("name");
 
         if (input_id!=undefined)
         {
-            input_id = input_id.substr(0,input_id.indexOf('0'));
-            input_name = input_name.substr(0,input_name.indexOf('0'))+count+input_name.substr(input_name.indexOf('0')+1);
+            input_name = input_name.replace('['+(data_row-1)+']','['+data_row+']');// input_name.substr(0,input_name.indexOf('0'))+count+input_name.substr(input_name.indexOf('0')+1);
 
-            clone_input.attr('id',input_id+count).attr('name',input_name).val('');
+            clone_input.attr('id',input_id+data_row).attr('name',input_name).val('');
 
             if ((clone_input).hasClass('autocmpl'))
                 runAutocomplete(clone_input);
 
             if ((clone_input).hasClass('timepicker'))
-        	 	clone_input.attr('value',int2Time(clone_input.val())).after('<span class="add-on"><i class="icon-time"></i></span>').timepicker();
+            clone_input.attr('value',int2Time(clone_input.val())).after('<span class="add-on"><i class="icon-time"></i></span>').timepicker();
 
             if ((clone_input).hasClass('redactor')) {
                 var cloneConfig = JSON.parse(JSON.stringify(tinymceConfig));
@@ -281,7 +278,6 @@ function addInput(block)
                 tinymce.init(cloneConfig);
             }
         }
-
     });
 
     if ($("#"+block).hasClass('sortable'))

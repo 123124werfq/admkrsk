@@ -29,7 +29,7 @@ use yii\widgets\ActiveForm;
 
 <div id="poll-questions" class="multiinput sortable">
     <?php foreach ($model->getRecords('answers') as $key => $data) {?>
-        <div class="row">
+        <div class="row" data-row="<?=$key?>">
             <div class="col-md-12">
                 <?= Html::hiddenInput("Answer[answers][$key][id_poll_answer]", $data->id_poll_answer, ['id' => 'Answer_id_poll_answer_' . $key]); ?>
                 <?= Html::hiddenInput("Answer[answers][$key][ord]", $data->ord, ['id' => 'Answer_ord_' . $key]); ?>

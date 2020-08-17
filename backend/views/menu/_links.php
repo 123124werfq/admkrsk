@@ -10,7 +10,7 @@
 
 <div id="list-records" class="multiinput sortable m-t">
     <?php foreach ($records as $key => $data) {?>
-    <div class="row">
+    <div class="row" data-row="<?=$key?>">
         <div class="col-md-4">
             <?=Html::hiddenInput("MenuLink[links][$key][id_link]",$data->id_link,['id'=>'MenuLink_id_link_'.$key]);?>
             <?=Html::hiddenInput("MenuLink[links][$key][ord]",$data->ord,['id'=>'MenuLink_ord_'.$key]);?>

@@ -125,7 +125,7 @@ use yii\web\JsExpression;
         echo '<div id="table_options" class="multiyiinput">';
         foreach ($data as $key => $row)
         {
-            echo '<div class="row-flex">';
+            echo '<div class="row-flex" data-row="'.$key.'">';
             foreach ($row as $okey => $option)
             {
                 $option['class'] = 'form-control';

@@ -38,7 +38,7 @@
         <p>Отображать если:</p>
         <div id="visibles" class="multiyiinput">
         <?php foreach ($records as $key => $visibleInput) {?>
-            <div class="row">
+            <div class="row" data-row="<?=$key?>">
                 <div class="col-sm-5">
                 <?=$form->field($visibleInput, "[visibleInputs][$key]id",['template'=>"{input}"])->hiddenInput()?>
                     <?=$form->field($visibleInput, "[visibleInputs][$key]id_input_visible",['template'=>"{input}"])->dropDownList($visibleInputs,['class'=>'form-control visible-field','prompt'=>'Выберите поле зависимости'])?>
