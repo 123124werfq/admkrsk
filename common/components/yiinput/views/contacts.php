@@ -9,7 +9,7 @@
         foreach ($data as $rkey=>$record)
         {
             $class_name = get_class($record);
-            echo '<div class="form-inline">';
+            echo '<div data-row="'.$rkey.'" class="form-inline">';
 
             $i++;
 
