@@ -24,6 +24,11 @@ class WorkflowController extends \yii\web\Controller
 
     public function actionIn()
     {
+        $path = Yii::getAlias('@runtime')."/logs/documents.log";
+        file_put_contents($path,date("r").":\n\n", FILE_APPEND);
+        file_put_contents($path,file_get_contents('php://input'), FILE_APPEND);
+        file_put_contents($path,"\n", FILE_APPEND);
+
         $model = new WorkflowForm();
 
         if (Yii::$app->request->isPost) {
