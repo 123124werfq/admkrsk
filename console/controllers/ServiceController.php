@@ -63,7 +63,7 @@ class ServiceController extends Controller
                 else
                 {
                     $unixDate = strtotime($statusInfo['eventDate']);
-                    $as = ServiceAppealState::find()->where("id_appeal=$apppeal->id_appeal")->andWhere("state=$statusCode")->andWhere("date=$unixDate")->one();
+                    $as = ServiceAppealState::find()->where("id_appeal=$apppeal->id_appeal")->andWhere("state='$statusCode'")->andWhere("date=$unixDate")->one();
 
                     if(!$as)
                     {
