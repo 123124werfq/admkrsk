@@ -327,7 +327,8 @@ class ServiceController extends Controller
                    if ($state->save())
                    {
                        $appeal->state = $state->state;
-                       $appeal->number_internal = $appeal->id_appeal; // пока такой внутренний номер
+                       $appeal->number_internal = strtoupper(str_replace('-','',$idents['guid'])); // пока такой внутренний номер
+                       //$appeal->number_system = $idents['guid'];
                        $appeal->updateAttributes(['state', 'number_internal']);
 
                         // запрос к СЭД
@@ -380,6 +381,7 @@ class ServiceController extends Controller
 
                         return [
                             'success'=>$form->message_success?$form->renderMessage($record,[
+                                    'appeal_id' => $appeal->id_appeal,
                                     'appeal_number'=> isset($appeal->number_internal)?$appeal->number_internal:false,
                                     'service_reestr_number'=>$service->reestr_number,
                                     'service_reestr_name'=>$service->name,
