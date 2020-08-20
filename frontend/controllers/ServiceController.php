@@ -310,7 +310,7 @@ class ServiceController extends Controller
                 $appeal->id_target = $insertedData['id_target'];
                 $appeal->state = 'empty'; // это переехало в ServiceAppealState, убрать в перспективе
                 $appeal->created_at = time();
-                $appeal->data = serialize($insertedData);
+                $appeal->data = json_encode($insertedData);
 
                 $idents = [
                    'guid' => Service::generateGUID()
