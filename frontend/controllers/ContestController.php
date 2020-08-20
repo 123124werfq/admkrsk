@@ -125,6 +125,14 @@ class ContestController extends \yii\web\Controller
             $this->redirect("/contests/select/select");
 
 //        $canAdd = !(isset($cc['max_orders']) && $cc['max_orders']>0 && $cc['max_orders']<=$total_ord);
+        $currentContest['mainpage'] = 'contest_the_mayor_premium_for_iniciative_citizen';
+
+        if(isset($currentContest['mainpage']))        
+        {
+            $mainpage = Page::find()->where(['alias' => $currentContest['mainpage']])->one();
+            if($mainpage)
+                $page = $mainpage;
+        }
 
         return $this->render('form', [
             'form'      => $form,
