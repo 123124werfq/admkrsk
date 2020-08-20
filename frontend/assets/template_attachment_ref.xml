@@ -34,11 +34,11 @@
           <ServiceTarget>ТЕСТ С ВЛОЖЕНИЕМ</ServiceTarget>
           <ServicePlace>Город</ServicePlace>
           <DocDate>REQDATEHERE</DocDate>
-          <FL_FIO LastName="ИВАНОВ" FirstName="ИВАН" MiddleName="ИВАНОВИЧ" />
+          <FL_FIO LastName="firstname" FirstName="secondname" MiddleName="middlename" />
           <FL_SNILS>{snils}</FL_SNILS>
           <FL_PASSPORT PassportSeriesAndNum="{passport_serie} {passport_number}" PassportWhoIssued="{passport_issued}" PassportWhenIssued="{passport_date}" />
           <ADR ADR_Country="{addr_country}" ADR_Region_Code="{addr_region_code}" ADR_Region="{addr_region}" ADR_City_Code="{addr_city_code}" ADR_City="{addr_city}" ADR_City_District="{addr_district}" ADR_Street_Code="{addr_street_code}" ADR_Street="{addr_street}" ADR_House="{addr_house}" ADR_Zip="{addr_zip}" />
-          <FL_ContactInfo Tel="000000000" />
+          <FL_ContactInfo Tel="{phone}" />
           <FL_SUBJECT>TEST</FL_SUBJECT>
           <FIELDS>
             {fields_list}

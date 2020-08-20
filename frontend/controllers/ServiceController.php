@@ -301,8 +301,6 @@ class ServiceController extends Controller
             {
                 $insertedData = $record->getData(true);
 
-                print_r($insertedData); die();
-
                 $appeal = new ServiceAppeal;
                 $appeal->id_user = Yii::$app->user->id;
                 $appeal->id_service = $service->id_service;
@@ -312,6 +310,7 @@ class ServiceController extends Controller
                 $appeal->id_target = $insertedData['id_target'];
                 $appeal->state = 'empty'; // это переехало в ServiceAppealState, убрать в перспективе
                 $appeal->created_at = time();
+                $appeal->data = serialize($insertedData);
 
                 $idents = [
                    'guid' => Service::generateGUID()
