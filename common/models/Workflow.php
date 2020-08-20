@@ -689,7 +689,7 @@ XMLPARTS2;
 
               if(!empty($appeal->data))
               {
-                $userData = json_decode($appeal->data);
+                $userData = json_decode($appeal->data, true);
                 if(isset($userData['firstname'])) $sourceText = str_replace('firstname', $userData['firstname'], $sourceText);
                 if(isset($userData['secondname'])) $sourceText = str_replace('secondname', $userData['secondname'], $sourceText);
                 if(isset($userData['middlename'])) $sourceText = str_replace('middlename', $userData['middlename'], $sourceText);
