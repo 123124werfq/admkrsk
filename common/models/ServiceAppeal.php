@@ -119,7 +119,7 @@ class ServiceAppeal extends \yii\db\ActiveRecord
 
     public function getStatusName()
     {
-        $as = ServiceAppealState::find()->where(['id_appeal' => $this->id_record])->orderBy('id_state DESC')->one();
+        $as = ServiceAppealState::find()->where(['id_appeal' => $this->id_appeal])->orderBy('id_state DESC')->one();
 
         if(!$as)
             return 'н/д';
@@ -189,7 +189,7 @@ class ServiceAppeal extends \yii\db\ActiveRecord
     
     public function getStatusDate()
     {
-        $as = ServiceAppealState::find()->where(['id_appeal' => $this->id_record])->andWhere(['state' => 1])->one();
+        $as = ServiceAppealState::find()->where(['id_appeal' => $this->id_appeal])->andWhere(['state' => 1])->one();
 
         if(!$as)
             return "-";
