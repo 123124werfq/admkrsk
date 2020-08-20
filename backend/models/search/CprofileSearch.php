@@ -73,7 +73,8 @@ class CprofileSearch extends CstProfile
         if(isset($contests[$this->id_contest]))
             $sql = "SELECT * FROM cst_profile cp 
                 LEFT JOIN form_form ff ON cp.id_record_contest = ff.id_collection
-                WHERE ff.alias = '{$contests[$this->id_contest]['participant_form']}'";
+                left join db_collection_record cr on cr.id_record = cp.id_record_anketa 
+                WHERE ff.alias = '{$contests[$this->id_contest]['participant_form']}' and cr.created_by is not null";
         else
             $sql = "SELECT * FROM cst_profile cp";
 
