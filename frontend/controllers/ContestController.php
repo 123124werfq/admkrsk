@@ -125,7 +125,6 @@ class ContestController extends \yii\web\Controller
             $this->redirect("/contests/select/select");
 
 //        $canAdd = !(isset($cc['max_orders']) && $cc['max_orders']>0 && $cc['max_orders']<=$total_ord);
-        $currentContest['mainpage'] = 'contest_the_mayor_premium_for_iniciative_citizen';
 
         $mainpage = $page;
         if(isset($currentContest['mainpage']))        
