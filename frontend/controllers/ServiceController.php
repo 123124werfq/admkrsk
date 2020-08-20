@@ -301,6 +301,8 @@ class ServiceController extends Controller
             {
                 $insertedData = $record->getData(true);
 
+                print_r($insertedData); die();
+
                 $appeal = new ServiceAppeal;
                 $appeal->id_user = Yii::$app->user->id;
                 $appeal->id_service = $service->id_service;
