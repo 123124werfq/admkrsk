@@ -120,9 +120,11 @@ class ServiceAppeal extends \yii\db\ActiveRecord
     public function getStatusName()
     {
         $as = ServiceAppealState::find()->where(['id_appeal' => $this->id_record])->orderBy('id_state DESC')->one();
-        $result = 'н/д';
 
-        switch ($as) {
+        if(!$as)
+            return 'н/д';
+
+        switch ($as->state) {
             case -1:
                 $result = 'Ошибка обработки результата';
                 break;
