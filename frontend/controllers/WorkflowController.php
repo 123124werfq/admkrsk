@@ -15,9 +15,13 @@ use Selective\XmlDSig\DigestAlgorithmType;
 use Selective\XmlDSig\XmlSigner;
 use XmlDsig\XmlDigitalSignature;
 
+use SimpleXMLElement;
 
 use common\models\Pdocument;
 use frontend\models\WorkflowForm;
+
+use common\models\ServiceAppeal;
+use common\models\ServiceAppealState;
 
 class WorkflowController extends \yii\web\Controller
 {
@@ -317,12 +321,54 @@ MTMOARCH;
         return parent::beforeAction($action);
     }
 
+    static protected function xmlToArray($xml)
+    {
+        $res = false;
+        $response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", trim($xml));
+        $xml = new SimpleXMLElement($response);
+        $body = $xml->xpath('//SBody')[0];
+        $res = json_decode(json_encode((array)$body), TRUE);
+        return $res;
+    }
+
     public function actionInlet()
     {
         $path = Yii::getAlias('@runtime')."/logs/services.log";
+
+        $input = file_get_contents('php://input');
         file_put_contents($path,date("r").":\n\n", FILE_APPEND);
-        file_put_contents($path,file_get_contents('php://input'), FILE_APPEND);
+        file_put_contents($path,$input, FILE_APPEND);
         file_put_contents($path,"\n", FILE_APPEND);
+
+        $input = trim($input);
+
+        $xmlArray = self::xmlToArray($input);
+
+        if(isset($xmlArray['v25pushEventRequest']['smevMessage']))
+        {
+            $caseNum =  $xmlArray['v25pushEventRequest']['smevMessage']['smevCaseNumber'];
+            $statusInfo = $xmlArray['v25pushEventRequest']['smevMessageData']['smevAppData'];
+            $statusCode = $xmlArray['v25pushEventRequest']['smevMessageData']['smevAppData']['event']['orderStatusEvent']['statusCode']['techCode'];
+    
+            $appeal = ServiceAppeal::find()->where("number_internal='$caseNum'")->one();
+
+            if($appeal)
+            {
+                $unixDate = strtotime($statusInfo['eventDate']);
+                $as = ServiceAppealState::find()->where("id_appeal=$appeal->id_appeal")->andWhere("state='$statusCode'")->andWhere("date=$unixDate")->one();
+    
+                if(!$as)
+                {
+                    $as = new ServiceAppealState;
+                    $as->id_appeal = $appeal->id_appeal;
+                    $as->state = $statusCode;
+                    $as->date = $unixDate;
+                    $as->save();
+                }
+            }
+    
+        }
+
     }    
 
     public function actionAppealsinput()
