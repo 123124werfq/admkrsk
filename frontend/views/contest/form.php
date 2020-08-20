@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div class="col-third order-xs-0">
-                <?=frontend\widgets\RightMenuWidget::widget(['page'=>$page])?>
+                <?=frontend\widgets\RightMenuWidget::widget(['page'=>$mainpage])?>
             </div>
         </div>
     </div>
