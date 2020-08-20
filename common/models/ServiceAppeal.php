@@ -183,5 +183,16 @@ class ServiceAppeal extends \yii\db\ActiveRecord
         }
 
         return $result;
-    }       
+    }
+    
+    public function getStatusDate()
+    {
+        $as = ServiceAppealState::find()->where(['id_appeal' => $this->id_record])->andWhere(['state' => 1])->one();
+
+        if(!$as)
+            return "-";
+
+        return date("d.m.Y", $as->date);
+
+    }
 }
