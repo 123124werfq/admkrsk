@@ -103,7 +103,11 @@ class ContestController extends \yii\web\Controller
             if(!empty($contest['participant_form']))
             {
                 if($form->alias == $contest['participant_form'])
+                {
                     $contestname = $contest['name'];
+                    if(isset($contest['mainpage']))
+                        $contestmainpage = $contest['mainpage'];
+                }
             }
         }
 
@@ -127,9 +131,9 @@ class ContestController extends \yii\web\Controller
 //        $canAdd = !(isset($cc['max_orders']) && $cc['max_orders']>0 && $cc['max_orders']<=$total_ord);
 
         $mainpage = $page;
-        if(isset($currentContest['mainpage']))        
+        if(isset($contestmainpage))        
         {
-            $mainpage = Page::find()->where(['alias' => $currentContest['mainpage']])->one();
+            $mainpage = Page::find()->where(['alias' => $contestmainpage])->one();
             if(!$mainpage)
                 $mainpage = $page;
         }
