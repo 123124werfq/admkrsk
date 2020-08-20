@@ -105,8 +105,11 @@ class ContestController extends \yii\web\Controller
                 if($form->alias == $contest['participant_form'])
                 {
                     $contestname = $contest['name'];
-                    if(isset($contest['mainpage']))
-                        $contestmainpage = $contest['mainpage'];
+                    if(isset($contest['contest_page_link']))
+                    {
+                        $tm = explode("/", $contest['contest_page_link']);
+                        $contestmainpage = end($tm);
+                    }
                 }
             }
         }
