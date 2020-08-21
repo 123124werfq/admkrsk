@@ -13,6 +13,18 @@ function getValueById(id)
     return '';
 }
 
+function removeRow(obj)
+{
+  var parent = $(obj).parent().parent();
+
+  if (parent.siblings().length>0)
+      parent.remove();
+  else
+      parent.find("input,textarea").val('');
+
+  return false;
+}
+
 function setVisisble()
 {
     $("div[data-visible-field]").each(function(){

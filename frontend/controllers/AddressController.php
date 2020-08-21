@@ -244,37 +244,29 @@ class AddressController extends \yii\web\Controller
         };
 
         $query = House::find()
-            ->select(['id_house', 'name', 'postalcode', 'lat', 'lon'])
+            ->select(['id_house', 'map_house.name', 'postalcode', 'lat', 'lon','district.name as districtname','map_house.id_district'])
+            ->joinWith('district as district')
             ->filterWhere(['id_street' => $id_street ?: null])
-            ->groupBy('id_house')
-            ->orderBy(['name' => SORT_ASC])
+            ->groupBy('id_house, district.name')
+            ->orderBy(['map_house.name' => SORT_ASC])
             ->limit(20)
             ->asArray();
 
-        if ($search) {
+        if ($search)
             $query->andFilterWhere(['ilike', 'name', $search]);
-        }
 
         $results = [];
         foreach ($query->all() as $house) {
             $results[] = [
                 'id' => $house['id_house'],
                 'text' => $house['name'],
+                'district' => $house['districtname'],
+                'id_district' => $house['id_district'],
                 'postalcode' => $house['postalcode'],
                 'lat' => $house['lat'],
                 'lon' => $house['lon'],
             ];
         }
-
-        /*if (empty($results)) {
-            $results = [
-                'id' => null,
-                'text' => $search,
-                'postalcode' => '',
-                'lat' => '',
-                'lon' => '',
-            ];
-        }*/
 
         return $this->asJson(['results' => $results]);
     }

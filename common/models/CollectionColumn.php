@@ -86,6 +86,18 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'type'=>'input',
                 ],
             ],
+            self::TYPE_DATETIME=>[
+                'default'=>[
+                    'name'=>'Сейчас по умолчанию',
+                    'type'=>'checkbox',
+                ],
+            ],
+            self::TYPE_DATE=>[
+                'default'=>[
+                    'name'=>'Сегодня по умолчанию',
+                    'type'=>'checkbox',
+                ],
+            ],
             self::TYPE_COLLECTIONS => [
                 'accept_add'=>[
                     'name'=>'Разрешить добавление',

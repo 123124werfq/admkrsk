@@ -5,25 +5,13 @@
 	if (!empty($show_on_map))
 	{
 		$this->registerJsFile('https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=987cf952-38fd-46ee-b595-02977f1247ac',['depends'=>[\yii\web\JqueryAsset::className()],'position'=>\yii\web\View::POS_END]);
-
 		$this->registerJsFile('/js/onmap.js',['depends'=>[\yii\web\JqueryAsset::className()],'position'=>\yii\web\View::POS_END]);
 	}
 
 	$i=1;
 ?>
 
-<form class="search-table" data-hash="<?=$unique_hash?>" action="">
-	<?php if (!empty($search_columns)){?>
-		<?php foreach ($search_columns as $key => $column)
-		{
-			if ($column['type']==0)
-				echo Html::dropDownList('search_column['.$unique_hash.']['.$column['column']->id_column.']','',$column['values'],['class'=>'form-control','prompt'=>$column['column']->name]);
-			else
-				echo Html::textInput('search_column['.$unique_hash.']['.$column['column']->id_column.']','',['class'=>'form-control','placeholder'=>$column['column']->name,'max-lenght'=>255]);
-		 }?>
- 	<?php }?>
- 	<?=Html::dropDownList('ps','',[$pagesize=>$pagesize,20=>20,30=>30,50=>50],['class'=>'form-control pagesize']);?>
-</form>
+<?=$this->render('_search',['unique_hash'=>$unique_hash,'search_columns'=>$search_columns,'pagesize'=>$pagesize])?>
 
 <div class="collection-controls">
 	<?php if (!empty($show_download) && !empty($setting)){?>
