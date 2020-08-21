@@ -103,7 +103,14 @@ class ContestController extends \yii\web\Controller
             if(!empty($contest['participant_form']))
             {
                 if($form->alias == $contest['participant_form'])
+                {
                     $contestname = $contest['name'];
+                    if(isset($contest['contest_page_link']))
+                    {
+                        $tm = explode("/", $contest['contest_page_link']);
+                        $contestmainpage = end($tm);
+                    }
+                }
             }
         }
 
@@ -126,6 +133,14 @@ class ContestController extends \yii\web\Controller
 
 //        $canAdd = !(isset($cc['max_orders']) && $cc['max_orders']>0 && $cc['max_orders']<=$total_ord);
 
+        $mainpage = $page;
+        if(isset($contestmainpage))        
+        {
+            $mainpage = Page::find()->where(['alias' => $contestmainpage])->one();
+            if(!$mainpage)
+                $mainpage = $page;
+        }
+
         return $this->render('form', [
             'form'      => $form,
             'page'      => $page,
@@ -133,6 +148,7 @@ class ContestController extends \yii\web\Controller
             'contestname' => $contestname,
             'profile' => $profile,
             'record'    => !empty($profile->record)?$profile->record:null,
+            'mainpage' => $mainpage
 //            'canAdd' =>  $canAdd
         ]);
     }

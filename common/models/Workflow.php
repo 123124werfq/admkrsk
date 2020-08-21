@@ -686,6 +686,26 @@ XMLPARTS2;
                 $tagstring = "Input_{$tagparts[0]}_{$tagparts[1]}_{$tagparts[2]}FL";
                 $sourceText = str_replace('TAGSERVICEHERE', $tagstring, $sourceText);
               }
+
+              if(!empty($appeal->data))
+              {
+                $userData = json_decode($appeal->data, true);
+                if(isset($userData['firstname'])) $sourceText = str_replace('firstname', $userData['firstname'], $sourceText);
+                if(isset($userData['secondname'])) $sourceText = str_replace('secondname', $userData['secondname'], $sourceText);
+                if(isset($userData['middlename'])) $sourceText = str_replace('middlename', $userData['middlename'], $sourceText);
+                if(isset($userData['passport_Seria'])) $sourceText = str_replace('{passport_serie}', $userData['passport_Seria'], $sourceText);
+                if(isset($userData['passport_number'])) $sourceText = str_replace('{passport_number}', $userData['passport_number'], $sourceText);
+                if(isset($userData['passport_out'])) $sourceText = str_replace('{passport_issued}', $userData['passport_out'], $sourceText);
+                if(isset($userData['passport_outDate'])) $sourceText = str_replace('{passport_date}', $userData['passport_outDate'], $sourceText);
+                if(isset($userData['home_address']['country'])) $sourceText = str_replace('{addr_country}', $userData['home_address']['country'], $sourceText);
+                if(isset($userData['home_address']['region'])) $sourceText = str_replace('{addr_region}', $userData['home_address']['region'], $sourceText);
+                if(isset($userData['home_address']['city'])) $sourceText = str_replace('{addr_city}', $userData['home_address']['city'], $sourceText);
+                if(isset($userData['home_address']['district'])) $sourceText = str_replace('{addr_district}', $userData['home_address']['district'], $sourceText);
+                if(isset($userData['home_address']['street'])) $sourceText = str_replace('{addr_street}', $userData['home_address']['street'], $sourceText);
+                if(isset($userData['home_address']['house'])) $sourceText = str_replace('{addr_house}', $userData['home_address']['house'], $sourceText);
+                if(isset($userData['home_address']['postalcode'])) $sourceText = str_replace('{addr_zip}', $userData['home_address']['postalcode'], $sourceText);
+                if(isset($userData['fl_phone'])) $sourceText = str_replace('{phone}', $userData['fl_phone'], $sourceText);
+              }
             }
 
             $tempPath = str_replace('.xml', '_temp.xml', $sourcePath); // формирум файл, который будем подписывать

@@ -295,6 +295,7 @@ ul.menu-container ul .create-menu {display: none;}
 .nav-list-topbar.nav > li.active a {background: #fff; color: #333;}
 
 .modal-body .btn {display: none;}
+.modal-body tfoot .btn {display: block;}
 
 .modal-body {
     padding: 20px 20px 30px 10px;

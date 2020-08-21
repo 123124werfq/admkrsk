@@ -23,12 +23,12 @@
                         </thead>           
                         <?php foreach ($appeals as $appeal){  ?>
                         <tr>
-                            <td><?=$appeal->target->reestr_number?>-<?=$appeal->number_internal?><br><?=date("d.m.Y", $appeal->created_at)?></td>
+                            <td><?=$appeal->target->reestr_number?>-<?=$appeal->id_appeal?><br><?=date("d.m.Y", $appeal->created_at)?></td>
                             <td>
                                 <?=$appeal->target->reestr_number?><br>
                                 <?=$appeal->target->name?><br><br>
-                                Номер: <?=$appeal->target->target_code?><br>
-                                Дата регистрации: -<br>
+                                Номер: <?=$appeal->number_internal?><br>
+                                Дата регистрации: <?=$appeal->statusDate?><br>
                             </td>
                             <td><?=$appeal->statusName?></td>
                             <td>
