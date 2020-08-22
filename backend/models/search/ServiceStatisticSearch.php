@@ -74,7 +74,6 @@ class ServiceStatisticSearch extends Integration
         if(count($cond))
             $sql .= " where " . implode(" and ", $cond);
 
-echo($sql); die();
         $count = Yii::$app->db->createCommand("SELECT COUNT(*) FROM ($sql) t1")->queryScalar();
     
         $dataProvider = new SqlDataProvider([
