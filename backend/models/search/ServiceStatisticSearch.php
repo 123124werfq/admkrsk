@@ -49,9 +49,9 @@ class ServiceStatisticSearch extends Integration
     {
         //var_dump($params); die();
         $sql = "select *, st.reestr_number, st.name as target_name from(
-                    select sa.id_appeal, sa.id_service, sa.id_target, sa.number_internal, sa.number_system , MAX(sas.\"date\") as resdate, sas.state as resstate, string_agg(sas.state,'→') as state_history from service_appeal sa 
+                    select sa.id_appeal, sa.id_service, sa.id_target, sa.number_internal, sa.number_system , MAX(sas.\"date\") as resdate, max(sas.state) as resstate, string_agg(sas.state,'→') as state_history from service_appeal sa 
                     left join service_appeal_state sas on sas.id_appeal = sa.id_appeal 
-                    group by sa.id_appeal, sas.state
+                    group by sa.id_appeal
                     ) t1 
                     left join service_target st on st.id_target = CAST(coalesce(t1.id_target, '0') AS integer)
                     ";
@@ -74,7 +74,7 @@ class ServiceStatisticSearch extends Integration
         if(count($cond))
             $sql .= " where " . implode(" and ", $cond);
 
-
+echo($sql); die();
         $count = Yii::$app->db->createCommand("SELECT COUNT(*) FROM ($sql) t1")->queryScalar();
     
         $dataProvider = new SqlDataProvider([
