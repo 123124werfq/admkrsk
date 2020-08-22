@@ -172,6 +172,7 @@ $defaultColumns = [
             ['class' => 'form-control', 'prompt' => 'Все']
         )          
     ],
+    /*
     'state_history'  => [ 
         'label' => 'История',
         'format' => 'raw',
@@ -185,9 +186,10 @@ $defaultColumns = [
                 $output[] = "<acronym title='" .ServiceAppealState::statusNameByCode($st) . "'>$st</acronym>"; 
             }
 
-            return $model['state_history'].implode("→", $output);
+            return implode("→", $output);
         }
     ],
+    */
     'number_internal' => [ 
         'label' => '',
         'attribute' => 'number_internal',
