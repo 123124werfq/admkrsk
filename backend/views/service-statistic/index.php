@@ -159,7 +159,7 @@ $defaultColumns = [
         'label' => 'Текущий статус',
         //'attribute' => 'resstate',        
         'value' => function ($model) {
-            return ServiceAppealState::statusNameByCode($model['resstate']);
+            //return ServiceAppealState::statusNameByCode($model['resstate']);
 
             $curState = explode("→", $model['state_history']);
 
@@ -172,7 +172,6 @@ $defaultColumns = [
             ['class' => 'form-control', 'prompt' => 'Все']
         )          
     ],
-    /*
     'state_history'  => [ 
         'label' => 'История',
         'format' => 'raw',
@@ -189,7 +188,6 @@ $defaultColumns = [
             return implode("→", $output);
         }
     ],
-    */
     'number_internal' => [ 
         'label' => '',
         'attribute' => 'number_internal',
