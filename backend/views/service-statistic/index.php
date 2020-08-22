@@ -105,6 +105,14 @@ $defaultColumns = [
 ];
 */
 
+$allStatuses = [];
+
+for ($i=-1; $i < 20 ; $i++) { 
+
+    if(ServiceAppealState::statusNameByCode($i) != 'Неизвестный статус')
+        $allStatuses[$i] = ServiceAppealState::statusNameByCode($i);
+};
+
 $defaultColumns = [
     'id_appeal' => 'id_appeal:integer:ID',
     'date:prop' => [
@@ -149,13 +157,36 @@ $defaultColumns = [
     */
     'resstate' => [
         'label' => 'Текущий статус',
+        //'attribute' => 'resstate',        
         'value' => function ($model) {
             return ServiceAppealState::statusNameByCode($model['resstate']);
-        }
+
+            $curState = explode("→", $model['state_history']);
+
+            return ServiceAppealState::statusNameByCode(end($curState));
+        },
+        'filter' => Html::activeDropDownList(
+            $searchModel,
+            'resstate',
+            $allStatuses,
+            ['class' => 'form-control', 'prompt' => 'Все']
+        )          
     ],
     'state_history'  => [ 
         'label' => 'История',
-        'attribute' => 'state_history',
+        'format' => 'raw',
+        //'attribute' => 'state_history',
+        'value' => function ($model) {
+            $curState = explode("→", $model['state_history']);
+            $output = [];
+
+            foreach($curState as $st)
+            {
+                $output[] = "<acronym title='" .ServiceAppealState::statusNameByCode($st) . "'>$st</acronym>"; 
+            }
+
+            return implode("→", $output);
+        }
     ],
     'number_internal' => [ 
         'label' => '',
@@ -183,6 +214,15 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'rowOptions'=>function($model){
+            $curState = explode("→", $model['state_history']);
+            if(in_array(end($curState),[3,4]) )
+                return ['class' => 'success'];
+
+            if(end($curState)==0 && strtotime($model['resdate'])<strftime("1 day ago") ){
+                return ['class' => 'danger'];
+            }
+        },        
         'columns' => array_merge(array_values($gridColumns), [
             /*
             [
