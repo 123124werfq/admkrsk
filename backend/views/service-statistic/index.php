@@ -185,7 +185,7 @@ $defaultColumns = [
                 $output[] = "<acronym title='" .ServiceAppealState::statusNameByCode($st) . "'>$st</acronym>"; 
             }
 
-            return implode("→", $output);
+            return $model['state_history'].implode("→", $output);
         }
     ],
     'number_internal' => [ 
