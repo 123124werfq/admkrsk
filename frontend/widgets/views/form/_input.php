@@ -97,6 +97,8 @@ if (empty($modelForm->maxfilesize))
 
                 if (!empty($model->$clearAttribute))
                     $model->$clearAttribute = date('Y-m-d', $model->$clearAttribute);
+                else if (!empty($options['default']))
+                    $model->$clearAttribute = date('Y-m-d');
 
                 echo $form->field($model, $attribute)->textInput($options);
                 break;
@@ -106,7 +108,9 @@ if (empty($modelForm->maxfilesize))
                     $model->$clearAttribute = strtotime($model->$clearAttribute);
 
                 if (!empty($model->$clearAttribute))
-                    $model->$clearAttribute = date('Y-m-d\TH:i:s', $model->$clearAttribute);
+                    $model->$clearAttribute = date('Y-m-d\TH:i', $model->$clearAttribute);
+                else if (!empty($options['default']))
+                    $model->$clearAttribute = date('Y-m-d\TH:i');
 
                 $options['type'] = 'datetime-local';
                 echo $form->field($model, $attribute)->textInput($options);
@@ -366,6 +370,22 @@ if (empty($modelForm->maxfilesize))
                     ],
                     'pluginEvents' => [
                         "select2:select" => "function(e) {
+                            var regionID = $('#input-district$id_input');
+
+                            if (regionID.length >0 && regionID.val()=='')
+                            {
+                                if (e.params.data.district!='')
+                                {
+                                    if (regionID.find('option[value=\"'+ e.params.data.id_district + '\"]').length) {
+                                        regionID.val(e.params.data.id_district).trigger('change');
+                                    } else {              
+                                        console.log(123);
+                                        var newOption = new Option(e.params.data.district, e.params.data.id_district, true, true);                                        
+                                        regionID.append(newOption).trigger('change');
+                                    } 
+                                }
+                            }
+
                             if ($('#postcode" . $id_input . "').length>0)
                                 $('#postcode" . $id_input . "').val(e.params.data.postalcode);
                         }",
@@ -812,7 +832,8 @@ JS;
                         ],
                     ],
                     'pluginEvents' => [
-                        "select2:select" => "function(e) {
+                        "select2:select" => "function(e) {                            
+                            
                     		if ($('#postalcode" . $id_subform . "').length>0)
                     			$('#postalcode" . $id_subform . "').val(e.params.data.postalcode);
                     	}",

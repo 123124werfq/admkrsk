@@ -1,3 +1,5 @@
+<?=$this->render('_search',['unique_hash'=>$unique_hash,'search_columns'=>$search_columns,'pagesize'=>$pagesize])?>
+
 <?php
 	foreach ($allrows as $id_record => $row)
 	{
