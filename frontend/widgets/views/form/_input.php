@@ -97,6 +97,8 @@ if (empty($modelForm->maxfilesize))
 
                 if (!empty($model->$clearAttribute))
                     $model->$clearAttribute = date('Y-m-d', $model->$clearAttribute);
+                else if (!empty($options['default']))
+                    $model->$clearAttribute = date('Y-m-d');
 
                 echo $form->field($model, $attribute)->textInput($options);
                 break;
@@ -106,7 +108,9 @@ if (empty($modelForm->maxfilesize))
                     $model->$clearAttribute = strtotime($model->$clearAttribute);
 
                 if (!empty($model->$clearAttribute))
-                    $model->$clearAttribute = date('Y-m-d\TH:i:s', $model->$clearAttribute);
+                    $model->$clearAttribute = date('Y-m-d\TH:i', $model->$clearAttribute);
+                else if (!empty($options['default']))
+                    $model->$clearAttribute = date('Y-m-d\TH:i');
 
                 $options['type'] = 'datetime-local';
                 echo $form->field($model, $attribute)->textInput($options);
@@ -136,20 +140,37 @@ if (empty($modelForm->maxfilesize))
                 echo $form->field($model, $attribute)->textArea($options);
                 break;
             case CollectionColumn::TYPE_REPEAT:
+                
+                echo $form->field($model, $attribute.'[begin]')->textInput(['type'=>'date']);
+                echo $form->field($model, $attribute.'[end]')->textInput(['type'=>'date']);
+
                 echo '<div class="checkbox-group">
                             <label class="checkbox checkbox__ib">
-                                ' . Html::checkBox($inputname.'[active]', (!empty($model->$clearAttribute)), ['class'=>'checkbox_control']) . '
-                                <span class="checkbox_label">' . ($input->label ?? $input->name) . '</span>
+                                ' . Html::checkBox($inputname.'[is_repeat]', (!empty($model->$clearAttribute['is_repeat'])), ['class'=>'checkbox_control']) . '
+                                <span class="checkbox_label">Повторяющееся событие</span>
                             </label>
                       </div>';
-                echo $form->field($model, $attribute.'[repeat]')->radioList([1=>'Ежедневно',7=>'Еженедельно',31=>"Ежемесячно"], $options);
-                echo $form->field($model, $attribute.'[days]')->textinput(['placeholder'=>'Дней между повторами']);
 
-                foreach ($input->getArrayValues() as $key => $value)
+                echo $form->field($model, $attribute.'[repeat_cout]')->textInput(['type'=>'number','min'=>0,'placeholder'=>'Количество повторов']);
+
+                echo $form->field($model, $attribute.'[repeat]')->radioList([1=>'Ежедневно',7=>'Еженедельно',31=>"Ежемесячно"], $options);
+                echo $form->field($model, $attribute.'[days]')->textInput(['placeholder'=>'Дней между повторами']);
+
+                $week = [
+                    'Понедельник'=>'Понедельник',
+                    'Вторник'=>'Вторник',
+                    'Среда'=>'Среда',
+                    'Четверг'=>'Четверг',
+                    'Пятница'=>'Пятница',
+                    'Суббота'=>'Суббота',
+                    'Воскресенье'=>'Воскресенье',
+                ];
+
+                foreach ($week as $key => $value)
                 {
                     echo '<div class="radio-group">
                                 <label class="radio">
-                                    <input type="radio" name="'.$inputname.'" value="' . Html::encode($key) . '" class="radio_control">
+                                    <input type="radio" name="'.$inputname.'[week]'.'" value="' . Html::encode($key).'" class="radio_control">
                                     <span class="radio_label">' . $value . '</span>
                                 </label>
                           </div>';
@@ -366,6 +387,22 @@ if (empty($modelForm->maxfilesize))
                     ],
                     'pluginEvents' => [
                         "select2:select" => "function(e) {
+                            var regionID = $('#input-district$id_input');
+
+                            if (regionID.length >0 && regionID.val()=='')
+                            {
+                                if (e.params.data.district!='')
+                                {
+                                    if (regionID.find('option[value=\"'+ e.params.data.id_district + '\"]').length) {
+                                        regionID.val(e.params.data.id_district).trigger('change');
+                                    } else {              
+                                        console.log(123);
+                                        var newOption = new Option(e.params.data.district, e.params.data.id_district, true, true);                                        
+                                        regionID.append(newOption).trigger('change');
+                                    } 
+                                }
+                            }
+
                             if ($('#postcode" . $id_input . "').length>0)
                                 $('#postcode" . $id_input . "').val(e.params.data.postalcode);
                         }",
@@ -812,7 +849,8 @@ JS;
                         ],
                     ],
                     'pluginEvents' => [
-                        "select2:select" => "function(e) {
+                        "select2:select" => "function(e) {                            
+                            
                     		if ($('#postalcode" . $id_subform . "').length>0)
                     			$('#postalcode" . $id_subform . "').val(e.params.data.postalcode);
                     	}",

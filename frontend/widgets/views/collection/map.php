@@ -15,3 +15,4 @@ JS;
 <div class="collection-map">
 	<div id="map<?=$uniq_id?>" style="width: <?=$options['width']?>; height: <?=$options['height']?>"></div>
 </div>
+

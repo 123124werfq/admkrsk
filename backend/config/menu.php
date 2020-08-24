@@ -251,6 +251,12 @@ return [
                     'menu.service' => ['class' => Service::class],
                 ]
             ],
+            'service-statistic' => [
+                'title' => 'Статистика',
+                'roles' => [
+                    'menu.service' => ['class' => Service::class],
+                ]
+            ],
         ],
     ],
 //    'institution' => [
