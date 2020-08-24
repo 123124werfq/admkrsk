@@ -169,19 +169,18 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     $output[$search_index] = '';
                 break;
             case CollectionColumn::TYPE_REPEAT:
-                
+
                 $output[$search_index] = implode("\r\n", $value);
 
                 $dates = [];
 
-                if (!empty[$value['repeat_cout']])
-                {                    
+                if (!empty([$value['repeat_cout']])
+                {
                     for ($i=1; $i<=(int)$value['repeat_cout']; $i++)
                     {
-                        $dates 
                     }
                 }
-                
+
                 break;
             case CollectionColumn::TYPE_MAP:
                 $output[$search_index] = implode(' ', $value);
