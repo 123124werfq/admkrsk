@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
 use common\components\helper\Helper;
 use yii\mongodb\Query;
@@ -26,6 +27,8 @@ use yii\mongodb\Query;
  */
 class CollectionRecord extends \yii\db\ActiveRecord
 {
+    use SoftDeleteTrait;
+
     public $data = null;
 
     public $loadData = [];
@@ -344,7 +347,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             $output[$column['alias']][$id_record] = $subrecord->getDataAsString($keyAsAlias,false);
                         }
                     }
-                    else 
+                    else
                         $output[$column['alias']] = $column->getValueByType($value);
                 }
                 else

@@ -14,8 +14,6 @@ use yii\grid\GridView;
 /* @var $page Page */
 /* @var $customColumns array */
 
-$archive = Yii::$app->request->get('archive');
-
 $this->title = $page->title;
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -25,6 +23,8 @@ $this->params['button-block'][] = Html::a('Экспорт XLS', ['', 'export' =>
 GridAsset::register($this);
 
 
+$archive = Yii::$app->request->get('archive');
+
 if (Yii::$app->user->can('admin.news')) {
     if ($archive) {
         $this->params['button-block'][] = Html::a('Все записи', ['index', 'id_page' => $page->id_page], ['class' => 'btn btn-default']);
@@ -32,6 +32,7 @@ if (Yii::$app->user->can('admin.news')) {
         $this->params['button-block'][] = Html::a('Архив', ['index', 'id_page' => $page->id_page, 'archive' => 1], ['class' => 'btn btn-default']);
     }
 }
+
 $this->params['button-block'][] = Html::a('Добавить новость', ['create', 'id_page' => $page->id_page], ['class' => 'btn btn-success']);
 
 $defaultColumns = [

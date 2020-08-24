@@ -153,6 +153,22 @@ class CollectionRecordController extends Controller
         $this->redirect(Yii::$app->request->referrer ?: '/');
     }
 
+     /**
+     * @param $id
+     * @return Response
+     * @throws NotFoundHttpException
+     * @throws InvalidConfigException
+     */
+    public function actionUndelete($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->restore())
+            $model->createAction(Action::ACTION_UNDELETE);
+
+        return $this->redirect(['index', 'id' => $model->id_collection, 'archive' => 1]);
+    }
+
     public function makeAction($model,$type,$dataProvider)
     {
         // добавляем фильтр по ID
