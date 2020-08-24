@@ -174,10 +174,11 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                 $dates = [];
 
-                if (!empty([$value['repeat_cout']])
+                if (!empty([$value['repeat_cout']]))
                 {
                     for ($i=1; $i<=(int)$value['repeat_cout']; $i++)
                     {
+
                     }
                 }
 
