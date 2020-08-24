@@ -1,3 +1,6 @@
+<?php
+	use yii\helpers\Html;
+?>
 <form class="search-table" data-hash="<?=$unique_hash?>" action="">
 	<?php if (!empty($search_columns)){?>
 		<?php foreach ($search_columns as $key => $column)
