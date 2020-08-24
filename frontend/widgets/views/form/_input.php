@@ -140,20 +140,37 @@ if (empty($modelForm->maxfilesize))
                 echo $form->field($model, $attribute)->textArea($options);
                 break;
             case CollectionColumn::TYPE_REPEAT:
+                
+                echo $form->field($model, $attribute.'[begin]')->textInput(['type'=>'date']);
+                echo $form->field($model, $attribute.'[end]')->textInput(['type'=>'date']);
+
                 echo '<div class="checkbox-group">
                             <label class="checkbox checkbox__ib">
-                                ' . Html::checkBox($inputname.'[active]', (!empty($model->$clearAttribute)), ['class'=>'checkbox_control']) . '
-                                <span class="checkbox_label">' . ($input->label ?? $input->name) . '</span>
+                                ' . Html::checkBox($inputname.'[is_repeat]', (!empty($model->$clearAttribute['is_repeat'])), ['class'=>'checkbox_control']) . '
+                                <span class="checkbox_label">Повторяющееся событие</span>
                             </label>
                       </div>';
-                echo $form->field($model, $attribute.'[repeat]')->radioList([1=>'Ежедневно',7=>'Еженедельно',31=>"Ежемесячно"], $options);
-                echo $form->field($model, $attribute.'[days]')->textinput(['placeholder'=>'Дней между повторами']);
 
-                foreach ($input->getArrayValues() as $key => $value)
+                echo $form->field($model, $attribute.'[repeat_cout]')->textInput(['type'=>'number','min'=>0,'placeholder'=>'Количество повторов']);
+
+                echo $form->field($model, $attribute.'[repeat]')->radioList([1=>'Ежедневно',7=>'Еженедельно',31=>"Ежемесячно"], $options);
+                echo $form->field($model, $attribute.'[days]')->textInput(['placeholder'=>'Дней между повторами']);
+
+                $week = [
+                    'Понедельник'=>'Понедельник',
+                    'Вторник'=>'Вторник',
+                    'Среда'=>'Среда',
+                    'Четверг'=>'Четверг',
+                    'Пятница'=>'Пятница',
+                    'Суббота'=>'Суббота',
+                    'Воскресенье'=>'Воскресенье',
+                ];
+
+                foreach ($week as $key => $value)
                 {
                     echo '<div class="radio-group">
                                 <label class="radio">
-                                    <input type="radio" name="'.$inputname.'" value="' . Html::encode($key) . '" class="radio_control">
+                                    <input type="radio" name="'.$inputname.'[week]'.'" value="' . Html::encode($key).'" class="radio_control">
                                     <span class="radio_label">' . $value . '</span>
                                 </label>
                           </div>';

@@ -130,8 +130,8 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'type'=>'richtext',
                 ],
             ],
-            /*self::TYPE_REPEAT => [
-                'begin'=>[
+            self::TYPE_REPEAT => [
+                /*'begin'=>[
                     'name'=>'Дата начала',
                     'type'=>'input',
                 ],
@@ -147,13 +147,9 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'name'=>'Число повторов',
                     'type'=>'input',
                 ],
-                'time_begin'=>[
+                'time'=>[
                     'name'=>'Время начала',
-                    'type'=>'time',
-                ],
-                'time_end'=>[
-                    'name'=>'Время конца',
-                    'type'=>'time',
+                    'type'=>'table',
                 ],
                 'type'=>[
                     'name'=>'Трубется дополнительное подтверждение',
@@ -163,8 +159,8 @@ class CollectionColumn extends \yii\db\ActiveRecord
                         '2'=>"Еженедельно",
                         '3'=>"Ежемесячно",
                     ]
-                ],
-            ],*/
+                ],*/
+            ],
             self::TYPE_INTEGER => [
                 'min'=>[
                     'name'=>'Минимум',
@@ -333,7 +329,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             self::TYPE_SERVICETARGET => "Цель муниципальной услуги",
             self::TYPE_SERVICE => "Услуги для обжалования",
 
-            self::TYPE_REPEAT => 'Дата / Период',
+            self::TYPE_REPEAT => 'Повторяющееся событие',
             self::TYPE_CUSTOM => 'Составная колонка',
         ];
 
