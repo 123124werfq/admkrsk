@@ -170,17 +170,73 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 break;
             case CollectionColumn::TYPE_REPEAT:
 
-                $output[$search_index] = implode("\r\n", $value);
-
+            //var_dump($value);
                 $dates = [];
 
-                if (!empty([$value['repeat_cout']]))
+                if (!empty($value['repeat_cout']))
                 {
-                    for ($i=1; $i<=(int)$value['repeat_cout']; $i++)
-                    {
+                    $gbegin = $value['begin'];
+                    $gend = $value['end'];
 
+                    if ($value['repeat']=='Еженедельно')
+                    {
+                        $weeek = [];
+
+                        if (is_array($value['week']))
+                            foreach ($value['week'] as $key => $value)
+                            {
+                                switch ($value)
+                                {
+                                    case 'Понедельник':
+                                        $weeek[] = 1;
+                                        break;
+                                    case 'Вторник':
+                                        $weeek[] = 2;
+                                        break;
+                                    case 'Среда':
+                                        $weeek[] = 3;
+                                        break;
+                                    case 'Четверг':
+                                        $weeek[] = 4;
+                                        break;
+                                    case 'Пятница':
+                                        $weeek[] = 5;
+                                        break;
+                                    case 'Суббота':
+                                        $weeek[] = 6;
+                                        break;
+                                    case 'Воскресенье':
+                                        $weeek[] = 7;
+                                        break;
+                                }
+                            }
+
+                        $begin = $gbegin - (date('N',$begin)-1)*24*3600;
+
+                        for ($i=1; $i<=(int)$value['repeat_count']; $i++)
+                        {
+                            foreach ($week as $wkey => $wkday)
+                            {
+                                $search_date = $wkday*24*3600+$begin;
+
+                                if ($search_date<$gend)
+                                    break;
+
+                                if ($search_date>$gbegin)
+                                {
+                                    $dates = [$search_date];
+                                }
+                            }
+
+                            if ($search_date<$gend)
+                                break;
+
+                            $begin+=7*24*3600;
+                        }
                     }
                 }
+
+                $output[$search_index] = $dates;
 
                 break;
             case CollectionColumn::TYPE_MAP:

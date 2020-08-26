@@ -10,6 +10,7 @@ use common\models\CollectionColumn;
 use common\models\CollectionRecord;
 use kartik\select2\Select2;
 use yii\web\JsExpression;
+use yii\helpers\Url;
 
 /** @var FormElement $element */
 $styles = $element->getStyles();
@@ -29,7 +30,7 @@ $options['class'] = 'form-control';
 /*if (!empty($input->required))
     $options['required'] = true;*/
 
-if (!empty($input->readonly))
+if (!empty($input->readonly) && strpos(Yii::$app->params['backendUrl'],'/'.$_SERVER['SERVER_NAME'])===false)
     $options['readonly'] = true;
 
 if (empty($options['id']))
@@ -140,7 +141,7 @@ if (empty($modelForm->maxfilesize))
                 echo $form->field($model, $attribute)->textArea($options);
                 break;
             case CollectionColumn::TYPE_REPEAT:
-                
+
                 echo $form->field($model, $attribute.'[begin]')->textInput(['type'=>'date']);
                 echo $form->field($model, $attribute.'[end]')->textInput(['type'=>'date']);
 
@@ -151,9 +152,9 @@ if (empty($modelForm->maxfilesize))
                             </label>
                       </div>';
 
-                echo $form->field($model, $attribute.'[repeat_cout]')->textInput(['type'=>'number','min'=>0,'placeholder'=>'Количество повторов']);
+                echo $form->field($model, $attribute.'[repeat_count]')->textInput(['type'=>'number','min'=>0,'placeholder'=>'Количество повторов']);
 
-                echo $form->field($model, $attribute.'[repeat]')->radioList([1=>'Ежедневно',7=>'Еженедельно',31=>"Ежемесячно"], $options);
+                echo $form->field($model, $attribute.'[repeat]')->radioList(['Ежедневно'=>'Ежедневно','Еженедельно'=>'Еженедельно','Ежемесячно'=>"Ежемесячно"], $options);
                 echo $form->field($model, $attribute.'[days]')->textInput(['placeholder'=>'Дней между повторами']);
 
                 $week = [
@@ -166,14 +167,16 @@ if (empty($modelForm->maxfilesize))
                     'Воскресенье'=>'Воскресенье',
                 ];
 
+                $current_values = (isset($model->$clearAttribute['week'])) ? $model->$clearAttribute['week'] : [];
+
                 foreach ($week as $key => $value)
                 {
-                    echo '<div class="radio-group">
-                                <label class="radio">
-                                    <input type="radio" name="'.$inputname.'[week]'.'" value="' . Html::encode($key).'" class="radio_control">
-                                    <span class="radio_label">' . $value . '</span>
-                                </label>
-                          </div>';
+                    echo '<div class="checkbox-group">
+                        <label class="checkbox checkbox__ib">
+                            <input type="checkbox" ' . (in_array($key, $current_values) ? 'checked' : '') . ' name="'.$inputname.'[week][]" value="' . Html::encode($key) . '" class="checkbox_control">
+                            <span class="checkbox_label">' . $value . '</span>
+                        </label>
+                    </div>';
                 }
 
                 break;
@@ -395,11 +398,11 @@ if (empty($modelForm->maxfilesize))
                                 {
                                     if (regionID.find('option[value=\"'+ e.params.data.id_district + '\"]').length) {
                                         regionID.val(e.params.data.id_district).trigger('change');
-                                    } else {              
+                                    } else {
                                         console.log(123);
-                                        var newOption = new Option(e.params.data.district, e.params.data.id_district, true, true);                                        
+                                        var newOption = new Option(e.params.data.district, e.params.data.id_district, true, true);
                                         regionID.append(newOption).trigger('change');
-                                    } 
+                                    }
                                 }
                             }
 
@@ -849,8 +852,8 @@ JS;
                         ],
                     ],
                     'pluginEvents' => [
-                        "select2:select" => "function(e) {                            
-                            
+                        "select2:select" => "function(e) {
+
                     		if ($('#postalcode" . $id_subform . "').length>0)
                     			$('#postalcode" . $id_subform . "').val(e.params.data.postalcode);
                     	}",

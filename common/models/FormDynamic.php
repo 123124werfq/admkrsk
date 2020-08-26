@@ -129,6 +129,11 @@ class FormDynamic extends DynamicModel
                     case CollectionColumn::TYPE_JSON:
                         $data[$index] = json_encode($this->$attribute);
                         break;
+                    case CollectionColumn::TYPE_REPEAT:
+                        $data[$index]['begin'] = strtotime($this->$attribute['begin']);
+                        $data[$index]['end'] = strtotime($this->$attribute['end']);
+
+                        break;
                     case CollectionColumn::TYPE_ADDRESS:
 
                         $value = $this->$attribute;
