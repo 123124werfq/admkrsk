@@ -533,6 +533,10 @@ jQuery(document).ready(function()
     });
 
     $("#CollectionRecord button.btn-primary").click(function(){
+      $("#CollectionRecord form").submit();
+    });
+
+    $("#CollectionRecord").delegate('form','submit',function(){
 
         event.preventDefault();
 
