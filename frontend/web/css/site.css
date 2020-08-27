@@ -303,6 +303,10 @@ table.vote thead{
     form.ajax-form .row {flex-wrap: nowrap!important;}
 }
 
+@media screen and (min-width: 767px) {
+    .sidemenu > ul > li.current {display: block;}
+}
+
 @media screen and (max-width: 992px) {
     .search-table input, .search-table select {width: 100%!important;}
 }
