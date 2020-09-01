@@ -173,14 +173,37 @@ class CollectionRecord extends \yii\db\ActiveRecord
             //var_dump($value);
                 $dates = [];
 
-                if (!empty($value['repeat_cout']))
+                if (!empty($value['is_repeat']))
                 {
                     $gbegin = $value['begin'];
                     $gend = $value['end'];
 
-                    if ($value['repeat']=='Еженедельно')
+                    $repeat_count = $value['repeat_count']?:365;
+
+                    if ($value['repeat']=='Ежедневно')
                     {
-                        $weeek = [];
+                        $space = (int)$value['day_space'];
+
+                        $begin = $gbegin;
+
+                        $i = 0;
+
+                        while ($begin <= $gend && $i <= $repeat_count)
+                        {
+                            $search_date = $i*24*3600+$begin;
+
+                            if ($search_date>=$gbegin)
+                                $dates = [$search_date];
+
+                            $begin+= ($space+1)*24*3600;
+
+                            $i++;
+                        }
+                    }
+                    else if ($value['repeat']=='Еженедельно')
+                    {
+                        $week = [];
+                        $space = (int)$value['week_space'];
 
                         if (is_array($value['week']))
                             foreach ($value['week'] as $key => $value)
@@ -188,50 +211,51 @@ class CollectionRecord extends \yii\db\ActiveRecord
                                 switch ($value)
                                 {
                                     case 'Понедельник':
-                                        $weeek[] = 1;
+                                        $week[] = 1;
                                         break;
                                     case 'Вторник':
-                                        $weeek[] = 2;
+                                        $week[] = 2;
                                         break;
                                     case 'Среда':
-                                        $weeek[] = 3;
+                                        $week[] = 3;
                                         break;
                                     case 'Четверг':
-                                        $weeek[] = 4;
+                                        $week[] = 4;
                                         break;
                                     case 'Пятница':
-                                        $weeek[] = 5;
+                                        $week[] = 5;
                                         break;
                                     case 'Суббота':
-                                        $weeek[] = 6;
+                                        $week[] = 6;
                                         break;
                                     case 'Воскресенье':
-                                        $weeek[] = 7;
+                                        $week[] = 7;
                                         break;
                                 }
                             }
 
-                        $begin = $gbegin - (date('N',$begin)-1)*24*3600;
+                        $begin = $gbegin - (date('N',$gbegin)-1)*24*3600;
 
-                        for ($i=1; $i<=(int)$value['repeat_count']; $i++)
+                        $i = 1;
+                        while ($begin <= $gend && $i <= $repeat_count)
                         {
                             foreach ($week as $wkey => $wkday)
                             {
                                 $search_date = $wkday*24*3600+$begin;
 
-                                if ($search_date<$gend)
+                                if ($search_date>$gend)
                                     break;
 
-                                if ($search_date>$gbegin)
-                                {
-                                    $dates = [$search_date];
-                                }
+                                if ($search_date>=$gbegin)
+                                    $dates[] = $search_date;
                             }
 
-                            if ($search_date<$gend)
+                            if ($search_date>$gend)
                                 break;
 
-                            $begin+=7*24*3600;
+                            $begin += ($space+1)*7*24*3600;
+
+                            $i++;
                         }
                     }
                 }

@@ -132,6 +132,22 @@ function visibleForm(visibleInputs,visibleElements,dom)
 
 $(document).ready(function() {
 
+    $(".repeat-switcher").change(function(){
+        if ($(this).prop('checked'))
+            $(this).closest('.flex-wrap').find('.is_repeat').show();
+        else
+            $(this).closest('.flex-wrap').find('.is_repeat').hide();
+    });
+
+    $(".repeat_repeat").change(function(){
+        var $this = $(this);
+
+        $this.closest('.flex-wrap').find('.repeat-block').hide();
+        $this.closest('.flex-wrap').find('.repeat-block[data-repeat='+$this.val()+']').show();
+    });
+
+
+
     $(".ajax-form").on('beforeSubmit', function (event) {
         event.preventDefault();
 
@@ -245,7 +261,7 @@ $(document).ready(function() {
         return false;
     });
 
-    $(".search-table select, .search-table input").change(function(){
+    $(".search-table select, .search-table input").on('change datepicker-change',function(){
         var $form = $(this).closest('form');
         $.pjax({
             container: '#'+$form.data('hash'),

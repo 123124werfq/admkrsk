@@ -702,6 +702,11 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 $model = Street::findOne((int)$value);
                 return $city->name??null;
                 break;
+            case self::TYPE_REPEAT:
+                if (empty($value['begin']))
+                    return '';
+                return date('d.m.Y',$value['begin']).'-'.date('d.m.Y',$value['end']);
+                break;
             case self::TYPE_JSON:
                 if (is_array($value))
                     return $value;
