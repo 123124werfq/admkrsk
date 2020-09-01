@@ -303,7 +303,7 @@ class CollectionWidget extends \yii\base\Widget
             {
                 foreach ($search_columns as $key => $search_column)
                 {
-                    if ($search_column['type'] == 1)
+                    if ($search_column['type'] != 0)
                         continue;
 
                     $alias = $search_column['column']->alias;
