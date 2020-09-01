@@ -207,6 +207,9 @@ class CollectionWidget extends \yii\base\Widget
                                     ->orWhere(['and',
                                         ['>=','col'.$id_col.'.begin',$begin],
                                         ['<=','col'.$id_col.'.end',$end]
+                                    ])->andWhere(['and',
+                                        ['>=','col'.$id_col.'_search',$begin],
+                                        ['<=','col'.$id_col.'_search',$end],
                                     ]);
                                 }
                                 else
