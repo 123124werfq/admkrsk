@@ -400,18 +400,18 @@
 
 
     // GID SLIDER
-    // $('.gid-slider').slick({
-    //     infinite: true,
-    //     slidesToShow: 1,
-    //     dots: true,
-    //     arrows: false,
-    //     fade: true,
-    //     cssEase: 'linear',
-    //     speed: 600,
-    //     autoplay: true,
-    //     autoplaySpeed: 5000,
-    //     pauseOnHover: false
-    // });
+    $('.gid-slider').slick({
+       infinite: true,
+       slidesToShow: 1,
+       dots: true,
+       arrows: false,
+       fade: true,
+       cssEase: 'linear',
+       speed: 1000,
+       autoplay: true,
+       autoplaySpeed: 5000,
+       pauseOnHover: false
+    });
     // // /GID SLIDER
 
 
