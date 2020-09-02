@@ -23,6 +23,7 @@
                                     		echo '<option value="'.$rub->id_record.'" '.($rub->id_record==$id_rub?'selected':'').'>'.$rub->getLineValue().'</option>';
                                     	?>
                                     </select>
+                                </div>
                             </div>
                             <div class="btn-group_item">
                                 <div class="datepicker-holder">
