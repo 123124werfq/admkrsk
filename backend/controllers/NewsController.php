@@ -275,6 +275,7 @@ class NewsController extends Controller
     {
         $model = $this->findModel($id);
         $model->tagNames = [];
+
         foreach ($model->tags as $key => $tag)
             $model->tagNames[$tag->name] = $tag->name;
 

@@ -8,6 +8,7 @@ use backend\models\search\TagSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * TagController implements the CRUD actions for Tag model.
@@ -112,17 +113,17 @@ class TagController extends Controller
 
     public function actionList($q)
     {
-        $models = Tag::findAllByName($q);
-        $items = [];
+        $models = Tag::find()->where(['ilike','name',$q])->limit(50)->all();
+        $results = [];
 
         foreach ($models as $model) {
-            $items[] = ['name' => $model->name];
+             $results[] = [
+                'id' => $model->name,
+                'text' => $model->name,
+            ];
         }
-        // We know we can use ContentNegotiator filter
-        // this way is easier to show you here :)
-        Yii::$app->response->format = Response::FORMAT_JSON;
 
-        return $items;
+        return $this->asJson(['results' => $results]);
     }
 
     /**
