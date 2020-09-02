@@ -184,6 +184,51 @@ class CollectionWidget extends \yii\base\Widget
 
                         if ($search_columns[$id_col]['type']==1)
                             $query->andWhere(['like','col'.$id_col,$search_columns[$id_col]['value']]);
+                        elseif ($search_columns[$id_col]['type']==3)
+                        {
+                            $dates = $search_columns[$id_col]['value'];
+                            $dates = explode('-', $dates);
+
+                            $begin = strtotime($dates[0]);
+                            $end = strtotime($dates[1]);
+
+                            if (count($dates)==2)
+                            {
+                                if ($columns[$id_col]->type==CollectionColumn::TYPE_REPEAT)
+                                {
+                                    $query->andWhere(['and',
+                                        ['<=','col'.$id_col.'.begin',$begin],
+                                        ['>=','col'.$id_col.'.end',$begin]
+                                    ])
+                                    ->orWhere(['and',
+                                        ['<=','col'.$id_col.'.begin',$end],
+                                        ['>=','col'.$id_col.'.end',$end]
+                                    ])
+                                    ->orWhere(['and',
+                                        ['>=','col'.$id_col.'.begin',$begin],
+                                        ['<=','col'.$id_col.'.end',$end]
+                                    ])->andWhere(['and',
+                                        ['>=','col'.$id_col.'_search',$begin],
+                                        ['<=','col'.$id_col.'_search',$end],
+                                    ]);
+                                }
+                                else
+                                {
+                                    $query->andWhere(['and',
+                                        ['<=','col'.$id_col,$begin],
+                                        ['>=','col'.$id_col,$begin]
+                                    ])
+                                    ->orWhere(['and',
+                                        ['<=','col'.$id_col,$end],
+                                        ['>=','col'.$id_col,$end]
+                                    ])
+                                    ->orWhere(['and',
+                                        ['>=','col'.$id_col,$begin],
+                                        ['<=','col'.$id_col,$end]
+                                    ]);
+                                }
+                            }
+                        }
                         else
                             $query->andWhere(['col'.$id_col=>$search_columns[$id_col]['value']]);
                     }
@@ -258,7 +303,7 @@ class CollectionWidget extends \yii\base\Widget
             {
                 foreach ($search_columns as $key => $search_column)
                 {
-                    if ($search_column['type'] == 1)
+                    if ($search_column['type'] != 0)
                         continue;
 
                     $alias = $search_column['column']->alias;

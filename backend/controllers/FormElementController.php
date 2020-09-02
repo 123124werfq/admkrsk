@@ -160,7 +160,7 @@ class FormElementController extends Controller
             else if (!empty($model->subForm))
             {
                 foreach ($model->subForm->rows as $key => $row) {
-                    foreach ($row->element as $key => $element)
+                    foreach ($row->elements as $key => $element)
                     {
                         if (!empty($element->input))
                         {

@@ -256,6 +256,17 @@ class CollectionSearch extends DynamicModel
 
                 };
             }
+            else if ($col->type==CollectionColumn::TYPE_REPEAT)
+            {
+                $dataProviderColumns[$col_alias]['format'] = 'raw';
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias)
+                {
+                    if (empty($model[$col_alias]))
+                        return '';
+
+                    return date('d.m.Y',$model[$col_alias]['begin']).'-'.date('d.m.Y',$model[$col_alias]['end']);
+                };
+            }
             else if (!empty($col->input->id_collection))
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';

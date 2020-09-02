@@ -173,7 +173,7 @@ class CollectionQuery extends \yii\mongodb\Query
             {
                 $id_column = str_replace('col', '', $vkey);
 
-                if (!isset($this->columns[$id_column]) || in_array($id_column, $this->id_columns_search))
+                if (!isset($this->columns[$id_column])) //|| in_array($id_column, $this->id_columns_search)
                     continue;
 
                 if (!empty($value))

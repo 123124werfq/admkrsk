@@ -105,7 +105,6 @@ class FormDynamic extends DynamicModel
         return $this->labels[$name]??$name;
     }
 
-
     public function prepareData($columnAsIndex=true, $post=null)
     {
         $data = [];
@@ -128,6 +127,13 @@ class FormDynamic extends DynamicModel
                         break;
                     case CollectionColumn::TYPE_JSON:
                         $data[$index] = json_encode($this->$attribute);
+                        break;
+                    case CollectionColumn::TYPE_REPEAT:
+
+                        $data[$index] = $this->$attribute;
+                        $data[$index]['begin'] = strtotime($this->$attribute['begin']);
+                        $data[$index]['end'] = strtotime($this->$attribute['end']);
+
                         break;
                     case CollectionColumn::TYPE_ADDRESS:
 

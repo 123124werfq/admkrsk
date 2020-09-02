@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
 use common\components\helper\Helper;
 use yii\mongodb\Query;
@@ -26,6 +27,8 @@ use yii\mongodb\Query;
  */
 class CollectionRecord extends \yii\db\ActiveRecord
 {
+    use SoftDeleteTrait;
+
     public $data = null;
 
     public $loadData = [];
@@ -164,6 +167,101 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     $output[$search_index] = implode("\r\n", $value);
                 else
                     $output[$search_index] = '';
+                break;
+            case CollectionColumn::TYPE_REPEAT:
+
+            //var_dump($value);
+                $dates = [];
+
+                if (!empty($value['is_repeat']))
+                {
+                    $gbegin = $value['begin'];
+                    $gend = $value['end'];
+
+                    $repeat_count = $value['repeat_count']?:365;
+
+                    if ($value['repeat']=='Ежедневно')
+                    {
+                        $space = (int)$value['day_space'];
+
+                        $begin = $gbegin;
+
+                        $i = 0;
+
+                        while ($begin <= $gend && $i <= $repeat_count)
+                        {
+                            $search_date = $i*24*3600+$begin;
+
+                            if ($search_date>=$gbegin)
+                                $dates = [$search_date];
+
+                            $begin+= ($space+1)*24*3600;
+
+                            $i++;
+                        }
+                    }
+                    else if ($value['repeat']=='Еженедельно')
+                    {
+                        $week = [];
+                        $space = (int)$value['week_space'];
+
+                        if (is_array($value['week']))
+                            foreach ($value['week'] as $key => $value)
+                            {
+                                switch ($value)
+                                {
+                                    case 'Понедельник':
+                                        $week[] = 1;
+                                        break;
+                                    case 'Вторник':
+                                        $week[] = 2;
+                                        break;
+                                    case 'Среда':
+                                        $week[] = 3;
+                                        break;
+                                    case 'Четверг':
+                                        $week[] = 4;
+                                        break;
+                                    case 'Пятница':
+                                        $week[] = 5;
+                                        break;
+                                    case 'Суббота':
+                                        $week[] = 6;
+                                        break;
+                                    case 'Воскресенье':
+                                        $week[] = 7;
+                                        break;
+                                }
+                            }
+
+                        $begin = $gbegin - (date('N',$gbegin)-1)*24*3600;
+
+                        $i = 1;
+                        while ($begin <= $gend && $i <= $repeat_count)
+                        {
+                            foreach ($week as $wkey => $wkday)
+                            {
+                                $search_date = $wkday*24*3600+$begin;
+
+                                if ($search_date>$gend)
+                                    break;
+
+                                if ($search_date>=$gbegin)
+                                    $dates[] = $search_date;
+                            }
+
+                            if ($search_date>$gend)
+                                break;
+
+                            $begin += ($space+1)*7*24*3600;
+
+                            $i++;
+                        }
+                    }
+                }
+
+                $output[$search_index] = $dates;
+
                 break;
             case CollectionColumn::TYPE_MAP:
                 $output[$search_index] = implode(' ', $value);
@@ -344,7 +442,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             $output[$column['alias']][$id_record] = $subrecord->getDataAsString($keyAsAlias,false);
                         }
                     }
-                    else 
+                    else
                         $output[$column['alias']] = $column->getValueByType($value);
                 }
                 else

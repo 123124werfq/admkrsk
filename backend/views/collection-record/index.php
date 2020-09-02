@@ -37,6 +37,11 @@ $this->params['action-block'][] = Html::a('Конвертировать данн
 
 $this->params['action-block'][] = Html::a('Импортировать данные', ['/collection/import', 'id' => $model->id_collection]);
 
+/*$archive = Yii::$app->request->get('archive');
+
+$this->params['action-block'][] = Html::a('Удаленные записи', ['index', 'id' => $page->id_collection, 'archive' => 1]);
+}*/
+
 if (!empty($model->form->template))
   $this->params['action-block'][] = Html::a('Скачать архив документов', ['/collection-record/all-doc', 'id' => $model->id_collection]);
 

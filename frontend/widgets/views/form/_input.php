@@ -10,6 +10,7 @@ use common\models\CollectionColumn;
 use common\models\CollectionRecord;
 use kartik\select2\Select2;
 use yii\web\JsExpression;
+use yii\helpers\Url;
 
 /** @var FormElement $element */
 $styles = $element->getStyles();
@@ -29,7 +30,7 @@ $options['class'] = 'form-control';
 /*if (!empty($input->required))
     $options['required'] = true;*/
 
-if (!empty($input->readonly))
+if (!empty($input->readonly) && strpos(Yii::$app->params['backendUrl'],'/'.$_SERVER['SERVER_NAME'])===false)
     $options['readonly'] = true;
 
 if (empty($options['id']))
@@ -140,24 +141,78 @@ if (empty($modelForm->maxfilesize))
                 echo $form->field($model, $attribute)->textArea($options);
                 break;
             case CollectionColumn::TYPE_REPEAT:
-                echo '<div class="checkbox-group">
-                            <label class="checkbox checkbox__ib">
-                                ' . Html::checkBox($inputname.'[active]', (!empty($model->$clearAttribute)), ['class'=>'checkbox_control']) . '
-                                <span class="checkbox_label">' . ($input->label ?? $input->name) . '</span>
-                            </label>
-                      </div>';
-                echo $form->field($model, $attribute.'[repeat]')->radioList([1=>'Ежедневно',7=>'Еженедельно',31=>"Ежемесячно"], $options);
-                echo $form->field($model, $attribute.'[days]')->textinput(['placeholder'=>'Дней между повторами']);
 
-                foreach ($input->getArrayValues() as $key => $value)
-                {
-                    echo '<div class="radio-group">
+                $value = $model->$clearAttribute;
+
+                echo '<div class="flex-wrap"><div class="col-md-6">'.$form->field($model, $attribute.'[begin]')->textInput(['type'=>'date','value'=> !empty($value['begin'])?date('Y-m-d', $value['begin']):'']).'</div>';
+                echo '<div class="col-md-6">'.$form->field($model, $attribute.'[end]')->textInput(['type'=>'date','value'=> !empty($value['end'])?date('Y-m-d', $value['end']):'']).'</div>';
+
+                $repeatDisplay = '';
+
+                if (empty($value['is_repeat']))
+                    $repeatDisplay = 'style="display:none"';
+
+                echo '<div class="col-md-6">
+                        <div class="checkbox-group">
+                            <label class="checkbox checkbox__ib">
+                                ' . Html::checkBox($inputname.'[is_repeat]', (!empty($model->$clearAttribute['is_repeat'])), ['class'=>'checkbox_control repeat-switcher']) . '
+                                <span class="checkbox_label">Повторяющееся событие</span>
+                            </label>
+                        </div>
+                      </div>';
+
+                echo '<div class="col-md-6 is_repeat" '.$repeatDisplay.'>'.$form->field($model, $attribute.'[repeat_count]')->textInput(['type'=>'number','min'=>0,'placeholder'=>'Количество повторов']).'</div>';
+
+                $options['item'] = function ($index, $label, $name, $checked, $value) {
+                    $check = $checked ? ' checked="checked"' : '';
+                    return '<div class="radio-group">
                                 <label class="radio">
-                                    <input type="radio" name="'.$inputname.'" value="' . Html::encode($key) . '" class="radio_control">
-                                    <span class="radio_label">' . $value . '</span>
+                                    <input class="radio_control repeat_repeat" type="radio" name="'.$name.'" value="'.$value.'" '.$check.'/>
+                                    <span class="radio_label">' . $label . '</span>
                                 </label>
-                          </div>';
-                }
+                            </div>';
+                };
+                $options['class'] = '';
+
+                echo '<div class="col-md-6 is_repeat" '.$repeatDisplay.'>'.$form->field($model, $attribute.'[repeat]',['template'=>'{input}'])->radioList(['Ежедневно'=>'Ежедневно','Еженедельно'=>'Еженедельно',], $options).'</div>'; //'Ежемесячно'=>"Ежемесячно"
+
+                $options['class'] = 'form-control';
+
+                echo '<div class="col-md-6 is_repeat" '.$repeatDisplay.'>';
+                    echo '<div class="repeat-block" '.((!empty($value['repeat']) && $value['repeat']=='Ежедневно')?'':'style="display:none"').' data-repeat="Ежедневно">';
+                        echo $form->field($model, $attribute.'[day_space]')->textInput(['placeholder'=>'Дней между повторами']);
+                    echo "</div>";
+
+
+                    $week = [
+                        'Понедельник'=>'Понедельник',
+                        'Вторник'=>'Вторник',
+                        'Среда'=>'Среда',
+                        'Четверг'=>'Четверг',
+                        'Пятница'=>'Пятница',
+                        'Суббота'=>'Суббота',
+                        'Воскресенье'=>'Воскресенье',
+                    ];
+
+                    $current_values = (isset($model->$clearAttribute['week'])) ? $model->$clearAttribute['week'] : [];
+
+                    echo '<div class="repeat-block" '.((!empty($value['repeat']) && $value['repeat']=='Еженедельно')?'':'style="display:none"').' data-repeat="Еженедельно">';
+                        echo '<div class="checkboxes">';
+                        foreach ($week as $key => $value)
+                        {
+                            echo '<div class="checkbox-group">
+                                <label class="checkbox checkbox__ib">
+                                    <input type="checkbox" ' . (in_array($key, $current_values) ? 'checked' : '') . ' name="'.$inputname.'[week][]" value="' . Html::encode($key) . '" class="checkbox_control">
+                                    <span class="checkbox_label">' . $value . '</span>
+                                </label>
+                            </div>';
+                        }
+                        echo '</div>';
+                        echo $form->field($model, $attribute.'[week_space]')->textInput(['placeholder'=>'Недель между повторами']);
+                    echo '</div>';
+
+                echo "</div>";
+                echo "</div>";
 
                 break;
             case CollectionColumn::TYPE_ADDRESSES:
@@ -378,11 +433,11 @@ if (empty($modelForm->maxfilesize))
                                 {
                                     if (regionID.find('option[value=\"'+ e.params.data.id_district + '\"]').length) {
                                         regionID.val(e.params.data.id_district).trigger('change');
-                                    } else {              
+                                    } else {
                                         console.log(123);
-                                        var newOption = new Option(e.params.data.district, e.params.data.id_district, true, true);                                        
+                                        var newOption = new Option(e.params.data.district, e.params.data.id_district, true, true);
                                         regionID.append(newOption).trigger('change');
-                                    } 
+                                    }
                                 }
                             }
 
@@ -544,6 +599,7 @@ JS;
 	            </div>';
                 break;
             case CollectionColumn::TYPE_RADIO:
+
                 foreach ($input->getArrayValues() as $key => $value) {
                     echo '<div class="radio-group">
 								<label class="radio">
@@ -832,8 +888,8 @@ JS;
                         ],
                     ],
                     'pluginEvents' => [
-                        "select2:select" => "function(e) {                            
-                            
+                        "select2:select" => "function(e) {
+
                     		if ($('#postalcode" . $id_subform . "').length>0)
                     			$('#postalcode" . $id_subform . "').val(e.params.data.postalcode);
                     	}",
