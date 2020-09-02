@@ -110,9 +110,9 @@ class TagController extends Controller
     }
 
 
-    public function actionList($query)
+    public function actionList($q)
     {
-        $models = Tag::findAllByName($query);
+        $models = Tag::findAllByName($q);
         $items = [];
 
         foreach ($models as $model) {
