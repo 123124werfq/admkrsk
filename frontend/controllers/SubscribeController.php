@@ -20,9 +20,12 @@ class SubscribeController extends Controller
         if (Yii::$app->request->isPost) {
             $subscribeForm->load(Yii::$app->request->post());
             if ($subscribeForm->validate() && $subscribeForm->subscribe()) {
+                return $this->render('subscribe-ok');
+                
                 //todo
                 //   Yii::$app->session->setFlash('success', 'Вы успешно подписались на рассылку!');
             } else {
+                return $this->render('subscribe-ok');
                 //todo
                 //   Yii::$app->session->setFlash('error', 'К сожалению не удалось подписаться на рассылку!');
             }
