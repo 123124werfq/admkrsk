@@ -88,10 +88,10 @@
                         </div>';
             };
             $options['class'] = '';
-            echo '<div class="col-md-6 is_repeat" '.$repeatDisplay.'>'.$form->field($model, $attribute.'[repeat_month]',['template'=>'{input}'])->radioList(['Число месяца'=>'Число месяца','Неделя месяца'=>'Неделя месяца'], $options).'</div>';
+            echo '<div class="col-md-6 is_repeat" '.$repeatDisplay.'>'.$form->field($model, $attribute.'[repeat_month]',['template'=>'{input}'])->radioList(['Числа месяца'=>'Числа месяца','Неделя месяца'=>'Неделя месяца'], $options).'</div>';
             $options['class'] = 'form-control';
 
-            echo '<div class="repeat-block-month" '.((!empty($value['repeat_month']) && $value['repeat_month']=='Число месяца')?'':'style="display:none"').' data-repeat="Число месяца">';
+            echo '<div class="repeat-block-month" '.((!empty($value['repeat_month']) && $value['repeat_month']=='Числа месяца')?'':'style="display:none"').' data-repeat="Числа месяца">';
 
                 echo $form->field($model, $attribute.'[month_days]')->widget(Select2::class, [
                     'data' => $days,
