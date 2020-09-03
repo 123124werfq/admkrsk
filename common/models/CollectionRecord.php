@@ -55,6 +55,44 @@ class CollectionRecord extends \yii\db\ActiveRecord
         ];
     }
 
+    protected function getWeeknumbers($input)
+    {
+        $week = [];
+
+        if (!is_array($input))
+            return $week;
+
+        foreach ($input as $key => $value)
+        {
+            switch ($value)
+            {
+                case 'Понедельник':
+                    $week[] = 1;
+                    break;
+                case 'Вторник':
+                    $week[] = 2;
+                    break;
+                case 'Среда':
+                    $week[] = 3;
+                    break;
+                case 'Четверг':
+                    $week[] = 4;
+                    break;
+                case 'Пятница':
+                    $week[] = 5;
+                    break;
+                case 'Суббота':
+                    $week[] = 6;
+                    break;
+                case 'Воскресенье':
+                    $week[] = 7;
+                    break;
+            }
+        }
+
+        return $week;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -173,43 +211,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
             //var_dump($value);
                 $dates = [];
 
-                function getWeeknumbers($input)
-                {
-                    $week = [];
-
-                    if (!is_array($input))
-                        return $week;
-
-                    foreach ($input as $key => $value)
-                    {
-                        switch ($value)
-                        {
-                            case 'Понедельник':
-                                $week[] = 1;
-                                break;
-                            case 'Вторник':
-                                $week[] = 2;
-                                break;
-                            case 'Среда':
-                                $week[] = 3;
-                                break;
-                            case 'Четверг':
-                                $week[] = 4;
-                                break;
-                            case 'Пятница':
-                                $week[] = 5;
-                                break;
-                            case 'Суббота':
-                                $week[] = 6;
-                                break;
-                            case 'Воскресенье':
-                                $week[] = 7;
-                                break;
-                        }
-                    }
-
-                    return $week;
-                }
+                
 
                 if (!empty($value['is_repeat']))
                 {
@@ -241,7 +243,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     else if ($value['repeat']=='Еженедельно')
                     {                        
                         $space = (int)$value['week_space'];
-                        $week = getWeeknumbers($value['week']??'');
+                        $week = $this->getWeeknumbers($value['week']??'');
 
                         $begin = $gbegin - (date('N',$gbegin))*24*3600;
 
@@ -304,7 +306,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                             if (!empty($week_number))
                             {
-                                $week = getWeeknumbers($value['month_week']??'');
+                                $week = $this->getWeeknumbers($value['month_week']??'');
 
                                 $search_date = $begin = mktime(0,0,0,date('n',$gbegin),1,date('Y',$gbegin))+($week_number-1)*7*24*3600;
 

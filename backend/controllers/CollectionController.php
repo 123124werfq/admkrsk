@@ -292,6 +292,65 @@ class CollectionController extends Controller
         {
             switch ($form->type)
             {
+                case CollectionColumn::TYPE_REPEAT:
+                    $col = Yii::$app->request->post('address');
+                    
+                    if (!empty($col))
+                    {
+                        $newColumn = $collection->createColumn([
+                            'name' => 'Дата проведения',
+                            'alias' => 'date_repeat',
+                            'type' => CollectionColumn::TYPE_REPEAT,
+                        ]);
+
+                        if ($newColumn)
+                        {
+                            // добавляем инпут в форму
+                            $newColumn->collection->form->createInput([
+                                'type' => $newColumn->type,
+                                'name' => $newColumn->name,
+                                'label' => $newColumn->name,
+                                'fieldname' => $newColumn->alias,
+                                'id_column' => $newColumn->id_column,
+                            ]);
+
+                            $alldata = $collection->getData([], true);
+
+                            foreach ($alldata as $id_record => $data)
+                            {
+                                if (empty($data[$col]))
+                                continue;
+
+                                $repeat = new \SimpleXMLElement($data[$col]);
+
+                                $record = CollectionRecord::findOne($id_record);
+
+                                $begin = strtotime($repeat->minDate);
+                                $end = strtotime($repeat->maxDate);
+                                
+                                $insert = [
+                                    "begin" => $begin,
+                                    "end" => $end,
+                                    "is_repeat" => 0,
+                                    "repeat_count" => "",
+                                    "repeat" => "",
+                                    "day_space" => "",
+                                    "week_space" => "",
+                                    "repeat_month" => "",
+                                    "month_days" => "",
+                                    "week_number" => "",
+                                    "month_week" => []
+                                ];
+                                $record->data = [$newColumn->id_column => $insert];
+                                $record->update();
+                            }
+                        }
+                        else
+                            print_r($newColumn->errors);
+                    }
+
+                    break;
+
                 case CollectionColumn::TYPE_MAP:
                     $x = Yii::$app->request->post('x');
                     $y = Yii::$app->request->post('y');
