@@ -143,6 +143,8 @@ if (empty($modelForm->maxfilesize))
             case CollectionColumn::TYPE_REPEAT:
                 echo $this->render('inputs/_repeat',[
                     'model'=>$model,
+                    'id_input'=>$id_input,
+                    'input'=>$input,    
                     'form'=>$form,
                     'options'=>$options,
                     'attribute'=>$attribute,
@@ -850,13 +852,14 @@ JS;
                 else if (!empty($columns) && empty($data))
                     $data = [[]];
 
-                echo $this->render('inputs/jsontable',[
+                echo $this->render('inputs/_jsontable',[
                     'model'=>$model,
                     'form'=>$form,
                     'id_input'=>$id_input,
                     'options'=>$options,
                     'columns'=>$columns,
                     'data'=>$data,
+                    'input'=>$input,
                     'attribute'=>$attribute,
                     'inputname'=>$inputname,
                     'clearAttribute'=>$clearAttribute,
