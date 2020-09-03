@@ -25,6 +25,7 @@ $this->params['breadcrumbs'][] = ['label' => $model->pageTitle, 'url' => ['view'
             <?=$form->field($formConvert, 'type')->dropDownList([
                 CollectionColumn::TYPE_MAP=>'Координаты',
                 CollectionColumn::TYPE_ADDRESS=>'Адрес',
+                CollectionColumn::TYPE_REPEAT=>'Адрес с повтром',
                 //CollectionColumn::TYPE_COLLECTIONS=>'Данные из списка, несколько элементов',
             ])?>
 
