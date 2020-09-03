@@ -211,10 +211,10 @@ class CollectionWidget extends \yii\base\Widget
                                             ['>=','col'.$id_col.'.begin',$begin],
                                             ['<=','col'.$id_col.'.end',$end]
                                         ]
-                                    ])                                    
+                                    ])                          
                                     ->andWhere(
                                         ['or',
-                                            ['col'.$id_col.'_search'=>''],
+                                            ['==','col'.$id_col.'_search',[]],
                                             ['col'.$id_col.'_search'=>
                                                 [
                                                     '$elemMatch'=>[
