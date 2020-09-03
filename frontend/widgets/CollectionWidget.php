@@ -162,6 +162,7 @@ class CollectionWidget extends \yii\base\Widget
                 {
                     $search_columns[$column_search['id_column']]['column'] = $columns[$column_search['id_column']];
                     $search_columns[$column_search['id_column']]['type'] = $column_search['type'];
+
                     if (!empty($columns[$column_search['id_column']]->input->values))
                         $search_columns[$column_search['id_column']]['values'] = $columns[$column_search['id_column']]->input->getArrayValues();
                     else
@@ -196,21 +197,93 @@ class CollectionWidget extends \yii\base\Widget
                             {
                                 if ($columns[$id_col]->type==CollectionColumn::TYPE_REPEAT)
                                 {
-                                    $query->andWhere(['and',
-                                        ['<=','col'.$id_col.'.begin',$begin],
-                                        ['>=','col'.$id_col.'.end',$begin]
+
+                                    $query->andWhere(['or',
+                                        ['and',
+                                            ['<=','col'.$id_col.'.begin',$begin],
+                                            ['>=','col'.$id_col.'.end',$begin]
+                                        ],
+                                        ['and',
+                                            ['<=','col'.$id_col.'.begin',$end],
+                                            ['>=','col'.$id_col.'.end',$end]
+                                        ],
+                                        ['and',
+                                            ['>=','col'.$id_col.'.begin',$begin],
+                                            ['<=','col'.$id_col.'.end',$end]
+                                        ]
                                     ])
-                                    ->orWhere(['and',
+                                    /*->orWhere(['and',
                                         ['<=','col'.$id_col.'.begin',$end],
                                         ['>=','col'.$id_col.'.end',$end]
                                     ])
                                     ->orWhere(['and',
                                         ['>=','col'.$id_col.'.begin',$begin],
                                         ['<=','col'.$id_col.'.end',$end]
-                                    ])->andWhere(['and',
+                                    ])*/
+                                    /*->andWhere(['and',
                                         ['>=','col'.$id_col.'_search',$begin],
                                         ['<=','col'.$id_col.'_search',$end],
+                                    ]);*/
+                                    //->andWhere(['col'.$id_col.'_search'=>'{$elemMatch: {$gte: '.$begin.', $lt: '.$end.'}}']);
+                                    ->andWhere(
+                                    [
+                                        'col'.$id_col.'_search'=>
+                                        [
+                                            '$elemMatch'=>[
+                                                '$gte'=>$begin,
+                                                '$lte'=>$end,
+                                            ]
+                                        ]
                                     ]);
+
+                                    /*array(1) {
+  ["$and"]=>
+  array(2) {
+    [0]=>
+    array(1) {
+      ["col8977"]=>
+      array(1) {
+        ["$gte"]=>
+        string(2) "10"
+      }
+    }
+    [1]=>
+    array(1) {
+      ["col8977"]=>
+      array(1) {
+        ["$lte"]=>
+        string(2) "20"
+      }
+    }
+  }
+}
+
+
+                                    array(1) {
+                                      ["$and"]=>
+                                      array(2) {
+                                        [0]=>
+                                        array(1) {
+                                          ["col8977"]=>
+                                          array(1) {
+                                            ["$gte"]=>
+                                            string(2) "10"
+                                          }
+                                        }
+                                        [1]=>
+                                        array(1) {
+                                          ["col8977"]=>
+                                          array(1) {
+                                            ["$lte"]=>
+                                            string(2) "20"
+                                          }
+                                        }
+                                      }
+                                    }*/
+
+
+                                    /*->andFilterCompare('col'.$id_col.'_search',$begin,'>=')
+                                    ->andFilterCompare('col'.$id_col.'_search',$end,'<=');*/
                                 }
                                 else
                                 {

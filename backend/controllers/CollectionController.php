@@ -197,11 +197,14 @@ class CollectionController extends Controller
      * @return mixed
      * @throws InvalidConfigException
      */
-    public function actionList($q)
+    public function actionList($q,$id_type=null)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $query = Collection::find();
+
+        if (!empty($id_type))
+            $query->andWhere(['id_type'=>$id_type]);
 
         if ((new NumberValidator(['integerOnly' => true]))->validate($q)) {
             $query->andWhere([
@@ -823,7 +826,7 @@ class CollectionController extends Controller
      * @return array|string
      * @throws HttpException
      */
-    public function actionRedactor()
+    public function actionRedactor($id_type=null)
     {
         $this->layout = 'clear';
         $model = new Collection;
@@ -873,10 +876,12 @@ class CollectionController extends Controller
         if (Yii::$app->request->isAjax)
             return $this->renderAjax('redactor', [
                 'model' => $model,
+                'id_type' => $id_type,
             ]);
 
         return $this->render('redactor', [
             'model' => $model,
+            'id_type' => $id_type,
         ]);
     }
 

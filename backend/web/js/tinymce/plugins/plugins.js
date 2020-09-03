@@ -723,26 +723,28 @@ tinymce.PluginManager.add("recordSearch", function(editor, url) {
     });
 });
 
-/*tinymce.PluginManager.add("subcollection", function(editor, url) {
+
+tinymce.PluginManager.add("faqcollection", function(editor, url) {
     var _dialog = false;
     var _typeOptions = [];
 
     function _onAction() {
         $.ajax({
-            url: '/faq/redactor',
+            url: '/collection/redactor',
             type: 'get',
+            data: {id_type:1},
             dataType: 'html',
             success: function(data) {
                 $('#redactor-modal').modal();
                 $('#redactor-modal .modal-body').html(data);
                 $('#redactor-modal form').submit(function(){
                     $.ajax({
-                        url: '/faq/redactor',
+                        url: '/collection/redactor',
                         type: 'post',
                         dataType: 'json',
                         data: $('#redactor-modal form').serialize(),
                         success: function(data) {
-                            editor.insertContent('<p><subcollection data-id_column="'+data.id_column+'">Подсписок #' + data.id_column + '.</subcollection></p>');
+                            editor.insertContent('<p><collection data-key='+data.key+' data-id='+data.id_collection+' ">Публичные слушания #' + data.id_collection + '.</collection></p>');
                             $('#redactor-modal').modal('hide');
                         }
                     });
@@ -754,19 +756,19 @@ tinymce.PluginManager.add("recordSearch", function(editor, url) {
     }
 
     // Define the Toolbar button
-    editor.ui.registry.addButton('subcollection', {
-        text: "Подсписок",
+    editor.ui.registry.addButton('faqcollection', {
+        text: "Публичные слушания",
         onAction: _onAction
     });
 
     // Define the Menu Item
-    editor.ui.registry.addMenuItem('subcollection', {
-        text: 'Подсписок',
+    editor.ui.registry.addMenuItem('faqcollection', {
+        text: 'Публичные слушания',
         context: 'insert',
         onAction: _onAction
     });
 });
-*/
+
 tinymce.PluginManager.add("faq", function(editor, url) {
     var _dialog = false;
     var _typeOptions = [];
@@ -810,6 +812,8 @@ tinymce.PluginManager.add("faq", function(editor, url) {
         onAction: _onAction
     });
 });
+
+
 
 
 tinymce.PluginManager.add("map", function(editor, url) {

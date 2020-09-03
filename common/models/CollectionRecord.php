@@ -234,7 +234,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                                 }
                             }
 
-                        $begin = $gbegin - (date('N',$gbegin)-1)*24*3600;
+                        $begin = $gbegin - (date('N',$gbegin))*24*3600;
 
                         $i = 1;
                         while ($begin <= $gend && $i <= $repeat_count)
