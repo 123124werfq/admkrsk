@@ -166,6 +166,15 @@ class Block extends \yii\db\ActiveRecord
                 ],
             ]
         ],
+        'event_body'=> [
+            'label'=>'Вывод события на всю ширину',
+            'vars'=>[
+                'collection'=>[
+                    'name'=>'Список',
+                    'type'=>BlockVar::TYPE_COLLECTION,
+                ],
+            ]
+        ],
         'event_main'=> [
             'label'=>'Шапка события',
             'vars'=>[
