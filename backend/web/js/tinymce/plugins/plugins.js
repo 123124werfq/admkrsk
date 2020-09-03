@@ -135,6 +135,50 @@ function setElementsEditable(editor, selector, editFunc) {
 
 tinymce.PluginManager.add("form", function(editor, url) {
     var _dialog = false;
+    var _typeOptions = [];
+
+    function _onAction() {
+        $.ajax({
+            url: '/form/redactor',
+            type: 'get',
+            dataType: 'html',
+            success: function(data) {
+                $('#redactor-modal').modal();
+                $('#redactor-modal .modal-body').html(data);
+                $('#redactor-modal form').submit(function(){
+                    $.ajax({
+                        url: '/form/redactor',
+                        type: 'post',
+                        dataType: 'json',
+                        data: $('#redactor-modal form').serialize(),
+                        success: function(data) {
+                            editor.insertContent('<forms data-id="' + data.id_form + '">Форма #' + data.id_form + '.</forms>');                            
+                            $('#redactor-modal').modal('hide');
+                        }
+                    });
+
+                    return false;
+                });
+            }
+        });
+    }
+
+    // Define the Toolbar button
+    editor.ui.registry.addButton('form', {
+        text: "Форма",
+        onAction: _onAction
+    });
+
+    // Define the Menu Item
+    editor.ui.registry.addMenuItem('form', {
+        text: 'Форма',
+        context: 'insert',
+        onAction: _onAction
+    });
+});
+
+/*tinymce.PluginManager.add("form", function(editor, url) {
+    var _dialog = false;
     var _forms = [];
 
     setTimeout(function () {
@@ -209,7 +253,6 @@ tinymce.PluginManager.add("form", function(editor, url) {
             onSubmit: function(api) {
                 // insert markup
                 editor.insertContent('<forms data-id="' + api.getData().id_form + '">Форма #' + api.getData().id_form + '.</forms>');
-
                 setElementsEditable(editor, 'forms', editableForm);
                 // close the dialog
                 api.close();
@@ -229,11 +272,6 @@ tinymce.PluginManager.add("form", function(editor, url) {
         };
     }
 
-    /**
-     * Plugin behaviour for when the Toolbar or Menu item is selected
-     *
-     * @private
-     */
     function _onAction() {
         // Open a Dialog, and update the dialog instance var
         _dialog = editor.windowManager.open(_getDialogConfig());
@@ -283,8 +321,7 @@ tinymce.PluginManager.add("form", function(editor, url) {
         //icon: 'bubbles',
         onAction: _onAction
     });
-});
-
+});*/
 
 tinymce.PluginManager.add("pagenews", function(editor, url) {
     var _dialog = false;
@@ -705,8 +742,6 @@ tinymce.PluginManager.add("recordSearch", function(editor, url) {
                 });
             }
         });
-
-
     }
 
     // Define the Toolbar button
@@ -723,50 +758,6 @@ tinymce.PluginManager.add("recordSearch", function(editor, url) {
     });
 });
 
-/*tinymce.PluginManager.add("subcollection", function(editor, url) {
-    var _dialog = false;
-    var _typeOptions = [];
-
-    function _onAction() {
-        $.ajax({
-            url: '/faq/redactor',
-            type: 'get',
-            dataType: 'html',
-            success: function(data) {
-                $('#redactor-modal').modal();
-                $('#redactor-modal .modal-body').html(data);
-                $('#redactor-modal form').submit(function(){
-                    $.ajax({
-                        url: '/faq/redactor',
-                        type: 'post',
-                        dataType: 'json',
-                        data: $('#redactor-modal form').serialize(),
-                        success: function(data) {
-                            editor.insertContent('<p><subcollection data-id_column="'+data.id_column+'">Подсписок #' + data.id_column + '.</subcollection></p>');
-                            $('#redactor-modal').modal('hide');
-                        }
-                    });
-
-                    return false;
-                });
-            }
-        });
-    }
-
-    // Define the Toolbar button
-    editor.ui.registry.addButton('subcollection', {
-        text: "Подсписок",
-        onAction: _onAction
-    });
-
-    // Define the Menu Item
-    editor.ui.registry.addMenuItem('subcollection', {
-        text: 'Подсписок',
-        context: 'insert',
-        onAction: _onAction
-    });
-});
-*/
 tinymce.PluginManager.add("faq", function(editor, url) {
     var _dialog = false;
     var _typeOptions = [];
@@ -810,7 +801,6 @@ tinymce.PluginManager.add("faq", function(editor, url) {
         onAction: _onAction
     });
 });
-
 
 tinymce.PluginManager.add("map", function(editor, url) {
     var _dialog = false;
