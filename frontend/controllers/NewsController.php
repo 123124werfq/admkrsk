@@ -68,11 +68,11 @@ class NewsController extends Controller
 
         // выделенная новость
         $selected_news = null;
-        
+
         if ($p == 0)
         {
             $selected_news = clone $news;
-            // выделенная новость показывется за два дня 
+            // выделенная новость показывется за два дня
             $selected_news = $selected_news->andWhere('highlight = 1 AND id_media <> 0 AND date_publish>'.strtotime('-2 days'))->orderBy('date_publish DESC')->one();
 
             if (!empty($selected_news))
@@ -119,10 +119,20 @@ class NewsController extends Controller
             'content' => $model->description
         ]);
 
+        $similar_news = News::find();
+
         if (!empty($model->id_rub))
-            $similar_news = News::find()->where(['id_rub'=>$model->id_rub,'id_page'=>$model->id_page])->andWhere('id_news <> '.$id)->limit(3)->all();
+            $similar_news->where(['id_rub'=>$model->id_rub,'id_page'=>$model->id_page])
+                        ->andWhere('id_news <> '.$id);
+
         else
-            $similar_news = News::find()->where(['id_page'=>$model->id_page])->andWhere('id_news <> '.$id)->limit(3)->all();
+            $similar_news->where(['id_page'=>$model->id_page])
+                         ->andWhere('id_news <> '.$id);
+
+        $similar_news = $similar_news
+                            ->limit(3)
+                            ->orderBy('date_publish DESC')
+                            ->all();
 
         $model->createAction();
 

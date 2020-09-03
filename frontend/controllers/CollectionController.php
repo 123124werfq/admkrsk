@@ -80,13 +80,11 @@ class CollectionController extends \yii\web\Controller
 
                 if ($columns[$collection->id_column_map]->type == CollectionColumn::TYPE_ADDRESS)
                 {
-
                     $x = (float)str_replace(',', '.', $data[$collection->id_column_map]['lat']??'');
                     $y = (float)str_replace(',', '.', $data[$collection->id_column_map]['lon']??'');
                 }
                 else
                 {
-
                     $x = (float)str_replace(',', '.', $data[$collection->id_column_map][0]);
                     $y = (float)str_replace(',', '.', $data[$collection->id_column_map][1]);
                 }

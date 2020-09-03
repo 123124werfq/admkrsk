@@ -177,152 +177,6 @@ tinymce.PluginManager.add("form", function(editor, url) {
     });
 });
 
-/*tinymce.PluginManager.add("form", function(editor, url) {
-    var _dialog = false;
-    var _forms = [];
-
-    setTimeout(function () {
-        setElementsEditable(editor, 'forms', editableForm);
-    }, 100);
-
-    let editDialog = {
-        title: 'Изменить форму',
-        body: {},
-        buttons: [
-            {
-                text: 'Close',
-                type: 'cancel',
-                onclick: 'close'
-            },
-            {
-                text: 'Insert',
-                type: 'submit',
-                primary: true,
-                enabled: false
-            }
-        ]
-    };
-
-    function editableForm(form) {
-        let formId = form.getAttribute('data-id');
-        $.ajax({
-            url: '/form/get-form?form-id=' + formId,
-            type: 'get',
-            dataType: 'json',
-            success: function (data) {
-                editDialog.body = {
-                    type: 'panel',
-                    items: [{
-                        type: 'selectbox',
-                        name: 'id_form',
-                        label: 'Форма',
-                        items: data,
-                        flex: true
-                    }]
-                };
-                editDialog.onSubmit = function (api) {
-                    let editFormId = api.getData().id_form;
-                    form.setAttribute('data-id', editFormId);
-                    form.innerText = 'Форма #' + editFormId + '.';
-                    form.ondblclick = function () {
-                        editableForm(form)
-                    };
-                    api.close();
-                };
-                _dialog = editor.windowManager.open(editDialog);
-                _dialog.block('Loading...');
-                _dialog.redial(editDialog);
-                _dialog.unblock();
-            }
-        });
-    }
-
-    function _getDialogConfig() {
-        return {
-            title: 'Вставить форму',
-            body: {
-                type: 'panel',
-                items: [{
-                    type: 'selectbox',
-                    name: 'id_form',
-                    label: 'Форма',
-                    items: _forms,
-                    flex: true
-                }, ]
-            },
-            onSubmit: function(api) {
-                // insert markup
-                editor.insertContent('<forms data-id="' + api.getData().id_form + '">Форма #' + api.getData().id_form + '.</forms>');
-                setElementsEditable(editor, 'forms', editableForm);
-                // close the dialog
-                api.close();
-            },
-            buttons: [{
-                    text: 'Close',
-                    type: 'cancel',
-                    onclick: 'close'
-                },
-                {
-                    text: 'Insert',
-                    type: 'submit',
-                    primary: true,
-                    enabled: false
-                }
-            ]
-        };
-    }
-
-    function _onAction() {
-        // Open a Dialog, and update the dialog instance var
-        _dialog = editor.windowManager.open(_getDialogConfig());
-
-        // block the Dialog, and commence the data update
-        // Message is used for accessibility
-        _dialog.block('Loading...');
-
-        // Do a server call to get the items for the select box
-        // We'll pretend using a setTimeout call
-        setTimeout(function() {
-
-            // We're assuming this is what runs after the server call is performed
-            // We'd probably need to loop through a response from the server, and update
-            // the _forms array with new values. We're just going to hard code
-            // those for now.
-            _forms = [];
-
-            $.ajax({
-                url: '/form/get-form',
-                type: 'get',
-                dataType: 'json',
-                //data: {_csrf: csrf_value},
-                success: function(data) {
-                    _forms = data;
-                    _dialog.redial(_getDialogConfig());
-                    // unblock the dialog
-                    _dialog.unblock();
-                }
-            });
-
-
-        }, 100);
-    }
-
-    // Define the Toolbar button
-    editor.ui.registry.addButton('form', {
-        text: "Форма",
-        //icon: 'bubbles',
-        onAction: _onAction
-    });
-
-    // Define the Menu Item
-    editor.ui.registry.addMenuItem('form', {
-        text: 'Форма',
-        context: 'insert',
-        //icon: 'bubbles',
-        onAction: _onAction
-    });
-});*/
-
 tinymce.PluginManager.add("pagenews", function(editor, url) {
     var _dialog = false;
     var _forms = [];
@@ -757,6 +611,52 @@ tinymce.PluginManager.add("recordSearch", function(editor, url) {
         onAction: _onAction
     });
 });
+
+tinymce.PluginManager.add("faqcollection", function(editor, url) {
+    var _dialog = false;
+    var _typeOptions = [];
+
+    function _onAction() {
+        $.ajax({
+            url: '/collection/redactor',
+            type: 'get',
+            data: {id_type:1},
+            dataType: 'html',
+            success: function(data) {
+                $('#redactor-modal').modal();
+                $('#redactor-modal .modal-body').html(data);
+                $('#redactor-modal form').submit(function(){
+                    $.ajax({
+                        url: '/collection/redactor',
+                        type: 'post',
+                        dataType: 'json',
+                        data: $('#redactor-modal form').serialize(),
+                        success: function(data) {
+                            editor.insertContent('<p><collection data-key='+data.key+' data-id='+data.id_collection+' ">Публичные слушания #' + data.id_collection + '.</collection></p>');
+                            $('#redactor-modal').modal('hide');
+                        }
+                    });
+
+                    return false;
+                });
+            }
+        });
+    }
+
+    // Define the Toolbar button
+    editor.ui.registry.addButton('faqcollection', {
+        text: "Публичные слушания",
+        onAction: _onAction
+    });
+
+    // Define the Menu Item
+    editor.ui.registry.addMenuItem('faqcollection', {
+        text: 'Публичные слушания',
+        context: 'insert',
+        onAction: _onAction
+    });
+});
+
 
 tinymce.PluginManager.add("faq", function(editor, url) {
     var _dialog = false;

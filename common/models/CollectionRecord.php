@@ -234,7 +234,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                                 }
                             }
 
-                        $begin = $gbegin - (date('N',$gbegin)-1)*24*3600;
+                        $begin = $gbegin - (date('N',$gbegin))*24*3600;
 
                         $i = 1;
                         while ($begin <= $gend && $i <= $repeat_count)
@@ -256,6 +256,39 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             $begin += ($space+1)*7*24*3600;
 
                             $i++;
+                        }
+                    }
+                    elseif ($value['repeat']=='Ежемесячно')
+                    {
+                        if ($value['repeat_month']=='Числа месяца')
+                        {
+                            $search_date = $begin = mktime(0,0,0,date('n',$gbegin),1,date('Y',$gbegin));
+
+                            $i = 1;
+                            while ($begin <= $gend && $search_date <= $gend && $i <= $repeat_count)
+                            {
+                                $t = date('t',$begin);
+
+                                foreach ($value['month_days'] as $dkey => $day)
+                                {
+                                    $search_date = $begin+$day*24*3600;
+
+                                    if ($search_date>$gend)
+                                        break;
+
+                                    if ($search_date>=$gbegin && $search_date<=$gend)
+                                    {
+                                        $dates[] = $search_date;
+                                        $i++;
+                                    }
+                                }
+
+                                $begin = mktime(0,0,0,date('n',$begin)+1,1,date('Y',$begin));
+                            }
+                        }
+                        elseif ($value['repeat_month']=='Неделя месяца')
+                        {
+
                         }
                     }
                 }

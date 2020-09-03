@@ -27,7 +27,7 @@ $model->filters = json_encode($model->filters);
             'ajax' => [
                 'url' => '/collection/list',
                 'dataType' => 'json',
-                'data' => new JsExpression('function(params) { return {q:params.term}; }')
+                'data' => new JsExpression('function(params) { return {q:params.term,id_type:'.(int)$id_type.'}; }')
             ],
         ],
     ])->label('Выберите список')?>

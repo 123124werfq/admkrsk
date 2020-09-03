@@ -29,3 +29,42 @@ if (!empty($collection->form->template))
     ]);?>
     </div>
 </div>
+
+<?php
+	/*$data = $model->getData();
+	//var_dump($data);
+
+	$array = [ 1598893200,
+        1598979600,
+        1599066000,
+        1599498000,
+        1599584400,
+        1599670800,
+        1600102800,
+        1600189200,
+        1600275600,
+        1600707600,
+        1600794000,
+        1600880400,
+        1601312400,
+        1601398800,
+        1601485200,
+        1601917200,
+        1602003600,
+        1602090000];
+
+
+	$begin = 1599152400;
+	$end = 1599238800;
+
+	echo "string";
+
+	foreach ($array as $key => $value) {
+
+		echo date('d.m.Y',$value).'<br>';
+
+		if ($value>=$begin && $value<=$end)
+			echo $value;
+		# code...
+	}*/
+?>
