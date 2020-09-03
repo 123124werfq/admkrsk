@@ -612,7 +612,7 @@ tinymce.PluginManager.add("recordSearch", function(editor, url) {
     });
 });
 
-tinymce.PluginManager.add("faqcollection", function(editor, url) {
+/*tinymce.PluginManager.add("faqcollection", function(editor, url) {
     var _dialog = false;
     var _typeOptions = [];
 
@@ -655,8 +655,7 @@ tinymce.PluginManager.add("faqcollection", function(editor, url) {
         context: 'insert',
         onAction: _onAction
     });
-});
-
+});*/
 
 tinymce.PluginManager.add("faq", function(editor, url) {
     var _dialog = false;
