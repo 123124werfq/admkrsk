@@ -152,8 +152,6 @@ $(document).ready(function() {
         $this.closest('.flex-wrap').find('.repeat-block-month[data-repeat="'+$this.val()+'"]').show();
     });
 
-
-
     $(".ajax-form").on('beforeSubmit', function (event) {
         event.preventDefault();
 
