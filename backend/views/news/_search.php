@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
+
 use common\models\Collection;
 
 /* @var $this yii\web\View */
@@ -11,7 +13,6 @@ use common\models\Collection;
 
 $rubs = Collection::find()->where(['alias'=>"news_rubs"])->one();
 $rubs = (!empty($rubs))?$rubs->getArray():[];
-
 ?>
 
 <div class="news-search search">
@@ -33,6 +34,10 @@ $rubs = (!empty($rubs))?$rubs->getArray():[];
         <div class="col-sm-3">
             <?= $form->field($model, 'id_rub')->dropDownList($rubs,['prompt'=>'Выбрите рубрику']) ?>
         </div>
+        <div class="col-sm-3">
+            <?= $form->field($model, 'id_page')->dropDownList(ArrayHelper::map($news_pages, 'id_page', 'title'),['prompt'=>'Выбрите раздел']) ?>
+        </div>
+
         <div class="col-sm-2">
             <?= Html::submitButton('Найти', ['class' => 'btn btn-primary']) ?>
             <?= Html::a('Сбросить',['index'], ['class' => 'btn btn-default']) ?>

@@ -2,6 +2,7 @@
 
 namespace backend\models\search;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Tag;
@@ -40,7 +41,11 @@ class TagSearch extends Tag
      */
     public function search($params)
     {
-        $query = Tag::find();
+        if (Yii::$app->request->get('archive')) {
+            $query = Tag::findDeleted();
+        } else {
+            $query = Tag::find();
+        }
 
         // add conditions that should always apply here
 

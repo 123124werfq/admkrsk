@@ -138,8 +138,36 @@ class NewsController extends Controller
      * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
      */
-    public function actionIndex($id_page, $export = 0)
+    public function actionIndex($id_page=null, $export = 0)
     {
+        $news_pages = Page::find()
+            ->andFilterWhere(['id_page' => Page::getAccessPageIds()])
+            ->andWhere(['or',['type'=>Page::TYPE_NEWS],['type'=>Page::TYPE_ANONS]])
+            ->orderBy('title ASC')
+            ->all();
+
+        if (empty($id_page) && !empty($news_pages))
+        {
+            return $this->redirect(['index','id_page'=>$news_pages[0]->id_page]);
+        }
+
+         /*(!empty($news_pages))
+        {
+            $menu['news']['submenu'] = [];
+
+            foreach ($news_pages as $key => $page) {
+                $menu['news']['submenu']['news?id_page=' . $page->id_page] = [
+                    'title' => $page->title,
+                    'roles' => [
+                        'backend.entityAccess' => [
+                            'entity_id' => $page->id_page,
+                            'class' => Page::class,
+                        ],
+                    ],
+                ];
+            }
+        }*/
+
         if (!$id_page || ($page = Page::findOne($id_page)) === null) {
             throw new NotFoundHttpException();
         } elseif (!Page::hasEntityAccess($page->id_page)) {
@@ -202,6 +230,7 @@ class NewsController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'page' => $page,
+            'news_pages'=>$news_pages,
             'customColumns' => $columns,
         ]);
     }

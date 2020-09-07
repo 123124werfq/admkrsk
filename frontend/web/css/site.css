@@ -313,6 +313,8 @@ table.vote thead{
 
 @media screen and (max-width: 767px) {
     .sidemenu > ul > li.current {display: block;}
+
+
 }
 
 @media screen and (max-width: 992px) {
@@ -413,6 +415,22 @@ table.vote thead td{
 .active .b-quotes_header_icon {
     background: url('/img/quotes_close.png') center right no-repeat;
 }
+
+.content blockquote {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 40px;
+    margin-inline-end: 40px;
+    font-style: italic;
+}
+
+.content blockquote p {
+    font-size: 2.4rem;
+
+    line-height: 3.2rem;
+    color: #3b4256;
+}
+
 
 .b-quotes_text blockquote {margin-bottom: 0px;}
 .b-quotes_text {
