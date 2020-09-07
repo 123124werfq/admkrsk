@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use yii\web\JsExpression;
 use yii\web\View;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Collection */
@@ -52,6 +53,10 @@ else
     $columns = $columns_dropdown;
 ?>
     <?=$form->field($model, 'id_parent_collection',['template'=>'{input}'])->hiddenInput();?>
+
+    <?php if ($model->parent->id_type == 1){?>
+        <?=$form->field($model, 'id_form')->dropDownList(ArrayHelper::map($model->parent->forms, 'id_form', 'name'),['prompt'=>'Выберите форму для ввода']);?>
+    <?php }?>
 
     <?=$form->field($model, 'template_view')->dropDownList(['table'=>'Таблицей','template'=>'Шаблоном'])->hint('Если не заполнен шаблон вывода элемента, то выведятся все данные из колонок отображения в виде списка');?>
 

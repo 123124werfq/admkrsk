@@ -158,7 +158,7 @@ class CollectionQuery extends \yii\mongodb\Query
 
         $output = [];
         $emptyRow = [];
-
+        
         foreach ($this->columns as $key => $col)
         {
             if (!in_array($col->id_column, $this->id_columns_search))

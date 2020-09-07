@@ -4,6 +4,7 @@ namespace frontend\widgets;
 use Yii;
 use common\models\Form;
 use common\models\CollectionRecord;
+use common\models\CollectionColumn;
 use common\models\FormDynamic;
 
 class FormsWidget extends \yii\base\Widget
@@ -37,6 +38,19 @@ class FormsWidget extends \yii\base\Widget
         {
             $this->data = json_decode($this->attributes['data'],true);
             $this->inputs['postData'] = json_encode($this->data);
+        }
+
+        if (!empty($this->objectData))
+        {            
+            $collectionRecord = CollectionRecord::findOne((int)$this->objectData['id_record']);
+
+            $column = $this->form->collection->getColumns()
+                ->where(['type'=>CollectionColumn::TYPE_COLLECTION])->one();
+                //->joinWith('input as input')
+                //->andWhere(['input.id_collection'=>$collectionRecord->id_collection])->one();
+
+            if (!empty($column))
+                $this->inputs['postData'] = json_encode([$column->alias => $collectionRecord->id_record]);
         }
 
         if (empty($this->form))

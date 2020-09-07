@@ -48,7 +48,7 @@ class FormController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'collection'],
+                        'actions' => ['index', 'collection', 'redactor','list'],
                         'roles' => ['backend.form.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Form::class,
@@ -545,6 +545,41 @@ class FormController extends Controller
         return json_encode($forms);
     }
 
+    public function actionRedactor()
+    {        
+        if (!empty($_POST['id_form']))
+        {
+            $ids = $_POST['id_form'];
+
+            return $this->asJson(['id_form'=>$ids]);
+        }
+
+        return $this->renderAjax('redactor', []);
+    }
+
+    public function actionList($q)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $query = Form::find();
+        
+        $query->andWhere([
+            'or',
+            ['ilike', 'name', $q],
+        ]);
+
+        $results = [];
+        
+        foreach ($query->limit(20)->all() as $data) {
+            /* @var Collection $collection */
+            $results[] = [
+                'id' => $data->id_form,
+                'text' => $data->name,
+            ];
+        }
+
+        return ['results' => $results];
+    }
 
     public function actionOrder()
     {

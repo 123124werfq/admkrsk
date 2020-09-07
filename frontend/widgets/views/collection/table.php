@@ -104,11 +104,6 @@ else {
 						{
 							$value = $column->getValueByType($row[$column->alias]);
 
-							/*if (is_array($row[$column->alias]))
-								$value = '<span>'.implode('</span><br><span>', $row[$column->alias]).'</span>';
-							else
-								$value = $row[$column->alias];*/
-
 							if ($column->is_link)
 								echo Html::a($value, ['/collection','id'=>$id_record,'id_page'=>$page->id_page,'id_collection'=>$id_collection]);
 							elseif (!empty($columnsOptions[$column->alias]['filelink']) && !empty($row[$columnsOptions[$column->alias]['filelink']]))

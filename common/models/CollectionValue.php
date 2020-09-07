@@ -63,7 +63,7 @@ class CollectionValue extends \yii\db\ActiveRecord
                 return District::findOne((int)$value);
                 break;
             case self::TYPE_REGION:
-                return Region::findOne((int)$value)
+                return Region::findOne((int)$value);
                 break;
             case self::TYPE_SUBREGION:
                 return Subregion::findOne((int)$value);

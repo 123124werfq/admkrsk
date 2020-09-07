@@ -485,7 +485,6 @@ class Collection extends ActiveRecord
         if (!empty($options['filters']) && !is_array($options['filters']))
         {
             $query->where(json_decode($options['filters'],true));
-            var_dump(json_decode($options['filters'],true));
         }
 
         return $query;

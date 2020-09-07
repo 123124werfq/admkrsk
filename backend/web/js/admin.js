@@ -329,6 +329,26 @@ function reordModels($block,$data)
 
 jQuery(document).ready(function()
 {
+  $("body").delegate(".repeat-switcher",'change',function(){
+      if ($(this).prop('checked'))
+          $(this).closest('.flex-wrap').find('.is_repeat').show();
+      else
+          $(this).closest('.flex-wrap').find('.is_repeat').hide();
+  });
+
+  $("body").delegate(".repeat_repeat",'change',function(){
+      var $this = $(this);
+      $this.closest('.flex-wrap').find('.repeat-block').hide();
+      $this.closest('.flex-wrap').find('.repeat-block[data-repeat='+$this.val()+']').show();
+  });
+
+  $("body").delegate(".repeat_month",'change',function(){
+      var $this = $(this);
+      console.log('.repeat-block-month[data-repeat="'+$this.val()+'"]');
+      $this.closest('.flex-wrap').find('.repeat-block-month').hide();
+      $this.closest('.flex-wrap').find('.repeat-block-month[data-repeat="'+$this.val()+'"]').show();
+  });
+
     $("body").delegate('.dz-remove','click',function(){
 
         var form = $(this).closest('form');

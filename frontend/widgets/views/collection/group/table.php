@@ -1,3 +1,13 @@
+<?php 
+	use yii\widgets\Pjax;
+?>
+<?=$this->render('../_search',['unique_hash'=>$unique_hash,'search_columns'=>$search_columns,'pagesize'=>$pagesize])?>
+
+<?php Pjax::begin([
+	'id' => $unique_hash,
+	'timeout'=>5000
+	//'enablePushState' => false,
+]) ?>
 <div class="table-responsive">
 	<table class="<?=!empty($table_style)?$table_style:''?>">
 		<thead>
@@ -27,9 +37,21 @@ else {?>
 					<?php if ($show_row_num){?>
 						<td><?=$offset+$i++?></td>
 					<?php }?>
-					<?php foreach ($row as $tkey => $td){
-						echo "<td>$td</td>";
-					}?>
+					<?php foreach ($columns as $ckey => $column) {?>
+						<td><?php
+							if (isset($row[$column->alias]))
+							{
+								$value = $column->getValueByType($row[$column->alias]);
+
+								if ($column->is_link)
+									echo Html::a($value, ['/collection','id'=>$id_record,'id_page'=>$page->id_page,'id_collection'=>$id_collection]);
+								elseif (!empty($columnsOptions[$column->alias]['filelink']) && !empty($row[$columnsOptions[$column->alias]['filelink']]))
+									echo '<a href="'.$row[$columnsOptions[$column->alias]['filelink']].'" download>'.$value.'</a>';
+								else
+									echo $value;
+							}?>
+						</td>
+					<?php }?>
 				</tr>
 		<?php   }
 			}
@@ -40,3 +62,4 @@ else {?>
 <?=\yii\widgets\LinkPager::widget([
     'pagination' => $pagination,
 ]);?>
+<?php Pjax::end(); ?>

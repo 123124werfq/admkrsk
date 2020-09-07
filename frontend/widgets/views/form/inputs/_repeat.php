@@ -17,6 +17,30 @@
     if (empty($value['is_repeat']))
         $repeatDisplay = 'style="display:none"';
 
+    $columns = [
+        [
+            'name'=>'Начало','alias'=>'begin','type'=>'string',
+        ],
+        [
+            'name'=>'Конец','alias'=>'end','type'=>'string',
+        ],
+    ];
+    
+    $data = $value['time']??[[]];
+    
+    echo $this->render('_jsontable',[
+        'model'=>$model,
+        'form'=>$form,
+        'id_input'=>$id_input,
+        'options'=>$options,
+        'columns'=>$columns,
+        'data'=>$data,
+        'input'=>$input,
+        'attribute'=>$attribute,
+        'inputname'=>$inputname.'[time]',
+        'clearAttribute'=>$clearAttribute,
+    ]);
+    
     echo '<div class="col-md-6">
             <div class="checkbox-group">
                 <label class="checkbox checkbox__ib">
