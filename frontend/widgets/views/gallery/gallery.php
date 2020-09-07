@@ -10,7 +10,6 @@ $cover = array_shift($medias);
 
 if (empty($limit))
     $limit = 3;
-
 ?>
 <div class="content-gallery">
     <div class="content-galery_main">
@@ -26,7 +25,7 @@ if (empty($limit))
                 <a href="<?= $media->getUrl() ?>" data-fancybox="gallery-<?= $gallery->id_gallery ?>">
                     <img src="<?= $media->showThumb(['w' => 768, 'h' => 450]) ?>" alt="">
                     <?php if ($key >= ($limit - 1) && count($medias) >= ($limit + 1)) { ?>
-                        <span class="content-gallery_count">+<?= count($medias) - $limit - 1 ?></span>
+                        <span class="content-gallery_count">+<?= count($medias) - $limit?></span>
                     <?php } ?>
                 </a>
             </div>
