@@ -58,13 +58,6 @@ $contacts = Collection::getArrayByAlias("press_people");
                         'placeholder' => 'Выберите рубрику',
                     ],
                 ])?>
-                <?=$form->field($model, 'id_record_contact')->widget(Select2::class, [
-                    'data' => $contacts,
-                    'pluginOptions' => [
-                        'allowClear' => true,
-                        'placeholder' => 'Выберите контакт',
-                    ],
-                ])?>
 
                 <?= $form->field($model, 'title')->textarea(['maxlength' => 255]) ?>
                 <?= $form->field($model, 'description')->textarea(['maxlength' => 255]) ?>
@@ -72,6 +65,14 @@ $contacts = Collection::getArrayByAlias("press_people");
                 <?= $form->field($model, 'url')->textInput(['maxlength' => 255])->hint('Заполняется если требуется сделать новость-ссылку')?>
 
                 <?= $form->field($model, 'content')->textarea(['rows' => 6,'class'=>'redactor']) ?>
+
+                <?=$form->field($model, 'id_record_contact')->widget(Select2::class, [
+                    'data' => $contacts,
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                        'placeholder' => 'Выберите контакт',
+                    ],
+                ])?>
 
                 <div class="row">
                     <div class="col-sm-6">
