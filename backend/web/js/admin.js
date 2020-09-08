@@ -329,6 +329,12 @@ function reordModels($block,$data)
 
 jQuery(document).ready(function()
 {
+  $('body').delegate(".delete-subform",'click',function(){
+        if ($(this).closest('.subform').parent().find('.subform').length>1)
+            $(this).closest('.subform').remove();
+        return false;
+  });
+
   $("body").delegate(".repeat-switcher",'change',function(){
       if ($(this).prop('checked'))
           $(this).closest('.flex-wrap').find('.is_repeat').show();
