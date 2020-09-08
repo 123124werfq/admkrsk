@@ -15,17 +15,19 @@
                 <div class="col-2-third">
                     <h2 class="gid_title"><?=(!empty($blockVars['title']))?$blockVars['title']->value:''?></h2>
                 </div>
+                <?php if (!empty($blockVars['menu']->value)){?>
                 <div class="col-third">
                     <ul class="gid-menu">
-                        <?php if (!empty($blockVars['menu'])){
+                            <?php
                             $menu = Menu::findOne($blockVars['menu']->value);
 
                             if (!empty($menu))
                                 foreach ($menu->links as $key => $link) {?>
                                 <li class="gid-menu_item"><a href="<?=(!empty($link->id_page))?$link->page->getUrl():$link->url?>" class="gid-menu_link"><?=$link->label?></a></li>
-                        <?php }}?>
+                        <?php }?>
                     </ul>
                 </div>
+                <?php }?>
             </div>
         </div>
     </div>

@@ -38,6 +38,9 @@ use kartik\select2\Select2;
 	            case $var::TYPE_STRING:
 	                echo Html::activeTextInput($var,"[$ckey]value",['class'=>'form-control','id'=>'Value_'.$ckey,'placeholder'=>$var->name]);
 	                break;
+	            case $var::TYPE_COLOR:
+	                echo Html::activeTextInput($var,"[$ckey]value",['class'=>'form-control','id'=>'Value_'.$ckey,'placeholder'=>$var->name,'type'=>'color']);
+	                break;
 	            case $var::TYPE_DATE:
 	                echo Html::activeTextInput($var,"[$ckey]value",['class'=>'form-control','type'=>'date', 'id'=>'Value_'.$ckey,'placeholder'=>$var->name]);
 	                break;
@@ -45,7 +48,7 @@ use kartik\select2\Select2;
 	                echo Html::activeTextArea($var,"[$ckey]value",['class'=>'form-control','id'=>'Value_'.$ckey,'placeholder'=>$var->name]);
 	                break;
 	            case $var::TYPE_CHECKBOX:
-	                echo Html::activeCheckBox($var,"[$ckey]value",['id'=>'Value_'.$ckey,'label'=>$var->name]);
+	                echo Html::activeCheckBox($var,"[$ckey]value",['id'=>'Value_'.$ckey,'label'=>'']);
 	                break;
 
 	            case $var::TYPE_COLLECTION:
@@ -111,7 +114,6 @@ use kartik\select2\Select2;
 	                        'placeholder' => 'Выберите раздел',
 	                    ],
                 	]);
-	                //echo Html::activeDropDownList($var,"[$ckey]value",ArrayHelper::map(\common\models\Page::find()->all(), 'id_page', 'title'),['class'=>'form-control','id'=>'Value_'.$ckey, 'prompt'=>$var->name]);
 	                break;
 	            case $var::TYPE_RICHTEXT:
 	                echo Html::activeTextArea($var,"[$ckey]value",['class'=>'form-control redactor','id'=>'Value_'.$ckey,'placeholder'=>$var->name]);

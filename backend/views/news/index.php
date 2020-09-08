@@ -22,7 +22,6 @@ $this->render('/page/_head', ['model' => $page]);
 $this->params['button-block'][] = Html::a('Экспорт XLS', ['', 'export' => 1, 'id_page' => $page->id_page], ['class' => 'btn btn-default']);
 GridAsset::register($this);
 
-
 $archive = Yii::$app->request->get('archive');
 
 if (Yii::$app->user->can('admin.news')) {
@@ -33,7 +32,7 @@ if (Yii::$app->user->can('admin.news')) {
     }
 }
 
-$this->params['button-block'][] = Html::a('Добавить новость', ['create', 'id_page' => $page->id_page], ['class' => 'btn btn-success']);
+$this->params['button-block'][] = Html::a('Добавить', ['create', 'id_page' => $page->id_page], ['class' => 'btn btn-success']);
 
 $defaultColumns = [
     'id_news' => 'id_news',
@@ -105,7 +104,7 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
 
 <div class="ibox">
     <div class="ibox-content">
-        <?= $this->render('_search', ['model' => $searchModel]); ?>
+        <?= $this->render('_search', ['model' => $searchModel,'news_pages'=>$news_pages]); ?>
     </div>
 </div>
 

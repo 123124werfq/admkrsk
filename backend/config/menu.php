@@ -159,6 +159,22 @@ return [
     'news' => [
         'title' => 'Пресс-центр',
         'icon' => 'fa fa-newspaper-o',
+        'submenu' => [
+            'news' => [
+                'title' => 'Новости',
+                'roles' => [
+                    'menu.news' => ['class' => News::class],
+                    'admin.cstProfile',
+                ],
+            ],
+            'tag' => [
+                'title' => 'Теги',
+                'roles' => [
+                    'menu.news' => ['class' => News::class],
+                    'admin.cstProfile',
+                ],
+            ],
+        ],
         'roles' => [
             'menu.news' => ['class' => News::class],
         ],

@@ -1,6 +1,9 @@
 <?php
 
 namespace common\models;
+use common\traits\ActionTrait;
+
+use common\components\softdelete\SoftDeleteTrait;
 
 use Yii;
 
@@ -13,6 +16,9 @@ use Yii;
  */
 class Tag extends \yii\db\ActiveRecord
 {
+    use SoftDeleteTrait;
+    use ActionTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -40,8 +46,10 @@ class Tag extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'frequency' => 'Frequency',
-            'name' => 'Name',
+            'frequency' => 'Частота использования',
+            'name' => 'Название',
+            'deleted_at' => 'Deleted At',
+            'deleted_by' => 'Deleted By',
         ];
     }
 }

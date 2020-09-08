@@ -197,7 +197,7 @@ class CollectionWidget extends \yii\base\Widget
                             {
                                 if ($columns[$id_col]->type==CollectionColumn::TYPE_REPEAT)
                                 {
-
+                                    //$query->id_columns_search = [$id_col];
                                     $query->andWhere(['or',
                                         ['and',
                                             ['<=','col'.$id_col.'.begin',$begin],
@@ -211,79 +211,20 @@ class CollectionWidget extends \yii\base\Widget
                                             ['>=','col'.$id_col.'.begin',$begin],
                                             ['<=','col'.$id_col.'.end',$end]
                                         ]
-                                    ])
-                                    /*->orWhere(['and',
-                                        ['<=','col'.$id_col.'.begin',$end],
-                                        ['>=','col'.$id_col.'.end',$end]
-                                    ])
-                                    ->orWhere(['and',
-                                        ['>=','col'.$id_col.'.begin',$begin],
-                                        ['<=','col'.$id_col.'.end',$end]
-                                    ])*/
-                                    /*->andWhere(['and',
-                                        ['>=','col'.$id_col.'_search',$begin],
-                                        ['<=','col'.$id_col.'_search',$end],
-                                    ]);*/
-                                    //->andWhere(['col'.$id_col.'_search'=>'{$elemMatch: {$gte: '.$begin.', $lt: '.$end.'}}']);
+                                    ])                          
                                     ->andWhere(
-                                    [
-                                        'col'.$id_col.'_search'=>
-                                        [
-                                            '$elemMatch'=>[
-                                                '$gte'=>$begin,
-                                                '$lte'=>$end,
+                                        ['or',
+                                            ['==','col'.$id_col.'_search',[]],
+                                            ['col'.$id_col.'_search'=>
+                                                [
+                                                    '$elemMatch'=>[
+                                                        '$gte'=>$begin,
+                                                        '$lte'=>$end,
+                                                    ]
+                                                ]
                                             ]
                                         ]
-                                    ]);
-
-                                    /*array(1) {
-  ["$and"]=>
-  array(2) {
-    [0]=>
-    array(1) {
-      ["col8977"]=>
-      array(1) {
-        ["$gte"]=>
-        string(2) "10"
-      }
-    }
-    [1]=>
-    array(1) {
-      ["col8977"]=>
-      array(1) {
-        ["$lte"]=>
-        string(2) "20"
-      }
-    }
-  }
-}
-
-
-                                    array(1) {
-                                      ["$and"]=>
-                                      array(2) {
-                                        [0]=>
-                                        array(1) {
-                                          ["col8977"]=>
-                                          array(1) {
-                                            ["$gte"]=>
-                                            string(2) "10"
-                                          }
-                                        }
-                                        [1]=>
-                                        array(1) {
-                                          ["col8977"]=>
-                                          array(1) {
-                                            ["$lte"]=>
-                                            string(2) "20"
-                                          }
-                                        }
-                                      }
-                                    }*/
-
-
-                                    /*->andFilterCompare('col'.$id_col.'_search',$begin,'>=')
-                                    ->andFilterCompare('col'.$id_col.'_search',$end,'<=');*/
+                                    );
                                 }
                                 else
                                 {
@@ -428,7 +369,7 @@ class CollectionWidget extends \yii\base\Widget
 
         // оффсет и срез данных
         $offset = ($p-1)*$this->pagesize;
-        $allrows = array_slice($allrows, $offset, $this->pagesize,true);
+        $allrows = array_slice($allrows, $offset, $this->pagesize,true);        
 
         // отображение по группам
         if ($this->group)
@@ -438,7 +379,30 @@ class CollectionWidget extends \yii\base\Widget
             if (!empty($group_alias))
             {
                 foreach ($allrows as $id_record => $row)
-                    $group_rows[isset($row[$group_alias])?$row[$group_alias]:0][$id_record] = $row;
+                {           
+                    $group_index = 0;
+
+                    if ($columns[$this->group]->type==CollectionColumn::TYPE_REPEAT)
+                    {                        
+                        if (!empty($row[$group_alias]['begin']) && empty($begin))
+                            $group_index = date('d.m.Y',$row[$group_alias]['begin']);
+                        elseif (!empty($begin) && !empty($end))
+                        {
+                            for ($i=$begin; $i<=$end; $i+=(7*24*3600))
+                            {
+                                if ($row[$group_alias]['begin']<=$i && $row[$group_alias]['end']>=$i)
+                                {
+                                    $group_index = date('d.m.Y',$i);
+                                    $group_rows[$group_index][$id_record] = $row;
+                                }
+                            }
+                        }
+                    }
+                    else if (isset($row[$group_alias]))
+                        $group_index = $row[$group_alias];
+
+                    $group_rows[$group_index][$id_record] = $row;
+                }
             }
 
             return $this->render('collection/group/'.$this->template,[

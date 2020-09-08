@@ -1,3 +1,12 @@
+<?php use yii\widgets\Pjax;?>
+
+<?=$this->render('../_search',['unique_hash'=>$unique_hash,'search_columns'=>$search_columns,'pagesize'=>$pagesize])?>
+
+<?php Pjax::begin([
+	'id' => $unique_hash,
+	'timeout'=>5000
+]) ?>
+
 <?php
 	foreach ($groups as $group => $allrows)
 	{
@@ -28,3 +37,5 @@
 	    'pagination' => $pagination,
 	]);
 ?>
+
+<?php Pjax::end(); ?>

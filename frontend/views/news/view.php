@@ -62,7 +62,7 @@ function parseAttributesFromTag($tag){
                 <?=frontend\widgets\RightMenuWidget::widget(['page'=>$page])?>
             </div>
         </div>
-		<hr class="hr hr__md">
+		<hr class="hr hr__md nomargin">
 		<div class="row">
 			<div class="col-2-third">
                 <?=$this->render('_contact',['model'=>$model])?>

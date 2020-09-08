@@ -1,14 +1,28 @@
 <?php
-    $cover = (!empty($blockVars['cover']))?$blockVars['cover']->makeThumb(['w'=>1920,'h'=>1080]):'';
-    $cover_mobile = (!empty($blockVars['cover_mobile']))?$blockVars['cover_mobile']->makeThumb(['w'=>1920,'h'=>1080]):'';
+    /*$cover = (!empty($blockVars['cover']))?$blockVars['cover']->makeThumb(['w'=>1920,'h'=>1080]):'';
+    $cover_mobile = (!empty($blockVars['cover_mobile']))?$blockVars['cover_mobile']->makeThumb(['w'=>1920,'h'=>1080]):'';*/
 
+    $cover = (!empty($blockVars['cover']))?$blockVars['cover']->medias:'';// ?$blockVars['cover']
+    $cover_mobile = (!empty($blockVars['cover_mobile']))?$blockVars['cover_mobile']->medias:'';
+    $background = (!empty($blockVars['background']))?$blockVars['background']->value:0;
     $countdown = (!empty($blockVars['countdown']))?strtotime($blockVars['countdown']->value):0;
 ?>
-<div class="main-slider_item main-slider_item__single" style="background-image: url(<?=$cover?>);">
+<div class="main-slider_item main-slider_item__single <?=!empty($background)?'has-backgroud':''?>" style="background-image: url(<?=''//$cover?>);">
+    <?php if (count($cover)>1){?>
+    <div class="gid-slider hidden-accessability">
+        <?php
+            foreach ($cover as $key => $media) {?>
+            <img src="<?=$media->showThumb(['w'=>1920,'h'=>1080])?>" alt=""/>
+        <?php }?>
+    </div>
+    <?php }?>
+
+    <?php if (count($cover)==1){?>
     <picture class="main-slider_img">
-        <source media="(max-width: 992px)" srcset="<?=$cover_mobile?>">
-        <img src="<?=$cover?>" alt=""/>
+        <source media="(max-width: 992px)" srcset="<?=$cover_mobile[0]->showThumb(['w'=>1280,'h'=>1024])?>?>">
+        <img src="<?=$cover[0]->showThumb(['w'=>1920,'h'=>1080])?>" alt=""/>
     </picture>
+    <?php }?>
     <div class="main-slider_content">
         <div class="container">
             <div class="main-slider_content-holder">

@@ -65,10 +65,10 @@ function filePicker(callback, value, meta) {
 var tinymceConfig = {
     selector:'.redactor',
     plugins: [
-        'link image imagetools table autoresize collections gallery code paste media lists fullscreen stickytoolbar form hrreserve pagenews faq recordSearch map faqcollection'
+        'link image imagetools table autoresize collections gallery code paste media lists fullscreen stickytoolbar form hrreserve pagenews faq recordSearch map'
     ],
     menu: {
-        custom: { title: 'Плагины', items: 'form gallery collections hrreserve pagenews faq recordSearch map faqcollection'}
+        custom: { title: 'Плагины', items: 'form gallery collections hrreserve pagenews faq recordSearch map'}
     },
     menubar: 'file edit view insert format tools table custom',
     contextmenu: "link image imagetools table spellchecker",
@@ -354,6 +354,32 @@ function addDashboardPin()
 
 jQuery(document).ready(function()
 {
+  $('body').delegate(".delete-subform",'click',function(){
+        if ($(this).closest('.subform').parent().find('.subform').length>1)
+            $(this).closest('.subform').remove();
+        return false;
+  });
+
+  $("body").delegate(".repeat-switcher",'change',function(){
+      if ($(this).prop('checked'))
+          $(this).closest('.flex-wrap').find('.is_repeat').show();
+      else
+          $(this).closest('.flex-wrap').find('.is_repeat').hide();
+  });
+
+  $("body").delegate(".repeat_repeat",'change',function(){
+      var $this = $(this);
+      $this.closest('.flex-wrap').find('.repeat-block').hide();
+      $this.closest('.flex-wrap').find('.repeat-block[data-repeat='+$this.val()+']').show();
+  });
+
+  $("body").delegate(".repeat_month",'change',function(){
+      var $this = $(this);
+      console.log('.repeat-block-month[data-repeat="'+$this.val()+'"]');
+      $this.closest('.flex-wrap').find('.repeat-block-month').hide();
+      $this.closest('.flex-wrap').find('.repeat-block-month[data-repeat="'+$this.val()+'"]').show();
+  });
+
     $("body").delegate('.dz-remove','click',function(){
 
         var form = $(this).closest('form');

@@ -21,7 +21,8 @@ $form = ActiveForm::begin();
         'placeholder' => 'Выберите форму',
     ],
     'options' => [
-        'multiple' => false
+        'multiple' => false,
+        'id'=>'form-redactor-id-form',
     ]
 ]);
 ?>

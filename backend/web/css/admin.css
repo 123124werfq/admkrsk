@@ -20,6 +20,8 @@ img {max-width: 100%;}
 
 .input-group-space input {margin-right: 10px; margin-bottom: 10px;}
 
+.repeat-block-month {overflow: hidden;}
+
 .select2-container--open {z-index: 9999;}
 
 .table-valign-middle td {vertical-align: middle!important;}

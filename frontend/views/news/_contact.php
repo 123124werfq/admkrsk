@@ -17,6 +17,9 @@
             <?php if (!empty($data['phone'])){?>
 			<a class="person-card_contact-item person-card_contact-item__phone" href="tel:<?=$data['phone']?>"><?=$data['phone']?></a>
             <?php }?>
+            <?php if (!empty($data['mobile_phone'])){?>
+			<a class="person-card_contact-item person-card_contact-item__phone" href="tel:<?=$data['mobile_phone']?>"><?=$data['mobile_phone']?></a>
+            <?php }?>
             <?php if (!empty($data['email'])){?>
 			<a class="person-card_contact-item person-card_contact-item__email" href="mailto:info@domain.ru"><?=$data['email']?></a>
             <?php }?>

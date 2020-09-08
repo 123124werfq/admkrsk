@@ -66,10 +66,10 @@ class NewsSearch extends News
             }
         }
 
-        $id_page = Yii::$app->request->get('id_page');
+        /*$id_page = Yii::$app->request->get('id_page');
 
         if (!empty($id_page))
-            $query->andWhere(['id_page' => $id_page]);
+            $query->andWhere(['id_page' => $id_page]);*/
 
         if (!Yii::$app->request->get('sort'))
             $query->orderBy('id_news DESC');

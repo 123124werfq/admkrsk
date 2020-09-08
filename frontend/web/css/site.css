@@ -31,6 +31,18 @@ form .subform .text-help {margin-top: 0px;}
     opacity: 0;
 }
 
+
+.main-slider_img {visibility: visible;}
+.main-slider_item .gid-slider {display: flex; align-items: center;}
+.has-backgroud .main-slider_content-holder {background: rgba(255,255,255,0.5);}
+.main-slider_content-holder {
+    padding: 30px;
+    margin: 0px -30px;
+    margin-top: -30px;
+}
+
+.nomargin {margin: 0px!important;}
+
 .content .content-gallery_img img {object-fit: cover; height: 140px;}
 
 .main {min-height: 400px;}
@@ -313,6 +325,8 @@ table.vote thead{
 
 @media screen and (max-width: 767px) {
     .sidemenu > ul > li.current {display: block;}
+
+
 }
 
 @media screen and (max-width: 992px) {
@@ -413,6 +427,22 @@ table.vote thead td{
 .active .b-quotes_header_icon {
     background: url('/img/quotes_close.png') center right no-repeat;
 }
+
+.content blockquote {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 40px;
+    margin-inline-end: 40px;
+    font-style: italic;
+}
+
+.content blockquote p {
+    font-size: 2.4rem;
+
+    line-height: 3.2rem;
+    color: #3b4256;
+}
+
 
 .b-quotes_text blockquote {margin-bottom: 0px;}
 .b-quotes_text {

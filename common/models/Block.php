@@ -166,6 +166,15 @@ class Block extends \yii\db\ActiveRecord
                 ],
             ]
         ],
+        'event_body'=> [
+            'label'=>'Вывод события на всю ширину',
+            'vars'=>[
+                'collection'=>[
+                    'name'=>'Список',
+                    'type'=>BlockVar::TYPE_COLLECTION,
+                ],
+            ]
+        ],
         'event_main'=> [
             'label'=>'Шапка события',
             'vars'=>[
@@ -175,11 +184,11 @@ class Block extends \yii\db\ActiveRecord
                 ],
                 'cover'=>[
                     'name'=>'Обложка',
-                    'type'=>BlockVar::TYPE_MEDIA,
+                    'type'=>BlockVar::TYPE_MEDIAS,
                 ],
                 'cover_mobile'=>[
                     'name'=>'Обложка мобильная',
-                    'type'=>BlockVar::TYPE_MEDIA,
+                    'type'=>BlockVar::TYPE_MEDIAS,
                 ],
                 'content'=>[
                     'name'=>'Описание',
@@ -200,6 +209,10 @@ class Block extends \yii\db\ActiveRecord
                 'id_page'=>[
                     'name'=>'Раздел для программ мероприятий',
                     'type'=>BlockVar::TYPE_PAGE,
+                ],
+                'background'=>[
+                    'name'=>'Подложка под текст',
+                    'type'=>BlockVar::TYPE_CHECKBOX,
                 ],
             ]
         ],
