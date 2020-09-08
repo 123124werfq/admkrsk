@@ -114,7 +114,6 @@ use kartik\select2\Select2;
 	                        'placeholder' => 'Выберите раздел',
 	                    ],
                 	]);
-	                //echo Html::activeDropDownList($var,"[$ckey]value",ArrayHelper::map(\common\models\Page::find()->all(), 'id_page', 'title'),['class'=>'form-control','id'=>'Value_'.$ckey, 'prompt'=>$var->name]);
 	                break;
 	            case $var::TYPE_RICHTEXT:
 	                echo Html::activeTextArea($var,"[$ckey]value",['class'=>'form-control redactor','id'=>'Value_'.$ckey,'placeholder'=>$var->name]);

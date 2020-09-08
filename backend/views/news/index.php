@@ -32,7 +32,7 @@ if (Yii::$app->user->can('admin.news')) {
     }
 }
 
-$this->params['button-block'][] = Html::a('Добавить новость', ['create', 'id_page' => $page->id_page], ['class' => 'btn btn-success']);
+$this->params['button-block'][] = Html::a('Добавить', ['create', 'id_page' => $page->id_page], ['class' => 'btn btn-success']);
 
 $defaultColumns = [
     'id_news' => 'id_news',

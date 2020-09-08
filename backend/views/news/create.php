@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model common\models\News */
 
 $this->title = 'Добавить';
-$this->params['breadcrumbs'][] = ['label' => $subtitle, 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $page->title, 'url' => ['index','id_page'=>$page->id_page]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?= $this->render('_form', [

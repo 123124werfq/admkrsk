@@ -168,15 +168,17 @@ class NewsController extends Controller
             }
         }*/
 
+        $searchModel = new NewsSearch();
+        $searchModel->id_page = $id_page;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $id_page = $searchModel->id_page;
+
         if (!$id_page || ($page = Page::findOne($id_page)) === null) {
             throw new NotFoundHttpException();
         } elseif (!Page::hasEntityAccess($page->id_page)) {
             throw new ForbiddenHttpException();
         }
-
-        $searchModel = new NewsSearch();
-        $searchModel->id_page = $id_page;
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         $grid = GridSetting::findOne([
             'class' => static::grid,
@@ -287,7 +289,7 @@ class NewsController extends Controller
 
         return $this->render('create', [
             'model' => $model,
-            'subtitle' => $page->title??'Новости'
+            'page' => $page
         ]);
     }
 
@@ -326,6 +328,7 @@ class NewsController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'page'=>$model->page,
         ]);
     }
 

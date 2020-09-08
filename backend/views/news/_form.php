@@ -76,10 +76,10 @@ $contacts = Collection::getArrayByAlias("press_people");
 
                 <div class="row">
                     <div class="col-sm-6">
-                        <?= $form->field($model, 'date_publish')->textInput(['type'=>'datetime-local','value'=>(!empty($model->date_publish))?date('Y-m-d\TH:i', $model->date_publish):'']) ?>
+                        <?= $form->field($model, 'date_publish')->textInput(['type'=>'datetime-local','value'=>(!empty($model->date_publish))?date('Y-m-d\TH:i', $model->date_publish):''])->label(!empty($model->page)&&$model->page->type==Page::TYPE_ANONS?'Начало события':'Дата публикации') ?>
                     </div>
                     <div class="col-sm-6">
-                        <?= $form->field($model, 'date_unpublish')->textInput(['type'=>'datetime-local','value'=>(!empty($model->date_unpublish))?date('Y-m-d\TH:i',$model->date_unpublish):'']) ?>
+                        <?= $form->field($model, 'date_unpublish')->textInput(['type'=>'datetime-local','value'=>(!empty($model->date_unpublish))?date('Y-m-d\TH:i',$model->date_unpublish):''])->label(!empty($model->page)&&$model->page->type==Page::TYPE_ANONS?'Конец события':'Снять с публикации') ?>
                     </div>
                 </div>
 
