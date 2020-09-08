@@ -1,6 +1,6 @@
 <?php use yii\widgets\Pjax;?>
 
-<?=$this->render('_search',['unique_hash'=>$unique_hash,'search_columns'=>$search_columns,'pagesize'=>$pagesize])?>
+<?=$this->render('../_search',['unique_hash'=>$unique_hash,'search_columns'=>$search_columns,'pagesize'=>$pagesize])?>
 
 <?php Pjax::begin([
 	'id' => $unique_hash,
