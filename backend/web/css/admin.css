@@ -773,6 +773,13 @@ img.main-img {width: 100%;}
 .fileupload_iten-delete:hover {
     color: #e4292f;
 }
+
+.dashboard-pin{
+    display: inline-block;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
 @media screen and (max-width: 767px) {
     .fileupload_content {
         padding-left: 0;

@@ -327,6 +327,31 @@ function reordModels($block,$data)
   });
 }
 
+function addDashboardPin()
+{
+  $('.page-heading h2').css('display', 'inline-block').after("<div class='dashboard-pin'><i class='fa fa-thumb-tack'></i></div>");
+
+  $('#dash-save').click(function(){
+    $.ajax({
+      url: '/site/savelink',
+      type: 'post',
+      data: {name: $('.page-heading h2').text(), url: location.href, _csrf: csrf_value},
+      success: function(data)
+      {
+        toastr.success('Сыылка сохранена', '');
+      }
+    });
+    $('#dashboard-modal').modal('hide');
+  });
+
+  $('.dashboard-pin').click(function(){
+    $('#dash-link').val(location.href);
+    $('#dash-name').val($('.page-heading h2').text());
+    $('#dashboard-modal').modal();
+  });
+}
+
+
 jQuery(document).ready(function()
 {
     $("body").delegate('.dz-remove','click',function(){
@@ -766,4 +791,6 @@ jQuery(document).ready(function()
               });*/
       }
   }).disableSelection();
+
+  addDashboardPin();
 });

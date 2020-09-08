@@ -32,7 +32,7 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['index', 'setting'],
+                        'actions' => ['index', 'setting', 'savelink', 'deletelink'],
                         'allow' => true,
                         'roles' => ['backend'],
                     ],
@@ -170,4 +170,14 @@ class SiteController extends Controller
         $sql = "UPDATE $table SET ord = $pos WHERE `$modelPk` = '$modelId'" . $additionalWhere;
         Yii::$app->db->createCommand($sql)->execute();
     }
+
+    public function actionSavelink()
+    {
+
+    }
+
+    public function actionDeletelink()
+    {
+
+    } 
 }

@@ -483,6 +483,28 @@ $this->beginPage();
   </div>
 </div>
 
+<div id="dashboard-modal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+            <h3>Добавить текущую страницу в быстрый доступ?</h3>
+            <div class="form-group">
+                <label class="control-label" for="dash-link">Ссылка</label>
+                <input id="dash-link" class="form-control" name="dash-link" value="">
+            </div>          
+            <div class="form-group">
+                <label class="control-label" for="dash-name">Подпись</label>
+                <input id="dash-name" class="form-control" name="dash-name" value="">
+            </div>          
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" id="dash-save">Добавить</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <?php $this->endBody();?>
 </body>
 </html>
