@@ -65,10 +65,10 @@ function filePicker(callback, value, meta) {
 var tinymceConfig = {
     selector:'.redactor',
     plugins: [
-        'link image imagetools table autoresize collections gallery code paste media lists fullscreen stickytoolbar form hrreserve pagenews faq recordSearch map faqcollection'
+        'link image imagetools table autoresize collections gallery code paste media lists fullscreen stickytoolbar form hrreserve pagenews faq recordSearch map'
     ],
     menu: {
-        custom: { title: 'Плагины', items: 'form gallery collections hrreserve pagenews faq recordSearch map faqcollection'}
+        custom: { title: 'Плагины', items: 'form gallery collections hrreserve pagenews faq recordSearch map'}
     },
     menubar: 'file edit view insert format tools table custom',
     contextmenu: "link image imagetools table spellchecker",

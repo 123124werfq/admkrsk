@@ -213,13 +213,13 @@ class MediaController extends Controller
             $stream = fopen($temp['tmp_name'], 'r+');
             Yii::$app->publicStorage->writeStream($filetowrite, $stream);
             fclose($stream);
-            //move_uploaded_file($temp['tmp_name'], $filetowrite);
 
             $ip = Yii::$app->request->userIP;
 
-            if ($ip != '127.0.0.1') {
+            if ($ip != '127.0.0.1')
                 $url = str_replace('http://127.0.0.1:9000', 'https://storage.admkrsk.ru', Yii::$app->publicStorage->getPublicUrl($filetowrite));
-            }
+            else
+                $url = Yii::$app->publicStorage->getPublicUrl($filetowrite);
 
             // Respond to the successful upload with JSON.
             // Use a location key to specify the path to the saved image resource.
