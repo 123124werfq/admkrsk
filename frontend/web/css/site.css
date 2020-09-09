@@ -31,7 +31,8 @@ form .subform .text-help {margin-top: 0px;}
     opacity: 0;
 }
 
-.content p img {margin-bottom: 0px;}
+.content p img {margin-bottom: 0px!important;}
+.img-legend {font-size: 1.5rem; margin-top: -15px;}
 
 .main-slider_img {visibility: visible;}
 .main-slider_item .gid-slider {display: flex; align-items: center;}

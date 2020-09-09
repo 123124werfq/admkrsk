@@ -305,6 +305,14 @@ $(document).ready(function() {
         return false;
     });
 
+    $(".searchable img[data-full]").each(function(i){
+        var link = $(this);
+
+        console.log(link.data('full'));
+
+        link.wrap($('<a href="'+link.data('full')+'" class="fancybox" data-fancybox="gallery-content" />'));
+    });
+
     $(".modal-checkbox").change(function(){
 
         if ($(this).is(':checked'))
