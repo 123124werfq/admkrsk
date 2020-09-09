@@ -13,12 +13,13 @@ $bundle = AppAsset::register($this);
     <div class="sidebar-collapse">
         <ul class="nav metismenu" id="side-menu">
             <li class="nav-header">
-                <div class="dropdown profile-element"> <span>
-                    <img width="50" height="50" alt="" class="img-circle" src="<?=''//$user->getAvatar(['w'=>100,'h'=>100],true)?>"/>
+                <div class="dropdown profile-element">
+                    <span>
+                        <a href="/"><img width="50" height="50" alt="" class="img-circle" src="<?='/img/user.svg'//$user->getAvatar(['w'=>100,'h'=>100],true)?>"/></a>
                      </span>
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                     <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold"><?=$user->email?></strong>
-                     </span> <span class="text-muted text-xs block">Администратор <b class="caret"></b></span> </span> </a>
+                     </span> <span class="text-muted text-xs block"><?=$user->username?> <b class="caret"></b></span> </span> </a>
                     <ul class="dropdown-menu animated fadeInRight m-t-xs">
 <!--                        <li>--><?php //// echo Html::a('Профиль', ['/cabinet/user/update', 'id' => $user->id]) ?><!--</li>-->
 <!--                        <li class="divider"></li>-->

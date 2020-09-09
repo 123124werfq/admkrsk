@@ -339,7 +339,11 @@ function addDashboardPin()
       success: function(data)
       {
         toastr.success('Сыылка сохранена', '');
-      }
+      },
+      error:  function(data)
+      {
+        toastr.error('Ошибка при сохранении', '');
+      },
     });
     $('#dashboard-modal').modal('hide');
   });

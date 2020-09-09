@@ -2,16 +2,11 @@
 
 namespace backend\controllers;
 
-use common\models\Action;
 use Yii;
 use yii\base\Exception;
-use yii\web\Controller;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use common\models\LoginForm;
-use common\models\AdUser;
-use yii\web\Cookie;
-use yii\web\Response;
+use yii\web\{Controller,Cookie,Response};
+use yii\filters\{VerbFilter,AccessControl};
+use common\models\{Action,LoginForm,AdUser,Dashboard};
 
 /**
  * Site controller
@@ -71,7 +66,9 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $dashboardLinks = Dashboard::find()->where(['id_user' => Yii::$app->user->id])->all();
+
+        return $this->render('index', ['links' => $dashboardLinks]);
     }
 
     /**
@@ -173,11 +170,33 @@ class SiteController extends Controller
 
     public function actionSavelink()
     {
+        if(!isset($_POST['name']) || !isset($_POST['url']) )
+            die();
 
+        $user = Yii::$app->user->identity;
+
+        $dasboardLink = Dashboard::find()->where(['id_user' => $user->id])->andWhere(['link' => $_POST['url']])->one();
+
+        if(!$dasboardLink)
+            $dasboardLink = new Dashboard;
+
+        $dasboardLink->id_user = $user->id;
+        $dasboardLink->name = $_POST['name'];
+        $dasboardLink->link = $_POST['url'];
+
+        $dasboardLink->save();
     }
 
     public function actionDeletelink()
     {
+        if(!isset($_POST['id']) )
+            die();
 
+        $user = Yii::$app->user->identity;
+
+        $dasboardLink = Dashboard::find()->where(['id_user' => $user->id])->andWhere(['id_dashboard' => $_POST['id']])->one();
+
+        if($dasboardLink)
+            $dasboardLink->delete();
     } 
 }
