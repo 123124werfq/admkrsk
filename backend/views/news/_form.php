@@ -66,11 +66,14 @@ $contacts = Collection::getArrayByAlias("press_people");
 
                 <?= $form->field($model, 'content')->textarea(['rows' => 6,'class'=>'redactor']) ?>
 
-                <?=$form->field($model, 'id_record_contact')->widget(Select2::class, [
+                <?=$form->field($model, 'contacts')->widget(Select2::class, [
                     'data' => $contacts,
                     'pluginOptions' => [
                         'allowClear' => true,
                         'placeholder' => 'Выберите контакт',
+                    ],
+                    'options' => [
+                        'multiple' => true,
                     ],
                 ])?>
 
