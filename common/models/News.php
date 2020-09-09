@@ -87,6 +87,7 @@ class News extends \yii\db\ActiveRecord
             [['date_publish', 'date_unpublish','tagNames','pages'], 'safe'],
             [['title', 'description', 'url'], 'string', 'max' => 255],
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
+            [['contacts'],'safe'],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
             ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
         ];
@@ -109,6 +110,7 @@ class News extends \yii\db\ActiveRecord
             'description' => 'Описание',
             'highlight' => 'Выделить',
             'content' => 'Содержание',
+            'contacts'=>'Контакты для прессы',
             'date_publish' => 'Дата публикации',
             'date_unpublish' => 'Снять с публикации',
             'state' => 'Активен',
@@ -211,11 +213,17 @@ class News extends \yii\db\ActiveRecord
     }
 
     /**
+     *  DEPRECATED NOW IS getContactsRecords!!!! MSD
      * @return ActiveQuery
      */
     public function getContact()
     {
         return $this->hasOne(CollectionRecord::class, ['id_record' => 'id_record_contact']);
+    }
+
+    public function getContactsRecords()
+    {
+        return $this->hasMany(CollectionRecord::class, ['id_record' => 'contacts']);
     }
 
     /**
