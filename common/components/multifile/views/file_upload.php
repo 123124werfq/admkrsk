@@ -45,6 +45,7 @@ $script = <<< JS
 				single: $single,
 				relationname: '$POST_relation_name',
 				records: $records,
+				showAuthor: $showAuthor,
 				$allowedExtensions
 				showPreview: $showPreview,
 				tpl: $template

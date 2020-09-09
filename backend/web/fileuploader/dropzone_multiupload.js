@@ -19,9 +19,9 @@
 			if (!data)
 				data = JSON.parse('{"name":"","description":""}');
 
-			var description = fileName.split('_').join(' ').split('.');
+			/*var description = fileName.split('_').join(' ').split('.');
 			description.pop();
-			description.join('.');
+			description.join('.');*/
 
 			if (!id_media)
 				id_media = 0;
@@ -41,18 +41,25 @@
 			}
 
 			if (settings.tpl==1)
-				return '<tr id="file'+index+'">\
+			{
+				$output = '<tr id="file'+index+'">\
 						'+preview+'\
 						<td valign="top">\
 							<input type="text" class="form-control" name="'+settings.relationname+'['+settings.group+']['+index+'][name]" rel="name" value="'+data.name+'" placeholder="Заголовок" />\
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][file_path]" value="'+file+'"/>\
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][id_media]" value="'+id_media+'"/>\
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][ord]" rel="ord" value="'+index+'"/>\
-							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][grouptype]" rel="name" value="'+settings.group+'"/>\
-							<textarea maxlength="255" class="form-control" name="'+settings.relationname+'['+settings.group+']['+index+'][description]" rel="description" placeholder="Описание">'+data.description+'</textarea>\
+							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][grouptype]" rel="name" value="'+settings.group+'"/>'
+																
+				if (settings.showAuthor == 1)	
+					$output += '<input type="text" class="form-control" name="'+settings.relationname+'['+settings.group+']['+index+'][author]" rel="name" value="'+data.name+'" placeholder="Заголовок" />';
+				
+
+				$output += '<textarea maxlength="255" class="form-control" name="'+settings.relationname+'['+settings.group+']['+index+'][description]" rel="description" placeholder="Описание">'+data.description+'</textarea>\
 						</td>\
 						<td width="15"><a class="close btn btn-default" onclick="$(this).parent().parent().remove(); return false;">&times;</a></td>\
 					</tr>';
+			}
 			else
 				return '<div class="dz-preview dz-processing dz-image-preview dz-success dz-complete">\
 					    	<div class="dz-filename"><span data-dz-name></span></div>\
@@ -72,21 +79,12 @@
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][name]" rel="name" value="'+fileName+'"/>\
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][grouptype]" rel="name" value="'+settings.group+'"/>\
 						</div>';
-
-				/*<li id="file'+index+'">\
-							<img src="'+file+'"/>\
-							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][file_path]" value="'+file+'"/>\
-							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][id_media]" value="'+id_media+'"/>\
-							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][ord]" rel="ord" value="'+index+'"/>\
-							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][name]" rel="name" value="'+fileName+'"/>\
-							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][grouptype]" rel="name" value="'+settings.group+'"/>\
-						<a class="close btn btn-default" onclick="$(this).parent().remove(); return false;">&times;</a>\
-					</li>';*/
 		}
 
 		var settings = $.extend({
 			relationname: 'Media',
 			group: 1,
+			showAuthor: 0,
 			tpl: 1,
 			single:false,
 			records: [],

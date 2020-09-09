@@ -58,7 +58,7 @@ class Media extends \yii\db\ActiveRecord
             [['type', 'size', 'width', 'height', 'duration', 'ord', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['is_private'],'boolean'],
             [['name'], 'required'],
-            [['name', 'mime', 'extension'], 'string', 'max' => 255],
+            [['name', 'mime', 'extension', 'author'], 'string', 'max' => 255],
             [['description'], 'safe'],
         ];
     }
@@ -86,6 +86,15 @@ class Media extends \yii\db\ActiveRecord
             'updated_by' => 'Updated By',
             'deleted_at' => 'Deleted At',
             'deleted_by' => 'Deleted By',
+        ];
+    }
+
+    public static function getSize()
+    {
+        return [
+            self::SIZE_SMALL => 'Маленькое (300px)',
+            self::SIZE_MEDIUM => 'Среднее (600px)',            
+            self::SIZE_BIG => 'Большое (1900px)',
         ];
     }
 
@@ -262,17 +271,27 @@ class Media extends \yii\db\ActiveRecord
         return $url_piece.$level1.'/'.$level2.'/'.$filename;
     }
 
-    public function showThumb($option)
+    public function showThumb($option,$size=null)
     {
+        if ($size!==null)
+        {
+            if ($size == Media::SIZE_MEDIUM)
+                $option['w'] = 600;
+            elseif ($size == Media::SIZE_BIG)
+                $option['w'] = 1900;
+            else
+                $option['w'] = 300;
+        }        
+
         if (!empty($this->url)&&empty($this->size))
-            return $this->url;
+            return $this->url;        
 
         if (!empty($option))
             return $this->makeThumb($this->getFilePath(),$option);
         else
             return $this->getUrl();
     }
-
+        
     public static function thumb($id_media, $size=0)
     {
         $media = Media::findOne($id_media);

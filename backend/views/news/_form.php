@@ -112,7 +112,6 @@ $contacts = Collection::getArrayByAlias("press_people");
                     'showPreview'=>true
                 ]);?>
 
-
                 <?=$form->field($model, 'pages')->widget(Select2::class, [
                     'data' => ArrayHelper::map(\common\models\Page::find()->where('id_page IN (SELECT id_page FROM db_news)')->all(), 'id_page', 'title'),
                     'pluginOptions' => [

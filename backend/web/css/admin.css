@@ -461,7 +461,7 @@ td.date {background: #FAFAFA; border-right: 1px solid #eee;}
 img.main-img {width: 100%;}
 
 .file-row .preview img {width: 120px;}
-.file-row {display: flex;}
+.file-row {display: flex; margin-bottom: 15px;}
 .file-row .dz-remove {
     font-size: 27px;
     color: #aaa;

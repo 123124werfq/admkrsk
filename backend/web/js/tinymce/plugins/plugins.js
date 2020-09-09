@@ -133,6 +133,53 @@ function setElementsEditable(editor, selector, editFunc) {
     }
 }
 
+tinymce.PluginManager.add("ownmedia", function(editor, url) {
+    var _dialog = false;
+    var _typeOptions = [];
+
+    function _onAction() {
+        $.ajax({
+            url: '/media/redactor',
+            type: 'get',
+            dataType: 'html',
+            success: function(data) {
+                $('#redactor-modal').modal();
+                $('#redactor-modal .modal-body').html(data);
+                $('#redactor-modal form').submit(function(){
+                    $.ajax({
+                        url: '/media/redactor',
+                        type: 'post',
+                        dataType: 'json',
+                        data: $('#redactor-modal form').serialize(),
+                        success: function(data) {
+                            editor.insertContent('<ownmedia>\
+                                    <img src="'+data.src+'" data-id="'+data.id_media+'" data-full="'+data.full+'">\
+                                    <p class="img-legend">'+data.title+'<p/>\
+                                </ownmedia>');
+                            $('#redactor-modal').modal('hide');
+                        }
+                    });
+
+                    return false;
+                });
+            }
+        });
+    }
+
+    // Define the Toolbar button
+    editor.ui.registry.addButton('ownmedia', {
+        text: "Изображение",
+        onAction: _onAction
+    });
+
+    // Define the Menu Item
+    /*editor.ui.registry.addMenuItem('form', {
+        text: 'Форма',
+        context: 'insert',
+        onAction: _onAction
+    });*/
+});
+
 tinymce.PluginManager.add("form", function(editor, url) {
     var _dialog = false;
     var _typeOptions = [];
