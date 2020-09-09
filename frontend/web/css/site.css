@@ -31,6 +31,7 @@ form .subform .text-help {margin-top: 0px;}
     opacity: 0;
 }
 
+.content p img {margin-bottom: 0px;}
 
 .main-slider_img {visibility: visible;}
 .main-slider_item .gid-slider {display: flex; align-items: center;}
@@ -228,7 +229,7 @@ ul.pagination {text-align: center;}
 .subform-container .subform-container {padding: 10px; border: 1px solid #dde1e6;}
 .subform-container .collections-action-buttons {margin-top: -58px; padding-right: 130px;}
 
-.fileupload_list .dz-remove, {
+.fileupload_list .dz-remove {
     cursor: pointer;
     position: absolute;
     display: block;

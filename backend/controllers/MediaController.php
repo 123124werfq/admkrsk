@@ -91,7 +91,7 @@ class MediaController extends Controller
         $model = new Media();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_media]);
+            return $this->redirect(['index', 'id' => $model->id_media]);
         }
 
         return $this->render('create', [
@@ -111,7 +111,7 @@ class MediaController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_media]);
+            return $this->redirect(['index', 'id' => $model->id_media]);
         }
 
         return $this->render('update', [
@@ -152,6 +152,47 @@ class MediaController extends Controller
 
         // to pass data through iframe you will need to encode all html tags
         return json_encode($result);
+    }
+    
+    public function actionRedactor()
+    {
+        $model = new \backend\models\forms\MediaForm;
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+            $media = $model->getMediaRecords('media');
+            
+            if (!empty($media))
+            {
+                $media = $media[0];
+                
+                if ($media->save())
+                {
+                    $media->saveFile();
+
+                    $output = $model->attributes;
+                    $output['src'] = $media->showThumb([],$model->size);
+
+                    if (!empty($model->lightbox))
+                        $output['full'] = $media->showThumb([],Media::SIZE_BIG);
+                    
+                    if (!empty($media->author))
+                        $output['title'] .= ' Автор:'.$media->author;
+                    
+                    return $this->asJson($output);
+                }
+            }    
+        }
+        /*if (!empty($_POST['id_faq_category']))
+        {
+            $ids = $_POST['id_faq_category'];
+
+            return json_encode(['id_faq_category'=>$ids]);
+        }*/
+
+        return $this->renderAjax('redactor', [
+            'model'=>$model,
+        ]);
     }
 
     /**

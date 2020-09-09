@@ -19,11 +19,16 @@
 			var file = data.preview;
 			var fileName = data.name;
 			var id_media = data.id;
-
+			
 			var description = data.description;
-			/*fileName.split('_').join(' ').split('.');
-			description.pop();
-			description.join('.');*/
+			
+			if (description==null)
+				description = '';
+
+			var author = data.author;
+			
+			if (author==null)
+				author = '';
 
 			if (!id_media)
 				id_media = 0;
@@ -33,7 +38,7 @@
 
 			preview = '';
 
-			return '<div class="file-row" class="files">\
+			var output = '<div class="file-row" class="files">\
 						<div class="preview dz-preview">\
 							<img src="'+file+'" data-dz-thumbnail />\
 						</div>\
@@ -42,8 +47,12 @@
 						    <input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][file_path]" value="'+file+'"/>\
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][id_media]" value="'+id_media+'"/>\
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][ord]" rel="ord" value="'+index+'"/>\
-							<input type="text" class="form-control" placeholder="Название" name="'+settings.relationname+'['+settings.group+']['+index+'][filename]" rel="name" value="'+fileName+'"/>\
-							<textarea class="form-control" placeholder="Описание" name="'+settings.relationname+'['+settings.group+']['+index+'][description]">'+description+'</textarea>\
+							<input type="text" class="form-control" placeholder="Название" name="'+settings.relationname+'['+settings.group+']['+index+'][filename]" rel="name" value="'+fileName+'"/>';
+
+			if (settings.showAuthor)
+				output += '<input type="text" class="form-control" placeholder="Автор" name="'+settings.relationname+'['+settings.group+']['+index+'][author]" rel="name" value="'+author+'"/>';
+
+			output += '<textarea class="form-control" placeholder="Описание" name="'+settings.relationname+'['+settings.group+']['+index+'][description]">'+description+'</textarea>\
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][grouptype]" rel="name" value="'+settings.group+'"/>\
 						</div>\
 						<div class="file-progress">\
@@ -54,10 +63,13 @@
 						</div>\
 						<a class="dz-remove" href="javascript:undefined;" data-dz-remove="">×</a>\
 					</div>';
+
+			return output;
 		}
 
 		var settings = $.extend({
 			relationname: 'Media',
+			showAuthor: 0,
 			group: 1,
 			tpl: 1,
 			single:false,
@@ -95,7 +107,6 @@
 					}
 				}).disableSelection();
 			}
-
 
 			if (settings.records.length>0)
 			{
@@ -150,13 +161,19 @@
 				init: function(){
 			        this.on("success", function(file, response){
 
-			        	response = JSON.parse(response);
-			            $(file.previewElement).find('.media-data').append(
-			        	'<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+new_index+'][file_path]" value="'+response.file+'"/>\
+						response = JSON.parse(response);
+						
+						var element = '<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+new_index+'][file_path]" value="'+response.file+'"/>\
 						<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+new_index+'][ord]" rel="ord" value="'+new_index+'"/>\
-						<input class="form-control" placeholder="Название" type="text" name="'+settings.relationname+'['+settings.group+']['+new_index+'][filename]" value="'+file.name+'"/>\
-						<textarea class="form-control" placeholder="Описание" name="'+settings.relationname+'['+settings.group+']['+new_index+'][description]" value=""/>\
-						<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+new_index+'][grouptype]" rel="name" value="'+settings.group+'"/>');
+						<input class="form-control" placeholder="Название" type="text" name="'+settings.relationname+'['+settings.group+']['+new_index+'][filename]" value="'+file.name+'"/>';
+
+						if (settings.showAuthor)
+							element += '<input type="text" class="form-control" placeholder="Автор" name="'+settings.relationname+'['+settings.group+']['+new_index+'][author]" value=""/>';
+						
+						element+='<textarea class="form-control" placeholder="Описание" name="'+settings.relationname+'['+settings.group+']['+new_index+'][description]" value=""/>\
+								<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+new_index+'][grouptype]" rel="name" value="'+settings.group+'"/>';
+
+			            $(file.previewElement).find('.media-data').append(element);
 
 			            $(file.previewElement).find(".dz-progress").fadeOut();
 						new_index++;

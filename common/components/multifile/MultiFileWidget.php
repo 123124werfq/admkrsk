@@ -20,6 +20,8 @@ class MultiFileWidget extends Widget
 
 	public $grouptype;
 
+	public $showAuthor = false;
+
 	public $template=2;
 
 	public $extensions = [];
@@ -62,13 +64,14 @@ class MultiFileWidget extends Widget
 				}
 			}
 		}
-
+		
 		return $this->render('file_upload',[
 			'model'=>$this->model,
 			'records'=>$records,
 			'POST_relation_name'=>\yii\helpers\StringHelper::basename(get_class($this->model)).'_'.$this->relation,
 			'single'=>(int)$this->single,
 			'group'=>$this->grouptype,
+			'showAuthor'=>(int)$this->showAuthor,
 			'extensions'=>$this->extensions,
 			'showPreview'=>(int)$this->showPreview,
 			'template'=>$this->template

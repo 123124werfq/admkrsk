@@ -8,32 +8,20 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="media-form">
+<div class="ibox">
+    <div class="ibox-content">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'type')->textInput() ?>
+    <?= $form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
 
-    <?= $form->field($model, 'size')->textInput() ?>
+    <?= $form->field($model, 'description')->textArea() ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'width')->textInput() ?>
-
-    <?= $form->field($model, 'height')->textInput() ?>
-
-    <?= $form->field($model, 'duration')->textInput() ?>
-
-    <?= $form->field($model, 'mime')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'extension')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'ord')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
+    <?= $form->field($model, 'author')->textArea() ?>
+    
+    <hr>
+    <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
 
     <?php ActiveForm::end(); ?>
-
+    </div>
 </div>

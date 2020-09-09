@@ -25,6 +25,7 @@ use kartik\select2\Select2;
             'model' => $model,
             'single' => false,
             'relation' => 'medias',
+            'showAuthor' => true,
             'extensions' => ['jpg', 'jpeg', 'gif', 'png'],
             'grouptype' => 1,
             'showPreview' => true
