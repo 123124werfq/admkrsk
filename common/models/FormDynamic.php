@@ -159,7 +159,7 @@ class FormDynamic extends DynamicModel
                                     'houseguid'=>'',
                                     'lat'=>'',
                                     'lon'=>'',
-                                    'postalcode'=>''
+                                    'postalcode'=>'',
                                     'place'=>''
                                 ];
 

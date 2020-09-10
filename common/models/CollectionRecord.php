@@ -211,7 +211,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
             //var_dump($value);
                 $dates = [];
 
-                
+
 
                 if (!empty($value['is_repeat']))
                 {
@@ -241,7 +241,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                         }
                     }
                     else if ($value['repeat']=='Еженедельно')
-                    {                        
+                    {
                         $space = (int)$value['week_space'];
                         $week = $this->getWeeknumbers($value['week']??'');
 
@@ -324,7 +324,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                                             break;
 
                                         if ($search_date>=$gbegin)
-                                        {                                            
+                                        {
                                             $dates[] = $search_date;
                                             $i++;
                                         }
@@ -436,7 +436,6 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     ])->execute();
 
                 $dataMongo = array_merge($dataMongo,$this->getMongoDate($value,$column));
-                /*$dataMongo['col'.$column->id_column] = ($column->type == CollectionColumn::TYPE_INTEGER)?(float)$value:$value;*/
             }
 
             $dataMongo['id_record'] = $this->id_record;
@@ -460,7 +459,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     $columnsAlias = array_merge(Helper::getTwigVars($column->template),$columnsAlias);
                 }
             }
-            
+
             if ($hasCustom)
             {
                 $recordData = $this->getDataRaw(true,true,$columnsAlias);
@@ -525,7 +524,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     else
                         $output[$column['alias']] = $value;
                 }
-                else                
+                else
                     $output[$column['alias']] = $value;
             }
 

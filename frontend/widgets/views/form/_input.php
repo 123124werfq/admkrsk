@@ -118,6 +118,8 @@ if (empty($modelForm->maxfilesize))
                 break;
             case CollectionColumn::TYPE_INTEGER:
                 $options['type'] = 'number';
+                if (empty($options['step']))
+                    $options['step'] = 'any';
                 echo $form->field($model, $attribute)->textInput($options);
                 break;
             case CollectionColumn::TYPE_INPUT:
@@ -144,7 +146,7 @@ if (empty($modelForm->maxfilesize))
                 echo $this->render('inputs/_repeat',[
                     'model'=>$model,
                     'id_input'=>$id_input,
-                    'input'=>$input,    
+                    'input'=>$input,
                     'form'=>$form,
                     'options'=>$options,
                     'attribute'=>$attribute,

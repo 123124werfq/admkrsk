@@ -294,7 +294,7 @@ class CollectionController extends Controller
             {
                 case CollectionColumn::TYPE_REPEAT:
                     $col = Yii::$app->request->post('address');
-                    
+
                     if (!empty($col))
                     {
                         $newColumn = $collection->createColumn([
@@ -327,7 +327,7 @@ class CollectionController extends Controller
 
                                 $begin = strtotime($repeat->minDate);
                                 $end = strtotime($repeat->maxDate);
-                                
+
                                 $insert = [
                                     "begin" => $begin,
                                     "end" => $end,
@@ -379,7 +379,7 @@ class CollectionController extends Controller
                             foreach ($alldata as $id_record => $data)
                             {
                                 $record = CollectionRecord::findOne($id_record);
-                                $record->data = [$newColumn->id_column => [$data[$x], $data[$y]]];
+                                $record->data = [$newColumn->id_column => [str_replace(',', '.', $data[$x]), str_replace(',', '.', $data[$y])]];
                                 $record->update();
                             }
                         }
@@ -483,8 +483,8 @@ class CollectionController extends Controller
 
                             if (!empty($x) && !empty($y) && !empty($data[$x]))
                             {
-                                $empty['lat'] = $data[$x];
-                                $empty['lon'] = $data[$y];
+                                $empty['lat'] = str_replace(',', '.', $data[$x]);
+                                $empty['lon'] = str_replace(',', '.', $data[$y]);
                             }
 
                             $record = CollectionRecord::findOne($id_record);
@@ -1285,6 +1285,8 @@ class CollectionController extends Controller
 
                                             switch ($columns[$tdkey]->type)
                                             {
+                                                case CollectionColumn::TYPE_INTEGER:
+                                                    $insert[$columns[$tdkey]->id_column] = str_replace(',', '.', $value);
                                                 case CollectionColumn::TYPE_DATE:
                                                 case CollectionColumn::TYPE_DATETIME:
                                                     $insert[$columns[$tdkey]->id_column] = strtotime($value);
