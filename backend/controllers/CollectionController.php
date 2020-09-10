@@ -1287,6 +1287,7 @@ class CollectionController extends Controller
                                             {
                                                 case CollectionColumn::TYPE_INTEGER:
                                                     $insert[$columns[$tdkey]->id_column] = str_replace(',', '.', $value);
+                                                    break;
                                                 case CollectionColumn::TYPE_DATE:
                                                 case CollectionColumn::TYPE_DATETIME:
                                                     $insert[$columns[$tdkey]->id_column] = strtotime($value);

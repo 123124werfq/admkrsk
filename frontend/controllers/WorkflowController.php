@@ -25,7 +25,6 @@ use common\models\ServiceAppealState;
 
 class WorkflowController extends \yii\web\Controller
 {
-
     public function actionIn()
     {
         $path = Yii::getAlias('@runtime')."/logs/documents.log";
@@ -140,17 +139,17 @@ class WorkflowController extends \yii\web\Controller
 
         $dsig->loadPrivateKey( $certName);
         //$dsig->loadPublicKey('path/to/public/key');
-        
+
         $dsig->addObject('I am a data blob.');
         $dsig->sign();
-        
+
         $result = $dsig->getSignedDocument();
 
         var_dump($result);
 
         die();
         */
-        
+
         $certName = Yii::getAlias('@app'). "/assets/ADMKRSK-TEST-SERVICE-SITE.pfx";
         $xmlSigner = new XmlSigner();
         $xmlSigner->loadPfxFile($certName, 'CdtDblGfh');
@@ -159,7 +158,7 @@ class WorkflowController extends \yii\web\Controller
 
         //var_dump($result);
         die();
-        
+
 
         $certName = Yii::getAlias('@app'). "/assets/ADMKRSK-TEST-SERVICE-SITE.pfx";
 
@@ -208,7 +207,7 @@ class WorkflowController extends \yii\web\Controller
     public function actionBcheck()
     {
         $binary =  file_get_contents(Yii::getAlias('@app'). "/assets/req_7a06c1c5-0218-4672-a6eb-7ef46529803e.docx.sig.bin");
-        $res = base64_encode($binary);        
+        $res = base64_encode($binary);
 
         var_dump($res);
     }
@@ -224,7 +223,7 @@ class WorkflowController extends \yii\web\Controller
             $fp = fopen($attachment, "rb");
             $binary = fread($fp, filesize($attachment));
             $attachment64 = base64_encode($binary);
-            $attachment64 = chunk_split($attachment64, 76, "\r\n"); 
+            $attachment64 = chunk_split($attachment64, 76, "\r\n");
             $digest = base64_encode(pack('H*', hash('sha1',$binary)));  // считаем дайджест архива: хэш sha1 -> ASCII -> base64
             //$digest = base64_encode(sha1($binary));
 
@@ -233,7 +232,7 @@ class WorkflowController extends \yii\web\Controller
             echo ("Дайджест: $digest<br>");
 
 
-            $sourceText = file_get_contents($sourcePath); 
+            $sourceText = file_get_contents($sourcePath);
             //$sourceText = str_replace($toReplace, $attachment64, $sourceText); // заменям ссылку файлоы (возможно, не надо)
             $sourceText = str_replace('ATTDIGESTHERE', $digest, $sourceText); // записываем дайджест ФАЙЛа (дайдже xml запишется при подписи)
 
@@ -299,8 +298,8 @@ MTMOARCH;
         {
             $fp = fopen($attachment, "rb");
             $binary = fread($fp, filesize($attachment));
-            $attachment64 = base64_encode($binary);  
-            $attachment64 = chunk_split($attachment64, 76, "\r\n");          
+            $attachment64 = base64_encode($binary);
+            $attachment64 = chunk_split($attachment64, 76, "\r\n");
         }
 
         $result = $mtomHeader;
@@ -349,14 +348,14 @@ MTMOARCH;
             $caseNum =  $xmlArray['v25pushEventRequest']['smevMessage']['smevCaseNumber'];
             $statusInfo = $xmlArray['v25pushEventRequest']['smevMessageData']['smevAppData'];
             $statusCode = $xmlArray['v25pushEventRequest']['smevMessageData']['smevAppData']['event']['orderStatusEvent']['statusCode']['techCode'];
-    
+
             $appeal = ServiceAppeal::find()->where("number_internal='$caseNum'")->one();
 
             if($appeal)
             {
                 $unixDate = strtotime($statusInfo['eventDate']);
                 $as = ServiceAppealState::find()->where("id_appeal=$appeal->id_appeal")->andWhere("state='$statusCode'")->andWhere("date=$unixDate")->one();
-    
+
                 if(!$as)
                 {
                     $as = new ServiceAppealState;
@@ -366,10 +365,10 @@ MTMOARCH;
                     $as->save();
                 }
             }
-    
+
         }
 
-    }    
+    }
 
     public function actionAppealsinput()
     {
@@ -377,13 +376,13 @@ MTMOARCH;
         file_put_contents($path,date("r").":\n\n", FILE_APPEND);
         file_put_contents($path,file_get_contents('php://input'), FILE_APPEND);
         file_put_contents($path,"\n", FILE_APPEND);
-    }  
-    
+    }
+
     public function actionDocsinput()
     {
         $path = Yii::getAlias('@runtime')."/logs/docs.log";
         file_put_contents($path,date("r").":\n\n", FILE_APPEND);
         file_put_contents($path,file_get_contents('php://input'), FILE_APPEND);
         file_put_contents($path,"\n", FILE_APPEND);
-    }      
+    }
 }
