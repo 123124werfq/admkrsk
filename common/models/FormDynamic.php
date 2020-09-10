@@ -160,6 +160,7 @@ class FormDynamic extends DynamicModel
                                     'lat'=>'',
                                     'lon'=>'',
                                     'postalcode'=>''
+                                    'place'=>''
                                 ];
 
                         if (!empty($value['house']))

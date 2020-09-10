@@ -29,8 +29,11 @@ use common\models\CollectionColumn;
 		</div>
 		<div class="col-md-6">
 		<table class="table">
-	        <?php foreach ($model->collection->columns as $key => $column) {
-	            echo '<tr><th width="100">' . ($column->alias ? $column->alias : 'column_' . $column->id_column) . '</th><td>' . $column->name . '</td></tr>';
+			<?php foreach ($model->collection->columns as $key => $column)
+			{
+				$props = $column->getTemplateProperties();
+					foreach ($props as $alias => $prop )
+	            		echo '<tr><th width="100">' . ($alias) . '</th><td>' . $column->name.' '.$prop . '</td></tr>';
 	        } ?>
 	    </table>
 	    </div>

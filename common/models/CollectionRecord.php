@@ -460,10 +460,10 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     $columnsAlias = array_merge(Helper::getTwigVars($column->template),$columnsAlias);
                 }
             }
-
+            
             if ($hasCustom)
             {
-                $recordData = $this->getDataAsString(true,true,$columnsAlias);
+                $recordData = $this->getDataRaw(true,true,$columnsAlias);
 
                 foreach ($columns as $key => $column)
                     if ($column->isCustom())
@@ -481,6 +481,59 @@ class CollectionRecord extends \yii\db\ActiveRecord
     {
         $recordData = $this->getData(true);
     }*/
+
+    public function getDataRaw($keyAsAlias=true,$includeRelation=false,$onlyColumns=[])
+    {
+        $record = \common\components\collection\CollectionQuery::getQuery($this->id_collection)
+                    ->select()
+                    ->where(['id_record'=>$this->id_record]);
+
+        $columns = $record->columns;
+
+        $record = $record->getArray();
+
+        $output = ['id_record'=>$this->id_record];
+
+        if (!empty($record))
+        {
+            $record = array_shift($record);
+
+            foreach ($columns as $key => $column)
+            {
+                if (!empty($onlyColumns) && !in_array($column->alias, $onlyColumns))
+                    continue;
+
+                $value = $record[$column->id_column];
+
+                if ($includeRelation && $column->isRelation() && !empty($value))
+                {
+                    if ($column->type == CollectionColumn::TYPE_COLLECTION)
+                    {
+                        $subrecord = CollectionRecord::findOne(key($value));
+                        $output[$column['alias']] = $subrecord->getDataRaw($keyAsAlias,false);
+                    }
+                    else if ($column->type == CollectionColumn::TYPE_COLLECTIONS)
+                    {
+                        $output[$column['alias']] = [];
+
+                        foreach ($value as $id_record => $label)
+                        {
+                            $subrecord = CollectionRecord::findOne($id_record);
+                            $output[$column['alias']][$id_record] = $subrecord->getDataRaw($keyAsAlias,false);
+                        }
+                    }
+                    else
+                        $output[$column['alias']] = $value;
+                }
+                else                
+                    $output[$column['alias']] = $value;
+            }
+
+            return $output;
+        }
+        else
+            return [];
+    }
 
     public function getDataAsString($keyAsAlias=true,$includeRelation=false,$onlyColumns=[])
     {
@@ -529,7 +582,6 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 {
                     $output[$column['alias']] = $column->getValueByType($value);
                 }
-
             }
 
             return $output;
