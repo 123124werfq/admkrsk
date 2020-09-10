@@ -32,6 +32,8 @@ use common\models\CollectionColumn;
 			<?php foreach ($model->collection->columns as $key => $column)
 			{
 				$props = $column->getTemplateProperties();
+
+				if (!empty($props))
 					foreach ($props as $alias => $prop )
 	            		echo '<tr><th width="100">' . ($alias) . '</th><td>' . $column->name.' '.$prop . '</td></tr>';
 	        } ?>
