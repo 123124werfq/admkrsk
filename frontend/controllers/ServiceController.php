@@ -40,6 +40,9 @@ class ServiceController extends Controller
 
     public function actionIndex($page=null)
     {
+        if (empty($page))
+            die();
+
         return $this->render('/site/blocks',['page'=>$page]);
     }
 
@@ -344,13 +347,13 @@ class ServiceController extends Controller
                             $toSend = $wf->xopCreate($archivePath, $appeal);
 
                         //echo($toSend);
-                        
+
                         if($toSend)
                             $rawResult = $wf->sendServiceMultipartMessage($toSend);
-                        
+
                         //echo $rawResult;
                         //die();
-                        
+
                         //$opres = $wf->sendServiceMessage($appeal);
 
                         $opres = strpos($rawResult, "ACCEPT");
@@ -363,7 +366,7 @@ class ServiceController extends Controller
                             $integration->status = Integration::STATUS_OK;
                         else
                             $integration->status = Integration::STATUS_ERROR;
-                        
+
 
                         $integration->description = ' Запрос услуги ' . $appeal->number_internal;
 
