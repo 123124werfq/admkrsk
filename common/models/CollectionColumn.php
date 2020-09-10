@@ -186,6 +186,10 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'name'=>'Показывать координаты',
                     'type'=>'checkbox',
                 ],
+                'show_place'=>[
+                    'name'=>'Показывать место',
+                    'type'=>'checkbox',
+                ],
 
                 /*'valid_country'=>[
                     'name'=>'Обязательно страна',

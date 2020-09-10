@@ -251,7 +251,7 @@ class House extends \yii\db\ActiveRecord
         return $address;
     }
 
-    public function getArrayData()
+    public function getArrayData($place=null)
     {
         return [
             'country'=>$this->country->name??'',
@@ -273,6 +273,8 @@ class House extends \yii\db\ActiveRecord
             'lon'=>$this->lon??'',
             'postalcode'=>$this->postalcode??'',
             'fullname'=>$this->getFullName(),
+            'place'=>$place?$place->name:'',
+            'id_place'=>$place?$place->id_place:'',
         ];
     }
 }

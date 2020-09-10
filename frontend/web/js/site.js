@@ -20,6 +20,36 @@ function getValueById(id)
     return '';
 }
 
+function selectPlace(id)
+{
+    var $input = $("#"+id);
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: '/address/house-by-place',
+        data: {id:$input.val()}
+    }).done(function(data){        
+        if (data!={})
+        {
+            var container = $input.closest('.flex-wrap');
+
+            for (var key in data)
+            {
+                console.log('select[name*="['+key+'"]');
+
+                var select = container.find('select[name*="['+key+'"]');
+
+                if (select.length>0)
+                {
+                    
+                    var newOption = new Option(data[key], data['id_'+key], true, true);
+                    select.append(newOption).trigger('change');
+                }
+            }
+        }
+    });
+}
+
 function addInput(block)
 {
     // находим сколько строк
