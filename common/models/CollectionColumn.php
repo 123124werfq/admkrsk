@@ -301,6 +301,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
             self::TYPE_REPEAT => 'Повторяющееся событие',
             self::TYPE_CUSTOM => 'Составная колонка',
+            self::TYPE_ARCHIVE => 'Архив',
         ];
 
         if (empty($type))

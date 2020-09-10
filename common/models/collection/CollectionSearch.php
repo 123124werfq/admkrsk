@@ -54,14 +54,13 @@ class CollectionSearch extends DynamicModel
     public function search($params)
     {
         $model = $this->collection;
-        $query = $model->getDataQuery();
+        $query = $model->getDataQuery(true);
 
         $columns = $model->getColumns()->with('input')->all();
 
         $dataProviderColumns = [
             [
                 'class' => 'yii\grid\CheckboxColumn',
-                // you may configure additional properties here
                 'checkboxOptions' => function ($model, $key, $index, $column) {
                        return ['value' => $model['id_record']];
                 }
@@ -98,6 +97,7 @@ class CollectionSearch extends DynamicModel
         ];
 
         $sortAttributes = ['id_record'];
+        
         foreach ($columns as $key => $col)
         {
             $col_alias = 'col'.$col->id_column;
@@ -122,10 +122,7 @@ class CollectionSearch extends DynamicModel
                 'attribute'=>$col_alias,
                 'format' => 'raw',
                 'headerOptions'=>$options,
-            ];
-
-            /*if ($col->type==CollectionColumn::TYPE_INTEGER)
-                $dataProviderColumns[$col_alias]['format'] = 'integer';*/
+            ];            
 
             if ($col->type==CollectionColumn::TYPE_DATE)
                 $dataProviderColumns[$col_alias]['format'] = ['date', 'php:d.m.Y'];
@@ -173,7 +170,6 @@ class CollectionSearch extends DynamicModel
             else if ($col->type==CollectionColumn::TYPE_CHECKBOX || $col->type==CollectionColumn::TYPE_ARCHIVE)
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
-                //$dataProviderColumns[$col_alias]['filterType'] = \yii\grid\GridView::CHECKBOX;
                 $dataProviderColumns[$col_alias]['filter'] = [true => 'Да', false => 'Нет'];
                 $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias,$col) {
 
@@ -316,7 +312,7 @@ class CollectionSearch extends DynamicModel
         }
 
         $this->columns = $dataProviderColumns;
-
+        
         $this->load($params);
 
         $archiveColumn = $this->collection->getArchiveColumn();
@@ -325,7 +321,9 @@ class CollectionSearch extends DynamicModel
         {
             $attr = "col".$archiveColumn->id_column;
             if ($this->$attr=='')
+            {
                 $query->andWhere(['or',['=',$attr,null],[$attr=>0]]);
+            }            
         }
 
         foreach ($this->attributes as $attr => $value)
@@ -333,11 +331,13 @@ class CollectionSearch extends DynamicModel
             if ($value!='')
             {
                 if (!empty($value))
-                    $query->andWhere(['or',['like',$attr,$value],[$attr=>(is_numeric($value))?(float)$value:$value]]);
+                {                                       
+                    $query->andWhere(['or',['like',$attr,$value],[$attr=>(is_numeric($value))?(int)$value:$value]]);
+                }
                 else
                     $query->andWhere(['or',['=',$attr,null],[$attr=>(is_numeric($value))?(float)$value:$value]]);
             }
-        }
+        }        
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
