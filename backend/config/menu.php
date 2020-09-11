@@ -195,6 +195,13 @@ return [
                     'admin.cstProfile',
                 ],
             ],
+            'collection-record/index?id=24' => [
+                'title' => 'Помошники по связям',
+                'roles' => [
+                    'menu.news' => ['class' => News::class],
+                    'admin.cstProfile',
+                ],
+            ],
             'collection-record/index?id=6' => [
                 'title' => 'Рубрики новостей',
                 'roles' => [
