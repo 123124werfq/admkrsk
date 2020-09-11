@@ -380,6 +380,31 @@ class FormController extends Controller
             print_r($formCopy->errors);
     }
 
+    public function actionFormCollection($id)
+    {
+        $input = FormInput::findOne($id);
+
+        if (empty($input))
+            return '';
+
+        Yii::$app->assetManager->bundles = [
+            'yii\bootstrap\BootstrapAsset' => false,
+            'yii\web\JqueryAsset'=>false,
+            'yii\web\YiiAsset'=>false,
+        ];
+
+        $activeForm = \yii\widgets\ActiveForm::begin([
+            'fieldConfig' => [
+                'template' => '{input}{error}',
+            ]
+        ]);
+
+        return $this->renderAjax('collection_form',[
+            'form'=>$activeForm,
+            'input'=>$input,
+        ]);
+    }
+
     /**
      * @param $id_row
      * @return string

@@ -144,7 +144,9 @@ position: absolute;
 .search-form .btn, .search .btn {    padding: 9px 12px;}
 
 .btn-visible {display: inline-block!important;}
-.subform-action-buttons .btn {display: inline-block!important;}
+.subform-action-buttons .btn, .collections-action-buttons .btn {display: inline-block!important;}
+.collections-action-buttons {text-align: right;}
+
 .subform-action-buttons {text-align: right; margin-bottom: 30px;}
 
 .add-plus {position:absolute; right: 70px; margin-top: -5px; width:50px; height: 50px; border-radius: 50px; font-size: 30px; line-height: 36px;}
