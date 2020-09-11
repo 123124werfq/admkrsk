@@ -22,7 +22,9 @@ use kartik\select2\Select2;
     <?php
     if (!empty($model->blocks[$model->type]['vars']))
     {
-    	$vars = $model->getVars();
+		$vars = $model->getVars();
+		
+		
 
     	foreach ($vars as $ckey => $var) {
 

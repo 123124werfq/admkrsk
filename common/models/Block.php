@@ -175,6 +175,15 @@ class Block extends \yii\db\ActiveRecord
                 ],
             ]
         ],
+        'event_programm'=> [
+            'label'=>'Программа мероприятия',
+            'vars'=>[
+                'collection'=>[
+                    'name'=>'Список',
+                    'type'=>BlockVar::TYPE_RICHTEXT,
+                ],
+            ]
+        ],
         'event_main'=> [
             'label'=>'Шапка события',
             'vars'=>[

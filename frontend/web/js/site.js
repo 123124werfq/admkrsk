@@ -388,7 +388,7 @@ $(document).ready(function() {
         });
     });
 
-    $("#program-filter input").on('datepicker-change', function(event,obj) {
+    /*$("#program-filter input").on('datepicker-change', function(event,obj) {
         $.ajax({
             type: "GET",
             dataType: "html",
@@ -408,7 +408,7 @@ $(document).ready(function() {
         }).done(function(data) {
             $(".program-list").html(data);
         });
-    });
+    });*/
 
     $("#service_search_input").autocomplete({
         'minLength':'2',

@@ -40,15 +40,23 @@ class CollectionWidget extends \yii\base\Widget
 
     public function run()
     {
-        $setting = '';
+        $setting = '';        
 
+        
         if (!empty($this->attributes))
         {
+
             if (!empty($this->attributes['key']))
             {
+                $old_attribures = $this->attributes;
+
                 $setting = SettingPluginCollection::find()->where(['key'=>$this->attributes['key']])->one();
+                
                 if (!empty($setting))
+                {
                     $this->attributes = json_decode($setting->settings,true);
+                    $this->attributes = array_merge($this->attributes,$old_attribures);
+                }
             }
 
             if (!empty($this->attributes['id']))
