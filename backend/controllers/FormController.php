@@ -79,7 +79,7 @@ class FormController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['create','create-service','copy'],
+                        'actions' => ['create','create-service','copy','form-collection'],
                         'roles' => ['backend.form.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Form::class,
