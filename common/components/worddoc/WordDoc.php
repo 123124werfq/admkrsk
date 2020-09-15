@@ -300,7 +300,7 @@ class WordDoc
                 else
                 {
                     $data[$col_alias] = Html::encode($data[$col_alias]);
-                    $data[$col_alias] = str_replace("\r\n", '<w:br/>', $data[$col_alias]);
+                    $data[$col_alias] = str_replace("\n", '<w:br/>', $data[$col_alias]);
 
                     $string_output[$col->alias] = (string)$data[$col_alias];
                 }
