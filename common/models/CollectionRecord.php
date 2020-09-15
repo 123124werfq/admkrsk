@@ -208,10 +208,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 break;
             case CollectionColumn::TYPE_REPEAT:
 
-            //var_dump($value);
                 $dates = [];
-
-
 
                 if (!empty($value['is_repeat']))
                 {
@@ -446,7 +443,6 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 $collection->update(['id_record'=>$this->id_record],$dataMongo);
 
             // Это надо оптимизировать, перенесено под инсерт потомучто не работает при CREATE / MSD
-            $dataMongo = [];
             $columnsAlias = [];
 
             $hasCustom = false;
@@ -458,7 +454,28 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     $hasCustom = true;
                     $columnsAlias = array_merge(Helper::getTwigVars($column->template),$columnsAlias);
                 }
+
+                if (!empty($dataMongo['col'.$column->id_column]) && $column->isRelation() && !empty($column->input->options['parent']))
+                {
+                    $relatedColumn = CollectionColumn::findOne($column->input->options['parent']);
+
+                    if (!empty($relatedColumn))
+                    {
+                        $ids = $dataMongo['col'.$column->id_column];
+
+                        $relatedCollection = Yii::$app->mongodb->getCollection('collection'.$column->input->id_collection);
+
+                        $updateData = [
+                            'col'.$column->input->options['parent'] => $this->id_record,
+                            'col'.$column->input->options['parent'].'_search' => $dataMongo['col'.$relatedColumn->input->id_collection_column]??''
+                        ];
+
+                        $relatedCollection->update(['id_record'=>$ids],$updateData);
+                    }
+                }
             }
+
+            $dataMongo = [];
 
             if ($hasCustom)
             {

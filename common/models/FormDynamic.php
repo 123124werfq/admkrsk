@@ -307,12 +307,12 @@ class FormDynamic extends DynamicModel
 
                                 if (!empty($empty['house']))
                                     $fulladdress[] = $empty['house'];
-                            }                          
+                            }
 
                             $empty['fullname'] = implode(', ', $fulladdress);
 
                             $data[$index] = $empty;
-                        }                                                
+                        }
 
                         if (!empty($value['place']))
                         {
@@ -340,11 +340,8 @@ class FormDynamic extends DynamicModel
 
                         if (!empty($value['coords'][1]))
                             $data[$index]['lon'] = $value['coords'][1];
-                                                        
+
                         break;
-                    /*case CollectionColumn::TYPE_CHECKBOXLIST:
-                        $data[$index] = json_encode($this->$attribute);
-                        break;*/
                     case CollectionColumn::TYPE_COLLECTIONS:
 
                         // если разрешили добавлять
@@ -378,7 +375,6 @@ class FormDynamic extends DynamicModel
                                                 $collectionRecord->data = $prepareData;
                                                 $collectionRecord->save();
                                             }
-
 
                                             if (!empty($collectionRecord->id_record))
                                                 $ids[] = $collectionRecord->id_record;

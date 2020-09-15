@@ -108,17 +108,18 @@ class CollectionColumn extends \yii\db\ActiveRecord
                         '1'=>"Да",
                     ]
                 ],
-                'sortable'=>[
-                    'name'=>'Сортировка элементов',
-                    'type'=>'checkbox',
-                ],
                 'button_label'=>[
-                    'name'=>'Подпись добавить',
+                    'name'=>'Подпись кнопки добавить',
                     'type'=>'input',
                 ],
                 'parent'=>[
-                    'name'=>'Добавлять связь родителя',
+                    'name'=>'Устанавливать связь родителя в колонку',
                     'type'=>'dropdown',
+                    'is_relation'=>true,
+                ],
+                'sortable'=>[
+                    'name'=>'Сортировка элементов',
+                    'type'=>'checkbox',
                 ],
             ],
             self::TYPE_CHECKBOX => [
@@ -194,27 +195,6 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'name'=>'Показывать место',
                     'type'=>'checkbox',
                 ],
-
-                /*'valid_country'=>[
-                    'name'=>'Обязательно страна',
-                    'type'=>'checkbox',
-                ],
-                'valid_region'=>[
-                    'name'=>'Обязательно регион',
-                    'type'=>'checkbox',
-                ],
-                'valid_subregion'=>[
-                    'name'=>'Обязательно область',
-                    'type'=>'checkbox',
-                ],
-                'valid_city'=>[
-                    'name'=>'Обязательно город',
-                    'type'=>'checkbox',
-                ],
-                'valid_district'=>[
-                    'name'=>'Обязательно район',
-                    'type'=>'checkbox',
-                ],*/
             ],
             self::TYPE_TEXTAREA => [
                 'maxlength'=>[
@@ -878,7 +858,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
     public function getInput()
     {
-        return $this->hasOne(FormInput::class, ['id_column' => 'id_column'])->andWhere(['id_form'=>$this->collection->id_form]);
+        return $this->hasOne(FormInput::class, ['id_column' => 'id_column']);//->andWhere(['id_form'=>$this->collection->id_form]);
     }
 
     public function getInputs()

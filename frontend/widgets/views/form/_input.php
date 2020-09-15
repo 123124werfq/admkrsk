@@ -428,7 +428,7 @@ if (empty($modelForm->maxfilesize))
                     ],
                     'pluginEvents' => [
                         "select2:select" => "function(e) {
-                            
+
                             if ($('#input-house$id_input').val()=='')
                             {
                                 selectPlace('input-place$id_input');
@@ -612,6 +612,9 @@ if (empty($modelForm->maxfilesize))
 
                 if (!empty($model->$clearAttribute))
                     $value = $model->$clearAttribute;
+
+                if (is_numeric($value))
+                    $value = [$value];
 
                 echo $form->field($model, $attribute)->widget(Select2::class, [
                     'data' => $value,
