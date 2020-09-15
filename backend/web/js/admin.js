@@ -587,6 +587,21 @@ jQuery(document).ready(function()
         ]
     });
 
+    $("#CollectionRecord").delegate(".form-copy","click",function(){
+      var $link = $(this);
+
+      $.ajax({
+          type: "GET",
+          dataType: "html",
+          url: "/form/form-collection",
+          data: {id:$link.data('id')}
+      }).done(function(data){
+          $("#"+$link.data('group')).append(data);
+      });
+
+      return false;
+  })
+
     $("#CollectionRecord button.btn-primary").click(function(){
       $("#CollectionRecord form").submit();
     });

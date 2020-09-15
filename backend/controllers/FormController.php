@@ -79,7 +79,7 @@ class FormController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['create','create-service','copy'],
+                        'actions' => ['create','create-service','copy','form-collection'],
                         'roles' => ['backend.form.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Form::class,
@@ -378,6 +378,31 @@ class FormController extends Controller
             return $this->redirect(['view', 'id'=>$newForm->id_form]);
         else
             print_r($formCopy->errors);
+    }
+
+    public function actionFormCollection($id)
+    {
+        $input = FormInput::findOne($id);
+
+        if (empty($input))
+            return '';
+
+        Yii::$app->assetManager->bundles = [
+            'yii\bootstrap\BootstrapAsset' => false,
+            'yii\web\JqueryAsset'=>false,
+            'yii\web\YiiAsset'=>false,
+        ];
+
+        $activeForm = \yii\widgets\ActiveForm::begin([
+            'fieldConfig' => [
+                'template' => '{input}{error}',
+            ]
+        ]);
+
+        return $this->renderAjax('collection_form',[
+            'form'=>$activeForm,
+            'input'=>$input,
+        ]);
     }
 
     /**

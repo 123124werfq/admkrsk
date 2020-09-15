@@ -667,7 +667,7 @@ if (empty($modelForm->maxfilesize))
                     }
                     echo '</div>';
 
-                    echo '<div class="collections-action-buttons"><a data-id="' . $input->id_input . '" data-group="subforms' . $input->id_input . '" class="btn btn__secondary form-copy" href="javascript:">'.(!empty($options['button_label'])?$options['button_label']:'Добавить еще').'</a></div>';
+                    echo '<div class="collections-action-buttons"><a data-id="' . $input->id_input . '" data-group="subforms' . $input->id_input . '" class="btn btn__secondary form-copy btn-primary" href="javascript:">'.(!empty($options['button_label'])?$options['button_label']:'Добавить еще').'</a></div>';
                 } else
                 {
                     $value = [];
