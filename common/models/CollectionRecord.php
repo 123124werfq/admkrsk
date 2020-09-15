@@ -461,16 +461,24 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                     if (!empty($relatedColumn))
                     {
-                        $ids = $dataMongo['col'.$column->id_column];
+                        //$ids = $dataMongo['col'.$column->id_column];
 
-                        $relatedCollection = Yii::$app->mongodb->getCollection('collection'.$column->input->id_collection);
+                        $relatedRecords = CollectionRecord::find()->where(['id_record'=>$dataMongo['col'.$column->id_column]])->all();
 
-                        $updateData = [
+                        foreach ($relatedRecords as $rel)
+                        {
+                            $rel->data = [$column->input->options['parent']=>$this->id_record];
+                            $rel->save();
+                        }
+
+                        //$relatedCollection = Yii::$app->mongodb->getCollection('collection'.$column->input->id_collection);
+
+                        /*$updateData = [
                             'col'.$column->input->options['parent'] => $this->id_record,
                             'col'.$column->input->options['parent'].'_search' => $dataMongo['col'.$relatedColumn->input->id_collection_column]??''
                         ];
 
-                        $relatedCollection->update(['id_record'=>$ids],$updateData);
+                        $relatedCollection->update(['id_record'=>$ids],$updateData);*/
                     }
                 }
             }
@@ -525,8 +533,11 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 {
                     if ($column->type == CollectionColumn::TYPE_COLLECTION)
                     {
-                        $subrecord = CollectionRecord::findOne(key($value));
-                        $output[$column['alias']] = $subrecord->getDataRaw($keyAsAlias,false);
+                        $subrecord = CollectionRecord::findOne(is_array($value)?key($value):$value);
+                        if (!empty($subrecord))
+                        {                            
+                            $output[$column['alias']] = $subrecord->getDataRaw($keyAsAlias,false);
+                        }
                     }
                     else if ($column->type == CollectionColumn::TYPE_COLLECTIONS)
                     {
