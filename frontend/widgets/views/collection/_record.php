@@ -57,6 +57,7 @@
 
                         if (is_array($value))
                             var_dump($value);
+
                         else echo $value;
                     }
                 }

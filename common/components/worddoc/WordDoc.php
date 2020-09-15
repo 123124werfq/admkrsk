@@ -57,6 +57,11 @@ class WordDoc
         {
             if (isset($columns[$alias]) && $columns[$alias]->type==CollectionColumn::TYPE_JSON)
             {
+                $value = json_decode($value);
+
+                if (is_string($value))
+                    $value = json_decode($value,true);
+
                 if (!empty($value))
                 {
                     $template->cloneRow($alias.'.'.key($value[0]), count($value));
@@ -173,11 +178,6 @@ class WordDoc
             }
             else if ($col->type==CollectionColumn::TYPE_JSON)
             {
-                $value = json_decode($data[$col_alias]);
-
-                if (is_string($value))
-                    $value = json_decode($value,true);
-
                 /*$table = new \Table(array('borderSize' => 12, 'borderColor' => 'green', 'width' => 6000, 'unit' => TblWidth::TWIP));
                 $table->addRow();
                 $table->addCell(150)->addText('Cell A1');
@@ -189,7 +189,7 @@ class WordDoc
                 $table->addCell(150)->addText('Cell B3');*/
                 //$templateProcessor->setComplexBlock('table', $table);
 
-                $string_output[$col->alias] = $value;//$table;//$value;
+                $string_output[$col->alias] = $data[$col_alias];//$table;//$value;
             }
             else if ($col->type==CollectionColumn::TYPE_ADDRESS)
             {
