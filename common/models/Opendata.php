@@ -799,7 +799,8 @@ class Opendata extends ActiveRecord
                     return null;
                 }
 
-                $columns = ArrayHelper::getColumn(CollectionColumn::findAll($this->columns), 'id_column');
+                $collectionColumns = CollectionColumn::find()->where(['id_column' => $this->columns])->indexBy('id_column')->all();
+                $columns = ArrayHelper::getColumn($collectionColumns, 'id_column');
 
                 $data = $this->collection->getData($columns);
 
@@ -808,7 +809,19 @@ class Opendata extends ActiveRecord
                 fputcsv($tmpfile, $columns);
 
                 foreach ($data as $datum) {
-                    fputcsv($tmpfile, $datum);
+                    try {
+                        $row = [];
+                        foreach ($datum as $key => $value) {
+                            $row[$key] = $collectionColumns[$key]->getValueByType($value);
+                        }
+                        fputcsv($tmpfile, $row);
+                    } catch (\Exception $e) {
+                        Yii::error([
+                            'error' => $e->getMessage(),
+                            'datum' => $datum,
+                            'row' => $row,
+                        ]);
+                    }
                 }
 
                 Yii::$app->publicStorage->putStream($opendataData->path, $tmpfile);

@@ -729,22 +729,25 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 break;
             case self::TYPE_CITY:
                 $model = City::findOne((int)$value);
-                return $city->name??null;
+                return $model->name??null;
                 break;
             case self::TYPE_STREET:
                 $model = Street::findOne((int)$value);
-                return $city->name??null;
+                return $model->name??null;
                 break;
             case self::TYPE_ADDRESS:
+                if (!is_array($value)) {
+                    return $value;
+                }
+                $output = '';
                 if (!empty($value['fullname']))
-                    $output = $value['fullname'];
+                    $output .= $value['fullname'];
 
                 if (!empty($value['place']))
-                    $output .= ','.$value['place'];
+                    $output .= ', '.$value['place'];
 
                 if (!empty($value['lat']))
-                    $output .= ','.$value['lat'].':'.$value['lon'];
-
+                    $output .= ', '.$value['lat'].':'.$value['lon'];
                 return $output;
                 break;
             case self::TYPE_REPEAT:
