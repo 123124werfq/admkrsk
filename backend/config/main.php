@@ -14,9 +14,10 @@ return [
     'modules' => [],
     'components' => [
         'request' => [
+            'class' => 'common\base\Request',
             'csrfParam' => '_csrf-backend',
             'trustedHosts' => [
-                '10.24.0.84',
+                '10.24.0.0/24',
             ],
         ],
         'user' => [
