@@ -5,6 +5,7 @@ use Yii;
 use PhpOffice\PhpWord\TemplateProcessor;
 use common\models\CollectionColumn;
 use common\models\CollectionRecord;
+use yii\helpers\Html;
 
 
 class WordDoc
