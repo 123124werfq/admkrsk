@@ -147,7 +147,7 @@ class WordDoc
 
                 $string_output[$col_alias] = implode('<w:br/>', $output);
             }
-            else if (!isset($data[$col_alias]))
+            else if (!isset($data[$col_alias]) || empty($data[$col_alias]))
                 $string_output[$col_alias] = '';
             else if ($col->type==CollectionColumn::TYPE_DATE)
                 $string_output[$col_alias] = date('d.m.Y',(int)$data[$col_alias]);
@@ -189,7 +189,7 @@ class WordDoc
                 $table->addCell(150)->addText('Cell B3');*/
                 //$templateProcessor->setComplexBlock('table', $table);
 
-                $string_output[$col->alias] = '';//$table;//$value;
+                $string_output[$col->alias] = $value;//$table;//$value;
             }
             else if ($col->type==CollectionColumn::TYPE_ADDRESS)
             {
