@@ -112,7 +112,7 @@ class WordDoc
                         foreach ($records as $rkey => $record)
                             $records_string[] = WordDoc::convertDataToString($record->getData(true),$rcolumns);
 
-                        $template->cloneBlock($alias, 0, true, false, $records_string);
+                        $template->cloneBlock($alias, 0, true, true, $records_string);
                     }
                 }
             }
@@ -178,7 +178,7 @@ class WordDoc
                 if (is_string($value))
                     $value = json_decode($value,true);
 
-                $string_output[$col->alias] = $value;
+                $string_output[$col->alias] = '';//$value;
             }
             else if ($col->type==CollectionColumn::TYPE_ADDRESS)
             {
