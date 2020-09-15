@@ -178,7 +178,7 @@ class WordDoc
                 if (is_string($value))
                     $value = json_decode($value,true);
 
-                $table = new \Table(array('borderSize' => 12, 'borderColor' => 'green', 'width' => 6000, 'unit' => TblWidth::TWIP));
+                /*$table = new \Table(array('borderSize' => 12, 'borderColor' => 'green', 'width' => 6000, 'unit' => TblWidth::TWIP));
                 $table->addRow();
                 $table->addCell(150)->addText('Cell A1');
                 $table->addCell(150)->addText('Cell A2');
@@ -186,10 +186,10 @@ class WordDoc
                 $table->addRow();
                 $table->addCell(150)->addText('Cell B1');
                 $table->addCell(150)->addText('Cell B2');
-                $table->addCell(150)->addText('Cell B3');
+                $table->addCell(150)->addText('Cell B3');*/
                 //$templateProcessor->setComplexBlock('table', $table);
 
-                $string_output[$col->alias] = $table;//$value;
+                $string_output[$col->alias] = '';//$table;//$value;
             }
             else if ($col->type==CollectionColumn::TYPE_ADDRESS)
             {
