@@ -50,10 +50,9 @@
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][id_media]" value="'+id_media+'"/>\
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][ord]" rel="ord" value="'+index+'"/>\
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][grouptype]" rel="name" value="'+settings.group+'"/>'
-																
-				if (settings.showAuthor == 1)	
-					$output += '<input type="text" class="form-control" name="'+settings.relationname+'['+settings.group+']['+index+'][author]" rel="name" value="'+data.name+'" placeholder="Заголовок" />';
-				
+
+				if (settings.showAuthor == 1)
+					$output += '<input type="text" class="form-control" name="'+settings.relationname+'['+settings.group+']['+index+'][author]" rel="name" value="'+data.name+'" placeholder="Автор" />';
 
 				$output += '<textarea maxlength="255" class="form-control" name="'+settings.relationname+'['+settings.group+']['+index+'][description]" rel="description" placeholder="Описание">'+data.description+'</textarea>\
 						</td>\

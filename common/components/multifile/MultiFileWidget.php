@@ -56,6 +56,7 @@ class MultiFileWidget extends Widget
 						}
 
 						$records[$key]['file_path'] = $data->getFilePath();
+						$records[$key]['download'] = $data->getUrl();
 						$records[$key]['size'] = round($data->size/1024/1024,3).'MB';
 						if ($data->isImage())
 							$records[$key]['preview'] =  $data->showThumb(['w'=>300]);
@@ -64,7 +65,7 @@ class MultiFileWidget extends Widget
 				}
 			}
 		}
-		
+
 		return $this->render('file_upload',[
 			'model'=>$this->model,
 			'records'=>$records,
