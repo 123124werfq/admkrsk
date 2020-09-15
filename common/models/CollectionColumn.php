@@ -765,9 +765,6 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 if (!empty($value['place']))
                     $output .= ','.$value['place'];
 
-                if (!empty($value['place']))
-                    $output .= ','.$value['place'];
-
                 if (!empty($value['lat']))
                     $output .= ','.$value['lat'].':'.$value['lon'];
 
