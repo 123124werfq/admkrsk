@@ -759,9 +759,6 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 if (!empty($value['fullname']))
                     $output = $value['fullname'];
 
-                if (!empty($value['room']))
-                    $output .= ','.$value['room'];
-
                 if (!empty($value['place']))
                     $output .= ','.$value['place'];
 
