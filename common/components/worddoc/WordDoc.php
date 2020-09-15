@@ -57,11 +57,6 @@ class WordDoc
         {
             if (isset($columns[$alias]) && $columns[$alias]->type==CollectionColumn::TYPE_JSON)
             {
-                $value = json_decode($value,true);
-
-                if (is_string($value))
-                    $value = json_decode($value,true);
-
                 if (!empty($value))
                 {
                     $template->cloneRow($alias.'.'.key($value[0]), count($value));
@@ -115,9 +110,7 @@ class WordDoc
 
                         $records_string = [];
                         foreach ($records as $rkey => $record)
-                        {
                             $records_string[] = WordDoc::convertDataToString($record->getData(true),$rcolumns);
-                        }
 
                         $template->cloneBlock($alias, 0, true, false, $records_string);
                     }
@@ -180,7 +173,12 @@ class WordDoc
             }
             else if ($col->type==CollectionColumn::TYPE_JSON)
             {
-                $string_output[$col->alias] = $data[$col_alias];
+                $value = json_decode($data[$col_alias]);
+
+                if (is_string($value))
+                    $value = json_decode($value,true);
+
+                $string_output[$col->alias] = $value;
             }
             else if ($col->type==CollectionColumn::TYPE_ADDRESS)
             {

@@ -116,6 +116,10 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'name'=>'Подпись добавить',
                     'type'=>'input',
                 ],
+                'parent'=>[
+                    'name'=>'Добавлять связь родителя',
+                    'type'=>'dropdown',
+                ],
             ],
             self::TYPE_CHECKBOX => [
                 'popup'=>[
@@ -503,7 +507,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
             case self::TYPE_DATETIME:
                 return [
                     $this->alias => 'Число (UNIXTIME)',
-                ];                
+                ];
             case self::TYPE_CHECKBOXLIST:
             case self::TYPE_MAP:
                 return [
