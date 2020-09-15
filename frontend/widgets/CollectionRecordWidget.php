@@ -11,6 +11,7 @@ class CollectionRecordWidget extends \yii\base\Widget
     public $templateAsElement = false;
     public $columnsAlias = [];
     public $columns = [];
+    public $noRecursion = false;
 
     public function run()
     {
@@ -46,6 +47,7 @@ class CollectionRecordWidget extends \yii\base\Widget
         	'template'=>$template,
         	'recordData'=>$recorData,
             'columns'=>$columns,
+            'noRecursion'=>$this->noRecursion,
         ]);
     }
 }
