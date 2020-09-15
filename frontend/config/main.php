@@ -82,6 +82,7 @@ return [
                 'class' => 'yii\web\UrlNormalizer',
             ],
             'rules' => [
+                'workflow/in'=>'workflow/in',
                 'site/flush' => 'site/flush',
                 [
                     'class' => 'yii\web\GroupUrlRule',
