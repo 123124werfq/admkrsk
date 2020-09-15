@@ -146,9 +146,7 @@ class WordDoc
                 $output = [];
 
                 foreach ($values as $key => $value)
-                {
                     $output[] = $value.(!empty($data[$col_alias]) && in_array($value, $data[$col_alias])?' - да':' - нет');
-                }
 
                 $string_output[$col_alias] = implode('<w:br/>', $output);
             }
@@ -299,7 +297,12 @@ class WordDoc
                 if (is_array($data[$col_alias]))
                     $string_output[$col->alias] = implode('<w:br/>', $data[$col_alias]);
                 else
+                {
+                    $data[$col_alias] = Html::encode($data[$col_alias]);
+                    $data[$col_alias] = str_replace("\r\n", '<w:br/>', $data[$col_alias]);
+
                     $string_output[$col->alias] = (string)$data[$col_alias];
+                }
             }
         }
 
