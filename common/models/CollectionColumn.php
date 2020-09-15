@@ -755,6 +755,24 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 $model = Street::findOne((int)$value);
                 return $city->name??null;
                 break;
+            case self::TYPE_ADDRESS:
+                if (!empty($value['fullname']))
+                    $output = $value['fullname'];
+
+                if (!empty($value['room']))
+                    $output .= ','.$value['room'];
+
+                if (!empty($value['place']))
+                    $output .= ','.$value['place'];
+
+                if (!empty($value['place']))
+                    $output .= ','.$value['place'];
+
+                if (!empty($value['lat']))
+                    $output .= ','.$value['lat'].':'.$value['lon'];
+
+                return $output;
+                break;
             case self::TYPE_REPEAT:
                 if (empty($value['begin']))
                     return '';
