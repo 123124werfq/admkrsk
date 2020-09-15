@@ -527,7 +527,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 else
                 {
                     if ($column->type == CollectionColumn::TYPE_JSON)
-                        $output[$column['alias']] = json_decode($valu)
+                        $output[$column['alias']] = json_decode($value);
                     else
                         $output[$column['alias']] = $value;
                 }
