@@ -231,7 +231,7 @@ class ContestController extends \yii\web\Controller
 
         $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
         if(!$contestCollection)
-        return $this->render('expertsonly');
+            return $this->render('expertsonly');
 
         $data = $links = [];
 
@@ -252,7 +252,7 @@ class ContestController extends \yii\web\Controller
             }
 
             if(!isset($tmp))
-                throw new BadRequestHttpException();
+                return $this->render('expertsonly');
         }
 
         $profiles = CstProfile::find()->all();
