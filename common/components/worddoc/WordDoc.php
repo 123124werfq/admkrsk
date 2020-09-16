@@ -175,6 +175,21 @@ class WordDoc
                 else
                     $string_output[$col->alias] = $data[$col_alias];
             }
+            else if ($col->type==CollectionColumn::TYPE_REPEAT)
+            {
+                $string_output[$col->alias.'.begin'] = $data[$col_alias]['begin']?date('d.m.Y',$data[$col_alias]['begin']):'';
+                $string_output[$col->alias.'.end'] = $data[$col_alias]['end']?date('d.m.Y',$data[$col_alias]['end']):'';
+                $string_output[$col->alias.'.is_repeat'] = $data[$col_alias]['is_repeat']?'Да':'Нет';
+                $string_output[$col->alias.'.repeat_count'] = $data[$col_alias]['repeat_count']??'';
+                $string_output[$col->alias.'.repeat'] = $data[$col_alias]['repeat']??'';
+                $string_output[$col->alias.'.day_space'] = $data[$col_alias]['day_space']??'';
+                $string_output[$col->alias.'.week_space'] = $data[$col_alias]['week_space']??'';
+                $string_output[$col->alias.'.repeat_month'] = $data[$col_alias]['repeat_month']??'';
+                $string_output[$col->alias.'.month_days'] = is_array($data[$col_alias]['month_days'])?implode(', ', $data[$col_alias]['month_days']):'';
+                $string_output[$col->alias.'.week'] = (!empty($data[$col_alias]['week'])&&is_array($data[$col_alias]['week']))?implode(', ', $data[$col_alias]['week']):'';
+                $string_output[$col->alias.'.week_number'] = $data[$col_alias]['week_number']??'';
+                $string_output[$col->alias.'.month_week'] = is_array($data[$col_alias]['month_week'])?implode(', ', $data[$col_alias]['month_week']):'';
+            }
             else if ($col->type==CollectionColumn::TYPE_JSON)
             {
                 /*$table = new \Table(array('borderSize' => 12, 'borderColor' => 'green', 'width' => 6000, 'unit' => TblWidth::TWIP));

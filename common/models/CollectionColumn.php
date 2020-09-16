@@ -529,9 +529,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 return [];
             case self::TYPE_REPEAT:
                 return [
-                    "$this->alias.name" => 'Название файла (Строка)',
-                    "$this->alias.size" => 'Размер файла (Число байт)',
-                    "$this->alias.url" => 'Путь до файла (Строка)',
+
                 ];
             case self::TYPE_ARCHIVE:
                 return [
