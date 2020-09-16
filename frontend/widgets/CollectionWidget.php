@@ -203,9 +203,9 @@ class CollectionWidget extends \yii\base\Widget
                             if (count($dates)==2)
                             {
                                 $begin = strtotime($dates[0]);
-                                $begin = mktime(0,0,0,date('n',$begin),date('j"',$begin),date('Y',$begin));
+                                $begin = mktime(0,0,0,date('n',$begin),date('j',$begin),date('Y',$begin));
                                 $end = strtotime($dates[1]);
-                                $end = mktime(23,59,59,date('n',$end),date('j"',$end),date('Y',$end));//
+                                $end = mktime(23,59,59,date('n',$end),date('j',$end),date('Y',$end));//
 
                                 if ($columns[$id_col]->type==CollectionColumn::TYPE_REPEAT)
                                 {
