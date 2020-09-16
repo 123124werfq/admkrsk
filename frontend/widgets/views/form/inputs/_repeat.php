@@ -29,7 +29,7 @@
 
     $data = $value['time']??[[]];
 
-    echo $this->render('_jsontable',[
+    echo '<div class="col-md-12">'.$this->render('_jsontable',[
         'model'=>$model,
         'form'=>$form,
         'id_input'=>$id_input,
@@ -40,7 +40,7 @@
         'attribute'=>$attribute,
         'inputname'=>$inputname.'[time]',
         'clearAttribute'=>$clearAttribute,
-    ]);
+    ]).'</div>';
 
     echo '<div class="col-md-6">
             <div class="checkbox-group">
