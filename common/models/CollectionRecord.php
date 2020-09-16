@@ -275,7 +275,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             $i = 1;
                             while ($begin <= $gend && $search_date <= $gend && $i <= $repeat_count)
                             {
-                                $t = date('t',$begin);
+                                $t = (int)date('t',$begin);
 
                                 foreach ($value['month_days'] as $dkey => $day)
                                 {
