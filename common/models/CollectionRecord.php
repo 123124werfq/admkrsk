@@ -336,6 +336,10 @@ class CollectionRecord extends \yii\db\ActiveRecord
                         }
                     }
                 }
+                else {
+                    if (empty($value['end']))
+                        $value['end'] = $value['begin'];
+                }
 
                 $output[$search_index] = $dates;
 
@@ -535,7 +539,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     {
                         $subrecord = CollectionRecord::findOne(is_array($value)?key($value):$value);
                         if (!empty($subrecord))
-                        {                            
+                        {
                             $output[$column['alias']] = $subrecord->getDataRaw($keyAsAlias,false);
                         }
                     }
