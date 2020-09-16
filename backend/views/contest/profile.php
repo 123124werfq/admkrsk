@@ -16,7 +16,7 @@ use yii\helpers\Url;
 $this->title = 'Анкеты, поданные для учстия в конкурсах';
 $this->params['breadcrumbs'][] = $this->title;
 if($contestid>0)
-    $this->params['button-block'][] = '<a class="btn btn-success create-collection" href="/collection-record/all-doc?id='.$contestid.'">Скачать архив</a>';
+    $this->params['button-block'][] = '<a class="btn btn-success" href="/collection-record/all-doc?id='.$contestid.'">Скачать архив</a>';
 
 GridAsset::register($this);
 

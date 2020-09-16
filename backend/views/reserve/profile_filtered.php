@@ -122,7 +122,7 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-//        'filterModel' => $searchModel,
+        'filterModel' => $searchModel,
         'rowOptions' => function ($model) {
             /*
             if ($model->isBusy()) {

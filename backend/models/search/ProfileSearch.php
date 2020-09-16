@@ -15,13 +15,19 @@ use common\models\HrProfile;
  */
 class ProfileSearch extends HrProfile
 {
+    public $surname;
+    public $plist;
+    public $status;
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-
+            [['id_profile'], 'integer'],
+            [['surname'], 'string'],
+            [['plist'], 'string'],
+            [['status'], 'integer'],
         ];
     }
 
@@ -44,6 +50,8 @@ class ProfileSearch extends HrProfile
      */
     public function search($params)
     {
+
+
         /*
         $query = HrProfile::find();
 
@@ -70,6 +78,13 @@ class ProfileSearch extends HrProfile
                         left join db_collection_value dcv on hpp.id_record_position = dcv.id_record
                         group by id_profile) tp on tp.id_profile = hp.id_profile                 
                     ";
+        /*                    
+        $this->load($params);
+        if(!empty($params))
+        {
+            var_dump($this->surname);
+        }
+        */                   
 
         $count = Yii::$app->db->createCommand("SELECT COUNT(*) FROM ($sql) t1")->queryScalar();
 
@@ -90,7 +105,7 @@ class ProfileSearch extends HrProfile
                         'desc' => ['created_at' => SORT_DESC],
                         'default' => SORT_ASC
                     ],
-                    'state' => [
+                    'status' => [
                         'asc' => ['state' => SORT_ASC],
                         'desc' => ['state' => SORT_DESC],
                         'default' => SORT_ASC
