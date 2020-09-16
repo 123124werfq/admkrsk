@@ -230,9 +230,9 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             $search_date = $i*24*3600+$begin;
 
                             if ($search_date>=$gbegin)
-                                $dates = [$search_date];
+                                $dates[] = $search_date;
 
-                            $begin+= ($space+1)*24*3600;
+                            $begin+= $space*24*3600;
 
                             $i++;
                         }
@@ -275,14 +275,14 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             $i = 1;
                             while ($begin <= $gend && $search_date <= $gend && $i <= $repeat_count)
                             {
-                                $t = date('t',$begin);
+                                $t = (int)date('t',$begin);
 
                                 foreach ($value['month_days'] as $dkey => $day)
                                 {
                                     if ($day>$t)
                                         continue;
 
-                                    $search_date = $begin+$day*24*3600;
+                                    $search_date = $begin+$day*(24*3600-1);
 
                                     if ($search_date>$gend)
                                         break;
@@ -335,6 +335,10 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             }
                         }
                     }
+                }
+                else {
+                    if (empty($value['end']))
+                        $value['end'] = $value['begin'];
                 }
 
                 $output[$search_index] = $dates;
@@ -535,7 +539,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     {
                         $subrecord = CollectionRecord::findOne(is_array($value)?key($value):$value);
                         if (!empty($subrecord))
-                        {                            
+                        {
                             $output[$column['alias']] = $subrecord->getDataRaw($keyAsAlias,false);
                         }
                     }

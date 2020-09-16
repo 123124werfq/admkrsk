@@ -49,7 +49,7 @@ class ReserveController extends Controller
             $columns = json_decode($grid->settings, true);
         }
 
-        return $this->render('profile', [
+        return $this->render('profile_filtered', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'customColumns' => $columns,

@@ -162,7 +162,8 @@ class SiteController extends Controller
                 Yii::getAlias('@runtime')
             ));
 
-            Yii::$app->session->set('backUrl', Yii::$app->request->referrer);
+            Yii::$app->session->set('backUrl', empty($_SESSION['backUrlExpert'])?Yii::$app->request->referrer:$_SESSION['backUrlExpert']);
+            unset($_SESSION['backUrlExpert']);
 
             $url = $esia->buildUrl();
 
