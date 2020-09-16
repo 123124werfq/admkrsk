@@ -282,7 +282,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                                     if ($day>$t)
                                         continue;
 
-                                    $search_date = $begin+$day*24*3600;
+                                    $search_date = $begin+$day*(24*3600-1);
 
                                     if ($search_date>$gend)
                                         break;
