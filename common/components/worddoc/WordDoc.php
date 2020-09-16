@@ -179,7 +179,7 @@ class WordDoc
             {
                 $string_output[$col->alias.'.begin'] = $data[$col_alias]['begin']?date('d.m.Y',$data[$col_alias]['begin']):'';
                 $string_output[$col->alias.'.end'] = $data[$col_alias]['end']?date('d.m.Y',$data[$col_alias]['end']):'';
-                $string_output[$col->alias.'.is_repeat'] = $data[$col_alias]['is_repeat']?'Да':'Нет';
+                $string_output[$col->alias.'.is_repeat'] = !empty($data[$col_alias]['is_repeat'])?'Да':'Нет';
                 $string_output[$col->alias.'.repeat_count'] = $data[$col_alias]['repeat_count']??'';
                 $string_output[$col->alias.'.repeat'] = $data[$col_alias]['repeat']??'';
                 $string_output[$col->alias.'.day_space'] = $data[$col_alias]['day_space']??'';
