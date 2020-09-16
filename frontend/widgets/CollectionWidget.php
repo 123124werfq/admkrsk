@@ -40,9 +40,9 @@ class CollectionWidget extends \yii\base\Widget
 
     public function run()
     {
-        $setting = '';        
+        $setting = '';
 
-        
+
         if (!empty($this->attributes))
         {
 
@@ -51,7 +51,7 @@ class CollectionWidget extends \yii\base\Widget
                 $old_attribures = $this->attributes;
 
                 $setting = SettingPluginCollection::find()->where(['key'=>$this->attributes['key']])->one();
-                
+
                 if (!empty($setting))
                 {
                     $this->attributes = json_decode($setting->settings,true);
@@ -199,7 +199,8 @@ class CollectionWidget extends \yii\base\Widget
                             $dates = explode('-', $dates);
 
                             $begin = strtotime($dates[0]);
-                            $end = strtotime($dates[1]);
+                            $begin = mktime(0,0,0,date('n',$begin),date('j"',$begin),date('Y',$begin));
+                            $end = mktime(23,59,59,date('n',$end),date('j"',$end),date('Y',$end));//strtotime($dates[1]);
 
                             if (count($dates)==2)
                             {
@@ -219,7 +220,7 @@ class CollectionWidget extends \yii\base\Widget
                                             ['>=','col'.$id_col.'.begin',$begin],
                                             ['<=','col'.$id_col.'.end',$end]
                                         ]
-                                    ])                          
+                                    ])
                                     ->andWhere(
                                         ['or',
                                             ['==','col'.$id_col.'_search',[]],
@@ -377,7 +378,7 @@ class CollectionWidget extends \yii\base\Widget
 
         // оффсет и срез данных
         $offset = ($p-1)*$this->pagesize;
-        $allrows = array_slice($allrows, $offset, $this->pagesize,true);        
+        $allrows = array_slice($allrows, $offset, $this->pagesize,true);
 
         // отображение по группам
         if ($this->group)
@@ -387,11 +388,11 @@ class CollectionWidget extends \yii\base\Widget
             if (!empty($group_alias))
             {
                 foreach ($allrows as $id_record => $row)
-                {           
+                {
                     $group_index = 0;
 
                     if ($columns[$this->group]->type==CollectionColumn::TYPE_REPEAT)
-                    {                        
+                    {
                         if (!empty($row[$group_alias]['begin']) && empty($begin))
                             $group_index = date('d.m.Y',$row[$group_alias]['begin']);
                         elseif (!empty($begin) && !empty($end))
