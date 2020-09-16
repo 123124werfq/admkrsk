@@ -14,13 +14,14 @@
                     echo 'Не заполнено';
                 else
                 {
-                    if ($column->isRelation())
+                    if ($column->isRelation() && empty($noRecursion))
                     {
                         if (!empty($recordData[$column->id_column]) && is_array($recordData[$column->id_column]))
                             foreach ($recordData[$column->id_column] as $id_subrecord => $subrecord)
                             {
                                 echo \frontend\widgets\CollectionRecordWidget::widget([
                                     'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
+                                    'noRecursion'=>true,
                                 ]);
                             }
                     }
@@ -57,6 +58,7 @@
 
                         if (is_array($value))
                             var_dump($value);
+
                         else echo $value;
                     }
                 }

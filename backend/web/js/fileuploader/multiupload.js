@@ -51,7 +51,6 @@
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][id_media]" value="'+id_media+'"/>\
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][ord]" rel="ord" value="'+index+'"/>\
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][grouptype]" rel="name" value="'+settings.group+'"/>\
-							<!--textarea maxlength="255" class="form-control" name="'+settings.relationname+'['+settings.group+']['+index+'][description]" rel="description" placeholder="Описание">'+data.description+'</textarea-->\
 						</td>\
 						<td width="15"><a class="close btn btn-default" onclick="$(this).parent().parent().remove(); return false;">&times;</a></td>\
 					</tr>';

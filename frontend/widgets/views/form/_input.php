@@ -118,6 +118,8 @@ if (empty($modelForm->maxfilesize))
                 break;
             case CollectionColumn::TYPE_INTEGER:
                 $options['type'] = 'number';
+                if (empty($options['step']))
+                    $options['step'] = 'any';
                 echo $form->field($model, $attribute)->textInput($options);
                 break;
             case CollectionColumn::TYPE_INPUT:
@@ -144,7 +146,7 @@ if (empty($modelForm->maxfilesize))
                 echo $this->render('inputs/_repeat',[
                     'model'=>$model,
                     'id_input'=>$id_input,
-                    'input'=>$input,    
+                    'input'=>$input,
                     'form'=>$form,
                     'options'=>$options,
                     'attribute'=>$attribute,
@@ -193,7 +195,9 @@ if (empty($modelForm->maxfilesize))
                         'houseguid'=>'',
                         'lat'=>'',
                         'lon'=>'',
-                        'postalcode'=>''
+                        'postalcode'=>'',
+                        'place'=>'',
+                        'id_place'=>'',
                     ];
 
                     $city = City::find()->where("name LIKE '%Красноярск%'")->one();
@@ -318,8 +322,6 @@ if (empty($modelForm->maxfilesize))
                     ]
                 ]).'</div>';
 
-                //echo '<div class="col-md-12"></div>';
-
                 if (!empty($options['show_street']))
                 echo '<div class="col-md-4">'.$form->field($model, $attribute.'[street]')->widget(Select2::class, [
                     'data' => [$value['id_street']?:$value['street']=>$value['street']],
@@ -398,35 +400,44 @@ if (empty($modelForm->maxfilesize))
                     echo '</div>';
                 }
 
-
                 if (!empty($options['show_coords']))
                 {
                     echo '<div class="col-md-12">';
                     echo MapInputWidget::widget(['name' => $inputname.'[coords]', 'index' => $options['id'], /*'value' => $model->$clearAttribute*/]);
                     echo '</div>';
                 }
+
+                if (!empty($options['show_place']))
+                echo '<div class="col-md-12">'.$form->field($model, $attribute.'[place]')->widget(Select2::class, [
+                    'data' => [$value['id_place']?:$value['id_place']=>$value['place']],
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        'tags' => false,
+                        'allowClear' => true,
+                        'minimumInputLength' => 0,
+                        'placeholder' => 'Место',
+                        'ajax' => [
+                            'url' => '/address/place',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {search:params.term,id_house:getValueById("input-house' . $id_input . '")};}')
+                        ],
+                    ],
+                    'options' => [
+                        'value'=>empty($value['id_place'])?$value['place']:$value['id_place'],
+                        'id' => 'input-place' . $id_input
+                    ],
+                    'pluginEvents' => [
+                        "select2:select" => "function(e) {
+
+                            if ($('#input-house$id_input').val()=='')
+                            {
+                                selectPlace('input-place$id_input');
+                            }
+                        }",
+                    ]
+                ]).'</div>';
+
                 echo '</div>';
-
-                /*$script = <<< JS
-$("#{$options['id']}").autocomplete({
-        'minLength':'2',
-        'showAnim':'fold',
-        'select': function(event, ui) {
-
-        },
-        'change': function (event, ui) {
-            if (ui.item)
-            {
-            }
-            else {
-                $("#{$options['id']}").val('');
-            }
-        },
-        'source':'/search/address',
-    })
-    .data("autocomplete");
-JS;
-                $this->registerJs($script, yii\web\View::POS_END);*/
                 break;
             case CollectionColumn::TYPE_FILE:
 
@@ -602,6 +613,9 @@ JS;
                 if (!empty($model->$clearAttribute))
                     $value = $model->$clearAttribute;
 
+                if (is_numeric($value))
+                    $value = [$value];
+
                 echo $form->field($model, $attribute)->widget(Select2::class, [
                     'data' => $value,
                     'pluginOptions' => [
@@ -656,7 +670,7 @@ JS;
                     }
                     echo '</div>';
 
-                    echo '<div class="collections-action-buttons"><a data-id="' . $input->id_input . '" data-group="subforms' . $input->id_input . '" class="btn btn__secondary form-copy" href="javascript:">'.(!empty($options['button_label'])?$options['button_label']:'Добавить еще').'</a></div>';
+                    echo '<div class="collections-action-buttons"><a data-id="' . $input->id_input . '" data-group="subforms' . $input->id_input . '" class="btn btn__secondary form-copy btn-primary" href="javascript:">'.(!empty($options['button_label'])?$options['button_label']:'Добавить еще').'</a></div>';
                 } else
                 {
                     $value = [];

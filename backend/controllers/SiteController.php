@@ -27,7 +27,7 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['index', 'setting', 'savelink', 'deletelink'],
+                        'actions' => ['index', 'setting', 'savelink', 'deletelink', 'test'],
                         'allow' => true,
                         'roles' => ['backend'],
                     ],
@@ -198,5 +198,16 @@ class SiteController extends Controller
 
         if($dasboardLink)
             $dasboardLink->delete();
-    } 
+    }
+
+    public function actionTest()
+    {
+        echo "<pre>";
+        print_r([
+            'remoteIp' => Yii::$app->request->getRemoteIP(),
+            'userIp' => Yii::$app->request->getUserIP(),
+            '_SERVER' => $_SERVER,
+        ]);
+        die();
+    }
 }

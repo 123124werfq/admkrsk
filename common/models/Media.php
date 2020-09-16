@@ -93,7 +93,7 @@ class Media extends \yii\db\ActiveRecord
     {
         return [
             self::SIZE_SMALL => 'Маленькое (300px)',
-            self::SIZE_MEDIUM => 'Среднее (600px)',            
+            self::SIZE_MEDIUM => 'Среднее (600px)',
             self::SIZE_BIG => 'Большое (1900px)',
         ];
     }
@@ -265,7 +265,6 @@ class Media extends \yii\db\ActiveRecord
         /*if (!is_dir($dir.$level1.'/'.$level2))
             mkdir($dir.$level1.'/'.$level2);*/
 
-
         $filename = ($this->hash?:$this->id_media).'.'.$this->extension;
 
         return $url_piece.$level1.'/'.$level2.'/'.$filename;
@@ -281,17 +280,17 @@ class Media extends \yii\db\ActiveRecord
                 $option['w'] = 1900;
             else
                 $option['w'] = 300;
-        }        
+        }
 
         if (!empty($this->url)&&empty($this->size))
-            return $this->url;        
+            return $this->url;
 
         if (!empty($option))
             return $this->makeThumb($this->getFilePath(),$option);
         else
             return $this->getUrl();
     }
-        
+
     public static function thumb($id_media, $size=0)
     {
         $media = Media::findOne($id_media);

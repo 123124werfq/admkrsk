@@ -31,10 +31,8 @@ class CollectionColumn extends \yii\db\ActiveRecord
     const TYPE_RICHTEXT = 4;
     const TYPE_CHECKBOX = 5;
     const TYPE_CHECKBOXLIST = 14;
-    //const TYPE_MULTISELECT = 6;
     const TYPE_MAP = 7;
     const TYPE_FILE = 8;
-    //const TYPE_FILES = 18;
     const TYPE_IMAGE = 9;
     const TYPE_COLLECTION = 13;
     const TYPE_COLLECTIONS = 25;
@@ -54,6 +52,9 @@ class CollectionColumn extends \yii\db\ActiveRecord
     const TYPE_ADDRESSES = 30;
     const TYPE_REPEAT = 31;
     const TYPE_ARCHIVE = 32;
+
+    //const TYPE_MULTISELECT = 6;
+    //const TYPE_FILES = 18;
 
     public static function getTypeOptions($type)
     {
@@ -107,13 +108,18 @@ class CollectionColumn extends \yii\db\ActiveRecord
                         '1'=>"Да",
                     ]
                 ],
+                'button_label'=>[
+                    'name'=>'Подпись кнопки добавить',
+                    'type'=>'input',
+                ],
+                'parent'=>[
+                    'name'=>'Устанавливать связь родителя в колонку',
+                    'type'=>'dropdown',
+                    'is_relation'=>true,
+                ],
                 'sortable'=>[
                     'name'=>'Сортировка элементов',
                     'type'=>'checkbox',
-                ],
-                'button_label'=>[
-                    'name'=>'Подпись добавить',
-                    'type'=>'input',
                 ],
             ],
             self::TYPE_CHECKBOX => [
@@ -129,37 +135,6 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'name'=>'Соглашение',
                     'type'=>'richtext',
                 ],
-            ],
-            self::TYPE_REPEAT => [
-                /*'begin'=>[
-                    'name'=>'Дата начала',
-                    'type'=>'input',
-                ],
-                'end'=>[
-                    'name'=>'Дата конца',
-                    'type'=>'input',
-                ],
-                'is_repeat'=>[
-                    'name'=>'Повторяющееся событие',
-                    'type'=>'checkbox',
-                ],
-                'repeat_count'=>[
-                    'name'=>'Число повторов',
-                    'type'=>'input',
-                ],
-                'time'=>[
-                    'name'=>'Время начала',
-                    'type'=>'table',
-                ],
-                'type'=>[
-                    'name'=>'Трубется дополнительное подтверждение',
-                    'type'=>'radio',
-                    'values'=>[
-                        '1'=>"Ежедневно",
-                        '2'=>"Еженедельно",
-                        '3'=>"Ежемесячно",
-                    ]
-                ],*/
             ],
             self::TYPE_INTEGER => [
                 'min'=>[
@@ -216,27 +191,10 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'name'=>'Показывать координаты',
                     'type'=>'checkbox',
                 ],
-
-                /*'valid_country'=>[
-                    'name'=>'Обязательно страна',
+                'show_place'=>[
+                    'name'=>'Показывать место',
                     'type'=>'checkbox',
                 ],
-                'valid_region'=>[
-                    'name'=>'Обязательно регион',
-                    'type'=>'checkbox',
-                ],
-                'valid_subregion'=>[
-                    'name'=>'Обязательно область',
-                    'type'=>'checkbox',
-                ],
-                'valid_city'=>[
-                    'name'=>'Обязательно город',
-                    'type'=>'checkbox',
-                ],
-                'valid_district'=>[
-                    'name'=>'Обязательно район',
-                    'type'=>'checkbox',
-                ],*/
             ],
             self::TYPE_TEXTAREA => [
                 'maxlength'=>[
@@ -331,6 +289,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
             self::TYPE_REPEAT => 'Повторяющееся событие',
             self::TYPE_CUSTOM => 'Составная колонка',
+            self::TYPE_ARCHIVE => 'Архив',
         ];
 
         if (empty($type))
@@ -505,6 +464,78 @@ class CollectionColumn extends \yii\db\ActiveRecord
         ];
 
         return $json;
+    }
+
+    public function getTemplateProperties()
+    {
+        switch ($this->type){
+            case self::TYPE_INPUT:
+            case self::TYPE_TEXTAREA:
+            case self::TYPE_SELECT:
+            case self::TYPE_RICHTEXT:
+            case self::TYPE_CHECKBOX:
+            case self::TYPE_RADIO:
+            case self::TYPE_CUSTOM:
+                return [
+                    $this->alias => 'Строка',
+                ];
+            case self::TYPE_INTEGER:
+                return [
+                    $this->alias => 'Число',
+                ];
+            case self::TYPE_DATE:
+            case self::TYPE_DATETIME:
+                return [
+                    $this->alias => 'Число (UNIXTIME)',
+                ];
+            case self::TYPE_CHECKBOXLIST:
+            case self::TYPE_MAP:
+                return [
+                    $this->alias => 'Массив',
+                ];
+            case self::TYPE_FILE:
+            case self::TYPE_IMAGE:
+                return [
+                    "$this->alias.name" => 'Название файла (Строка)',
+                    "$this->alias.size" => 'Размер файла (Число байт)',
+                    "$this->alias.url" => 'Путь до файла (Строка)',
+                ];
+            case self::TYPE_COLLECTION:
+            case self::TYPE_COLLECTIONS:
+                return [];
+            case self::TYPE_ADDRESS:
+                return [
+                    $this->alias.'.country'=>'Страна (Строка)',
+                    $this->alias.'.region'=>'Регион (Строка)',
+                    $this->alias.'.subregion'=>'Область (Строка)',
+                    $this->alias.'.city'=>'Город (Строка)',
+                    $this->alias.'.district'=>'Район (Строка)',
+                    $this->alias.'.street'=>'Улица (Строка)',
+                    $this->alias.'.house'=>'Дом (Строка)',
+                    $this->alias.'.room'=>'Квартира(Строка)',
+                    $this->alias.'.fullname'=>'Полная строка адреса (Строка)',
+                    $this->alias.'.houseguid'=>'GUID ФИАС (Строка)',
+                    $this->alias.'.lat'=>'Широта (Число)',
+                    $this->alias.'.lon'=>'Долгота (Число)',
+                    $this->alias.'.postalcode'=>'Почтовый индекс (Число)',
+                    $this->alias.'.place'=>'Место (Строка)',
+                ];;
+            case self::TYPE_JSON:
+                return [];
+            case self::TYPE_SERVICETARGET:
+            case self::TYPE_SERVICE:
+                return [];
+            case self::TYPE_ADDRESSES:
+                return [];
+            case self::TYPE_REPEAT:
+                return [
+
+                ];
+            case self::TYPE_ARCHIVE:
+                return [
+                    $this->alias => '0 или 1',
+                ];
+        }
     }
 
     public function getOptionsData()
@@ -696,11 +727,26 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 break;
             case self::TYPE_CITY:
                 $model = City::findOne((int)$value);
-                return $city->name??null;
+                return $model->name??null;
                 break;
             case self::TYPE_STREET:
                 $model = Street::findOne((int)$value);
-                return $city->name??null;
+                return $model->name??null;
+                break;
+            case self::TYPE_ADDRESS:
+                if (!is_array($value)) {
+                    return $value;
+                }
+                $output = '';
+                if (!empty($value['fullname']))
+                    $output .= $value['fullname'];
+
+                if (!empty($value['place']))
+                    $output .= ', '.$value['place'];
+
+                if (!empty($value['lat']))
+                    $output .= ', '.$value['lat'].':'.$value['lon'];
+                return $output;
                 break;
             case self::TYPE_REPEAT:
                 if (empty($value['begin']))
@@ -813,7 +859,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
     public function getInput()
     {
-        return $this->hasOne(FormInput::class, ['id_column' => 'id_column'])->andWhere(['id_form'=>$this->collection->id_form]);
+        return $this->hasOne(FormInput::class, ['id_column' => 'id_column']);//->andWhere(['id_form'=>$this->collection->id_form]);
     }
 
     public function getInputs()

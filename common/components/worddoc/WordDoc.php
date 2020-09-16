@@ -5,6 +5,7 @@ use Yii;
 use PhpOffice\PhpWord\TemplateProcessor;
 use common\models\CollectionColumn;
 use common\models\CollectionRecord;
+use yii\helpers\Html;
 
 
 class WordDoc
@@ -57,7 +58,7 @@ class WordDoc
         {
             if (isset($columns[$alias]) && $columns[$alias]->type==CollectionColumn::TYPE_JSON)
             {
-                $value = json_decode($value,true);
+                $value = json_decode($value);
 
                 if (is_string($value))
                     $value = json_decode($value,true);
@@ -115,9 +116,7 @@ class WordDoc
 
                         $records_string = [];
                         foreach ($records as $rkey => $record)
-                        {
                             $records_string[] = WordDoc::convertDataToString($record->getData(true),$rcolumns);
-                        }
 
                         $template->cloneBlock($alias, 0, true, false, $records_string);
                     }
@@ -148,13 +147,11 @@ class WordDoc
                 $output = [];
 
                 foreach ($values as $key => $value)
-                {
                     $output[] = $value.(!empty($data[$col_alias]) && in_array($value, $data[$col_alias])?' - да':' - нет');
-                }
 
                 $string_output[$col_alias] = implode('<w:br/>', $output);
             }
-            else if (!isset($data[$col_alias]))
+            else if (!isset($data[$col_alias]) || empty($data[$col_alias]))
                 $string_output[$col_alias] = '';
             else if ($col->type==CollectionColumn::TYPE_DATE)
                 $string_output[$col_alias] = date('d.m.Y',(int)$data[$col_alias]);
@@ -178,9 +175,35 @@ class WordDoc
                 else
                     $string_output[$col->alias] = $data[$col_alias];
             }
+            else if ($col->type==CollectionColumn::TYPE_REPEAT)
+            {
+                $string_output[$col->alias.'.begin'] = $data[$col_alias]['begin']?date('d.m.Y',$data[$col_alias]['begin']):'';
+                $string_output[$col->alias.'.end'] = $data[$col_alias]['end']?date('d.m.Y',$data[$col_alias]['end']):'';
+                $string_output[$col->alias.'.is_repeat'] = (!empty($data[$col_alias]['is_repeat']))?'Да':'Нет';
+                $string_output[$col->alias.'.repeat_count'] = $data[$col_alias]['repeat_count']??'';
+                $string_output[$col->alias.'.repeat'] = $data[$col_alias]['repeat']??'';
+                $string_output[$col->alias.'.day_space'] = $data[$col_alias]['day_space']??'';
+                $string_output[$col->alias.'.week_space'] = $data[$col_alias]['week_space']??'';
+                $string_output[$col->alias.'.repeat_month'] = $data[$col_alias]['repeat_month']??'';
+                $string_output[$col->alias.'.month_days'] = (!empty($data[$col_alias]['month_days']))?implode(', ', $data[$col_alias]['month_days']):'';
+                $string_output[$col->alias.'.week'] = (!empty($data[$col_alias]['week'])&&is_array($data[$col_alias]['week']))?implode(', ', $data[$col_alias]['week']):'';
+                $string_output[$col->alias.'.week_number'] = $data[$col_alias]['week_number']??'';
+                $string_output[$col->alias.'.month_week'] = (!empty($data[$col_alias]['month_week']))?implode(', ', $data[$col_alias]['month_week']):'';
+            }
             else if ($col->type==CollectionColumn::TYPE_JSON)
             {
-                $string_output[$col->alias] = $data[$col_alias];
+                /*$table = new \Table(array('borderSize' => 12, 'borderColor' => 'green', 'width' => 6000, 'unit' => TblWidth::TWIP));
+                $table->addRow();
+                $table->addCell(150)->addText('Cell A1');
+                $table->addCell(150)->addText('Cell A2');
+                $table->addCell(150)->addText('Cell A3');
+                $table->addRow();
+                $table->addCell(150)->addText('Cell B1');
+                $table->addCell(150)->addText('Cell B2');
+                $table->addCell(150)->addText('Cell B3');*/
+                //$templateProcessor->setComplexBlock('table', $table);
+
+                $string_output[$col->alias] = $data[$col_alias];//$table;//$value;
             }
             else if ($col->type==CollectionColumn::TYPE_ADDRESS)
             {
@@ -290,7 +313,12 @@ class WordDoc
                 if (is_array($data[$col_alias]))
                     $string_output[$col->alias] = implode('<w:br/>', $data[$col_alias]);
                 else
+                {
+                    $data[$col_alias] = Html::encode($data[$col_alias]);
+                    $data[$col_alias] = str_replace("\n", '<w:br/>', $data[$col_alias]);
+
                     $string_output[$col->alias] = (string)$data[$col_alias];
+                }
             }
         }
 

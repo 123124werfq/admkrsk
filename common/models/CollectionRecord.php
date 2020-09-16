@@ -208,10 +208,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 break;
             case CollectionColumn::TYPE_REPEAT:
 
-            //var_dump($value);
                 $dates = [];
-
-                
 
                 if (!empty($value['is_repeat']))
                 {
@@ -233,15 +230,15 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             $search_date = $i*24*3600+$begin;
 
                             if ($search_date>=$gbegin)
-                                $dates = [$search_date];
+                                $dates[] = $search_date;
 
-                            $begin+= ($space+1)*24*3600;
+                            $begin+= $space*24*3600;
 
                             $i++;
                         }
                     }
                     else if ($value['repeat']=='Еженедельно')
-                    {                        
+                    {
                         $space = (int)$value['week_space'];
                         $week = $this->getWeeknumbers($value['week']??'');
 
@@ -278,14 +275,14 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             $i = 1;
                             while ($begin <= $gend && $search_date <= $gend && $i <= $repeat_count)
                             {
-                                $t = date('t',$begin);
+                                $t = (int)date('t',$begin);
 
                                 foreach ($value['month_days'] as $dkey => $day)
                                 {
                                     if ($day>$t)
                                         continue;
 
-                                    $search_date = $begin+$day*24*3600;
+                                    $search_date = $begin+$day*(24*3600-1);
 
                                     if ($search_date>$gend)
                                         break;
@@ -324,7 +321,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                                             break;
 
                                         if ($search_date>=$gbegin)
-                                        {                                            
+                                        {
                                             $dates[] = $search_date;
                                             $i++;
                                         }
@@ -338,6 +335,10 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             }
                         }
                     }
+                }
+                else {
+                    if (empty($value['end']))
+                        $value['end'] = $value['begin'];
                 }
 
                 $output[$search_index] = $dates;
@@ -436,7 +437,6 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     ])->execute();
 
                 $dataMongo = array_merge($dataMongo,$this->getMongoDate($value,$column));
-                /*$dataMongo['col'.$column->id_column] = ($column->type == CollectionColumn::TYPE_INTEGER)?(float)$value:$value;*/
             }
 
             $dataMongo['id_record'] = $this->id_record;
@@ -447,7 +447,6 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 $collection->update(['id_record'=>$this->id_record],$dataMongo);
 
             // Это надо оптимизировать, перенесено под инсерт потомучто не работает при CREATE / MSD
-            $dataMongo = [];
             $columnsAlias = [];
 
             $hasCustom = false;
@@ -459,11 +458,40 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     $hasCustom = true;
                     $columnsAlias = array_merge(Helper::getTwigVars($column->template),$columnsAlias);
                 }
+
+                if (!empty($dataMongo['col'.$column->id_column]) && $column->isRelation() && !empty($column->input->options['parent']))
+                {
+                    $relatedColumn = CollectionColumn::findOne($column->input->options['parent']);
+
+                    if (!empty($relatedColumn))
+                    {
+                        //$ids = $dataMongo['col'.$column->id_column];
+
+                        $relatedRecords = CollectionRecord::find()->where(['id_record'=>$dataMongo['col'.$column->id_column]])->all();
+
+                        foreach ($relatedRecords as $rel)
+                        {
+                            $rel->data = [$column->input->options['parent']=>$this->id_record];
+                            $rel->save();
+                        }
+
+                        //$relatedCollection = Yii::$app->mongodb->getCollection('collection'.$column->input->id_collection);
+
+                        /*$updateData = [
+                            'col'.$column->input->options['parent'] => $this->id_record,
+                            'col'.$column->input->options['parent'].'_search' => $dataMongo['col'.$relatedColumn->input->id_collection_column]??''
+                        ];
+
+                        $relatedCollection->update(['id_record'=>$ids],$updateData);*/
+                    }
+                }
             }
+
+            $dataMongo = [];
 
             if ($hasCustom)
             {
-                $recordData = $this->getDataAsString(true,true,$columnsAlias);
+                $recordData = $this->getDataRaw(true,true,$columnsAlias);
 
                 foreach ($columns as $key => $column)
                     if ($column->isCustom())
@@ -481,6 +509,67 @@ class CollectionRecord extends \yii\db\ActiveRecord
     {
         $recordData = $this->getData(true);
     }*/
+
+    public function getDataRaw($keyAsAlias=true,$includeRelation=false,$onlyColumns=[])
+    {
+        $record = \common\components\collection\CollectionQuery::getQuery($this->id_collection)
+                    ->select()
+                    ->where(['id_record'=>$this->id_record]);
+
+        $columns = $record->columns;
+
+        $record = $record->getArray();
+
+        $output = ['id_record'=>$this->id_record];
+
+        if (!empty($record))
+        {
+            $record = array_shift($record);
+
+            foreach ($columns as $key => $column)
+            {
+                if (!empty($onlyColumns) && !in_array($column->alias, $onlyColumns))
+                    continue;
+
+                $value = $record[$column->id_column];
+
+                if ($includeRelation && $column->isRelation() && !empty($value))
+                {
+                    if ($column->type == CollectionColumn::TYPE_COLLECTION)
+                    {
+                        $subrecord = CollectionRecord::findOne(is_array($value)?key($value):$value);
+                        if (!empty($subrecord))
+                        {
+                            $output[$column['alias']] = $subrecord->getDataRaw($keyAsAlias,false);
+                        }
+                    }
+                    else if ($column->type == CollectionColumn::TYPE_COLLECTIONS)
+                    {
+                        $output[$column['alias']] = [];
+
+                        foreach ($value as $id_record => $label)
+                        {
+                            $subrecord = CollectionRecord::findOne($id_record);
+                            $output[$column['alias']][$id_record] = $subrecord->getDataRaw($keyAsAlias,false);
+                        }
+                    }
+                    else
+                        $output[$column['alias']] = $value;
+                }
+                else
+                {
+                    if ($column->type == CollectionColumn::TYPE_JSON)
+                        $output[$column['alias']] = json_decode($value);
+                    else
+                        $output[$column['alias']] = $value;
+                }
+            }
+
+            return $output;
+        }
+        else
+            return [];
+    }
 
     public function getDataAsString($keyAsAlias=true,$includeRelation=false,$onlyColumns=[])
     {
@@ -529,7 +618,6 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 {
                     $output[$column['alias']] = $column->getValueByType($value);
                 }
-
             }
 
             return $output;

@@ -15,18 +15,24 @@
 		}
 
 		var li_tmpl = function(data, index)
-		{	
+		{
 			var file = data.preview;
 			var fileName = data.name;
 			var id_media = data.id;
-			
+
 			var description = data.description;
-			
+
 			if (description==null)
 				description = '';
 
+			var download = data.download;
+
+			if (download==null)
+				download = '';
+
+
 			var author = data.author;
-			
+
 			if (author==null)
 				author = '';
 
@@ -52,14 +58,14 @@
 			if (settings.showAuthor)
 				output += '<input type="text" class="form-control" placeholder="Автор" name="'+settings.relationname+'['+settings.group+']['+index+'][author]" rel="name" value="'+author+'"/>';
 
-			output += '<textarea class="form-control" placeholder="Описание" name="'+settings.relationname+'['+settings.group+']['+index+'][description]">'+description+'</textarea>\
+				output += '<textarea class="form-control" placeholder="Описание" name="'+settings.relationname+'['+settings.group+']['+index+'][description]">'+description+'</textarea>\
 							<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+index+'][grouptype]" rel="name" value="'+settings.group+'"/>\
 						</div>\
 						<div class="file-progress">\
 						    <p class="size" data-dz-size></p>\
 						</div>\
 						<div class="file-buttons">\
-							<a href="'+file+'" class="btn btn-success" download><i class="fa fa-download"></i></a>\
+							<a href="'+download+'" class="btn btn-success" download><i class="fa fa-download"></i></a>\
 						</div>\
 						<a class="dz-remove" href="javascript:undefined;" data-dz-remove="">×</a>\
 					</div>';
@@ -162,14 +168,14 @@
 			        this.on("success", function(file, response){
 
 						response = JSON.parse(response);
-						
+
 						var element = '<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+new_index+'][file_path]" value="'+response.file+'"/>\
 						<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+new_index+'][ord]" rel="ord" value="'+new_index+'"/>\
 						<input class="form-control" placeholder="Название" type="text" name="'+settings.relationname+'['+settings.group+']['+new_index+'][filename]" value="'+file.name+'"/>';
 
 						if (settings.showAuthor)
 							element += '<input type="text" class="form-control" placeholder="Автор" name="'+settings.relationname+'['+settings.group+']['+new_index+'][author]" value=""/>';
-						
+
 						element+='<textarea class="form-control" placeholder="Описание" name="'+settings.relationname+'['+settings.group+']['+new_index+'][description]" value=""/>\
 								<input type="hidden" name="'+settings.relationname+'['+settings.group+']['+new_index+'][grouptype]" rel="name" value="'+settings.group+'"/>';
 

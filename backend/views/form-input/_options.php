@@ -7,6 +7,7 @@
 
 	$columns = [];
 
+
 	if (!empty($options))
 	{
 		echo '<div class="row-flex">';
@@ -45,7 +46,29 @@
 					echo '<script type="text/javascript">tinymce.init(tinymceConfig);</script>';
 					break;
 				case 'dropdown':
-					echo Html::dropDownList("FormInput[options][$key]",$value,$option['values'],$inputOption);
+					if (!empty($option['is_relation']))
+					{
+						$values = [];
+
+						if (!empty($model->collection))
+						{
+							$columns = $model->collection->getColumns()
+										->joinWith('input as input')
+											->where(['input.id_collection'=>$model->column->id_collection])
+											->select(['input.id_column','input.name','db_collection_column.id_column'])
+											->asArray()->all();
+
+							foreach ($columns as $ckey => $data) {
+								$values[$data['id_column']] = $data['name'];
+							}
+						}
+
+						$inputOption['prompt'] = "Выберите колонку";
+					}
+					else
+						$values = $option['values'];
+
+					echo Html::dropDownList("FormInput[options][$key]",$value,$values,$inputOption);
 					break;
 				default:
 					break;

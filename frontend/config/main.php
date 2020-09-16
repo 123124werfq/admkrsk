@@ -48,30 +48,10 @@ return [
             )
         ),
         'request' => [
+            'class' => 'common\base\Request',
             'csrfParam' => '_csrf-frontend',
-            // 'trustedHosts' => [
-            //     '10.24.0.0/24' => [
-            //         'X-Forwarded-For',
-            //         'X-Forwarded-Proto',
-            //         'Front-End-Https',
-            //         'HTTP_X_FORWARDED_FOR',
-            //     ],
-            // ],
-            'secureHeaders' => [
-                // Common:
-                'X-Forwarded-For',
-                'X-Forwarded-Host',
-                'X-Forwarded-Proto',
-
-                // Microsoft:
-                'Front-End-Https',
-                'X-Rewrite-Url',
-                'HTTP_X_FORWARDED_FOR',
-            ],
-            'ipHeaders' => [
-                // Common
-                'X-Forwarded-For',
-                'HTTP_X_FORWARDED_FOR',
+            'trustedHosts' => [
+                '10.24.0.0/24',
             ],
         ],
         'user' => [
@@ -102,6 +82,7 @@ return [
                 'class' => 'yii\web\UrlNormalizer',
             ],
             'rules' => [
+                'workflow/in'=>'workflow/in',
                 'site/flush' => 'site/flush',
                 [
                     'class' => 'yii\web\GroupUrlRule',

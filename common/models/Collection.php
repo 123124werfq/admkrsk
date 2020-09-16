@@ -385,9 +385,8 @@ class Collection extends ActiveRecord
             $options = json_decode($this->options, true);
 
             if (!empty($options['filters']) && !is_array($options['filters']))
-            {
-                $query->andWhere(json_decode($options['filters'],true));
-            }
+                $query->where(json_decode($options['filters'],true));
+            
         }
 
         $query->keyAsAlias = $keyAsAlias;
@@ -405,7 +404,7 @@ class Collection extends ActiveRecord
         return $id_collection;
     }
 
-    public function getDataQuery()
+    public function getDataQuery($eraseFilters = false)
     {
         if (!empty($this->id_parent_collection))
             $id_collection = $this->id_parent_collection;
@@ -414,14 +413,15 @@ class Collection extends ActiveRecord
 
         $query = CollectionQuery::getQuery($id_collection)->select();
 
+        if ($eraseFilters)
+            $query->where(null);
+
         if (!empty($this->options))
         {
             $options = json_decode($this->options, true);
 
             if (!empty($options['filters']))
-            {
-                $query->andWhere(json_decode($options['filters'],true));
-            }
+                $query->where(json_decode($options['filters'],true));            
         }
 
         return $query;

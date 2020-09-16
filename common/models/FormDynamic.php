@@ -159,7 +159,9 @@ class FormDynamic extends DynamicModel
                                     'houseguid'=>'',
                                     'lat'=>'',
                                     'lon'=>'',
-                                    'postalcode'=>''
+                                    'postalcode'=>'',
+                                    'place'=>'',
+                                    'id_place'=>'',
                                 ];
 
                         if (!empty($value['house']))
@@ -312,10 +314,25 @@ class FormDynamic extends DynamicModel
                             $data[$index] = $empty;
                         }
 
+                        if (!empty($value['place']))
+                        {
+                            if (is_numeric($value['place']))
+                            {
+                                $addModel = Place::findOne($value['place']);
+
+                                if (!empty($addModel))
+                                {
+                                    $data[$index]['place'] = $addModel->name??'';
+                                    $data[$index]['id_place'] = $addModel->id_house??'';
+                                    $data[$index]['fullname'] = ', '.$value['place'];
+                                }
+                            }
+                        }
+
                         if (!empty($value['room']))
                         {
                             $data[$index]['room'] = $value['room'];
-                            $data['fullname'] = ', кв.'.$value['room'];
+                            $data[$index]['fullname'] .= ', кв.'.$value['room'];
                         }
 
                         if (!empty($value['coords'][0]))
@@ -325,9 +342,6 @@ class FormDynamic extends DynamicModel
                             $data[$index]['lon'] = $value['coords'][1];
 
                         break;
-                    /*case CollectionColumn::TYPE_CHECKBOXLIST:
-                        $data[$index] = json_encode($this->$attribute);
-                        break;*/
                     case CollectionColumn::TYPE_COLLECTIONS:
 
                         // если разрешили добавлять
@@ -361,7 +375,6 @@ class FormDynamic extends DynamicModel
                                                 $collectionRecord->data = $prepareData;
                                                 $collectionRecord->save();
                                             }
-
 
                                             if (!empty($collectionRecord->id_record))
                                                 $ids[] = $collectionRecord->id_record;

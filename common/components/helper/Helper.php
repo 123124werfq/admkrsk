@@ -176,7 +176,7 @@ class Helper
 		return $twig->render('index', $data);
 	}
 
-	public static function runContentWidget($content, $page, $recordData=[])
+	public static function runContentWidget($content, $page, $recordData=[],$insertAttributes=[])
 	{
 		function parseAttributesFromTag($tag, $recordData=[])
 		{
@@ -215,7 +215,8 @@ class Helper
         if (!empty($matches[0]))
 	        foreach ($matches[0] as $key => $match)
 	        {
-	            $attributes = parseAttributesFromTag($match, $recordData);
+				$attributes = parseAttributesFromTag($match, $recordData);				
+				$attributes = array_merge($attributes,$insertAttributes);
 
                 $class = 'frontend\widgets\\' . ucwords($matches[1][$key]) . 'Widget';
 

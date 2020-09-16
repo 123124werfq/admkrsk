@@ -160,8 +160,50 @@ return [
         'title' => 'Пресс-центр',
         'icon' => 'fa fa-newspaper-o',
         'submenu' => [
-            'news' => [
+            'news?id_page=7' => [
                 'title' => 'Новости',
+                'roles' => [
+                    'menu.news' => ['class' => News::class],
+                    'admin.cstProfile',
+                ],
+            ],
+            'news?id_page=8' => [
+                'title' => 'Актуально',
+                'roles' => [
+                    'menu.news' => ['class' => News::class],
+                    'admin.cstProfile',
+                ],
+            ],
+            'news?id_page=1975' => [
+                'title' => 'Важно',
+                'roles' => [
+                    'menu.news' => ['class' => News::class],
+                    'admin.cstProfile',
+                ],
+            ],
+            'news?id_page=479' => [
+                'title' => 'Ограничения движения',
+                'roles' => [
+                    'menu.news' => ['class' => News::class],
+                    'admin.cstProfile',
+                ],
+            ],
+            'news?id_page=1372' => [
+                'title' => 'News',
+                'roles' => [
+                    'menu.news' => ['class' => News::class],
+                    'admin.cstProfile',
+                ],
+            ],
+            'collection-record/index?id=24' => [
+                'title' => 'Помошники по связям',
+                'roles' => [
+                    'menu.news' => ['class' => News::class],
+                    'admin.cstProfile',
+                ],
+            ],
+            'collection-record/index?id=6' => [
+                'title' => 'Рубрики новостей',
                 'roles' => [
                     'menu.news' => ['class' => News::class],
                     'admin.cstProfile',

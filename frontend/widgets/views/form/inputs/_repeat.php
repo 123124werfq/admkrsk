@@ -9,8 +9,9 @@
 
     $value = $model->$clearAttribute;
 
-    echo '<div class="flex-wrap"><div class="col-md-6">'.$form->field($model, $attribute.'[begin]')->textInput(['type'=>'date','max'=>date('Y-m-d',strtotime("+2 years")),'value'=> !empty($value['begin'])?date('Y-m-d', $value['begin']):'']).'</div>';
-    echo '<div class="col-md-6">'.$form->field($model, $attribute.'[end]')->textInput(['type'=>'date','max'=>date('Y-m-d',strtotime("+2 years")),'value'=> !empty($value['end'])?date('Y-m-d', $value['end']):'']).'</div>';
+    echo '<div class="flex-wrap">
+                <div class="col-md-6"><label class="form-label">Дата начала</label>'.$form->field($model, $attribute.'[begin]')->textInput(['type'=>'date','max'=>date('Y-m-d',strtotime("+2 years")),'required'=>true,'value'=> !empty($value['begin'])?date('Y-m-d', $value['begin']):'']).'</div>';
+    echo '<div class="col-md-6"><label class="form-label">Дата конца</label>'.$form->field($model, $attribute.'[end]')->textInput(['type'=>'date','max'=>date('Y-m-d',strtotime("+2 years")),'required'=>true,'value'=> !empty($value['end'])?date('Y-m-d', $value['end']):'']).'</div>';
 
     $repeatDisplay = '';
 
@@ -19,16 +20,16 @@
 
     $columns = [
         [
-            'name'=>'Начало','alias'=>'begin','type'=>'string',
+            'name'=>'Начало','alias'=>'begin','type'=>'time',
         ],
         [
-            'name'=>'Конец','alias'=>'end','type'=>'string',
+            'name'=>'Конец','alias'=>'end','type'=>'time',
         ],
     ];
-    
+
     $data = $value['time']??[[]];
-    
-    echo $this->render('_jsontable',[
+
+    echo '<div class="col-md-12">'.$this->render('_jsontable',[
         'model'=>$model,
         'form'=>$form,
         'id_input'=>$id_input,
@@ -39,8 +40,8 @@
         'attribute'=>$attribute,
         'inputname'=>$inputname.'[time]',
         'clearAttribute'=>$clearAttribute,
-    ]);
-    
+    ]).'</div>';
+
     echo '<div class="col-md-6">
             <div class="checkbox-group">
                 <label class="checkbox checkbox__ib">

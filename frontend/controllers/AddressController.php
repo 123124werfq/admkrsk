@@ -8,6 +8,7 @@ use common\models\District;
 use common\models\House;
 use common\models\Region;
 use common\models\Street;
+use common\models\Place;
 use common\models\Subregion;
 use Yii;
 use yii\web\BadRequestHttpException;
@@ -269,5 +270,53 @@ class AddressController extends \yii\web\Controller
         }
 
         return $this->asJson(['results' => $results]);
+    }
+
+    public function actionPlace($id_house = null, $search = '')
+    {
+        $id_house = (int) $id_house;
+
+        $query = Place::find()
+            ->select([Place::tableName() . '.id_place', Place::tableName() . '.name'])
+            ->filterWhere([
+                Place::tableName() . '.id_house' => $id_house ?: null,
+            ])            
+            ->orderBy([Place::tableName() . '.name' => SORT_ASC])
+            ->limit(20)
+            ->asArray();
+
+        if ($search)
+            $query->andFilterWhere(['ilike', Place::tableName() . '.name', $search]);
+
+        $results = [];
+
+        foreach ($query->all() as $data)
+        {
+            $results[] = [
+                'id' => $data['id_place'],
+                'text' => $data['name'],
+            ];
+        }
+
+        return $this->asJson(['results' => $results]);
+    }
+
+    public function actionHouseByPlace()
+    {
+        $id = (int)Yii::$app->request->post('id');
+
+        if (empty($id))
+            return  $this->asJson([]);
+
+        $place = Place::findOne($id);
+
+        if (empty($place))
+            return  $this->asJson([]);
+
+        $output = $place->house->getArrayData($place);
+
+        return $this->asJson(
+            $output
+        );
     }
 }

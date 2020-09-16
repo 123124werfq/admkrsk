@@ -115,6 +115,9 @@ else
 
                 <div class="options <?= $showDetail? '' : 'hide'?>"?>
                     <div class="form-group">
+                        <?=Html::textInput("ViewColumns[$key][class]",$data['class']??'',['class'=>'form-control','id'=>'CollectionColumn_class_'.$key,'placeholder'=>'Класс/Стиль колонки']);?>
+                    </div>
+                    <div class="form-group">
                         <?=Html::textInput("ViewColumns[$key][group]",$data['group']??'',['class'=>'form-control','id'=>'CollectionColumn_group_'.$key,'placeholder'=>'Введите группу']);?>
                     </div>
                     <div class="form-group">

@@ -30,6 +30,7 @@ class CollectionQuery extends \yii\mongodb\Query
         //$query->andWhere(['=','date_delete',null]);
 
         $archiveColumn = $query->collection->getArchiveColumn();
+
         if (!empty($archiveColumn))
         {
             $attr = "col".$archiveColumn->id_column;
@@ -51,13 +52,13 @@ class CollectionQuery extends \yii\mongodb\Query
             $this->id_columns_search = array_diff($id_columns_search, $id_columns);
             $id_columns = array_merge($id_columns,$id_columns_search);
         }
-
+            
         if (!empty($id_columns))
             $columns->where(['id_column'=>$id_columns]);
 
         $columns = $columns->indexBy('id_column')->all();
         $this->columns = $columns;
-
+        
         $select = [];
         foreach ($columns as $key => $column)
         {

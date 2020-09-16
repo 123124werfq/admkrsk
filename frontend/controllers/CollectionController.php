@@ -20,7 +20,8 @@ class CollectionController extends \yii\web\Controller
 		if (empty($model) || empty($page))
 			throw new NotFoundHttpException('The requested page does not exist.');
 
-        $data = $model->getData(true);
+        $data = $model->getDataRaw(true,true);
+
         $data['id_record'] = $model->id_record;
         $data['created_at'] = $model->created_at;
         $data['updated_at'] = $model->updated_at;
