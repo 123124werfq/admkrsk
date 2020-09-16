@@ -230,9 +230,9 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             $search_date = $i*24*3600+$begin;
 
                             if ($search_date>=$gbegin)
-                                $dates = [$search_date];
+                                $dates[] = $search_date;
 
-                            $begin+= ($space+1)*24*3600;
+                            $begin+= $space*24*3600;
 
                             $i++;
                         }
