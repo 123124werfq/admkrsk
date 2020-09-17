@@ -254,16 +254,17 @@ class CollectionRecord extends \yii\db\ActiveRecord
                                 if ($search_date>$gend)
                                     break;
 
-                                if ($search_date>=$gbegin)
+                                if ($search_date>=$gbegin && $search_date<=$gend)
+                                {
                                     $dates[] = $search_date;
+                                    $i++;
+                                }
                             }
 
                             if ($search_date>$gend)
                                 break;
 
                             $begin += ($space+1)*7*24*3600;
-
-                            $i++;
                         }
                     }
                     elseif ($value['repeat']=='Ежемесячно')
