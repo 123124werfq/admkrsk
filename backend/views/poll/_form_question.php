@@ -35,7 +35,13 @@ use yii\widgets\ActiveForm;
                 <?= Html::hiddenInput("Answer[answers][$key][ord]", $data->ord, ['id' => 'Answer_ord_' . $key]); ?>
                 <div class="form-group">
                     <?= Html::label('Ответ', 'Answer_name_' . $key) ?>
-                    <?= Html::textInput("Answer[answers][$key][answer]", $data->answer, ['class'=>'form-control', 'id' => 'Answer_answer_' . $key]); ?>
+                    <div class="input-group">
+                        <?= Html::textInput("Answer[answers][$key][answer]", $data->answer, ['class'=>'form-control', 'id' => 'Answer_answer_' . $key]); ?>
+                            <?= Html::button('Удалить', [
+                                'class' => 'btn btn-danger btn-end',
+                                'onclick' => 'return removeRow($(this).parent().parent())'
+                            ]) ?>
+                    </div>
                 </div>
                 <div class="form-group">
                     <?= Html::label('Описание', 'Answer_name_' . $key) ?>

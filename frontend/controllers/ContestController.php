@@ -224,11 +224,14 @@ class ContestController extends \yii\web\Controller
         $expert = CstExpert::findOne(['id_user' => Yii::$app->user->id]);
 
         if(!$expert)
+        {
+            $_SESSION['backUrlExpert'] = "https://grants.admkrsk.ru/contest/vote/$id";
             return $this->redirect('/login');
+        }
 
         $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
         if(!$contestCollection)
-            throw new BadRequestHttpException();
+            return $this->render('expertsonly');
 
         $data = $links = [];
 
@@ -249,7 +252,7 @@ class ContestController extends \yii\web\Controller
             }
 
             if(!isset($tmp))
-                throw new BadRequestHttpException();
+                return $this->render('expertsonly');
         }
 
         $profiles = CstProfile::find()->all();

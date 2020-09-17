@@ -2,9 +2,12 @@
 
 namespace backend\models\search;
 
+use Yii;
+
 use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\data\SqlDataProvider;
 use common\models\HrProfile;
 
 /**
@@ -12,13 +15,19 @@ use common\models\HrProfile;
  */
 class ProfileSearch extends HrProfile
 {
+    public $surname;
+    public $plist;
+    public $status;
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-
+            [['id_profile'], 'integer'],
+            [['surname'], 'string'],
+            [['plist'], 'string'],
+            [['status'], 'integer'],
         ];
     }
 
@@ -41,6 +50,9 @@ class ProfileSearch extends HrProfile
      */
     public function search($params)
     {
+
+
+        /*
         $query = HrProfile::find();
 
         // add conditions that should always apply here
@@ -52,6 +64,61 @@ class ProfileSearch extends HrProfile
                 'pageSize' => $params['pageSize'] ?? 10
             ],
         ]);
+        */
+
+        $sql = "select hp.*, surname, name, patronic, plist from hr_profile hp
+                    left join
+                    (select id_record, value as surname from db_collection_value  where id_column = 1061) tsurname on tsurname.id_record = hp.id_record
+                    left join
+                    (select id_record, value as name from db_collection_value  where id_column = 1062) tname on tname.id_record = hp.id_record
+                    left join
+                    (select id_record, value as patronic from db_collection_value where id_column = 1063) tpatronic on tpatronic.id_record = hp.id_record
+                    left join 
+                    (select id_profile, string_agg(value, '<br>') plist from hr_profile_positions hpp 
+                        left join db_collection_value dcv on hpp.id_record_position = dcv.id_record
+                        group by id_profile) tp on tp.id_profile = hp.id_profile                 
+                    ";
+        /*                    
+        $this->load($params);
+        if(!empty($params))
+        {
+            var_dump($this->surname);
+        }
+        */                   
+
+        $count = Yii::$app->db->createCommand("SELECT COUNT(*) FROM ($sql) t1")->queryScalar();
+
+        $dataProvider = new SqlDataProvider([
+            'sql' => $sql,
+            'params' => [],
+            'totalCount' => $count,
+            'pagination' => [
+                'pageSize' => 20,
+            ],
+            'sort' => [
+                'defaultOrder'=> ['id_profile'=>SORT_DESC],
+                'attributes' => [
+                    'id_profile',
+                    'updated_at',
+                    'created_at' => [
+                        'asc' => ['created_at' => SORT_ASC],
+                        'desc' => ['created_at' => SORT_DESC],
+                        'default' => SORT_ASC
+                    ],
+                    'status' => [
+                        'asc' => ['state' => SORT_ASC],
+                        'desc' => ['state' => SORT_DESC],
+                        'default' => SORT_ASC
+                    ],
+                    'surname' => [
+                        'asc' => ['state' => SORT_ASC],
+                        'desc' => ['state' => SORT_DESC],
+                        'default' => SORT_ASC
+                    ],                    
+                ],
+            ],
+        ]);                     
+
 
         $this->load($params);
 
