@@ -157,6 +157,10 @@ position: absolute;
 .input-group {display: flex;}
 .input-group-addon .btn {padding: 2px;}
 .input-group-addon:last-child {border-left:1px solid #E5E6E7; }
+.input-group .btn-end {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
 
 .form-row {
     border: 1px dashed #aaa;

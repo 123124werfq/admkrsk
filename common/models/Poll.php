@@ -221,6 +221,7 @@ class Poll extends \yii\db\ActiveRecord
         return Poll::find()
             ->where([
                 'and',
+                ['status' => self::STATUS_ACTIVE],
                 ['<', 'date_start', time()],
                 ['>', 'date_end', time()],
             ])
