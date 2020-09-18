@@ -4,7 +4,7 @@
 /* @var $model common\models\Poll */
 
 $this->title = 'Редактирование голосования';
-$this->params['breadcrumbs'][] = ['label' => 'Редактирование голосования', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Голосования', 'url' => ['reserve/contest']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="poll-create">

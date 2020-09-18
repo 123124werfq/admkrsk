@@ -9,7 +9,7 @@ use common\models\HrContest;
 use Yii;
 use yii\base\Model;
 
-class ContestForm extends Model
+class ContestForm extends HrContest
 {
     public $id;
     public $name;
@@ -73,6 +73,11 @@ class ContestForm extends Model
         }
         return false;
 
+    }
+
+    public function getExperts()
+    {
+        return parent::getExperts();
     }
 
 }
