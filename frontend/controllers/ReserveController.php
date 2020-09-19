@@ -70,7 +70,7 @@ class ReserveController extends \yii\web\Controller
                 {
                     Yii::$app->response->format = Response::FORMAT_JSON;
                     return [
-                        'success'=>$form->message_success?$form->message_success:'Спасибо, данные отправлены'
+                        'success'=>$collection->form->message_success?$collection->form->message_success:'Спасибо, данные отправлены'
                     ];
                 }
 
@@ -114,7 +114,8 @@ class ReserveController extends \yii\web\Controller
         $expert = HrExpert::findOne(['id_user' => Yii::$app->user->id]);
 
         if(!$expert)
-            throw new BadRequestHttpException();
+            return $this->render('expertsonly');
+//            throw new BadRequestHttpException();
 
 
         $enabled = false;
@@ -124,7 +125,8 @@ class ReserveController extends \yii\web\Controller
                 $enabled = true;
 
         if(!$enabled)
-            throw new BadRequestHttpException();
+            return $this->render('expertsonly');
+//            throw new BadRequestHttpException();
 
         $votes = HrVote::find()->where(['id_expert' => $expert->id_expert, 'id_contest' => $contest->id_contest])->all();
 
@@ -146,7 +148,8 @@ class ReserveController extends \yii\web\Controller
         $expert = HrExpert::findOne(['id_user' => Yii::$app->user->id]);
 
         if(!$expert)
-            throw new BadRequestHttpException();
+            return $this->render('expertsonly');
+//            throw new BadRequestHttpException();
 
         $enabled = false;
 
@@ -155,7 +158,8 @@ class ReserveController extends \yii\web\Controller
                 $enabled = true;
 
         if(!$enabled)
-            throw new BadRequestHttpException();
+            return $this->render('expertsonly');
+//            throw new BadRequestHttpException();
 
         $profile = HrProfile::findOne($id);
 
@@ -166,7 +170,8 @@ class ReserveController extends \yii\web\Controller
                 $enabled = true;
 
         if(!$enabled)
-            throw new BadRequestHttpException();
+            return $this->render('expertsonly');
+            //throw new BadRequestHttpException();
 
         if (!empty(Yii::$app->request->post()))
         {
@@ -241,10 +246,12 @@ class ReserveController extends \yii\web\Controller
         $expert = HrExpert::findOne(['id_user' => Yii::$app->user->id]);
 
         if(!$expert)
-            throw new BadRequestHttpException();
+            return $this->render('expertsonly');
+//            throw new BadRequestHttpException();
 
         if($contest->id_user != $expert->id_expert)
-            throw new BadRequestHttpException();
+            return $this->render('expertsonly');
+//            throw new BadRequestHttpException();
 
 
         $votes = HrVote::find()->where(['id_contest' => $contest->id_contest])->all();
