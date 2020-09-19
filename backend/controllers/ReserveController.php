@@ -76,10 +76,30 @@ class ReserveController extends Controller
 
     public function actionCreate()
     {
+        //var_dump($_POST); die();
         $contest = new ContestForm;
 
         if ($contest->load(Yii::$app->request->post())) {
-            $contest->create();
+            $cst = $contest->create();
+
+            $sql = "DELETE FROM hrl_contest_expert WHERE id_contest = {$cst->id_contest}";
+            Yii::$app->db->createCommand($sql)->execute();
+
+            if(is_array($_POST["ContestForm"]['experts']))
+                foreach ($_POST["ContestForm"]['experts'] as $id_expert) {
+                    $sql = "INSERT INTO hrl_contest_expert (id_contest, id_expert) VALUES ({$cst->id_contest}, {$id_expert})";
+                    Yii::$app->db->createCommand($sql)->execute();
+                }
+
+            $sql = "DELETE FROM hrl_contest_profile WHERE id_contest = {$cst->id_contest}";
+            Yii::$app->db->createCommand($sql)->execute();
+
+            if(is_array($_POST['profiles']))
+                foreach ($_POST['profiles'] as $id_profile) {
+                    $sql = "INSERT INTO hrl_contest_profile (id_contest, id_profile) VALUES ({$cst->id_contest}, {$id_profile})";
+                    Yii::$app->db->createCommand($sql)->execute();
+                }
+
             return $this->redirect('/reserve/contest');
         }
 
