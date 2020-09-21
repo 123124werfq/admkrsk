@@ -47,7 +47,16 @@ $defaultColumns = [
         'value' => function ($model) {
             $pretenders = [];
             foreach ($model->profiles as $profile) {
-                $pretenders[] = "<a href='/reserve/editable?id={$profile->id_profile}' target='_blank'>" . $profile->name . "</a>";
+                $name = '';
+                if(empty($profile->name))
+                {
+                    $data = $profile->getRecordData();
+                    $name = $data['surname'].' '.$data['name'].' '.$data['parental_name'];
+                }
+                else
+                    $name = $profile->name;
+
+                $pretenders[] = "<a href='/reserve/editable?id={$profile->id_profile}' target='_blank'>" . $name . "</a>";
             }
             return implode('<br>', $pretenders);
         }

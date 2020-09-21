@@ -191,9 +191,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
         $output = [];
 
         $value_index = 'col'.$column->id_column;
-        $search_index = 'col'.$column->id_column.'_search';
-
-        $output[$value_index] = $value;
+        $search_index = 'col'.$column->id_column.'_search';        
 
         switch ($column->type)
         {
@@ -215,6 +213,9 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     $gbegin = $value['begin'];
                     $gend = $value['end'];
 
+                    if (empty($gend))                    
+                        $gend = $gbegin+strtotime('+2 years');
+                    
                     $repeat_count = $value['repeat_count']?:365;
 
                     if ($value['repeat']=='Ежедневно')
@@ -235,7 +236,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             $begin+= $space*24*3600;
 
                             $i++;
-                        }
+                        }                        
                     }
                     else if ($value['repeat']=='Еженедельно')
                     {
@@ -335,7 +336,9 @@ class CollectionRecord extends \yii\db\ActiveRecord
                                 }
                             }
                         }
-                    }
+                    }                                        
+                    if (empty($value['end']) && !empty($dates))
+                        $value['end'] = $dates[count($dates)-1];                        
                 }
                 else {
                     if (empty($value['end']))
@@ -374,12 +377,13 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 break;
                 break;
             default:
-                $output[$value_index] = $value;
                 if (is_array($value))
                     $output[$search_index] = is_array($value)?json_encode($value,JSON_UNESCAPED_UNICODE):$value;
 
                 break;
         }
+
+        $output[$value_index] = $value;
 
         return $output;
     }

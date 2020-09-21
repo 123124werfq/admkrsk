@@ -11,7 +11,7 @@
 
     echo '<div class="flex-wrap">
                 <div class="col-md-6"><label class="form-label">Дата начала</label>'.$form->field($model, $attribute.'[begin]')->textInput(['type'=>'date','max'=>date('Y-m-d',strtotime("+2 years")),'required'=>true,'value'=> !empty($value['begin'])?date('Y-m-d', $value['begin']):'']).'</div>';
-    echo '<div class="col-md-6"><label class="form-label">Дата конца</label>'.$form->field($model, $attribute.'[end]')->textInput(['type'=>'date','max'=>date('Y-m-d',strtotime("+2 years")),'required'=>true,'value'=> !empty($value['end'])?date('Y-m-d', $value['end']):'']).'</div>';
+    echo '<div class="col-md-6"><label class="form-label">Дата конца</label>'.$form->field($model, $attribute.'[end]')->textInput(['type'=>'date','max'=>date('Y-m-d',strtotime("+2 years")),'value'=> !empty($value['end'])?date('Y-m-d', $value['end']):'']).'</div>';
 
     $repeatDisplay = '';
 

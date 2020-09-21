@@ -23,7 +23,8 @@ $defaultColumns = [
     'name:text:Имя',
     'patronic:text:Отчество',
     'usr:prop' => [
-        'label' => '',
+        'attribute' => 'usr',
+        'label' => 'ЕСИА',
         'format' => 'html',
         'value' => function ($model) {
             if(empty($model['id_user']))
@@ -31,6 +32,7 @@ $defaultColumns = [
             else
                 return "<a href='/user/view?id={$model['id_user']}'>профиль</a>";
         },
+        'filter' => [ 1 => 'Есть ЕСИА', 2 => 'Нет ЕСИА']
     ],
     'date_create:prop' => [
         'label' => 'Дата создания',
@@ -47,14 +49,27 @@ $defaultColumns = [
             return date("d-m-Y H:i", $model['updated_at'] ? $model['updated_at'] : $model['created_at']).$badge;
         },
     ],
-    'plist:raw:Должности',
+    'plist:raw:Должности' => [
+        'label' => 'Должности',
+        'attribute' => 'plist',
+        'format' => 'raw',
+        'filter' => $positions
+
+    ],
     'status:prop' => [
+        'attribute' => 'status',
         'label' => 'Статус',
         'format' => 'html',
         'value' => function ($model) {
-            return $model['state'];
-            //return $model->getStatename(true);
+            return HrProfile::namedState($model['state'], true);
         },
+        'filter' => [
+            HrProfile::STATE_ACTIVE => HrProfile::namedState(HrProfile::STATE_ACTIVE),
+            HrProfile::STATE_RESERVED => HrProfile::namedState(HrProfile::STATE_RESERVED),
+            HrProfile::STATE_HIRED => HrProfile::namedState(HrProfile::STATE_HIRED),
+            HrProfile::STATE_BANNED => HrProfile::namedState(HrProfile::STATE_BANNED),
+            HrProfile::STATE_ARCHIVED => HrProfile::namedState(HrProfile::STATE_ARCHIVED),
+        ]
     ],
     /*
     'target:prop' => [

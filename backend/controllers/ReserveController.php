@@ -2,26 +2,13 @@
 
 namespace backend\controllers;
 
-use common\models\CollectionRecord;
-use common\models\GridSetting;
-use common\models\HrContest;
-use common\models\HrExpert;
-use common\models\HrProfile;
-use common\models\HrProfilePositions;
-use common\models\HrReserve;
-use common\models\HrResult;
-use common\models\HrVote;
 use Yii;
+use common\models\{CollectionRecord,GridSetting,HrContest,HrExpert,HrProfile,HrProfilePositions,HrReserve,HrResult,HrVote,CollectionColumn};
+use backend\models\search\{ProfileSearch,ContestSearch,ExpertSearch};
+use backend\models\forms\{ExpertForm,ContestForm};
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use backend\models\search\ProfileSearch;
-use backend\models\search\ContestSearch;
-use backend\models\search\ExpertSearch;
-use backend\models\forms\ExpertForm;
-use backend\models\forms\ContestForm;
-
-use common\models\CollectionColumn;
+use yii\web\{Controller,NotFoundHttpException,Response};
+use yii\helpers\ArrayHelper;
 
 class ReserveController extends Controller
 {
@@ -49,10 +36,21 @@ class ReserveController extends Controller
             $columns = json_decode($grid->settings, true);
         }
 
+        $sql = "select distinct value as val from hr_profile_positions hpp 
+                    left join db_collection_value dcv on hpp.id_record_position = dcv.id_record
+                    order by value";
+        $positionsRaw = Yii::$app->db->createCommand($sql)->queryAll();
+        $positions = [];
+
+            for ($i=0; $i < count($positionsRaw); $i++) { 
+                $positions[$i+1] = $positionsRaw[$i]['val'];
+            }
+
         return $this->render('profile_filtered', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'customColumns' => $columns,
+            'positions' => $positions
         ]);
     }
 
@@ -78,10 +76,30 @@ class ReserveController extends Controller
 
     public function actionCreate()
     {
+        //var_dump($_POST); die();
         $contest = new ContestForm;
 
         if ($contest->load(Yii::$app->request->post())) {
-            $contest->create();
+            $cst = $contest->create();
+
+            $sql = "DELETE FROM hrl_contest_expert WHERE id_contest = {$cst->id_contest}";
+            Yii::$app->db->createCommand($sql)->execute();
+
+            if(is_array($_POST["ContestForm"]['experts']))
+                foreach ($_POST["ContestForm"]['experts'] as $id_expert) {
+                    $sql = "INSERT INTO hrl_contest_expert (id_contest, id_expert) VALUES ({$cst->id_contest}, {$id_expert})";
+                    Yii::$app->db->createCommand($sql)->execute();
+                }
+
+            $sql = "DELETE FROM hrl_contest_profile WHERE id_contest = {$cst->id_contest}";
+            Yii::$app->db->createCommand($sql)->execute();
+
+            if(is_array($_POST['profiles']))
+                foreach ($_POST['profiles'] as $id_profile) {
+                    $sql = "INSERT INTO hrl_contest_profile (id_contest, id_profile) VALUES ({$cst->id_contest}, {$id_profile})";
+                    Yii::$app->db->createCommand($sql)->execute();
+                }
+
             return $this->redirect('/reserve/contest');
         }
 
@@ -92,7 +110,6 @@ class ReserveController extends Controller
 
     public function actionEdit($id)
     {
-
         $model = HrContest::findOne($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -101,18 +118,20 @@ class ReserveController extends Controller
             $sql = "DELETE FROM hrl_contest_expert WHERE id_contest = {$model->id_contest}";
             Yii::$app->db->createCommand($sql)->execute();
 
-            foreach ($_POST['HrContest']['experts'] as $id_expert) {
-                $sql = "INSERT INTO hrl_contest_expert (id_contest, id_expert) VALUES ({$model->id_contest}, {$id_expert})";
-                Yii::$app->db->createCommand($sql)->execute();
-            }
+            if(is_array($_POST['experts']))
+                foreach ($_POST['experts'] as $id_expert) {
+                    $sql = "INSERT INTO hrl_contest_expert (id_contest, id_expert) VALUES ({$model->id_contest}, {$id_expert})";
+                    Yii::$app->db->createCommand($sql)->execute();
+                }
 
             $sql = "DELETE FROM hrl_contest_profile WHERE id_contest = {$model->id_contest}";
             Yii::$app->db->createCommand($sql)->execute();
 
-            foreach ($_POST['HrContest']['profiles'] as $id_profile) {
-                $sql = "INSERT INTO hrl_contest_profile (id_contest, id_profile) VALUES ({$model->id_contest}, {$id_profile})";
-                Yii::$app->db->createCommand($sql)->execute();
-            }
+            if(is_array($_POST['profiles']))
+                foreach ($_POST['profiles'] as $id_profile) {
+                    $sql = "INSERT INTO hrl_contest_profile (id_contest, id_profile) VALUES ({$model->id_contest}, {$id_profile})";
+                    Yii::$app->db->createCommand($sql)->execute();
+                }
 
             return $this->redirect('/reserve/contest');
         }
@@ -416,6 +435,57 @@ class ReserveController extends Controller
         Yii::$app->end();
     }
 
+
+
+    public function actionExpertslist($q)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+
+        $exps = HrExpert::find()->where(['state' => 1])->all();
+
+        $results = [];
+        foreach ($exps as $key => $expert) {
+
+            if(strpos(strtolower(" ".$expert->name),strtolower($q))!==false )
+                $results[] = [
+                    'id' => $expert->id_expert,
+                    'text' => $expert->name . ' (' . $expert->user->email . ')',
+                ];
+            
+        }
+
+        return ['results' => $results];
+    }
+
+    public function actionProfilelist($q)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $profs = ArrayHelper::map(HrProfile::find()->where(['reserve_date' => null])->all(),'id_profile', function($model){
+            if(empty($model->name))
+            {
+                $data = $model->getRecordData();
+                return $data['surname'].' '.$data['name'].' '.$data['parental_name'];
+            }
+            else
+                return $model->name;
+        });
+
+        $results = [];
+
+        foreach ($profs as $key => $profile) {
+
+            if(strpos(strtolower(" ".$profile),strtolower($q))!==false )
+                $results[] = [
+                    'id' => $key,
+                    'text' => $profile,
+                ];
+            
+        }
+
+        return ['results' => $results];
+    }    
 
     /*
     public function actionArchived()

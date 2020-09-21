@@ -1,17 +1,12 @@
 <?php
 
-use backend\widgets\UserAccessControl;
-use backend\widgets\UserGroupAccessControl;
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-use common\models\Collection;
-use common\models\Page;
-use yii\helpers\ArrayHelper;
+use common\models\{HrExpert,HrProfile};
+use backend\widgets\{UserAccessControl,UserGroupAccessControl};
+use yii\helpers\{Html,ArrayHelper,Url};
 use kartik\select2\Select2;
 use kartik\datetime\DateTimePicker;
-use common\models\HrExpert;
-use common\models\HrProfile;
-
+use yii\web\JsExpression;
+use yii\widgets\ActiveForm;
 
 ?>
 
@@ -67,33 +62,68 @@ use common\models\HrProfile;
 
         ?>
 
-        <?=
-            $form->field($model, 'experts[]')
-                ->dropDownList(ArrayHelper::map(HrExpert::find()->where(['state' => 1])->all(),'id_expert','name'),
-                    [
-                        'multiple'=>'multiple',
-                        'options' => $expertsSelected
-                    ]);
-        ?>
+        <h3>Эксперты</h3>
+        <?= Select2::widget([
+            'model' => $model,
+            //'attribute' => 'experts[]',
+            'data' => ArrayHelper::map(HrExpert::find()->all(), 'id_expert', function ($model) {
+                return $model->name . ' (' . $model->user->email . ')';
+            }),
+            'name' => 'experts',
+            'value' => !empty($model->experts)?ArrayHelper::map($model->experts, 'id_expert', function ($model) {
+                return $model->id_expert;
+                //return $model->name . ' (' . $model->user->email . ')';
+            }):null,
+            'pluginOptions' => [
+                'allowClear' => true,
+                'multiple' => true,
+                'minimumInputLength' => 1,
+                'placeholder' => 'Выберите экспертов',
+                'ajax' => [
+                    'url' => Url::toRoute(['/reserve/expertslist']),
+                    'dataType' => 'json',
+                    'data' => new JsExpression('function(params) { return {q:params.term}; }')
+                ],
+            ],
+            'options' => [
+                'class' => 'col-md-9',
+                'multiple' => true,
+            ]           
+        ]) ?>        
 
-        <?php
-            $profilesSelected = [];
-
-            foreach ($model->profiles as $profile)
-            {
-                $profilesSelected[$profile->id_profile] = ['Selected' => true];
-            }
-
-        ?>
-
-        <?=
-            $form->field($model, 'profiles[]')
-                ->dropDownList(ArrayHelper::map(HrProfile::find()->where(['reserve_date' => null])->all(),'id_profile','name'),
-                    [
-                        'multiple'=>'multiple',
-                        'options' => $profilesSelected
-                    ]);
-        ?>
+        <br><br>
+        <h3>Анкеты</h3>
+        <?= Select2::widget([
+            'model' => $model,
+            'data' => ArrayHelper::map(HrProfile::find()->where(['reserve_date' => null])->all(),'id_profile', function($model){
+                if(empty($model->name))
+                {
+                    $data = $model->getRecordData();
+                    return $data['surname'].' '.$data['name'].' '.$data['parental_name'].' ('.$data['email'].')';
+                }
+                else
+                    return $model->name;
+            }),
+            'name' => 'profiles',
+            'value' => !empty($model->profiles)?ArrayHelper::map($model->profiles, 'id_profile', function ($model) {
+                return $model->id_profile;            
+            }):null,
+            'pluginOptions' => [
+                'allowClear' => true,
+                'multiple' => true,
+                'minimumInputLength' => 1,
+                'placeholder' => 'Выберите анкеты',
+                'ajax' => [
+                    'url' => Url::toRoute(['/reserve/profilelist']),
+                    'dataType' => 'json',
+                    'data' => new JsExpression('function(params) { return {q:params.term}; }')
+                ],
+            ],
+            'options' => [
+                'class' => 'col-md-9',
+                'multiple' => true,
+            ]           
+        ]) ?>          
 
         <?=
         $form->field($model, 'state')

@@ -51,6 +51,7 @@ class HrProfile extends \yii\db\ActiveRecord
     public $access_user_ids;
     public $access_user_group_ids;
 
+    
 
     /**
      * {@inheritdoc}
@@ -198,10 +199,10 @@ class HrProfile extends \yii\db\ActiveRecord
         return $result;
     }
 
-    public function getStatename($button = false)
+    static function namedState($state, $button = false)
     {
         if(!$button) {
-            switch ($this->state) {
+            switch ($state) {
                 case HrProfile::STATE_ACTIVE:
                     return 'Активно';
                 case HrProfile::STATE_RESERVED:
@@ -216,7 +217,7 @@ class HrProfile extends \yii\db\ActiveRecord
             return 'Активно';
         }
         else {
-            switch ($this->state) {
+            switch ($state) {
                 case HrProfile::STATE_ACTIVE:
                     return '<span class="badge badge-primary">Активно</span>';
                 case HrProfile::STATE_RESERVED:
@@ -231,6 +232,11 @@ class HrProfile extends \yii\db\ActiveRecord
             return '<span class="badge badge-primary">Активно</span>';
 
         }
+    }
+
+    public function getStatename($button = false)
+    {
+        return HrProfile::namedState($this->state, $button);
     }
 
     public function isBusy()

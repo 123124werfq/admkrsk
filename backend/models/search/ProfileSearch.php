@@ -18,6 +18,7 @@ class ProfileSearch extends HrProfile
     public $surname;
     public $plist;
     public $status;
+    public $usr;
     /**
      * {@inheritdoc}
      */
@@ -28,6 +29,7 @@ class ProfileSearch extends HrProfile
             [['surname'], 'string'],
             [['plist'], 'string'],
             [['status'], 'integer'],
+            [['usr'], 'safe']
         ];
     }
 
@@ -76,15 +78,31 @@ class ProfileSearch extends HrProfile
                     left join 
                     (select id_profile, string_agg(value, '<br>') plist from hr_profile_positions hpp 
                         left join db_collection_value dcv on hpp.id_record_position = dcv.id_record
-                        group by id_profile) tp on tp.id_profile = hp.id_profile                 
-                    ";
-        /*                    
+                        group by id_profile) tp on tp.id_profile = hp.id_profile
+                    where 1=1";
+                           
         $this->load($params);
-        if(!empty($params))
+
+        if(!empty($this->surname))
+            $sql .= " and lower(surname) like('%".strtolower(addslashes($this->surname))."%')";
+
+        if(!empty($this->usr))
+            $sql .= ($this->usr==1)?" and id_user is not null":" and id_user is null";
+
+        if(!empty($this->plist))
         {
-            var_dump($this->surname);
+            $tsql = "select distinct value as val from hr_profile_positions hpp 
+            left join db_collection_value dcv on hpp.id_record_position = dcv.id_record
+            order by value";            
+            $positionsRaw = Yii::$app->db->createCommand($tsql)->queryAll();
+            $positions = [];
+    
+                for ($i=0; $i < count($positionsRaw); $i++) { 
+                    $positions[$i+1] = $positionsRaw[$i]['val'];
+                }
+
+            $sql .= " and plist like('%".strtolower(addslashes($positions[$this->plist]))."%')";
         }
-        */                   
 
         $count = Yii::$app->db->createCommand("SELECT COUNT(*) FROM ($sql) t1")->queryScalar();
 

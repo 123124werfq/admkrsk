@@ -9,7 +9,7 @@ use common\models\HrContest;
 use Yii;
 use yii\base\Model;
 
-class ContestForm extends Model
+class ContestForm extends HrContest
 {
     public $id;
     public $name;
@@ -53,19 +53,21 @@ class ContestForm extends Model
         // доабвить модератора и нотификацию
         if($contest->save())
         {
-            foreach ($this->experts as $id_expert)
-            {
-                $sql = "INSERT INTO hrl_contest_expert (id_contest, id_expert) VALUES ({$contest->id_contest}, {$id_expert})";
-                Yii::$app->db->createCommand($sql)->execute();
-            }
+            if(is_array($this->experts))
+                foreach ($this->experts as $id_expert)
+                {
+                    $sql = "INSERT INTO hrl_contest_expert (id_contest, id_expert) VALUES ({$contest->id_contest}, {$id_expert})";
+                    Yii::$app->db->createCommand($sql)->execute();
+                }
+            
+            if(is_array($this->profiles))
+                foreach ($this->profiles as $id_profile)
+                {
+                    $sql = "INSERT INTO hrl_contest_profile (id_contest, id_profile) VALUES ({$contest->id_contest}, {$id_profile})";
+                    Yii::$app->db->createCommand($sql)->execute();
+                }
 
-            foreach ($this->profiles as $id_profile)
-            {
-                $sql = "INSERT INTO hrl_contest_profile (id_contest, id_profile) VALUES ({$contest->id_contest}, {$id_profile})";
-                Yii::$app->db->createCommand($sql)->execute();
-            }
-
-            return $contest->id_contest;
+            return $contest;
         }
         else {
             var_dump($contest->getErrors());
@@ -73,6 +75,11 @@ class ContestForm extends Model
         }
         return false;
 
+    }
+
+    public function getExperts()
+    {
+        return parent::getExperts();
     }
 
 }

@@ -353,4 +353,33 @@ class CollectionController extends Controller
             }
         }
     }
+
+    public function actionEventFix()
+    {
+        $collection = Collection::find()->where(['id_collection'=>379])->one();
+        $records = $collection->getData([],true);
+
+        foreach ($records as $data)
+        {
+            $period = [                
+                "begin" => $data['date_begin'],
+                "end"=>$data['date_end'],
+                "is_repeat"=>(int)$data['is_repeat'],
+                "repeat_count"=>$data['repeat_count'],
+                "repeat"=>$data['period'],
+                "day_space"=>$data['between_day'],
+                "week"=>$data['ch_week'],
+                "week_space"=>$data['between'],
+                "repeat_month"=>'',
+                "month_days"=>"",
+                "week_number"=>preg_replace('/\D/', '', $data['week_num']),
+                "month_week"=>'',
+            ];
+
+            $record = CollectionRecord::findOne($data['id_record']);
+
+            $record->data = [12741=>$record];
+        }
+
+    }
 }
