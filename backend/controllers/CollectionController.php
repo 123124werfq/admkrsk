@@ -236,7 +236,7 @@ class CollectionController extends Controller
      * @throws NotFoundHttpException
      * @throws InvalidConfigException
      */
-    public function actionRecordList($id, $q, $id_column = null)
+    public function actionRecordList($id, $q='', $id_column = null)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -248,7 +248,8 @@ class CollectionController extends Controller
 
         $id_column = (int)$id_column;
 
-        $query->andWhere(['like','col'.$id_column,$q]);
+        if (!empty($q))
+            $query->andWhere(['like','col'.$id_column,$q]);
 
         foreach ($query->limit(30)->getStrinyfyArray() as $key => $value)
         {
