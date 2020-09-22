@@ -66,7 +66,7 @@ class ReserveController extends \yii\web\Controller
                 $profile->id_record = $record->id_record;
                 $profile->save();
 
-                var_dump($profile);
+                //var_dump($profile);
 
                 if (Yii::$app->request->isAjax)
                 {
