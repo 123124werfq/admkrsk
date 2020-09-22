@@ -148,7 +148,7 @@ class Form extends \yii\db\ActiveRecord
 
     public function isSubform()
     {
-        return ($this->template==2);
+        return ($this->is_template==2);
     }
 
     public function createInput($attributes)
@@ -259,10 +259,11 @@ class Form extends \yii\db\ActiveRecord
             return $this->hasMany(FormInput::class, ['id_form' => 'id_form']);
         else
             return FormInput::find()->where('id_input IN (
-            SELECT id_input
-                FROM form_element as fi
-                INNER JOIN form_row as fr ON fr.id_row = fi.id_row
-            WHERE fr.id_form = '.$this->id_form.')');
+                        SELECT id_input
+                            FROM form_element as fi
+                            INNER JOIN form_row as fr ON fr.id_row = fi.id_row
+                        WHERE fr.id_form = '.$this->id_form.')'
+                    );
     }
 
     public function getTemplate()
@@ -277,7 +278,7 @@ class Form extends \yii\db\ActiveRecord
 
     public function getParent()
     {
-        $element = FormElement::find()->joinWith('row')->where(['id_form'=>$this->id_form])->one();
+        $element = FormElement::find()->joinWith('row')->where(['form_element.id_form'=>$this->id_form])->one();
         return $element->row->form;
     }
 
