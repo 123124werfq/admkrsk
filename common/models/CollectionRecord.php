@@ -191,7 +191,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
         $output = [];
 
         $value_index = 'col'.$column->id_column;
-        $search_index = 'col'.$column->id_column.'_search';        
+        $search_index = 'col'.$column->id_column.'_search';
 
         switch ($column->type)
         {
@@ -213,9 +213,9 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     $gbegin = $value['begin'];
                     $gend = $value['end'];
 
-                    if (empty($gend))                    
+                    if (empty($gend))
                         $gend = $gbegin+strtotime('+2 years');
-                    
+
                     $repeat_count = $value['repeat_count']?:365;
 
                     if ($value['repeat']=='Ежедневно')
@@ -224,7 +224,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                         $begin = $gbegin;
 
-                        $i = 0;
+                        $i = 1;
 
                         while ($begin <= $gend && $i <= $repeat_count)
                         {
@@ -236,7 +236,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                             $begin+= $space*24*3600;
 
                             $i++;
-                        }                        
+                        }
                     }
                     else if ($value['repeat']=='Еженедельно')
                     {
@@ -255,7 +255,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                                 if ($search_date>$gend)
                                     break;
 
-                                if ($search_date>=$gbegin && $search_date<=$gend)
+                                if ($search_date>=$gbegin && $search_date<=$gend && $i <= $repeat_count)
                                 {
                                     $dates[] = $search_date;
                                     $i++;
@@ -289,7 +289,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                                     if ($search_date>$gend)
                                         break;
 
-                                    if ($search_date>=$gbegin && $search_date<=$gend)
+                                    if ($search_date>=$gbegin && $search_date<=$gend && $i <= $repeat_count)
                                     {
                                         $dates[] = $search_date;
                                         $i++;
@@ -322,7 +322,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
                                         if ($search_date>$gend)
                                             break;
 
-                                        if ($search_date>=$gbegin)
+                                        if ($search_date>=$gbegin && $i <= $repeat_count)
                                         {
                                             $dates[] = $search_date;
                                             $i++;
@@ -336,9 +336,9 @@ class CollectionRecord extends \yii\db\ActiveRecord
                                 }
                             }
                         }
-                    }                                        
+                    }
                     if (empty($value['end']) && !empty($dates))
-                        $value['end'] = $dates[count($dates)-1];                        
+                        $value['end'] = $dates[count($dates)-1];
                 }
                 else {
                     if (empty($value['end']))

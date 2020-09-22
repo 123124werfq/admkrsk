@@ -97,7 +97,7 @@ class CollectionSearch extends DynamicModel
         ];
 
         $sortAttributes = ['id_record'];
-        
+
         foreach ($columns as $key => $col)
         {
             $col_alias = 'col'.$col->id_column;
@@ -122,7 +122,7 @@ class CollectionSearch extends DynamicModel
                 'attribute'=>$col_alias,
                 'format' => 'raw',
                 'headerOptions'=>$options,
-            ];            
+            ];
 
             if ($col->type==CollectionColumn::TYPE_DATE)
                 $dataProviderColumns[$col_alias]['format'] = ['date', 'php:d.m.Y'];
@@ -237,19 +237,15 @@ class CollectionSearch extends DynamicModel
                     {
                         $labels = json_decode($model[$col_alias.'_search'],true);
 
-                        if (is_array($labels))
+                        if (is_array($labels) && is_array($model[$col_alias]))
                         {
                             $links = [];
-                            foreach ($model[$col_alias] as $key => $id_record) {
+                            foreach ($model[$col_alias] as $key => $id_record)
                                 $links[] = '<a data-pjax="0" target="_blank" href="/collection-record/view?id='.$id_record.'">'.$labels[$id_record].'</a>';
-                            }
 
                             return implode('<br>', $links);
                         }
                     }
-
-                    //$labels = json_decode($model[$col_alias],true);
-
                 };
             }
             else if ($col->type==CollectionColumn::TYPE_REPEAT)
@@ -312,7 +308,7 @@ class CollectionSearch extends DynamicModel
         }
 
         $this->columns = $dataProviderColumns;
-        
+
         $this->load($params);
 
         $archiveColumn = $this->collection->getArchiveColumn();
@@ -323,7 +319,7 @@ class CollectionSearch extends DynamicModel
             if ($this->$attr=='')
             {
                 $query->andWhere(['or',['=',$attr,null],[$attr=>0]]);
-            }            
+            }
         }
 
         foreach ($this->attributes as $attr => $value)
@@ -331,13 +327,13 @@ class CollectionSearch extends DynamicModel
             if ($value!='')
             {
                 if (!empty($value))
-                {                                       
+                {
                     $query->andWhere(['or',['like',$attr,$value],[$attr=>(is_numeric($value))?(int)$value:$value]]);
                 }
                 else
                     $query->andWhere(['or',['=',$attr,null],[$attr=>(is_numeric($value))?(float)$value:$value]]);
             }
-        }        
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
