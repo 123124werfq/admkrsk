@@ -116,7 +116,7 @@ class FormInputController extends Controller
         // определяем коллекцию из которой будем брать доступные инпуты
         if (empty($form->collection->parent))
             $collection = $form->collection;
-        else 
+        else
             $collection = $form->collection->parent;
 
         $exist_inputs = $collection->form->getInputs()->select(['id_input','name'])->andWhere('id_input NOT IN (
@@ -153,7 +153,11 @@ class FormInputController extends Controller
 
         $element = new FormElement;
 
-        $model->id_form = $form->id_form;
+        if ($form->isSubform())
+            $model->id_form = $form->getParent()->id_form;
+        else
+            $model->id_form = $form->id_form;
+
         $model->populateRelation('element', $element);
 
         if (Yii::$app->request->isAjax)

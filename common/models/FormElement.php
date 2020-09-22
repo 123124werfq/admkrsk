@@ -49,7 +49,7 @@ class FormElement extends \yii\db\ActiveRecord
     {
         return [
             'id_element' => 'Id Element',
-            'id_form' => 'Форма',
+            'id_form' => 'Подформа',
             'type' => 'Тип',
             'content' => 'Содержимое',
             'ord' => 'Ord',
