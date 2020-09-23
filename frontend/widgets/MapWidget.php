@@ -28,13 +28,13 @@ class MapWidget extends Widget
     {
         if (!empty($this->attributes))
         {
-            if (!empty($this->attributes['key']))
+            /*if (!empty($this->attributes['key']))
             {
                 $setting = SettingPluginCollection::find()->where(['key'=>$this->attributes['key']])->one();
 
                 if (!empty($setting))
                     $this->attributes = json_decode($setting->settings,true);
-            }
+            }*/
 
             if (!empty($this->attributes['id']))
                 $this->id_collection = (int)$this->attributes['id'];

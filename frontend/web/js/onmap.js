@@ -65,7 +65,7 @@ $(document).ready(function() {
         $("#map-controls").change(function(){
             showMap($(this).val(),'map-controls');
         });
-
+        
         showMap($("#map-controls").val(),'map-container');
     }
 });

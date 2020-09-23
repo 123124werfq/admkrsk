@@ -16,6 +16,8 @@ use yii\web\JsExpression;
 /* @var $this yii\web\View */
 /* @var $model common\models\Collection */
 /* @var $form yii\widgets\ActiveForm */
+
+Yii::$app->params['tinymce_plugins'][] = 'recordmap';
 ?>
 
 <?php $form = ActiveForm::begin(); ?>

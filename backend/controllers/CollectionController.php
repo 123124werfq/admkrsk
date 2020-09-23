@@ -294,6 +294,7 @@ class CollectionController extends Controller
             switch ($form->type)
             {
                 case CollectionColumn::TYPE_REPEAT:
+                    
                     $col = Yii::$app->request->post('address');
 
                     if (!empty($col))
@@ -320,7 +321,7 @@ class CollectionController extends Controller
                             foreach ($alldata as $id_record => $data)
                             {
                                 if (empty($data[$col]))
-                                continue;
+                                    continue;
 
                                 $repeat = new \SimpleXMLElement($data[$col]);
 
@@ -380,7 +381,17 @@ class CollectionController extends Controller
                             foreach ($alldata as $id_record => $data)
                             {
                                 $record = CollectionRecord::findOne($id_record);
-                                $record->data = [$newColumn->id_column => [str_replace(',', '.', $data[$x]), str_replace(',', '.', $data[$y])]];
+
+                                if ($x==$y)
+                                {
+                                    $coords = explode(',',$data[$x]);
+
+                                    if (count($coords)>2)                                    
+                                        $record->data = [$newColumn->id_column => [str_replace('[', '', $coords[0]), str_replace(']', '', $coords[1])]];
+                                }
+                                else 
+                                    $record->data = [$newColumn->id_column => [str_replace(',', '.', $data[$x]), str_replace(',', '.', $data[$y])]];
+
                                 $record->update();
                             }
                         }
