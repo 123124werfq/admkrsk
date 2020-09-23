@@ -84,7 +84,7 @@ class ProfileSearch extends HrProfile
         $this->load($params);
 
         if(!empty($this->surname))
-            $sql .= " and lower(surname) like('%".strtolower(addslashes($this->surname))."%')";
+            $sql .= " and lower(surname) like('%".mb_strtolower(addslashes($this->surname), "UTF8")."%')";
 
         if(!empty($this->usr))
             $sql .= ($this->usr==1)?" and id_user is not null":" and id_user is null";
@@ -101,7 +101,7 @@ class ProfileSearch extends HrProfile
                     $positions[$i+1] = $positionsRaw[$i]['val'];
                 }
 
-            $sql .= " and plist like('%".strtolower(addslashes($positions[$this->plist]))."%')";
+            $sql .= " and plist like('%".mb_strtolower(addslashes($positions[$this->plist]), "UTF8")."%')";
         }
 
         $count = Yii::$app->db->createCommand("SELECT COUNT(*) FROM ($sql) t1")->queryScalar();

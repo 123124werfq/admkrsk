@@ -447,7 +447,7 @@ class ReserveController extends Controller
         $results = [];
         foreach ($exps as $key => $expert) {
 
-            if(strpos(strtolower(" ".$expert->name),strtolower($q))!==false )
+            if(strpos(mb_strtolower(" ".$expert->name, "UTF8"),mb_strtolower($q, "UTF8"))!==false )
                 $results[] = [
                     'id' => $expert->id_expert,
                     'text' => $expert->name . ' (' . $expert->user->email . ')',
@@ -474,13 +474,20 @@ class ReserveController extends Controller
 
         $results = [];
 
+        $count = 0;
+
         foreach ($profs as $key => $profile) {
 
-            if(strpos(strtolower(" ".$profile),strtolower($q))!==false )
+            if(strpos(mb_strtolower(" ".$profile, "UTF8"),mb_strtolower($q, "UTF8"))!==false )
+            {
                 $results[] = [
                     'id' => $key,
                     'text' => $profile,
                 ];
+
+                if($count++ > 4)
+                    break;
+            }
             
         }
 

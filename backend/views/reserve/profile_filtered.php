@@ -139,11 +139,9 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'rowOptions' => function ($model) {
-            /*
-            if ($model->isBusy()) {
+            if ($model['state'] == HrProfile::STATE_BANNED) {
                 return ['class' => 'warning'];
             }
-            */
         },
         'columns' => array_merge(array_values($gridColumns), [
             [
@@ -151,13 +149,28 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
                 'template' => '{view} {editable} {ban} {archive} ',
                 'buttons' => [
                     'archive' => function ($url, $model, $key) {
-                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-floppy-disk"]);
-                        return Html::a($icon, $url, [
-                            'disabled' => true,
-                            'title' => 'Восстановить',
-                            'aria-label' => 'Восстановить',
-                            'data-pjax' => '0',
-                        ]);
+                        $url = '/reserve/archive?id='.$model['id_profile'];
+                        if($model['state'] ==  HrProfile::STATE_ARCHIVED)
+                        {
+                            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-share"]);
+                            return Html::a($icon, $url, [
+                                'disabled' => true,
+                                'title' => 'Восстановить',
+                                'aria-label' => 'Восстановить',
+                                'data-pjax' => '0',
+                            ]);
+                        }
+                        else
+                        {
+                            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-floppy-disk"]);
+                            return Html::a($icon, $url, [
+                                'disabled' => true,
+                                'title' => 'В архив',
+                                'aria-label' => 'В архив',
+                                'data-pjax' => '0',
+                            ]);
+
+                        }
                     },
                     'editable' => function ($url, $model, $key) {
                         $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-pencil"]);
@@ -169,12 +182,27 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
                         ]);
                     },
                     'ban' => function ($url, $model, $key) {
-                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-ban-circle"]);
-                        return Html::a($icon, $url, [
-                            'title' => 'Заблокировать',
-                            'aria-label' => 'Заблокировать',
-                            'data-pjax' => '0',
-                        ]);
+                        $url = '/reserve/ban?id='.$model['id_profile'];
+                        if($model['state'] ==  HrProfile::STATE_BANNED)
+                        {
+                            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-ok-circle"]);
+                            return Html::a($icon, $url, [
+                                'title' => 'Разблокировать',
+                                'aria-label' => 'Разблокировать',
+                                'data-pjax' => '0',
+                            ]);
+    
+                        }
+                        else
+                        {
+                            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-ban-circle"]);
+                            return Html::a($icon, $url, [
+                                'title' => 'Заблокировать',
+                                'aria-label' => 'Заблокировать',
+                                'data-pjax' => '0',
+                            ]);
+    
+                        }                        
                     },
                 ],
                 'contentOptions' => ['class' => 'button-column']

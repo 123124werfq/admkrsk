@@ -60,13 +60,15 @@ use yii\widgets\ActiveForm;
                 $expertsSelected[$expert->id_expert] = ['Selected' => true];
             }
 
+            $palinExpertsList = implode(",", array_keys($expertsSelected));
+
         ?>
 
         <h3>Эксперты</h3>
         <?= Select2::widget([
             'model' => $model,
             //'attribute' => 'experts[]',
-            'data' => ArrayHelper::map(HrExpert::find()->all(), 'id_expert', function ($model) {
+            'data' => ArrayHelper::map(HrExpert::find()->where("id_expert IN ($palinExpertsList)")->all(), 'id_expert', function ($model) {
                 return $model->name . ' (' . $model->user->email . ')';
             }),
             'name' => 'experts',
@@ -92,10 +94,24 @@ use yii\widgets\ActiveForm;
         ]) ?>        
 
         <br><br>
+
+
+        <?php
+            $profilesSelected = [];
+
+            foreach ($model->profiles as $profileSelected)
+            {
+                $profilesSelected[$profileSelected->id_profile] = ['Selected' => true];
+            }
+
+            $palinProfileList = implode(",", array_keys($profilesSelected));
+
+        ?>
+
         <h3>Анкеты</h3>
         <?= Select2::widget([
             'model' => $model,
-            'data' => ArrayHelper::map(HrProfile::find()->where(['reserve_date' => null])->all(),'id_profile', function($model){
+            'data' => ArrayHelper::map(HrProfile::find()->where("id_profile IN ($palinProfileList)")->andWhere(['reserve_date' => null])->all(),'id_profile', function($model){
                 if(empty($model->name))
                 {
                     $data = $model->getRecordData();
