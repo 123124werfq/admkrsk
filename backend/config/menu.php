@@ -168,6 +168,13 @@ return [
                 ],
             ],
             'news?id_page=8' => [
+                'title' => 'Анонсы',
+                'roles' => [
+                    'menu.news' => ['class' => News::class],
+                    'admin.cstProfile',
+                ],
+            ],
+            'news?id_page=462' => [
                 'title' => 'Актуально',
                 'roles' => [
                     'menu.news' => ['class' => News::class],
