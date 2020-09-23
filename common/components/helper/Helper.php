@@ -102,6 +102,10 @@ class Helper
 	    $twig->addFilter($filter);
 
 	    $filter = new \Twig\TwigFilter('thumb', function ($data) {
+
+	    	if (is_string($data))
+	    		return $data;
+
 	    	if (is_array($data) && empty($data['id']))
 	    		$data = array_shift($data);
 
@@ -116,10 +120,13 @@ class Helper
 	    $twig->addFilter($filter);
 
 	    $filter = new \Twig\TwigFilter('thumb_medium', function ($data) {
+	    	if (is_string($data))
+	    		return $data;
+
 	    	if (is_array($data))
 	    		$data = array_shift($data);
 
-	    	if (empty($data))
+	    	if (empty($data['id']))
 	    		return '';
 
 	    	$url = \common\models\Media::thumb($data['id'],\common\models\Media::SIZE_MEDIUM);
@@ -129,10 +136,13 @@ class Helper
 	    $twig->addFilter($filter);
 
 	    $filter = new \Twig\TwigFilter('thumb_big', function ($data) {
+	    	if (is_string($data))
+	    		return $data;
+
 	    	if (is_array($data))
 	    		$data = array_shift($data);
 
-	    	if (empty($data))
+	    	if (empty($data['id']))
 	    		return '';
 
 	    	$url = \common\models\Media::thumb($data['id'],\common\models\Media::SIZE_BIG);
@@ -215,7 +225,7 @@ class Helper
         if (!empty($matches[0]))
 	        foreach ($matches[0] as $key => $match)
 	        {
-				$attributes = parseAttributesFromTag($match, $recordData);				
+				$attributes = parseAttributesFromTag($match, $recordData);
 				$attributes = array_merge($attributes,$insertAttributes);
 
                 $class = 'frontend\widgets\\' . ucwords($matches[1][$key]) . 'Widget';
