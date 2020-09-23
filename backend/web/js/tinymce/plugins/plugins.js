@@ -171,14 +171,52 @@ tinymce.PluginManager.add("ownmedia", function(editor, url) {
         text: "Изображение",
         onAction: _onAction
     });
+});
+
+tinymce.PluginManager.add("recordmap", function(editor, url) {
+    var _dialog = false;
+    var _typeOptions = [];
+
+    function _onAction() {
+        $.ajax({
+            url: '/collection/redactor-map',
+            type: 'get',
+            dataType: 'html',
+            success: function(data) {
+                $('#redactor-modal').modal();
+                $('#redactor-modal .modal-body').html(data);
+                $('#redactor-modal form').submit(function(){
+                    $.ajax({
+                        url: '/form/redactor',
+                        type: 'post',
+                        dataType: 'json',
+                        data: $('#redactor-modal form').serialize(),
+                        success: function(data) {
+                            editor.insertContent('<forms data-id="' + data.id_form + '">Форма #' + data.id_form + '.</forms>');
+                            $('#redactor-modal').modal('hide');
+                        }
+                    });
+
+                    return false;
+                });
+            }
+        });
+    }
+
+    // Define the Toolbar button
+    editor.ui.registry.addButton('recordmap', {
+        text: "Карта для записи",
+        onAction: _onAction
+    });
 
     // Define the Menu Item
-    /*editor.ui.registry.addMenuItem('form', {
-        text: 'Форма',
+    editor.ui.registry.addMenuItem('recordmap', {
+        text: 'Карта для записи',
         context: 'insert',
         onAction: _onAction
-    });*/
+    });
 });
+
 
 tinymce.PluginManager.add("form", function(editor, url) {
     var _dialog = false;
@@ -199,7 +237,7 @@ tinymce.PluginManager.add("form", function(editor, url) {
                         dataType: 'json',
                         data: $('#redactor-modal form').serialize(),
                         success: function(data) {
-                            editor.insertContent('<forms data-id="' + data.id_form + '">Форма #' + data.id_form + '.</forms>');                            
+                            editor.insertContent('<forms data-id="' + data.id_form + '">Форма #' + data.id_form + '.</forms>');
                             $('#redactor-modal').modal('hide');
                         }
                     });

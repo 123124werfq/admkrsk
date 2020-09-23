@@ -568,6 +568,11 @@ class CollectionColumn extends \yii\db\ActiveRecord
         return 'db_collection_column';
     }
 
+    public function isCoords()
+    {
+        return ($this->type == self::TYPE_MAP || $this->type == self::TYPE_ADDRESS);
+    }
+
     public function isFile()
     {
         return ($this->type == self::TYPE_FILE || $this->type == self::TYPE_FILE_OLD);
