@@ -11,6 +11,7 @@ $this->beginPage();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Администрация</title>
     <?php $this->head()?>
+    <?php $this->registerJs("var tinymce_plugins = ['".implode(' ',Yii::$app->params['tinymce_plugins'])."'];", yii\web\View::POS_BEGIN);?>
     <?=Html::csrfMetaTags() ?>
 </head>
 <body style="background: #fff; padding: 20px 20px 100px; width: 1000px; height: 600px;">

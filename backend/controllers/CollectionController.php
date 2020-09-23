@@ -76,7 +76,7 @@ class CollectionController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'redactor', 'partition', 'pages'],
+                        'actions' => ['index', 'redactor', 'record-map', 'partition', 'pages'],
                         'roles' => ['backend.collection.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Collection::class,
@@ -294,7 +294,7 @@ class CollectionController extends Controller
             switch ($form->type)
             {
                 case CollectionColumn::TYPE_REPEAT:
-                    
+
                     $col = Yii::$app->request->post('address');
 
                     if (!empty($col))
@@ -386,10 +386,10 @@ class CollectionController extends Controller
                                 {
                                     $coords = explode(',',$data[$x]);
 
-                                    if (count($coords)>2)                                    
+                                    if (count($coords)>2)
                                         $record->data = [$newColumn->id_column => [str_replace('[', '', $coords[0]), str_replace(']', '', $coords[1])]];
                                 }
-                                else 
+                                else
                                     $record->data = [$newColumn->id_column => [str_replace(',', '.', $data[$x]), str_replace(',', '.', $data[$y])]];
 
                                 $record->update();
@@ -891,6 +891,17 @@ class CollectionController extends Controller
 
         return $this->renderAjax('search_record_redactor', [
             'model' => $model,
+        ]);
+    }
+
+    public function actionRecordMap($id_collection)
+    {
+        $model = new \backend\models\forms\CollectionRecordForm;
+        $collection = $this->findModel($id);
+
+        return $this->render('record_map',[
+            'collection'=>$collection,
+            'model'=>$modelm
         ]);
     }
 

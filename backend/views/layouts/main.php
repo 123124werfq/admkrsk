@@ -36,7 +36,7 @@ $this->beginPage();
         $this->registerJs($script, yii\web\View::POS_END);
     }
 
-    $this->registerJs("var tinymce_plugins = ['".implode(' ',Yii::$app->params['tinymce_plugins'])."'];", yii\web\View::POS_BEGIN);    
+    $this->registerJs("var tinymce_plugins = ['".implode(' ',Yii::$app->params['tinymce_plugins'])."'];", yii\web\View::POS_BEGIN);
 ?>
 <?php $this->beginBody(); ?>
 <div id="wrapper">
@@ -493,11 +493,11 @@ $this->beginPage();
             <div class="form-group">
                 <label class="control-label" for="dash-link">Ссылка</label>
                 <input id="dash-link" class="form-control" name="dash-link" value="">
-            </div>          
+            </div>
             <div class="form-group">
                 <label class="control-label" for="dash-name">Подпись</label>
                 <input id="dash-name" class="form-control" name="dash-name" value="">
-            </div>          
+            </div>
       </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary" id="dash-save">Добавить</button>
