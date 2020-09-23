@@ -119,7 +119,7 @@ class Helper
 	    	if (is_array($data))
 	    		$data = array_shift($data);
 
-	    	if (empty($data))
+	    	if (empty($data['id']))
 	    		return '';
 
 	    	$url = \common\models\Media::thumb($data['id'],\common\models\Media::SIZE_MEDIUM);
@@ -132,7 +132,7 @@ class Helper
 	    	if (is_array($data))
 	    		$data = array_shift($data);
 
-	    	if (empty($data))
+	    	if (empty($data['id']))
 	    		return '';
 
 	    	$url = \common\models\Media::thumb($data['id'],\common\models\Media::SIZE_BIG);
@@ -169,7 +169,7 @@ class Helper
 	    },['is_safe' => ['html']]);
 
 	    $twig->addFilter($filter);
-
+у
 		if(isset($data['attachments']) && is_array($data['attachments'])) // костыль! исправить, не допуская прохождения массивов
 			unset($data['attachments']);
 
@@ -215,7 +215,7 @@ class Helper
         if (!empty($matches[0]))
 	        foreach ($matches[0] as $key => $match)
 	        {
-				$attributes = parseAttributesFromTag($match, $recordData);				
+				$attributes = parseAttributesFromTag($match, $recordData);
 				$attributes = array_merge($attributes,$insertAttributes);
 
                 $class = 'frontend\widgets\\' . ucwords($matches[1][$key]) . 'Widget';
