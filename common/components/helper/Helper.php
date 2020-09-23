@@ -169,7 +169,7 @@ class Helper
 	    },['is_safe' => ['html']]);
 
 	    $twig->addFilter($filter);
-у
+
 		if(isset($data['attachments']) && is_array($data['attachments'])) // костыль! исправить, не допуская прохождения массивов
 			unset($data['attachments']);
 
