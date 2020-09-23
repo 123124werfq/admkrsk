@@ -164,6 +164,8 @@ class ReserveController extends \yii\web\Controller
 //            throw new BadRequestHttpException();
 
         $profile = HrProfile::findOne($id);
+        if(!$profile)
+            throw new BadRequestHttpException();
 
         $enabled = false;
 
