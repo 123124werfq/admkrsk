@@ -173,6 +173,7 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
                         }
                     },
                     'editable' => function ($url, $model, $key) {
+                        $url = '/reserve/editable?id='.$model['id_profile'];
                         $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-pencil"]);
                         return Html::a($icon, $url, [
                             'target' => '_blank',
@@ -181,6 +182,16 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
                             'data-pjax' => '0',
                         ]);
                     },
+                    'view' => function ($url, $model, $key) {
+                        $url = '/reserve/view?id='.$model['id_profile'];
+                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-eye-open"]);
+                        return Html::a($icon, $url, [
+                            'target' => '_blank',
+                            'title' => 'Просмотр',
+                            'aria-label' => 'Просмотр',
+                            'data-pjax' => '0',
+                        ]);
+                    },                    
                     'ban' => function ($url, $model, $key) {
                         $url = '/reserve/ban?id='.$model['id_profile'];
                         if($model['state'] ==  HrProfile::STATE_BANNED)
