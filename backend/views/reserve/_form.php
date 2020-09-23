@@ -74,6 +74,7 @@ use yii\widgets\ActiveForm;
         <h3>Анкеты</h3>
         <?= Select2::widget([
             'model' => $model,
+            /*
             'data' => ArrayHelper::map(HrProfile::find()->where(['reserve_date' => null])->all(),'id_profile', function($model){
                 if(empty($model->name))
                 {
@@ -83,6 +84,7 @@ use yii\widgets\ActiveForm;
                 else
                     return $model->name;
             }),
+            */
             'name' => 'profiles',
             'pluginOptions' => [
                 'allowClear' => true,
