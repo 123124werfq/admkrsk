@@ -93,7 +93,7 @@ class Media extends \yii\db\ActiveRecord
     {
         return [
             self::SIZE_SMALL => 'Маленькое (300px)',
-            self::SIZE_MEDIUM => 'Среднее (600px)',
+            self::SIZE_MEDIUM => 'Среднее (770px)',
             self::SIZE_BIG => 'Большое (1900px)',
         ];
     }
@@ -275,7 +275,7 @@ class Media extends \yii\db\ActiveRecord
         if ($size!==null)
         {
             if ($size == Media::SIZE_MEDIUM)
-                $option['w'] = 600;
+                $option['w'] = 770;
             elseif ($size == Media::SIZE_BIG)
                 $option['w'] = 1900;
             else
@@ -301,7 +301,7 @@ class Media extends \yii\db\ActiveRecord
         $options = [];
 
         if ($size == Media::SIZE_MEDIUM)
-            $options['w'] = 600;
+            $options['w'] = 770;
         elseif ($size == Media::SIZE_BIG)
             $options['w'] = 1900;
         else

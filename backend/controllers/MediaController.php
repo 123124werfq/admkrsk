@@ -153,7 +153,7 @@ class MediaController extends Controller
         // to pass data through iframe you will need to encode all html tags
         return json_encode($result);
     }
-    
+
     public function actionRedactor()
     {
         $model = new \backend\models\forms\MediaForm;
@@ -161,27 +161,28 @@ class MediaController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
             $media = $model->getMediaRecords('media');
-            
+
             if (!empty($media))
             {
                 $media = $media[0];
-                
+
                 if ($media->save())
                 {
                     $media->saveFile();
 
                     $output = $model->attributes;
                     $output['src'] = $media->showThumb([],$model->size);
+                    $output['id_media'] = $media->id_media;
 
                     if (!empty($model->lightbox))
                         $output['full'] = $media->showThumb([],Media::SIZE_BIG);
-                    
+
                     if (!empty($media->author))
                         $output['title'] .= ' Автор:'.$media->author;
-                    
+
                     return $this->asJson($output);
                 }
-            }    
+            }
         }
         /*if (!empty($_POST['id_faq_category']))
         {

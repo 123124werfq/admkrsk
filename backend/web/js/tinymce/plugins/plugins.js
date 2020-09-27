@@ -152,8 +152,14 @@ tinymce.PluginManager.add("ownmedia", function(editor, url) {
                         dataType: 'json',
                         data: $('#redactor-modal form').serialize(),
                         success: function(data) {
+
+                            var full = '';
+
+                            if (data.full != undefined)
+                                full = 'data-full="'+data.full+'"';
+
                             editor.insertContent('<ownmedia>\
-                                    <img src="'+data.src+'" data-id="'+data.id_media+'" data-full="'+data.full+'">\
+                                    <img src="'+data.src+'" data-id="'+data.id_media+'" '+full+'\> \
                                     <p class="img-legend">'+data.title+'<p/>\
                                 </ownmedia>');
                             $('#redactor-modal').modal('hide');

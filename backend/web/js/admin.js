@@ -70,9 +70,9 @@ var tinymceConfig = {
     },
     menubar: 'file edit view insert format tools table custom',
     contextmenu: "link image imagetools table spellchecker",
-    toolbar: "code fullscreen | undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist blockquote | link media ownmedia",
+    toolbar: "code removeformat | undo redo | fontsizeselect| styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist blockquote | link media ownmedia",
     language: 'ru',
-    extended_valid_elements : "faq[data-ids|data-category],map[data-id],searchrecord[data-encodedata],pagenews[data-id],hrreserve[pagesize],collection[data-id|data-encodedata],gallery[data-id|data-limit|data-type],forms[data-id|data-data]",
+    extended_valid_elements : "faq[data-ids|data-category],map[data-id],searchrecord[data-encodedata],pagenews[data-id],hrreserve[pagesize],collection[data-id|data-encodedata],gallery[data-id|data-limit|data-type],forms[data-id|data-data],ownmedia",
     content_css : "/js/tinymce/admin.css",
     image_title: true,
     images_upload_url: '/media/tinymce',
@@ -108,7 +108,7 @@ var tinymceConfig = {
       };
       input.click();
     },*/
-    formats: {
+    /*formats: {
         removeformat: [
             {
                 selector: 'b,strong,em,i,font,u,strike,sub,sup,dfn,code,samp,kbd,var,cite,mark,q,del,ins,blockquote',
@@ -121,7 +121,7 @@ var tinymceConfig = {
             { selector: 'span', attributes: ['style', 'class'], remove: 'empty', split: true, expand: false, deep: true },
             { selector: '*', attributes: ['style', 'class'], split: false, expand: false, deep: true }
         ]
-    }
+    }*/
 };
 
 tinymce.init(tinymceConfig);
