@@ -1,6 +1,7 @@
 <?php
 
 namespace common\models;
+use common\components\helper\Helper;
 
 use Yii;
 
@@ -313,7 +314,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
         $value = '';
 
         try {
-            $value = \common\components\helper\Helper::renderTwig($template,$data);
+            $value = Helper::renderTwig($template,$data);
         }
         catch (Exception $e) {
 
@@ -756,7 +757,50 @@ class CollectionColumn extends \yii\db\ActiveRecord
             case self::TYPE_REPEAT:
                 if (empty($value['begin']))
                     return '';
-                return date('d.m.Y',$value['begin']).'-'.date('d.m.Y',$value['end']);
+
+                $output = [];
+                $output[] = 'с '.date('d.m.Y',$value['begin']).' по '.date('d.m.Y',$value['end']);
+
+                if (!empty($value['is_repeat']))
+                {
+                    /*if (!empty($value['repeat_count']))
+                        $output[] = Helper::plural($value['repeat_count'],['раз','раза','раз']);*/
+
+                    if (!empty($value['repeat']))
+                        $output[] = mb_strtolower($value['repeat']);
+
+                    if (!empty($value['day_space']))
+                        $output[] = 'через '.Helper::plural($value['day_space'],['день','дня','дней']);
+
+                    if (!empty($value['week']))
+                        $output[] = implode(', ', $value['week']);
+
+                    if (!empty($value['week_space']))
+                        $output[] = 'через '.Helper::plural($value['week_space'],['неделю','недели','недель']);
+
+                    if (!empty($value['month_days']))
+                        $output[] = 'каждые '.implode(', ', $value['month_days']).' дни месяца';
+
+                    if (!empty($value['repeat_month']) && $value['repeat_month']=='Неделя месяца')
+                    {
+                        if (!empty($value['week_number']))
+                            $output[] = 'каждую '.$value['week_number'].' неделю месяца';
+
+                        if (!empty($value['month_week']))
+                            $output[] = implode(', ', $value['month_week']);
+                    }
+                }
+
+                if (!empty($value['time']) && is_array($value['time']))
+                {
+                    $time_string = [];
+                    foreach ($value['time'] as $tkey => $time)
+                        $time_string[] = implode('-', $time);
+
+                    $time_string = 'Время: '.implode(', ', $time_string).'';
+                }
+
+                return implode(', ', $output).(!empty($time_string)?'. '.$time_string:'');
                 break;
             case self::TYPE_JSON:
                 if (is_array($value))

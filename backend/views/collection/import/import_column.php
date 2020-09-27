@@ -48,6 +48,8 @@
 
 <?=Html::activeHiddenInput($model, 'filepath')?>
 <?=Html::activeHiddenInput($model, 'name');?>
+<?=Html::activeHiddenInput($model, 'skip');?>
+<?=Html::activeHiddenInput($model, 'firstRowAsName');?>
 <?=Html::activeHiddenInput($model, 'sheet');?>
 
 <div class="ibox m-t">

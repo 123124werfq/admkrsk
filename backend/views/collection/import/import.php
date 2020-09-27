@@ -27,7 +27,12 @@ if (empty($table))
 ?>
 <div class="ibox m-t">
     <div class="ibox-content">
-        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+
+        <?php if (empty($id)){?>
+        <?=Html::activeTextInput($model, "name",['placeholder'=>'Название списка','class'=>'form-control','required'=>true])?>
+        <?php }?>
+
+        <div class="fileinput fileinput-new input-group" data-provides="fileinput" style="margin-top: 20px;">
             <div class="form-control" data-trigger="fileinput">
                 <i class="glyphicon glyphicon-file fileinput-exists"></i>
             <span class="fileinput-filename"></span>
@@ -44,14 +49,14 @@ if (empty($table))
 
         <div class="row">
             <div class="col-md-6">
-                <?=Html::activeTextInput($model, "name",['placeholder'=>'Название списка','class'=>'form-control','required'=>true])?>
+                <?php if (!empty($id)){?>
+                <?=Html::activeCheckBox($model, "erase")?>
+                <?php }?>
             </div>
-            <div class="col-md-5 text-right">
+            <div class="col-md-6 text-right">
                 <?=Html::submitButton('Импортировать', ['class' => 'btn btn-primary']) ?>
             </div>
         </div>
-
-        <?=Html::activeCheckBox($model, "erase")?>
     </div>
 </div>
 <?php }

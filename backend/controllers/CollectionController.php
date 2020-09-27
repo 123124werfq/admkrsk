@@ -1162,7 +1162,10 @@ class CollectionController extends Controller
         $existCollection = null;
 
         if (!empty($id))
+        {
             $existCollection = $this->findModel($id);
+            $model->name = $existCollection->name;
+        }
 
         if (!empty($model->file) || !empty($model->filepath))
         {
@@ -1173,10 +1176,13 @@ class CollectionController extends Controller
                 $model->file->saveAs($model->filepath);
             }
 
-            $data = \moonland\phpexcel\Excel::import($model->filepath, [
-                'setFirstRecordAsKeys' => false,
-                'setIndexSheetByName' => true,
-            ]);
+            if (is_file($model->filepath))
+                $data = \moonland\phpexcel\Excel::import($model->filepath, [
+                    'setFirstRecordAsKeys' => false,
+                    'setIndexSheetByName' => true,
+                ]);
+            else
+                $model->addError('file','Файл не найден');
 
             if (!empty($data))
             {
@@ -1189,43 +1195,48 @@ class CollectionController extends Controller
                     $keys = [];
                     $records = [];
 
-                    if (empty($_POST['import']))
-                    {
-                        $sheet_pos = array_search($model->sheet, array_keys($data));
+                    //if (empty($_POST['import']))
+                    //{
+                    $sheet_pos = array_search($model->sheet, array_keys($data));
 
+                    if (!empty($_POST['CollectionImportForm'][$sheet_pos]))
+                    {
                         $post = $_POST['CollectionImportForm'][$sheet_pos];
-                        $model->load($_POST['CollectionImportForm'][$sheet_pos]);
+                        $model->load($post);
 
                         $model->skip = (int)$post['skip'];
                         $model->keyrow = (int)$post['keyrow'];
                         $model->firstRowAsName = $post['firstRowAsName'];
-                        $post = Yii::$app->request->post("CollectionImportForm.$sheet_pos");
-
-                        $model->load($post);
                     }
+                    else
+                    {
+                        //$post = Yii::$app->request->post("CollectionImportForm.$sheet_pos");
+                        //$model->load($post);
+                        $model->load(Yii::$app->request->post());
+                    }
+
+                    //}
 
                     foreach ($data[$model->sheet] as $rowkey => $row)
                     {
-                        if (empty($_POST['import']))
+                        // устанавливаем алиасы
+                        if ($rowkey==$model->keyrow && $model->keyrow>0)
                         {
-                            // устанавливаем алиасы
-                            if ($rowkey==$model->keyrow && $model->keyrow>0)
-                            {
-                                if (empty($columns))
-                                    $columns = $row;
-
-                                $keys = $row;
-                            }
-
-                            // пропускаем
-                            if (!empty($model->skip) && $rowkey <= $model->skip)
-                                continue;
-
-                            // устанавливаем именя колонок по первой строке если выбрали
-                            if ($rowkey == ($model->skip + 1) && $model->firstRowAsName) {
+                            if (empty($columns))
                                 $columns = $row;
-                                continue;
-                            }
+
+                            $keys = $row;
+                        }
+
+                        // пропускаем
+                        if (!empty($model->skip) && $rowkey <= $model->skip)
+                            continue;
+
+                        // устанавливаем именя колонок по первой строке если выбрали
+                        if ($rowkey == ((int)$model->skip + 1) && $model->firstRowAsName)
+                        {
+                            $columns = $row;
+                            continue;
                         }
 
                         $records[] = $row;
@@ -1255,6 +1266,7 @@ class CollectionController extends Controller
 
                                 if ($collection->save())
                                 {
+
                                     $columns = [];
 
                                     $i = 0;
@@ -1329,7 +1341,10 @@ class CollectionController extends Controller
                                         }
 
                                         $collectionRecord->data = $insert;
-                                        $collectionRecord->save();
+
+                                        if (!$collectionRecord->save())
+                                            print_r($collectionRecord->errors);
+
                                     }
 
                                     Yii::$app->session->setFlash('success', 'Данные импортированы');
@@ -1339,25 +1354,29 @@ class CollectionController extends Controller
                                     foreach ($values as $id_column => $value)
                                     {
                                         $input = FormInput::find()->where(['id_column'=>$id_column])->one();
+
                                         if (!empty($input))
-                                            $input->values = implode(';', $value);
+                                            $input->values = json_encode($values);
+
                                         $input->updateAttributes(['values']);
                                     }
 
-                                    unlink($model->filepath);
+                                    @unlink($model->filepath);
 
                                     return $this->redirect(['view', 'id' => $collection->id_collection]);
                                 }
                                 else
                                     print_r($collection->errors);
-                            } else
+                            }
+                            else
                             {
                                 Yii::$app->session->setFlash('error', 'Нет данных для записи');
-                                $this->refresh();
+                                return $this->refresh();
                             }
                         }
                         catch (Exception $e)
                         {
+                            Yii::$app->session->setFlash('error', 'Ошибка при записи в базу данных');
                             $model->addError('file','Ошибка при чтении файла, ошибка формата данных');
                         }
                     }
@@ -1365,8 +1384,11 @@ class CollectionController extends Controller
                     {
                         // сохраняем названия колонок
                         if (empty($columns))
+                        {
+                            $i = 0;
                             foreach ($records[1] as $rkey => $value)
                                 $columns[$rkey] = 'Колонка №'.($i++);
+                        }
 
                         if (empty($keys))
                             foreach ($columns as $key => $column)
@@ -1391,6 +1413,7 @@ class CollectionController extends Controller
 
         return $this->render('import/import', [
             'model' => $model,
+            'id'=>$id,
         ]);
     }
 

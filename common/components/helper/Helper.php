@@ -616,7 +616,7 @@ class Helper
 	*
 	* @return строка вида "3 собаки"
 	*/
-	public function plural($num, $forms)
+	public static function plural($num, $forms)
 	{
 		$tail = $num % 100;
 

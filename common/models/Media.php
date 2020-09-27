@@ -389,7 +389,9 @@ class Media extends \yii\db\ActiveRecord
             return 'Error, source file not found';
 
         $preview_stream = fopen(Yii::getAlias('@runtime').'/'.$path, 'r+');
+
         Yii::$app->publicStorage->writeStream($path, $preview_stream);
+
         fclose($preview_stream);
 
         unlink(Yii::getAlias('@runtime').'/'.$path);
