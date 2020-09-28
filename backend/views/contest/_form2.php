@@ -58,6 +58,7 @@ use yii\web\JsExpression;
             <label class="control-label" for="hrcontest-experts">Информационное сообщение</label>
 
             <?= Html::textArea('comment', $comment, ['rows' => 6, 'class'=>'redactor']) ?>
+            <button onclick="alert('Извините, в данный момент потчовый сервис недоступен. Попробуйте отправить чуть позже.'); return false;">Отправить сообщение</button>
         
         </div>
 
