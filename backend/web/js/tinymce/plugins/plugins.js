@@ -158,7 +158,7 @@ tinymce.PluginManager.add("ownmedia", function(editor, url) {
                             if (data.full != undefined)
                                 full = 'data-full="'+data.full+'"';
 
-                            editor.insertContent('<figure contenteditable="false">\
+                            editor.insertContent('<figure>\
                                         <img src="'+data.src+'" data-id="'+data.id_media+'" '+full+'\> \
                                         <figcaption class="img-legend">'+data.title+'</figcaption>\
                                     </figure>');

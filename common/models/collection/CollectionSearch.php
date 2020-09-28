@@ -41,9 +41,9 @@ class CollectionSearch extends DynamicModel
                 case CollectionColumn::TYPE_RICHTEXT:
                     $this->addRule(['col'.$column->id_column], 'string');
                     break;
-                case CollectionColumn::TYPE_ARCHIVE:
+                /*case CollectionColumn::TYPE_ARCHIVE:
                     $this->addRule(['col'.$column->id_column], 'boolean');
-                    break;
+                    break;*/
                 default:
                     //$this->addRule(['col'.$column->id_column], 'safe');
                     break;
@@ -315,11 +315,14 @@ class CollectionSearch extends DynamicModel
 
         if (!empty($archiveColumn))
         {
+            $archive = Yii::$app->request->get('archive');
+
             $attr = "col".$archiveColumn->id_column;
-            if ($this->$attr=='')
-            {
+
+            if (empty($archive))
                 $query->andWhere(['or',['=',$attr,null],[$attr=>0]]);
-            }
+            else
+                $query->andWhere([$attr=>1]);
         }
 
         foreach ($this->attributes as $attr => $value)

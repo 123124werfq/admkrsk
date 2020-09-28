@@ -95,7 +95,7 @@ class CollectionRecordController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['update'],
+                        'actions' => ['update','restore'],
                         'roles' => ['backend.collection.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
@@ -151,6 +151,21 @@ class CollectionRecordController extends Controller
         }
 
         $this->redirect(Yii::$app->request->referrer ?: '/');
+    }
+
+    /**
+     * @param $id
+     * @return Response
+     * @throws NotFoundHttpException
+     * @throws InvalidConfigException
+     */
+    public function actionRestore($id,$id_collection)
+    {
+        $model = $this->findModel($id);
+        $model->data = ['is_archive'=>0];
+        $model->save();
+
+        return $this->redirect(['view', 'id' => $model->id_record,'id_collection'=>$id_collection]);
     }
 
      /**

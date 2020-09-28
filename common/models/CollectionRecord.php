@@ -186,6 +186,11 @@ class CollectionRecord extends \yii\db\ActiveRecord
         return implode(', ',$output);
     }
 
+    public function isArchive()
+    {
+        return (!empty($this->is_archive));
+    }
+
     protected function getMongoDate($value, $column)
     {
         $output = [];

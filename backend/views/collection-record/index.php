@@ -12,7 +12,25 @@ use yii\widgets\Pjax;
 /* @var $model common\models\Collection */
 
 $this->title = $model->pageTitle;
+
+$archiveColumn = $model->getArchiveColumn();
+
+if (!empty($archiveColumn))
+{
+  $archive = Yii::$app->request->get('archive');
+
+  if ($archive) {
+      $this->params['button-block'][] = Html::a('Не архив', ['index'], ['class' => 'btn btn-default']);
+  } else {
+      $this->params['button-block'][] = Html::a('Архив', ['index', 'archive' => 1], ['class' => 'btn btn-default']);
+  }
+}
+
 $this->params['breadcrumbs'][] = ['label' => $model->breadcrumbsLabel, 'url' => ['collection/index']];
+
+if (!empty($model->id_parent_collection))
+  $this->params['breadcrumbs'][] = ['label' => $model->parent->name, 'url' => ['collection/view','id'=>$model->id_parent_collection]];
+
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['index', 'id' => $model->id_collection]];
 
 $this->params['button-block'][] = Html::a('Добавить', ['create', 'id' => $model->id_collection], ['class' => 'btn btn-success create-collection','data-toggle'=>"modal",'data-target'=>"#CollectionRecord"]);

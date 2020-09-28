@@ -17,7 +17,8 @@ $archive = Yii::$app->request->get('archive');
 $this->title = $searchModel->breadcrumbsLabel;
 $this->params['breadcrumbs'][] = $this->title;
 
-if (Yii::$app->user->can('admin.collection')) {
+if (Yii::$app->user->can('admin.collection'))
+{
     if ($archive) {
         $this->params['button-block'][] = Html::a('Все записи', ['index'], ['class' => 'btn btn-default']);
     } else {

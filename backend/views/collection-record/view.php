@@ -11,6 +11,13 @@ $this->params['breadcrumbs'][] = ['label' => 'Списки', 'url' => ['index']]
 $this->params['breadcrumbs'][] = ['label' => $model->collection->name, 'url' => ['collection-record/index','id'=>$model->id_collection]];
 $this->params['breadcrumbs'][] = $this->title;
 
+$data = $model->getData(true);
+if ($model->isArchive())
+{
+    $this->params['button-block'][] = Html::a('Восстановить из архива', ['restore','id'=>$model->id_record,'id_collection'=>$collection->id_collection],
+            ['class' => 'btn btn-warning']);
+}
+
 if (!empty($collection->form->template))
 {
 	$this->params['button-block'][] = Html::a('Скачать .doc', ['form/make-doc','id_record'=>$model->id_record,'id_collection'=>$collection->id_collection],
