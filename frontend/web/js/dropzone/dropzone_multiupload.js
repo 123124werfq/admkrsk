@@ -90,7 +90,7 @@
 			tpl: 1,
 			single:false,
 			records: [],
-			allowedExtensions: [],
+			allowedExtensions: null,
 			showPreview:false
 		}, options );
 
@@ -153,7 +153,7 @@
 			var uploader = $(element).dropzone({
 				addRemoveLinks: true,
 				url: "/media/upload",
-				//addRemoveLinks: "/media/delete",
+				acceptedFiles: settings.allowedExtensions,
 				dictRemoveFile: '×',
 				dictCancelUpload: '×',
 				resizeWidth: 1920,

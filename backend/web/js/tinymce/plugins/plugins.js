@@ -158,10 +158,10 @@ tinymce.PluginManager.add("ownmedia", function(editor, url) {
                             if (data.full != undefined)
                                 full = 'data-full="'+data.full+'"';
 
-                            editor.insertContent('<ownmedia>\
-                                    <img src="'+data.src+'" data-id="'+data.id_media+'" '+full+'\> \
-                                    <p class="img-legend">'+data.title+'<p/>\
-                                </ownmedia>');
+                            editor.insertContent('<figure contenteditable="false">\
+                                        <img src="'+data.src+'" data-id="'+data.id_media+'" '+full+'\> \
+                                        <figcaption class="img-legend">'+data.title+'</figcaption>\
+                                    </figure>');
                             $('#redactor-modal').modal('hide');
                         }
                     });

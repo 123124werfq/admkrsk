@@ -66,6 +66,12 @@ class MultiFileWidget extends Widget
 			}
 		}
 
+		if (!empty($this->extensions) && is_array($this->extensions))
+		{
+			foreach ($this->extensions as $key=>$data)			
+				$this->extensions[$key] = '.'.$this->extensions[$key];
+		}
+
 		return $this->render('file_upload',[
 			'model'=>$this->model,
 			'records'=>$records,

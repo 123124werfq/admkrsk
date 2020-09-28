@@ -106,6 +106,8 @@ $contacts = Collection::getArrayByAlias("press_people");
                     ],
                 ]) ?>
 
+                <label class="control-label">Обложка</label>
+
                 <?=common\components\multifile\MultiFileWidget::widget([
                     'model'=>$model,
                     'single'=>true,

@@ -81,6 +81,46 @@ var tinymceConfig = {
     file_picker_types: 'file image',
     sticky_offset: 0,
     convert_urls: 0,
+    style_formats: [
+      {title: 'Заголовки', items: [
+        {title: 'Заголовок 1', format: 'h1'},
+        {title: 'Заголовок 2', format: 'h2'},
+        {title: 'Заголовок 3', format: 'h3'},
+        {title: 'Заголовок 4', format: 'h4'},
+        {title: 'Заголовок 5', format: 'h5'},
+        {title: 'Заголовок 6', format: 'h6'}
+      ]},
+      {title: 'Стили форматирования', items: [
+        {title: 'Bold', icon: 'bold', format: 'bold'},
+        {title: 'Italic', icon: 'italic', format: 'italic'},
+        {title: 'Underline', icon: 'underline', format: 'underline'},
+        {title: 'Strikethrough', icon: 'strikethrough', format: 'strikethrough'},
+        {title: 'Superscript', icon: 'superscript', format: 'superscript'},
+        {title: 'Subscript', icon: 'subscript', format: 'subscript'},
+        {title: 'Code', icon: 'code', format: 'code'}
+      ]},
+      /*{title: 'Блоки', items: [
+        {title: 'Paragraph', format: 'p'},
+        {title: 'Blockquote', format: 'blockquote'},
+        {title: 'Div', format: 'div'},
+        {title: 'Pre', format: 'pre'}
+      ]},*/
+      { title: 'Контейнеры', items: [        
+        { title: 'Акцент', block: 'article', wrapper: true, merge_siblings: false, classes:'accent'},
+        { title: 'blockquote', block: 'blockquote', wrapper: true },
+        /*{ title: 'section', block: 'section', wrapper: true, merge_siblings: false },
+        { title: 'hgroup', block: 'hgroup', wrapper: true },
+        { title: 'aside', block: 'aside', wrapper: true },*/
+        { title: 'Иллюстрация с подписью', block: 'figure', wrapper: true }
+      ] },
+      {title: 'Выравнивание', items: [
+        {title: 'Left', icon: 'alignleft', format: 'alignleft'},
+        {title: 'Center', icon: 'aligncenter', format: 'aligncenter'},
+        {title: 'Right', icon: 'alignright', format: 'alignright'},
+        {title: 'Justify', icon: 'alignjustify', format: 'alignjustify'}
+      ]}
+    ]
+
     /*file_picker_callback: function(callback, value, meta) {
         // Provide file and text for the link dialog
         if (meta.filetype == 'file') {
