@@ -662,7 +662,8 @@ jQuery(document).ready(function()
 
             if (data.success)
             {
-              $.pjax.reload({container: '#collection_grid', async: false});
+              if ($("#collection_grid").length>0)
+                $.pjax.reload({container: '#collection_grid', async: false});
 
               $("#CollectionRecord").modal('hide');
             }
@@ -684,7 +685,7 @@ jQuery(document).ready(function()
     csrf = $('meta[name=csrf-param]').prop('content');
     csrf_value = $('meta[name=csrf-token]').prop('content');
 
-    $(".table-responsive").delegate('.update-record a','click',function(){
+    $("body").delegate('.update-record a, a.update-record','click',function(){
 
       var $link = $(this);
 
