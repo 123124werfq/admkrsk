@@ -174,7 +174,8 @@ tinymce.PluginManager.add("ownmedia", function(editor, url) {
 
     // Define the Toolbar button
     editor.ui.registry.addButton('ownmedia', {
-        text: "Изображение",
+        //text: "Изображение",
+        icon: 'image',
         onAction: _onAction
     });
 });

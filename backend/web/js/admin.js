@@ -69,7 +69,7 @@ var tinymceConfig = {
         custom: { title: 'Плагины', items: 'form gallery collections hrreserve pagenews faq recordSearch map'}
     },
     menubar: 'file edit view insert format tools table custom',
-    contextmenu: "link image imagetools table spellchecker",
+    contextmenu: "link imagetools table spellchecker",
     toolbar: "code removeformat | undo redo | fontsizeselect| styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist blockquote | link media ownmedia",
     language: 'ru',
     extended_valid_elements : "faq[data-ids|data-category],map[data-id],searchrecord[data-encodedata],pagenews[data-id],hrreserve[pagesize],collection[data-id|data-encodedata],gallery[data-id|data-limit|data-type],forms[data-id|data-data],ownmedia",
@@ -78,7 +78,7 @@ var tinymceConfig = {
     images_upload_url: '/media/tinymce',
     automatic_uploads: true,
     paste_data_images: true,
-    file_picker_types: 'file image',
+    file_picker_types: 'file',
     sticky_offset: 0,
     convert_urls: 0,
     style_formats: [
@@ -105,7 +105,7 @@ var tinymceConfig = {
         {title: 'Div', format: 'div'},
         {title: 'Pre', format: 'pre'}
       ]},*/
-      { title: 'Контейнеры', items: [        
+      { title: 'Контейнеры', items: [
         { title: 'Акцент', block: 'article', wrapper: true, merge_siblings: false, classes:'accent'},
         { title: 'blockquote', block: 'blockquote', wrapper: true },
         /*{ title: 'section', block: 'section', wrapper: true, merge_siblings: false },

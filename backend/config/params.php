@@ -3,7 +3,7 @@ return [
     'adminEmail' => 'admin@example.com',
     'tinymce_plugins' => [
         'link',
-        'image',
+        //'image',
         'imagetools',
         'table',
         'autoresize',
