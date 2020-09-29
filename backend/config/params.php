@@ -21,6 +21,7 @@ return [
         'faq',
         'recordSearch',
         'map',
-        'ownmedia'
+        'ownmedia',
+        'ownfile'
     ]
 ];
