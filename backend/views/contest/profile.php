@@ -13,7 +13,7 @@ use yii\helpers\Url;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $customColumns array */
 
-$this->title = 'Анкеты, поданные для учстия в конкурсах';
+$this->title = 'Анкеты, поданые для участия в конкурсах';
 $this->params['breadcrumbs'][] = $this->title;
 if($contestid>0)
     $this->params['button-block'][] = '<a class="btn btn-success" href="/collection-record/all-doc?id='.$contestid.'">Скачать архив</a>';
@@ -129,7 +129,10 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
 
 <div class="service-index">
 
-    <!--
+    <div class="ibox">
+        <div class="ibox-content">
+    
+        <!--
     <div class="ibox">
         <a style="color: white" href="<?= Url::to(['', 'pageSize' => 10]) ?>"><button class="btn btn-primary">10</button></a>
         <a style="color: white" href="<?= Url::to(['', 'pageSize' => 20]) ?>"><button class="btn btn-primary">20</button></a>
@@ -137,7 +140,7 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
     </div>
     -->
 
-    <select id="contestselect" onchange="filterContest()">
+    <select class="form-control" id="contestselect" onchange="filterContest()">
         <option value="0">Все</option>
     <?php 
         foreach($allContests as $contId => $contName){
@@ -147,73 +150,86 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
         }
     ?>
     </select> 
-<script>
-    let filterContest = function(){
+    <script>
+        let filterContest = function(){
 
-         let newContestId = $('#contestselect').val();
-         document.location.href = '/contest/profile?cont='+newContestId;
+        let newContestId = $('#contestselect').val();
+        document.location.href = '/contest/profile?cont='+newContestId;
     } 
-</script> 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-//        'filterModel' => $searchModel,
-        'columns' => array_merge(array_values($gridColumns), [
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {editable} {ban} {status} ',
-                'buttons' => [
-                    'view' => function ($url, $model, $key) {
-                        $url = str_replace("=$key", "={$model['id_profile']}", $url);
+    </script> 
+
     
-                            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-eye-open"]);
-                            return Html::a($icon, $url, [
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
+    //        'filterModel' => $searchModel,
+            'columns' => array_merge(array_values($gridColumns), [
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'template' => '{view} {editable} {ban} {status} ',
+                    'buttons' => [
+                        'view' => function ($url, $model, $key) {
+                            $url = str_replace("=$key", "={$model['id_profile']}", $url);
+                                        
+                                return Html::a('', $url, [
+                                    'class' => "glyphicon glyphicon-eye-open",
+                                    'target' => '_blank',
+                                    'title' => 'Редактировать',
+                                    'aria-label' => 'Редактировать',
+                                    'data-pjax' => '0',
+                                ]);
+                            },
+
+                        'editable' => function ($url, $model, $key) {
+                            //$url = str_replace("=$key", "={$model['id_record']}", $url);
+
+                            return Html::a('', ['/collection-record/update', 'id' => $model['id_record']],['class' => 'glyphicon glyphicon-pencil update-record']);
+
+                            /*$icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-pencil"]);
+                            return Html::a($icon, '/collection-record/update?id='.$model['id_record'], [
                                 'target' => '_blank',
                                 'title' => 'Редактировать',
                                 'aria-label' => 'Редактировать',
                                 'data-pjax' => '0',
-                            ]);
+                            ]);*/
                         },
-
-                    'editable' => function ($url, $model, $key) {
-                    $url = str_replace("=$key", "={$model['id_profile']}", $url);
-
-                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-pencil"]);
-                        return Html::a($icon, $url, [
-                            'target' => '_blank',
-                            'title' => 'Редактировать',
-                            'aria-label' => 'Редактировать',
-                            'data-pjax' => '0',
-                        ]);
-                    },
-                    'status' => function ($url, $model, $key) {
-                        $url = str_replace("=$key", "={$model['id_profile']}", $url);
-                        switch ($model['state']) {
-                            case CstProfile::STATE_DRAFT:
-                                $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-ok"]);
-                                $title = 'Принять';
-                                break;
-                            case CstProfile::STATE_ACCEPTED:
-                                $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-remove"]);
-                                $title = 'Отклонить';
-                                break;
-                        }
-                        return Html::a($icon, $url, [
-                            'target' => '_blank',
-                            'title' => $title,
-                            'aria-label' => $title,
-                            'data-pjax' => '0',
-                        ]);
-                    },                                     
-                ],
-                'contentOptions' => ['class' => 'button-column']
+                        'status' => function ($url, $model, $key) {
+                            $url = str_replace("=$key", "={$model['id_profile']}", $url);
+                            
+                            switch ($model['state']) {
+                                case CstProfile::STATE_DRAFT:
+                                    
+                                    return Html::a('', $url, [
+                                        'target' => '_blank',
+                                        'title' => 'Принять',
+                                        'aria-label' => 'Принять',
+                                        'data-pjax' => '0',
+                                        'class' => "glyphicon glyphicon-ok"
+                                    ]);                                    
+                                    
+                                    break;
+                                case CstProfile::STATE_ACCEPTED:
+                                    return Html::a('', $url, [
+                                        'target' => '_blank',
+                                        'title' => 'Отклонить',
+                                        'aria-label' => 'Отклонить',
+                                        'data-pjax' => '0',
+                                        'class' => "glyphicon glyphicon-remove"
+                                    ]);                                                                        
+                                    break;
+                            }
+                            
+                        },                                     
+                    ],
+                    'contentOptions' => ['class' => 'button-column']
+                ]
+            ]),
+            'tableOptions' => [
+                'emptyCell' => '',
+                'class' => 'table table-striped ids-style valign-middle table-hover',
+                'data-grid' => ReserveController::gridProfile,
+                'id' => 'grid',
             ]
-        ]),
-        'tableOptions' => [
-            'emptyCell' => '',
-            'class' => 'table table-striped ids-style valign-middle table-hover',
-            'data-grid' => ReserveController::gridProfile,
-            'id' => 'grid',
-        ]
-    ]); ?>
-
+        ]); ?>
+        </div>
+    </div>
 </div>

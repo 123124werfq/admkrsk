@@ -17,7 +17,7 @@ use yii\web\View;
 $columns = ArrayHelper::map($model->parent->columns, 'id_column', 'name');
 $model->filters = $rules = $model->getViewFilters();
 $model->filters = json_encode($model->filters);
-
+Yii::$app->params['sidebar'] = $this->render('_twig_options',['columns'=>$model->parent->columns]);
 ?>
 
 <?php $form = ActiveForm::begin(['id'=>'collection-view']); ?>
@@ -27,9 +27,14 @@ $model->filters = json_encode($model->filters);
 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
 <hr>
-<?= $form->field($model, 'template')->textInput(['class' => 'form-control redactor']) ?>
 
-<?= $form->field($model, 'template_element')->textInput(['class' => 'form-control redactor']) ?>
+<?= $form->field($model, 'template')->textInput(['class' => 'form-control redactor'])->label('Шаблон страницы <a class="right-sidebar-toggle">
+    {{ }}
+</a>')?>
+
+<?= $form->field($model, 'template_element')->textInput(['class' => 'form-control redactor'])->label('Шаблон элемента <a class="right-sidebar-toggle">
+    {{ }}
+</a>') ?>
 
 <?php if (!$model->isNewRecord) { ?>
     <?= $form->field($model, 'label')->widget(Select2::class, [

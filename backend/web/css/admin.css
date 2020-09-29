@@ -129,6 +129,8 @@ position: absolute;
     right: 0px;
 }
 
+#right-sidebar {width: 400px!important; right: -400px;}
+
 .multiyiinput .form-inline {margin-bottom: 10px;}
 .multiyiinput .item {background:#fff;}
 .multiyiinput.sortable .item td:first-child{position: relative;}

@@ -20,7 +20,7 @@ use common\models\CollectionColumn;
 
     <?= $form->field($model, 'alias')->textInput(['disabled' => !$model->isCustom()]) ?>
 
-<?php if ($model->isCustom()){?>
+	<?php if ($model->isCustom()){?>
 	<?= $form->field($model, 'keep_relation')->checkBox()->hint('В случае измеенния даных в записи источнике, колонка будет переформирована')?>
 
 	<div class="row">
@@ -44,9 +44,7 @@ use common\models\CollectionColumn;
 
 	<?php
     $data = $model->getOptionsData();
-
 	echo '<div class="row-flex">';
-
 	foreach ($data as $key => $option)
 	{
 		$option['class'] = 'form-control';
