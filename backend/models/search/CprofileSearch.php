@@ -74,13 +74,13 @@ class CprofileSearch extends CstProfile
             $sql = "SELECT * FROM cst_profile cp 
                 LEFT JOIN form_form ff ON cp.id_record_contest = ff.id_collection
                 left join db_collection_record cr on cr.id_record = cp.id_record_anketa 
-                WHERE ff.alias = '{$contests[$this->id_contest]['participant_form']}' and cr.created_by is not null";
+                WHERE ff.alias = '{$contests[$this->id_contest]['participant_form']}' and cr.created_by is not null and cr.deleted_at is null";
         else
         {
             //$sql = "SELECT * FROM cst_profile cp";
             $sql = "SELECT * FROM cst_profile cp 
                 left join db_collection_record cr on cr.id_record = cp.id_record_anketa 
-                WHERE cr.created_by is not null";
+                WHERE cr.created_by is not null and cr.deleted_at is null";
         }
 
         $count = Yii::$app->db->createCommand("SELECT COUNT(*) FROM ($sql) t1")->queryScalar();

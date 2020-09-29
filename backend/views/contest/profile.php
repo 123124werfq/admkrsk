@@ -13,7 +13,7 @@ use yii\helpers\Url;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $customColumns array */
 
-$this->title = 'Анкеты, поданные для учстия в конкурсах';
+$this->title = 'Анкеты, поданые для участия в конкурсах';
 $this->params['breadcrumbs'][] = $this->title;
 if($contestid>0)
     $this->params['button-block'][] = '<a class="btn btn-success" href="/collection-record/all-doc?id='.$contestid.'">Скачать архив</a>';
