@@ -18,6 +18,9 @@ use yii\web\JsExpression;
 /* @var $form yii\widgets\ActiveForm */
 
 Yii::$app->params['tinymce_plugins'][] = 'recordmap';
+
+Yii::$app->params['sidebar'] = $this->render('_twig_options',['columns'=>$model->columns]);
+
 ?>
 
 <?php $form = ActiveForm::begin(); ?>
@@ -27,9 +30,13 @@ Yii::$app->params['tinymce_plugins'][] = 'recordmap';
 <?= $form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
 
 <hr>
-<?= $form->field($model, 'template')->textInput(['class' => 'form-control redactor']) ?>
+<?= $form->field($model, 'template')->textInput(['class' => 'form-control redactor'])->label('Шаблон страницы <a class="right-sidebar-toggle">
+    {{ }}
+</a>')?>
 
-<?= $form->field($model, 'template_element')->textInput(['class' => 'form-control redactor']) ?>
+<?= $form->field($model, 'template_element')->textInput(['class' => 'form-control redactor'])->label('Шаблон элемента <a class="right-sidebar-toggle">
+    {{ }}
+</a>') ?>
 
 <table class="table">
     <?php foreach ($model->columns as $key => $column) {

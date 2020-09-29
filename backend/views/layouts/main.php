@@ -35,7 +35,6 @@ $this->beginPage();
         $script = "toastr.$type('$message', '');";
         $this->registerJs($script, yii\web\View::POS_END);
     }
-
     $this->registerJs("var tinymce_plugins = ['".implode(' ',Yii::$app->params['tinymce_plugins'])."'];", yii\web\View::POS_BEGIN);
 ?>
 <?php $this->beginBody(); ?>
@@ -144,6 +143,13 @@ $this->beginPage();
 </div>
 
 <?php $this->endBody();?>
+
+<div id="right-sidebar" class="animated">
+    <div class="sidebar-container">
+      <?=Yii::$app->params['sidebar']??''?>
+    </div>}
+</div>
+
 </body>
 </html>
 <?php $this->endPage();?>
