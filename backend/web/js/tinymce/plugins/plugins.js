@@ -133,6 +133,50 @@ function setElementsEditable(editor, selector, editFunc) {
     }
 }
 
+tinymce.PluginManager.add("ownfile", function(editor, url) {
+    var _dialog = false;
+    var _typeOptions = [];
+
+    function _onAction() {
+        $.ajax({
+            url: '/media/redactor?file=1',
+            type: 'get',
+            dataType: 'html',
+            success: function(data) {
+                $('#redactor-modal').modal();
+                $('#redactor-modal .modal-body').html(data);
+                $('#redactor-modal form').submit(function(){
+                    $.ajax({
+                        url: '/media/redactor?file=1',
+                        type: 'post',
+                        dataType: 'json',
+                        data: $('#redactor-modal form').serialize(),
+                        success: function(data) {
+
+                            var full = '';
+
+                            if (data.full != undefined)
+                                full = 'data-full="'+data.full+'"';
+
+                            editor.insertContent('<a href="'+data.filepath+'" data-size="'+data.size+'" data-id="'+data.id_media+'">'+data.title+'</a>');
+                            $('#redactor-modal').modal('hide');
+                        }
+                    });
+
+                    return false;
+                });
+            }
+        });
+    }
+
+    // Define the Toolbar button
+    editor.ui.registry.addButton('ownfile', {
+        //text: "Изображение",
+        icon: 'document-properties',
+        onAction: _onAction
+    });
+});
+
 tinymce.PluginManager.add("ownmedia", function(editor, url) {
     var _dialog = false;
     var _typeOptions = [];
