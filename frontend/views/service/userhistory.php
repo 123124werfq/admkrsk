@@ -6,7 +6,7 @@
         <?=frontend\widgets\Breadcrumbs::widget(['page'=>$page])?>
         <div class="row">
             <div class="col-2-third order-xs-1 content">
-                <h1 class="h2"><?=$page->title?></h1>
+                <h1 class="h2"><?=$page?$page->title:'Найденные обращения и услуги'?></h1>
 
                 <?php if(empty($appeals)) { ?>
                     <p>Запросов предоставления муниципальных услуг не поступало.</p>
@@ -32,6 +32,9 @@
                             </td>
                             <td><?=$appeal->statusName?></td>
                             <td>
+                                <?php 
+                                    if($page){
+                                ?>
                                 <select>
                                     <option>5</option>
                                     <option>4</option>
@@ -39,6 +42,7 @@
                                     <option>2</option>
                                     <option>1</option>
                                 </select>
+                                    <?php } ?>
                             </td>
                         </tr>
                         <?php }?>
