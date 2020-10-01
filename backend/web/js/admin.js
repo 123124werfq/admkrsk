@@ -172,66 +172,6 @@ tinymce.init(tinymceConfig);
   });
 });*/
 
-function visibleForm(visibleInputs,visibleElements,dom)
-{
-    var $dom = $(dom);
-
-    function getValue(id_input)
-    {
-        var input = $dom.find("#formdynamic-input"+id_input+", .formdynamic-input"+id_input+" input[name*='input"+id_input+"']:checked");
-
-        if (input.is(':checkbox'))
-        {
-            if (input.is(':checked'))
-                var val = input.val();
-            else
-                var val = null
-        }
-        else
-            var val = input.val();
-
-        return val;
-    }
-
-    function check(id_element)
-    {
-        var show = true;
-
-        for (var id_input in visibleElements[id_element])
-        {
-            var value = getValue(id_input);
-
-            if (visibleElements[id_element][id_input].indexOf(value)<0)
-            {
-                show = false;
-                break;
-            }
-        }
-
-        if (show)
-            $dom.find("#element"+id_element).show().find('input, textarea, select').prop('disabled',false);
-        else
-            $dom.find("#element"+id_element).hide().find('input, textarea, select').prop('disabled',true);
-    }
-
-    for (var id_vinput in visibleInputs)
-    {
-        $dom.find("#formdynamic-input"+id_vinput+", .formdynamic-input"+id_vinput+" input[name*='input"+id_vinput+"']").change(function(){
-
-            if ($(this).data('id'))
-                var id = $(this).data('id');
-            else
-                var id = $(this).attr('id').replace('formdynamic-input','');
-
-            for (var id_element in visibleInputs[id])
-                check(id_element);
-        });
-    }
-
-    for (var id_element in visibleElements)
-        check(id_element);
-}
-
 function formTemplateSortable()
 {
   $("#form-template_pjax ").sortable({
@@ -395,42 +335,7 @@ function addDashboardPin()
 
 
 jQuery(document).ready(function()
-{
-  $('body').delegate(".delete-subform",'click',function(){
-        if ($(this).closest('.subform').parent().find('.subform').length>1)
-            $(this).closest('.subform').remove();
-        return false;
-  });
-
-  $("body").delegate(".repeat-switcher",'change',function(){
-      if ($(this).prop('checked'))
-          $(this).closest('.flex-wrap').find('.is_repeat').show();
-      else
-          $(this).closest('.flex-wrap').find('.is_repeat').hide();
-  });
-
-  $("body").delegate(".repeat_repeat",'change',function(){
-      var $this = $(this);
-      $this.closest('.flex-wrap').find('.repeat-block').hide();
-      $this.closest('.flex-wrap').find('.repeat-block[data-repeat='+$this.val()+']').show();
-  });
-
-  $("body").delegate(".repeat_month",'change',function(){
-      var $this = $(this);
-      console.log('.repeat-block-month[data-repeat="'+$this.val()+'"]');
-      $this.closest('.flex-wrap').find('.repeat-block-month').hide();
-      $this.closest('.flex-wrap').find('.repeat-block-month[data-repeat="'+$this.val()+'"]').show();
-  });
-
-    $("body").delegate('.dz-remove','click',function(){
-
-        var form = $(this).closest('form');
-        $(this).closest('.fileupload_item').remove();
-        recalculateFormSize(form);
-        return false;
-
-    });
-
+{  
     $(".selectActionDropDown a").click(function(){
 
       var $link = $(this);
@@ -479,6 +384,7 @@ jQuery(document).ready(function()
       $("#selectCount").html($('input[name="selection[]"]:checked').length);
 
     });
+
     $("#redactor-modal button[type=submit]").click(function(){
       $("#redactor-modal form").submit();
       return false;

@@ -54,27 +54,7 @@ function addInput(block)
     return false;
 }
 
-$(document).ready(function() {
-
-    $(".repeat-switcher").change(function(){
-        if ($(this).prop('checked'))
-            $(this).closest('.flex-wrap').find('.is_repeat').show();
-        else
-            $(this).closest('.flex-wrap').find('.is_repeat').hide();
-    });
-
-    $(".repeat_repeat").change(function(){
-        var $this = $(this);
-        $this.closest('.flex-wrap').find('.repeat-block').hide();
-        $this.closest('.flex-wrap').find('.repeat-block[data-repeat='+$this.val()+']').show();
-    });
-
-    $(".repeat_month").change(function(){
-        var $this = $(this);
-        console.log('.repeat-block-month[data-repeat="'+$this.val()+'"]');
-        $this.closest('.flex-wrap').find('.repeat-block-month').hide();
-        $this.closest('.flex-wrap').find('.repeat-block-month[data-repeat="'+$this.val()+'"]').show();
-    });
+$(document).ready(function() {        
 
     $(".ajax-form").on('beforeSubmit', function (event) {
         event.preventDefault();
@@ -214,12 +194,6 @@ $(document).ready(function() {
         $("#news-filter").submit();
     });
 
-    $('.boxed.form-inside').delegate(".delete-subform",'click',function(){
-        if ($(this).closest('.subform').parent().find('.subform').length>1)
-            $(this).closest('.subform').remove();
-        return false;
-    });
-
     $('body').delegate(".accept-checkbox",'click',function(){
 
         var inputID = $(this).data('id');
@@ -286,7 +260,7 @@ $(document).ready(function() {
         'source':'/service/search'
     });
 
-    if($('.damask-form').length)
+    if ($('.damask-form').length)
     {
         var groupNum = -1, serviceNum = -1, avialableDays = [];
 
@@ -383,18 +357,15 @@ $(document).ready(function() {
         $('select[name="service_0"]').on('loaded.bs.select', function () {
             var Selectpicker = $('#number').data('selectpicker');
         });
-
     }
 
     $('a[href$=".doc"], a[href$=".docx"], a[href$=".xls"], a[href$=".xlsx"]').each(function(idx,el){
-        let originalLink = $(el).attr('href');
-
-        //originalLink = originalLink.replace('administration', '_administration');
+        let originalLink = $(el).attr('href');        
 
         if(originalLink.indexOf('://')==-1) originalLink = location.origin + originalLink;
 
         let previewLink = "https://docs.google.com/gview?embedded=false&url="+originalLink;
-        //$(el).append('<a href="'+previewLink+'" traget="_blank">просмотр</a>');
+        
         if(!$(el).hasClass('btn'))
             $(el).attr('href', previewLink).attr('target', '_blank');
     });
@@ -402,110 +373,6 @@ $(document).ready(function() {
     $('#gosbar-search-go, #gosbar-search-go-btn').click(function(){
         if($('.header-search').val()!='')
             $('#top-search').submit();
-    });
-
-    $(".dz-remove").click(function(){
-        var form = $(this).closest('form');
-        $(this).closest('.fileupload_item').remove();
-        recalculateFormSize(form);
-        return false;
-    });
-
-    $(".fileupload").each(function(){
-        var form = $(this).closest('form');
-        var id_input = $(this).data('input');
-        var new_index = $(this).find('.fileupload_item').length+1;
-        var maxFiles = $(this).data('maxfiles');
-        var maxFilesize = $(this).data('maxfilesize');
-        var acceptedFiles = $(this).data('acceptedfiles');
-
-        if (!maxFiles)
-            maxFiles = null;
-
-        if (!maxFilesize)
-            maxFilesize = null;
-
-         if (!acceptedFiles)
-            acceptedFiles = null;
-
-        $(this).addClass('input'+id_input);
-
-        var uploader = $(this).find('.fileupload_dropzone').dropzone({
-            addRemoveLinks: true,
-            url: "/media/upload",
-            dictRemoveFile: '×',
-            dictCancelUpload: '×',
-            maxFiles:maxFiles,
-            maxFilesize:maxFilesize,
-            acceptedFiles:acceptedFiles,
-            resizeWidth: 1920,
-            clickable: ".input"+id_input+" .fileupload_control",
-            previewsContainer: ".input"+id_input+" .fileupload_list",
-            previewTemplate: '<div class="fileupload_item">\
-                                <div class="fileupload_preview">\
-                                    <div class="fileupload_preview-type">\
-                                        <img data-dz-thumbnail />\
-                                    </div>\
-                                </div>\
-                                <div class="fileupload_item-content">\
-                                    <p class="fileupload_item-name" data-dz-name></p>\
-                                    <div class="fileupload_item-status"><span class="fileupload_item-size" data-dz-size></span>\
-                                        <div class="fileupload_item-progress">\
-                                            <div class="fileupload_progress-bar" data-dz-uploadprogress></div>\
-                                        </div><div class="fileupload_item-progress-value">100%</div>\
-                                        <div class="dz-error-message"><span data-dz-errormessage></span></div>\
-                                    </div>\
-                                </div>\
-                                <div class="fileupload_item-pagecount">\
-                                </div>\
-                            </div>',
-            dictFileTooBig:'Размер файла ({{filesize}}Mb). Максимальный размер: {{maxFilesize}}Mb.',
-            init: function(){
-
-                var plugin = this;
-                this.on("success", function(file, response){
-                    response = JSON.parse(response);
-
-                    $(file.previewElement).append(
-                        '<input type="hidden" name="FormDynamic[input'+id_input+']['+new_index+'][file_path]" value="'+response.file+'"/>'
-                    );
-                    $(file.previewElement).append(
-                        '<input type="hidden" name="FormDynamic[input'+id_input+']['+new_index+'][filename]" value="'+response.filename+'"/>'
-                    );
-                    $(file.previewElement).find('.fileupload_item-pagecount').append(
-                        'на <input class="form-control" type="number" step="1" min="1" name="FormDynamic[input'+id_input+']['+new_index+'][pagecount]" value="" placeholder="л."/> л.'
-                    );
-
-                    if ($(file.previewElement).find('.fileupload_preview-type img').attr('src')==undefined)
-                        $(file.previewElement).find('.fileupload_preview-type').text(response.file.split('.').pop());
-
-                    new_index++;
-                });
-
-                this.on("addedfile", function(file){
-
-                    $(file.previewElement).attr('data-filesize',file.size);
-
-                    var maxtotalsize = form.data('maxfilesize');
-                    var currentSize = recalculateFormSize(form);
-
-                    //console.log(maxtotalsize+ ' < '+currentSize);
-
-                    if ((currentSize+file.size)>maxtotalsize)
-                    {
-                        plugin.removeFile(file);
-                        alert('Вы превысили лимит максимального размера приложенных документов');
-                        recalculateFormSize(form);
-                    }
-                });
-            }
-            /*accept: function(file, done) {
-                if (file.name == "justinbieber.jpg") {
-                  done("Naha, you don't.");
-                }
-                else { done(); }
-              }*/
-        });
     });
 
     if((location.href.indexOf('administration/service')>0) && ($('.form-inside').length))
@@ -530,6 +397,7 @@ $(document).ready(function() {
         $('select').each(function(idx,el){$(el).val(1);})
         return false;
     });
+
     $('#allPosOff').click(function(){
         $('select').each(function(idx,el){$(el).val(-1);})
         return false;

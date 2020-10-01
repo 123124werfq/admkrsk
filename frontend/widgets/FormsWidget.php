@@ -64,6 +64,8 @@ class FormsWidget extends \yii\base\Widget
         if (!empty($this->collectionRecord) && empty($this->data))
             $model->loadDataFromRecord($this->collectionRecord->getData());
 
+        FormAssets::register($this->getView());
+
         return $this->render('form/'.$this->template,[
         	'form'=>$this->form,
             'model'=>$model,
