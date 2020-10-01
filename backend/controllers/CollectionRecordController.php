@@ -462,7 +462,7 @@ class CollectionRecordController extends Controller
             if ($form->validate())
             {
                 $prepare = $form->prepareData(true);
-                $model->data = $form->prepareData(true);
+                $model->data = $prepare;
 
                 if ($model->save())
                     if (!Yii::$app->request->isAjax)

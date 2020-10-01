@@ -124,7 +124,7 @@ class ContestController extends \yii\web\Controller
                 if($rr)
                     $total_ord++;
             }
-        }        
+        }
 
         $cc = reset($currentContest);
 
@@ -134,7 +134,7 @@ class ContestController extends \yii\web\Controller
 //        $canAdd = !(isset($cc['max_orders']) && $cc['max_orders']>0 && $cc['max_orders']<=$total_ord);
 
         $mainpage = $page;
-        if(isset($contestmainpage))        
+        if(isset($contestmainpage))
         {
             $mainpage = Page::find()->where(['alias' => $contestmainpage])->one();
             if(!$mainpage)
@@ -167,7 +167,10 @@ class ContestController extends \yii\web\Controller
 
         $user = Yii::$app->user->identity;
 
-        $profiles = CstProfile::find()->where(['id_user' => $user->id])->all();
+        $profiles = CstProfile::find()
+                        ->where(['id_user' => $user->id])
+                        ->orderBy('created_at DESC')
+                        ->all();
 
         $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
         if(!$contestCollection || !$page)
@@ -176,7 +179,7 @@ class ContestController extends \yii\web\Controller
         $activeContests = $contestCollection->getDataQuery()->getArray(true);
 
         $links = [];
-        foreach ($activeContests as $ackey => $contest) 
+        foreach ($activeContests as $ackey => $contest)
         {
             if(!empty($contest['participant_form']))
             {
@@ -208,7 +211,7 @@ class ContestController extends \yii\web\Controller
         $finishedContests = $contestCollection->getDataQuery()->whereByAlias(['=', 'contest_state', 'Конкурс завершен'])->getArray(true);
         ksort($finishedContests, SORT_NUMERIC);
         $finishedContests = array_reverse($finishedContests, true);
-        
+
 
         return $this->render('select', [
             'profiles' => $profiles,
@@ -339,7 +342,7 @@ class ContestController extends \yii\web\Controller
         $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
         if(!$contestCollection)
             throw new BadRequestHttpException();
-    
+
         $activeContests = $contestCollection->getDataQuery()->whereByAlias(['<>', 'contest_state', 'Конкурс завершен'])->getArray(true);
         $currentContest = null;
 
@@ -350,7 +353,7 @@ class ContestController extends \yii\web\Controller
                 if(!$form)
                     continue;
 
-                if($form->id_collection == $profile->id_record_contest)                    
+                if($form->id_collection == $profile->id_record_contest)
                 {
                     $currentContest = $cst;
                     break;

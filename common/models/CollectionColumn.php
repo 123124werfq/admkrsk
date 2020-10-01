@@ -520,7 +520,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     $this->alias.'.lon'=>'Долгота (Число)',
                     $this->alias.'.postalcode'=>'Почтовый индекс (Число)',
                     $this->alias.'.place'=>'Место (Строка)',
-                ];;
+                ];
             case self::TYPE_JSON:
                 return [];
             case self::TYPE_SERVICETARGET:
@@ -530,7 +530,18 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 return [];
             case self::TYPE_REPEAT:
                 return [
-
+                    $this->alias.'.begin'=>'Дата начала (UNIXTIME)',
+                    $this->alias.'.end'=>'Дата конца (UNIXTIME)',
+                    $this->alias.'.is_repeat'=>'Повторяющееся событие (1 или 0)',
+                    $this->alias.'.repeat_count'=>'Количество повторов (Число)',
+                    $this->alias.'.repeat'=>'Тип повторов (Ежедневное, Еженедельно, Ежемесячно)',
+                    $this->alias.'.week'=>'Дни недели (Массив)',
+                    $this->alias.'.week_space'=>'Пробел между неделями (Число)',
+                    $this->alias.'.day_space'=>'Пробел между днями (Число)',
+                    $this->alias.'.month_days'=>'Дни месяца (Массив)',
+                    $this->alias.'.repeat_month'=>'Тип повторов ежемесячно (строка)',
+                    $this->alias.'.week_number'=>'Дни недели (Массив)',
+                    $this->alias.'.month_week'=>'Номер недели месяца (Число 1-6)',
                 ];
             case self::TYPE_ARCHIVE:
                 return [

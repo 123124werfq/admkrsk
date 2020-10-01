@@ -86,6 +86,10 @@ $contacts = Collection::getArrayByAlias("press_people");
                     </div>
                 </div>
 
+                
+                <?= $form->field($model, 'send_subscribe')->checkBox() ?>
+                
+
                 <?= $form->field($model, 'tagNames')->widget(Select2::class, [
                     'data' => $model->tagNames,
                     'pluginOptions' => [

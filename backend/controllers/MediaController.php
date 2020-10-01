@@ -170,15 +170,29 @@ class MediaController extends Controller
                 {
                     $media->saveFile();
 
-                    $output = $model->attributes;
-                    $output['src'] = $media->showThumb([],$model->size);
-                    $output['id_media'] = $media->id_media;
+                    if (empty(Yii::$app->request->get('file')))
+                    {
+                        $output = $model->attributes;
+                        $output['src'] = $media->showThumb([],$model->size);
+                        $output['id_media'] = $media->id_media;
 
-                    if (!empty($model->lightbox))
-                        $output['full'] = $media->showThumb([],Media::SIZE_BIG);
+                        if (!empty($model->lightbox))
+                            $output['full'] = $media->showThumb([],Media::SIZE_BIG);
 
-                    if (!empty($media->author))
-                        $output['title'] .= ' Автор:'.$media->author;
+                        if (!empty($media->author))
+                            $output['title'] .= ' Автор:'.$media->author;
+                    }
+                    else
+                    {
+                        $output = $model->attributes;
+
+                        if (empty($output['title']))
+                            $output['title'] = $media->name;
+
+                        $output['filepath'] = $media->getUrl();
+                        $output['id_media'] = $media->id_media;
+                        $output['size'] = $media->size;
+                    }
 
                     return $this->asJson($output);
                 }

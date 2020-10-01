@@ -70,7 +70,7 @@ var tinymceConfig = {
     },
     menubar: 'file edit view insert format tools table custom',
     contextmenu: "link imagetools table spellchecker",
-    toolbar: "code removeformat | undo redo | fontsizeselect| styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist blockquote | link media ownmedia",
+    toolbar: "code removeformat | undo redo | fontsizeselect| styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist blockquote | link media ownmedia ownfile",
     language: 'ru',
     extended_valid_elements : "faq[data-ids|data-category],map[data-id],searchrecord[data-encodedata],pagenews[data-id],hrreserve[pagesize],collection[data-id|data-encodedata],gallery[data-id|data-limit|data-type],forms[data-id|data-data],ownmedia",
     content_css : "/js/tinymce/admin.css",
