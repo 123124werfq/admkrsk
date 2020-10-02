@@ -667,11 +667,12 @@ class CollectionController extends Controller
 
                     foreach ($datas as $id_record => $data)
                     {
-                        if (!empty($data[$form->id_collection_column])) {
+                        if (!empty($data[$form->id_collection_column]))
+                        {
                             $id_link = $data[$form->id_collection_column];
                             $textSearch = $id_source = null;
 
-                            if (strpos($id_link, '[[')!==false)
+                            if (strpos($id_link, '[[')!==false || strpos($id_link, '["')!==false)
                             {
                                 $id_link = str_replace(['[', ']', ", ", '""'], ['{', '}', ":", '\"'], $id_link);
                                 $id_link = str_replace(['{{', '}}', '}:{'], ['[{', '}]', '},{'], $id_link);
