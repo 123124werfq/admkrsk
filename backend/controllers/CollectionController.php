@@ -680,6 +680,8 @@ class CollectionController extends Controller
 
                                 if (!empty($id_link[0]))
                                     $id_link = key($id_link[0]);
+                                else if (!empty($id_link))
+                                    $id_link = key($id_link);
                             }
 
                             foreach ($datas_source as $id_record_source => $sources) {
