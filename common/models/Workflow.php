@@ -537,7 +537,7 @@ XMLPARTS1;
         <rev:DigestValue>$dg</rev:DigestValue>
         <Description>ЗАЯВЛЕНИЕ</Description>
       </rev:AppliedDocument>                    
-XMLPARTS2;                   
+XMLPARTS2; 
                 }
             }
 
@@ -549,13 +549,14 @@ XMLPARTS2;
 
                 file_put_contents($docPath, $tfile);
 
-                if (is_file($docPath)) {
+                if (is_file($docPath)) 
+                {
                     $zip->addFile($docPath, 'req_' . $guid . ".auth");
 
                     if($signFname = $this->makeSign($docPath))
                     {
-                      $path_parts = pathinfo($signFname);                
-                      $zip->addFile($signFname, $path_parts['basename']);
+                      $path_parts = pathinfo($signFname);
+                      $zip->addFile($signFname,$path_parts['basename']);
                       $filesToUnlink[] = $signFname;
                     }
 
@@ -571,7 +572,7 @@ XMLPARTS2;
         <rev:DigestValue>$dg</rev:DigestValue>
       </rev:AppliedDocument>                    
 XMLPARTS2;                      
-                }
+                }                
             }
 
             // теперь надо составить список всех файлов и его тоже подписать
@@ -648,7 +649,7 @@ XMLPARTS2;
 
 
     // метод подписи XML, протестирован руками
-    protected function signServiceXML($sourcePath, $resultPath, $attachment = null, $appeal = null)
+    protected function signServiceXML($sourcePath, $resultPath, $attachment = null, $appeal = null, $insdata = [])
     {
         $certName = "/var/www/admkrsk/common/config/ADMKRSK-TEST-SERVICE-SITE.pfx";
 
@@ -686,10 +687,10 @@ XMLPARTS2;
                 $tagstring = "Input_{$tagparts[0]}_{$tagparts[1]}_{$tagparts[2]}FL";
                 $sourceText = str_replace('TAGSERVICEHERE', $tagstring, $sourceText);
               }
-
-              if(!empty($appeal->data))
+              if(!empty($insdata))
               {
-                $userData = json_decode($appeal->data, true);
+                //$userData = json_decode($appeal->data, true);
+                $userData = $insdata;
                 if(isset($userData['firstname'])) $sourceText = str_replace('firstname', $userData['firstname'], $sourceText);
                 if(isset($userData['secondname'])) $sourceText = str_replace('secondname', $userData['secondname'], $sourceText);
                 if(isset($userData['middlename'])) $sourceText = str_replace('middlename', $userData['middlename'], $sourceText);
@@ -707,7 +708,7 @@ XMLPARTS2;
                 if(isset($userData['fl_phone'])) $sourceText = str_replace('{phone}', $userData['fl_phone'], $sourceText);
               }
             }
-
+          
             $tempPath = str_replace('.xml', '_temp.xml', $sourcePath); // формирум файл, который будем подписывать
             file_put_contents($tempPath,$sourceText);
             $sourcePath = $tempPath;
@@ -727,7 +728,7 @@ XMLPARTS2;
         }
     }
 
-    public function xopCreate($archivePath, $appeal = null)
+    public function xopCreate($archivePath, $appeal = null, $insdata = [])
     {
         $source = '/var/www/admkrsk/common/config/template_attachment_ref.xml';
         $xmlPath = '/var/www/admkrsk/frontend/runtime/tmp/signed'.time().'.xml';
@@ -735,7 +736,7 @@ XMLPARTS2;
         //$attachment = Yii::getAlias('@app').'/assets/6995_req_7a06c1c5-0218-4672-a6eb-7ef46529803e.zip';
         $attachment = $archivePath;
 
-        $this->signServiceXML($source, $xmlPath, $attachment, $appeal);
+        $this->signServiceXML($source, $xmlPath, $attachment, $appeal, $insdata);
 
         if(!file_exists($xmlPath))
             return false;

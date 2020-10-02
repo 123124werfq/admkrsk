@@ -56,6 +56,8 @@ img {max-width: 100%;}
     justify-content: space-between;}
 #input-options .row-flex {flex-wrap: wrap; justify-content: start;}
 
+.flex-wrap {margin:15px -15px;}
+
 #form-template .form-control {
     border-radius: 5px;
     border: 0px;
@@ -356,6 +358,9 @@ ul.menu-container ul .create-menu {display: none;}
 
 #content_wrapper {padding-top: 60px;}
 .ids-style tr th:first-child, .ids-style tr td:first-child {width:40px; color: #ccc; font-size: 12px;}
+.ids-style .filters td:first-child input {min-width: 60px; padding: 0px 5px;}
+.ids-style .filters td:first-child {padding: 0px;}
+
 
 .navbar .nav > li > a {font-weight: 400; text-transform: uppercase;}
 .navbar .nav > li > a  span {margin-right: 5px;}

@@ -46,6 +46,23 @@ class ServiceController extends Controller
         return $this->render('/site/blocks',['page'=>$page]);
     }
 
+    public function actionCheck($page=null)
+    {
+        if(isset($_GET['query']))
+        {
+            $appeals = ServiceAppeal::find()->where(['number_internal' => $_GET['query']])->all();
+
+            return $this->render('userhistory', [
+                'page' => $page,
+                'appeals' => $appeals
+            ]);
+    
+        }
+        else
+            $this->redirect('/reception/check');
+
+    }    
+
     public function actionReestr($page=null,$id_situation=null)
     {
         $clientType = Yii::$app->request->get('client_type');
@@ -344,7 +361,7 @@ class ServiceController extends Controller
                         $archivePath = $wf->generateArchive($idents['guid'], $attachments, $export_path);
                         // ... тут XML
                         if($archivePath)
-                            $toSend = $wf->xopCreate($archivePath, $appeal);
+                            $toSend = $wf->xopCreate($archivePath, $appeal, $insertedData);
 
                         //echo($toSend);
 

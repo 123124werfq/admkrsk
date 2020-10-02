@@ -5,7 +5,7 @@
 	use yii\captcha\CaptchaValidator;
 
 	$this->registerJsFile('/js/dropzone/dropzone.js',['depends'=>[\yii\web\JqueryAsset::className()],'position'=>\yii\web\View::POS_END]);
-	$this->registerCssFile('/js/dropzone/dropzone.min.css');
+	$this->registerCssFile('/js/dropzone/dropzone.min.css');	
 
 	$visibleElements = [];
 	$visibleInputs = [];
