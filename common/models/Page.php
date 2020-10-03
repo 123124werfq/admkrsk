@@ -150,7 +150,7 @@ class Page extends ActiveRecord
             self::TYPE_PAGE => "Страница",
             self::TYPE_NEWS => "Новости",
             self::TYPE_ANONS => "Анонсы",
-            //self::TYPE_LINK => "Ссылка",
+            self::TYPE_LINK => "Ссылка",
         ];
 
         return $labels;
@@ -174,6 +174,9 @@ class Page extends ActiveRecord
 
     public function getUrl($absolute = false)
     {
+        if ($this->type==self::TYPE_LINK)
+            return $this->alias;
+
         if (!empty($this->existUrl))
             return $this->existUrl;
 

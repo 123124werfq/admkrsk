@@ -399,12 +399,12 @@ class PageController extends Controller
     {
         $model = $this->findModel($id);
 
-        $submenu = [];
+        //$submenu = [];
 
-        if (empty($model->menu))
-            $submenu = $model->getChilds()->orderBy('ord');
-        else
-            $submenu = $model->menu->getLinks()->orderBy('ord');
+        //if (empty($model->menu))
+        $submenu = $model->getChilds()->orderBy('ord');
+        /*else
+            $submenu = $model->menu->getLinks()->orderBy('ord');*/
 
         $dataProvider = new ActiveDataProvider([
             'query' => $submenu,
@@ -427,10 +427,13 @@ class PageController extends Controller
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
      */
-    public function actionCreate($id_parent=null)
+    public function actionCreate($id_parent=null,$is_link=0)
     {
         $model = new Page();
         $model->created_at = time();
+
+        if ($is_link)
+            $model->type = Page::TYPE_LINK;
 
         if (!empty($id_parent))
         {

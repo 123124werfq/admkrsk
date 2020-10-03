@@ -42,47 +42,43 @@ $this->render('_head',['model'=>$model]);
                     <div class="panel-body">
                         <h2>
                             <span class="pull-right">
-                            <?=Html::a('Добавить ссылку', ['menu-link/create', 'id_page' => $model->id_page], ['class' => 'btn btn-default'])?>
+                            <?=Html::a('Добавить ссылку', ['create', 'id_parent' => $model->id_page,'is_link'=>1], ['class' => 'btn btn-default'])?>
                             <?=Html::a('Добавить подраздел', ['create', 'id_parent' => $model->id_page], ['class' => 'btn btn-default'])?>
                             </span>
                             Меню раздела
                         </h2>
 
                         <?php
-                            if (empty($model->menu))
-                            {
-                                echo GridView::widget([
-                                    'dataProvider' => $submenu,
-                                    'columns' => [
-                                        'id_page',
-                                        [
-                                            'attribute' => 'title',
-                                            'format' => 'html',
-                                            'value' => function ($model) {
-                                                return $model->title.'<br><a target="_blank" href="'.$model->getUrl(true).'">'.$model->getUrl().'</a>';
+                            echo GridView::widget([
+                                'dataProvider' => $submenu,
+                                'columns' => [
+                                    'id_page',
+                                    [
+                                        'attribute' => 'title',
+                                        'format' => 'html',
+                                        'value' => function ($model) {
+                                            return $model->title.'<br><a target="_blank" href="'.$model->getUrl(true).'">'.$model->getUrl().'</a>';
+                                        },
+                                    ],
+                                    [
+                                        'class' => 'yii\grid\ActionColumn',
+                                        'contentOptions'=>['class'=>'button-column'],
+                                        'template' => '{hide} {view} {update} {delete}',
+                                        'buttons' => [
+                                            'hide' => function ($url, $model, $key) {
+                                                return Html::a('', ['/page/hide', 'id' => $model->id_page],['class' => (!$model->hidemenu)?'fa fa-toggle-on':'fa fa-toggle-off']);
                                             },
                                         ],
-                                        [
-                                            'class' => 'yii\grid\ActionColumn',
-                                            'contentOptions'=>['class'=>'button-column'],
-                                            'template' => '{hide} {view} {update} {delete}',
-                                            'buttons' => [
-                                                'hide' => function ($url, $model, $key) {
-                                                    return Html::a('', ['/page/hide', 'id' => $model->id_page],['class' => (!$model->hidemenu)?'fa fa-toggle-on':'fa fa-toggle-off']);
-                                                },
-                                            ],
-                                        ],
                                     ],
-                                    'tableOptions'=>[
-                                        'emptyCell' => '',
-                                        'class' => 'table table-striped ids-style valign-middle table-hover ordered',
-                                        'data-order-url'=>'/page/order'
-                                    ]
-                                ]);
-                            }
-                            else
-                            {
-                                echo GridView::widget([
+                                ],
+                                'tableOptions'=>[
+                                    'emptyCell' => '',
+                                    'class' => 'table table-striped ids-style valign-middle table-hover ordered',
+                                    'data-order-url'=>'/page/order'
+                                ]
+                            ]);
+
+                                /*echo GridView::widget([
                                     'dataProvider' => $submenu,
                                     'columns' => [
                                         'id_link',
@@ -128,7 +124,7 @@ $this->render('_head',['model'=>$model]);
                                         'data-order-url'=>'/menu/order'
                                     ]
                                 ]);
-                            }
+                            }*/
                         ?>
                     </div>
                 </div>

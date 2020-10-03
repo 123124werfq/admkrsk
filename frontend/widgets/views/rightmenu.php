@@ -6,25 +6,24 @@ use common\models\Page;
 
 	$submenu = false;
 
-	$menu = $page->menu;
+	//$menu = $page->menu;
 
-	if (empty($menu) || empty($menu->activeLinks))
+	/*if (empty($menu) || empty($menu->activeLinks))
+	{*/
+	if (!empty($submenu = $page->getChilds()->andWhere(['hidemenu'=>0])->orderBy('ord ASC')->all()))
+		// меню из соседей
 	{
-		if (!empty($submenu = $page->getChilds()->andWhere(['hidemenu'=>0])->orderBy('ord ASC')->all()))
-			// меню из соседей
-		{
-		}
-		else if (!empty($page->parent->menu) && !empty($page->parent->menu->activeLinks))
-		{
-			$menu = $page->parent->menu;
-		}
-		else if (!empty($submenu = $page->parent->getChilds()->andWhere(['hidemenu'=>0])->orderBy('ord ASC')->all()))
-		{
-		}
-		else
-		{
+	}
+	/*else if (!empty($page->parent->menu) && !empty($page->parent->menu->activeLinks))
+	{
+		$menu = $page->parent->menu;
+	}*/
+	else if (!empty($submenu = $page->parent->getChilds()->andWhere(['hidemenu'=>0])->orderBy('ord ASC')->all()))
+	{
+	}
+	else
+	{
 
-		}
 	}
 ?>
 
@@ -40,14 +39,14 @@ use common\models\Page;
 		}
 ?>
 <?php
-		if (!empty($menu))
+/*		if (!empty($menu))
 			foreach ($menu->activeLinks as $key => $link)
 			{
 				$url = $link->getUrl();
 ?>
 			<li <?=$url==Yii::$app->request->url?'class="selected active"':''?>><a href="<?=$url?>"><?=(!empty($link->id_page))?$link->page->getLabel():$link->label?></a></li>
 <?php
-		 	}
+		 	}*/
 ?>
 	</ul>
 </div>
