@@ -433,9 +433,10 @@ class CollectionController extends Controller
                 }
 
                 if (empty($output))
+                {
                     var_dump($record[1073]);
-
-                die();
+                    //die();
+                }
 
                 $changedata[1073] = json_encode($output);
             }
@@ -453,9 +454,10 @@ class CollectionController extends Controller
                 }
 
                 if (empty($output))
+                {
                     var_dump($record[1074]);
-
-                die();
+                    //die();
+                }
 
                 $changedata[1074] = json_encode($output);
             }
