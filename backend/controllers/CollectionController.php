@@ -628,7 +628,10 @@ class CollectionController extends Controller
 
                                 foreach ($array as $akey => $kdata)
                                 {
-                                    $id = key($kdata);
+                                    if (is_array($kdata))
+                                        $id = key($kdata);
+                                    else
+                                        $id = $akey;
 
                                     foreach ($datas_source as $id_record_source => $sources)
                                     {
