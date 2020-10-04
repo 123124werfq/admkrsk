@@ -562,7 +562,10 @@ class CollectionController extends Controller
             }
 
             foreach ($data as $id_mun_column => $value)
-                $prepareData[$ccolumns[[$id_mun_column]]] = $value;
+            {
+                if (isset($ccolumns[$id_mun_column]))
+                    $prepareData[$ccolumns[$id_mun_column]] = $value;
+            }
 
             var_dump($prepareData);
             die();
