@@ -24,6 +24,8 @@ class InstitutionImportJob extends Job implements RetryableJobInterface
      */
     public function execute($queue)
     {
+        return true;
+        
         $transaction = Yii::$app->db->beginTransaction();
         try {
             $client = new Client();
