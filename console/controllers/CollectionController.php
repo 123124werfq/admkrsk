@@ -361,7 +361,7 @@ class CollectionController extends Controller
 
         foreach ($records as $data)
         {
-            $period = [                
+            $period = [
                 "begin" => $data['date_begin'],
                 "end"=>$data['date_end'],
                 "is_repeat"=>(int)$data['is_repeat'],
@@ -380,6 +380,186 @@ class CollectionController extends Controller
 
             $record->data = [12741=>$record];
         }
+    }
 
+    public function actionCombineInstitution()
+    {
+        $collection = Collection::find()->where(['id_collection'=>88])->one();
+
+        $mongoCollection = Yii::$app->mongodb->getCollection('collection'.$collection->id_collection);
+        $mongoCollection->remove(['or',['id_record'=>null],['id_record'=>'']]);
+
+        $data88 =  $collection->getData();
+
+        $collection472 = Collection::find()->where(['id_collection'=>472])->one();
+
+        if (!empty($collection472))
+            $collection472 = $collection472->getData();
+        else
+            $collection472 = [];
+
+        $collection346 = Collection::find()->where(['id_collection'=>346])->one();
+        if (!empty($collection346))
+            $collection346 = $collection346->getData();
+        else
+            $collection346 = [];
+
+        foreach ($data88 as $id_record => $record)
+        {
+            $findRecord = CollectionRecord::findOne($id_record);
+
+            $changedata = [];
+
+            if ($record[1072] == '10')
+                $changedata[1072] = '["2", "Автономное учреждение"]';
+            else if ($record[1072] == '08')
+                $changedata[1072] = '["1", "Казенное учреждение"]';
+            else if ($record[1072] == '03')
+                $changedata[1072] = '["3", "Бюджетное учреждение"]';
+
+            if (!empty($record[1107]))
+                $changedata[1107] = mb_strtoupper($record[1107]);
+
+            if (!empty($record[1073]))
+            {
+                $output = [];
+                $search = json_decode($record[1073],true);
+
+                foreach ($search as $skey => $data)
+                {
+                    foreach ($collection472 as $ckey => $cdata)
+                        if ($cdata[13041] == $data['fullname'])
+                            $output[$cdata[13040]] = $data['fullname'];
+                }
+
+                $changedata[1073] = json_encode($output);
+            }
+
+            if (!empty($record[1074]))
+            {
+                $output = [];
+                $search = json_decode($record[1074],true);
+
+                foreach ($search as $skey => $data)
+                {
+                    foreach ($collection346 as $ckey => $cdata)
+                        if ($cdata[1349] == $data['code'].' '.$data['name'])
+                            $output[$cdata[1355]] = $data['code'].' '.$data['name'];
+                }
+
+                $changedata[1074] = json_encode($output);
+            }
+
+            print_r($changedata);
+            die();
+
+            $findRecord->data = $changedata;
+            $findRecord->save();
+        }
+
+        die();
+
+        $munic = Collection::find()->where(['id_collection'=>481])->one();
+
+        $data481 = $munic->getData();
+
+        $ccolumns = [
+            13105=>13309,
+            13106=>13310,
+            13107=>13311,
+            13108=>1070,
+            13109=>1071,
+            13110=>1101,
+            13111=>1102,
+            13112=>1103,
+            13113=>13312,
+            13114=>1072,
+            13115=>1110,
+            13116=>1108,
+            13117=>1109,
+            13118=>1107,
+            13119=>1106,
+            13120=>1105,
+            13121=>1104,
+            13122=>13314,
+            13123=>1100,
+            13124=>1099,
+            13125=>1090,
+            13126=>1089,
+            13127=>1088,
+            13128=>1087,
+            13129=>1086,
+            13130=>1085,
+            13131=>1084,
+            13132=>1083,
+            13133=>1082,
+            13134=>13315,
+            13135=>1091,
+            13136=>1092,
+            13137=>1094,
+            13138=>1095,
+            13139=>1096,
+            13140=>13316,
+            13141=>1069,
+            13142=>1077,
+            13143=>1081,
+            13144=>1080,
+            13145=>1079,
+            13146=>1078,
+            13148=>1073,
+            13149=>1076,
+            13150=>1074,
+            13151=>13317,
+            13152=>13318,
+            13153=>13319,
+            13154=>13320,
+            13155=>1065,
+            13156=>13321,
+            13157=>13322,
+            13158=>13323,
+            13159=>1068,
+            13160=>13324,
+            13161=>13325,
+            13162=>13326,
+            13163=>13327,
+            13164=>13328,
+            13165=>13329,
+            13166=>1097,
+            13167=>1098,
+            13168=>13330,
+            13169=>13331
+        ];
+
+        foreach ($data481 as $id_col => $data)
+        {
+            $prepareData = [];
+
+            if ($data[13159]=='True')
+                $prepareData[1068] = 0;
+
+            $findRecord = false;
+            foreach ($data88 as $id_record => $record)
+            {
+                if ($record[1070]==$data[13108] || $record[1101]==$data[13110])
+                {
+                    $findRecord = CollectionRecord::findOne($id_record);
+                    break;
+                }
+            }
+
+            if (empty($findRecord))
+            {
+                $findRecord = new CollectionRecord;
+                $findRecord->id_collection = $collection->id_collection;
+            }
+
+            foreach ($data as $id_mun_column => $value)
+            {
+                $prepareData[$ccolumns[[$id_mun_column]]] = $value;
+            }
+
+            $findRecord->data = $prepareData;
+            $findRecord->save();
+        }
     }
 }
