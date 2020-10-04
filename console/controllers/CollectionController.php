@@ -435,7 +435,7 @@ class CollectionController extends Controller
                 if (empty($output))
                 {
                     var_dump($record[1073]);
-                    //die();
+                    die();
                 }
 
                 $changedata[1073] = json_encode($output);
@@ -456,7 +456,7 @@ class CollectionController extends Controller
                 if (empty($output))
                 {
                     var_dump($record[1074]);
-                    //die();
+                    die();
                 }
 
                 $changedata[1074] = json_encode($output);
@@ -465,7 +465,7 @@ class CollectionController extends Controller
             //$findRecord->save();
         }
 
-        die();
+        //die();
 
         $munic = Collection::find()->where(['id_collection'=>481])->one();
 
@@ -562,12 +562,13 @@ class CollectionController extends Controller
             }
 
             foreach ($data as $id_mun_column => $value)
-            {
                 $prepareData[$ccolumns[[$id_mun_column]]] = $value;
-            }
+
+            var_dump($prepareData);
+            die();
 
             $findRecord->data = $prepareData;
-            $findRecord->save();
+            //$findRecord->save();
         }
     }
 }
