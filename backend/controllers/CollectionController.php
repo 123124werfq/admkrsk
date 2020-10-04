@@ -684,8 +684,10 @@ class CollectionController extends Controller
                                     $id_link = key($id_link);
                             }
 
-                            foreach ($datas_source as $id_record_source => $sources) {
-                                if ($sources[$form->id_collection_from_column] == $id_link) {
+                            foreach ($datas_source as $id_record_source => $sources)
+                            {
+                                if ($sources[$form->id_collection_from_column] == $id_link || $sources[$form->id_collection_from_column_label] == $id_link)
+                                {
                                     $id_source = $id_record_source;
                                     $textSearch = $sources[$form->id_collection_from_column_label];
                                 }
