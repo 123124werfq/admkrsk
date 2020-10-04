@@ -387,7 +387,7 @@ class CollectionController extends Controller
         $collection = Collection::find()->where(['id_collection'=>88])->one();
 
         $mongoCollection = Yii::$app->mongodb->getCollection('collection'.$collection->id_collection);
-        $mongoCollection->remove(['or',['id_record'=>null],['id_record'=>'']]);
+        $mongoCollection->remove(['>','id_record',30184]);
 
         $data88 =  $collection->getData();
 
@@ -432,6 +432,11 @@ class CollectionController extends Controller
                             $output[$cdata[13040]] = $data['fullname'];
                 }
 
+                if (empty($output))
+                    var_dump($record[1073]);
+
+                die();
+
                 $changedata[1073] = json_encode($output);
             }
 
@@ -447,14 +452,16 @@ class CollectionController extends Controller
                             $output[$cdata[1355]] = $data['code'].' '.$data['name'];
                 }
 
+                if (empty($output))
+                    var_dump($record[1074]);
+
+                die();
+
                 $changedata[1074] = json_encode($output);
             }
 
-            print_r($changedata);
-            die();
-
-            $findRecord->data = $changedata;
-            $findRecord->save();
+            //$findRecord->data = $changedata;
+            //$findRecord->save();
         }
 
         die();
