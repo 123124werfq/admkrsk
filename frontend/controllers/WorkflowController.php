@@ -349,10 +349,18 @@ MTMOARCH;
             $statusInfo = $xmlArray['v25pushEventRequest']['smevMessageData']['smevAppData'];
             $statusCode = $xmlArray['v25pushEventRequest']['smevMessageData']['smevAppData']['event']['orderStatusEvent']['statusCode']['techCode'];
 
+            if(isset($xmlArray['v25pushEventRequest']['smevMessageData']['smevAppData']['orgRegNum']))
+            {
+                $regNum = $xmlArray['v25pushEventRequest']['smevMessageData']['smevAppData']['orgRegNum'];
+            }
+
             $appeal = ServiceAppeal::find()->where("number_internal='$caseNum'")->one();
 
             if($appeal)
             {
+                $appeal->number_system = $regNum;
+                $appeal->updateAttributes(['number_system']);
+
                 $unixDate = strtotime($statusInfo['eventDate']);
                 $as = ServiceAppealState::find()->where("id_appeal=$appeal->id_appeal")->andWhere("state='$statusCode'")->andWhere("date=$unixDate")->one();
 

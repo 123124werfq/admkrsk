@@ -709,6 +709,9 @@ XMLPARTS2;
               }
             }
           
+            // удаляем то, чего не нашлось
+            $sourceText = str_replace(['{phone}','firstname','secondname','middlename','{passport_serie}','{passport_number}','{passport_issued}','{passport_date}','{addr_country}','{addr_region}','{addr_city}','{addr_district}','{addr_street}','{addr_house}','{addr_zip}'], '', $sourceText);
+
             $tempPath = str_replace('.xml', '_temp.xml', $sourcePath); // формирум файл, который будем подписывать
             file_put_contents($tempPath,$sourceText);
             $sourcePath = $tempPath;
