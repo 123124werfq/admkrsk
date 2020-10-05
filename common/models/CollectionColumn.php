@@ -936,11 +936,14 @@ class CollectionColumn extends \yii\db\ActiveRecord
     {
         if ($this->type == CollectionColumn::TYPE_COLLECTION)
         {
-            $subrecord = CollectionRecord::findOne(is_array($value)?key($value):$value);
+            $subrecord = CollectionRecord::find()->where(['id_record'=>is_array($value)?key($value):$value])->one();
+            
             if (!empty($subrecord))
             {
                 return $subrecord->getDataRaw(true,false);
             }
+            
+            return [];
         }
         else if ($this->type == CollectionColumn::TYPE_COLLECTIONS)
         {
