@@ -363,7 +363,7 @@ class ServiceController extends Controller
                         $numberCounter->value = $servCounter;
                         $numberCounter->updateAttributes(['value']);
 
-                        $appeal->number_common = $appeal->target->reestr_number . '-' . $servCounter;
+                        $appeal->number_common = ($appeal->target->reestr_number . '-' . $servCounter);
                         //$appeal->number_system = $idents['guid'];
                         $appeal->updateAttributes(['state', 'number_internal', 'number_common']);
 
