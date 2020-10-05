@@ -961,7 +961,7 @@ class SiteController extends Controller
     {
         try {
             $res = Yii::$app->mailer->compose('confirm', ['code' => 666 ])
-                //->setFrom('noreply@smup.com')
+                ->setFrom('noreply@admkrsk.ru')
                 ->setTo(['kosyag@yandex.ru'])
                 ->setSubject("Confirm Your Email Address")
                 ->send();
