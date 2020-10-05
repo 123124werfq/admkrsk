@@ -365,7 +365,7 @@ class ServiceController extends Controller
 
                         $appeal->number_common = $appeal->target->reestr_number . '-' . $servCounter;
                         //$appeal->number_system = $idents['guid'];
-                        $appeal->updateAttributes(['state', 'number_internal']);
+                        $appeal->updateAttributes(['state', 'number_internal', 'number_common']);
 
                         // запрос к СЭД
                         $attachments = $record->getAllMedias();
@@ -425,6 +425,7 @@ class ServiceController extends Controller
                                     'service_fio' => Yii::$app->user->identity->username
                                 ]):$this->renderPartial('_result',[
                                 'number'=> isset($appeal->number_internal)?$appeal->number_internal:false,
+                                'number_common' => $appeal->number_common,
                                 'service'=>$service,
                                 'page' => $page,
                                 'date' => date("d.m.Y", $appeal->created_at),
