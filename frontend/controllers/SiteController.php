@@ -957,4 +957,21 @@ class SiteController extends Controller
         die();
     }
 
+    public function actionMailtest()
+    {
+        try {
+            $res = Yii::$app->mailer->compose('confirm', ['code' => 666 ])
+                ->setFrom('stajor@maxsoft.ru')
+                ->setTo(['kosyag@gmail.com'])
+                ->setSubject("Confirm Your Email Address")
+                ->send();
+
+            var_dump($res);
+        } catch (\Exception $e) {
+            var_dump($e);
+         return $this->render('//site/confirmemail_error');
+        }
+
+    } 
+
 }
