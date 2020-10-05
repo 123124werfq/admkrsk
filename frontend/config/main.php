@@ -56,7 +56,7 @@ return [
                 'host' => 'smtp.office365.com',
                 'username' => 'stajor@maxsoft.ru',
                 'password' => 'User1',
-                'port' => '578',
+                'port' => '587',
                 'encryption' => 'ssl',
                 /*
                 'port' => '465',
