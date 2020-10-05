@@ -336,13 +336,16 @@ class CollectionWidget extends \yii\base\Widget
                 foreach ($allrows as $rkey => $row)
                 {
                     // собираем все возможные значения для выпадшки в фильтре
-                    if (!empty($row[$alias]) && (is_string($row[$alias]) || is_numeric($row[$alias])))
-                        $search_columns[$key]['values'][$row[$alias]] = $row[$alias];
-                    elseif (is_array($row[$alias]))
+                    if (!empty($row[$alias])
                     {
-                        $fkey = key($row[$alias]);
-                        if (!empty($row[$alias][$fkey]))
-                            $search_columns[$key]['values'][$fkey] = $row[$alias][$fkey];
+                        if (is_string($row[$alias]) || is_numeric($row[$alias])))
+                            $search_columns[$key]['values'][$row[$alias]] = $row[$alias];
+                        elseif (is_array($row[$alias]))
+                        {
+                            $fkey = key($row[$alias]);
+                            if (!empty($row[$alias][$fkey]))
+                                $search_columns[$key]['values'][$fkey] = $row[$alias][$fkey];
+                        }
                     }
                 }
             }
