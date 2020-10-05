@@ -57,8 +57,10 @@ return [
                 'username' => 'admkrsk\s10_adm',
                 'password' => 'sF23Hw$aS',
                 'port' => '587',
-                'encryption' => 'ssl',
+                'encryption' => 'tls',
                 /*
+                'port' => '465',
+                'encryption' => 'ssl',
                 'streamOptions' => [
                     'ssl' => [
                         'allow_self_signed' => true,
