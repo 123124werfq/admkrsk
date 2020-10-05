@@ -38,10 +38,11 @@ class AppAsset extends AssetBundle
         "inspinia/js/plugins/jasny/jasny-bootstrap.min.js",
         "/js/tinymce/tinymce.min.js",
         "/js/tinymce/plugins/plugins.js",
-        "js/jquerybuilder/query-builder.standalone.min.js",
+        //"js/jquerybuilder/query-builder.standalone.min.js",
+        "js/jquerybuilder/query-builder.standalone.js",
         "js/jquerybuilder/i18n/query-builder.ru.js",
-        "js/admin.js?v=15",
-        
+        "js/admin.js?v=16",
+
     ];
     public $depends = [
         'yii\web\JqueryAsset',

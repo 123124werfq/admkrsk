@@ -420,7 +420,11 @@ class Collection extends ActiveRecord
             $options = json_decode($this->options, true);
 
             if (!empty($options['filters']))
-                $query->where(json_decode($options['filters'],true));            
+            {
+                $filters = json_decode($options['filters'],true);
+                if (!empty($filters))
+                    $query->where($filters);
+            }
         }
 
         return $query;

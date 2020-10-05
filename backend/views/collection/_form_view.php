@@ -106,6 +106,7 @@ Yii::$app->params['sidebar'] = $this->render('_twig_options',['columns'=>$model-
     }
 
     $json_filters = json_encode($json_filters);
+    $json_filters = str_replace(['"%%','%%"'], '', $json_filters);
 
     if (!empty($rules))
         $rules = json_encode($rules);

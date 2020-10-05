@@ -233,6 +233,7 @@ foreach ($model->parent->columns as $key => $column) {
 }
 
 $json_filters = json_encode($json_filters);
+$json_filters = str_replace(['"%%','%%"'], '', $json_filters);
 
 if (empty($rules))
     $rules = [['empty'=>true]];
@@ -240,6 +241,7 @@ if (empty($rules))
 $rules = json_encode($rules);
 
 $script = <<< JS
+
     $("#collection-redactor").submit(function(){
         var rules = $('#querybuilder').queryBuilder('getMongo');
         $("#collection-filters").val(JSON.stringify(rules));

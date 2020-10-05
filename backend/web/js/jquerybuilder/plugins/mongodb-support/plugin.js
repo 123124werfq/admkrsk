@@ -390,4 +390,3 @@ QueryBuilder.extend(/** @lends module:plugins.MongoDbSupport.prototype */ {
             }
         }
     }
-});

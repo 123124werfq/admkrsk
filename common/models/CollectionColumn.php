@@ -2,7 +2,7 @@
 
 namespace common\models;
 use common\components\helper\Helper;
-
+use yii\web\JsExpression;
 use Yii;
 
 /**
@@ -439,7 +439,30 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 ];
                 break;
             case self::TYPE_COLLECTIONS:
-                $operators = ['is_null', 'is_not_null','contains','not_contains'];
+                $type = 'integer';
+                $input = 'select';
+                $operators = ['is_null', 'is_not_null','equal','in','not_in'];
+                $plugin = 'select2';
+                $plugin_config = ['ajax'=>[
+                    'url'=> '/collection/record-list',
+                    'dataType' => 'json',
+                    'data' => '%%function(params) { return {q:params.term,id:'.$this->input->id_collection.',id_column:'.$this->input->id_collection_column.'}}%%'
+                    ]
+                  ];
+                //$values = [111,222,333];
+                break;
+            case self::TYPE_COLLECTION:
+                $type = 'integer';
+                $input = 'select';
+                $operators = ['is_null', 'is_not_null','equal','in','not_in'];
+                $plugin = 'select2';
+                $plugin_config = ['ajax'=>[
+                    'url'=> '/collection/record-list',
+                    'dataType' => 'json',
+                    'data' => 'datafunction',
+                    'data' => '%%function(params) { return {q:params.term,id:'.$this->input->id_collection.',id_column:'.$this->input->id_collection_column.'}}%%'
+                    ]
+                  ];
                 break;
             case self::TYPE_CHECKBOX:
                 $operators = [
@@ -460,9 +483,25 @@ class CollectionColumn extends \yii\db\ActiveRecord
             'id' =>"col{$this->id_column}",
             'label'=> $this->name,
             'type'=> $type,
-            'input'=> 'text',
+            'input'=> $input??'text',
             'operators'=> $operators,
         ];
+
+
+        if (!empty($values))
+        {
+            $json['values'] = $values;
+        }
+
+        if (!empty($plugin))
+        {
+            $json['plugin'] = $plugin;
+        }
+
+        if (!empty($plugin_config))
+        {
+            $json['plugin_config'] = $plugin_config;
+        }
 
         return $json;
     }
@@ -891,6 +930,41 @@ class CollectionColumn extends \yii\db\ActiveRecord
         }
 
         return '';
+    }
+
+    public function relatedData($value)
+    {
+        if ($this->type == CollectionColumn::TYPE_COLLECTION)
+        {
+            $id_record = is_array($value)?key($value):$value;
+
+            if (!empty($id_record))
+            {
+                $subrecord = CollectionRecord::findOne($id_record);
+                
+                if (!empty($subrecord))
+                {
+                    return $subrecord->getDataRaw(true,false);
+                }
+            }
+            
+            return [];
+        }
+        else if ($this->type == CollectionColumn::TYPE_COLLECTIONS)
+        {
+            $output = [];
+
+            if (is_array($value))
+                foreach ($value as $id_record => $label)
+                {
+                    $subrecord = CollectionRecord::findOne($id_record);
+                    $output[] = $subrecord->getDataRaw(true,false);
+                }
+
+            return $output;
+        }
+
+        return $value;
     }
 
     /**
