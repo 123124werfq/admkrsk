@@ -61,6 +61,7 @@ return [
                 /*
                 'port' => '465',
                 'encryption' => 'ssl',
+                */
                 'streamOptions' => [
                     'ssl' => [
                         'allow_self_signed' => true,
@@ -68,7 +69,6 @@ return [
                         'verify_peer_name' => false,
                     ],
                 ],
-                */
             ],
         ],          
         'request' => [
