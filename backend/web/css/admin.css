@@ -30,6 +30,8 @@ img {max-width: 100%;}
 
 .query-builder .rule-value-container input[type=number], .query-builder .rule-value-container input[type=text], .query-builder .rule-value-container select {padding: 10px;}
 .query-builder .rules-group-container {background: transparent; border: 0px;}
+.rule-value-container .select2 {width: 100%!important;}
+.rule-value-container {min-width: 150px;}
 
 .row-flex .col-close, .col-close {
     align-items: center;
