@@ -444,9 +444,9 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 $operators = ['is_null', 'is_not_null','equal','in','not_in'];
                 $plugin = 'select2';
                 $plugin_config = ['ajax'=>[
-                    'url'=> '/page/list',
+                    'url'=> '/collection/record-list',
                     'dataType' => 'json',
-                    'data' => '%%function(params) { return {q:params.term,id:'.$this->id_collection.',id_column:'.$this->input->id_collection_column.'}}%%'
+                    'data' => '%%function(params) { return {q:params.term,id:'.$this->input->id_collection.',id_column:'.$this->input->id_collection_column.'}}%%'
                     ]
                   ];
                 //$values = [111,222,333];
@@ -457,10 +457,10 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 $operators = ['is_null', 'is_not_null','equal','in','not_in'];
                 $plugin = 'select2';
                 $plugin_config = ['ajax'=>[
-                    'url'=> '/page/list',
+                    'url'=> '/collection/record-list',
                     'dataType' => 'json',
-                    'data' => 'datafunction'
-                    //'data'=> "eval(function(params) { return {q:params.term};}"
+                    'data' => 'datafunction',
+                    'data' => '%%function(params) { return {q:params.term,id:'.$this->input->id_collection.',id_column:'.$this->input->id_collection_column.'}}%%'
                     ]
                   ];
                 break;
