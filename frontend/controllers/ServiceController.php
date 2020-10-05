@@ -353,7 +353,7 @@ class ServiceController extends Controller
                         if(!$numberCounter)
                         {
                             $numberCounter = new ServiceCounter;
-                            $numberCounter->service_counter = $appeal->target->reestr_number;
+                            $numberCounter->service_number = $appeal->target->reestr_number;
                             $numberCounter->value = 0;
                             $numberCounter->save();
                         }
