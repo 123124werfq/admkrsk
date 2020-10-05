@@ -932,6 +932,33 @@ class CollectionColumn extends \yii\db\ActiveRecord
         return '';
     }
 
+    public function relatedData($value)
+    {
+        if ($this->type == CollectionColumn::TYPE_COLLECTION)
+        {
+            $subrecord = CollectionRecord::findOne(is_array($value)?key($value):$value);
+            if (!empty($subrecord))
+            {
+                return $subrecord->getDataRaw(true,false);
+            }
+        }
+        else if ($this->type == CollectionColumn::TYPE_COLLECTIONS)
+        {
+            $output = [];
+
+            if (is_array($value))
+                foreach ($value as $id_record => $label)
+                {
+                    $subrecord = CollectionRecord::findOne($id_record);
+                    $output[] = $subrecord->getDataRaw(true,false);
+                }
+
+            return $output;
+        }
+
+        return $value;
+    }
+
     /**
      * {@inheritdoc}
      */

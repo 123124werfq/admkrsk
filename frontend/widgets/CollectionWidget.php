@@ -137,6 +137,7 @@ class CollectionWidget extends \yii\base\Widget
 
         if ($this->template!='table' && !empty($model->template_element))
         {
+
             $columns_alias = Helper::getTwigVars($model->template_element);
 
             if (!empty($columns_alias))
