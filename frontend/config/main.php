@@ -57,7 +57,7 @@ return [
                 'username' => 'stajor@maxsoft.ru',
                 'password' => 'User1',
                 'port' => '587',
-                'encryption' => 'ssl',
+                'encryption' => 'tls',
                 /*
                 'port' => '465',
                 'encryption' => 'ssl',
