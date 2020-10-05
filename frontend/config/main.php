@@ -47,6 +47,28 @@ return [
                 ],
             )
         ),
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'useFileTransport' => false,
+
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => '10.24.0.4',
+                'username' => 'admkrsk\s10_adm',
+                'password' => 'sF23Hw$aS',
+                'port' => '25',
+                /*
+                'encryption' => 'ssl',
+                'streamOptions' => [
+                    'ssl' => [
+                        'allow_self_signed' => true,
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                    ],
+                ],
+                */
+            ],
+        ],          
         'request' => [
             'class' => 'common\base\Request',
             'csrfParam' => '_csrf-frontend',
