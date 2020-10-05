@@ -56,7 +56,7 @@ form .subform .text-help {margin-top: 0px;}
     color: #aaa!important;
 }
 .fileupload_item-pagecount {display: none; padding-right: 15px;}
-.fileupload_item-pagecount input {margin: 0px 5px 0px!important; width: 70px!important;}
+.fileupload_item-pagecount input {margin: 0px 5px 0px!important; width: 70px!important; padding: 13px 0px!important; text-align: center;}
 .show-pagecount .fileupload_item-pagecount {display: flex; align-items: center;}
 
 .content table.table-bordered thead th, .content table.table-bordered tbody td
