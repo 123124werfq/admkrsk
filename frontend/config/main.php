@@ -56,9 +56,9 @@ return [
                 'host' => '10.24.0.4',
                 'username' => 'admkrsk\s10_adm',
                 'password' => 'sF23Hw$aS',
-                'port' => '25',
-                /*
+                'port' => '587',
                 'encryption' => 'ssl',
+                /*
                 'streamOptions' => [
                     'ssl' => [
                         'allow_self_signed' => true,
