@@ -53,7 +53,7 @@ return [
 
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
-                'host' => '1smtp.office365.com',
+                'host' => 'smtp.office365.com',
                 'username' => 'stajor@maxsoft.ru',
                 'password' => 'User1',
                 'port' => '578',
