@@ -233,7 +233,7 @@ foreach ($model->parent->columns as $key => $column) {
 }
 
 $json_filters = json_encode($json_filters);
-$json_filters = str_replace('"datafunction"', 'function(params) { return {q:params.term};}', $json_filters);
+$json_filters = str_replace(['"%%','%%"'], '', $json_filters);
 
 if (empty($rules))
     $rules = [['empty'=>true]];
