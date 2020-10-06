@@ -11,6 +11,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Услуги', 'url' => ['index']]
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->params['action-block'][] = Html::a('Добавить форму', ['form/create-service','id_service'=>$model->id_service], ['class' => '']);
+$this->params['action-block'][] = Html::a('Добавить цель', ['service-target/create','id'=>$model->id_service], ['class' => '']);
 $this->params['button-block'][] = Html::a('Редактировать', ['update', 'id' => $model->id_service], ['class' => 'btn btn-primary']);
 
 if ($model->isDeleted()) {
