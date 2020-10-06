@@ -144,7 +144,7 @@ class AdImportController extends Controller
         //$members = array_merge($members1, $members2);
 
         if(!$members) die('No members found, make sure you are specifying the correct object_class');
-        $keep = array('samaccountname','email','employeeID', 'name', 'company', 'department', 'description', 'title',  'givenname', 'mobilephone', 'othertelephone', 'city', 'phone', 'displayname', 'objectsid', 'office', 'fax');
+        $keep = array('samaccountname','mail','email','employeeID', 'name', 'company', 'department', 'description', 'title',  'givenname', 'mobilephone', 'othertelephone', 'city', 'phone', 'displayname', 'objectsid', 'office', 'fax');
 
         $i = 1; // For counting our output
         foreach($members as $m) {
