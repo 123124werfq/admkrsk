@@ -343,7 +343,7 @@ class CollectionWidget extends \yii\base\Widget
                         elseif (is_array($row[$alias]))
                         {
                             $fkey = key($row[$alias]);
-                            if (!empty($row[$alias][$fkey]))
+                            if (!empty($row[$alias][$fkey]) && (is_string($row[$alias][$fkey]) || is_numeric($row[$alias][$fkey])))
                                 $search_columns[$key]['values'][$fkey] = $row[$alias][$fkey];
                         }
                     }

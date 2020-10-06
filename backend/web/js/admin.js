@@ -66,13 +66,13 @@ var tinymceConfig = {
     selector:'.redactor',
     plugins: tinymce_plugins,
     menu: {
-        custom: { title: 'Плагины', items: 'form gallery collections hrreserve pagenews faq recordSearch map'}
+        custom: { title: 'Плагины', items: 'form gallery collections hrreserve pagenews faq recordSearch map recordmap'}
     },
     menubar: 'file edit view insert format tools table custom',
     contextmenu: "link imagetools table spellchecker",
     toolbar: "code removeformat | undo redo | fontsizeselect| styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist blockquote | link media ownmedia ownfile",
     language: 'ru',
-    extended_valid_elements : "faq[data-ids|data-category],map[data-id],searchrecord[data-encodedata],pagenews[data-id],hrreserve[pagesize],collection[data-id|data-encodedata],gallery[data-id|data-limit|data-type],forms[data-id|data-data],ownmedia",
+    extended_valid_elements : "faq[data-ids|data-category],map[data-id],searchrecord[data-encodedata],pagenews[data-id],hrreserve[pagesize],collection[data-id|data-encodedata],gallery[data-id|data-limit|data-type],forms[data-id|data-data],ownmedia,recordmap[data-id]",
     content_css : "/js/tinymce/admin.css",
     image_title: true,
     images_upload_url: '/media/tinymce',

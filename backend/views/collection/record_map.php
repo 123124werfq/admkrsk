@@ -13,7 +13,7 @@ use yii\helpers\ArrayHelper;
 
 ?>
 
-<?php $form = ActiveForm::begin(['id'=>'collection-redactor-record']); ?>
+<?php $form = ActiveForm::begin(['id'=>'form-record-map']); ?>
 
 <?php
     $columns = $collection->columns;
@@ -31,9 +31,9 @@ use yii\helpers\ArrayHelper;
     $columns = $columns_dropdown;
 ?>
 
-<?=$form->field($model, 'id_column_coords')->dropDownList($columns_coords));?>
+<?=$form->field($model, 'id_column_coords')->dropDownList($columns_coords);?>
 
-<h3>Отображаемые поля</h3>
+<!--h3>Отображаемые поля</h3>
 <br/>
 <div class="row">
     <div class="col-sm-5">
@@ -41,7 +41,7 @@ use yii\helpers\ArrayHelper;
     </div>
 </div>
 <div id="view-columns" class="multiyiinput sortable">
-    <?php foreach ($columns as $key => $data) {?>
+    <?php /*foreach ($columns as $key => $data) {?>
     <div data-row="<?=$key?>" class="row">
         <div class="col-sm-5">
             <div class="form-group">
@@ -52,6 +52,7 @@ use yii\helpers\ArrayHelper;
             <a class="close btn" href="#">&times;</a>
         </div>
     </div>
-    <?php break; }?>
+    <?php break; }*/?>
 </div>
-<a onclick="return addInput('view-columns')" href="#" class="btn btn-default">Добавить еще</a>
+<a onclick="return addInput('view-columns')" href="#" class="btn btn-default">Добавить еще</a-->
+<?php ActiveForm::end(); ?>
