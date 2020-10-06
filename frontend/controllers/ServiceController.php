@@ -166,10 +166,6 @@ class ServiceController extends Controller
             }
         }
 
-        /*foreach ($tree[0] as $key => $value) {
-            echo $value->name.'<br>';
-        }*/
-
         if (Yii::$app->request->isAjax)
         {
             return $this->renderPartial('_reestr',['rubrics'=>$tree,'servicesRubs'=>$servicesRubs,'active'=>($open)?'active':'']);

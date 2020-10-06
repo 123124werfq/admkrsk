@@ -677,7 +677,7 @@ jQuery(document).ready(function()
         };
 
         $.ajax({
-            url: '/menu-link/update?id='+ui.item.data('id'),
+            //url: '/menu-link/update?id='+ui.item.data('id'),
             type: 'post',
             data: data,
             success: function(data)
