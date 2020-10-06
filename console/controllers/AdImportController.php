@@ -152,8 +152,10 @@ class AdImportController extends Controller
             $attr = $this->mydap_attributes($m,$keep);
 //var_dump($attr); 
 //die();
+$flag = 0;
 if(strpos($attr['name'][0], 'ече'))
 {
+    $flag = 1;
     echo($attr['name'][0]);
     echo "\n";
 }
@@ -162,13 +164,13 @@ if(strpos($attr['name'][0], 'ече'))
 
             if($company == "[no company]")
             {
-                //echo "[no company] - SKIPPED\n";
+                if($flag) echo "[no company] - SKIPPED\n";
                 continue;
             }
 
             if(!isset($attr['email'][0]))
             {
-                //echo "[no email] - SKIPPED\n";
+                if($flag)  echo "[no email] - SKIPPED\n";
                 continue;
             }
 
