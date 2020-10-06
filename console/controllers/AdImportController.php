@@ -154,15 +154,24 @@ class AdImportController extends Controller
             $company = isset($attr['company'][0]) ? $attr['company'][0] : "[no company]";
 
             if($company == "[no company]")
+            {
+                echo "[no company] - SKIPPED\n";
                 continue;
+            }
 
             if(!isset($attr['email'][0]))
+            {
+                echo "[no email] - SKIPPED\n";
                 continue;
+            }
 
             $alreadyUser = AdUser::find()->where(['email' => $attr['email'][0]])->one();
 
             if($alreadyUser)
+            {
+                echo $alreadyUser->name ." [already there]  - SKIPPED\n";
                 continue;
+            }
 
             $aduser = new AdUser();
             $aduser->sn = isset($attr['samaccountname'][0]) ? $attr['samaccountname'][0] : null;
