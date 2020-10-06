@@ -110,7 +110,7 @@ var tinymceConfig = {
         /*{ title: 'section', block: 'section', wrapper: true, merge_siblings: false },
         { title: 'hgroup', block: 'hgroup', wrapper: true },
         { title: 'aside', block: 'aside', wrapper: true },*/
-        { title: 'Иллюстрация с подписью', block: 'figure', wrapper: true }
+        { title: 'Иллюстрация с подписью', block: 'figure', wrapper: true },
         { title: 'Div', format: 'div'},
       ] },
       {title: 'Выравнивание', items: [
