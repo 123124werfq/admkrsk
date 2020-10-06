@@ -178,7 +178,10 @@ if(strpos($attr['name'][0], 'игапова'))
                 continue;
             }
 
-            $alreadyUser = AdUser::find()->where(['email' => $attr['email'][0]])->one();
+            if(isset($attr['email']))
+                $alreadyUser = AdUser::find()->where(['email' => $attr['email'][0]])->one();
+            if(isset($attr['mail']))
+                $alreadyUser = AdUser::find()->where(['email' => $attr['mail'][0]])->one();
 
             if($alreadyUser)
             {
