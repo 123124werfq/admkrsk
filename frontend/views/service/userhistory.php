@@ -23,10 +23,12 @@
                         </thead>           
                         <?php foreach ($appeals as $appeal){  ?>
                         <tr>
-                            <td><?=$appeal->number_common?><!--<?=$appeal->target->reestr_number?>-<?=$appeal->id_appeal?>--><br><?=date("d.m.Y", $appeal->created_at)?></td>
+                            <td><?=$appeal->number_common?><br><?=date("d.m.Y", $appeal->created_at)?></td>
                             <td>
+                                <?php if(is_object($appeal->target)) { ?>
                                 <?=$appeal->target->reestr_number?><br>
                                 <?=$appeal->target->name?><br><br>
+                                <?php } ?>
                                 Номер: <?=$appeal->number_system?><br>
                                 Дата регистрации: <?=$appeal->statusDate?><br>
                             </td>
@@ -48,21 +50,6 @@
                         <?php }?>
                     </table>
                     </div>
-                    <!--
-                    <ul>
-                        <?php foreach ($appeals as $appeal){  ?>
-                            <li>
-                                <p><strong>№ <?=$appeal->target->reestr_number?>-<?=$appeal->number_internal?> от <?=date("d.m.Y", $appeal->created_at)?></strong><br>
-                                    <em><?=$appeal->target->name?></em><br>
-                                    Структурное подразделение: Администрация города Красноярска<br>
-                                    Статус: <?=$appeal->statusName?><p>
-
-
-                            </li>
-                        <?php }?>
-                    </ul>
-
-                    -->
                 <?php } ?>
                 <div class="subscribe">
                     <div class="subscribe_left">
