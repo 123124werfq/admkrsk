@@ -150,7 +150,12 @@ class AdImportController extends Controller
         foreach($members as $m) {
 
             $attr = $this->mydap_attributes($m,$keep);
-//var_dump($attr); die();
+//var_dump($attr); 
+//die();
+
+echo($attr['name'][0]);
+echo "\n";
+
             $company = isset($attr['company'][0]) ? $attr['company'][0] : "[no company]";
 
             if($company == "[no company]")
