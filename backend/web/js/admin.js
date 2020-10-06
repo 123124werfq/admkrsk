@@ -111,6 +111,7 @@ var tinymceConfig = {
         { title: 'hgroup', block: 'hgroup', wrapper: true },
         { title: 'aside', block: 'aside', wrapper: true },*/
         { title: 'Иллюстрация с подписью', block: 'figure', wrapper: true }
+        { title: 'Div', format: 'div'},
       ] },
       {title: 'Выравнивание', items: [
         {title: 'Left', icon: 'alignleft', format: 'alignleft'},
