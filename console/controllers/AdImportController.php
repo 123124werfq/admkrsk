@@ -155,13 +155,13 @@ class AdImportController extends Controller
 
             if($company == "[no company]")
             {
-                echo "[no company] - SKIPPED\n";
+                //echo "[no company] - SKIPPED\n";
                 continue;
             }
 
             if(!isset($attr['email'][0]))
             {
-                echo "[no email] - SKIPPED\n";
+                //echo "[no email] - SKIPPED\n";
                 continue;
             }
 
