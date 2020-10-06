@@ -936,11 +936,19 @@ class CollectionColumn extends \yii\db\ActiveRecord
     {
         if ($this->type == CollectionColumn::TYPE_COLLECTION)
         {
-            $subrecord = CollectionRecord::findOne(is_array($value)?key($value):$value);
-            if (!empty($subrecord))
+            $id_record = is_array($value)?key($value):$value;
+
+            if (!empty($id_record))
             {
-                return $subrecord->getDataRaw(true,false);
+                $subrecord = CollectionRecord::findOne($id_record);
+                
+                if (!empty($subrecord))
+                {
+                    return $subrecord->getDataRaw(true,false);
+                }
             }
+            
+            return [];
         }
         else if ($this->type == CollectionColumn::TYPE_COLLECTIONS)
         {

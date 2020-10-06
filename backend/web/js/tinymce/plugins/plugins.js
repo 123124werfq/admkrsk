@@ -228,22 +228,36 @@ tinymce.PluginManager.add("recordmap", function(editor, url) {
     var _dialog = false;
     var _typeOptions = [];
 
+    function getUrlVars() {
+        var vars = {};
+        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+            vars[key] = value;
+        });
+        return vars;
+    }
+
     function _onAction() {
         $.ajax({
-            url: '/collection/redactor-map',
+            url: '/collection/record-map',
             type: 'get',
+            data: {id_collection:getUrlVars()['id']},
             dataType: 'html',
             success: function(data) {
                 $('#redactor-modal').modal();
                 $('#redactor-modal .modal-body').html(data);
-                $('#redactor-modal form').submit(function(){
+                
+                $('#redactor-modal form').submit(function(e){
+
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+
                     $.ajax({
-                        url: '/form/redactor',
+                        url: '/collection/record-map?id_collection='+getUrlVars()['id'],
                         type: 'post',
                         dataType: 'json',
                         data: $('#redactor-modal form').serialize(),
                         success: function(data) {
-                            editor.insertContent('<forms data-id="' + data.id_form + '">Форма #' + data.id_form + '.</forms>');
+                            editor.insertContent('<recordmap data-id="' + data.id_column_coords + '">Отображение карты #' + data.id_column_coords + '.</recordmap>');
                             $('#redactor-modal').modal('hide');
                         }
                     });

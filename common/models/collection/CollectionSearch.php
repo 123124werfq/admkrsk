@@ -148,7 +148,7 @@ class CollectionSearch extends DynamicModel
                     if (empty($model[$col_alias]))
                         return '';
 
-                    $district = District::findOne($model[$col_alias]);
+                    $district = \common\models\District::findOne($model[$col_alias]);
 
                     if (!empty($district))
                         return $district->name;

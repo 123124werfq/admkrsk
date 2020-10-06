@@ -11,7 +11,7 @@ use common\models\ServiceAppeal;
 use common\models\ServiceAppealState;
 use common\models\ServiceRubric;
 use common\models\FormDynamic;
-
+use common\models\ServiceCounter;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -350,10 +350,26 @@ class ServiceController extends Controller
 
                    if ($state->save())
                    {
-                       $appeal->state = $state->state;
-                       $appeal->number_internal = substr('TEST'.strtoupper(str_replace('-','',$idents['guid'])),0,32); // пока такой внутренний номер
-                       //$appeal->number_system = $idents['guid'];
-                       $appeal->updateAttributes(['state', 'number_internal']);
+                        $appeal->state = $state->state;
+                        $appeal->number_internal = substr('TEST'.strtoupper(str_replace('-','',$idents['guid'])),0,32); // пока такой внутренний номер
+
+                        $numberCounter = ServiceCounter::find()->where(['service_number' => $appeal->target->reestr_number])->one();
+                        if(!$numberCounter)
+                        {
+                            $numberCounter = new ServiceCounter;
+                            $numberCounter->service_number = $appeal->target->reestr_number;
+                            $numberCounter->value = 0;
+                            $numberCounter->save();
+                        }
+
+                        $servCounter = $numberCounter->value + 1;
+
+                        $numberCounter->value = $servCounter;
+                        $numberCounter->updateAttributes(['value']);
+
+                        $appeal->number_common = ($appeal->target->reestr_number . '-' . $servCounter);
+                        //$appeal->number_system = $idents['guid'];
+                        $appeal->updateAttributes(['state', 'number_internal', 'number_common']);
 
                         // запрос к СЭД
                         $attachments = $record->getAllMedias();
@@ -413,6 +429,7 @@ class ServiceController extends Controller
                                     'service_fio' => Yii::$app->user->identity->username
                                 ]):$this->renderPartial('_result',[
                                 'number'=> isset($appeal->number_internal)?$appeal->number_internal:false,
+                                'number_common' => $appeal->number_common,
                                 'service'=>$service,
                                 'page' => $page,
                                 'date' => date("d.m.Y", $appeal->created_at),

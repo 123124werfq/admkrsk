@@ -326,18 +326,27 @@ class CollectionWidget extends \yii\base\Widget
 
         if (!empty($search_columns))
         {
-            foreach ($allrows as $rkey => $row)
+            foreach ($search_columns as $key => $search_column)
             {
-                foreach ($search_columns as $key => $search_column)
+                if ($search_column['type'] != 0)
+                    continue;
+                    
+                $alias = $search_column['column']->alias;
+
+                foreach ($allrows as $rkey => $row)
                 {
-                    if ($search_column['type'] != 0)
-                        continue;
-
-                    $alias = $search_column['column']->alias;
-
                     // собираем все возможные значения для выпадшки в фильтре
-                    if (!empty($row[$alias]) && (is_string($row[$alias]) || is_numeric($row[$alias])))
-                        $search_columns[$key]['values'][$row[$alias]] = $row[$alias];
+                    if (!empty($row[$alias]))
+                    {
+                        if (is_string($row[$alias]) || is_numeric($row[$alias]))
+                            $search_columns[$key]['values'][$row[$alias]] = $row[$alias];
+                        elseif (is_array($row[$alias]))
+                        {
+                            $fkey = key($row[$alias]);
+                            if (!empty($row[$alias][$fkey]) && (is_string($row[$alias][$fkey]) || is_numeric($row[$alias][$fkey])))
+                                $search_columns[$key]['values'][$fkey] = $row[$alias][$fkey];
+                        }
+                    }
                 }
             }
         }
