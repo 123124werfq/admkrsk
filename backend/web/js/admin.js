@@ -58,15 +58,14 @@ var csrf, csrf_value;
 function filePicker(callback, value, meta) {
     var input = document.createElement('input');
     input.setAttribute('type', 'file');
-    //input.setAttribute('accept', 'image/*');
     input.click();
 }
 
 var tinymceConfig = {
     selector:'.redactor',
-    plugins: tinymce_plugins,
+    plugins: 'link imagetools table autoresize collections gallery code paste media lists fullscreen stickytoolbar form hrreserve pagenews faq recordSearch map ownmedia ownfile recordmap',
     menu: {
-        custom: { title: 'Плагины', items: 'form gallery collections hrreserve pagenews faq recordSearch map recordmap'}
+        custom: { title: 'Плагины', items: tinymce_plugins}
     },
     menubar: 'file edit view insert format tools table custom',
     contextmenu: "link imagetools table spellchecker",
@@ -335,7 +334,7 @@ function addDashboardPin()
 
 
 jQuery(document).ready(function()
-{  
+{
     $(".selectActionDropDown a").click(function(){
 
       var $link = $(this);

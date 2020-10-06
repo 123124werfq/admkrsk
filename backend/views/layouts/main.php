@@ -35,7 +35,7 @@ $this->beginPage();
         $script = "toastr.$type('$message', '');";
         $this->registerJs($script, yii\web\View::POS_END);
     }
-    $this->registerJs("var tinymce_plugins = ['".implode(' ',Yii::$app->params['tinymce_plugins'])."'];", yii\web\View::POS_BEGIN);
+    $this->registerJs("var tinymce_plugins = '".implode(' ',Yii::$app->params['tinymce_plugins'])."';", yii\web\View::POS_BEGIN);
 ?>
 <?php $this->beginBody(); ?>
 <div id="wrapper">
@@ -86,7 +86,7 @@ $this->beginPage();
                     <?= isset($this->params['button-block']) ? implode(' ', $this->params['button-block']) : '' ?>
                 </div>
             </div>
-        <?php } ?>        
+        <?php } ?>
         <div class="wrapper wrapper-content">
             <?= $content ?>
         </div>

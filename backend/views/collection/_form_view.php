@@ -14,6 +14,8 @@ use yii\web\View;
 /* @var $model common\models\Collection */
 /* @var $form yii\widgets\ActiveForm */
 
+Yii::$app->params['tinymce_plugins'][] = 'recordmap';
+
 $columns = ArrayHelper::map($model->parent->columns, 'id_column', 'name');
 $model->filters = $rules = $model->getViewFilters();
 $model->filters = json_encode($model->filters);
