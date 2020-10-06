@@ -150,19 +150,38 @@ class AdImportController extends Controller
         foreach($members as $m) {
 
             $attr = $this->mydap_attributes($m,$keep);
-//var_dump($attr); die();
+//var_dump($attr); 
+//die();
+$flag = 0;
+if(strpos($attr['name'][0], 'игапова'))
+{
+    $flag = 1;
+    print_r($attr);
+    //echo($attr['name'][0]);
+    echo "\n";
+}
+
             $company = isset($attr['company'][0]) ? $attr['company'][0] : "[no company]";
 
             if($company == "[no company]")
+            {
+                if($flag) echo "[no company] - SKIPPED\n";
                 continue;
+            }
 
             if(!isset($attr['email'][0]))
+            {
+                if($flag)  echo "[no email] - SKIPPED\n";
                 continue;
+            }
 
             $alreadyUser = AdUser::find()->where(['email' => $attr['email'][0]])->one();
 
             if($alreadyUser)
+            {
+                echo $alreadyUser->name ." [already there]  - SKIPPED\n";
                 continue;
+            }
 
             $aduser = new AdUser();
             $aduser->sn = isset($attr['samaccountname'][0]) ? $attr['samaccountname'][0] : null;
