@@ -330,7 +330,7 @@ class CollectionWidget extends \yii\base\Widget
             {
                 if ($search_column['type'] != 0)
                     continue;
-                    
+
                 $alias = $search_column['column']->alias;
 
                 foreach ($allrows as $rkey => $row)
@@ -348,6 +348,9 @@ class CollectionWidget extends \yii\base\Widget
                         }
                     }
                 }
+
+                if (!empty($search_columns[$key]['values']))
+                    asort($search_columns[$key]['values']);
             }
         }
 
