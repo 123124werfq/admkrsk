@@ -908,11 +908,24 @@ class CollectionController extends Controller
     public function actionRecordMap($id_collection)
     {
         $model = new \backend\models\forms\CollectionRecordForm;
-        $collection = $this->findModel($id);
+        $collection = $this->findModel($id_collection);
+        
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            
+            
+            return $this->asJson($model->attributes);
+        }
 
-        return $this->render('record_map',[
+        Yii::$app->assetManager->bundles = [
+            'yii\bootstrap\BootstrapAsset' => false,
+            'yii\web\JqueryAsset'=>false,
+            'yii\web\YiiAsset'=>false,
+        ];
+        
+        return $this->renderAjax('record_map',[
             'collection'=>$collection,
-            'model'=>$modelm
+            'model'=>$model
         ]);
     }
 

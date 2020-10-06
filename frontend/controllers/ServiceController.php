@@ -56,12 +56,12 @@ class ServiceController extends Controller
                 'page' => $page,
                 'appeals' => $appeals
             ]);
-    
+
         }
         else
             $this->redirect('/reception/check');
 
-    }    
+    }
 
     public function actionReestr($page=null,$id_situation=null)
     {
@@ -147,16 +147,16 @@ class ServiceController extends Controller
 
                 if (!empty($rub->parent->parent))
                 {
-                    $tree[(int)$rub->parent->parent->id_parent][(int)$rub->parent->parent->id_parent] = $rub->parent->parent;
+                    $tree[(int)$rub->parent->parent->id_parent][(int)$rub->parent->id_parent] = $rub->parent->parent;
                 }
             }
         }
 
-        foreach ($tree as $key => &$array)
+        foreach ($tree as $key => $array)
         {
             if (is_array($array))
             {
-                uasort($array, function ($a, $b)
+                uasort($tree[$key], function ($a, $b)
                 {
                     if ($a->ord == $b->ord)
                         return 0;

@@ -58,21 +58,20 @@ var csrf, csrf_value;
 function filePicker(callback, value, meta) {
     var input = document.createElement('input');
     input.setAttribute('type', 'file');
-    //input.setAttribute('accept', 'image/*');
     input.click();
 }
 
 var tinymceConfig = {
     selector:'.redactor',
-    plugins: tinymce_plugins,
+    plugins: 'link imagetools table autoresize collections gallery code paste media lists fullscreen stickytoolbar form hrreserve pagenews faq recordSearch map ownmedia ownfile recordmap',
     menu: {
-        custom: { title: 'Плагины', items: 'form gallery collections hrreserve pagenews faq recordSearch map'}
+        custom: { title: 'Плагины', items: tinymce_plugins}
     },
     menubar: 'file edit view insert format tools table custom',
     contextmenu: "link imagetools table spellchecker",
     toolbar: "code removeformat | undo redo | fontsizeselect| styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist blockquote | link media ownmedia ownfile",
     language: 'ru',
-    extended_valid_elements : "faq[data-ids|data-category],map[data-id],searchrecord[data-encodedata],pagenews[data-id],hrreserve[pagesize],collection[data-id|data-encodedata],gallery[data-id|data-limit|data-type],forms[data-id|data-data],ownmedia",
+    extended_valid_elements : "faq[data-ids|data-category],map[data-id],searchrecord[data-encodedata],pagenews[data-id],hrreserve[pagesize],collection[data-id|data-encodedata],gallery[data-id|data-limit|data-type],forms[data-id|data-data],ownmedia,recordmap[data-id]",
     content_css : "/js/tinymce/admin.css",
     image_title: true,
     images_upload_url: '/media/tinymce',
@@ -111,7 +110,8 @@ var tinymceConfig = {
         /*{ title: 'section', block: 'section', wrapper: true, merge_siblings: false },
         { title: 'hgroup', block: 'hgroup', wrapper: true },
         { title: 'aside', block: 'aside', wrapper: true },*/
-        { title: 'Иллюстрация с подписью', block: 'figure', wrapper: true }
+        { title: 'Иллюстрация с подписью', block: 'figure', wrapper: true },
+        { title: 'Div', format: 'div'},
       ] },
       {title: 'Выравнивание', items: [
         {title: 'Left', icon: 'alignleft', format: 'alignleft'},
@@ -335,7 +335,7 @@ function addDashboardPin()
 
 
 jQuery(document).ready(function()
-{  
+{
     $(".selectActionDropDown a").click(function(){
 
       var $link = $(this);
@@ -677,7 +677,7 @@ jQuery(document).ready(function()
         };
 
         $.ajax({
-            url: '/menu-link/update?id='+ui.item.data('id'),
+            //url: '/menu-link/update?id='+ui.item.data('id'),
             type: 'post',
             data: data,
             success: function(data)

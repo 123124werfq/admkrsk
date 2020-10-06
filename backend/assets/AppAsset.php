@@ -41,7 +41,7 @@ class AppAsset extends AssetBundle
         //"js/jquerybuilder/query-builder.standalone.min.js",
         "js/jquerybuilder/query-builder.standalone.js",
         "js/jquerybuilder/i18n/query-builder.ru.js",
-        "js/admin.js?v=16",
+        "js/admin.js?v=17",
 
     ];
     public $depends = [

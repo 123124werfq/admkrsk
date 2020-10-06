@@ -127,6 +127,9 @@ class ServiceRubricController extends Controller
      */
     public function actionIndex()
     {
+        if (Yii::$app->request->isAjax)
+            return $this->actionOrder();
+
         if (Yii::$app->request->get('archive')) {
             $query = ServiceRubric::findDeleted();
         } else {
@@ -194,8 +197,6 @@ class ServiceRubricController extends Controller
 
             if (!Yii::$app->request->isAjax)
                 return $this->redirect(['view', 'id' => $model->id_rub]);
-            else
-                $this->actionOrder();
         }
 
         return $this->render('update', [
