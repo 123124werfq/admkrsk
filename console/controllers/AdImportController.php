@@ -172,7 +172,7 @@ if(strpos($attr['name'][0], 'игапова'))
                 continue;
             }
 
-            if(!isset($attr['email'][0]) && !isset($attr['mail'][0]))
+            if(!isset($attr['email']) && !isset($attr['mail']))
             {
                 if($flag)  echo "[no email] - SKIPPED\n";
                 continue;
@@ -195,9 +195,10 @@ if(strpos($attr['name'][0], 'игапова'))
             $aduser->description = isset($attr['description'][0]) ? $attr['description'][0] : null;
             $aduser->title = isset($attr['title'][0]) ? $attr['title'][0] : null;
             $aduser->displayname = isset($attr['displayname'][0]) ? $attr['displayname'][0] : null;
-            $aduser->email = isset($attr['email'][0]) ? $attr['email'][0] : null;
-            if(empty($aduser->email))
+            if(isset($attr['email']))
                 $aduser->email = isset($attr['email'][0]) ? $attr['email'][0] : null;
+            if(isset($attr['mail']))
+                $aduser->email = isset($attr['mail'][0]) ? $attr['mail'][0] : null;
             $aduser->fax = isset($attr['fax'][0]) ? $attr['fax'][0] : null;
             $aduser->office = isset($attr['office'][0]) ? $attr['office'][0] : null;
             $aduser->phone = isset($attr['phone'][0]) ? $attr['phone'][0] : null;
