@@ -156,7 +156,8 @@ $flag = 0;
 if(strpos($attr['name'][0], 'ече'))
 {
     $flag = 1;
-    echo($attr['name'][0]);
+    print_r($attr);
+    //echo($attr['name'][0]);
     echo "\n";
 }
 
