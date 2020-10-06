@@ -152,7 +152,9 @@ class AdImportController extends Controller
             $attr = $this->mydap_attributes($m,$keep);
 //var_dump($attr); 
 //die();
+
 $flag = 0;
+/*
 if(strpos($attr['name'][0], 'игапова'))
 {
     $flag = 1;
@@ -160,6 +162,7 @@ if(strpos($attr['name'][0], 'игапова'))
     //echo($attr['name'][0]);
     echo "\n";
 }
+*/
 
             $company = isset($attr['company'][0]) ? $attr['company'][0] : "[no company]";
 
@@ -169,7 +172,7 @@ if(strpos($attr['name'][0], 'игапова'))
                 continue;
             }
 
-            if(!isset($attr['email'][0]))
+            if(!isset($attr['email'][0]) && !isset($attr['mail'][0]))
             {
                 if($flag)  echo "[no email] - SKIPPED\n";
                 continue;
@@ -193,6 +196,8 @@ if(strpos($attr['name'][0], 'игапова'))
             $aduser->title = isset($attr['title'][0]) ? $attr['title'][0] : null;
             $aduser->displayname = isset($attr['displayname'][0]) ? $attr['displayname'][0] : null;
             $aduser->email = isset($attr['email'][0]) ? $attr['email'][0] : null;
+            if(empty($aduser->email))
+                $aduser->email = isset($attr['email'][0]) ? $attr['email'][0] : null;
             $aduser->fax = isset($attr['fax'][0]) ? $attr['fax'][0] : null;
             $aduser->office = isset($attr['office'][0]) ? $attr['office'][0] : null;
             $aduser->phone = isset($attr['phone'][0]) ? $attr['phone'][0] : null;
