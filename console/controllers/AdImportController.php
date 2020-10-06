@@ -153,7 +153,7 @@ class AdImportController extends Controller
 //var_dump($attr); 
 //die();
 $flag = 0;
-if(strpos($attr['name'][0], 'Шигапова'))
+if(strpos($attr['name'][0], 'игапова'))
 {
     $flag = 1;
     print_r($attr);
