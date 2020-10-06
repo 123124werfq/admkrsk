@@ -152,9 +152,11 @@ class AdImportController extends Controller
             $attr = $this->mydap_attributes($m,$keep);
 //var_dump($attr); 
 //die();
-
-echo($attr['name'][0]);
-echo "\n";
+if(strpos($attr['name'][0], 'ече'))
+{
+    echo($attr['name'][0]);
+    echo "\n";
+}
 
             $company = isset($attr['company'][0]) ? $attr['company'][0] : "[no company]";
 
