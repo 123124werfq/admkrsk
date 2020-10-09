@@ -559,7 +559,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                         if (is_array($value))
                         {
-                            $output[$column['alias']] = \common\components\collection\CollectionQuery::getQuery($this->id_collection)
+                            $output[$column['alias']] = \common\components\collection\CollectionQuery::getQuery($column->input->id_collection)
                             ->select()
                             ->where(['id_record'=>array_keys($value)])
                             ->getArray(true);
