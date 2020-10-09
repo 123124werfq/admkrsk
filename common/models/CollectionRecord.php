@@ -557,11 +557,19 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     {
                         $output[$column['alias']] = [];
 
-                        foreach ($value as $id_record => $label)
+                        if (is_array($value))
+                        {
+                            $output[$column['alias']] = \common\components\collection\CollectionQuery::getQuery($this->id_collection)
+                            ->select()
+                            ->where(['id_record'=>array_keys($value)])
+                            ->getArray(true);
+                        }
+
+                        /*foreach ($value as $id_record => $label)
                         {
                             $subrecord = CollectionRecord::findOne($id_record);
                             $output[$column['alias']][$id_record] = $subrecord->getDataRaw($keyAsAlias,false);
-                        }
+                        }*/
                     }
                     else
                         $output[$column['alias']] = $value;
