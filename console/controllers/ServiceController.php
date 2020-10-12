@@ -6,6 +6,7 @@ use Yii;
 use SimpleXMLElement;
 use yii\console\Controller;
 
+use common\models\Service;
 use common\models\ServiceAppeal;
 use common\models\ServiceAppealState;
 use common\models\Collection;
