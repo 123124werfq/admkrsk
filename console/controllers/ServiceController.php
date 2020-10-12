@@ -52,7 +52,7 @@ class ServiceController extends Controller
         {
             if (isset($services[$data['service']]) && isset($search[$data['office']]))
             {
-                $cnt = Yii::$app->db->createCommand('SELECT count(*) FROM servicel_collection_firm WHERE id_service = '.$services[$data['service']]->id_service.' AND id_office = '.$search[$data['office']])->queryScalar();
+                $cnt = Yii::$app->db->createCommand('SELECT count(*) FROM servicel_collection_firm WHERE id_service = '.$services[$data['service']]->id_service.' AND id_record = '.$search[$data['office']])->queryScalar();
 
                 if ($cnt==0)
                     Yii::$app->db->createCommand()->insert('servicel_collection_firm',[
