@@ -43,7 +43,7 @@ class ServiceController extends Controller
 
         $search = [];
         foreach ($datas as $id_record => $data) {
-            $search[$data['id_office']] = $id_record;
+            $search[(string)$data['id_office']] = $id_record;
         }
 
         $services = Service::find()->indexBy('reestr_number')->all();
@@ -53,7 +53,7 @@ class ServiceController extends Controller
             if (isset($services[$data['service']]) && isset($search[$data['office']]))
             {
                 Yii::$app->db->createCommand()->insert('servicel_collection_firm',[
-                    'id_service'=>$services[$data]->id_service,
+                    'id_service'=>$services[$data['service']]->id_service,
                     'id_record'=>$search[$data['office']],
                 ])->execute();
             }
