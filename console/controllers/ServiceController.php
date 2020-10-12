@@ -8,7 +8,7 @@ use yii\console\Controller;
 
 use common\models\ServiceAppeal;
 use common\models\ServiceAppealState;
-
+use common\models\Collection;
 
 class ServiceController extends Controller
 {
