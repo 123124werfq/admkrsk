@@ -48,7 +48,7 @@ Yii::$app->params['sidebar'] = $this->render('_twig_options',['columns'=>$model-
     <?= $form->field($model, 'label')->widget(Select2::class, [
         'data' => ArrayHelper::map($model->getColumns()->andWhere([
             'id_collection' => $model->id_collection,
-            'type' => [CollectionColumn::TYPE_INPUT, CollectionColumn::TYPE_INTEGER]
+            'type' => [CollectionColumn::TYPE_INPUT, CollectionColumn::TYPE_INTEGER,CollectionColumn::TYPE_CUSTOM]
         ])->all(), 'id_column', 'name'),
         'pluginOptions' => [
             'allowClear' => true,
