@@ -28,6 +28,37 @@ class ServiceController extends Controller
         return $res;
     }
 
+    public function actionOffice()
+    {
+        $sql = "SELECT * FROM tmp_import_offices";
+        $relation = Yii::$app->db->createCommand($sql)->queryAll();
+
+        $collection = Collection::find()->where(['id_collection'=>498])->one();
+
+        $datas = $collection->getData([],true);
+
+        $sql = "DELETE FROM servicel_collection_firm";
+        Yii::$app->db->createCommand($sql)->execute();
+
+        $search = [];
+        foreach ($datas as $id_record => $data) {
+            $search[$data['id_office']] = $id_record;
+        }
+
+        $services = Service::find()->indexBy('reestr_number')->all();
+
+        foreach ($relation as $key => $data)
+        {
+            if (isset($services[$data['service']]) && isset($search[$data['office']]))
+            {
+                Yii::$app->db->createCommand()->insert('servicel_collection_firm',[
+                    'id_service'=>$services[$data]->id_service,
+                    'id_record'=>$search[$data['office']],
+                ])->execute();
+            }
+        }
+    }
+
     public function actionParse($path)
     {
         if(!file_exists($path))
@@ -44,7 +75,6 @@ class ServiceController extends Controller
 
             if(strpos($part, "?xml"))
             {
-
                 $part = substr($part, (strpos($part, "\n")+1));
                 $part = substr($part, 0, strrpos($part, "\n"));
 
