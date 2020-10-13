@@ -240,7 +240,7 @@ class CollectionSearch extends DynamicModel
 
                 $dataProviderColumns[$col_alias]['filter'] =
                 Select2::widget([
-                    'name' => 'attribute_name',
+                    'name' => 'CollectionSearch['.$col_alias.']',
                     'value' => '',
                     'data' => [],
                     'pluginOptions' => [
@@ -249,11 +249,12 @@ class CollectionSearch extends DynamicModel
                         'minimumInputLength' => 2,
                         'placeholder' => 'Начните ввод',
                         'ajax' => [
-                            'url' => '/record/list',
+                            'url'=> '/collection/record-list',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {q:params.term,id:'.$col->id_collection.',id_column:'.$col->input->id_collection_column.'};}')
+                            'data' => new JsExpression('function(params) { return {q:params.term,id:'.$col->input->id_collection.',id_column:'.$col->input->id_collection_column.'};}')
                         ],
                     ],
+                    'id'=>$col_alias.'_filter',
                     'options'=>[
                         'prompt'=>'Выберите родителя'
                     ]
