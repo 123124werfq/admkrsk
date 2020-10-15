@@ -8,6 +8,7 @@ use common\models\CstExpert;
 use common\models\CstProfile;
 use common\models\CstResult;
 use common\models\CstVote;
+use common\models\CstContestMessage;
 use common\models\Collection;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -165,6 +166,8 @@ class ContestController extends Controller
         if(!$contest)
             throw new BadRequestHttpException();
         $model = $contest->getData(true);
+
+        $message = CstContestMessage::find()->where(['id_contest' => $id])->orderBy('id_contest_message DESC')->one();
         
         if(Yii::$app->request->get('flag'))
         {
@@ -177,6 +180,17 @@ class ContestController extends Controller
                 $sql = "INSERT INTO cst_contest_expert (id_record_contest, id_expert) VALUES ({$id}, {$id_expert})";
                 Yii::$app->db->createCommand($sql)->execute();
             }
+
+            if(!$message)
+            {
+                $message = new CstContestMessage;
+                $message->created_at = time();
+            }
+
+            $message->updated_at = time();
+            $message->message = Yii::$app->request->get('comment');
+            $message->id_contest = $id;
+            $message->save();
 
             return $this->redirect('/contest/contest');
         }
@@ -215,10 +229,12 @@ class ContestController extends Controller
             $experts[] = $item['id_expert'];
         }
 
+
         return $this->render('update', [
             'model' => $model,
             'experts' => $experts,
-            'comment' => ''
+            'id' => $id,
+            'comment' => $message?$message['message']:''
         ]);
     }
 

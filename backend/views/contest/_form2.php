@@ -51,14 +51,14 @@ use yii\web\JsExpression;
 
         <div class="form-group field-hrcontest-experts">
             <label class="control-label" for="hrcontest-experts">Сcылка для экспертов</label>
-            <p><a href=""></a>
+            <p><a href='https://grants.admkrsk.ru/contest/vote/<?=md5($id)?>'>https://grants.admkrsk.ru/contest/vote/<?=md5($id)?></a>
         </div>
 
         <div class="form-group field-hrcontest-experts">
             <label class="control-label" for="hrcontest-experts">Информационное сообщение</label>
-
+            <p>Шаблоны: {name} - имя эксперта, {contest} - наименование конкурса, {link} - ссылка на конкурс</p>
             <?= Html::textArea('comment', $comment, ['rows' => 6, 'class'=>'redactor']) ?>
-            <button onclick="alert('Извините, в данный момент потчовый сервис недоступен. Попробуйте отправить чуть позже.'); return false;">Отправить сообщение</button>
+            <input type='submit' name='sendmsg' value="Отправить сообщение" class='btn btn-warning' onclick="alert('Извините, в данный момент потчовый сервис недоступен. Попробуйте отправить чуть позже.'); return false;">
         
         </div>
 

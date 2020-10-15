@@ -7,6 +7,8 @@ use common\models\Media;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\base\DynamicModel ;
+use kartik\select2\Select2;
+use yii\web\JsExpression;
 
 
 class CollectionSearch extends DynamicModel
@@ -34,11 +36,14 @@ class CollectionSearch extends DynamicModel
         {
             switch ($column->type) {
                 case CollectionColumn::TYPE_INTEGER:
+                case CollectionColumn::TYPE_COLLECTION:
+                case CollectionColumn::TYPE_COLLECTIONS:
                     $this->addRule(['col'.$column->id_column], 'number');
                     break;
                 case CollectionColumn::TYPE_INPUT:
                 case CollectionColumn::TYPE_TEXTAREA:
                 case CollectionColumn::TYPE_RICHTEXT:
+                case CollectionColumn::TYPE_CUSTOM:
                     $this->addRule(['col'.$column->id_column], 'string');
                     break;
                 /*case CollectionColumn::TYPE_ARCHIVE:
@@ -231,6 +236,30 @@ class CollectionSearch extends DynamicModel
             else if ($col->type==CollectionColumn::TYPE_COLLECTIONS)
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
+                //$dataProviderColumns[$col_alias]['filter'] = Html::activeDropDownList($searchModel, 'attribute_name', ArrayHelper::map(ModelName::find()->asArray()->all(), 'ID', 'Name'),['class'=>'form-control','prompt' => 'Select Category']),
+
+                $dataProviderColumns[$col_alias]['filter'] =
+                Select2::widget([
+                    'name' => 'CollectionSearch['.$col_alias.']',
+                    'value' => '',
+                    'data' => [],
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        'allowClear' => true,
+                        'minimumInputLength' => 2,
+                        'placeholder' => 'Начните ввод',
+                        'ajax' => [
+                            'url'=> '/collection/record-list',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {q:params.term,id:'.$col->input->id_collection.',id_column:'.$col->input->id_collection_column.'};}')
+                        ],
+                    ],
+                    'id'=>$col_alias.'_filter',
+                    'options'=>[
+                        'prompt'=>'Выберите родителя'
+                    ]
+                ]);
+
                 $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias)
                 {
                     if (!empty($model[$col_alias.'_search']))
@@ -251,12 +280,12 @@ class CollectionSearch extends DynamicModel
             else if ($col->type==CollectionColumn::TYPE_REPEAT)
             {
                 $dataProviderColumns[$col_alias]['format'] = 'raw';
-                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias)
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias,$col)
                 {
                     if (empty($model[$col_alias]))
                         return '';
 
-                    return date('d.m.Y',$model[$col_alias]['begin']).'-'.date('d.m.Y',$model[$col_alias]['end']);
+                    return $col->getValueByType($model[$col_alias]);
                 };
             }
             else if (!empty($col->input->id_collection))
@@ -330,9 +359,7 @@ class CollectionSearch extends DynamicModel
             if ($value!='')
             {
                 if (!empty($value))
-                {
                     $query->andWhere(['or',['like',$attr,$value],[$attr=>(is_numeric($value))?(int)$value:$value]]);
-                }
                 else
                     $query->andWhere(['or',['=',$attr,null],[$attr=>(is_numeric($value))?(float)$value:$value]]);
             }
@@ -355,12 +382,6 @@ class CollectionSearch extends DynamicModel
         {
             return $dataProvider;
         }
-
-        /*$query->andFilterWhere([
-            'id_house' => $this->id_house,
-            'is_active' => $this->is_active,
-            'is_updatable' => $this->is_updatable,
-        ]);*/
 
         return $dataProvider;
     }

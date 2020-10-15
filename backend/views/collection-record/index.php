@@ -105,7 +105,12 @@ if ($model->alias == 'institution')
           <div class="table-responsive">
               <?php yii\widgets\Pjax::begin([
                 'id' => 'collection_grid',
-                'enablePushState' => false,
+                
+
+   'enablePushState' => false,
+
+   'enableReplaceState' => false,
+
                 'scrollTo' => '#collection_grid',
                 'timeout'=>5000,
               ]) ?>
