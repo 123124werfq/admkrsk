@@ -168,8 +168,51 @@ class ContestController extends Controller
         $model = $contest->getData(true);
 
         $message = CstContestMessage::find()->where(['id_contest' => $id])->orderBy('id_contest_message DESC')->one();
-        
-        if(Yii::$app->request->get('flag'))
+
+
+        if(Yii::$app->request->get('sendmsg') && Yii::$app->request->get('comment'))
+        {
+            $template = Yii::$app->request->get('comment');
+            $experts = Yii::$app->request->get('experts');
+
+            $mailaddr = false;
+            $totalSent = 0;
+
+            foreach ($experts as $id_expert) {
+                $expt = CstExpert::findOne($id_expert);
+
+                if($expt)
+                {
+                    if(!empty($expt->id_esia_user))
+                        $mailaddr = $expt->user->esiainfo->email;
+                    else
+                        $mailaddr = $expt->user->email;
+                }
+
+                $mailContent = str_replace('{name}', $expt->user->getUsername(), $template);
+                $mailContent = str_replace('{contest}', $model['name'], $mailContent);
+                $mailContent = str_replace('{link}', "<a href='https://grants.admkrsk.ru/contest/vote/".md5($id).">https://grants.admkrsk.ru/contest/vote/".md5($id)."</a>", $mailContent);
+    
+                $mailaddr = 'kosyag@yandex.ru';
+
+                //var_dump(htmlspecialchars($mailContent));
+
+                try {
+                    $res = Yii::$app->mailer->compose('blank', ['content' => $mailContent ])
+                        ->setFrom('stajor@maxsoft.ru')
+                        ->setTo([$mailaddr])
+                        ->setSubject("Информация от admkrsk.ru")
+                        ->send();
+
+                    $totalSent++;
+                    //var_dump($res);
+                } catch (\Exception $e) {
+                    //var_dump($e);
+                }
+
+            }
+        }
+        else if(Yii::$app->request->get('flag'))
         {
             $experts = Yii::$app->request->get('experts');
 
@@ -234,6 +277,7 @@ class ContestController extends Controller
             'model' => $model,
             'experts' => $experts,
             'id' => $id,
+            'totalSent' => isset($totalSent)?$totalSent:false,
             'comment' => $message?$message['message']:''
         ]);
     }

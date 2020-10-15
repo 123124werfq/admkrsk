@@ -58,8 +58,10 @@ use yii\web\JsExpression;
             <label class="control-label" for="hrcontest-experts">Информационное сообщение</label>
             <p>Шаблоны: {name} - имя эксперта, {contest} - наименование конкурса, {link} - ссылка на конкурс</p>
             <?= Html::textArea('comment', $comment, ['rows' => 6, 'class'=>'redactor']) ?>
-            <input type='submit' name='sendmsg' value="Отправить сообщение" class='btn btn-warning' onclick="alert('Извините, в данный момент потчовый сервис недоступен. Попробуйте отправить чуть позже.'); return false;">
-        
+            <input type='submit' name='sendmsg' value="Отправить сообщение" class='btn btn-warning'>
+            <?php if(isset($totalSent) && $totalSent !== false) { ?> 
+            <p>Отправлено писем: <?=$totalSent?></p>
+            <?php } ?>
         </div>
 
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
