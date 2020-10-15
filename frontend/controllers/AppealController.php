@@ -16,7 +16,6 @@ class AppealController extends \yii\web\Controller
         return $this->render('index', [
             'page' => $page,
             'appeals' => $appeals
-
         ]);
     }
 

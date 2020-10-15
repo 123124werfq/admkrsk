@@ -6,6 +6,7 @@ use Yii;
 use common\models\ServiceComplaintForm;
 use common\models\CollectionRecord;
 use common\models\FormDynamic;
+use yii\web\NotFoundHttpException;
 
 class ComplaintController extends \yii\web\Controller
 {

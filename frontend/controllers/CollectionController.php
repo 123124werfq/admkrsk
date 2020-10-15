@@ -9,6 +9,7 @@ use common\models\Collection;
 use common\models\SettingPluginCollection;
 use yii\web\Response;
 use Yii;
+use yii\web\NotFoundHttpException;
 
 class CollectionController extends \yii\web\Controller
 {
