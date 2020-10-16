@@ -27,7 +27,7 @@ use common\models\ServiceRubric;
         </div>
         <div class="col-sm-3">
             <?=$form->field($model, 'id_rub')->widget(Select2::class, [
-                'data' => ArrayHelper::map(ServiceRubric::find()->joinWith('childs as childs')->where('childs.id_rub IS NULL')->all(), 'id_rub', 'name'),
+                'data' => ArrayHelper::map(ServiceRubric::find()->joinWith('childs as childs')->where('childs.id_rub IS NULL')->orderBy('name ASC')->all(), 'id_rub', 'name'),
                 'pluginOptions' => [
                     'allowClear' => true,
                     'placeholder' => 'Выберите рубрику',
