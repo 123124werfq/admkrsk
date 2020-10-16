@@ -183,7 +183,7 @@ class ContestController extends Controller
 
                 if($expt)
                 {
-                    $mailaddr = $expt->getRealmail();
+                    $mailaddr = $expt->user->getRealmail();
                 }
 
                 $mailContent = str_replace('{name}', $expt->user->getUsername(), $template);
