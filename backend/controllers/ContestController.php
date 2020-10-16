@@ -183,10 +183,7 @@ class ContestController extends Controller
 
                 if($expt)
                 {
-                    if(!empty($expt->id_esia_user))
-                        $mailaddr = $expt->user->esiainfo->email;
-                    else
-                        $mailaddr = $expt->user->email;
+                    $mailaddr = $expt->getRealmail();
                 }
 
                 $mailContent = str_replace('{name}', $expt->user->getUsername(), $template);
