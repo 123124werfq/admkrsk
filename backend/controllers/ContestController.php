@@ -205,9 +205,11 @@ class ContestController extends Controller
                         ->send();
 
                     $totalSent++;
-                    var_dump($res);                    
+                    var_dump($res);
+                    die();                    
                 } catch (\Exception $e) {
-                    //var_dump($e);
+                    var_dump($e);
+                    die();
                 }
 
             }
