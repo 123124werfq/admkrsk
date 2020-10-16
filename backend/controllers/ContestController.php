@@ -191,9 +191,9 @@ class ContestController extends Controller
 
                 $mailContent = str_replace('{name}', $expt->user->getUsername(), $template);
                 $mailContent = str_replace('{contest}', $model['name'], $mailContent);
-                $mailContent = str_replace('{link}', "<a href='https://grants.admkrsk.ru/contest/vote/".md5($id).">https://grants.admkrsk.ru/contest/vote/".md5($id)."</a>", $mailContent);
+                $mailContent = str_replace('{link}', "https://grants.admkrsk.ru/contest/vote/".md5($id), $mailContent);
     
-                $mailaddr = 'kosyag@yandex.ru';
+                //$mailaddr = 'kosyag@yandex.ru';
 
                 //var_dump(htmlspecialchars($mailContent));
 
