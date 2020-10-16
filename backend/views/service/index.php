@@ -6,6 +6,9 @@ use common\models\GridSetting;
 use common\models\Service;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
+use common\models\ServiceRubric;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\search\ServiceSearch */
@@ -30,11 +33,14 @@ $defaultColumns = [
             'width' => '40%',
         ]
     ],
-    'form:prop' => [
-        'attribute' => 'name',
-        'label' => "Формы",
+    'id_rub' => [
+        'attribute' => 'id_rub',
+        'filter' => ArrayHelper::map(ServiceRubric::find()->joinWith('childs as childs')->where('childs.id_rub IS NULL')->orderBy('name ASC')->all(), 'id_rub', 'name'),
+        'options' => [
+            'width' => '200',
+        ],
         'value' => function ($model) {
-            return $model->getForms()->where(['state' => 1])->count();
+            return ($model->id_rub) ? $model->rubric->name : '';
         },
     ],
     'old' => [
@@ -46,6 +52,12 @@ $defaultColumns = [
         'label' => "Форма",
         'value' => function ($model) {
             return ($model->online) ? 'Онлайн' : 'Оффлайн';
+        },
+    ],
+    'form:prop' => [
+        'label' => "Формы",
+        'value' => function ($model) {
+            return $model->getForms()->where(['state' => 1])->count();
         },
     ],
 ];
@@ -83,37 +95,41 @@ if (Yii::$app->user->can('admin.service')) {
     </div>
 </div>
 
-<div class="service-index">
+<?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => array_merge(array_values($gridColumns), [
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {update} ' . ($archive ? '{undelete}' : '{delete}'),
-                'buttons' => [
-                    'undelete' => function ($url, $model, $key) {
-                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-floppy-disk"]);
-                        return Html::a($icon, $url, [
-                            'title' => 'Восстановить',
-                            'aria-label' => 'Восстановить',
-                            'data-pjax' => '0',
-                        ]);
-                    },
+<div class="ibox">
+    <div class="ibox-content">
+    <div style="margin-top: 10px; text-align:right;">
+    <a style="color: white" href="<?= Url::to(['', 'pageSize' => 10]) ?>"><button class="btn btn-primary">10</button></a>
+    <a style="color: white" href="<?= Url::to(['', 'pageSize' => 20]) ?>"><button class="btn btn-primary">20</button></a>
+    <a style="color: white" href="<?= Url::to(['', 'pageSize' => 40]) ?>"><button class="btn btn-primary">40</button></a>
+</div>
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
+            'columns' => array_merge(array_values($gridColumns), [
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'template' => '{view} {update} ' . ($archive ? '{undelete}' : '{delete}'),
+                    'buttons' => [
+                        'undelete' => function ($url, $model, $key) {
+                            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-floppy-disk"]);
+                            return Html::a($icon, $url, [
+                                'title' => 'Восстановить',
+                                'aria-label' => 'Восстановить',
+                                'data-pjax' => '0',
+                            ]);
+                        },
+                    ],
+                    'contentOptions' => ['class' => 'button-column']
                 ],
-                'contentOptions' => ['class' => 'button-column']
-            ],
-        ]),
-        'tableOptions' => [
-            'emptyCell' => '',
-            'class' => 'table table-striped ids-style valign-middle table-hover',
-            'data-grid' => ServiceController::grid,
-            'id' => 'grid',
-        ]
-    ]); ?>
-
-
+            ]),
+            'tableOptions' => [
+                'emptyCell' => '',
+                'class' => 'table table-striped ids-style valign-middle table-hover',
+                'data-grid' => ServiceController::grid,
+                'id' => 'grid',
+            ]
+        ]); ?>
+    </div>
 </div>
