@@ -426,6 +426,22 @@ class User extends ActiveRecord implements IdentityInterface
 
     }
 
+    public function getRealmail()
+    {
+        if (!empty($this->id_ad_user)) {
+            $ad = $this->getAdinfo()->one();
+            return $ad->email;
+        }
+
+        if (!empty($this->id_esia_user)) {
+            $ei = $this->getEsiainfo()->one();
+            return $ei->email;
+        }
+
+        return $this->email;
+
+    }    
+
     public function getMedia()
     {
         return $this->hasOne(Media::class, ['id_media' => 'id_media']);

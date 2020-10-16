@@ -47,6 +47,30 @@ return [
             'rules' => [
             ],
         ],
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'useFileTransport' => false,
+
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.office365.com',
+                'username' => 'stajor@maxsoft.ru',
+                'password' => 'User1',
+                'port' => '587',
+                'encryption' => 'tls',
+                /*
+                'port' => '465',
+                'encryption' => 'ssl',
+                */
+                'streamOptions' => [
+                    'ssl' => [
+                        'allow_self_signed' => true,
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                    ],
+                ],
+            ],
+        ],         
     ],
     'params' => $params,
 ];
