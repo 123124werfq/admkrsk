@@ -193,7 +193,7 @@ class ContestController extends Controller
                 //$mailaddr = 'kosyag@yandex.ru';
 
                 //var_dump(htmlspecialchars($mailContent));
-var_dump($mailaddr);
+
                 try {
                     $res = Yii::$app->mailer->compose('blank', ['content' => $mailContent ])
                         ->setFrom('stajor@maxsoft.ru')
