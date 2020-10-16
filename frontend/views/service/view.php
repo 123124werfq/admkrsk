@@ -1,4 +1,6 @@
 <?php
+    use frontend\widgets\CollectionRecordWidget;
+
     $this->params['page'] = $page;
 
     $attributes = [
@@ -26,6 +28,7 @@
     ];
 
     $forms = $service->getForms()->all();
+    $firms = $service->getFirms()->with('collection')->all();
 ?>
 <div class="main">
     <div class="container">
@@ -73,32 +76,18 @@
                 </div>
                 <?php }?>
 
-                <?php if (!empty($service->firms)){?>
+                <?php if (!empty($firms)){?>
                 <h2>Органы, оказывающие услугу:</h2>
-                <?php foreach ($service->firms as $key => $record){
-                        $data = $record->getData(true);
-                ?>
-                    <p><?=$data['department']??''?></p>
-                    <div class="content">
-                        <div class="table-reponsive">
-                            <table class="label-table">
-                                <tr>
-                                    <td>Адрес:</td>
-                                    <td><?=nl2br($data['office']??'')?></td>
-                                </tr>
-                                <tr>
-                                    <td>Телефон:</td>
-                                    <td><?=nl2br($data['phones']??'')?></td>
-                                </tr>
-                                <tr>
-                                    <td>Режим работы:</td>
-                                    <td><?=$data['worktime']??''?></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                <?php
-                    }}
+
+                <?php foreach ($firms as $key => $record){
+                        //$data = $record->getData(true);
+                        echo CollectionRecordWidget::widget([
+                            'collectionRecord'=>$record,
+                            'templateAsElement'=>true,
+                            'renderTemplate'=>true,
+                        ]);
+                    }
+                }
                 ?>
 
                 <div class="subscribe">
