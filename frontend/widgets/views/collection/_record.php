@@ -14,16 +14,20 @@
                     echo 'Не заполнено';
                 else
                 {
-                    if ($column->isRelation() && empty($noRecursion))
+                    if ($column->isRelation())
                     {
-                        if (!empty($recordData[$column->id_column]) && is_array($recordData[$column->id_column]))
-                            foreach ($recordData[$column->id_column] as $id_subrecord => $subrecord)
-                            {
-                                echo \frontend\widgets\CollectionRecordWidget::widget([
-                                    'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
-                                    'noRecursion'=>true,
-                                ]);
-                            }
+                        if (!in_array($column->input->id_collection,$recursionCollections))
+                        {
+                            if (!empty($recordData[$column->id_column]) && is_array($recordData[$column->id_column]))
+                                foreach ($recordData[$column->id_column] as $id_subrecord => $subrecord)
+                                {
+                                    echo \frontend\widgets\CollectionRecordWidget::widget([
+                                        'collectionRecord'=>CollectionRecord::findOne($id_subrecord),
+                                        //'noRecursion'=>true,
+                                        'recursionCollections'=>array_merge($recursionCollections,[$column->id_collection])
+                                    ]);
+                                }
+                        }
                     }
                     elseif ($column->type == CollectionColumn::TYPE_JSON)
                     {
