@@ -367,7 +367,7 @@ class ContestController extends Controller
         else 
             $extraStatuses = [];
 
-        var_dump($record);
+        //var_dump($record);
 
         return $this->render('viewprofile', [
             'model' => $profile,
