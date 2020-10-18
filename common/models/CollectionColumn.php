@@ -860,9 +860,11 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 return json_decode($value,true);
                 break;
             case self::TYPE_COLLECTION:
-            case self::TYPE_COLLECTIONS:
+            case self::TYPE_COLLECTIONS:            
                 if (is_array($value))
-                    return '<span>'.implode('</span><br/><span>', $value).'</span>';
+                {                    
+                    return '<span>'.implode("</span><br/><span>",array_map(function($a) {return implode("~",$a);},$value)).'</span>';
+                }
                 else
                     return $value;
                 break;
