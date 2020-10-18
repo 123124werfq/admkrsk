@@ -541,6 +541,8 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 if (!empty($onlyColumns) && !in_array($column->alias, $onlyColumns))
                     continue;
 
+                $alias = $keyAsAlias?$column['alias']:$column->id_column;
+
                 $value = $record[$column->id_column];
 
                 if ($includeRelation && $column->isRelation() && !empty($value))
@@ -550,16 +552,16 @@ class CollectionRecord extends \yii\db\ActiveRecord
                         $subrecord = CollectionRecord::findOne(is_array($value)?key($value):$value);
                         if (!empty($subrecord))
                         {
-                            $output[$column['alias']] = $subrecord->getDataRaw($keyAsAlias,false);
+                            $output[$alias] = $subrecord->getDataRaw($keyAsAlias,false);
                         }
                     }
                     else if ($column->type == CollectionColumn::TYPE_COLLECTIONS)
                     {
-                        $output[$column['alias']] = [];
+                        $output[$alias] = [];
 
                         if (is_array($value))
                         {
-                            $output[$column['alias']] = \common\components\collection\CollectionQuery::getQuery($column->input->id_collection)
+                            $output[$alias] = \common\components\collection\CollectionQuery::getQuery($column->input->id_collection)
                             ->select()
                             ->where(['id_record'=>array_keys($value)])
                             ->getArray(true);
@@ -572,14 +574,14 @@ class CollectionRecord extends \yii\db\ActiveRecord
                         }*/
                     }
                     else
-                        $output[$column['alias']] = $value;
+                        $output[$alias] = $value;
                 }
                 else
                 {
                     if ($column->type == CollectionColumn::TYPE_JSON)
-                        $output[$column['alias']] = json_decode($value);
+                        $output[$alias] = json_decode($value);
                     else
-                        $output[$column['alias']] = $value;
+                        $output[$alias] = $value;
                 }
             }
 
