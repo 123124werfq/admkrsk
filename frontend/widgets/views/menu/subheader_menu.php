@@ -1,6 +1,6 @@
 <ul class="sitemap_menu">
     <!-- элементам с подменю добавлять класс sitemap_menu-item__submenu -->
-    <?php foreach ($menu->getLinks()->where('id_parent IS NULL')->all() as $key => $link) {?>
+    <?php foreach ($menu->getLinks()->with('childs')->where('id_parent IS NULL')->all() as $key => $link) {?>
     <li class="sitemap_menu-item <?=!empty($link->childs)?'sitemap_menu-item__submenu':''?>">
         <span class="sitemap_header-wrap">
             <a href="<?=$link->getUrl()?>" class="sitemap_header"><span class="sitemap_header-text"><?=$link->label?></span></a>
