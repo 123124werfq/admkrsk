@@ -853,14 +853,20 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 return implode(', ', $output).(!empty($time_string)?'. '.$time_string:'');
                 break;
             case self::TYPE_JSON:
+                
                 if (is_array($value))
                     return $value;
 
                 return json_decode($value,true);
                 break;
-            case self::TYPE_COLLECTIONS:
+            case self::TYPE_COLLECTION:
+            case self::TYPE_COLLECTIONS:            
                 if (is_array($value))
-                    return '<span>'.implode('</span><br/><span>', $value).'</span>';
+                {                    
+                    var_dump($value);
+                    return '';
+                    //return '<span>'.implode("</span><br/><span>",array_map(function($a) {return implode("~",$a);},$value)).'</span>';
+                }
                 else
                     return $value;
                 break;

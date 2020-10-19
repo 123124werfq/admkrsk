@@ -205,8 +205,8 @@ class ContestController extends Controller
                     //var_dump($res);
                     //die();                    
                 } catch (\Exception $e) {
-                    var_dump($e);
-                    die();
+                    //var_dump($e);
+                    //die();
                 }
 
             }
@@ -307,6 +307,38 @@ class ContestController extends Controller
             {
                 $record->data = ['ready' => 0];
                 $record->save();
+
+                $mailaddr = $profile->user->getRealmail();
+
+                $mailContent = "<h2>Добрый день, " . $profile->user->getUsername() . "</h2>";
+                $mailContent .= "<p>Ваша заявка изменила статус на <em>" . $profile->additional_status  . "</em></p>";
+                $mailContent .= "<p>Комментарий к статусу: <em>" . $profile->comment  . "</em></p>";
+
+                //$mailContent = str_replace('{name}', $expt->user->getUsername(), $template);
+                //$mailContent = str_replace('{contest}', $model['name'], $mailContent);
+                //$mailContent = str_replace('{link}', "https://grants.admkrsk.ru/contest/vote/".md5($id), $mailContent);
+    
+                //$mailaddr = 'kosyag@yandex.ru';
+
+                //var_dump(htmlspecialchars($mailContent));
+
+                try {
+                    $res = Yii::$app->mailer->compose('blank', ['content' => $mailContent ])
+                        ->setFrom('stajor@maxsoft.ru')
+                        ->setTo([$mailaddr])
+                        ->setSubject("Измеился статус анкеты участника конкурса на сайте admkrsk.ru")
+                        ->send();
+
+                    //$totalSent++;
+                    //var_dump($res);
+                    //die();                    
+                } catch (\Exception $e) {
+                    //var_dump($e);
+                    //die();
+                }
+
+
+
             }
 
             return $this->redirect('/contest/profile');
@@ -334,6 +366,8 @@ class ContestController extends Controller
         }
         else 
             $extraStatuses = [];
+
+        //var_dump($record);
 
         return $this->render('viewprofile', [
             'model' => $profile,
