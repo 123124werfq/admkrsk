@@ -22,7 +22,7 @@ function selectPlace(id)
         dataType: "json",
         url: '/address/house-by-place',
         data: {id:$input.val()}
-    }).done(function(data){        
+    }).done(function(data){
         if (data!={})
         {
             var container = $input.closest('.flex-wrap');
@@ -35,7 +35,7 @@ function selectPlace(id)
 
                 if (select.length>0)
                 {
-                    
+
                     var newOption = new Option(data[key], data['id_'+key], true, true);
                     select.append(newOption).trigger('change');
                 }
@@ -243,12 +243,6 @@ $(document).ready(function() {
                     }
                 });
             }
-            /*accept: function(file, done) {
-                if (file.name == "justinbieber.jpg") {
-                done("Naha, you don't.");
-                }
-                else { done(); }
-            }*/
         });
     });
 });
