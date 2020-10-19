@@ -17,14 +17,14 @@
                 $templateValues[$alias] = $value;
             }
             else
-                $templateValues[$alias] = $columns[$alias]->getValueByType($value);
+                $templateValues[$alias] = $value; //$columns[$alias]->getValueByType($value);
         }
         else
             $templateValues[$alias] = $value;
 
-        if (isset($templateValues[$alias]) && is_array($templateValues[$alias]) && !$columns[$alias]->isRelation())
+        /*if (isset($templateValues[$alias]) && is_array($templateValues[$alias]) && !$columns[$alias]->isRelation())
             if (is_string(reset($templateValues[$alias])))
-                $templateValues[$alias] = implode('', $templateValues[$alias]);
+                $templateValues[$alias] = implode('', $templateValues[$alias]);*/
     }
 
     echo \common\components\helper\Helper::renderTwig($template,$templateValues);
