@@ -19,13 +19,21 @@
                         if (!in_array($column->input->id_collection,$recursionCollections))
                         {
                             if (!empty($recordData[$column->id_column]) && is_array($recordData[$column->id_column]))
-                                foreach ($recordData[$column->id_column] as $id_subrecord => $subrecord)
-                                {
+                            {
+                                if (!empty($recordData[$column->id_column]['id_record']))
                                     echo \frontend\widgets\CollectionRecordWidget::widget([
-                                        'collectionRecord'=>CollectionRecord::find()->where(['id_record'=>$subrecord['id_record']??$id_subrecord])->one(),
+                                        'collectionRecord'=>CollectionRecord::find()->where(['id_record'=>$recordData[$column->id_column]['id_record']])->one(),
                                         'recursionCollections'=>array_merge($recursionCollections,[$column->id_collection])
                                     ]);
-                                }
+                                else 
+                                    foreach ($recordData[$column->id_column] as $id_subrecord => $subrecord)
+                                    {
+                                        echo \frontend\widgets\CollectionRecordWidget::widget([
+                                            'collectionRecord'=>CollectionRecord::find()->where(['id_record'=>$id_subrecord])->one(),
+                                            'recursionCollections'=>array_merge($recursionCollections,[$column->id_collection])
+                                        ]);
+                                    }
+                            }
                         }
                     }
                     elseif ($column->type == CollectionColumn::TYPE_JSON)
