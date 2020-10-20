@@ -54,7 +54,7 @@ function addInput(block)
     return false;
 }
 
-$(document).ready(function() {        
+$(document).ready(function() {
 
     $(".ajax-form").on('beforeSubmit', function (event) {
         event.preventDefault();
@@ -125,28 +125,6 @@ $(document).ready(function() {
             }
         });
     }
-
-    $(".copydate").change(function(){
-
-        var checkbox = $(this);
-        if (checkbox.prop('checked'))
-        {
-            var group = checkbox.closest(".form-group");
-
-            $("#inputGroup"+checkbox.data('input')).find('input, select, textarea').each(function(){
-                var input = $("#"+$(this).attr('id').replace(checkbox.data('input'),checkbox.val()));
-
-                if (input.hasClass('select2-hidden-accessible'))
-                {
-                    input.html($(this).html());
-                    input.val($(this).val());
-                    input.trigger("change");
-                }
-                else
-                    input.val($(this).val());
-            });
-        }
-    });
 
     $("body").delegate('.showonmap','click',function(){
         if($('#map'+$(this).data('hash')+':visible').length)
@@ -224,7 +202,7 @@ $(document).ready(function() {
                 modal: true
             });
         }
-    });    
+    });
 
     $("#news-date").on('datepicker-change', function(event,obj) {
         $("#news-filter").submit();
@@ -360,12 +338,12 @@ $(document).ready(function() {
     }
 
     $('a[href$=".doc"], a[href$=".docx"], a[href$=".xls"], a[href$=".xlsx"]').each(function(idx,el){
-        let originalLink = $(el).attr('href');        
+        let originalLink = $(el).attr('href');
 
         if(originalLink.indexOf('://')==-1) originalLink = location.origin + originalLink;
 
         let previewLink = "https://docs.google.com/gview?embedded=false&url="+originalLink;
-        
+
         if(!$(el).hasClass('btn'))
             $(el).attr('href', previewLink).attr('target', '_blank');
     });

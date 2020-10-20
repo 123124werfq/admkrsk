@@ -122,6 +122,28 @@ function visibleForm(visibleInputs,visibleElements,dom)
 
 $(document).ready(function() {
 
+    $('body').delegate(".copydate",'change',function(){
+
+        var checkbox = $(this);
+        if (checkbox.prop('checked'))
+        {
+            var group = checkbox.closest(".form-group");
+
+            $("#inputGroup"+checkbox.data('input')).find('input, select, textarea').each(function(){
+                var input = $("#"+$(this).attr('id').replace(checkbox.data('input'),checkbox.val()));
+
+                if (input.hasClass('select2-hidden-accessible'))
+                {
+                    input.html($(this).html());
+                    input.val($(this).val());
+                    input.trigger("change");
+                }
+                else
+                    input.val($(this).val());
+            });
+        }
+    });
+
     $('body').delegate(".delete-subform",'click',function(){
         if ($(this).closest('.subform').parent().find('.subform').length>1)
             $(this).closest('.subform').remove();
