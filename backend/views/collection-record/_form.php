@@ -8,8 +8,6 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<?php $form = ActiveForm::begin(); ?>
-
 <?php if (!$model->isNewRecord && !empty($model->collection->type->is_faq)){?>
     <div class="text-right">
         <a class="btn btn-info btn-visible" href="/faq/create?id=<?=$model->id_record?>">Экспортировать в Вопрос-Ответ</a>
@@ -26,10 +24,8 @@ use yii\widgets\ActiveForm;
     ]]
 )?>
 
-<?php ActiveForm::end(); ?>
-
 <?php 
-$script = <<< JS
+/*$script = <<< JS
 $(".fileupload").each(function(){
     var id_input = $(this).data('input');
     var new_index = $(this).find('.fileupload_item').length+1;
@@ -75,5 +71,5 @@ $(".fileupload").each(function(){
     });
 });
 JS;
-$this->registerJs($script, yii\web\View::POS_END);
+$this->registerJs($script, yii\web\View::POS_END);*/
 ?>

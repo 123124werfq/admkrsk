@@ -32,7 +32,7 @@ function setVisisble()
         var source = $("#"+$(this).data('visible-field'));
         var block = $(this);
 
-        function check()
+        function checkV()
         {
             var values = String(block.data('values')).split(',');
 
@@ -45,10 +45,10 @@ function setVisisble()
         if (source.length>0)
         {
           source.change(function(){
-            check();
+            checkV();
           });
 
-          check();
+          checkV();
         }
     });
 }
@@ -730,55 +730,12 @@ jQuery(document).ready(function()
         $(this).find('.row').each(function(i){
             $(this).find("input[name*='ord]']").val($(this).index());
         });
-
-          /*if ($(this).prop("tagName")=='TBODY')
-            $this = $(this).parent();
-          else
-            $this = $(this);
-
-          var id = ui.item.data('id');
-          var pos = ui.item.index();
-          var table = $this.data('table');
-          var where = $this.data('where');
-          var pk = $this.data('pk');
-          if (table)
-              $.ajax({
-                  url: '/master/default/reord',
-                  type: 'post',
-                  data: 'id='+id+'&pos='+pos+'&table='+table+'&where='+where+'&pk='+pk,
-                  success: function(data)
-                  {
-                  }f
-              });*/
       }
     }).disableSelection();
 
     $(".ordered tbody, ul.ordered").sortable({
       stop: function(event, ui){
-
-          reordModels($(this));
-
-          /*if ($(this).prop("tagName")=='TBODY')
-            $this = $(this).parent();
-          else
-            $this = $(this);
-
-          var id = ui.item.data('id');
-          var pos = ui.item.index();
-          var table = $this.data('table');
-          var where = $this.data('where');
-          var pk = $this.data('pk');
-
-          if (table)
-              $.ajax({
-                  url: '/site/reord',
-                  type: 'post',
-                  data: 'id='+id+'&pos='+pos+'&table='+table+'&where='+where+'&pk='+pk,
-                  success: function(data)
-                  {
-
-                  }
-              });*/
+          reordModels($(this));         
       }
   }).disableSelection();
 
