@@ -15,6 +15,7 @@ use yii\widgets\ActiveForm;
     </div>
 <?php }?>
 <?=\frontend\widgets\FormsWidget::widget([
+    'action'=>'',
     'form'=>$collection->form,
     'collectionRecord'=>$model,
     'nocaptcha'=>true,
@@ -24,7 +25,7 @@ use yii\widgets\ActiveForm;
     ]]
 )?>
 
-<?php 
+<?php
 /*$script = <<< JS
 $(".fileupload").each(function(){
     var id_input = $(this).data('input');
@@ -61,7 +62,7 @@ $(".fileupload").each(function(){
                 $(file.previewElement).append(
                     '<input type="hidden" name="FormDynamic[input'+id_input+']['+new_index+'][filename]" value="'+response.filename+'"/>'
                 );
-                
+
                 if ($(file.previewElement).find('.fileupload_preview-type img').attr('src')==undefined)
                     $(file.previewElement).find('.fileupload_preview-type').text(response.file.split('.').pop());
 

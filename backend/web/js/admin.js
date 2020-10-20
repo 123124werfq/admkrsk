@@ -735,7 +735,7 @@ jQuery(document).ready(function()
 
     $(".ordered tbody, ul.ordered").sortable({
       stop: function(event, ui){
-          reordModels($(this));         
+          reordModels($(this));
       }
   }).disableSelection();
 
