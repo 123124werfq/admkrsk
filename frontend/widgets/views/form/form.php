@@ -35,7 +35,6 @@ JS;
 
 $this->registerJs($script, yii\web\View::POS_END);
 }?>
-
 	<?php $activeForm = ActiveForm::begin([
 		'id'=>'form'.$form->id_form,
 		'action'=>($action===null)?'/form/create?id='.$form->id_form:$action,

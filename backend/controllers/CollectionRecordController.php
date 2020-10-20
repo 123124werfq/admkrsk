@@ -439,6 +439,7 @@ class CollectionRecordController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'collection'=>$collection,
         ]);
     }
 
@@ -483,7 +484,14 @@ class CollectionRecordController extends Controller
         }
 
         if (Yii::$app->request->isAjax)
+        {
+            /*Yii::$app->assetManager->bundles = [
+                'yii\bootstrap\BootstrapAsset' => false,
+                'yii\web\JqueryAsset'=>false,
+                'yii\web\YiiAsset'=>false,
+            ];*/
             return $this->renderAjax('_form',['model'=>$model,'collection'=>$collection]);
+        }
 
         return $this->render('update', [
             'model' => $model,
