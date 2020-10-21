@@ -140,41 +140,8 @@ class WordDoc
         {
             $col_alias = $col->alias;
 
-            if ($col->type==CollectionColumn::TYPE_CHECKBOXLIST)
-            {
-                $values = $col->input->getArrayValues();
-
-                $output = [];
-
-                foreach ($values as $key => $value)
-                    $output[] = $value.(!empty($data[$col_alias]) && in_array($value, $data[$col_alias])?' - да':' - нет');
-
-                $string_output[$col_alias] = implode('<w:br/>', $output);
-            }
-            else if (!isset($data[$col_alias]) || empty($data[$col_alias]))
+            if (!isset($data[$col_alias]))
                 $string_output[$col_alias] = '';
-            else if ($col->type==CollectionColumn::TYPE_DATE)
-                $string_output[$col_alias] = date('d.m.Y',(int)$data[$col_alias]);
-            else if ($col->type==CollectionColumn::TYPE_DATETIME)
-                $string_output[$col_alias] = date('d.m.Y H:i',(int)$data[$col_alias]);
-            else if ($col->type==CollectionColumn::TYPE_DISTRICT)
-            {
-                $model = \common\models\District::findOne($data[$col_alias]);
-
-                if (!empty($model))
-                    $string_output[$col_alias] = $model->name;
-            }
-            else if ($col->type==CollectionColumn::TYPE_COLLECTIONS)
-                $string_output[$col->alias] = $data[$col_alias];
-            else if ($col->type==CollectionColumn::TYPE_SERVICETARGET)
-            {
-                $model = \common\models\ServiceTarget::findOne($data[$col_alias]);
-
-                if (!empty($model))
-                    $string_output[$col_alias] = $model->name;
-                else
-                    $string_output[$col->alias] = $data[$col_alias];
-            }
             else if ($col->type==CollectionColumn::TYPE_REPEAT)
             {
                 $string_output[$col->alias.'.begin'] = $data[$col_alias]['begin']?date('d.m.Y',$data[$col_alias]['begin']):'';
@@ -189,21 +156,6 @@ class WordDoc
                 $string_output[$col->alias.'.week'] = (!empty($data[$col_alias]['week'])&&is_array($data[$col_alias]['week']))?implode(', ', $data[$col_alias]['week']):'';
                 $string_output[$col->alias.'.week_number'] = $data[$col_alias]['week_number']??'';
                 $string_output[$col->alias.'.month_week'] = (!empty($data[$col_alias]['month_week']))?implode(', ', $data[$col_alias]['month_week']):'';
-            }
-            else if ($col->type==CollectionColumn::TYPE_JSON)
-            {
-                /*$table = new \Table(array('borderSize' => 12, 'borderColor' => 'green', 'width' => 6000, 'unit' => TblWidth::TWIP));
-                $table->addRow();
-                $table->addCell(150)->addText('Cell A1');
-                $table->addCell(150)->addText('Cell A2');
-                $table->addCell(150)->addText('Cell A3');
-                $table->addRow();
-                $table->addCell(150)->addText('Cell B1');
-                $table->addCell(150)->addText('Cell B2');
-                $table->addCell(150)->addText('Cell B3');*/
-                //$templateProcessor->setComplexBlock('table', $table);
-
-                $string_output[$col->alias] = $data[$col_alias];//$table;//$value;
             }
             else if ($col->type==CollectionColumn::TYPE_ADDRESS)
             {
@@ -222,34 +174,6 @@ class WordDoc
 
                 $string_output[$col->alias.'.lat'] = $data[$col_alias]['lat']??'';
                 $string_output[$col->alias.'.lon'] = $data[$col_alias]['lon']??'';
-            }
-            else if ($col->type==CollectionColumn::TYPE_CITY)
-            {
-                $model = \common\models\City::findOne($data[$col_alias]);
-
-                if (!empty($model))
-                    $string_output[$col_alias] = $model->name;
-            }
-            else if ($col->type==CollectionColumn::TYPE_STREET)
-            {
-                $model = \common\models\Street::findOne($data[$col_alias]);
-
-                if (!empty($model))
-                    $string_output[$col_alias] = $model->name;
-            }
-            else if ($col->type==CollectionColumn::TYPE_REGION)
-            {
-                $model = \common\models\Region::findOne($data[$col_alias]);
-
-                if (!empty($model))
-                    $string_output[$col_alias] = $model->name;
-            }
-            else if ($col->type==CollectionColumn::TYPE_HOUSE)
-            {
-                $model = \common\models\House::findOne($data[$col_alias]);
-
-                if (!empty($model))
-                    $string_output[$col_alias] = $model->name;
             }
             else if ($col->type==CollectionColumn::TYPE_FILE || $col->type==CollectionColumn::TYPE_IMAGE)
             {
@@ -306,6 +230,84 @@ class WordDoc
                     $string_output[$col->alias.'.size'] =
                     $string_output[$col->alias.'.pagecount'] = '';
                 }
+            }
+            elseif ($col->type==CollectionColumn::TYPE_CHECKBOXLIST)
+            {
+                $values = $col->input->getArrayValues();
+
+                $output = [];
+
+                foreach ($values as $key => $value)
+                    $output[] = $value.(!empty($data[$col_alias]) && in_array($value, $data[$col_alias])?' - да':' - нет');
+
+                $string_output[$col_alias] = implode('<w:br/>', $output);
+            }
+            else if (empty($data[$col_alias]))
+                $string_output[$col_alias] = '';
+            else if ($col->type==CollectionColumn::TYPE_DATE)
+                $string_output[$col_alias] = date('d.m.Y',(int)$data[$col_alias]);
+            else if ($col->type==CollectionColumn::TYPE_DATETIME)
+                $string_output[$col_alias] = date('d.m.Y H:i',(int)$data[$col_alias]);
+            else if ($col->type==CollectionColumn::TYPE_DISTRICT)
+            {
+                $model = \common\models\District::findOne($data[$col_alias]);
+
+                if (!empty($model))
+                    $string_output[$col_alias] = $model->name;
+            }
+            else if ($col->type==CollectionColumn::TYPE_COLLECTIONS)
+                $string_output[$col->alias] = $data[$col_alias];
+            else if ($col->type==CollectionColumn::TYPE_SERVICETARGET)
+            {
+                $model = \common\models\ServiceTarget::findOne($data[$col_alias]);
+
+                if (!empty($model))
+                    $string_output[$col_alias] = $model->name;
+                else
+                    $string_output[$col->alias] = $data[$col_alias];
+            }
+            else if ($col->type==CollectionColumn::TYPE_JSON)
+            {
+                /*$table = new \Table(array('borderSize' => 12, 'borderColor' => 'green', 'width' => 6000, 'unit' => TblWidth::TWIP));
+                $table->addRow();
+                $table->addCell(150)->addText('Cell A1');
+                $table->addCell(150)->addText('Cell A2');
+                $table->addCell(150)->addText('Cell A3');
+                $table->addRow();
+                $table->addCell(150)->addText('Cell B1');
+                $table->addCell(150)->addText('Cell B2');
+                $table->addCell(150)->addText('Cell B3');*/
+                //$templateProcessor->setComplexBlock('table', $table);
+
+                $string_output[$col->alias] = $data[$col_alias];//$table;//$value;
+            }
+            else if ($col->type==CollectionColumn::TYPE_CITY)
+            {
+                $model = \common\models\City::findOne($data[$col_alias]);
+
+                if (!empty($model))
+                    $string_output[$col_alias] = $model->name;
+            }
+            else if ($col->type==CollectionColumn::TYPE_STREET)
+            {
+                $model = \common\models\Street::findOne($data[$col_alias]);
+
+                if (!empty($model))
+                    $string_output[$col_alias] = $model->name;
+            }
+            else if ($col->type==CollectionColumn::TYPE_REGION)
+            {
+                $model = \common\models\Region::findOne($data[$col_alias]);
+
+                if (!empty($model))
+                    $string_output[$col_alias] = $model->name;
+            }
+            else if ($col->type==CollectionColumn::TYPE_HOUSE)
+            {
+                $model = \common\models\House::findOne($data[$col_alias]);
+
+                if (!empty($model))
+                    $string_output[$col_alias] = $model->name;
             }
             else if (!empty($col->input->id_collection))
             {
