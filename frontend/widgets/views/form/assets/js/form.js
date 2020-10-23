@@ -127,6 +127,8 @@ $(document).ready(function() {
         var checkbox = $(this);
         if (checkbox.prop('checked'))
         {
+            console.log(123);
+
             var group = checkbox.closest(".form-group");
 
             $("#inputGroup"+checkbox.data('input')).find('input, select, textarea').each(function(){
@@ -134,6 +136,7 @@ $(document).ready(function() {
 
                 if (input.hasClass('select2-hidden-accessible'))
                 {
+                    console.log(111);
                     input.html($(this).html());
                     input.val($(this).val());
                     input.trigger("change");
