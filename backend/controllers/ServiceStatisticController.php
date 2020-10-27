@@ -33,7 +33,7 @@ class ServiceStatisticController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['backend.serviceSituation.index', 'backend.entityAccess'],
+                        'roles' => ['backend.service.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => ServiceStatistic::class,
                         ],
