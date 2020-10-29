@@ -27,8 +27,8 @@ $options = $clear;
 
 $options['class'] = 'form-control';
 
-/*if (!empty($input->required))
-    $options['required'] = true;*/
+if (!empty($input->required) && $input->type == CollectionColumn::TYPE_CHECKBOX)
+    $options['required'] = true;
 
 if (!empty($input->readonly) && strpos(Yii::$app->params['backendUrl'],'/'.$_SERVER['SERVER_NAME'])===false)
     $options['readonly'] = true;
