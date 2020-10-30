@@ -102,7 +102,7 @@ var_dump($model->client_type);*/
             ]
         ])*/?>
 
-        <?= $form->field($model, 'addresses')->textarea(['rows' => 6,'class'=>'form-controll redactor']]) ?>
+        <?= $form->field($model, 'addresses')->textarea(['rows' => 6,'class'=>'form-controll redactor']) ?>
 
         <?= $form->field($model, 'result')->textarea(['rows' => 6,'class'=>'form-controll redactor']) ?>
 
