@@ -285,9 +285,17 @@ class PageController extends Controller
 
         $tree = [];
 
+        
+
         foreach ($pages as $key => $page)
         {
-            $tree[(int)$page->id_parent][$page->id_page] = $page;
+            //$tree[(int)$page->id_parent][$page->id_page] = $page;
+
+            $tree = [
+                "id"=>$page->id_page, 
+                "parent"=>$page->id_parent?:'#', 
+                "text"=>$page->title,
+            ];
         }
 
         return $this->render('tree',['tree'=>$tree]);
