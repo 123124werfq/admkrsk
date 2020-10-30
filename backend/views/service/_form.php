@@ -25,10 +25,10 @@ $id_firms = $model->getFirms()->indexBy('id_record')->all();
 if (!empty($id_firms))
     $model->id_firms = array_keys($id_firms);
 
-$offices = Collection::find()->where(['alias'=>'service_offices'])->one();
+/*$offices = Collection::find()->where(['alias'=>'service_offices'])->one();
 
 if (!empty($offices))
-    $offices = $offices->getArray();
+    $offices = $offices->getArray();*/
 
 /*var_dump($model->client_type);
 
@@ -90,7 +90,7 @@ var_dump($model->client_type);*/
 
         <hr/>
 
-        <?=$form->field($model, 'id_firms')->widget(Select2::class, [
+        <?=''/*$form->field($model, 'id_firms')->widget(Select2::class, [
             'data' => $offices,
             'pluginOptions' => [
                 'allowClear' => true,
@@ -100,9 +100,9 @@ var_dump($model->client_type);*/
             'options'=>[
                 'multiple'=>true,
             ]
-        ])?>
+        ])*/?>
 
-        <?= $form->field($model, 'addresses')->textarea(['rows' => 6]) ?>
+        <?= $form->field($model, 'addresses')->textarea(['rows' => 6,'class'=>'form-controll redactor']]) ?>
 
         <?= $form->field($model, 'result')->textarea(['rows' => 6,'class'=>'form-controll redactor']) ?>
 

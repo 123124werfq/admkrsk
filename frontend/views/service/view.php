@@ -28,7 +28,10 @@
     ];
 
     $forms = $service->getForms()->all();
-    $firms = $service->getFirms()->with('collection')->all();
+    $firms = $service->getFirms();
+
+    if (!empty($firms))
+        $firms = $firms->all();
 ?>
 <div class="main">
     <div class="container">

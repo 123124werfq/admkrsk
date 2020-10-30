@@ -550,7 +550,7 @@ jQuery(document).ready(function()
       $("#CollectionRecord form").submit();
     });
 
-    $("#CollectionRecord").delegate('form','submit',function(){
+    $("#CollectionRecord").delegate('form','submit',function(event){
 
         event.preventDefault();
 

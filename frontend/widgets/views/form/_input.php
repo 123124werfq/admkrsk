@@ -84,6 +84,20 @@ if (empty($modelForm->maxfilesize))
             case CollectionColumn::TYPE_SERVICE:
                 echo $form->field($model, $attribute)->dropDownList($input->getArrayValues(), $options);
                 break;
+            case CollectionColumn::TYPE_SERVICES:
+                echo $form->field($model, $attribute)->widget(Select2::class, [
+                    'data' => $input->getArrayValues(),
+                    'pluginOptions' => [
+                        'multiple' => true,
+                        'placeholder' => 'Выберите услуги',
+                    ],
+                    'options' => [
+                        'multiple' => true,
+                        //'value' => array_keys($value)
+                    ]
+                ]);
+                /*echo $form->field($model, $attribute)->dropDownList($input->getArrayValues(), $options);*/
+                break;
             case CollectionColumn::TYPE_SELECT:
                 echo $form->field($model, $attribute)->dropDownList($input->getArrayValues(), $options);
                 break;
@@ -613,7 +627,7 @@ if (empty($modelForm->maxfilesize))
                 if (!empty($model->$clearAttribute))
                     $value = $model->$clearAttribute;
 
-                if (is_numeric($value))
+                if (!is_array($value))
                     $value = [$value];
 
                 echo $form->field($model, $attribute)->widget(Select2::class, [

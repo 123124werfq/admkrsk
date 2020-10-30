@@ -151,6 +151,16 @@ class FormInput extends \yii\db\ActiveRecord
 
             return $output;
         }
+        if ($this->type == CollectionColumn::TYPE_SERVICES)
+        {
+            $records = Service::find()->all();
+            $output = [];
+
+            foreach ($records as $key => $data)
+                $output[$data->id_service] = $data->reestr_number;
+
+            return $output;
+        }
         elseif (!empty($this->typeOptions->service_attribute))
         {
             $values = Service::getAttributeValues($this->typeOptions->service_attribute,$model);

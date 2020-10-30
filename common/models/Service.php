@@ -233,7 +233,15 @@ class Service extends ActiveRecord
 
     public function getFirms()
     {
-        return $this->hasMany(CollectionRecord::class, ['id_record' => 'id_record'])->viaTable('servicel_collection_firm',['id_service'=>'id_service']);
+        $collection = Collection::find()->where(['alias'=>'service_offices'])->one();
+
+        if (empty($collection))
+            return [];
+
+        $records = $collection->getDataQuery()->whereByAlias(['in','services',$this->id_service])->getArray();
+
+        return CollectionRecord::find()->where(['id_record'=>array_keys($records)]);
+        //return $this->hasMany(CollectionRecord::class, ['id_record' => 'id_record'])->viaTable('servicel_collection_firm',['id_service'=>'id_service']);
     }
 
     public function getSituations()
@@ -255,6 +263,7 @@ class Service extends ActiveRecord
     {
         return $this->hasMany(Form::class, ['id_service' => 'id_service']);
     }
+
 
     static public function generateGUID(){
         if (function_exists('com_create_guid') === true)

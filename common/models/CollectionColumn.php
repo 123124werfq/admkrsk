@@ -53,6 +53,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
     const TYPE_ADDRESSES = 30;
     const TYPE_REPEAT = 31;
     const TYPE_ARCHIVE = 32;
+    const TYPE_SERVICES = 33;
 
     //const TYPE_MULTISELECT = 6;
     //const TYPE_FILES = 18;
@@ -287,6 +288,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
             self::TYPE_SERVICETARGET => "Цель муниципальной услуги",
             self::TYPE_SERVICE => "Услуги для обжалования",
+            self::TYPE_SERVICES => "Муниципальные услуги",
 
             self::TYPE_REPEAT => 'Повторяющееся событие',
             self::TYPE_CUSTOM => 'Составная колонка',
@@ -564,6 +566,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 return [];
             case self::TYPE_SERVICETARGET:
             case self::TYPE_SERVICE:
+            case self::TYPE_SERVICES:
                 return [];
             case self::TYPE_ADDRESSES:
                 return [];
@@ -853,16 +856,16 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 return implode(', ', $output).(!empty($time_string)?'. '.$time_string:'');
                 break;
             case self::TYPE_JSON:
-                
+
                 if (is_array($value))
                     return $value;
 
                 return json_decode($value,true);
                 break;
             case self::TYPE_COLLECTION:
-            case self::TYPE_COLLECTIONS:            
+            case self::TYPE_COLLECTIONS:
                 if (is_array($value))
-                {                    
+                {
                     var_dump($value);
                     return '';
                     //return '<span>'.implode("</span><br/><span>",array_map(function($a) {return implode("~",$a);},$value)).'</span>';
@@ -947,13 +950,13 @@ class CollectionColumn extends \yii\db\ActiveRecord
             if (!empty($id_record))
             {
                 $subrecord = CollectionRecord::findOne($id_record);
-                
+
                 if (!empty($subrecord))
                 {
                     return $subrecord->getDataRaw(true,false);
                 }
             }
-            
+
             return [];
         }
         else if ($this->type == CollectionColumn::TYPE_COLLECTIONS)

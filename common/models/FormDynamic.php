@@ -135,6 +135,19 @@ class FormDynamic extends DynamicModel
                         $data[$index]['end'] = strtotime($this->$attribute['end']);
 
                         break;
+                    case CollectionColumn::TYPE_SERVICES:
+
+                        $data[$index] = $this->$attribute;
+
+                        if (!empty($data[$index]) && is_array($data[$index]))
+                        {
+                            foreach ($data[$index] as $key => $value) {
+                                $data[$index][$key] = (int)$value;
+                            }
+                        }
+
+                        break;
+
                     case CollectionColumn::TYPE_ADDRESS:
 
                         $value = $this->$attribute;
