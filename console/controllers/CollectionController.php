@@ -386,8 +386,8 @@ class CollectionController extends Controller
     {
         $collection = Collection::find()->where(['id_collection'=>88])->one();
 
-        /*$mongoCollection = Yii::$app->mongodb->getCollection('collection'.$collection->id_collection);
-        $mongoCollection->remove(['>','id_record',30184]);*/
+        $mongoCollection = Yii::$app->mongodb->getCollection('collection'.$collection->id_collection);
+        $mongoCollection->remove(['or',['id_record'=>null],['id_record'=>'']]);
 
         $data88 =  $collection->getData();
 
@@ -432,12 +432,6 @@ class CollectionController extends Controller
                             $output[$cdata[13040]] = $data['fullname'];
                 }
 
-                if (empty($output))
-                {
-                    var_dump($record[1073]);
-                    die();
-                }
-
                 $changedata[1073] = json_encode($output);
             }
 
@@ -453,19 +447,17 @@ class CollectionController extends Controller
                             $output[$cdata[1355]] = $data['code'].' '.$data['name'];
                 }
 
-                if (empty($output))
-                {
-                    var_dump($record[1074]);
-                    die();
-                }
-
                 $changedata[1074] = json_encode($output);
             }
-            //$findRecord->data = $changedata;
-            //$findRecord->save();
+
+            print_r($changedata);
+            die();
+
+            $findRecord->data = $changedata;
+            $findRecord->save();
         }
 
-        //die();
+        die();
 
         $munic = Collection::find()->where(['id_collection'=>481])->one();
 
@@ -563,15 +555,11 @@ class CollectionController extends Controller
 
             foreach ($data as $id_mun_column => $value)
             {
-                if (isset($ccolumns[$id_mun_column]))
-                    $prepareData[$ccolumns[$id_mun_column]] = $value;
+                $prepareData[$ccolumns[[$id_mun_column]]] = $value;
             }
 
-            var_dump($prepareData);
-            die();
-
             $findRecord->data = $prepareData;
-            //$findRecord->save();
+            $findRecord->save();
         }
     }
 }

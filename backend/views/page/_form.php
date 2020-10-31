@@ -4,6 +4,7 @@ use backend\widgets\UserAccessControl;
 use backend\widgets\UserGroupAccessControl;
 use common\components\multifile\MultiFileWidget;
 use common\models\MailNotifyManager;
+use common\models\Page;
 use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\web\JsExpression;
@@ -15,78 +16,114 @@ use yii\widgets\ActiveForm;
 ?>
 
 <?php $form = ActiveForm::begin();
+
+
+if ($model->type!=Page::TYPE_LINK ){
 ?>
-
-<?php if ($model->alias!='/'){?>
-<?= $form->field($model, 'id_parent')->widget(Select2::class, [
-    'data' => (!empty($model->parent))?[$model->id_parent=>$model->parent->title]:[],
-    'pluginOptions' => [
-        'multiple' => false,
-        'allowClear' => true,
-        'minimumInputLength' => 2,
-        'placeholder' => 'Начните ввод',
-        'ajax' => [
-            'url' => '/page/list',
-            'dataType' => 'json',
-            'data' => new JsExpression('function(params) { return {q:params.term}; }')
+    <?php if ($model->alias!='/'){?>
+    <?= $form->field($model, 'id_parent')->widget(Select2::class, [
+        'data' => (!empty($model->parent))?[$model->id_parent=>$model->parent->title]:[],
+        'pluginOptions' => [
+            'multiple' => false,
+            'allowClear' => true,
+            'minimumInputLength' => 2,
+            'placeholder' => 'Начните ввод',
+            'ajax' => [
+                'url' => '/page/list',
+                'dataType' => 'json',
+                'data' => new JsExpression('function(params) { return {q:params.term}; }')
+            ],
         ],
-    ],
-    'options'=>[
-        'prompt'=>'Выберите родителя'
-    ]
-]) ?>
+        'options'=>[
+            'prompt'=>'Выберите родителя'
+        ]
+    ]) ?>
+    <?php }?>
+
+    <?= $form->field($model, 'created_at')->textInput(['type'=>'date','value'=>(!empty($model->created_at))?date('Y-m-d', $model->created_at):''])?>
+
+    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'alias',['template'=>'
+                                            {label}
+                                            <div class="input-group">
+    										'.($model->isNewRecord?'':'
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-addon"><a class="btn" href="'.$model->getUrl(true).'" target="_blank">Перейти</a></span>
+                                            </div>').'
+                                            {input}
+                                        </div>'])->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'content')->textarea(['rows' => 6, 'class'=>'redactor']) ?>
+
+    <div class="row">
+        <div class="col-sm-4"><?= $form->field($model, 'active')->checkBox() ?></div>
+        <div class="col-sm-4"><?= $form->field($model, 'hidemenu')->checkBox() ?></div>
+        <div class="col-sm-4"><?= $form->field($model, 'noguest')->checkBox() ?></div>
+    </div>
+
+    <?= $form->field($model, 'type')->dropDownlist($model->getTypes())?>
+
+    <?= $form->field($model, 'is_partition')->checkBox()?>
+
+    <?= $form->field($model, 'partition_domain')->textInput(['maxlength' => 255])->hint('Заполняется если это раздел. Все страницы данного раздела будут строится относительно этого домена. Вводить без "/" на конце') ?>
+
+    <?= $form->field($model, 'hidden_message')->textarea(['rows' => 6, 'class'=>'redactor'])->hint('Заполняется если страница не активна и требуется вывести сообщение')?>
+
+    <h3>Прикрепленные файлы внизу страницы</h3>
+
+    <?= MultiFileWidget::widget([
+        'model'=>$model,
+        'single'=>false,
+        'relation'=>'medias',
+        'grouptype'=>1,
+        'showPreview'=>true
+    ]);?>
+
+    <hr>
+
+    <?= $form->field($model, 'label')->textInput(['maxlength' => true])->hint('Отображается в хлебных крошках и меню')?>
+
+    <?= $form->field($model, 'seo_title')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'seo_description')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'seo_keywords')->textInput(['maxlength' => true]) ?>
+
+<?php }
+else {?>
+    <?php if ($model->alias!='/'){?>
+    <?= $form->field($model, 'id_parent')->widget(Select2::class, [
+        'data' => (!empty($model->parent))?[$model->id_parent=>$model->parent->title]:[],
+        'pluginOptions' => [
+            'multiple' => false,
+            'allowClear' => true,
+            'minimumInputLength' => 2,
+            'placeholder' => 'Начните ввод',
+            'ajax' => [
+                'url' => '/page/list',
+                'dataType' => 'json',
+                'data' => new JsExpression('function(params) { return {q:params.term}; }')
+            ],
+        ],
+        'options'=>[
+            'prompt'=>'Выберите родителя'
+        ]
+    ]) ?>
+    <?php }?>
+
+    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
+
+    <div class="row">
+        <div class="col-sm-4"><?= $form->field($model, 'active')->checkBox() ?></div>
+        <div class="col-sm-4"><?= $form->field($model, 'hidemenu')->checkBox() ?></div>
+    </div>
+
+    <?= $form->field($model, 'type')->dropDownlist($model->getTypes())?>
+
 <?php }?>
-
-<?= $form->field($model, 'created_at')->textInput(['type'=>'date','value'=>(!empty($model->created_at))?date('Y-m-d', $model->created_at):''])?>
-
-<?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
-
-<?= $form->field($model, 'alias',['template'=>'
-                                        {label}
-                                        <div class="input-group">
-										'.($model->isNewRecord?'':'
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-addon"><a class="btn" href="'.$model->getUrl(true).'" target="_blank">Перейти</a></span>
-                                        </div>').'
-                                        {input}
-                                    </div>'])->textInput(['maxlength' => true]) ?>
-
-<?= $form->field($model, 'content')->textarea(['rows' => 6, 'class'=>'redactor']) ?>
-
-<div class="row">
-    <div class="col-sm-4"><?= $form->field($model, 'active')->checkBox() ?></div>
-    <div class="col-sm-4"><?= $form->field($model, 'hidemenu')->checkBox() ?></div>
-    <div class="col-sm-4"><?= $form->field($model, 'noguest')->checkBox() ?></div>
-</div>
-
-<?= $form->field($model, 'type')->dropDownlist($model->getTypes())?>
-
-<?= $form->field($model, 'is_partition')->checkBox()?>
-
-<?= $form->field($model, 'partition_domain')->textInput(['maxlength' => 255])->hint('Заполняется если это раздел. Все страницы данного раздела будут строится относительно этого домена. Вводить без "/" на конце') ?>
-
-<?= $form->field($model, 'hidden_message')->textarea(['rows' => 6, 'class'=>'redactor'])->hint('Заполняется если страница не активна и требуется вывести сообщение')?>
-
-<h3>Прикрепленные файлы внизу страницы</h3>
-
-<?= MultiFileWidget::widget([
-    'model'=>$model,
-    'single'=>false,
-    'relation'=>'medias',
-    'grouptype'=>1,
-    'showPreview'=>true
-]);?>
-
-<hr>
-
-<?= $form->field($model, 'label')->textInput(['maxlength' => true])->hint('Отображается в хлебных крошках и меню')?>
-
-<?= $form->field($model, 'seo_title')->textInput(['maxlength' => true]) ?>
-
-<?= $form->field($model, 'seo_description')->textInput(['maxlength' => true]) ?>
-
-<?= $form->field($model, 'seo_keywords')->textInput(['maxlength' => true]) ?>
-
 
 <?php if (Yii::$app->user->can('admin.page')): ?>
     <hr>
