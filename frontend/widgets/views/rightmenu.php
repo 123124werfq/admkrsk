@@ -6,18 +6,9 @@ use common\models\Page;
 
 	$submenu = false;
 
-	//$menu = $page->menu;
-
-	/*if (empty($menu) || empty($menu->activeLinks))
-	{*/
 	if (!empty($submenu = $page->getChilds()->andWhere(['hidemenu'=>0])->orderBy('ord ASC')->all()))
-		// меню из соседей
 	{
 	}
-	/*else if (!empty($page->parent->menu) && !empty($page->parent->menu->activeLinks))
-	{
-		$menu = $page->parent->menu;
-	}*/
 	else if (!empty($submenu = $page->parent->getChilds()->andWhere(['hidemenu'=>0])->orderBy('ord ASC')->all()))
 	{
 	}

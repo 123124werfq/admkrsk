@@ -5,7 +5,7 @@ namespace backend\controllers;
 use backend\models\forms\CopyPageForm;
 use common\models\Action;
 use common\models\GridSetting;
-use common\models\MenuLink;
+//use common\models\MenuLink;
 use common\modules\log\models\Log;
 
 use moonland\phpexcel\Excel;
@@ -171,7 +171,7 @@ class PageController extends Controller
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $query = Page::find();
+        $query = Page::find()->where('type <> '.Page::TYPE_LINK);
 
         if (!Yii::$app->user->can('admin.page')) {
             $query->andWhere(['id_page' => Page::getAccessEntityIds()]);
@@ -289,11 +289,20 @@ class PageController extends Controller
         {
             //$tree[(int)$page->id_parent][$page->id_page] = $page;
 
+            $icon = '';
+
+            if ($page->isLink())
+                $icon = 'fa-link fa';
+            else if ($page->is_partition)
+                $icon = 'fa-globe fa';
+            else if ($page->isNews())
+                $icon = 'fa-newspaper-o fa';
+
             $tree[] = [
                 "id"=>$page->id_page,
                 "parent"=>$page->id_parent?:'#',
                 "text"=>$page->title,
-                "icon"=>$page->isLink()?'fa-link fa':''
+                "icon"=>$icon
             ];
         }
 

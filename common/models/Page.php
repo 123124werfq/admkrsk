@@ -91,9 +91,12 @@ class Page extends ActiveRecord
         return [
             [['id_media', 'active', 'id_parent'], 'default', 'value' => null],
             [['type'], 'default', 'value' => self::TYPE_PAGE],
-            [['id_media', 'active', 'id_parent', 'noguest', 'hidemenu','notify_rule','type'], 'integer'],
+            [['id_media', 'active', 'id_parent', 'noguest', 'hidemenu','notify_rule','type','id_page_link'], 'integer'],
             [['is_admin_notify'], 'boolean'],
-            [['title', 'alias'], 'required'],
+            [['title'], 'required'],
+            [['alias'], 'required', 'when' => function($model) {
+                return empty($model->id_page_link);
+            }],
             ['id_parent', 'required', 'when' => function($model) {
                 return ($model->lft!=1);
             }],
@@ -102,7 +105,7 @@ class Page extends ActiveRecord
                 return ($model->lft!=1);
             }],
             [['content', 'path', 'notify_message', 'hidden_message','label'], 'string'],
-            [['alias'], 'unique'],
+            [['alias'], 'validateAlias'],
             [['title', 'alias', 'seo_title', 'seo_description', 'seo_keywords'], 'string', 'max' => 255],
             [['partition_domain'], 'url', 'defaultScheme' => 'http'],
             [['created_at'],'safe'],
@@ -110,6 +113,18 @@ class Page extends ActiveRecord
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
             ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
         ];
+    }
+
+    public function validateAlias($attribute, $params, $validator)
+    {
+        if (!$this->isLink())
+        {
+            $count = Page::find()->where('id_page <> '.(int)$this->id_page)->andWhere(['alias'=>$this->$attribute])->andWhere('type <>'.self::TYPE_LINK)->count();
+
+            if ($count>0) {
+                $this->addError($attribute, 'Такой URL уже существует');
+            }
+        }
     }
 
     /**
@@ -183,7 +198,12 @@ class Page extends ActiveRecord
     public function getUrl($absolute = false)
     {
         if ($this->type==self::TYPE_LINK)
-            return $this->alias;
+        {
+            if (!empty($this->id_page_link) && !empty($this->pageLink))
+                return $this->pageLink->getUrl();
+            else
+                return $this->alias;
+        }
 
         if (!empty($this->existUrl))
             return $this->existUrl;
@@ -301,6 +321,7 @@ class Page extends ActiveRecord
     public function beforeSave($insert)
     {
         $this->updateCollectionPluginSettings();
+
         return parent::beforeSave($insert);
     }
 
@@ -368,7 +389,11 @@ class Page extends ActiveRecord
     public function getParent()
     {
         return $this->parents(1)->one();
-        //return $this->hasOne(Page::class, ['id_page' => 'id_parent']);
+    }
+
+    public function getPageLink()
+    {
+        return $this->hasOne(Page::class, ['id_page' => 'id_page_link']);
     }
 
     /**
