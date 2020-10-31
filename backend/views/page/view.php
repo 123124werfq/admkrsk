@@ -54,9 +54,17 @@ $this->render('_head',['model'=>$model]);
                                 'columns' => [
                                     'id_page',
                                     [
+                                        'format' => 'html',
+                                        'value' => function ($model) {
+
+                                            return $model->isLink()?'<i class="fa fa-link" title="Ссылка"></i>':'';
+                                        },
+                                    ],
+                                    [
                                         'attribute' => 'title',
                                         'format' => 'html',
                                         'value' => function ($model) {
+
                                             return $model->title.'<br><a target="_blank" href="'.$model->getUrl(true).'">'.$model->getUrl().'</a>';
                                         },
                                     ],
@@ -77,54 +85,6 @@ $this->render('_head',['model'=>$model]);
                                     'data-order-url'=>'/page/order'
                                 ]
                             ]);
-
-                                /*echo GridView::widget([
-                                    'dataProvider' => $submenu,
-                                    'columns' => [
-                                        'id_link',
-                                        [
-                                            'attribute' => 'title',
-                                            'format' => 'html',
-                                            'value' => function ($link) {
-                                                return $link->label.'<br><a target="_blank" href="'.$link->getUrl(true).'">'.$link->getUrl(true).'</a>';
-                                            },
-                                        ],
-                                        [
-                                            'class' => 'yii\grid\ActionColumn',
-                                            'contentOptions'=>['class'=>'button-column'],
-                                            'template' => '{hide} {update} {delete}',
-                                            'buttons' => [
-                                                'hide' => function ($url, $link, $key) {
-                                                    return Html::a('', ['/menu-link/hide', 'id' => $link->id_link],['class' => ($link->state)?'fa fa-toggle-on':'fa fa-toggle-off']);
-                                                },
-                                                'update' => function ($url, $link, $key) use ($model) {
-                                                    if (empty($link->page) || $link->page->id_parent != $model->id_page)
-                                                        return Html::a('', ['/menu-link/update', 'id' => $link->id_link],['class' => 'glyphicon glyphicon-pencil']);
-                                                    else
-                                                        return Html::a('', ['/page/update', 'id' => $link->id_page],['class' => 'glyphicon glyphicon-pencil']);
-                                                },
-                                                'delete' => function ($url, $link, $key) use ($model) {
-                                                    if (empty($link->page) || $link->page->id_parent != $model->id_page)
-                                                        return Html::a('', ['/menu-link/delete', 'id' => $link->id_link],['class' => 'glyphicon glyphicon-trash','data' => [
-                                                                'confirm' => 'Вы уверены что хотите удалить цель?',
-                                                                'method' => 'post',
-                                                        ]]);
-                                                    else
-                                                        return Html::a('', ['/page/delete', 'id' => $link->id_page, 'redirect'=>$model->id_page],['class' => 'glyphicon glyphicon-trash','data' => [
-                                                              'confirm' => 'Вы уверены что хотите удалить цель?',
-                                                              'method' => 'post',
-                                                        ]]);
-                                                }
-                                            ],
-                                        ],
-                                    ],
-                                    'tableOptions'=>[
-                                        'emptyCell' => '',
-                                        'class' => 'table table-striped ids-style valign-middle table-hover ordered',
-                                        'data-order-url'=>'/menu/order'
-                                    ]
-                                ]);
-                            }*/
                         ?>
                     </div>
                 </div>

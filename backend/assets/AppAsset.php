@@ -20,6 +20,7 @@ class AppAsset extends AssetBundle
         "inspinia/css/plugins/select2/select2.min.css",
         'inspinia/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css',
         "inspinia/css/plugins/jasny/jasny-bootstrap.min.css",
+        "inspinia/css/plugins/jsTree/style.min.css",
         "js/jquerybuilder/css/query-builder.default.min.css",
         "css/admin.css?v=6"
     ];
@@ -36,9 +37,9 @@ class AppAsset extends AssetBundle
         "inspinia/js/plugins/dataTables/datatables.min.js",
         "inspinia/js/bootstrap.min.js",
         "inspinia/js/plugins/jasny/jasny-bootstrap.min.js",
+        "inspinia/js/plugins/jsTree/jstree.min.js",
         "/js/tinymce/tinymce.min.js",
         "/js/tinymce/plugins/plugins.js",
-        //"js/jquerybuilder/query-builder.standalone.min.js",
         "js/jquerybuilder/query-builder.standalone.js",
         "js/jquerybuilder/i18n/query-builder.ru.js",
         "js/admin.js?v=17",

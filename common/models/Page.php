@@ -156,6 +156,14 @@ class Page extends ActiveRecord
         return $labels;
     }
 
+    public function isLink()
+    {
+        if ($this->type == self::TYPE_LINK)
+            return true;
+
+        return false;
+    }
+
     public function isNews()
     {
         if ($this->type == self::TYPE_NEWS || $this->type == self::TYPE_ANONS)

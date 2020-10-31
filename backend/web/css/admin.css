@@ -12,6 +12,18 @@ form-row html {overflow: inherit!important; padding-right: 0px!important;}
 
 img {max-width: 100%;}
 
+.jstree-anchor {
+    /*enable wrapping*/
+    white-space : normal !important;
+    /*ensure lower nodes move down*/
+    height : auto !important;
+    /*offset icon width*/
+    padding-left : 24px;
+    padding-right: 15px;
+}
+
+.jstree-anchor .jstree-icon {margin-left: -26px;}
+
 .row-flex {display: flex; justify-content: space-between; margin:10px -10px;}
 .row-flex .col, .text-row {width: 100%; margin: 0px 10px; padding: 0px;}
 .button-bar {margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;}

@@ -281,20 +281,19 @@ class PageController extends Controller
 
     public function actionTree()
     {
-        $pages = Page::find()->all();
+        $pages = Page::find()->orderBy('ord ASC')->all();
 
         $tree = [];
-
-        
 
         foreach ($pages as $key => $page)
         {
             //$tree[(int)$page->id_parent][$page->id_page] = $page;
 
-            $tree = [
-                "id"=>$page->id_page, 
-                "parent"=>$page->id_parent?:'#', 
+            $tree[] = [
+                "id"=>$page->id_page,
+                "parent"=>$page->id_parent?:'#',
                 "text"=>$page->title,
+                "icon"=>$page->isLink()?'fa-link fa':''
             ];
         }
 
@@ -407,12 +406,7 @@ class PageController extends Controller
     {
         $model = $this->findModel($id);
 
-        //$submenu = [];
-
-        //if (empty($model->menu))
         $submenu = $model->getChilds()->orderBy('ord');
-        /*else
-            $submenu = $model->menu->getLinks()->orderBy('ord');*/
 
         $dataProvider = new ActiveDataProvider([
             'query' => $submenu,
@@ -465,8 +459,8 @@ class PageController extends Controller
             {
                 $model->createAction(Action::ACTION_CREATE);
 
-                if (!empty($model->id_parent) && !empty($model->parent->menu))
-                    $model->parent->menu->addLink($model);
+                /*if (!empty($model->id_parent) && !empty($model->parent->menu))
+                    $model->parent->menu->addLink($model);*/
 
                 return $this->redirect(['view', 'id' => ($id_parent)?$id_parent:$model->id_page]);
             }
@@ -561,11 +555,11 @@ class PageController extends Controller
     {
         $model = $this->findModel($id);
 
-        if (!empty($model->parent->menu))
+        /*if (!empty($model->parent->menu))
         {
             $link = MenuLink::find()->where(['id_page' => $id,'id_menu'=>$model->parent->menu->id_menu])->one();
             $link->delete();
-        }
+        }*/
 
         if ($model->delete())
             $model->createAction(Action::ACTION_DELETE);
