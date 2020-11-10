@@ -424,6 +424,20 @@ class PageController extends Controller
             ],
         ]);
 
+        if (Yii::$app->request->isAjax)
+        {
+             Yii::$app->assetManager->bundles = [
+                'yii\bootstrap\BootstrapAsset' => false,
+                'yii\web\JqueryAsset'=>false,
+                'yii\web\YiiAsset'=>false,
+            ];
+
+            return $this->renderPartial('_view',[
+                'model' => $model,
+                'submenu' => $dataProvider,
+            ]);
+        }
+
         return $this->render('view', [
             'model' => $model,
             'submenu' => $dataProvider,

@@ -5,6 +5,25 @@ toastr.options = {
     timeOut: 5000
 };
 
+
+var ajax_page = false;
+
+function openNode(id)
+{
+  if (ajax_page)
+    ajax_page.abort();
+
+  ajax_page = $.ajax({
+      url: '/page/view',
+      type: 'get',
+      data: {id: id},
+      success: function(data)
+      {
+        $("#treeView").html(data);
+      }
+  });
+}
+
 function getValueById(id)
 {
     if ($("#"+id).length>0)
