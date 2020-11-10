@@ -20,6 +20,11 @@ function openNode(id)
       success: function(data)
       {
         $("#treeView").html(data);
+         $("#treeView .ordered tbody").sortable({
+          stop: function(event, ui){
+              reordModels($(this));
+          }
+        }).disableSelection();
       }
   });
 }
