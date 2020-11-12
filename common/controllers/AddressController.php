@@ -275,7 +275,7 @@ class AddressController extends \yii\web\Controller
 
         if (empty($results)) {
             $results = [
-                'id' => null,
+                'id' => 0,
                 'text' => $search,
                 'postalcode' => ''
             ];
