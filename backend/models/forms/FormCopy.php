@@ -44,8 +44,8 @@ class FormCopy extends Model
             $copyForm->id_collection = null;
 
             if (!empty($copyForm->alias))
-                $copyForm->alias .= '_copy';
-            
+                $copyForm->alias .= '_copy'.time();
+
             $copyForm->name = 'Копия - '.$form->name;
 
             $oldToNewInputs = $visibleInputs = [];
@@ -55,9 +55,9 @@ class FormCopy extends Model
                 $collection = new Collection;
                 $collection->attributes = $form->collection->attributes;
                 $collection->id_form = $copyForm->id_form;
-                $collection->name = $copyForm->name;                
-                $collection->alias = $collection->alias.'_copy';
-                $collection->save();                                
+                $collection->name = $copyForm->name;
+                $collection->alias = $collection->alias.'_copy'.time();
+                $collection->save();
 
                 $copyForm->id_collection = $collection->id_collection;
                 $copyForm->updateAttributes(['id_collection']);
@@ -79,7 +79,7 @@ class FormCopy extends Model
 
                             if (!empty($element->input))
                             {
-                                $newInput = new FormInput;                                
+                                $newInput = new FormInput;
 
                                 $newInput->attributes = $element->input->attributes;
                                 $newInput->id_form = $copyForm->id_form;
@@ -93,13 +93,13 @@ class FormCopy extends Model
                                 $column->name = $newInput->name;
                                 $column->alias = $newInput->fieldname;
                                 $column->id_collection = $copyForm->id_collection;
-                                $column->type = $newInput->type;                                
+                                $column->type = $newInput->type;
 
                                 if (!$column->save())
                                     print_r($column->errors);
 
                                 if (!empty($collection->id_column_map) && ($element->input->id_column == $collection->id_column_map))
-                                    $collection->id_column_map = $column->id_column;                                
+                                    $collection->id_column_map = $column->id_column;
 
                                 $newInput->id_column = $column->id_column;
                                 $newInput->updateAttributes(['id_column']);
