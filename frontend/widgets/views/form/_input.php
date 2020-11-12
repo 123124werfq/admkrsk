@@ -362,7 +362,7 @@ if (empty($modelForm->maxfilesize))
                     'data' => [$value['id_house']?:$value['house']=>$value['house']],
                     'pluginOptions' => [
                         'multiple' => false,
-                        //'allowClear' => true,
+                        'allowClear' => true,
                         'tags' => true,
                         'minimumInputLength' => 0,
                         'placeholder' => 'Дом',

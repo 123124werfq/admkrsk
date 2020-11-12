@@ -273,14 +273,15 @@ class AddressController extends \yii\web\Controller
             ];
         }
 
-        if (empty($results)) {
+        /*if (empty($results)) {
             $results[] = [
-                    'id' => 0,
+                    //'id' => null,
                     'text' => $search,
                     'postalcode' => '',
+                    'district'=> '',
                     'results'=>'',
                 ];
-        }
+        }*/
 
         return $this->asJson(['results' => $results]);
     }
