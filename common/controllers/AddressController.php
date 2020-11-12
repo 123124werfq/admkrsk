@@ -258,7 +258,7 @@ class AddressController extends \yii\web\Controller
         }
 
         if ($search)
-            $query->andFilterWhere(['ilike', 'name', $search]);
+            $query->andFilterWhere(['ilike', 'map_house.name', $search]);
 
         $results = [];
         foreach ($query->all() as $house) {
