@@ -20,10 +20,10 @@ $id_situations = $model->getSituations()->indexBy('id_situation')->all();
 if (!empty($id_situations))
     $model->id_situations = array_keys($id_situations);
 
-$id_firms = $model->getFirms()->indexBy('id_record')->all();
+/*$id_firms = $model->getFirms()->indexBy('id_record')->all();
 
 if (!empty($id_firms))
-    $model->id_firms = array_keys($id_firms);
+    $model->id_firms = array_keys($id_firms);*/
 
 /*$offices = Collection::find()->where(['alias'=>'service_offices'])->one();
 
