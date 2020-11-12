@@ -254,7 +254,7 @@ class AddressController extends \yii\web\Controller
             ->asArray();
 
         if ($is_active) {
-            $query->andFilterWhere(['is_active' => $is_active]);
+            $query->andFilterWhere(['map_house.is_active' => $is_active]);
         }
 
         if ($search)
