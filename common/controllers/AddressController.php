@@ -236,7 +236,7 @@ class AddressController extends \yii\web\Controller
      * @return Response
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionHouse($id_street, $search = '')
+    public function actionHouse($id_street, $is_active = 1, $search = '')
     {
         $id_street = (int) $id_street;
 
@@ -253,6 +253,10 @@ class AddressController extends \yii\web\Controller
             ->limit(20)
             ->asArray();
 
+        if ($is_active) {
+            $query->andFilterWhere(['is_active' => $is_active]);
+        }
+
         if ($search)
             $query->andFilterWhere(['ilike', 'name', $search]);
 
@@ -266,6 +270,14 @@ class AddressController extends \yii\web\Controller
                 'postalcode' => $house['postalcode'],
                 'lat' => $house['lat'],
                 'lon' => $house['lon'],
+            ];
+        }
+
+        if (empty($results)) {
+            $results = [
+                'id' => null,
+                'text' => $search,
+                'postalcode' => ''
             ];
         }
 
