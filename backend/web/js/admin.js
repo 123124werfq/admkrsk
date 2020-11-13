@@ -628,6 +628,7 @@ jQuery(document).ready(function()
           success: function(data)
           {
             $("#CollectionRecord .modal-body").html(data);
+            tinymce.init(tinymceConfig);
           }
       });
 
