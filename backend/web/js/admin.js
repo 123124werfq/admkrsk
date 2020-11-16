@@ -571,6 +571,7 @@ jQuery(document).ready(function()
   })
 
     $("#CollectionRecord button.btn-primary").click(function(){
+      tinyMCE.triggerSave();
       $("#CollectionRecord form").submit();
     });
 
