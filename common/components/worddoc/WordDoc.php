@@ -266,9 +266,9 @@ class WordDoc
                 else
                     $string_output[$col->alias] = $data[$col_alias];
             }
-            if ($col->type==CollectionColumn::TYPE_SERVICE)
+            else if ($col->type==CollectionColumn::TYPE_SERVICE)
             {
-                $model = \common\models\Service::findOne($data[$col_alias]);
+                $model = \common\models\Service::findOne((int)$data[$col_alias]);
 
                 if (!empty($model))
                     $string_output[$col_alias] = $model->reestr_number;
