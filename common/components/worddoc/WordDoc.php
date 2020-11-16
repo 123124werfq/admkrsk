@@ -266,6 +266,15 @@ class WordDoc
                 else
                     $string_output[$col->alias] = $data[$col_alias];
             }
+            if ($col->type==CollectionColumn::TYPE_SERVICE)
+            {
+                $model = \common\models\Service::findOne($data[$col_alias]);
+
+                if (!empty($model))
+                    $string_output[$col_alias] = $model->reestr_number;
+                else
+                    $string_output[$col->alias] = $data[$col_alias];
+            }
             else if ($col->type==CollectionColumn::TYPE_JSON)
             {
                 /*$table = new \Table(array('borderSize' => 12, 'borderColor' => 'green', 'width' => 6000, 'unit' => TblWidth::TWIP));
