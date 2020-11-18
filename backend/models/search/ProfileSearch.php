@@ -104,6 +104,11 @@ class ProfileSearch extends HrProfile
             $sql .= " and plist like('%".mb_strtolower(addslashes($positions[$this->plist]), "UTF8")."%')";
         }
 
+        if(!empty($this->status) || $this->status=='0')
+            $sql .= " and state='".(int)$this->status."'";
+        
+
+//var_dump($this->status); die();
         $count = Yii::$app->db->createCommand("SELECT COUNT(*) FROM ($sql) t1")->queryScalar();
 
         $dataProvider = new SqlDataProvider([
