@@ -79,7 +79,7 @@ class ProfileSearch extends HrProfile
                     (select id_profile, string_agg(value, '<br>') plist from hr_profile_positions hpp 
                         left join db_collection_value dcv on hpp.id_record_position = dcv.id_record
                         group by id_profile) tp on tp.id_profile = hp.id_profile
-                    where 1=1";
+                    where state<>'".HrProfile::STATE_ARCHIVED."'";
                            
         $this->load($params);
 

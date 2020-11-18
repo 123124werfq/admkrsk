@@ -133,13 +133,28 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
                 'template' => '{view} {editable} {ban} {archive} ',
                 'buttons' => [
                     'archive' => function ($url, $model, $key) {
-                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-floppy-disk"]);
-                        return Html::a($icon, $url, [
-                            'disabled' => true,
-                            'title' => 'Восстановить',
-                            'aria-label' => 'Восстановить',
-                            'data-pjax' => '0',
-                        ]);
+                        $url = '/reserve/archive?id='.$model['id_profile'];
+                        if($model['state'] ==  HrProfile::STATE_ARCHIVED)
+                        {
+                            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-share"]);
+                            return Html::a($icon, $url, [
+                                'disabled' => true,
+                                'title' => 'Восстановить',
+                                'aria-label' => 'Восстановить',
+                                'data-pjax' => '0',
+                            ]);
+                        }
+                        else
+                        {
+                            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-floppy-disk"]);
+                            return Html::a($icon, $url, [
+                                'disabled' => true,
+                                'title' => 'В архив',
+                                'aria-label' => 'В архив',
+                                'data-pjax' => '0',
+                            ]);
+
+                        }
                     },
                     'editable' => function ($url, $model, $key) {
                         $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-pencil"]);
