@@ -79,7 +79,7 @@ class ProfileSearch extends HrProfile
                     (select id_profile, string_agg(value, '<br>') plist from hr_profile_positions hpp 
                         left join db_collection_value dcv on hpp.id_record_position = dcv.id_record
                         group by id_profile) tp on tp.id_profile = hp.id_profile
-                    where (state<>'".HrProfile::STATE_ARCHIVED."' and state is not null)";
+                    where (state<>'".HrProfile::STATE_ARCHIVED."' or state is not null)";
                            
         $this->load($params);
 
@@ -108,7 +108,7 @@ class ProfileSearch extends HrProfile
             $sql .= " and state='".(int)$this->status."'";
         
 
-echo $sql; die();
+//echo $sql; die();
         $count = Yii::$app->db->createCommand("SELECT COUNT(*) FROM ($sql) t1")->queryScalar();
 
         $dataProvider = new SqlDataProvider([
