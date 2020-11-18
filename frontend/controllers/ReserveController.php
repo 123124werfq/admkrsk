@@ -27,6 +27,9 @@ class ReserveController extends \yii\web\Controller
 
     public function actionCandidateForm($page=null)
     {
+        if(Yii::$app->user->isGuest)
+            return $this->redirect('/login');
+
         $inputs = [];
 
         $page = Page::findOne(['alias'=>'candidate-form']);
