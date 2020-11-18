@@ -79,7 +79,7 @@ class ProfileSearch extends HrProfile
                     (select id_profile, string_agg(value, '<br>') plist from hr_profile_positions hpp 
                         left join db_collection_value dcv on hpp.id_record_position = dcv.id_record
                         group by id_profile) tp on tp.id_profile = hp.id_profile
-                    where (state<>'".HrProfile::STATE_ARCHIVED."' or state is not null)";
+                    where 1=1";
                            
         $this->load($params);
 
@@ -105,7 +105,14 @@ class ProfileSearch extends HrProfile
         }
 
         if(!empty($this->status) || $this->status=='0')
-            $sql .= " and state='".(int)$this->status."'";
+        {
+            if($this->status == HrProfile::STATE_ACTIVE)
+                $sql .= " and (state='".(int)$this->status."' or state is null)";
+            else
+                $sql .= " and state='".(int)$this->status."'";
+        }
+        else
+            $sql .= " and (state<>'".HrProfile::STATE_ARCHIVED."' or state is null)";
         
 
 //echo $sql; die();
