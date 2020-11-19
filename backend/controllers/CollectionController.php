@@ -973,7 +973,6 @@ class CollectionController extends Controller
         {
             $model->mapPropsAndAttributes($requestParams['Collection']);
             $configureJsonPluginOptions = $this->configureJsonCollection($model);
-            /** save plugin options */
             $jsonFormatOptions = base64_decode($configureJsonPluginOptions['base64']);
             $configureJsonPluginOptions['key'] = $model->savePluginSettings($jsonFormatOptions);
 

@@ -292,6 +292,11 @@ class Collection extends ActiveRecord
         return $this->hasMany(Page::class, ['id_page' => 'id_page'])->viaTable('dbl_collection_page',['id_collection'=>'id_collection']);
     }
 
+    public function isView()
+    {
+        return (!empty($this->id_parent_collection));
+    }
+
     public function getParent()
     {
         return $this->hasOne(Collection::class, ['id_collection' => 'id_parent_collection']);

@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
+use common\components\softdelete\SoftDeleteTrait;
 use yii\db\ActiveRecord;
 
 /**
@@ -18,6 +19,8 @@ use yii\db\ActiveRecord;
  */
 class SettingPluginCollection extends ActiveRecord
 {
+    use SoftDeleteTrait;
+
     public static function tableName()
     {
         return 'settings_plugin_collection';
@@ -33,14 +36,48 @@ class SettingPluginCollection extends ActiveRecord
     {
         $setting = new SettingPluginCollection();
         $setting->key = Yii::$app->security->generateRandomString();
-        $setting->id_collection = intval($collectionId);
-        $setting->id_page = intval(Yii::$app->request->get('page_id', 0));
+        $setting->id_model_widget = intval($collectionId);
+        //$setting->id_page = intval(Yii::$app->request->get('page_id', 0));
         $setting->settings = $settings;
 
         if ($setting->save())
             return $setting->key;
 
         return null;
+    }
+
+    public function updateSettingsForModel($attribute, $model)
+    {
+        $oldCollectionSettingsKeys = $this->searchCollectionKeys($this->getOldAttribute('content'));
+        $newCollectionSettingsKeys = $this->searchCollectionKeys($this->getAttribute('content'));
+
+        $deleteKeys = array_diff($oldCollectionSettingsKeys, $newCollectionSettingsKeys);                        
+
+        SettingPluginCollection::deleteAll([
+            'key' => $deleteKeys,
+        ]);
+    }
+
+    /**
+     * @param string $content
+     * @return array
+     */
+    private function searchCollectionKeys($content)
+    {
+        $collectionSettingsKeys = [];
+
+        if (!empty($content))
+        {
+            if (preg_match_all('/data-key=".*"/i', $content, $matches))
+            {
+                foreach ($matches[0] as $match) {
+                    $key = preg_split('/data-key=/i', $match);
+                    $collectionSettingsKeys[] = str_replace('"', '', $key[1]);
+                }
+            }
+        }
+        
+        return $collectionSettingsKeys;
     }
 
     /**
@@ -65,8 +102,16 @@ class SettingPluginCollection extends ActiveRecord
     {
         return [
             [['key', 'settings'], 'string'],
-            [['created_at', 'id', 'created_at', 'id_collection', 'id_page'], 'integer'],
+            [['created_at', 'id', 'created_at', 'id_collection', 'id_page'], 'integer'],            
         ];
+    }
+
+    public function getModel()
+    {
+        /*$model = new $this->model_class;
+        $pk = $model->owner->tableSchema->primaryKey[0]();*/
+
+        return $this->model_class::findOne((int)$this->id_model);
     }
 
     public function getCollection()

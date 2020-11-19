@@ -318,11 +318,11 @@ class Page extends ActiveRecord
         ];
     }
 
-    public function beforeSave($insert)
+    public function afterSave($insert)
     {
         $this->updateCollectionPluginSettings();
 
-        return parent::beforeSave($insert);
+        return parent::afterSave($insert);
     }
 
     /**
@@ -332,7 +332,9 @@ class Page extends ActiveRecord
     {
         $oldCollectionSettingsKeys = $this->searchCollectionKeys($this->getOldAttribute('content'));
         $newCollectionSettingsKeys = $this->searchCollectionKeys($this->getAttribute('content'));
-        $deleteKeys = array_diff($oldCollectionSettingsKeys, $newCollectionSettingsKeys);
+
+        $deleteKeys = array_diff($oldCollectionSettingsKeys, $newCollectionSettingsKeys);                        
+
         SettingPluginCollection::deleteAll([
             'key' => $deleteKeys,
         ]);
@@ -347,12 +349,16 @@ class Page extends ActiveRecord
         $collectionSettingsKeys = [];
 
         if (!empty($content))
-            if (preg_match_all('/data-key=".*"/i', $content, $matches)) {
+        {
+            if (preg_match_all('/data-key=".*"/i', $content, $matches))
+            {
                 foreach ($matches[0] as $match) {
                     $key = preg_split('/data-key=/i', $match);
                     $collectionSettingsKeys[] = str_replace('"', '', $key[1]);
                 }
             }
+        }
+        
         return $collectionSettingsKeys;
     }
 

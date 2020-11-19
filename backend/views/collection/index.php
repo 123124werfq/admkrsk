@@ -50,8 +50,9 @@ $defaultColumns = [
     'alias'=>'alias',
     'records'=>[
         'label'=>'Записей',
+        'format'=>'raw',
         'value'=>function($model) {
-            return $model->getItems()->count();
+            return (!$model->isView())?$model->getItems()->count():'<i title="Представление" class="fa fa-list"></i>';
         }
     ],
     'created_at'=>'created_at:date',
