@@ -49,6 +49,21 @@ class AdImportController extends Controller
         else return array();
     }
 
+    private function mydap_update($user_dn, $attribute_name, $value)
+    {
+        global $mydap; 
+        if(!isset($mydap)) die('Error, no LDAP connection established');
+        if(empty($user_dn)) die('Error, no LDAP user specified');
+
+        $ldapData = [$attribute_name => [$value]];
+        ldap_mod_replace($mydap, $user_dn, $ldapData); // hope this could work
+        
+        $result = (ldap_mod_replace($mydap, $user_dn, $ldapData))
+        or die('Error searching LDAP: '.ldap_error($mydap));
+
+        return $result;
+    }
+
     private function mydap_members($object_dn,$object_class='g') {
         global $mydap;
         if(!isset($mydap)) die('Error, no LDAP connection established');
@@ -185,12 +200,24 @@ if(strpos($attr['name'][0], 'игапова'))
 
             if($alreadyUser)
             {
-                echo $alreadyUser->name ." [already there]  - SKIPPED\n";
-                continue;
+                echo $alreadyUser->name ." [already there]  - UPDATE\n";
+                //continue; теперь не пропускаем имеющиеся записи, а обновляем их
+                $aduser = $alreadyUser;
+            }
+            else
+            {
+                $aduser = new AdUser();
+
+                // ToDo: определиться, как привязывать пользака: через sid или мыло
+
+                if(isset($attr['email']))
+                    $aduser->email = isset($attr['email'][0]) ? $attr['email'][0] : null;
+                if(isset($attr['mail']))
+                    $aduser->email = isset($attr['mail'][0]) ? $attr['mail'][0] : null;
+                $aduser->sid = implode(unpack('C*', $attr['objectsid'][0]));
+                $aduser->sn = isset($attr['samaccountname'][0]) ? $attr['samaccountname'][0] : null;
             }
 
-            $aduser = new AdUser();
-            $aduser->sn = isset($attr['samaccountname'][0]) ? $attr['samaccountname'][0] : null;
             $aduser->name = isset($attr['name'][0]) ? $attr['name'][0] : null;
             $aduser->city = isset($attr['city'][0]) ? $attr['city'][0] : null;
             $aduser->company = isset($attr['company'][0]) ? $attr['company'][0] : null;
@@ -198,38 +225,43 @@ if(strpos($attr['name'][0], 'игапова'))
             $aduser->description = isset($attr['description'][0]) ? $attr['description'][0] : null;
             $aduser->title = isset($attr['title'][0]) ? $attr['title'][0] : null;
             $aduser->displayname = isset($attr['displayname'][0]) ? $attr['displayname'][0] : null;
-            if(isset($attr['email']))
-                $aduser->email = isset($attr['email'][0]) ? $attr['email'][0] : null;
-            if(isset($attr['mail']))
-                $aduser->email = isset($attr['mail'][0]) ? $attr['mail'][0] : null;
             $aduser->fax = isset($attr['fax'][0]) ? $attr['fax'][0] : null;
             $aduser->office = isset($attr['office'][0]) ? $attr['office'][0] : null;
             $aduser->phone = isset($attr['phone'][0]) ? $attr['phone'][0] : null;
-            $aduser->sid = implode(unpack('C*', $attr['objectsid'][0]));
 
+            
             $checkaduser = AdUser::find()->where("sn = '{$aduser->sn}'")->count();
 
-            if($checkaduser)
+            if(!$alreadyUser && $checkaduser)
             {
-                echo $i . ". " . $aduser->displayname . " - SKIPPED\n";
+                echo $i . ". " . $aduser->displayname . " - SKIPPED DUE DUPLICATE SN\n";
                 continue;
             }
+            
 
-            $aduser->save();
+            if($aduser->save() && $alreadyUser)
+            {
+                echo $i . ". " . $aduser->displayname . " - UPDATED\n";   
+            }
 
-            $user = new User();
-            $user->email = ($aduser->sn).'@admkrsk.ru';
-            $user->username = $aduser->sn;
-            $user->setPassword($aduser->sid);
-            $user->generateAuthKey();
-            $user->status = User::STATUS_ACTIVE;
-            $user->id_ad_user = $aduser->id_ad_user;
 
-            echo $i . ". " . $aduser->displayname;
-            if($user->save())
-                echo " - SAVED\n";
-            else
-                echo " - FAILED\n";
+            // новый внутренний пользак создаётся только для вновьзагруженных из AD
+            if(!$alreadyUser)
+            {
+                $user = new User();
+                $user->email = ($aduser->sn).'@admkrsk.ru';
+                $user->username = $aduser->sn;
+                $user->setPassword($aduser->sid);
+                $user->generateAuthKey();
+                $user->status = User::STATUS_ACTIVE;
+                $user->id_ad_user = $aduser->id_ad_user;
+
+                echo $i . ". " . $aduser->displayname;
+                if($user->save())
+                    echo " - SAVED\n";
+                else
+                    echo " - FAILED\n";
+            }
 
             $i++;
         }
