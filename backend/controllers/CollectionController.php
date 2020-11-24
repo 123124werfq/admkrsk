@@ -937,7 +937,6 @@ class CollectionController extends Controller
     {
         $this->layout = 'clear';
         $model = new Collection;
-        //$model->id_parent_collection = 52;
         $model->name = 'temp';
         $requestParams = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
 
