@@ -214,6 +214,7 @@ class Collection extends ActiveRecord
      */
     public function mapPropsAndAttributes($data){
         $options = [];
+        
         foreach ($data as $key => $value)
         {
             if ($key === 'id_collection') {
@@ -224,13 +225,16 @@ class Collection extends ActiveRecord
             if (property_exists(static::class, $key) || $this->hasAttribute($key)) {
                 $this->$key = $value;
             }
+
             if (in_array($key, ['search', 'columns', 'filters'])) {
                 $options[$key] = $value;
             }
+
             if ($key === 'sort') {
                 $this->id_column_order = $value;
             }
         }
+        
         $this->options = json_encode($options);
         $this->updateAttributes(['options']);
     }
