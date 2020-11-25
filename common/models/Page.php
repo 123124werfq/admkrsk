@@ -318,11 +318,11 @@ class Page extends ActiveRecord
         ];
     }
 
-    public function afterSave($insert)
+    public function afterSave($insert, $changedAttributes)
     {
         $this->updateCollectionPluginSettings();
 
-        return parent::afterSave($insert);
+        return parent::afterSave($insert, $changedAttributes);
     }
 
     /**
