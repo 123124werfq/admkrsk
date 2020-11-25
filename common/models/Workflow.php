@@ -672,6 +672,9 @@ XMLPARTS2;
             $idreq = str_replace('.zip', '', $path_parts['basename']);
             $sourceText = str_replace('ATREQCODEHERE', $idreq, $sourceText);
 
+            // ставим метку времени вместо Order ID; решение временное, но пусть будет так
+            $ordid = time();
+            $sourceText = str_replace('ORDERID', $ordid, $sourceText);
 
             //  заменяем в шаблоне фактические данные
             if($appeal)
