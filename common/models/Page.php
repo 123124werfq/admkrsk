@@ -320,7 +320,7 @@ class Page extends ActiveRecord
 
     public function afterSave($insert, $changedAttributes)
     {
-        $this->updateCollectionPluginSettings();
+        SettingPlugin::updateCollectionPluginSettings();
 
         return parent::afterSave($insert, $changedAttributes);
     }
@@ -328,7 +328,7 @@ class Page extends ActiveRecord
     /**
      * Remove collection setting plugins by keys
      */
-    private function updateCollectionPluginSettings()
+    /*private function updateCollectionPluginSettings()
     {
         $oldCollectionSettingsKeys = $this->searchCollectionKeys($this->getOldAttribute('content'));
         $newCollectionSettingsKeys = $this->searchCollectionKeys($this->getAttribute('content'));
@@ -338,13 +338,13 @@ class Page extends ActiveRecord
         SettingPluginCollection::deleteAll([
             'key' => $deleteKeys,
         ]);
-    }
+    }*/
 
     /**
      * @param string $content
      * @return array
      */
-    private function searchCollectionKeys($content)
+    /*private function searchCollectionKeys($content)
     {
         $collectionSettingsKeys = [];
 
@@ -360,7 +360,7 @@ class Page extends ActiveRecord
         }
         
         return $collectionSettingsKeys;
-    }
+    }*/
 
     public static function find()
     {

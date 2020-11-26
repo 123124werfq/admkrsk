@@ -17,7 +17,7 @@ use yii\db\ActiveRecord;
  * @property integer $created_at
  * @property integer $updated_at
  */
-class SettingPluginCollection extends ActiveRecord
+class SettingPlugin extends ActiveRecord
 {
     use SoftDeleteTrait;
 
@@ -34,7 +34,7 @@ class SettingPluginCollection extends ActiveRecord
      */
     public static function setSettings(string $settings, $collectionId)
     {
-        $setting = new SettingPluginCollection();
+        $setting = new SettingPlugin();
         $setting->key = Yii::$app->security->generateRandomString();
         $setting->id_model_widget = intval($collectionId);
         //$setting->id_page = intval(Yii::$app->request->get('page_id', 0));
@@ -46,16 +46,19 @@ class SettingPluginCollection extends ActiveRecord
         return null;
     }
 
-    public function updateSettingsForModel($attribute, $model)
+    public static function updateSettingsForModel(array $attributes, $model)
     {
-        $oldCollectionSettingsKeys = $this->searchCollectionKeys($this->getOldAttribute('content'));
-        $newCollectionSettingsKeys = $this->searchCollectionKeys($this->getAttribute('content'));
+        foreach ($attributes as $attr)
+        {
+            /*$oldCollectionSettingsKeys = $this->searchCollectionKeys($model->getOldAttribute($attr));
+            $newCollectionSettingsKeys = $this->searchCollectionKeys($model->getAttribute($attr));
+            */
+            //$deleteKeys = array_diff($oldCollectionSettingsKeys, $newCollectionSettingsKeys);                        
 
-        $deleteKeys = array_diff($oldCollectionSettingsKeys, $newCollectionSettingsKeys);                        
-
-        SettingPluginCollection::deleteAll([
-            'key' => $deleteKeys,
-        ]);
+            /*SettingPlugin::deleteAll([
+                'key' => $deleteKeys,
+            ]);*/
+        }
     }
 
     /**
@@ -86,7 +89,7 @@ class SettingPluginCollection extends ActiveRecord
      */
     public static function getSettings(string $key)
     {
-        return SettingPluginCollection::findOne(['key' => $key]);
+        return SettingPlugin::findOne(['key' => $key]);
     }
 
     public function behaviors()

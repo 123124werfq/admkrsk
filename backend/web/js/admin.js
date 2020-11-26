@@ -431,22 +431,7 @@ jQuery(document).ready(function()
               setVisisble();
             }
         });
-    });
-
-    $("#collection-redactor #collection-id_parent_collection").change(function(){
-        $form = $("#collection-redactor");
-
-        $.ajax({
-            url: $form.attr('action'),
-            type: 'post',
-            data: $form.serialize(),
-            success: function(data)
-            {
-              $("body").html(data);
-              setVisisble();
-            }
-        });
-    });
+    });    
 
     $('body').delegate(".visible-field, #forminput-type, #forminput-id_collection",'change',function(){
         var $form = $("#FormElement form");

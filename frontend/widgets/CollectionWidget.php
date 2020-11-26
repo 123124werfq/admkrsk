@@ -4,7 +4,7 @@ namespace frontend\widgets;
 use Yii;
 use common\models\Collection;
 use common\models\CollectionColumn;
-use common\models\SettingPluginCollection;
+use common\models\SettingPlugin;
 use common\components\helper\Helper;
 use yii\data\Pagination;
 
@@ -42,15 +42,13 @@ class CollectionWidget extends \yii\base\Widget
     {
         $setting = '';
 
-
         if (!empty($this->attributes))
         {
-
             if (!empty($this->attributes['key']))
             {
                 $old_attribures = $this->attributes;
 
-                $setting = SettingPluginCollection::find()->where(['key'=>$this->attributes['key']])->one();
+                $setting = SettingPlugin::find()->where(['key'=>$this->attributes['key']])->one();
 
                 if (!empty($setting))
                 {

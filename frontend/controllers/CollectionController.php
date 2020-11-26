@@ -6,7 +6,7 @@ use common\models\CollectionRecord;
 use common\models\CollectionColumn;
 use common\models\Page;
 use common\models\Collection;
-use common\models\SettingPluginCollection;
+use common\models\SettingPlugin;
 use yii\web\Response;
 use Yii;
 use yii\web\NotFoundHttpException;
@@ -101,7 +101,6 @@ class CollectionController extends \yii\web\Controller
                     'content' => '<table>'.$content.'</table>',
                     'title' => $title
                 ];
-
             }
         }
 
@@ -110,7 +109,7 @@ class CollectionController extends \yii\web\Controller
 
     public function actionDownload($key,$id_page)
     {
-        $settings = SettingPluginCollection::find()->where(['key'=>$key,'id_page'=>$id_page])->one();
+        $settings = SettingPlugin::find()->where(['key'=>$key,'id_page'=>$id_page])->one();
 
         if (empty($settings))
             throw new NotFoundHttpException('The requested page does not exist.');

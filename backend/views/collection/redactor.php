@@ -17,8 +17,8 @@ $model->filters = json_encode($model->filters);
 
 <?php $form = ActiveForm::begin(['id'=>'collection-redactor']); ?>
 
-<?php if (empty($model->id_parent_collection)){?>
-    <?= $form->field($model, 'id_parent_collection')->widget(Select2::class, [
+<?php if (empty($model->id_parent_collection)){
+    echo $form->field($model, 'id_parent_collection')->widget(Select2::class, [
         'data' => [],
         'pluginOptions' => [
             'multiple' => false,
@@ -31,8 +31,27 @@ $model->filters = json_encode($model->filters);
                 'data' => new JsExpression('function(params) { return {q:params.term,id_type:'.(int)$id_type.'}; }')
             ],
         ],
-    ])->label('Выберите список')?>
-<?php
+    ])->label('Выберите список');
+
+$script = <<< JS
+    $("#collection-redactor #collection-id_parent_collection").change(function(){
+        var form = $("#collection-redactor");
+
+        $.ajax({
+            url: form.attr('action'),
+            type: 'post',
+            data: form.serialize(),
+            success: function(data)
+            {
+              $("#redactor-modal .modal-body").html(data);
+              setVisisble();
+            }
+        });
+    });
+JS;
+
+    $this->registerJs($script, View::POS_END);
+
 }
 else
 {
@@ -192,21 +211,22 @@ else
         ],
     ])->label('Колонки для скачивания')->hint('Если не указано то будут поля для отображения')?>
 
-    <br/><br/>
+    <br/>
     <center>
-        <button class="btn btn-primary" id="submit-redactor"><?= $model->isEdit ? 'Изменить' : 'Вставить'?></button>
+        <button class="btn btn-primary" type="submit" id="submit-redactor"><?= $model->isEdit ? 'Изменить' : 'Вставить'?></button>
     </center>
-    <br/><br/><br/>
+    <br/>
     <script>
         document.getElementById('submit-redactor').addEventListener('click', function (event) {
 
                 var rules = $('#querybuilder').queryBuilder('getMongo');
                 $("#collection-filters").val(JSON.stringify(rules));
 
-                $form = $("#collection-redactor");
+                /*$form = $("#collection-redactor");
 
                 var origin = '<?= isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : '' ?>';
                 let url = "<?= $model->isEdit ? '&configureEditCollection=1' : '&json=1' ?>";
+                
                 $.ajax({
                     url: $form.attr('action'),
                     type: 'post',
@@ -220,7 +240,7 @@ else
                             value: data
                         }, origin);
                     }
-                });
+                });*/
                 event.preventDefault();
        });
     </script>

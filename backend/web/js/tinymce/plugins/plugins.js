@@ -10,6 +10,69 @@ function getPageId() {
     return pageUrl.split('?id=')[1];
 }
 
+tinymce.PluginManager.add("collections", function(editor, url) {
+    
+    const CONTENT_ATTRIBUTE_NAME = 'data-encodedata';
+    const KEY_ATTRIBUTE_NAME = 'data-key';
+
+    var _dialog = false;
+    var _typeOptions = [];
+
+    function _onAction() {
+        $.ajax({
+            url: '/collection/redactor',
+            type: 'get',
+            dataType: 'html',
+            success: function(data) {
+                $('#redactor-modal').modal();
+                $('#redactor-modal .modal-body').html(data);                
+                
+                $('#redactor-modal form').submit(function(e){
+                    
+                    if (data.isEdit === true) {
+                        
+                        for (let item of getTinyContents(editor)) {
+                            let collection = item.querySelector('collection');
+                            if (collection) {
+                                let key = collection.getAttribute(KEY_ATTRIBUTE_NAME);
+                                
+                                if (key == data.key) {
+                                    let dataId = collection.getAttribute('data-id');
+                                    let encodeData = data.base64;
+                                    let key = data.key;
+                                    collection.setAttribute(CONTENT_ATTRIBUTE_NAME, encodeData);
+                                    collection.setAttribute(KEY_ATTRIBUTE_NAME, key);
+                                    item.ondblclick = function () {
+                                        setEdit(dataId, key);
+                                    };
+                                }
+                            }
+                        }
+    
+                    } else {
+                        
+                        editor.insertContent('<p><collection'+ ' '+ KEY_ATTRIBUTE_NAME + '=' + data.key +' data-id=' + data.id_collection + ' ' + CONTENT_ATTRIBUTE_NAME  + '="' + data.base64 + '">Список #' + data.id_collection + '.</collection></p>');
+                        setEditableCollections();
+                    }
+                });
+            }
+        });
+    }
+
+    // Define the Toolbar button
+    editor.ui.registry.addButton('collections', {
+        text: "Списки",
+        onAction: _onAction
+    });
+
+    // Define the Menu Item
+    editor.ui.registry.addMenuItem('collections', {
+        text: 'Списки',
+        context: 'insert',
+        onAction: _onAction
+    });
+});
+
 (function() {
     var iframe = (function() {
         'use strict';
@@ -79,6 +142,7 @@ function getPageId() {
                         let collection = item.querySelector('collection');
                         if (collection) {
                             let key = collection.getAttribute(KEY_ATTRIBUTE_NAME);
+                            
                             if (key == value.key) {
                                 let dataId = collection.getAttribute('data-id');
                                 let encodeData = value.base64;

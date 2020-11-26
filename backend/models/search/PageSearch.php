@@ -63,6 +63,8 @@ class PageSearch extends Page
             $query = Page::find();
         }
 
+        $query->andWhere('type <> '.Page::TYPE_LINK);
+
         $query->select([
             '*',
             'views' => Statistic::find()

@@ -4,7 +4,7 @@ namespace backend\controllers;
 
 use backend\models\forms\CollectionConvertForm;
 use common\models\Action;
-use common\models\SettingPluginCollection;
+use common\models\SettingPlugin;
 use common\modules\log\models\Log;
 use Throwable;
 use Yii;
@@ -936,6 +936,7 @@ class CollectionController extends Controller
     public function actionRedactor($id_type=null)
     {
         $this->layout = 'clear';
+        
         $model = new Collection;
         $model->name = 'temp';
         $requestParams = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
@@ -957,10 +958,12 @@ class CollectionController extends Controller
         /** open modal dialog for edit collection */
         if (isset($requestParams['edit']) && isset($requestParams['key']))
         {
-            $pluginOptions = SettingPluginCollection::getSettings($requestParams['key']);
+            $pluginOptions = SettingPlugin::getSettings($requestParams['key']);
+            
             if (!$pluginOptions) {
                 throw new HttpException(400);
             }
+            
             /** decode collection options */
             $decodePluginOptions = json_decode($pluginOptions->settings,true);
             $model->mapPropsAndAttributes($decodePluginOptions);

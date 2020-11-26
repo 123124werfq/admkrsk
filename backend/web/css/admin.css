@@ -320,8 +320,11 @@ ul.menu-container ul .create-menu {display: none;}
 .nav-list-topbar.nav > li.active {border-left: 0px; border-bottom: 3px solid #19aa8d; background: #fff;}
 .nav-list-topbar.nav > li.active a {background: #fff; color: #333;}
 
-.modal-body .btn {display: none;}
+.modal-body .btn[type=submit], .modal-body button[type=submit] {display: none;}
 .modal-body tfoot .btn {display: block;}
+
+#redactor-modal .modal-dialog {width: 100%;}
+#redactor-modal .modal-dialog .modal-body, #redactor-modal .modal-dialog .modal-footer {max-width: 1500px; margin: 0 auto;}
 
 .modal-body {
     padding: 20px 20px 30px 10px;
