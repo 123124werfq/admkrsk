@@ -32,6 +32,12 @@
 			</div>
 <?php }?>
 
+            <div class="content searchable">
+                <?php if (!empty($page)){?>
+                        <?=common\components\helper\Helper::runContentWidget($page->content,$page)?>
+                <?php }?>
+            </div>
+
 			<div class="subscribe">
                 <div class="subscribe_left">
                     Поделиться:
