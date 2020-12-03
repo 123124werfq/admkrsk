@@ -269,4 +269,36 @@ if(strpos($attr['name'][0], 'игапова'))
         $this->mydap_end();
 
     }
+
+    public function actionReverseUpdate()
+    {
+
+        $this->mydap_start(
+            'web_user@admkrsk.ru', // Active Directory search user
+            'PaO5q#3ows', // Active Directory search user password
+            '10.24.0.7' // Active Directory server
+        );
+
+        echo "Started\n";
+
+        $members2 = $this->mydap_members('OU=_Органы и территориальные подразделения,DC=admkrsk,DC=ru','c');
+
+        $members = $members2;
+        //$members = array_merge($members1, $members2);
+
+        if(!$members) die('No members found, make sure you are specifying the correct object_class');
+        $keep = array('samaccountname','mail','email','employeeID', 'name', 'company', 'department', 'description', 'title',  'givenname', 'mobilephone', 'othertelephone', 'city', 'phone', 'displayname', 'objectsid', 'office', 'fax');
+
+        $i = 1; // For counting our output
+        foreach($members as $m) {
+
+            $attr = $this->mydap_attributes($m,$keep);
+            $flag = 0;
+            echo($attr['name'][0]);
+            echo " - skipped\n";
+        }
+
+        echo "Finished\n";
+    }
+
 }
