@@ -866,9 +866,9 @@ class CollectionColumn extends \yii\db\ActiveRecord
             case self::TYPE_COLLECTIONS:
                 if (is_array($value))
                 {
-                    var_dump($value);
-                    return '';
-                    //return '<span>'.implode("</span><br/><span>",array_map(function($a) {return implode("~",$a);},$value)).'</span>';
+                    //var_dump($value);
+                    //return '';
+                    return '<span>'.implode("</span><br/><span>",array_map(function($a) {return implode("~",$a);},$value)).'</span>';
                 }
                 else
                     return $value;
