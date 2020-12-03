@@ -868,7 +868,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 {
                     //var_dump($value);
                     //return '';
-                    return '<span>'.implode("</span><br/><span>",array_map(function($a) {return implode("~",$a);},$value)).'</span>';
+                    return '<span>'.implode("</span><br/><span>",$value).'</span>';
                 }
                 else
                     return $value;
