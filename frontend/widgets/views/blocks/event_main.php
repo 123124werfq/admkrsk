@@ -19,7 +19,9 @@
 
     <?php if (count($cover)==1){?>
     <picture class="main-slider_img">
+        <?php if (!empty($cover_mobile[0])){?>
         <source media="(max-width: 992px)" srcset="<?=$cover_mobile[0]->showThumb(['w'=>1280,'h'=>1024])?>?>">
+        <?php }?>
         <img src="<?=$cover[0]->showThumb(['w'=>1920,'h'=>1080])?>" alt=""/>
     </picture>
     <?php }?>
