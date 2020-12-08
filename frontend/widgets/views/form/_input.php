@@ -414,7 +414,7 @@ if (empty($modelForm->maxfilesize))
                     echo '</div>';
                 }
 
-                if (!empty($options['show_coords']))
+                if (!empty($options['show_coord']))
                 {
                     echo '<div class="col-md-12">';
                     echo MapInputWidget::widget(['name' => $inputname.'[coords]', 'index' => $options['id'], /*'value' => $model->$clearAttribute*/]);

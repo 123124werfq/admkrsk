@@ -63,6 +63,8 @@ class PageSearch extends Page
             $query = Page::find();
         }
 
+        $query->andWhere('type <> '.Page::TYPE_LINK);
+
         $query->select([
             '*',
             'views' => Statistic::find()
@@ -91,7 +93,7 @@ class PageSearch extends Page
         }
 
         $id_partition = Yii::$app->request->get('id_partition',null);
-        
+
         if (!empty($id_partition))
         {
             $partition = Page::findOne($id_partition);
