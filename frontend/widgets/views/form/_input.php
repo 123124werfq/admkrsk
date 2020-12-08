@@ -384,14 +384,22 @@ if (empty($modelForm->maxfilesize))
                             {
                                 if (e.params.data.district!='')
                                 {
-                                    if (regionID.find('option[value=\"'+ e.params.data.id_district + '\"]').length) {
+                                    if (regionID.find('option[value=\"'+ e.params.data.id_district + '\"]').length){
                                         regionID.val(e.params.data.id_district).trigger('change');
                                     } else {
-                                        console.log(123);
                                         var newOption = new Option(e.params.data.district, e.params.data.id_district, true, true);
                                         regionID.append(newOption).trigger('change');
                                     }
                                 }
+                            }
+                            if ($('#latformdynamic_" . $id_input . "').length>0 && $('#latformdynamic_" . $id_input . "').val()!='')
+                            {
+                                $('#latformdynamic_" . $id_input . "').val(e.params.data.lat);
+                            }
+
+                            if ($('#lonformdynamic_" . $id_input . "').length>0 && $('#lonformdynamic_" . $id_input . "').val()!='')
+                            {
+                                $('#lonformdynamic_" . $id_input . "').val(e.params.data.lon);
                             }
 
                             if ($('#postcode" . $id_input . "').length>0)
