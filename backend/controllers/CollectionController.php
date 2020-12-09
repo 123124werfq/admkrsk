@@ -287,7 +287,7 @@ class CollectionController extends Controller
         $form = new CollectionConvertForm;
 
         $collection = $this->findModel($id);
-        $columns = $collection->getColumns()->indexBy('alias')->all();;
+        $columns = $collection->getColumns()->indexBy('alias')->all();
 
         if ($form->load(Yii::$app->request->post()) && $form->validate())
         {
@@ -909,11 +909,11 @@ class CollectionController extends Controller
     {
         $model = new \backend\models\forms\CollectionRecordForm;
         $collection = $this->findModel($id_collection);
-        
+
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
-            
-            
+
+
             return $this->asJson($model->attributes);
         }
 
@@ -922,7 +922,7 @@ class CollectionController extends Controller
             'yii\web\JqueryAsset'=>false,
             'yii\web\YiiAsset'=>false,
         ];
-        
+
         return $this->renderAjax('record_map',[
             'collection'=>$collection,
             'model'=>$model

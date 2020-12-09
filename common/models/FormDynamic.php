@@ -337,7 +337,7 @@ class FormDynamic extends DynamicModel
                                 {
                                     $data[$index]['place'] = $addModel->name??'';
                                     $data[$index]['id_place'] = $addModel->id_house??'';
-                                    $data[$index]['fullname'] = ', '.$value['place'];
+                                    $data[$index]['fullname'] .= ', '.$value['place'];
                                 }
                             }
                         }
