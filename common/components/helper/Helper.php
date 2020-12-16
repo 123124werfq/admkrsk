@@ -174,6 +174,52 @@ class Helper
 	    },['is_safe' => ['html']]);
 	    $twig->addFilter($filter);
 
+	    $filter = new \Twig\TwigFilter('schedule_string', function ($value) {
+	    	//$ths = json_decode($data, true);
+
+	    	if (!is_array($value))
+	    		$value = json_decode($value,true);
+
+            if (!is_array($value) || empty($value))
+                return '';
+
+            $output[] = 'с '.date('d.m.Y',$value['begin']).' по '.date('d.m.Y',$value['end']);
+
+            if (!empty($value['is_repeat']))
+            {
+                /*if (!empty($value['repeat_count']))
+                    $output[] = Helper::plural($value['repeat_count'],['раз','раза','раз']);*/
+
+                if (!empty($value['repeat']))
+                    $output[] = mb_strtolower($value['repeat']);
+
+                if (!empty($value['day_space']))
+                    $output[] = 'через '.Helper::plural($value['day_space'],['день','дня','дней']);
+
+                if (!empty($value['week']))
+                    $output[] = implode(', ', $value['week']);
+
+                if (!empty($value['week_space']))
+                    $output[] = 'через '.Helper::plural($value['week_space'],['неделю','недели','недель']);
+
+                if (!empty($value['month_days']))
+                    $output[] = 'каждые '.implode(', ', $value['month_days']).' дни месяца';
+
+                if (!empty($value['repeat_month']) && $value['repeat_month']=='Неделя месяца')
+                {
+                    if (!empty($value['week_number']))
+                        $output[] = 'каждую '.$value['week_number'].' неделю месяца';
+
+                    if (!empty($value['month_week']))
+                        $output[] = implode(', ', $value['month_week']);
+                }
+            }
+
+            return implode(', ', $output);
+
+	    },['is_safe' => ['html']]);
+	    $twig->addFilter($filter);
+
 	    $filter = new \Twig\TwigFilter('table', function ($data) {
 	    	//$ths = json_decode($data, true);
 
