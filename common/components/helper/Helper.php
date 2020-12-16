@@ -151,6 +151,26 @@ class Helper
 
 	    $twig->addFilter($filter);
 
+	    $filter = new \Twig\TwigFilter('schedule_time', function ($data) {
+	    	//$ths = json_decode($data, true);
+
+	    	if (!is_array($data))
+	    		$data = json_decode($data,true);
+
+            if (!is_array($data) || empty($data))
+            {
+                echo json_encode($data);
+                return '';
+            }
+
+            if (!empty($data['time']))
+            {
+                foreach ($data['time'] as $key => $row)
+                    $row['begin'].'-'.$row['end'].'<br>';
+            }
+	    },['is_safe' => ['html']]);
+
+
 	    $filter = new \Twig\TwigFilter('table', function ($data) {
 	    	//$ths = json_decode($data, true);
 
