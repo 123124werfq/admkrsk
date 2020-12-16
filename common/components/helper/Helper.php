@@ -158,10 +158,7 @@ class Helper
 	    		$data = json_decode($data,true);
 
             if (!is_array($data) || empty($data))
-            {
-                echo json_encode($data);
                 return '';
-            }
 
             if (!empty($data['time']))
             {
