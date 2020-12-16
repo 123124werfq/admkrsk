@@ -163,7 +163,13 @@ class Helper
             if (!empty($data['time']))
             {
                 foreach ($data['time'] as $key => $row)
-                    echo $row['begin'].'-'.$row['end'].'<br>';
+                {
+                    echo $row['begin'];
+                    if (!empty($row['end']))
+	                	echo '-'.$row['end'];
+
+	                echo '<br>';
+	            }
             }
 	    },['is_safe' => ['html']]);
 	    $twig->addFilter($filter);
