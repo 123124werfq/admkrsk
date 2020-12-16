@@ -169,7 +169,7 @@ class Helper
                     $row['begin'].'-'.$row['end'].'<br>';
             }
 	    },['is_safe' => ['html']]);
-
+	    $twig->addFilter($filter);
 
 	    $filter = new \Twig\TwigFilter('table', function ($data) {
 	    	//$ths = json_decode($data, true);
