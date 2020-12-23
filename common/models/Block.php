@@ -211,10 +211,10 @@ class Block extends \yii\db\ActiveRecord
                     'name'=>'Дата начала',
                     'type'=>BlockVar::TYPE_DATE,
                 ],
-                'programm'=>[
+                /*'programm'=>[
                     'name'=>'Программа мероприятия',
                     'type'=>BlockVar::TYPE_COLLECTION,
-                ],
+                ],*/
                 'id_page'=>[
                     'name'=>'Раздел для программ мероприятий',
                     'type'=>BlockVar::TYPE_PAGE,

@@ -1,4 +1,5 @@
 <?php
+    use common\models\Page;
     /*$cover = (!empty($blockVars['cover']))?$blockVars['cover']->makeThumb(['w'=>1920,'h'=>1080]):'';
     $cover_mobile = (!empty($blockVars['cover_mobile']))?$blockVars['cover_mobile']->makeThumb(['w'=>1920,'h'=>1080]):'';*/
 
@@ -32,8 +33,10 @@
                 <p class="main-slider_text">
                     <?=(!empty($blockVars['content']))?$blockVars['content']->value:''?>
                 </p>
-                <?php if (!empty($blockVars['programm'])){?>
-                <a href="/event/program?id=<?=$blockVars['programm']->value?>&id_page=<?=$blockVars['id_page']->value??$page->id_page?>" class="btn btn__secondary">Посмотреть программу</a>
+                <?php if (!empty($blockVars['id_page']->value)){
+                    $programm_page = Page::findOne((int)$blockVars['id_page']->value);
+                ?>
+                <a href="<?=$programm_page->getUrl()?>" class="btn btn__secondary">Посмотреть программу</a>
                 <?php }?>
                 <?php if (!empty($countdown) && $countdown>time()){?>
                 <div class="main-countdown-holder">
