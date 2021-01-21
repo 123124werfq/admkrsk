@@ -566,8 +566,8 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
                             $output[$alias] = [];
 
-                            foreach ($value as $key => $value)
-                                $output[$alias][$key] = $records[$key];
+                            foreach ($records as $key => $value)
+                                $output[$alias][$key] = $value;
                         }
                     }
                     else
