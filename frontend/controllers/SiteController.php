@@ -31,6 +31,7 @@ use common\models\EsiaUser;
 use yii\web\ErrorAction;
 use yii\web\NotFoundHttpException;
 use common\models\Workflow;
+use common\models\Smev;
 use yii\web\Response;
 
 /**
@@ -973,5 +974,11 @@ class SiteController extends Controller
         }
 
     } 
+
+    public function actionSmevtest()
+    {
+        $smev1 = new Smev;
+        $smev1->testMessage();
+    }    
 
 }

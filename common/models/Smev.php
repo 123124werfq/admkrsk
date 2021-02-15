@@ -154,10 +154,10 @@ class Smev extends Model
 //        $message = new ClientMessage(240501, $rq, $resp);
         $message = new ClientMessage(240501, $rq, null);
 
-        $cl->Send($message);
+       // $cl->Send($message);
 
-        //$res = $cl->Send($message);
-        //var_dump($res);
+        $res = $cl->Send($message);
+        var_dump($res);
     }
 
 }
