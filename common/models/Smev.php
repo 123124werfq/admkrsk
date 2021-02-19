@@ -136,7 +136,7 @@ class Smev extends Model
     {
         $cl = $this->connect();
 
-        $clientId = 'a6fc378d-c555-4485-8841-3137e9337797';
+        $clientId = 'a6fc378d-c555-4485-8841-3137e9337791';
 
         $primaryContent     = new MessagePrimaryContent($this->testRequest);
         $content            = new Content($primaryContent, null, null);
@@ -154,10 +154,10 @@ class Smev extends Model
 //        $message = new ClientMessage(240501, $rq, $resp);
         $message = new ClientMessage(240501, $rq, null);
 
-        $cl->Send($message);
+       // $cl->Send($message);
 
-        //$res = $cl->Send($message);
-        //var_dump($res);
+        $res = $cl->Send($message);
+        var_dump($res);
     }
 
 }
