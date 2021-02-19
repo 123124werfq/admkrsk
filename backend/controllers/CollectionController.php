@@ -1378,7 +1378,7 @@ class CollectionController extends Controller
                                         $input = FormInput::find()->where(['id_column'=>$id_column])->one();
 
                                         if (!empty($input))
-                                            $input->values = json_encode($values);
+                                            $input->values = json_encode($values[$id_column]);
 
                                         $input->updateAttributes(['values']);
                                     }
