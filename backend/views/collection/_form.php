@@ -71,8 +71,6 @@ Yii::$app->params['sidebar'] = $this->render('_twig_options',['columns'=>$model-
 
 <?php if (Yii::$app->user->can('admin.collection')): ?>
 
-
-
     <?php if ($model->isNewRecord){?>
     <?= $form->field($model, 'id_type')->dropDownList(ArrayHelper::map(CollectionType::find()->all(), 'id_type', 'name')
         ,['prompt'=>'Выберите тип'])->hint('Заполняется только для создания специальных типов списков') ?>

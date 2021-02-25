@@ -59,9 +59,10 @@ use yii\web\JsExpression;
         <?=$form->field($model, 'values')->textarea(['rows' => 6,'required'=>($model->type==CollectionColumn::TYPE_CHECKBOX)])->label('Введите значение, если чекбокс выбран')?>
     <?php }?>
 
-    <?php if ($model->type == CollectionColumn::TYPE_SELECT ||
-              $model->type == CollectionColumn::TYPE_RADIO ||
-              $model->type == CollectionColumn::TYPE_CHECKBOXLIST){?>
+    <?php if (empty($model->id_collection) && (
+                $model->type == CollectionColumn::TYPE_SELECT ||
+                $model->type == CollectionColumn::TYPE_RADIO ||
+                $model->type == CollectionColumn::TYPE_CHECKBOXLIST)){?>
         <?=$form->field($model, 'values')->widget(Select2::class, [
             'data' => $model->getArrayValues(),
             /*'multiple'=>true,*/
@@ -87,7 +88,7 @@ use yii\web\JsExpression;
                 'allowClear' => true,
                 'placeholder' => 'Выберите список',
             ],
-        ])->label('Или взять данные из списка')?>
+        ])->label('Взять данные из списка')?>
         </div>
         <div class="col-md-6">
         <?=$form->field($model, 'id_collection_column')->widget(Select2::class, [
@@ -161,6 +162,34 @@ use yii\web\JsExpression;
     <?php
         echo $this->render('_element_options',['element'=>$model->element,'id_form'=>$model->id_form,'form'=>$form]);
     ?>
+
+    <?php if ($model->type == CollectionColumn::TYPE_COLLECTION && !empty($model->id_collection)){?>
+    <?php
+        $search_inputs = ArrayHelper::map($model->form->getInputs()->select(['id_input','name'])->where('id_collection IS NOT NULL')->andWhere('id_input <> '.(int)$model->id_input)->all(),'id_input','name');
+        ?>
+    <h3>Зависимые поля для поиска</h3>
+    <div id="search-columns" class="multiyiinput">
+
+    <?php foreach ($model->getSearchInputs() as $key => $data) {?>
+        <div class="row" data-row="<?=$key?>">
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <?=Html::dropDownList("FormInput[search_inputs][$key][id_column]",$data['id_column'], ArrayHelper::map($model->collection->columns,'id_column','name'),['class'=>'form-control','id'=>'SearchColumns_id_column_'.$key,'prompt'=>'Выберите колонку']);?>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <?=Html::dropDownList("FormInput[search_inputs][$key][id_input]",$data['id_input'],$search_inputs,['class'=>'form-control','id'=>'SearchColumns_input_'.$key,'prompt'=>'Выберите поле']);?>
+                </div>
+            </div>
+            <div class="col-sm-1 col-close">
+                <a class="close btn" href="#">&times;</a>
+            </div>
+        </div>
+    <?php }?>
+    </div>
+    <a onclick="return addInput('search-columns')" href="#" class="btn btn-default btn-visible">Добавить еще</a>
+    <?php }?>
 
     <div class="form-group">
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

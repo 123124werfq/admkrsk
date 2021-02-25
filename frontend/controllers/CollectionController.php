@@ -173,14 +173,32 @@ class CollectionController extends \yii\web\Controller
         if (empty($collection))
             throw new NotFoundHttpException('The requested page does not exist.');
 
-        $collection = $collection->getArray($id_column);
+        if (empty($_GET['filter']))
+            $collection = $collection->getArray($id_column);
+        else
+        {
+            $filter = (array)$_GET['filter'];
+
+            $where = [];
+            foreach ($filter as $idc => $value)
+                if ($value!=='')
+                    $where['col'.(int)$idc] = (string)$value;
+
+            $data = $collection->getDataQuery()->andWhere($where)->select([$id_column])->getArray();
+
+            $collection = [];
+
+            foreach ($data as $key => $row) {
+                $collection[$key] = implode(' ', $row);
+            }
+        }
 
         $i = 0;
         $results = [];
 
         foreach ($collection as $key => $value)
         {
-            if ($i>15)
+            if ($i>30)
                 break;
 
             if ($q=='' || stripos($value, $q))

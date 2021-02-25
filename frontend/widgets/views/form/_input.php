@@ -99,6 +99,7 @@ if (empty($modelForm->maxfilesize))
                 /*echo $form->field($model, $attribute)->dropDownList($input->getArrayValues(), $options);*/
                 break;
             case CollectionColumn::TYPE_SELECT:
+                $options['prompt'] = 'Выберите значение';
                 echo $form->field($model, $attribute)->dropDownList($input->getArrayValues(), $options);
                 break;
             case CollectionColumn::TYPE_MAP:
@@ -628,6 +629,7 @@ if (empty($modelForm->maxfilesize))
                 echo '</div>';
                 echo '<div class="help-block"></div>';
                 break;
+
             case CollectionColumn::TYPE_COLLECTION:
 
                 $value = [];
@@ -638,6 +640,16 @@ if (empty($modelForm->maxfilesize))
                 if (!is_array($value))
                     $value = [$value];
 
+                $search_inputs = [];
+
+                /*if (!empty($model->search_inputs))
+                {
+                    $decode = json_decode($model->search_inputs);
+
+                    foreach ($variable as $key => $data)
+                        $search_inputs['formdynamic-input'.$data['id_input']] = $data['id_column'];
+                }*/
+
                 echo $form->field($model, $attribute)->widget(Select2::class, [
                     'data' => $value,
                     'pluginOptions' => [
@@ -647,7 +659,7 @@ if (empty($modelForm->maxfilesize))
                         'ajax' => [
                             'url' => '/collection/record-list',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {q:params.term,id:' . $input->id_collection . ',id_column:' . $input->id_collection_column . '};}')
+                            'data' => new JsExpression('function(params) { return {q:params.term,id:' . $input->id_collection . ',id_column:' . $input->id_collection_column . ', filter:getFilter('.$input->search_inputs.')};}')
                         ],
                     ],
                     'options' => [

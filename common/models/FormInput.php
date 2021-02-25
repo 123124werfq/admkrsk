@@ -53,7 +53,7 @@ class FormInput extends \yii\db\ActiveRecord
             }],
             [['fieldname'], 'fieldnameUnique'],
             [['hint','label'], 'string'],
-            [['options','values'],'safe'],
+            [['options','values','search_inputs'],'safe'],
             [['name', 'fieldname','alias'], 'string', 'max' => 500],
         ];
     }
@@ -124,10 +124,26 @@ class FormInput extends \yii\db\ActiveRecord
         return false;
     }
 
+    public function getSearchInputs()
+    {
+        if (!empty($this->search_inputs))
+            return json_decode($this->search_inputs,true);
+
+        return [
+            [
+            'id_input'=>null,
+            'id_column'=>null,
+            ]
+        ];
+    }
+
     public function beforeValidate()
     {
         if (is_array($this->values))
             $this->values = json_encode($this->values);
+
+        if (is_array($this->search_inputs))
+            $this->search_inputs = json_encode($this->search_inputs);
 
         //если сменили тип на неподдерживаемый коллекции
         if (!$this->supportCollectionSource() && !empty($this->id_collection))
@@ -186,7 +202,16 @@ class FormInput extends \yii\db\ActiveRecord
             $collection = Collection::findOne($this->id_collection);
 
             if (!empty($collection))
-                return $collection->getArray($this->id_collection_column??'');
+            {
+                $records = $collection->getArray($this->id_collection_column??'');
+                array_unique($records);
+
+                $values = [];
+                foreach ($records as $key => $record)
+                    $values[$record] = $record;
+
+                return $values;
+            }
             else
                 return [];
         }

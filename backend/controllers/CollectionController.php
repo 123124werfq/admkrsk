@@ -1398,6 +1398,8 @@ class CollectionController extends Controller
                         }
                         catch (Exception $e)
                         {
+
+                            echo $e->getMessage();
                             Yii::$app->session->setFlash('error', 'Ошибка при записи в базу данных');
                             $model->addError('file','Ошибка при чтении файла, ошибка формата данных');
                         }
