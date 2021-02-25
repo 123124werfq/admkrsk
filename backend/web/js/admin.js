@@ -39,7 +39,7 @@ function getValueById(id)
 
 function getFilter(settings)
 {
-    if (settings.length>0)
+    if (settings && settings.length>0)
     {
         var filters = {};
 
