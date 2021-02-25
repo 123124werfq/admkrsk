@@ -214,7 +214,7 @@ class Collection extends ActiveRecord
      */
     public function mapPropsAndAttributes($data){
         $options = [];
-        
+
         foreach ($data as $key => $value)
         {
             if ($key === 'id_collection') {
@@ -234,7 +234,7 @@ class Collection extends ActiveRecord
                 $this->id_column_order = $value;
             }
         }
-        
+
         $this->options = json_encode($options);
         $this->updateAttributes(['options']);
     }
@@ -363,7 +363,18 @@ class Collection extends ActiveRecord
 
         $output = [];
 
-        foreach ($data as $key => $row) {
+        foreach ($data as $id_record => $record)
+        {
+            foreach ($record as $rkey => $value)
+            {
+                if (is_array($value))
+                    $output[$id_record][$rkey] = implode('<br/>', $value);
+                else
+                    $output[$id_record][$rkey] = $value;
+            }
+        }
+
+        foreach ($output as $key => $row) {
             $output[$key] = implode(' ', $row);
         }
 
@@ -462,7 +473,7 @@ class Collection extends ActiveRecord
             $id_collection = $this->id_collection;
         }
 
-        $query = CollectionQuery::getQuery($id_collection);
+        $query = CollectionQuery::getData($id_collection);
 
         if (!is_array($options))
             $options = json_decode($this->options, true);
