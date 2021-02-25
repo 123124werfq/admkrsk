@@ -1,3 +1,23 @@
+function getFilter(settings)
+{
+    if (settings.length>0)
+    {
+        var filters = {};
+
+        for (var i = settings.length - 1; i >= 0; i--) {
+            filters[settings[i].id_column] = $("#formdynamic-input"+settings[i].id_input).val()
+        }
+
+        return filters;
+
+        /*Object.keys(settings).forEach(function(k){
+            console.log(k + ' - ' + settings[k]);
+        });*/
+    }
+    else
+        return {};
+}
+
 function formCopy(element)
 {
     var $link = $(element);
