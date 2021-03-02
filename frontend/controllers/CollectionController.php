@@ -204,7 +204,7 @@ class CollectionController extends \yii\web\Controller
             if ($i>30)
                 break;
 
-            if ($q=='' || stripos($value, $q))
+            if ($q=='' || stripos($value, $q)!==false)
             {
                 $results[] = [
                     'id' => $key,
