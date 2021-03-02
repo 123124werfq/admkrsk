@@ -310,7 +310,9 @@ class CollectionSearch extends DynamicModel
                                 $links[] = '<a data-pjax="0" target="_blank" href="/collection-record/view?id='.$id.'">'.$labels[$ckey].'</a>';
                         }
                     else
-                        $links = $labels;
+                    {
+                        $links[] = '<a data-pjax="0" target="_blank" href="/collection-record/view?id='.$model[$col_alias].'">'.implode('', $labels).'</a>';
+                    }
 
                     return implode('<br>', $links);
                 };
