@@ -184,7 +184,10 @@ class CollectionController extends \yii\web\Controller
                 if ($value!=='')
                     $where['col'.(int)$idc] = $value;
 
-            $data = $collection->getDataQuery()->andWhere($where)->select([$id_column])->getArray();
+            $data = $collection->getDataQuery()
+                        ->andWhere($where)
+                        ->select([$id_column])
+                        ->getArray();
 
             $collection = [];
 

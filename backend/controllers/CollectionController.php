@@ -708,7 +708,7 @@ class CollectionController extends Controller
                                 ])->execute();
 
                                 $update = [];
-                                $update['col' . $newColumn->id_column] = [$id_source];
+                                $update['col' . $newColumn->id_column] = $id_source;
                                 $update['col' . $newColumn->id_column . '_search'] = $textSearch;
                                 $collection->update(['id_record' => $id_record], $update);
                             }
