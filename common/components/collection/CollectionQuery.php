@@ -52,13 +52,13 @@ class CollectionQuery extends \yii\mongodb\Query
             $this->id_columns_search = array_diff($id_columns_search, $id_columns);
             $id_columns = array_merge($id_columns,$id_columns_search);
         }
-            
+
         if (!empty($id_columns))
             $columns->where(['id_column'=>$id_columns]);
 
         $columns = $columns->indexBy('id_column')->all();
         $this->columns = $columns;
-        
+
         $select = [];
         foreach ($columns as $key => $column)
         {
@@ -124,14 +124,14 @@ class CollectionQuery extends \yii\mongodb\Query
                 $this->andWhere(['col'.$id_column=>$condition[$alias]]);
         }
         else
-        if (count($condition)==3)
-        {
-            $alias = $condition[1];
-            $id_column = $this->GetIDColumnByAlias($alias);
+            if (count($condition)==3)
+            {
+                $alias = $condition[1];
+                $id_column = $this->GetIDColumnByAlias($alias);
 
-            if (!empty($id_column))
-                $this->andWhere([$condition[0],'col'.$id_column,$condition[2]]);
-        }
+                if (!empty($id_column))
+                    $this->andWhere([$condition[0],'col'.$id_column,$condition[2]]);
+            }
 
         return $this;
     }
@@ -159,7 +159,7 @@ class CollectionQuery extends \yii\mongodb\Query
 
         $output = [];
         $emptyRow = [];
-        
+
         foreach ($this->columns as $key => $col)
         {
             if (!in_array($col->id_column, $this->id_columns_search))

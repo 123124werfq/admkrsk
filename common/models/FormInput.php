@@ -143,7 +143,7 @@ class FormInput extends \yii\db\ActiveRecord
             $this->values = json_encode($this->values);
 
         if (is_array($this->search_inputs))
-            $this->search_inputs = json_encode($this->search_inputs);
+            $this->search_inputs = json_encode(array_map('array_values', $this->search_inputs));
 
         //если сменили тип на неподдерживаемый коллекции
         if (!$this->supportCollectionSource() && !empty($this->id_collection))
