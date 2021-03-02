@@ -640,15 +640,8 @@ if (empty($modelForm->maxfilesize))
                 if (!is_array($value))
                     $value = [$value];
 
-                $search_inputs = [];
-
-                /*if (!empty($model->search_inputs))
-                {
-                    $decode = json_decode($model->search_inputs);
-
-                    foreach ($variable as $key => $data)
-                        $search_inputs['formdynamic-input'.$data['id_input']] = $data['id_column'];
-                }*/
+                if (empty($input->search_inputs))
+                    $input->search_inputs = "''";
 
                 echo $form->field($model, $attribute)->widget(Select2::class, [
                     'data' => $value,
@@ -659,7 +652,7 @@ if (empty($modelForm->maxfilesize))
                         'ajax' => [
                             'url' => '/collection/record-list',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {q:params.term,id:' . $input->id_collection . ',id_column:' . $input->id_collection_column . ', filter:getFilter('.($input->search_inputs?:'').',\''.$arrayGroup.'\')};}')
+                            'data' => new JsExpression('function(params) { return {q:params.term,id:' . $input->id_collection . ',id_column:' . $input->id_collection_column . ', filter:getFilter('.$input->search_inputs.',\''.$arrayGroup.'\')};}')
                         ],
                     ],
                     'options' => [
