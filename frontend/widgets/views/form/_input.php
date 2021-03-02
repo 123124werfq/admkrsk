@@ -33,9 +33,6 @@ if (!empty($input->required) && $input->type == CollectionColumn::TYPE_CHECKBOX)
 if (!empty($input->readonly) && strpos(Yii::$app->params['backendUrl'],'/'.$_SERVER['SERVER_NAME'])===false)
     $options['readonly'] = true;
 
-if (empty($options['id']))
-    $options['id'] = "formdynamic-input" . $input->id_input;
-
 $groupClass = '';
 
 if ($input->type == CollectionColumn::TYPE_CHECKBOXLIST)
@@ -57,6 +54,9 @@ else
     $id_input = $attribute;
     $inputname = "FormDynamic[$attribute]";
 }
+
+if (empty($options['id']))
+    $options['id'] = "formdynamic-" . $id_input;
 
 $id_subform = (!empty($subform)) ? $subform->id_form : '';
 
@@ -659,7 +659,7 @@ if (empty($modelForm->maxfilesize))
                         'ajax' => [
                             'url' => '/collection/record-list',
                             'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {q:params.term,id:' . $input->id_collection . ',id_column:' . $input->id_collection_column . ', filter:getFilter('.$input->search_inputs.')};}')
+                            'data' => new JsExpression('function(params) { return {q:params.term,id:' . $input->id_collection . ',id_column:' . $input->id_collection_column . ', filter:getFilter('.$input->search_inputs.','.$arrayGroup.')};}')
                         ],
                     ],
                     'options' => [

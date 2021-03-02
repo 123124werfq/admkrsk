@@ -21,14 +21,20 @@ function getValueById(id)
     return '';
 }
 
-function getFilter(settings)
+function getFilter(settings,group)
 {
     if (settings && settings.length>0)
     {
+        if (group)
+            group = '-'+group;
+        else
+            group = '';
+
         var filters = {};
 
         for (var i = settings.length - 1; i >= 0; i--) {
-            filters[settings[i].id_column] = $("#formdynamic-input"+settings[i].id_input).val()
+            console.log("#formdynamic"+group+"-input"+settings[i].id_input);
+            filters[settings[i].id_column] = $("#formdynamic"+group+"-input"+settings[i].id_input).val();
         }
 
         return filters;
