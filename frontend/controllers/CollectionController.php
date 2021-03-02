@@ -189,7 +189,10 @@ class CollectionController extends \yii\web\Controller
             $collection = [];
 
             foreach ($data as $key => $row) {
-                $collection[$key] = implode(' ', $row);
+                if (is_array($row))
+                    $collection[$key] = implode(' ', $row);
+                else
+                    $collection[$key] = $row;
             }
         }
 
