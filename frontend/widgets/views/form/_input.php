@@ -50,7 +50,7 @@ if (!empty($arrayGroup))
     $id_input = str_replace(['[',']'], '_', $attribute);
 
     if (empty($options['id']))
-        $options['id'] = "formdynamic-".$arrayGroup.'-'.$attribute;
+        $options['id'] = "formdynamic-".$arrayGroup.'-'.$clearAttribute;
 }
 else
 {
@@ -58,7 +58,7 @@ else
     $inputname = "FormDynamic[$attribute]";
 
     if (empty($options['id']))
-        $options['id'] = "formdynamic-".$attribute;
+        $options['id'] = "formdynamic-".$clearAttribute;
 }
 
 $id_subform = (!empty($subform)) ? $subform->id_form : '';
