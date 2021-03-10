@@ -31,11 +31,13 @@ if (!empty($input->required) && $input->type == CollectionColumn::TYPE_CHECKBOX)
     $options['required'] = true;
 
 if (!empty($input->readonly) && strpos(Yii::$app->params['backendUrl'],'/'.$_SERVER['SERVER_NAME'])===false)
+{
     $options['readonly'] = true;
 
-// for checkbox
-if ($options['readonly'] == true && $input->type == CollectionColumn::TYPE_CHECKBOX)
-    $options['disabled'] = true;
+    // for checkbox
+    if ($input->type == CollectionColumn::TYPE_CHECKBOX)
+        $options['disabled'] = true;
+}
 
 $groupClass = '';
 
