@@ -501,7 +501,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
             if ($hasCustom)
             {
-                $recordData = $this->getDataRaw(true,true,$columnsAlias);
+                $recordData = $this->getDataRaw(true,true);//,$columnsAlias
 
                 foreach ($columns as $key => $column)
                     if ($column->isCustom())
