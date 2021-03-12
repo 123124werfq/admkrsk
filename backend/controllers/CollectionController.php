@@ -704,7 +704,7 @@ class CollectionController extends Controller
                                 Yii::$app->db->createCommand()->insert('db_collection_value', [
                                     'id_record' => $id_record,
                                     'id_column' => $newColumn->id_column,
-                                    'value' => json_encode([$id_source])
+                                    'value' => $id_source,
                                 ])->execute();
 
                                 $update = [];
