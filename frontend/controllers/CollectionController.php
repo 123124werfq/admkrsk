@@ -179,13 +179,20 @@ class CollectionController extends \yii\web\Controller
         {
             $filter = (array)$_GET['filter'];
 
-            $where = [];
+            $orwhere = $where = [];
+
+            $columns = [];
+
             foreach ($filter as $idc => $value)
                 if ($value!=='')
-                    $where['col'.(int)$idc] = $value;
+                {
+                    $where['col'.(int)$idc] = (string)$value;
+                    $orwhere['col'.(int)$idc] = (int)$value;
+                }
 
             $data = $collection->getDataQuery()
                         ->andWhere($where)
+                        ->orWhere($orwhere)
                         ->select([$id_column])
                         ->getArray();
 
