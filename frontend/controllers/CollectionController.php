@@ -189,7 +189,7 @@ class CollectionController extends \yii\web\Controller
                     $idc = (int)$idc;
 
                     if (is_numeric($value))
-                        $where[] = ['or',['=','col'.$idc,(string)$value],['=','col'.$idc=>(int)$value]];
+                        $where[] = ['or',['=','col'.$idc,(string)$value],['=','col'.$idc,(int)$value]];
                     else
                         $where['col'.$idc] = $value;
                 }
