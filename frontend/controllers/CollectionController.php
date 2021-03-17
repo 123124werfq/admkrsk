@@ -183,21 +183,22 @@ class CollectionController extends \yii\web\Controller
 
             $columns = [];
 
+            $data = $collection->getDataQuery();
+
             foreach ($filter as $idc => $value)
                 if ($value!=='')
                 {
                     $idc = (int)$idc;
 
                     if (is_numeric($value))
-                        $where[] = ['or',['=','col'.$idc,(string)$value],['=','col'.$idc,(int)$value]];
+                        $data->andWhere(['or',['=','col'.$idc,(string)$value],['=','col'.$idc,(int)$value]]);
                     else
-                        $where['col'.$idc] = $value;
+                        $data->andWhere(['col'.$idc => $value]);
                 }
 
-            $data = $collection->getDataQuery()
-                        ->andWhere($where)
-                        ->select([$id_column])
-                        ->getArray();
+
+            $data = $data->select([$id_column])
+            ->getArray();
 
             $collection = [];
 
