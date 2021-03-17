@@ -13,6 +13,7 @@
 				'type'=>[CollectionColumn::TYPE_SELECT,
 						 CollectionColumn::TYPE_CHECKBOX,
 						 CollectionColumn::TYPE_RADIO,
+						 CollectionColumn::TYPE_COLLECTION,
 						 CollectionColumn::TYPE_SERVICETARGET]
 			  ]);
 
