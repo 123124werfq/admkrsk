@@ -9,7 +9,6 @@
 		if ($visibleInput->type==CollectionColumn::TYPE_SELECT ||
 			$visibleInput->type==CollectionColumn::TYPE_CHECKBOX ||
 			$visibleInput->type==CollectionColumn::TYPE_RADIO ||
-			$visibleInput->type==CollectionColumn::TYPE_COLLECTION ||
 			$visibleInput->type==CollectionColumn::TYPE_SERVICETARGET)
 	    {
 	        $values = $visibleInput->getArrayValues();
@@ -55,6 +54,24 @@
                     'options'=>['multiple'=>'multiple','id'=>'visibleInputs_values_'.$rowKey],
                 ]);
 	        }
+	    }
+	    else if ($visibleInput->type==CollectionColumn::TYPE_COLLECTION)
+	    {
+	    	echo $form->field($model, "[visibleInputs][$rowKey]values",['template'=>"{input}"])->widget(Select2::class, [
+                'data' => $model->values,
+                'pluginOptions' => [
+                    'multiple' => false,
+                    'allowClear' => true,
+                    'minimumInputLength' => 0,
+                    'placeholder' => 'Начните ввод',
+                    'ajax' => [
+                        'url' => '/collection/list',
+                        'dataType' => 'json',
+                        'data' => new JsExpression('function(params) { return {q:params.term}; }')
+                    ],
+                ],
+                'options'=>['multiple'=>'multiple','id'=>'visibleInputs_values_'.$rowKey],
+            ]);
 	    }
 	    else
 	    {
