@@ -60,12 +60,12 @@
 	    	echo $form->field($model, "[visibleInputs][$rowKey]values",['template'=>"{input}"])->widget(Select2::class, [
                 'data' => $model->values,
                 'pluginOptions' => [
-                    'multiple' => false,
+                    'multiple' => true,
                     'allowClear' => true,
                     'minimumInputLength' => 0,
                     'placeholder' => 'Начните ввод',
                     'ajax' => [
-                        'url' => '/collection/list',
+                        'url' => '/collection/record-list?id='.$visibleInput->id_collection.'&id_column='.$visibleInput->id_collection_column,
                         'dataType' => 'json',
                         'data' => new JsExpression('function(params) { return {q:params.term}; }')
                     ],
