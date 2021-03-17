@@ -9,6 +9,7 @@
 		if ($visibleInput->type==CollectionColumn::TYPE_SELECT ||
 			$visibleInput->type==CollectionColumn::TYPE_CHECKBOX ||
 			$visibleInput->type==CollectionColumn::TYPE_RADIO ||
+			$visibleInput->type==CollectionColumn::TYPE_COLLECTION ||
 			$visibleInput->type==CollectionColumn::TYPE_SERVICETARGET)
 	    {
 	        $values = $visibleInput->getArrayValues();
