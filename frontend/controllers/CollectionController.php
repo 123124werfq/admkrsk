@@ -182,10 +182,7 @@ class CollectionController extends \yii\web\Controller
             $where = [];
             foreach ($filter as $idc => $value)
                 if ($value!=='')
-                {
-                    if (is_numeric($value))
-                        $where['col'.(int)$idc] = (int)$value;
-                }
+                    $where['col'.(int)$idc] = $value;
 
             $data = $collection->getDataQuery()
                         ->andWhere($where)
