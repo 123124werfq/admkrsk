@@ -9,6 +9,18 @@ use common\models\AdUser;
 
 class AdImportController extends Controller
 {
+
+    const OUS = [
+        '_Органы и территориальные подразделения',
+        '_Управление информатизации и связи',
+        'Доступ к порталу',
+        'Красноярский городской совет',
+        '_Администраторы УИиС',
+        '_Локальные администраторы',
+        '_Первые лица'
+    ];
+
+
     private function mydap_start($username,$password,$host,$port=389) {
         global $mydap;
         if(isset($mydap)) die('Error, LDAP connection already established');
@@ -299,6 +311,40 @@ if(strpos($attr['name'][0], 'игапова'))
         }
 
         echo "Finished\n";
+    }
+
+    public function takeone()
+    {
+        $target = 'sam@admkrsk.ru';
+
+        $this->mydap_start(
+            'web_user@admkrsk.ru', // Active Directory search user
+            'PaO5q#3ows', // Active Directory search user password
+            '10.24.0.7' // Active Directory server
+        );
+
+        $members = $this->mydap_members('OU=_Органы и территориальные подразделения,DC=admkrsk,DC=ru','c');
+
+        if(!$members) die('No members found, make sure you are specifying the correct object_class');
+        $keep = array('samaccountname','mail','email','employeeID', 'name', 'company', 'department', 'description', 'title',  'givenname', 'mobilephone', 'othertelephone', 'city', 'phone', 'displayname', 'objectsid', 'office', 'fax');
+
+        $i = 1; // For counting our output
+        foreach($members as $m) {
+
+            echo '.';
+            $attr = $this->mydap_attributes($m,$keep);
+
+            if( (isset($attr['email']) && $attr['email'] == $target) || (isset($attr['mail']) && $attr['mail'] == $target) )
+            {
+                echo "\n";
+                print_r($attr); 
+                die();
+            }
+
+        }
+
+        echo "all done";
+
     }
 
 }
