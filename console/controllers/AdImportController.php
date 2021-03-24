@@ -313,7 +313,7 @@ if(strpos($attr['name'][0], 'игапова'))
         echo "Finished\n";
     }
 
-    public function takeone()
+    public function actionTakeone($src = 0)
     {
         $target = 'sam@admkrsk.ru';
 
@@ -323,7 +323,7 @@ if(strpos($attr['name'][0], 'игапова'))
             '10.24.0.7' // Active Directory server
         );
 
-        $members = $this->mydap_members('OU=_Органы и территориальные подразделения,DC=admkrsk,DC=ru','c');
+        $members = $this->mydap_members('OU='.self::OUS[$src].',DC=admkrsk,DC=ru','c');
 
         if(!$members) die('No members found, make sure you are specifying the correct object_class');
         $keep = array('samaccountname','mail','email','employeeID', 'name', 'company', 'department', 'description', 'title',  'givenname', 'mobilephone', 'othertelephone', 'city', 'phone', 'displayname', 'objectsid', 'office', 'fax');
@@ -338,12 +338,12 @@ if(strpos($attr['name'][0], 'игапова'))
             {
                 echo "\n";
                 print_r($attr); 
-                die();
+                Yii::$app->end();
             }
-
+            $i++;
         }
 
-        echo "all done";
+        echo "all done: $i";
 
     }
 
