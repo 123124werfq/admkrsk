@@ -396,8 +396,6 @@ class SiteController extends Controller
         $attributes = $client->getUserAttributes();
         $oid = $attributes['oid'];
 
-        var_dump($oid); die();
-
         $user = User::findByOid($oid);
         if ($user) {
             $esiauser = EsiaUser::findOne($user->id_esia_user);
