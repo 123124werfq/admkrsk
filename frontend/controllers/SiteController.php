@@ -151,15 +151,15 @@ class SiteController extends Controller
             $model->password = '';
 
             // получаем УРЛ для входа через ЕСИА
-            if (!file_exists(Yii::getAlias('@app') . '/assets/admkrsk.pem')) {
+            if (!file_exists(Yii::getAlias('@app') . '/assets/admkrsk2021.pem')) {
                 return $this->goBack();
             }
 
             $esia = User::openId();
             $esia->setSigner(new CliSignerPKCS7(
-                Yii::getAlias('@app'). '/assets/admkrsk.pem',
-                Yii::getAlias('@app'). '/assets/admkrsk.pem',
-                'T%52gs]CPJ',
+                Yii::getAlias('@app'). '/assets/admkrsk2021.pem',
+                Yii::getAlias('@app'). '/assets/admkrsk2021.pem',
+                'CdtDblGfh1',//'T%52gs]CPJ',
                 Yii::getAlias('@runtime')
             ));
 
@@ -728,7 +728,7 @@ class SiteController extends Controller
     {
         //var_dump(Yii::getAlias('@app'). '/assets/admkrsk.pem'); die();
 
-        if (!file_exists(Yii::getAlias('@app') . '/assets/admkrsk.pem')) {
+        if (!file_exists(Yii::getAlias('@app') . '/assets/admkrsk2021.pem')) {
             echo "no cert";
             die();
         }
@@ -736,17 +736,17 @@ class SiteController extends Controller
 
         $config = new Config([
             'clientId' => '236403241',
-            'privateKeyPath' => Yii::getAlias('@app') . '/assets/admkrsk.pem',
-            'certPath' => Yii::getAlias('@app') . '/assets/admkrsk.pem',
+            'privateKeyPath' => Yii::getAlias('@app') . '/assets/admkrsk2021.pem',
+            'certPath' => Yii::getAlias('@app') . '/assets/admkrsk2021.pem',
             'redirectUrl' => 'https://t1.admkrsk.ru/site/signin',
             'portalUrl' => 'https://esia.gosuslugi.ru/',
             'scope' => ['fullname', 'birthdate', 'mobile', 'contacts', 'snils', 'inn', 'id_doc', 'birthplace', 'medical_doc', 'residence_doc', 'email', 'usr_org', 'usr_avt'],
         ]);
         $esia = new OpenId($config);
         $esia->setSigner(new CliSignerPKCS7(
-            Yii::getAlias('@app') . '/assets/admkrsk.pem',
-            Yii::getAlias('@app') . '/assets/admkrsk.pem',
-            'T%52gs]CPJ',
+            Yii::getAlias('@app') . '/assets/admkrsk2021.pem',
+            Yii::getAlias('@app') . '/assets/admkrsk2021.pem',
+            'CdtDblGfh1',//'T%52gs]CPJ',
             Yii::getAlias('@runtime')
         ));
 
@@ -758,7 +758,6 @@ class SiteController extends Controller
         Yii::$app->end();
     }
 
-
     public function actionSignin()
     {
         if (!isset($_REQUEST['code'])) {
@@ -769,9 +768,9 @@ class SiteController extends Controller
 
         $esia = User::openId();
         $esia->setSigner(new CliSignerPKCS7(
-            Yii::getAlias('@app'). '/assets/admkrsk.pem',
-            Yii::getAlias('@app'). '/assets/admkrsk.pem',
-            'T%52gs]CPJ',
+            Yii::getAlias('@app'). '/assets/admkrsk2021.pem',
+            Yii::getAlias('@app'). '/assets/admkrsk2021.pem',
+            'CdtDblGfh1',//'T%52gs]CPJ',
             Yii::getAlias('@runtime')
         ));
 
