@@ -760,6 +760,7 @@ class SiteController extends Controller
 
     public function actionSignin()
     {
+        var_dump($_REQUEST); die();
         if (!isset($_REQUEST['code'])) {
             return $this->goHome();
             //var_dump($_REQUEST);
