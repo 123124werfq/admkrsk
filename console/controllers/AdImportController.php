@@ -336,7 +336,7 @@ if(strpos($attr['name'][0], 'игапова'))
             echo '.';
             $attr = $this->mydap_attributes($m,$keep);
 
-            if( (isset($attr['email']) && $attr['email'] == $target) || (isset($attr['mail']) && $attr['mail'] == $target) )
+            if( (isset($attr['email']) && $attr['email'][0] == $target) || (isset($attr['mail']) && $attr['mail'][0] == $target) )
             {
                 echo "\n";
                 print_r($attr); 
@@ -370,13 +370,13 @@ if(strpos($attr['name'][0], 'игапова'))
             $aduser = false;
             if(isset($attr['email']))
             {
-                echo $attr['email'].'\n';
-                $adUser = AdUser::find()->where(['email' => $attr['email']])->one();
+                echo $attr['email'][0].'\n';
+                $adUser = AdUser::find()->where(['email' => $attr['email'][0]])->one();
             }
             else if(isset($attr['mail']))
             {
-                echo $attr['mail'].'\n';
-                $adUser = AdUser::find()->where(['email' => $attr['mail']])->one();
+                echo $attr['mail'][0].'\n';
+                $adUser = AdUser::find()->where(['email' => $attr['mail'][0]])->one();
             }
             if($aduser)
                 $found++;
