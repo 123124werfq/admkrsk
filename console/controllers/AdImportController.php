@@ -392,9 +392,9 @@ if(strpos($attr['name'][0], 'игапова'))
 
         echo "\ntotal: $i \nfound: $found";
 
-        $disabledAdUsers = AdUser::find()->where(['not in','id_user',$fids])->all();
+        $disabledAdUsers = AdUser::find()->where('NOT IN('.implode(',', $fids).')')->all();
 
-        echo "Inactive\n";
+        echo "\nInactive\n";
 
         foreach ($disabledAdUsers as $dau) {
             if(!empty($dau->email))
