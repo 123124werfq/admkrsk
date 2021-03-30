@@ -370,13 +370,13 @@ if(strpos($attr['name'][0], 'игапова'))
             $aduser = false;
             if(isset($attr['email']))
             {
-                echo $attr['email'][0].'\n';
-                $adUser = AdUser::find()->where(['email' => $attr['email'][0]])->one();
+                echo $attr['email'][0]."\n";
+                $adUser = User::find()->where(['login' => $attr['email'][0]])->one();
             }
             else if(isset($attr['mail']))
             {
-                echo $attr['mail'][0].'\n';
-                $adUser = AdUser::find()->where(['email' => $attr['mail'][0]])->one();
+                echo $attr['mail'][0]."\n";
+                $adUser = User::find()->where(['login' => $attr['mail'][0]])->one();
             }
             if($aduser)
                 $found++;
