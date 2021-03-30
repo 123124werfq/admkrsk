@@ -397,7 +397,8 @@ if(strpos($attr['name'][0], 'игапова'))
         echo "Inactive\n";
 
         foreach ($disabledAdUsers as $dau) {
-            echo $dau->email."\n";
+            if(!empty($dau->email))
+                echo $dau->email."\n";
         }
 
     }
