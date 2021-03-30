@@ -371,6 +371,7 @@ if(strpos($attr['name'][0], 'игапова'))
             
 
             $adUser = false;
+            /*
             if(isset($attr['email']))
             {
                 //echo $attr['email'][0]."\n";
@@ -381,6 +382,13 @@ if(strpos($attr['name'][0], 'игапова'))
                 //echo $attr['mail'][0]."\n";
                 $adUser = AdUser::find()->where(['email' => $attr['mail'][0]])->one();
             }
+            */
+            if(isset($attr['samaccountname']))
+            {
+                //echo $attr['email'][0]."\n";
+                $adUser = AdUser::find()->where(['sn' => $attr['samaccountname'][0]])->one();
+            }
+
             if($adUser)
             {
                 $found++;
