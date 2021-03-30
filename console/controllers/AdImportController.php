@@ -367,7 +367,7 @@ if(strpos($attr['name'][0], 'игапова'))
             $attr = $this->mydap_attributes($m,$keep);
             
 
-            $aduser = false;
+            $adUser = false;
             if(isset($attr['email']))
             {
                 echo $attr['email'][0]."\n";
@@ -378,7 +378,7 @@ if(strpos($attr['name'][0], 'игапова'))
                 echo $attr['mail'][0]."\n";
                 $adUser = User::find()->where(['email' => $attr['mail'][0]])->one();
             }
-            if($aduser)
+            if($adUser)
                 $found++;
 
             $i++;
