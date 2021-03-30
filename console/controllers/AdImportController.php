@@ -365,14 +365,19 @@ if(strpos($attr['name'][0], 'игапова'))
         $i = $found = 0; // For counting our output
         foreach($members as $m) {
             $attr = $this->mydap_attributes($m,$keep);
-            echo $attr['email'].'\n';
+            
 
             $aduser = false;
             if(isset($attr['email']))
+            {
+                echo $attr['email'].'\n';
                 $adUser = AdUser::find()->where(['email' => $attr['email']])->one();
+            }
             else if(isset($attr['mail']))
+            {
+                echo $attr['mail'].'\n';
                 $adUser = AdUser::find()->where(['email' => $attr['mail']])->one();
-            
+            }
             if($aduser)
                 $found++;
 
