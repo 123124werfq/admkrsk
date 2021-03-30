@@ -357,7 +357,7 @@ if(strpos($attr['name'][0], 'игапова'))
             '10.24.0.7' // Active Directory server
         );
 
-        $members = $this->mydap_members('DC=admkrsk,DC=ru','c');
+        $members = $this->mydap_members('OU=_Органы и территориальные подразделения,DC=admkrsk,DC=ru','c');
 
         if(!$members) die('No members found, make sure you are specifying the correct object_class');
         $keep = array('samaccountname','mail','email','employeeID', 'name', 'company', 'department', 'description', 'title',  'givenname', 'mobilephone', 'othertelephone', 'city', 'phone', 'displayname', 'objectsid', 'office', 'fax');
@@ -392,7 +392,7 @@ if(strpos($attr['name'][0], 'игапова'))
 
         echo "\ntotal: $i \nfound: $found";
 
-        $disabledAdUsers = AdUser::find()->where('id_ad_user IN('.implode(',', $fids).')')->all();
+        $disabledAdUsers = AdUser::find()->where('id_ad_user NOT IN('.implode(',', $fids).')')->all();
 
         echo "\nInactive (".count($disabledAdUsers).")\n";
 
