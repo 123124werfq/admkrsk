@@ -373,7 +373,7 @@ if(strpos($attr['name'][0], 'игапова'))
             $adUser = false;
             if(isset($attr['email']))
             {
-                echo $attr['email'][0]."\n";
+                //echo $attr['email'][0]."\n";
                 $adUser = AdUser::find()->where(['email' => $attr['email'][0]])->one();
             }
             else if(isset($attr['mail']))
@@ -382,12 +382,23 @@ if(strpos($attr['name'][0], 'игапова'))
                 $adUser = AdUser::find()->where(['email' => $attr['mail'][0]])->one();
             }
             if($adUser)
+            {
                 $found++;
+                $fids[] = $adUser->id_user;
+            }
 
             $i++;
         }
 
         echo "\ntotal: $i \nfound: $found";
+
+        $disabledAdUsers = AdUser::find()->where(['not in','id_user',$fids])->all();
+
+        echo "Inactive\n";
+
+        foreach ($disabledAdUsers as $dau) {
+            echo $dau->email."\n";
+        }
 
     }
 
