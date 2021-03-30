@@ -349,4 +349,38 @@ if(strpos($attr['name'][0], 'игапова'))
 
     }
 
+    public function actionDisabled()
+    {
+        $this->mydap_start(
+            'web_user@admkrsk.ru', // Active Directory search user
+            'PaO5q#3ows', // Active Directory search user password
+            '10.24.0.7' // Active Directory server
+        );
+
+        $members = $this->mydap_members('DC=admkrsk,DC=ru','c');
+
+        if(!$members) die('No members found, make sure you are specifying the correct object_class');
+        $keep = array('samaccountname','mail','email','employeeID', 'name', 'company', 'department', 'description', 'title',  'givenname', 'mobilephone', 'othertelephone', 'city', 'phone', 'displayname', 'objectsid', 'office', 'fax');
+
+        $i = $found = 0; // For counting our output
+        foreach($members as $m) {
+            echo '.';
+            $attr = $this->mydap_attributes($m,$keep);
+
+            $aduser = false;
+            if(isset($attr['email']))
+                $adUser = AdUser::find()->where(['email' => $attr['email']])->one();
+            else if(isset($attr['mail']))
+                $adUser = AdUser::find()->where(['email' => $attr['mail']])->one();
+            
+            if($aduser)
+                $found++;
+
+            $i++;
+        }
+
+        echo "\ntotal: $i \nfound: $found";
+
+    }
+
 }
