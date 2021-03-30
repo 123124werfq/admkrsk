@@ -28,6 +28,7 @@ class AdImportController extends Controller
         // Connect to AD
         $mydap = ldap_connect($host,$port) or die('Error connecting to LDAP');
 
+        ldap_set_option ($mydap, LDAP_OPT_REFERRALS, 0);
         ldap_set_option($mydap,LDAP_OPT_PROTOCOL_VERSION,3);
         @ldap_bind($mydap,$username,$password) or die('Error binding to LDAP: '.ldap_error($mydap));
 
@@ -324,7 +325,7 @@ if(strpos($attr['name'][0], 'игапова'))
         );
 
         //$members = $this->mydap_members('OU='.self::OUS[$src].',DC=admkrsk,DC=ru','c');
-        $members = $this->mydap_members('OU=_DA,DC=admkrsk,DC=ru','c');
+        $members = $this->mydap_members('DC=admkrsk,DC=ru','c');
 
         if(!$members) die('No members found, make sure you are specifying the correct object_class');
         $keep = array('samaccountname','mail','email','employeeID', 'name', 'company', 'department', 'description', 'title',  'givenname', 'mobilephone', 'othertelephone', 'city', 'phone', 'displayname', 'objectsid', 'office', 'fax');
