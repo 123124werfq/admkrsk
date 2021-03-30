@@ -325,7 +325,7 @@ if(strpos($attr['name'][0], 'игапова'))
         );
 
         //$members = $this->mydap_members('OU='.self::OUS[$src].',DC=admkrsk,DC=ru','c');
-        $members = $this->mydap_members('DC=admkrsk,DC=ru','c');
+        $members = $this->mydap_members('OU=_Органы и территориальные подразделения,DC=admkrsk,DC=ru','c');
 
         if(!$members) die('No members found, make sure you are specifying the correct object_class');
         $keep = array('samaccountname','mail','email','employeeID', 'name', 'company', 'department', 'description', 'title',  'givenname', 'mobilephone', 'othertelephone', 'city', 'phone', 'displayname', 'objectsid', 'office', 'fax');
@@ -364,8 +364,8 @@ if(strpos($attr['name'][0], 'игапова'))
 
         $i = $found = 0; // For counting our output
         foreach($members as $m) {
-            echo '.';
             $attr = $this->mydap_attributes($m,$keep);
+            echo $attr['email'].'\n';
 
             $aduser = false;
             if(isset($attr['email']))
