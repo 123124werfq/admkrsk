@@ -392,7 +392,7 @@ if(strpos($attr['name'][0], 'игапова'))
 
         echo "\ntotal: $i \nfound: $found";
 
-        $disabledAdUsers = AdUser::find()->where('id_ad_user NOT IN('.implode(',', $fids).')')->all();
+        $disabledAdUsers = AdUser::find()->where('id_ad_user IN('.implode(',', $fids).')')->all();
 
         echo "\nInactive (".count($disabledAdUsers).")\n";
 
