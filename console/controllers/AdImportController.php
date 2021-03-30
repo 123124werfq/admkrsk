@@ -394,13 +394,13 @@ if(strpos($attr['name'][0], 'игапова'))
 
         $disabledAdUsers = AdUser::find()->where('id_ad_user NOT IN('.implode(',', $fids).')')->all();
 
-        echo "\nInactive\n";
+        echo "\nInactive (".count($disabledAdUsers).")\n";
 
         foreach ($disabledAdUsers as $dau) {
             $user = User::find()->where(['id_ad_user' => $dau->id_ad_user])->one();
 
             if($user)
-                echo $user->getUsername()."\n";
+                echo $user->id_user.":".$user->getUsername()."\n";
         }
 
     }
