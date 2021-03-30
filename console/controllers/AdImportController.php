@@ -400,7 +400,7 @@ if(strpos($attr['name'][0], 'игапова'))
             $user = User::find()->where(['id_ad_user' => $dau->id_ad_user])->one();
 
             if($user)
-                echo $user->id_user.":".$user->getUsername()."\n";
+                echo $user->id.":".$user->getUsername()."\n";
         }
 
     }
