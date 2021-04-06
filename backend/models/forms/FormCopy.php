@@ -155,7 +155,8 @@ class FormCopy extends Model
                             $newColumn = new CollectionColumn;
                             $newColumn->attributes = $column->attributes;
                             $newColumn->id_collection = $copyForm->id_collection;
-                            $newColumn->save();
+                            if (!$newColumn->save())
+                                print_r($newColumn->errors);
                         }
                     }
 
