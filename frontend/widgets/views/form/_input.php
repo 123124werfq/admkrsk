@@ -674,9 +674,7 @@ if (empty($modelForm->maxfilesize))
 
                 $ids = $model->$clearAttribute;
 
-                $records = [];
-
-                if (!empty($ids))
+                if (!empty($ids) && is_array($ids))
                     $records = CollectionRecord::find()->where(['id_record' => array_keys($ids)])->indexBy('id_record')->all();
 
                 if (!empty($options['accept_add']))
