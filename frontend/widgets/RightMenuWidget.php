@@ -13,8 +13,8 @@ class RightMenuWidget extends \yii\base\Widget
     {
     	if (empty($this->page))
     		return false;
-    	
-        $menu = $this->page->menu;
+
+        //$menu = $this->page->menu;
 
         // временно отключаем меню на главной странице личного кабинета для конкурсов
         if( ($_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']) == 'grants.admkrsk.ru/personal')
@@ -22,7 +22,7 @@ class RightMenuWidget extends \yii\base\Widget
 
         return $this->render('rightmenu',[
         	'page'=>$this->page,
-        	'menu'=>$menu,
+        //	'menu'=>$menu,
         ]);
     }
 }

@@ -240,6 +240,16 @@ class FormInput extends \yii\db\ActiveRecord
         return $values;
     }
 
+    public function getSelected($ids)
+    {
+        $collection = Collection::findOne($this->id_collection);
+
+        $output = [];
+        $records = $collection->getDataQuery()->andWhere(['id_record'=>$ids])->getArray($this->id_collection_column);
+
+        return $records;
+    }
+
     public function isCopyable()
     {
         return ($this->type != CollectionColumn::TYPE_FILE && $this->type != CollectionColumn::TYPE_IMAGE);

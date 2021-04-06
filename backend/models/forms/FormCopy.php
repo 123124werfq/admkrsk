@@ -180,7 +180,7 @@ class FormCopy extends Model
 
                                 $oldColumn = $oldColumns[$id_column]??false;
 
-                                if (!empty($oldColumn))
+                                if (!empty($oldColumn) && isset($newColumns[$oldColumn->alias]))
                                     $inserData[str_replace($id_column, $newColumns[$oldColumn->alias]->id_column, $rkey)] = $data;
                             }
 
