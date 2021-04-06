@@ -641,6 +641,8 @@ jQuery(document).ready(function()
 
       var $link = $(this);
 
+      $("#CollectionRecord .modal-body").html('');
+
       $.ajax({
           url: $link.attr('href'),
           type: 'post',
