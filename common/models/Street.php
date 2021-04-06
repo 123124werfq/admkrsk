@@ -1,7 +1,9 @@
 <?php
 
 namespace common\models;
-
+use common\components\softdelete\SoftDeleteTrait;
+use common\traits\ActionTrait;
+use common\traits\MetaTrait;
 use Yii;
 
 /**
@@ -29,6 +31,10 @@ use Yii;
  */
 class Street extends \yii\db\ActiveRecord
 {
+     use MetaTrait;
+    use ActionTrait;
+    use SoftDeleteTrait;
+
     const VERBOSE_NAME = 'Улица';
     const VERBOSE_NAME_PLURAL = 'Улицы';
     const TITLE_ATTRIBUTE = 'name';
@@ -109,19 +115,19 @@ class Street extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    /*public function getStreetDistricts()
+    public function getStreetDistricts()
     {
         return $this->hasMany(StreetDistrict::class, ['id_street' => 'id_street']);
-    }*/
+    }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    /*public function getDistricts()
+    public function getDistricts()
     {
         return $this->hasMany(District::class, ['id_district' => 'id_district'])
             ->via('streetDistricts');
-    }*/
+    }
 
     /**
      * @return \yii\db\ActiveQuery
