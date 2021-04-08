@@ -80,6 +80,7 @@ function recalculateFormSize(form)
 
 function visibleForm(visibleInputs,visibleElements,dom)
 {
+    console.log(dom);
     let $dom = $(dom);
 
     if (dom.indexOf('form')==-1)
