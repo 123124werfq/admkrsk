@@ -114,7 +114,9 @@ function visibleForm(visibleInputs,visibleElements,dom)
 
         for (var id_input in visibleElements[id_element])
         {
-            var value = getValue(id_input);
+            let value = getValue(id_input);
+
+            console.log(value);
 
             if (visibleElements[id_element][id_input].indexOf(value)<0)
             {
