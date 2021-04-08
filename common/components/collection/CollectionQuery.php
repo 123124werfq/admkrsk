@@ -228,19 +228,22 @@ class CollectionQuery extends \yii\mongodb\Query
             $emptyRow[$this->keyAsAlias?$col->alias:$col->id_column] = '';
     }
 
-    public function getStrinyfyArray()
+    public function getStrinyfyArray($id_column=false)
     {
         $output = [];
 
         foreach ($this->getArray() as $id_record => $record)
         {
-            foreach ($record as $rkey => $value)
-            {
-                if (is_array($value))
-                    $output[$id_record][$rkey] = implode('<br/>', $value);
-                else
-                    $output[$id_record][$rkey] = $value;
-            }
+            if (empty($id_column))
+                foreach ($record as $rkey => $value)
+                {
+                    if (is_array($value))
+                        $output[$id_record][$rkey] = implode('<br/>', $value);
+                    else
+                        $output[$id_record][$rkey] = $value;
+                }
+            else
+                $output[$id_record] = $record[$id_column]?:'Не определена колонка';
         }
 
         return $output;
