@@ -82,6 +82,8 @@ function visibleForm(visibleInputs,visibleElements,dom)
 {
     let $dom = $(dom);
 
+    console.log($dom);
+
     function getValue(id_input)
     {
         var input = $dom.find("#formdynamic-input"+id_input+", .formdynamic-input"+id_input+" input[name*='input"+id_input+"']:checked");
