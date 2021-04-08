@@ -86,10 +86,10 @@ function visibleForm(visibleInputs,visibleElements,dom)
     if (dom.indexOf('form')==-1)
     {
         let div = dom.substring(1);
-        let input_prefix = 'formdynamic-'+div+'-input';
+        var input_prefix = 'formdynamic-'+div+'-input';
     }
     else
-        let input_prefix = 'formdynamic-input';
+        var input_prefix = 'formdynamic-input';
 
     function getValue(id_input)
     {
