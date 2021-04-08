@@ -112,6 +112,8 @@ function visibleForm(visibleInputs,visibleElements,dom)
     {
         var show = true;
 
+        console.log(id_element);
+
         for (var id_input in visibleElements[id_element])
         {
             let value = getValue(id_input);
