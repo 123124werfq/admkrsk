@@ -73,8 +73,6 @@ function recalculateFormSize(form)
         currentSize += $(this).data('filesize')*1;
     });
 
-    console.log(maxtotalsize+ ' < '+currentSize);
-
     $(".currentFormSize").html(' вы загрузили '+(currentSize/(1024*1024)).toFixed(2)+'Мб');
 
     return currentSize;
@@ -130,6 +128,8 @@ function visibleForm(visibleInputs,visibleElements,dom)
                 var id = $(this).data('id');
             else
                 var id = $(this).attr('id').replace('formdynamic-input','');
+
+            console.log(id);
 
             for (var id_element in visibleInputs[id])
                 check(id_element);
