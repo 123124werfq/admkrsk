@@ -82,7 +82,7 @@ function recalculateFormSize(form)
 
 function visibleForm(visibleInputs,visibleElements,dom)
 {
-    var $dom = $(dom);
+    let $dom = $(dom);
 
     function getValue(id_input)
     {
