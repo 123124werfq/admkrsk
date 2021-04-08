@@ -140,7 +140,7 @@ function visibleForm(visibleInputs,visibleElements,dom)
             if ($(this).data('id'))
                 var id = $(this).data('id');
             else
-                var id = $(this).attr('id').replace('formdynamic-input','');
+                var id = $(this).attr('id').replace(input_prefix,'');
 
             console.log(id);
 
