@@ -21,10 +21,10 @@ $visibleInputs = json_encode($visibleInputs);
 $visibleElements = json_encode($visibleElements);
 
 $script = <<< JS
-let visibleInputs = $visibleInputs;
-let visibleElements = $visibleElements;
 
 $(document).ready(function() {
+	let visibleInputs = $visibleInputs;
+	let visibleElements = $visibleElements;
 	visibleForm(visibleInputs,visibleElements,'#$arrayGroup');
 });
 JS;
