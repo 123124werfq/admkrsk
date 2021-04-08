@@ -58,7 +58,7 @@
 	    else if ($visibleInput->type==CollectionColumn::TYPE_COLLECTION)
 	    {
 	    	echo $form->field($model, "[visibleInputs][$rowKey]values",['template'=>"{input}"])->widget(Select2::class, [
-                'data' => $model->values,
+                'data' => $visibleInput->getSelected($model->values),
                 'pluginOptions' => [
                     'multiple' => true,
                     'allowClear' => true,
