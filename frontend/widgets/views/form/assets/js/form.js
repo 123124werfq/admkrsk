@@ -1,18 +1,18 @@
-function getFilter(settings)
+function getFilter(settings,group)
 {
-    if (settings.length>0)
+    if (settings && settings.length>0)
     {
+        if (group)
+            group = '-'+group;
+        else
+            group = '';
+
         var filters = {};
 
-        for (var i = settings.length - 1; i >= 0; i--) {
-            filters[settings[i].id_column] = $("#formdynamic-input"+settings[i].id_input).val()
-        }
+        for (var i = settings.length - 1; i >= 0; i--)
+            filters[settings[i].id_column] = $("#formdynamic"+group+"-input"+settings[i].id_input).val();
 
         return filters;
-
-        /*Object.keys(settings).forEach(function(k){
-            console.log(k + ' - ' + settings[k]);
-        });*/
     }
     else
         return {};
@@ -117,7 +117,7 @@ function visibleForm(visibleInputs,visibleElements,dom)
         }
 
         if (show)
-            $dom.find("#element"+id_element).show().find('input, textarea, select').prop('disabled',false);
+            $dom.find("#element"+id_element).show().find('input:not([readonly=""]), textarea:not([readonly=""]), select:not([readonly=""])').prop('disabled',false);
         else
             $dom.find("#element"+id_element).hide().find('input, textarea, select').prop('disabled',true);
     }

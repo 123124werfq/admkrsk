@@ -21,33 +21,6 @@ function getValueById(id)
     return '';
 }
 
-function getFilter(settings,group)
-{
-    if (settings && settings.length>0)
-    {
-        if (group)
-            group = '-'+group;
-        else
-            group = '';
-
-        var filters = {};
-
-        for (var i = settings.length - 1; i >= 0; i--) {
-            console.log("#formdynamic"+group+"-input"+settings[i].id_input);
-            filters[settings[i].id_column] = $("#formdynamic"+group+"-input"+settings[i].id_input).val();
-        }
-
-        return filters;
-
-        /*Object.keys(settings).forEach(function(k){
-            console.log(k + ' - ' + settings[k]);
-        });*/
-    }
-    else
-        return {};
-
-}
-
 function addInput(block)
 {
     // находим сколько строк
