@@ -84,7 +84,10 @@ function visibleForm(visibleInputs,visibleElements,dom)
     let $dom = $(dom);
 
     if (dom.indexOf('form')==-1)
-        let input_prefix = 'formdynamic-'+(dom.substring(1))+'-input';
+    {
+        let div = dom.substring(1);
+        let input_prefix = 'formdynamic-'+div+'-input';
+    }
     else
         let input_prefix = 'formdynamic-input';
 
