@@ -64,7 +64,7 @@ else
     $inputname = "FormDynamic[$attribute]";
 
     if (empty($options['id']))
-        $options['id'] = "formdynamic-".$clearAttribute;
+        $options['id'] = "formdynamic-form".$modelForm->id_form.'-'.$clearAttribute;
 }
 
 $id_subform = (!empty($subform)) ? $subform->id_form : '';

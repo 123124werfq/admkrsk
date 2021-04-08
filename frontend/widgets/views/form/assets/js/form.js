@@ -82,11 +82,11 @@ function visibleForm(visibleInputs,visibleElements,dom)
 {
     let $dom = $(dom);
 
-    console.log($dom);
+    let input_prefix = dom.substring(1);
 
     function getValue(id_input)
     {
-        var input = $dom.find("#formdynamic-input"+id_input+", .formdynamic-input"+id_input+" input[name*='input"+id_input+"']:checked");
+        var input = $dom.find("#"+input_prefix+id_input+", .formdynamic-input"+id_input+" input[name*='input"+id_input+"']:checked");
 
         if (input.is(':checkbox'))
         {
@@ -124,7 +124,7 @@ function visibleForm(visibleInputs,visibleElements,dom)
 
     for (var id_vinput in visibleInputs)
     {
-        $dom.find("#formdynamic-input"+id_vinput+", .formdynamic-input"+id_vinput+" input[name*='input"+id_vinput+"']").on("change changeaccept",function(){
+        $dom.find("#"+input_prefix+id_vinput+", .formdynamic-input"+id_vinput+" input[name*='input"+id_vinput+"']").on("change changeaccept",function(){
 
             if ($(this).data('id'))
                 var id = $(this).data('id');
