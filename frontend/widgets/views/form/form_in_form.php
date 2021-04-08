@@ -21,8 +21,8 @@ $visibleInputs = json_encode($visibleInputs);
 $visibleElements = json_encode($visibleElements);
 
 $script = <<< JS
-var visibleInputs = $visibleInputs;
-var visibleElements = $visibleElements;
+let visibleInputs = $visibleInputs;
+let visibleElements = $visibleElements;
 
 $(document).ready(function() {
 	visibleForm(visibleInputs,visibleElements,'#$arrayGroup');
