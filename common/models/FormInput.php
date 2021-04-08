@@ -242,6 +242,9 @@ class FormInput extends \yii\db\ActiveRecord
 
     public function getSelected($ids)
     {
+        if (empty($ids))
+            return [];
+
         $collection = Collection::findOne($this->id_collection);
 
         $output = [];
