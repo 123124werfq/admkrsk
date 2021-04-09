@@ -643,17 +643,17 @@ if (empty($modelForm->maxfilesize))
 
                 $value = [];
 
-                /*if (!empty($model->$clearAttribute))
-                    $value = $input->getSelected($model->$clearAttribute);
+                if (!empty($model->$clearAttribute))
+                    $value = $model->$clearAttribute;
 
                 if (!is_array($value))
-                    $value = [$value];*/
+                    $value = [$value];
 
                 if (empty($input->search_inputs))
                     $input->search_inputs = "''";
 
                 echo $form->field($model, $attribute)->widget(Select2::class, [
-                    'data' => $input->getSelected($model->$clearAttribute),
+                    'data' => $value,
                     'pluginOptions' => [
                         'multiple' => false,
                         'minimumInputLength' => 0,
@@ -664,9 +664,9 @@ if (empty($modelForm->maxfilesize))
                             'data' => new JsExpression('function(params) { return {q:params.term,id:' . $input->id_collection . ',id_column:' . $input->id_collection_column . ', filter:getFilter('.$input->search_inputs.',\''.$arrayGroup.'\')};}')
                         ],
                     ],
-                    /*'options' => [
+                    'options' => [
                         'value' => key($value)
-                    ]*/
+                    ]
                 ]);
                 break;
 
