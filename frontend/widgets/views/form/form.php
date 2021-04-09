@@ -30,7 +30,7 @@ $(document).ready(function() {
 	let visibleElements = $visibleElements;
 
 	visibleForm(visibleInputs,visibleElements,'#form$form->id_form');
-}
+});
 JS;
 
 $this->registerJs($script, yii\web\View::POS_END);
