@@ -142,8 +142,6 @@ function visibleForm(visibleInputs,visibleElements,dom)
             else
                 var id = $(this).attr('id').replace(input_prefix,'');
 
-            console.log(id);
-
             for (var id_element in visibleInputs[id])
                 check(id_element);
         });

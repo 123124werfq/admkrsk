@@ -25,10 +25,12 @@ $visibleInputs = json_encode($visibleInputs);
 $visibleElements = json_encode($visibleElements);
 
 $script = <<< JS
+$(document).ready(function() {
 	let visibleInputs = $visibleInputs;
 	let visibleElements = $visibleElements;
 
 	visibleForm(visibleInputs,visibleElements,'#form$form->id_form');
+}
 JS;
 
 $this->registerJs($script, yii\web\View::POS_END);
