@@ -643,17 +643,17 @@ if (empty($modelForm->maxfilesize))
 
                 $value = [];
 
-                if (!empty($model->$clearAttribute))
+                /*if (!empty($model->$clearAttribute))
                     $value = $input->getSelected($model->$clearAttribute);
 
                 if (!is_array($value))
-                    $value = [$value];
+                    $value = [$value];*/
 
                 if (empty($input->search_inputs))
                     $input->search_inputs = "''";
 
                 echo $form->field($model, $attribute)->widget(Select2::class, [
-                    'data' => $value,
+                    'data' => $input->getSelected($model->$clearAttribute),
                     'pluginOptions' => [
                         'multiple' => false,
                         'minimumInputLength' => 0,
