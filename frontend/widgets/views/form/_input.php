@@ -644,7 +644,7 @@ if (empty($modelForm->maxfilesize))
                 $value = [];
 
                 if (!empty($model->$clearAttribute))
-                    $value = $model->$clearAttribute;
+                    $value = $input->getSelected($model->$clearAttribute);
 
                 if (!is_array($value))
                     $value = [$value];

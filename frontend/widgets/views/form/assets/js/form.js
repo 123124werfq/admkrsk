@@ -49,8 +49,6 @@ function selectPlace(id)
 
             for (var key in data)
             {
-                console.log('select[name*="['+key+'"]');
-
                 var select = container.find('select[name*="['+key+'"]');
 
                 if (select.length>0)
@@ -80,7 +78,6 @@ function recalculateFormSize(form)
 
 function visibleForm(visibleInputs,visibleElements,dom)
 {
-    console.log(dom);
     let $dom = $(dom);
 
     if (dom.indexOf('form')==-1)
@@ -112,13 +109,9 @@ function visibleForm(visibleInputs,visibleElements,dom)
     {
         var show = true;
 
-        console.log(id_element);
-
         for (var id_input in visibleElements[id_element])
         {
             let value = getValue(id_input);
-
-            console.log(value);
 
             if (visibleElements[id_element][id_input].indexOf(value)<0)
             {
@@ -158,8 +151,6 @@ $(document).ready(function() {
         var checkbox = $(this);
         if (checkbox.prop('checked'))
         {
-            console.log(123);
-
             var group = checkbox.closest(".form-group");
 
             $("#inputGroup"+checkbox.data('input')).find('input, select, textarea').each(function(){
@@ -167,7 +158,6 @@ $(document).ready(function() {
 
                 if (input.hasClass('select2-hidden-accessible'))
                 {
-                    console.log(111);
                     input.html($(this).html());
                     input.val($(this).val());
                     input.trigger("change");
@@ -199,7 +189,6 @@ $(document).ready(function() {
 
     $("body").delegate(".repeat_month",'change',function(){
         var $this = $(this);
-        console.log('.repeat-block-month[data-repeat="'+$this.val()+'"]');
         $this.closest('.flex-wrap').find('.repeat-block-month').hide();
         $this.closest('.flex-wrap').find('.repeat-block-month[data-repeat="'+$this.val()+'"]').show();
     });
@@ -288,8 +277,6 @@ $(document).ready(function() {
 
                     var maxtotalsize = form.data('maxfilesize');
                     var currentSize = recalculateFormSize(form);
-
-                    //console.log(maxtotalsize+ ' < '+currentSize);
 
                     if ((currentSize+file.size)>maxtotalsize)
                     {

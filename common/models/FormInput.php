@@ -248,7 +248,7 @@ class FormInput extends \yii\db\ActiveRecord
         $collection = Collection::findOne($this->id_collection);
 
         $output = [];
-        $records = $collection->getDataQuery()->andWhere(['id_record'=>$ids])->getStrinyfyArray($this->id_collection_column);
+        $records = $collection->getDataQuery()->byID($ids)->getStrinyfyArray($this->id_collection_column);
 
         return $records;
     }
