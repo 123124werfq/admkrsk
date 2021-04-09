@@ -664,9 +664,9 @@ if (empty($modelForm->maxfilesize))
                             'data' => new JsExpression('function(params) { return {q:params.term,id:' . $input->id_collection . ',id_column:' . $input->id_collection_column . ', filter:getFilter('.$input->search_inputs.',\''.$arrayGroup.'\')};}')
                         ],
                     ],
-                    'options' => [
+                    /*'options' => [
                         'value' => key($value)
-                    ]
+                    ]*/
                 ]);
                 break;
 
