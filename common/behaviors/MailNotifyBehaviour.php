@@ -81,8 +81,18 @@ class MailNotifyBehaviour extends Behavior
      */
     public function mailNotify()
     {
-        $usersHasAccess = $this->owner->{$this->userIds};
-        $isAdminNotify = intval($this->owner->{$this->isAdminNotify});
+        // необходимый костыль: отсылаем письма админам коллекции, а не записи, 
+        // поэтому для каждой записи эмулируем вызов апдейта всей коллекции вцелом - КБ
+
+        if( strpos(get_class($this->owner),"CollectionRecord"))
+        {
+            $hostSender = $this->owner->collection;
+        }
+        else 
+            $hostSender = $this->owner;
+
+        $usersHasAccess = $hostSender->{$this->userIds};
+        $isAdminNotify = intval($hostSender->{$this->isAdminNotify});
         $userIds = [];
         if ($usersHasAccess) {
             $userIds = static::toInt($usersHasAccess);
@@ -93,7 +103,7 @@ class MailNotifyBehaviour extends Behavior
         $usersNotify = (new MailNotifyManager([
             'model' => $this->owner,
             'usersNotify' => $userIds,
-            'timeRule' => $this->owner{$this->timeRuleAttribute},
+            'timeRule' => $hostSender->{$this->timeRuleAttribute},
         ]))->getNotifyUsers();
 
         if ($usersNotify) {
@@ -101,22 +111,27 @@ class MailNotifyBehaviour extends Behavior
             $mailer = Yii::$app->mailer;
             /** @var Message[] $messages */
             $messages = [];
-            $templateMessage = $this->owner{$this->messageAttribute};
+            $templateMessage = $hostSender->{$this->messageAttribute};
 
             $mailFrom = isset(Yii::$app->params['email'])?Yii::$app->params['email']:'noreply@admkrsk.ru';
 
             foreach ($usersNotify as $user) {
                 $this->recordMessage($user, $templateMessage);
-                $messages[] = $mailer->compose(
-                    ['html' => 'notifyUpdate-html'],
-                    [
-                        'message' => $templateMessage,
-                    ]
-                )
-                    //todo configure swiftMailer->transport and params that send emails!
+
+                try{
+                    $messages[] = $mailer->compose(
+                        ['html' => 'notifyUpdate-html'],
+                        [
+                            'message' => $templateMessage,
+                        ]
+                    )
                     ->setFrom([$mailFrom => $this->senderName])
                     ->setTo($user->email)
-                    ->setSubject($this->subject);
+                    ->setSubject($this->subject)
+                    ->send();
+                } catch (\Exception $e) {
+                    continue;
+                } 
             }
             $mailer->sendMultiple($messages);
         }

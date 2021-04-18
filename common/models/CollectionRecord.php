@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use common\behaviors\MailNotifyBehaviour;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
 use common\components\helper\Helper;
@@ -118,6 +119,13 @@ class CollectionRecord extends \yii\db\ActiveRecord
             'ts' => TimestampBehavior::class,
             'ba' => BlameableBehavior::class,
             'log' => LogBehavior::class,
+            'afterUpdateMailNotify' => [
+                'class' => MailNotifyBehaviour::class,
+                'userIds' => 'access_user_ids',
+                'isAdminNotify' => 'is_admin_notify',
+                'timeRuleAttribute' => 'notify_rule',
+                'messageAttribute' => 'notify_message',
+            ],            
         ];
     }
 
