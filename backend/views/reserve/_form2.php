@@ -139,7 +139,7 @@ use yii\widgets\ActiveForm;
                 'class' => 'col-md-9',
                 'multiple' => true,
             ]           
-        ]) ?>          
+        ]) ?>                  
 
         <?=
         $form->field($model, 'state')
@@ -150,12 +150,34 @@ use yii\widgets\ActiveForm;
                     \common\models\HrContest::STATE_CLOSED => 'Подводятся итоги',
                     \common\models\HrContest::STATE_FINISHED => 'Итоги подведены'
                 ]);
+
+            if(empty($model->notification))
+            {
+                $model->notification = "Приглашаем вас принять участие в работе экспертной комиссии кадрового резерва с \n ".Yii::$app->formatter->asDatetime($model->begin)." по ".Yii::$app->formatter->asDatetime($model->end);
+                $model->notification .= "\n Ссылка на интерфейс голосования (только для залогиненых): https://t1.admrks.ru/reserve/vote";
+            }
         ?>
 
         <?= $form->field($model, 'notification')->textarea(['rows' => 6, 'class'=>'redactor']) ?>
 
 
-        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
+        <div class="form-group field-hrcontest-title">
+            <label class="control-label">Ареса для отправки приглашений</label>
+            <?php
+
+            foreach($model->experts as $expert)
+            {
+        ?>
+                <br><input type="checkbox" checked=checked name="HrContest[mailstosend][]" value="<?=($expert->user->esiainfo?$expert->user->esiainfo->email:$expert->user->email)?>">
+        <?php
+                echo $expert->name . " [" . ($expert->user->esiainfo?$expert->user->esiainfo->email:$expert->user->email)."]";
+            }
+        ?>
+        </div>
+
+
+        <?= Html::submitButton('Сохранить без отправки приглашений', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить и отправить письма', ['class' => 'btn btn-info', 'value' => 'sendmail']) ?>
 
         <?php ActiveForm::end(); ?>
     </div>
