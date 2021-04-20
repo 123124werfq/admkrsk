@@ -154,7 +154,7 @@ use yii\widgets\ActiveForm;
             if(empty($model->notification))
             {
                 $model->notification = "Приглашаем вас принять участие в работе экспертной комиссии кадрового резерва с \n ".Yii::$app->formatter->asDatetime($model->begin)." по ".Yii::$app->formatter->asDatetime($model->end);
-                $model->notification .= "\n Ссылка на интерфейс голосования (только для залогиненых): https://t1.admrks.ru/reserve/vote";
+                $model->notification .= "\n Ссылка на интерфейс голосования (только для залогиненых): https://t1.admkrsk.ru/reserve/vote";
             }
         ?>
 
