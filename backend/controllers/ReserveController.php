@@ -111,6 +111,8 @@ class ReserveController extends Controller
     public function actionEdit($id)
     {
         $model = HrContest::findOne($id);
+        //var_dump($_POST);
+        //die();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
 //            $model->createAction(Action::ACTION_UPDATE);
@@ -132,6 +134,26 @@ class ReserveController extends Controller
                     $sql = "INSERT INTO hrl_contest_profile (id_contest, id_profile) VALUES ({$model->id_contest}, {$id_profile})";
                     Yii::$app->db->createCommand($sql)->execute();
                 }
+
+            // отслыка почты экспертам
+            if(isset($_POST['sendmail']))
+            {
+
+                foreach($_POST['HrContest']['mailstosend'] as $expertEmail)
+                {
+                    echo($expertEmail);
+                    try {
+                        $res = Yii::$app->mailer->compose()
+                            ->setFrom('stajor@maxsoft.ru')
+                            ->setTo([$expertEmail])
+                            ->setSubject("Сообщение от сайта admkrsk.ru")
+                            ->setTextBody($model->notification)
+                            ->send();
+                    } catch (\Exception $e) {
+                        //var_dump($e);
+                    } 
+                }
+            }
 
             return $this->redirect('/reserve/contest');
         }

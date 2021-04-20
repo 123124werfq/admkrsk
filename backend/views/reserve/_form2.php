@@ -177,7 +177,7 @@ use yii\widgets\ActiveForm;
 
 
         <?= Html::submitButton('Сохранить без отправки приглашений', ['class' => 'btn btn-success']) ?>
-        <?= Html::submitButton('Сохранить и отправить письма', ['class' => 'btn btn-info', 'value' => 'sendmail']) ?>
+        <?= Html::submitButton('Сохранить и отправить письма', ['class' => 'btn btn-info', 'name' => 'sendmail', 'value' => 1]) ?>
 
         <?php ActiveForm::end(); ?>
     </div>
