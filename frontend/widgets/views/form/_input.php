@@ -675,7 +675,14 @@ if (empty($modelForm->maxfilesize))
                 $ids = $model->$clearAttribute;
 
                 if (!empty($ids) && is_array($ids))
-                    $records = CollectionRecord::find()->where(['id_record' => array_keys($ids)])->indexBy('id_record')->all();
+                {
+                    $ids_int = array_keys($ids);
+
+                    foreach ($ids_int as $idkey => $id)
+                        $ids_int[$idkey] = (int)$id;
+
+                    $records = CollectionRecord::find()->where(['id_record' => ])->indexBy('id_record')->all();
+                }
 
                 if (!empty($options['accept_add']))
                 {
@@ -705,7 +712,8 @@ if (empty($modelForm->maxfilesize))
                     echo '</div>';
 
                     echo '<div class="collections-action-buttons"><a data-id="' . $input->id_input . '" data-group="subforms' . $input->id_input . '" class="btn btn__secondary btn-primary" href="javascript:" onclick="return formCopy(this)">'.(!empty($options['button_label'])?$options['button_label']:'Добавить еще').'</a></div>';
-                } else
+                }
+                else
                 {
                     $value = [];
 
