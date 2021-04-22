@@ -335,14 +335,15 @@ class EsiaUser extends \yii\db\ActiveRecord
         $documentInfo = $esia->getDocInfo();
         foreach ($documentInfo as $dinfo)
         {
-            switch ($dinfo['type']){
-                case 'RF_PASSPORT':
-                    $this->passport_serie = $dinfo['series']??'';
-                    $this->passport_number = $dinfo['number']??'';
-                    $this->passport_date = $dinfo['issueDate']??'';
-                    $this->passport_issuer = $dinfo['issuedBy']??'';
-                    $this->passport_issuer_id = $dinfo['issueId']??'';
-                    break;
+            if(isset($dinfo['type']))
+                switch ($dinfo['type']){
+                    case 'RF_PASSPORT':
+                        $this->passport_serie = $dinfo['series']??'';
+                        $this->passport_number = $dinfo['number']??'';
+                        $this->passport_date = $dinfo['issueDate']??'';
+                        $this->passport_issuer = $dinfo['issuedBy']??'';
+                        $this->passport_issuer_id = $dinfo['issueId']??'';
+                        break;
             }
         }
 
