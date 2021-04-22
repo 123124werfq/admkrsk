@@ -681,7 +681,7 @@ if (empty($modelForm->maxfilesize))
                     foreach ($ids_int as $idkey => $id)
                         $ids_int[$idkey] = (int)$id;
 
-                    $records = CollectionRecord::find()->where(['id_record' => ])->indexBy('id_record')->all();
+                    $records = CollectionRecord::find()->where(['id_record' => $ids_int])->indexBy('id_record')->all();
                 }
 
                 if (!empty($options['accept_add']))
