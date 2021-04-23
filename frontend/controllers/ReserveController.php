@@ -103,6 +103,8 @@ class ReserveController extends \yii\web\Controller
             $excludeChecks[] = $value['id'];
         }
 
+print_r($excludeChecks);
+
         return $this->render('form', [
             'form'      => $collection->form,
             'page'      => $page,
