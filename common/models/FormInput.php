@@ -203,6 +203,24 @@ class FormInput extends \yii\db\ActiveRecord
 
             return $output;
         }
+        else if ($this->type == CollectionColumn::TYPE_COLLECTIONS)
+        {
+            $collection = Collection::findOne($this->id_collection);
+
+            if (!empty($collection))
+            {
+                $records = $collection->getArray($this->id_collection_column??'');
+                array_unique($records);
+
+                $values = [];
+                foreach ($records as $key => $record)
+                    $values[$key] = $record;
+
+                return $values;
+            }
+            else
+                return [];
+        }
         else if (!empty($this->id_collection))
         {
             $collection = Collection::findOne($this->id_collection);

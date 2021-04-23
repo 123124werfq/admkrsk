@@ -123,6 +123,14 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     'name'=>'Сортировка элементов',
                     'type'=>'checkbox',
                 ],
+                'formtype'=>[
+                    'name'=>'Вид выбора',
+                    'type'=>'dropdown',
+                    'values'=>[
+                        'dropdown'=>"Селект",
+                        'checkbox'=>"Чекбоксы",
+                    ]
+                ],
             ],
             self::TYPE_CHECKBOX => [
                 'popup'=>[

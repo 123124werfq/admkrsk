@@ -41,10 +41,9 @@ if (!empty($input->readonly) && strpos(Yii::$app->params['backendUrl'],'/'.$_SER
 
 $groupClass = '';
 
-if ($input->type == CollectionColumn::TYPE_CHECKBOXLIST)
+if ($input->type == CollectionColumn::TYPE_CHECKBOXLIST || (!empty($options['formtype']) && $options['formtype']=='checkbox'))
     $groupClass .= ' checkboxlist';
-
-if ($input->type == CollectionColumn::TYPE_SELECT)
+else  if ($input->type == CollectionColumn::TYPE_SELECT)
     $groupClass .= ' custom-select';
 
 $clearAttribute = $attribute = "input$input->id_input";
@@ -674,6 +673,8 @@ if (empty($modelForm->maxfilesize))
 
                 $ids = $model->$clearAttribute;
 
+                $ids_int = [];
+
                 if (!empty($ids) && is_array($ids))
                 {
                     $ids_int = array_keys($ids);
@@ -722,8 +723,12 @@ if (empty($modelForm->maxfilesize))
                             if (isset($records[$id]))
                                 $value[(string)$id] = $label;
 
-                    if (!empty($options['sortable']))
+
+                    if (empty($options['formtype']) || $options['formtype']=='select')
                     {
+
+                        if (!empty($options['sortable']))
+                        {
 $script = <<< JS
 setTimeout(function(){
     var optpos = 0;
@@ -738,28 +743,44 @@ $("#{$options['id']}").next().find('.select2-selection__rendered').sortable({
       }
     }).disableSelection();},1000);
 JS;
-                        $this->registerJs($script, yii\web\View::POS_END);
-                    }
+                            $this->registerJs($script, yii\web\View::POS_END);
+                        }
 
-                    echo $form->field($model, $attribute)->widget(Select2::class, [
-                        'data' => $value,
-                        'pluginOptions' => [
-                            'multiple' => true,
-                            //'allowClear' => true,
-                            'minimumInputLength' => 0,
-                            'placeholder' => 'Выберите записи',
-                            'ajax' => [
-                                'url' => '/collection/record-list',
-                                'dataType' => 'json',
-                                'data' => new JsExpression('function(params) { return {q:params.term,id:' . $input->id_collection.', id_column:' . $input->id_collection_column . '};}')
+                        echo $form->field($model, $attribute)->widget(Select2::class, [
+                            'data' => $value,
+                            'pluginOptions' => [
+                                'multiple' => true,
+                                //'allowClear' => true,
+                                'minimumInputLength' => 0,
+                                'placeholder' => 'Выберите записи',
+                                'ajax' => [
+                                    'url' => '/collection/record-list',
+                                    'dataType' => 'json',
+                                    'data' => new JsExpression('function(params) { return {q:params.term,id:' . $input->id_collection.', id_column:' . $input->id_collection_column . '};}')
+                                ],
                             ],
-                        ],
-                        'options' => [
-                            'id' => $options['id'],
-                            'multiple' => true,
-                            'value' => array_keys($value)
-                        ]
-                    ]);
+                            'options' => [
+                                'id' => $options['id'],
+                                'multiple' => true,
+                                'value' => array_keys($value)
+                            ]
+                        ]);
+                    }
+                    else
+                    {
+                        echo '<div class="checkboxes">';
+                        foreach ($input->getArrayValues() as $key => $value) {
+                            echo '
+                            <div class="checkbox-group">
+                                <label class="checkbox checkbox__ib">
+                                    <input type="checkbox" ' . (in_array($key, $ids_int) ? 'checked' : '') . ' name="'.$inputname.'[]" value="' . Html::encode($key) . '" class="checkbox_control">
+                                    <span class="checkbox_label">' . $value . '</span>
+                                </label>
+                            </div>';
+                        }
+                        echo '</div>';
+                        echo '<div class="help-block"></div>';
+                    }
                 }
                 break;
             case CollectionColumn::TYPE_DISTRICT:
