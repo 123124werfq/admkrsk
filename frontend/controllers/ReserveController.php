@@ -94,6 +94,16 @@ class ReserveController extends \yii\web\Controller
             return ActiveForm::validate($model);
         }
 
+        // определяем, по каким должностям тип уже в резерве
+        $rSQL = "select id_record_position as id from hr_reserve where deleted_at is null and id_profile = ".$profile->id_profile;
+        $rCount = Yii::$app->db->createCommand($rSQL)->queryAll();
+        $excludeChecks = [];
+        foreach ($rCount as $key => $value) {
+            $excludeChecks[] = $value['id'];
+        }
+        
+        var_dump($excludeChecks);
+
         return $this->render('form', [
             'form'      => $collection->form,
             'page'      => $page,
