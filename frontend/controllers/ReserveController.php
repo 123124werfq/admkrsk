@@ -96,12 +96,13 @@ class ReserveController extends \yii\web\Controller
 
         // определяем, по каким должностям тип уже в резерве
         //$rSQL = "select id_record_position as id from hr_reserve where deleted_at is null and id_profile = ".$profile->id_profile;
-        $rSQL = "select id_record_position as id from hr_reserve";
+        $rSQL = "select id_record_position as id, id_profile from hr_reserve";
         $rCount = Yii::$app->db->createCommand($rSQL)->queryAll();
         $excludeChecks = [];
         foreach ($rCount as $key => $value) {
             $excludeChecks[] = $value['id'];
         }
+        var_dump($profile->id_profile);
         var_dump($rCount);
         var_dump($excludeChecks);
 
