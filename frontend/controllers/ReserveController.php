@@ -108,7 +108,7 @@ class ReserveController extends \yii\web\Controller
             'page'      => $page,
             'inputs'    => $inputs,
             'record'    => !empty($profile->record)?$profile->record:null,
-            'exclchks'  =>  [28374, 28376]// $excludeChecks
+            'exclchks'  =>  $excludeChecks
         ]);
     }
 
