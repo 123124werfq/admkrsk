@@ -43,3 +43,13 @@
         </div>
     </div>
 </div>
+<script>
+<?php
+if(isset($exclchks))
+    foreach ($exclchks as $exclchk) {
+?>
+    document.querySelector("input[type='checkbox'][value='<?=$exclchk?>']").parentNode.parentNode.remove();
+<?php
+    }
+?>
+</script>

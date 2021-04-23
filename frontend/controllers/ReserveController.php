@@ -102,15 +102,13 @@ class ReserveController extends \yii\web\Controller
         foreach ($rCount as $key => $value) {
             $excludeChecks[] = $value['id'];
         }
-        var_dump($profile->id_profile);
-        var_dump($rCount);
-        var_dump($excludeChecks);
 
         return $this->render('form', [
             'form'      => $collection->form,
             'page'      => $page,
             'inputs'    => $inputs,
-            'record'    => !empty($profile->record)?$profile->record:null
+            'record'    => !empty($profile->record)?$profile->record:null,
+            'exclchks'  =>  [28374, 28376]// $excludeChecks
         ]);
     }
 
