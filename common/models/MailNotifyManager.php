@@ -233,6 +233,8 @@ class MailNotifyManager extends ActiveRecord
     private static function mapTime($time)
     {
         switch ($time) {
+            case 0:
+                return '0 minutes';
             case 1:
                 return '30 minutes';
             case 2:

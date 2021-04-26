@@ -427,6 +427,15 @@ class ReserveController extends Controller
     {
         $reserveItem = HrReserve::findOne($id);
 
+        $profileItem = HrProfile::find()->where(['id_profile' => $reserveItem->id_profile])->one();
+
+        if($profileItem)
+        {
+            $profileItem->reserve_date = null;
+            $profileItem->state = HrProfile::STATE_ACTIVE;
+            $profileItem->updateAttributes(['reserve_date', 'state']);
+        }
+
         if ($reserveItem)
             $reserveItem->delete();
 

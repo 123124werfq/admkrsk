@@ -87,11 +87,16 @@ class MailNotifyBehaviour extends Behavior
         if( strpos(get_class($this->owner),"CollectionRecord"))
         {
             $hostSender = $this->owner->collection;
-        }
-        else 
-            $hostSender = $this->owner;
 
-        $usersHasAccess = $hostSender->{$this->userIds};
+            $uids = Yii::$app->db->createCommand("select user_id from notify_users where class='common\models\Collection' and entity_id=".$this->owner->id_collection)->queryColumn('user_id');
+            $usersHasAccess = $uids;
+        }
+        else
+        { 
+            $hostSender = $this->owner;
+            $usersHasAccess = $hostSender->{$this->userIds};
+        }
+
         $isAdminNotify = intval($hostSender->{$this->isAdminNotify});
         $userIds = [];
         if ($usersHasAccess) {
@@ -100,6 +105,7 @@ class MailNotifyBehaviour extends Behavior
         if ($isAdminNotify) {
             $userIds[] = Yii::$app->user->id;
         }
+              
         $usersNotify = (new MailNotifyManager([
             'model' => $this->owner,
             'usersNotify' => $userIds,
@@ -117,7 +123,6 @@ class MailNotifyBehaviour extends Behavior
 
             foreach ($usersNotify as $user) {
                 $this->recordMessage($user, $templateMessage);
-
                 try{
                     $messages[] = $mailer->compose(
                         ['html' => 'notifyUpdate-html'],
@@ -130,10 +135,16 @@ class MailNotifyBehaviour extends Behavior
                     ->setSubject($this->subject)
                     ->send();
                 } catch (\Exception $e) {
+                    //echo($e->getMessage());
                     continue;
                 } 
             }
-            $mailer->sendMultiple($messages);
+
+            try{
+                $mailer->sendMultiple($messages);
+            } catch (\Exception $e) {
+                //
+            } 
         }
     }
 
