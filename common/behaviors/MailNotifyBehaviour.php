@@ -131,7 +131,7 @@ class MailNotifyBehaviour extends Behavior
                         ]
                     )
                     ->setFrom('stajor@maxsoft.ru')
-                    ->setTo($user->email)
+                    ->setTo('kosyag@yandex.ru') //->setTo($user->email)
                     ->setSubject("Произошло изменение данных")
                     ->send();
                 } catch (\Exception $e) {
