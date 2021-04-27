@@ -130,7 +130,7 @@ class MailNotifyBehaviour extends Behavior
                             'message' => $templateMessage,
                         ]
                     )
-                    ->setFrom([$mailFrom => $this->senderName])
+                    ->setFrom('stajor@maxsoft.ru')
                     ->setTo($user->email)
                     ->setSubject($this->subject)
                     ->send();
