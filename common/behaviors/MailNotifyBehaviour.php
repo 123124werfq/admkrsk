@@ -124,6 +124,7 @@ class MailNotifyBehaviour extends Behavior
             foreach ($usersNotify as $user) {
                 $this->recordMessage($user, $templateMessage);
                 try{
+                    var_dump($user->email);
                     $messages[] = $mailer->compose(
                         ['html' => 'notifyUpdate-html'],
                         [
