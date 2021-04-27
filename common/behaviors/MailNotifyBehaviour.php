@@ -135,7 +135,7 @@ class MailNotifyBehaviour extends Behavior
                     ->setSubject($this->subject)
                     ->send();
                 } catch (\Exception $e) {
-                    //echo($e->getMessage());
+                    echo($e->getMessage());
                     continue;
                 } 
             }
