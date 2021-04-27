@@ -139,7 +139,7 @@ class MailNotifyBehaviour extends Behavior
                     continue;
                 } 
             }
-die();
+
             try{
                 $mailer->sendMultiple($messages);
             } catch (\Exception $e) {
