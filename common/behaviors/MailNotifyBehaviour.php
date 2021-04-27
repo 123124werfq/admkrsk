@@ -124,8 +124,6 @@ class MailNotifyBehaviour extends Behavior
             foreach ($usersNotify as $user) {
                 $this->recordMessage($user, $templateMessage);
                 try{
-                    var_dump($user->email);
-                    /*
                     $messages[] = $mailer->compose(
                         ['html' => 'notifyUpdate-html'],
                         [
@@ -134,9 +132,8 @@ class MailNotifyBehaviour extends Behavior
                     )
                     ->setFrom('stajor@maxsoft.ru')
                     ->setTo($user->email)
-                    ->setSubject($this->subject)
+                    ->setSubject("Произошло изменение данных")
                     ->send();
-                    */
                 } catch (\Exception $e) {
                     echo($e->getMessage());
                     continue;
