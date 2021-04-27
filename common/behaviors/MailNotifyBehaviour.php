@@ -96,7 +96,7 @@ class MailNotifyBehaviour extends Behavior
             $hostSender = $this->owner;
             $usersHasAccess = $hostSender->{$this->userIds};
         }
-
+echo isset($hostSender->name)?$hostSender->name:$hostSender->title; die();
         $isAdminNotify = intval($hostSender->{$this->isAdminNotify});
         $userIds = [];
         if ($usersHasAccess) {
@@ -131,7 +131,7 @@ class MailNotifyBehaviour extends Behavior
                         ]
                     )
                     ->setFrom('stajor@maxsoft.ru')
-                    ->setTo('kosyag@yandex.ru') //->setTo($user->email)
+                    ->setTo($user->email)
                     ->setSubject("Произошло изменение данных")
                     ->send();
                 } catch (\Exception $e) {
