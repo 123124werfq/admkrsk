@@ -125,6 +125,7 @@ class MailNotifyBehaviour extends Behavior
                 $this->recordMessage($user, $templateMessage);
                 try{
                     var_dump($user->email);
+                    /*
                     $messages[] = $mailer->compose(
                         ['html' => 'notifyUpdate-html'],
                         [
@@ -135,12 +136,13 @@ class MailNotifyBehaviour extends Behavior
                     ->setTo($user->email)
                     ->setSubject($this->subject)
                     ->send();
+                    */
                 } catch (\Exception $e) {
                     echo($e->getMessage());
                     continue;
                 } 
             }
-
+die();
             try{
                 $mailer->sendMultiple($messages);
             } catch (\Exception $e) {
