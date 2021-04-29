@@ -82,10 +82,11 @@ Yii::$app->params['sidebar'] = $this->render('_twig_options',['columns'=>$model-
 
     <?= $form->field($model, 'notify_rule')->radioList(
         [
-            0 => 'Отключить уведомления',
+            99 => 'Без группировки',
             1 => 'чем 30 минут',
             2 => 'чем 1 час',
             3 => 'чем 3 час',
+            0 => 'Отключить уведомления',
         ],
         [
             'separator' => '&nbsp;&nbsp;&nbsp;</br>',
