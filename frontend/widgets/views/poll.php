@@ -56,7 +56,7 @@ use common\models\Question;
                         <?php }}?>
                     </ul>
                     <?php if (!empty($blockVars['button'])){?>
-                    <a href="<?=$blockVars['button_url']??''?>" class="btn btn__block"><?=$blockVars['button']?></a>
+                    <a href="<?=$blockVars['button_url']->value??''?>" class="btn btn__block"><?=$blockVars['button']->value?></a>
                     <?php }?>
                 </div>
             </div>
