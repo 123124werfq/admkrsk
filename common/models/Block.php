@@ -127,6 +127,14 @@ class Block extends \yii\db\ActiveRecord
                     'name'=>'Вопрос для вывода',
                     'type'=>BlockVar::TYPE_QUESTION,
                 ],
+                'button'=>[
+                    'name'=>'Подпись кнопки',
+                    'type'=>BlockVar::TYPE_STRING,
+                ],
+                'button_url'=>[
+                    'name'=>'Ссылка кнопки',
+                    'type'=>BlockVar::TYPE_STRING,
+                ],
             ]
         ],
         'video_section'=> [

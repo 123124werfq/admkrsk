@@ -55,7 +55,9 @@ use common\models\Question;
                                 <li class="gid-menu_item"><a href="<?=(!empty($link->id_page))?$link->page->getUrl():$link->url?>" class="gid-menu_link"><?=$link->label?></a></li>
                         <?php }}?>
                     </ul>
-                    <a href="#" class="btn btn__block">Написать сообщение</a>
+                    <?php if (!empty($blockVars['button'])){?>
+                    <a href="<?=$blockVars['button_url']??''?>" class="btn btn__block"><?=$blockVars['button']?></a>
+                    <?php }?>
                 </div>
             </div>
         </div>
