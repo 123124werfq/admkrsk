@@ -53,11 +53,17 @@ return [
 
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
+                'host' => '10.24.0.2',
+                'username' => 'admkrsk\s10_adm',
+                'password' => 'sF23Hw$aS',
+                'port' => 25,
+                /*
                 'host' => 'smtp.office365.com',
                 'username' => 'stajor@maxsoft.ru',
                 'password' => 'User1',
                 'port' => '587',
                 'encryption' => 'tls',
+                */
                 /*
                 'port' => '465',
                 'encryption' => 'ssl',

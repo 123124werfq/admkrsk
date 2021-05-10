@@ -27,7 +27,11 @@
                 echo $page->content;
                 ?>
 
+                <?php if($freeze) { ?>
+                    <p>Анкета в данный момент участвует в голосовании и не может быть отредактирована</p>
+                <?php } else { ?>
                 <?=frontend\widgets\FormsWidget::widget(['form'=>$form,'inputs'=>$inputs,'action'=>'', 'collectionRecord' => $record])?>
+                <?php } ?>
 
                 <div class="subscribe">
                     <div class="subscribe_left">

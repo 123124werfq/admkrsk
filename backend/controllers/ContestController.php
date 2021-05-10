@@ -196,7 +196,7 @@ class ContestController extends Controller
 
                 try {
                     $res = Yii::$app->mailer->compose('blank', ['content' => $mailContent ])
-                        ->setFrom('stajor@maxsoft.ru')
+                        ->setFrom('ssp@admkrsk.ru')
                         ->setTo([$mailaddr])
                         ->setSubject("Информация от admkrsk.ru")
                         ->send();
@@ -324,7 +324,7 @@ class ContestController extends Controller
 
                 try {
                     $res = Yii::$app->mailer->compose('blank', ['content' => $mailContent ])
-                        ->setFrom('stajor@maxsoft.ru')
+                        ->setFrom('ssp@admkrsk.ru')
                         ->setTo([$mailaddr])
                         ->setSubject("Измеился статус анкеты участника конкурса на сайте admkrsk.ru")
                         ->send();
