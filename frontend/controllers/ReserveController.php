@@ -42,6 +42,12 @@ class ReserveController extends \yii\web\Controller
 
         $model = new FormDynamic($collection->form);
 
+        $sql = "select COUNT(*) as cont from hr_contest hc 
+                    left join hrl_contest_profile hcp on hcp.id_contest = hc.id_contest 
+                    where state = 1 and id_profile = ".$profile->id_profile;
+
+        $activeContests = Yii::$app->db->createCommand($sql)->queryScalar();
+
         /*
         if(!$profile || true)
             $model = new FormDynamic($collection->form);
@@ -108,7 +114,8 @@ class ReserveController extends \yii\web\Controller
             'page'      => $page,
             'inputs'    => $inputs,
             'record'    => !empty($profile->record)?$profile->record:null,
-            'exclchks'  =>  $excludeChecks
+            'exclchks'  =>  $excludeChecks,
+            'freeze'    =>  ($activeContests>0)
         ]);
     }
 

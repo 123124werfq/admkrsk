@@ -493,8 +493,9 @@ class ReserveController extends Controller
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-
-        $profs = ArrayHelper::map(HrProfile::find()->where("id_user<>0")->andWhere("id_user is not null")->andWhere(['reserve_date' => null])->all(),'id_profile', function($model){
+        //$profilesToGo = HrProfile::find()->where("id_user<>0")->andWhere("id_user is not null")->andWhere(['reserve_date' => null])->all();
+        $profilesToGo = HrProfile::find()->where("id_user<>0")->andWhere("id_user is not null")->all();
+        $profs = ArrayHelper::map($profilesToGo,'id_profile', function($model){
             if(empty($model->name))
             {
                 $data = $model->getRecordData();
