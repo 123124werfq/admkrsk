@@ -144,7 +144,7 @@ class ReserveController extends Controller
                     echo($expertEmail);
                     try {
                         $res = Yii::$app->mailer->compose()
-                            ->setFrom('ssp@admkrsk.ru"')
+                            ->setFrom('ssp@admkrsk.ru')
                             ->setTo([$expertEmail])
                             ->setSubject("Сообщение от сайта admkrsk.ru")
                             ->setTextBody($model->notification)

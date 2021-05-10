@@ -132,7 +132,7 @@ class MailNotifyBehaviour extends Behavior
                             'message' => $templateMessage,
                         ]
                     )
-                    ->setFrom('ssp@admkrsk.ru"')
+                    ->setFrom('ssp@admkrsk.ru')
                     ->setTo($user->email)
                     ->setSubject("Произошло изменение данных ".$senderName)
                     ->send();
