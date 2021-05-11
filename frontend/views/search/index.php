@@ -77,11 +77,11 @@
 
         <div class="search-results content">
         <?php
-
-        echo \yii\widgets\ListView::widget([
-            'dataProvider' => $provider,
-            'itemView' => '_item',
-        ]);
+            if (!empty($provider))
+                echo \yii\widgets\ListView::widget([
+                    'dataProvider' => $provider,
+                    'itemView' => '_item',
+                ]);
         /*
             foreach ($result as $row)
             {

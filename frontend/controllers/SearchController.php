@@ -29,7 +29,11 @@ class SearchController extends \yii\web\Controller
         $order = Yii::$app->request->get('ord', false);
 
         $result = [];
-        if(!empty($query)) {
+        
+        $provider = null;
+
+        if(!empty($query))
+        {
             $sqlQuery = SearchSitemap::fulltext($query, $order == 'date', true);
 
             $sqlCountQuery = str_replace("SELECT *", "SELECT COUNT(*)", $sqlQuery);
