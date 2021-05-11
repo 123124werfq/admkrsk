@@ -148,7 +148,7 @@ class PageSearch extends Page
         ]);
 
         $query->andFilterWhere(['ilike', 'title', $this->title])
-            ->andFilterWhere(['ilike', 'alias', $this->alias])
+            ->andFilterWhere(['or',['ilike', 'alias', $this->alias],['ilike', 'partition_domain', $this->alias])
             ->andFilterWhere(['ilike', 'content', $this->content])
             ->andFilterWhere(['ilike', 'seo_title', $this->seo_title])
             ->andFilterWhere(['ilike', 'seo_description', $this->seo_description])

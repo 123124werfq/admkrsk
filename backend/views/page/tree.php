@@ -18,13 +18,13 @@ if (Yii::$app->user->can('admin.page'))
 	<div class="col-sm-5">
 		<div class="ibox">
 			<div class="ibox-content">
-				<div class="form-group">					
-					<input class="form-control" id="treesearch" type="text" placeholder="Поиск"/>					
+				<div class="form-group">
+					<input class="form-control" id="treesearch" type="text" placeholder="Поиск"/>
 				</div>
 				<div id="tree"></div>
 			</div>
 		</div>
-	</div>	
+	</div>
 	<div id="treeView" class="col-sm-7">
 	</div>
 </div>
@@ -36,7 +36,7 @@ $script = <<< JS
 $('#tree').jstree({
 	'core' : {
     	'data' : $tree,
-	}, 
+	},
 	"plugins" : [
    	 	"search",
   	],
@@ -52,7 +52,7 @@ $('#treesearch').keyup(function (){
 	to = setTimeout(function () {
 		var v = $('#treesearch').val();
 		$('#tree').jstree(true).search(v);
-		
+
 	}, 500);
 });
 
