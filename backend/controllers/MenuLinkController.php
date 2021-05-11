@@ -43,6 +43,8 @@ class MenuLinkController extends Controller
         if (empty($model))
             throw new NotFoundHttpException('The requested page does not exist.');
 
+        $this->actionOrder();
+
         $dataProvider = new ActiveDataProvider([
             'query' => MenuLink::find()->where(['id_menu'=>$id])->orderBy('ord'),
         ]);

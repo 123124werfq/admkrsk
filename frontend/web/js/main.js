@@ -1062,25 +1062,28 @@
     // /LIMIT TEXTAREA
 
 
+    let language = $("html").attr('lang');
+
     // DATEPICKER
     $('.datepicker').each(function() {
         $dateInput = $(this);
         $dateInput.dateRangePicker({
             container: $dateInput.parent(),
             //language: _spPageContextInfo.siteServerRelativeUrl == '/sites/eng' ? 'default' : 'ru',
-            language: 'ru',
+            language: language,
             startOfWeek: 'monday',
             separator : ' - ',
             format: 'DD.MM.YYYY',
             autoClose: true,
         });
     });
+
     $('.datepicker-ajax').each(function() {
         $dateInput = $(this);
         $dateInput.dateRangePicker({
             container: $dateInput.parent(),
             //language: _spPageContextInfo.siteServerRelativeUrl == '/sites/eng' ? 'default' : 'ru',
-            language: 'ru',
+            language: language,
             startOfWeek: 'monday',
             separator : ' - ',
             format: 'DD.MM.YYYY',

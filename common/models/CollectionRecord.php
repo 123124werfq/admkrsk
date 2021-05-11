@@ -723,10 +723,17 @@ class CollectionRecord extends \yii\db\ActiveRecord
         if (empty($this->loadData))
             $this->getData();
 
-        if (!empty($this->loadData[$id_column]))
+
+        if (!empty($this->loadData[$id_column]))        
+            $value = $this->loadData[$id_column];
+        else if (!empty($this->loadDataAlias[$id_column]))        
+            $value = $this->loadDataAlias[$id_column];
+
+
+        if (!empty($value))
         {
             //$ids = json_decode($this->loadData[$id_column],true);
-            $value = $this->loadData[$id_column];
+            //$value = $this->loadData[$id_column];
 
             if (!empty($value[0]['id']))
             {

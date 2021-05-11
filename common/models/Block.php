@@ -36,7 +36,7 @@ class Block extends \yii\db\ActiveRecord
                 'dropdown_menu'=>[
                     'name'=>'Разворачивающееся меню',
                     'type'=>BlockVar::TYPE_MENU,
-                ],
+                ],                                
             ],
             'layout'=>true,
         ],
@@ -46,6 +46,26 @@ class Block extends \yii\db\ActiveRecord
                 'menu'=>[
                     'name'=>'Меню',
                     'type'=>BlockVar::TYPE_MENU,
+                ],
+                'phone'=>[
+                    'name'=>'Телефон/факс',
+                    'type'=>BlockVar::TYPE_RICHTEXT,
+                ],
+                'address'=>[
+                    'name'=>'Адрес',
+                    'type'=>BlockVar::TYPE_RICHTEXT,
+                ],
+                'service_mail'=>[
+                    'name'=>'Отдел служебных писем',
+                    'type'=>BlockVar::TYPE_RICHTEXT,
+                ],
+                'people_request'=>[
+                    'name'=>'Обращения граждан',
+                    'type'=>BlockVar::TYPE_RICHTEXT,
+                ],
+                'trust_phone'=>[
+                    'name'=>'Телефон доверия',
+                    'type'=>BlockVar::TYPE_RICHTEXT,
                 ],
             ],
             'layout'=>true,

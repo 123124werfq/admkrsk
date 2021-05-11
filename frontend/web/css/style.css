@@ -4442,6 +4442,19 @@ a.sitemap_header:hover {
 .footer-menu.footer-menu__col {
     padding-left: 33.3333% !important;
 }
+.footer .footer-contacts a{
+    color: #F4F7FB !important;
+    text-decoration: none !important;
+}
+.footer .footer-contacts p {
+    font-size: 1.8rem;
+    color: #f4f7fb;
+    line-height: 2.6rem;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+
 .footer-menu_item {
     display: inline-block;
     vertical-align: top;
@@ -4569,7 +4582,7 @@ a.sitemap_header:hover {
 .footer-socials_item:hover .footer-socials_icon {
     fill: #F4F7FB;
 }
-.footer-contacts_label {
+.footer .footer-contacts .footer-contacts_label {
     font-size: 1.4rem;
     color: #dde1e6;
     line-height: 2rem;
@@ -4619,7 +4632,7 @@ a.sitemap_header:hover {
 .devby:hover strong {
     color: #fff;
 }
-.copyright {
+.footer .footer-contacts .copyright {
     font-size: 1.4rem;
     color: #848E99 !important;
     margin-top: 0;

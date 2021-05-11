@@ -32,32 +32,41 @@
             </div>
 <?php }else{ ?>
             <div class="footer-contacts">
+                <?php if (!empty($footer['phone']->value)){?>
                 <div class="footer-phone">
                     <p class="footer-contacts_label"><?=Yii::t('site', 'Телефон/факс')?>:</p>
-                    <p class="footer-contacts_text"><a href="tel:+73912119876">+7 (391) 211-98-76</a></p>
+                    <?=$footer['phone']->value?>
                 </div>
+                <?php }?>
+                <?php if (!empty($footer['address']->value)){?>
                 <div class="footer-address">
                     <p class="footer-contacts_label"><?=Yii::t('site', 'Адрес')?>:</p>
-                    <p class="footer-contacts_text">660049, г. Красноярск, ул. Карла Маркса, 93</p>
-                    <p class="footer-contacts_text">Электронная почта: adm@admkrsk.ru</p>
+                    <?=$footer['address']->value?>
+                    
                 </div>
+                <?php }?>
                 <?= frontend\widgets\MenuWidget::widget(['alias'=>'footer_social_menu','template'=>'footer_social_menu']); ?>
             </div>
 
             <div class="footer-contacts footer-contacts_phones">
+                <?php if (!empty($footer['service_mail']->value)){?>
                 <div class="footer-phone">
                     <p class="footer-contacts_label">Отдел служебных писем (служебная корреспонденция):</p>
-                    <p class="footer-contacts_text"><a href="tel:+73912261140">+7 (391) 226-11-40</a></p>
-                    <p class="footer-contacts_text"><a href="tel:+73912261251">+7 (391) 226-12-51</a></p>
+                    <?=$footer['service_mail']->value?>
                 </div>
+                <?php }?>
+                <?php if (!empty($footer['peopler_request']->value)){?>
                 <div class="footer-phone">
                     <p class="footer-contacts_label">Обращения граждан:</p>
-                    <p class="footer-contacts_text"><a href="tel:+73912261122">+7 (391) 226-11-22</a></p>
+                    <?=$footer['peopler_request']->value?>
                 </div>
+                <?php }?>
+                <?php if (!empty($footer['trust_phone']->value)){?>
                 <div class="footer-phone">
                     <p class="footer-contacts_label">Телефон доверия:</p>
-                    <p class="footer-contacts_text"><a href="tel:+73912261060">+7 (391) 226-10-60</a></p>
+                    <?=$footer['trust_phone']->value?>
                 </div>
+                <?php }?>
             </div>
 <?php } ?>
             <hr class="footer-hr">

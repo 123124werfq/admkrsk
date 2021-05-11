@@ -10,7 +10,6 @@
         {
             $data = $record->getData(true);
             $photo = $record->getMedia('photo',true);
-
 ?>
             <div class="goslinks-col goslinks-col__half">
                 <div class="person-card">
