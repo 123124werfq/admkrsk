@@ -57,6 +57,11 @@ function addInput(block)
 
 $(document).ready(function() {
 
+    $(".content.searchable table").each(function(){
+        if (!$(this).parent().hasClass('table-responsive'))
+            $(this).parent().addClass('table-responsive');
+    });
+
     $(".ajax-form").on('beforeSubmit', function (event) {
         event.preventDefault();
 
@@ -293,7 +298,7 @@ $(document).ready(function() {
             isRTL: false,
             showMonthAfterYear: false,
             yearSuffix: ''};
-        
+
         $.datepicker.setDefaults($.datepicker.regional['ru']);
 
         $("#datepicker").datepicker({
