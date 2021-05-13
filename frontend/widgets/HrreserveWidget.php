@@ -13,18 +13,29 @@ class HrreserveWidget extends Widget
 
     public function run()
     {
-        $reservers = HrReserve::find()->all();
+        $reservers = HrReserve::find()->joinWith(['profile as profile']);
+
+        if (!empty($_GET['id_record_position']))
+            $reservers->andWhere(['id_record_position'=>(int)$_GET['id_record_position']]);
 
         $output = [];
+        $groups = [];
 
-        foreach ($reservers as $reserver)
+        foreach ($reservers->all() as $reserver)
         {
             $fio = $reserver->profile->name;
+
+            if (!empty($_GET['fio']))
+                if (mb_stripos($fio, $_GET['fio'])===false)
+                    continue;
+
             $posname = $reserver->getPositionName();
             $posdate = $reserver->contest_date;
 
-            if(!isset($output[$reserver->id_profile]))
+            if (!isset($output[$reserver->id_profile]))
                 $output[$reserver->id_profile] = [];
+
+            $groups[$reserver->id_record_position] = $posname;
 
             $output[$reserver->id_profile][] = [
                 'name' => $fio,
@@ -37,6 +48,7 @@ class HrreserveWidget extends Widget
 
         return $this->render('reserve',[
             'reservers' => $output,
+            'groups'=>$groups,
         ]);
     }
 }

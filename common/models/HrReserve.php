@@ -91,8 +91,10 @@ class HrReserve extends \yii\db\ActiveRecord
     public function getPositionName()
     {
         $res = CollectionRecord::findOne($this->id_record_position);
+
         if(!$res)
             return false;
+
         $fields = $res->getData(true);
 
         return array_shift($fields);

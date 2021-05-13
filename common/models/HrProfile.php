@@ -51,7 +51,7 @@ class HrProfile extends \yii\db\ActiveRecord
     public $access_user_ids;
     public $access_user_group_ids;
 
-    
+
 
     /**
      * {@inheritdoc}
@@ -178,13 +178,13 @@ class HrProfile extends \yii\db\ActiveRecord
 
     public function getName()
     {
-        if($this->user)
+        if ($this->user)
             return $this->user->getUsername();
         else if(!empty($this->id_record))
         {
             $record = CollectionRecord::findOne($this->id_record);
             $rd = $record->getData(true);
-            
+
             if(isset($rd['surname']) && isset($rd['name']) && isset($rd['parental_name']) )
                 return($rd['surname'].' '.$rd['name'].' '.$rd['parental_name']);
             else

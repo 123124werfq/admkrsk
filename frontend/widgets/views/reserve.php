@@ -1,46 +1,37 @@
 <?php
-
+    use yii\helpers\Html;
+    use yii\widgets\Pjax;
 ?>
 <div id="hr_vote_view">
-    <table class="reserve-form search" cellpadding="2" cellspacing="0" border="0" width="100%">
-        <tbody>
-        <tr valign="top">
-            <td>
-                Категория должностей<br>
-                <select name="" style="width:200px;" filterfield="PostCategory">
-                    <option selected="selected" value=""></option>
-                    <option value="1">Высшая</option>
-                    <option value="2">Главная</option>
-                    <option value="3">Ведущая</option>
-                    <option value="4">Руководитель муниципального учреждения или предприятия</option>
-                </select>
-            </td>
-            <td>
-                Поиск по фамилии<br>
-                <input type="text" style="width:220px;" value=""></td>
-            <td>
-                <br><button type="button" class="button2" style="width:100px;">Поиск</button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <div style="padding:2px;">Количество резервистов: <?=count($reservers)?></div>
-    <table width="100%" class="ms-listviewtable border" border="0" cellspacing="0" cellpadding="2">
-        <tbody><tr class="hr_header" valign="top">
-            <th>
-                №
-            </th>
-            <th>
-                ФИО резервиста
-            </th>
-            <th>
-                Группы должностей
-            </th>
-            <th>
-                Дата включения в резерв
-            </th>
-        </tr>
 
+    <form class="search-table" data-hash="hrreserve" action="">
+        <?=Html::textInput('fio',Yii::$app->request->get('fio'),['class'=>'form-control','placeholder'=>'ФИО','max-lenght'=>255]);?>
+        <?=Html::dropDownList('id_record_position',Yii::$app->request->get('id_record_position'),$groups,['class'=>'form-control','prompt'=>'Группа']);?>
+    </form>
+
+    <?php Pjax::begin([
+        'id' => 'hrreserve',
+        'timeout'=>5000
+        //'enablePushState' => false,
+    ]) ?>
+
+    <div style="padding:0px 0px 10px; text-align: right;">Количество резервистов: <?=count($reservers)?></div>
+    <table width="100%" class="ms-listviewtable border" border="0" cellspacing="0" cellpadding="2">
+        <tbody>
+            <tr class="hr_header" valign="top">
+                <th>
+                    №
+                </th>
+                <th>
+                    ФИО резервиста
+                </th>
+                <th>
+                    Группы должностей
+                </th>
+                <th>
+                    Дата включения в резерв
+                </th>
+            </tr>
         <?php
             $count = 0;
             foreach($reservers as $rid => $reserver){
@@ -60,7 +51,7 @@
                 }
             }
         ?>
-
-
-        </tbody></table>
+        </tbody>
+    </table>
+    <?php Pjax::end(); ?>
 </div>
