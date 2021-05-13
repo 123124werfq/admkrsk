@@ -42,7 +42,7 @@
                 <div class="footer-address">
                     <p class="footer-contacts_label"><?=Yii::t('site', 'Адрес')?>:</p>
                     <?=$footer['address']->value?>
-                    
+
                 </div>
                 <?php }?>
                 <?= frontend\widgets\MenuWidget::widget(['alias'=>'footer_social_menu','template'=>'footer_social_menu']); ?>
@@ -55,10 +55,10 @@
                     <?=$footer['service_mail']->value?>
                 </div>
                 <?php }?>
-                <?php if (!empty($footer['peopler_request']->value)){?>
+                <?php if (!empty($footer['people_request']->value)){?>
                 <div class="footer-phone">
                     <p class="footer-contacts_label">Обращения граждан:</p>
-                    <?=$footer['peopler_request']->value?>
+                    <?=$footer['people_request']->value?>
                 </div>
                 <?php }?>
                 <?php if (!empty($footer['trust_phone']->value)){?>
