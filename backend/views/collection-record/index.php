@@ -22,7 +22,7 @@ if (!empty($archiveColumn))
   if ($archive) {
       $this->params['button-block'][] = Html::a('Не архив', ['index'], ['class' => 'btn btn-default']);
   } else {
-      $this->params['button-block'][] = Html::a('Архив', ['index', 'archive' => 1], ['class' => 'btn btn-default']);
+      $this->params['button-block'][] = Html::a('Архив', ['index', 'archive' => 1,'id'=>$model->id_collection], ['class' => 'btn btn-default']);
   }
 }
 

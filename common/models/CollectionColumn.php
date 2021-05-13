@@ -415,18 +415,26 @@ class CollectionColumn extends \yii\db\ActiveRecord
             case self::TYPE_DATE:
                 $type = 'date';
                 $operators = [
-                   'equal',
-                   'not_equal',
-                   'in',
-                   'not_in',
-                   'less',
-                   'less_or_equal',
-                   'greater',
-                   'greater_or_equal',
-                   'between',
-                   'not_between',
-                   'is_empty',
-                   'is_not_empty',
+                   ['type'=>'equal','optgroup'=>'basic'],
+                   ['type'=>'not_equal','optgroup'=>'basic'],
+                   ['type'=>'in','optgroup'=>'basic'],
+                   ['type'=>'not_in','optgroup'=>'basic'],
+                   ['type'=>'less','optgroup'=>'basic'],
+                   ['type'=>'less_or_equal','optgroup'=>'basic'],
+                   ['type'=>'greater','optgroup'=>'basic'],
+                   ['type'=>'greater_or_equal','optgroup'=>'basic'],
+                   ['type'=>'between','optgroup'=>'basic'],
+                   ['type'=>'not_between','optgroup'=>'basic'],
+                   ['type'=>'is_empty','optgroup'=>'basic'],
+                   ['type'=>'is_not_empty','optgroup'=>'basic'],
+                   ['type'=>'month', 'optgroup'=>'custom', 'nb_inputs'=> 0,'apply_to'=>['string']]
+                ];
+                $plugin = 'datepicker';
+                $plugin_config = [
+                  'format'=> 'yyyy/mm/dd',
+                  'todayBtn'=> 'linked',
+                  'todayHighlight'=> true,
+                  'autoclose'=> true,
                 ];
                 break;
             case self::TYPE_INTEGER:
