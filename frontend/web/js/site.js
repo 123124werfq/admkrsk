@@ -96,24 +96,24 @@ $(document).ready(function() {
                 });
             }
         }).fail(function (jqXHR, exception) {
-            var msg = '';
+            var msg = 'Ошибка: ';
 
             btn_sbm.prop('disabled',false).val('Сохранить');
 
             if (jqXHR.status === 0) {
-                msg = 'Not connect.\n Verify Network.';
+                msg = 'Нет связи.\n Проверьте соединение.';
             } else if (jqXHR.status == 404) {
-                msg = 'Requested page not found. [404]';
+                msg = 'Страница не найдена. [404]';
             } else if (jqXHR.status == 500) {
-                msg = 'Internal Server Error [500].';
+                msg = 'Ошибка сервера [500].';
             } else if (exception === 'parsererror') {
-                msg = 'Requested JSON parse failed.';
+                msg = 'Не валидный JSON ответ сервера.';
             } else if (exception === 'timeout') {
-                msg = 'Time out error.';
+                msg = 'Исткло время ожидания.';
             } else if (exception === 'abort') {
-                msg = 'Ajax request aborted.';
+                msg = 'Запрос отменен.';
             } else {
-                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                msg = '\n' + jqXHR.responseText;
             }
 
             alert(msg);
