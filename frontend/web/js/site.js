@@ -67,8 +67,12 @@ $(document).ready(function() {
 
         var $form = $(this);
 
+        var btn_sbm = $form.find('.form-end input[type="submit"]');
+
         $form.find('.has-error .help-block').html('');
         $form.find('.has-error').removeClass('has-error');
+
+        btn_sbm.prop('disabled',true).val('... Ожидайте');
 
         $.ajax({
             type: "POST",
@@ -76,6 +80,8 @@ $(document).ready(function() {
             url: $form.attr('action'),
             data: $form.serialize()
         }).done(function(data){
+
+            btn_sbm.prop('disabled',false).val('Сохранить');
 
             if (data.success)
                 $form.html(data.success);
@@ -89,6 +95,28 @@ $(document).ready(function() {
                     }
                 });
             }
+        }).fail(function (jqXHR, exception) {
+            var msg = '';
+
+            btn_sbm.prop('disabled',false).val('Сохранить');
+
+            if (jqXHR.status === 0) {
+                msg = 'Not connect.\n Verify Network.';
+            } else if (jqXHR.status == 404) {
+                msg = 'Requested page not found. [404]';
+            } else if (jqXHR.status == 500) {
+                msg = 'Internal Server Error [500].';
+            } else if (exception === 'parsererror') {
+                msg = 'Requested JSON parse failed.';
+            } else if (exception === 'timeout') {
+                msg = 'Time out error.';
+            } else if (exception === 'abort') {
+                msg = 'Ajax request aborted.';
+            } else {
+                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+            }
+
+            alert(msg);
         });
 
         //e.preventDefault();
