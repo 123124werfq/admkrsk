@@ -53,7 +53,7 @@ return [
 
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
-                'host' => '10.24.0.2',
+                'host' => '10.24.0.3',
                 'username' => 's10_adm@admkrsk.ru',
                 'password' => 'sF23Hw$aS',
                 'port' => 25,
