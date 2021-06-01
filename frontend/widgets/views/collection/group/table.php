@@ -1,4 +1,5 @@
-<?php 
+<?php
+	use yii\helpers\Html;
 	use yii\widgets\Pjax;
 ?>
 <?=$this->render('../_search',['unique_hash'=>$unique_hash,'search_columns'=>$search_columns,'pagesize'=>$pagesize])?>
