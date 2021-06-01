@@ -33,7 +33,7 @@ else {?>
 				if (!empty($group))
 					echo '<tr><td class="table-group" colspan="'.count($columns).'">'.$group.'</td></tr>';
 
-				foreach ($allrows as $key => $row){?>
+				foreach ($allrows as $id_record => $row){?>
 				<tr>
 					<?php if ($show_row_num){?>
 						<td><?=$offset+$i++?></td>
