@@ -501,6 +501,8 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 $operators = [
                     'is_empty',
                     'is_not_empty',
+                    'is_null',
+                    'is_not_null'
                 ];
                 break;
             case self::TYPE_FILE:
