@@ -414,7 +414,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 break;
             case self::TYPE_DATE:
                 $type = 'date';
-                $operators = [
+                /*$operators = [
                    ['type'=>'equal','optgroup'=>'basic'],
                    ['type'=>'not_equal','optgroup'=>'basic'],
                    ['type'=>'in','optgroup'=>'basic'],
@@ -428,13 +428,28 @@ class CollectionColumn extends \yii\db\ActiveRecord
                    ['type'=>'is_empty','optgroup'=>'basic'],
                    ['type'=>'is_not_empty','optgroup'=>'basic'],
                    ['type'=>'month', 'optgroup'=>'custom', 'nb_inputs'=> 0,'apply_to'=>['string']]
-                ];
+                ];*/
                 $plugin = 'datepicker';
                 $plugin_config = [
                   'format'=> 'yyyy/mm/dd',
                   'todayBtn'=> 'linked',
                   'todayHighlight'=> true,
                   'autoclose'=> true,
+                ];
+
+                $operators = [
+                   'equal',
+                   'not_equal',
+                   'in',
+                   'not_in',
+                   'less',
+                   'less_or_equal',
+                   'greater',
+                   'greater_or_equal',
+                   'between',
+                   'not_between',
+                   'is_empty',
+                   'is_not_empty',
                 ];
                 break;
             case self::TYPE_INTEGER:
