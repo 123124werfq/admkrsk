@@ -172,6 +172,7 @@ class CollectionQuery extends \yii\mongodb\Query
 
             foreach ($record as $vkey => $value)
             {
+
                 $id_column = str_replace('col', '', $vkey);
 
                 if (!isset($this->columns[$id_column])) //|| in_array($id_column, $this->id_columns_search)
@@ -181,6 +182,7 @@ class CollectionQuery extends \yii\mongodb\Query
                 {
                     if (isset($record['col'.$id_column.'_search']))
                     {
+
                         if (!is_array($value))
                             $value = [$value];
 
@@ -190,7 +192,7 @@ class CollectionQuery extends \yii\mongodb\Query
 
                         foreach ($value as $ikey => $id)
                         {
-                            if (empty($labels) && !empty($record['col'.$id_column.'_search']))
+                            if (!is_array($labels) && !empty($record['col'.$id_column.'_search']))
                                 $combine_value[$id] = $record['col'.$id_column.'_search'];
                             else
                                 $combine_value[$id] = $labels[$id]??$id;

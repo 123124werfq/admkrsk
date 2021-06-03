@@ -251,7 +251,7 @@ class CollectionController extends Controller
         if (!empty($q))
             $query->andWhere(['like','col'.$id_column,$q]);
 
-        foreach ($query->limit(30)->getStrinyfyArray() as $key => $value)
+        foreach ($query->limit(50)->getStrinyfyArray() as $key => $value)
         {
             $results[] = [
                 'id' => $key,
