@@ -116,7 +116,7 @@ class WordDoc
 
                         $records_string = [];
                         foreach ($records as $rkey => $record)
-                            $records_string[] = WordDoc::convertDataToString($record->getData(true),$rcolumns);
+                            $records_string[] = WordDoc::convertDataToString($record->getData(true),$rcolumns,true);
 
                         $template->cloneBlock($alias, 0, true, false, $records_string);
                     }
@@ -132,7 +132,7 @@ class WordDoc
         return $export_path;
     }
 
-    public static function convertDataToString($data,$columns)
+    public static function convertDataToString($data,$columns,$implode_collections=false)
     {
         $string_output = [];
 
@@ -142,6 +142,7 @@ class WordDoc
 
             if (!isset($data[$col_alias]))
                 $string_output[$col_alias] = '';
+
             else if ($col->type==CollectionColumn::TYPE_REPEAT)
             {
                 $string_output[$col->alias.'.begin'] = $data[$col_alias]['begin']?date('d.m.Y',$data[$col_alias]['begin']):'';
@@ -256,7 +257,12 @@ class WordDoc
                     $string_output[$col_alias] = $model->name;
             }
             else if ($col->type==CollectionColumn::TYPE_COLLECTIONS)
-                $string_output[$col->alias] = $data[$col_alias];
+            {
+                if ($implode_collections && is_array($data[$col_alias]))
+                    $string_output[$col->alias] = implode('<w:br/>',$data[$col_alias]);
+                else
+                    $string_output[$col->alias] = $data[$col_alias];
+            }
             else if ($col->type==CollectionColumn::TYPE_SERVICETARGET)
             {
                 $model = \common\models\ServiceTarget::findOne($data[$col_alias]);
