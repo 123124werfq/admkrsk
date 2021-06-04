@@ -55,8 +55,19 @@ if ($user) {
                                             continue;
 
                                         $tt = $profile->getRecord()->one();
-                                        if(!$tt->isArchiveLive())
+                                        $isArchive = false;
+                                        if($tt && !$tt->isArchiveLive())
                                             $availableProfilesCount++;
+                                        else
+                                            $isArchive = true;
+                                        
+                                        if($isArchive)
+                                        {
+                                    ?>
+                                    <li><s><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>&ida=<?=$profile['id_profile']?>">Заявка от <?= date("d.m.Y H:i", $profile['created_at'])?></a></s>
+                                    находится в архиве</li>
+                                    <?php
+                                        } else {
                                     ?>
                                     <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>&ida=<?=$profile['id_profile']?>">Редактировать заявку от <?= date("d.m.Y H:i", $profile['created_at'])?></a>
                                         <?php
@@ -74,7 +85,8 @@ if ($user) {
                                             }
                                         ?>
                                     </li>
-                                <?php } ?>
+                                <?php }
+                                    } ?>
                                 <?php if(!empty($contest['participant_form']) && isset($contest['max_orders']) && $contest['max_orders']>$availableProfilesCount){?>
                                     <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>">Создать новую заявку</a></li>
                                 <?php } ?>
