@@ -199,6 +199,17 @@ class CollectionRecord extends \yii\db\ActiveRecord
         return (!empty($this->is_archive));
     }
 
+    public function isArchiveLive()
+    {
+        $id_arch_column = $this->collection->getArchiveColumn()->id_column;
+        $data = $this->getData();
+        
+        if(!isset($data[$id_arch_column]))
+            return false;
+        else 
+            return (bool)$data[$id_arch_column];
+    }    
+
     protected function getMongoDate($value, $column)
     {
         $output = [];

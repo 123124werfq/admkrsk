@@ -54,7 +54,9 @@ if ($user) {
                                         if(!isset($links[$cstId]) || !in_array($profile['id_profile'],$links[$cstId]))
                                             continue;
 
-                                        $availableProfilesCount++;
+                                        $tt = $profile->getRecord()->one();
+                                        if(!$tt->isArchiveLive())
+                                            $availableProfilesCount++;
                                     ?>
                                     <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>&ida=<?=$profile['id_profile']?>">Редактировать заявку от <?= date("d.m.Y H:i", $profile['created_at'])?></a>
                                         <?php
