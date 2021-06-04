@@ -318,7 +318,7 @@ class WordDoc
                 if (!empty($model))
                     $string_output[$col_alias] = $model->name;
             }
-            else if (!empty($col->input->id_collection))
+            else if (!empty($col->input->id_collection) && is_array($data[$col_alias]))
             {
                 $string_output[$col->alias] = implode('<w:br/>', $data[$col_alias]);
             }
