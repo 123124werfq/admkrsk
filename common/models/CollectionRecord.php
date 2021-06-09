@@ -201,7 +201,13 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
     public function isArchiveLive()
     {
-        $id_arch_column = $this->collection->getArchiveColumn()->id_column;
+        $id_arch_column = $this->collection->getArchiveColumn();
+
+        if (empty($id_arch_column))
+            return false
+
+        $id_arch_column = $id_arch_column->id_column;
+
         $data = $this->getData();
         
         if(!isset($data[$id_arch_column]))
@@ -516,7 +522,10 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 }
             }
 
-            $dataMongo = [];
+            $dataMongo = [
+                'created_at'=>$this->created_at,
+                'updated_at'=>$this->updated_at,
+            ];
 
             if ($hasCustom)
             {
