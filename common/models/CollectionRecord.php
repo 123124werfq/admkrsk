@@ -204,7 +204,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
         $id_arch_column = $this->collection->getArchiveColumn();
 
         if (empty($id_arch_column))
-            return false
+            return false;
 
         $id_arch_column = $id_arch_column->id_column;
 
