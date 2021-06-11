@@ -322,7 +322,7 @@ table.vote thead{
     padding: 10px;
 }
 
-@media screen and (min-width: 1180px)
+@media screen and (max-width: 1180px)
 {
     .main-slider_item__single .main-slider_img img {
         height: 100%;
@@ -337,8 +337,6 @@ table.vote thead{
 
 @media screen and (max-width: 767px) {
     .sidemenu > ul > li.current {display: block;}
-
-
 }
 
 @media screen and (max-width: 992px) {
