@@ -60,7 +60,7 @@ if (!empty($this->params['page']))
     <meta name="HandheldFriendly" content="true">
     <link href="<?= $bundle->baseUrl . '/css/accessability.css' ?>" rel="stylesheet accessability" type="text/css" <?=$accessabilityMode?'':'disabled'?> title="accessability">
 
-    <link href="<?= $bundle->baseUrl . '/css/site.css?v=1' ?>" rel="stylesheet" type="text/css" <?=$accessabilityMode?'disabled':''?>>
+    <link href="<?= $bundle->baseUrl . '/css/site.css?v=2' ?>" rel="stylesheet" type="text/css" <?=$accessabilityMode?'disabled':''?>>
 
     <script>
         (function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement)

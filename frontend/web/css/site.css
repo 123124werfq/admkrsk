@@ -322,6 +322,15 @@ table.vote thead{
     padding: 10px;
 }
 
+@media screen and (min-width: 1180px)
+{
+    .main-slider_item__single .main-slider_img img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+}
+
 @media screen and (min-width: 992px) {
     form.ajax-form .row {flex-wrap: nowrap!important;}
 }
