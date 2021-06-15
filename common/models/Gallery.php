@@ -158,7 +158,9 @@ class Gallery extends ActiveRecord
             ->asArray()
             ->column();
         $newGroups = array_diff($this->galleryGroup, $oldGroups);
-        if ($newGroups) {
+
+        if ($newGroups)
+        {
             $batchNewGroups = $this->batchGroups($newGroups);
             Yii::$app->db->createCommand()
                 ->batchInsert(static::GALLERIES_GROUPS_JUNCTION,
@@ -170,13 +172,14 @@ class Gallery extends ActiveRecord
                 ->execute();
         }
         $removeGroups = array_diff($oldGroups, $this->galleryGroup);
-        if ($removeGroups) {
-            $batchRemoveGroups = $this->batchGroups($removeGroups);
+
+        if ($removeGroups)
+        {
             Yii::$app->db->createCommand()
                 ->delete(static::GALLERIES_GROUPS_JUNCTION,
                     [
                         'gallery_id' => $this->id_gallery,
-                        'gallery_group_id' => $batchRemoveGroups,
+                        'gallery_group_id' => $removeGroups,
                     ])
                 ->execute();
         }
