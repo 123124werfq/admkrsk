@@ -4,6 +4,7 @@
     use common\models\Page;
 
     $records = $model->getRecords('links');
+    $pages = Page::find()->all(), 'id_page', 'title');
 ?>
 
 <h2>Добавить элементы</h2>
@@ -20,7 +21,7 @@
             <?=Html::textInput("MenuLink[links][$key][url]",$data->url,['class'=>'form-control','id'=>'MenuLink_href_'.$key,'placeholder'=>'Введите URL']);?>
         </div>
         <div class="col-md-3">
-            <?=Html::dropDownList("MenuLink[links][$key][id_page]",$data->id_page,ArrayHelper::map(Page::find()->all(), 'id_page', 'title'),['class'=>'form-control','id'=>'CollectionColumn_type'.$key,'prompt'=>'Выберите раздел']);?>
+            <?=Html::dropDownList("MenuLink[links][$key][id_page]",$data->id_page,ArrayHelper::map($pages,['class'=>'form-control','id'=>'CollectionColumn_type'.$key,'prompt'=>'Выберите раздел']);?>
         </div>
         <div class="col-md-1">
             <a class="close btn" href="#">&times;</a>
