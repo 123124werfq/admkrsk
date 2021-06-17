@@ -629,7 +629,7 @@ if (empty($modelForm->maxfilesize))
                     echo '
 					<div class="checkbox-group">
 						<label class="checkbox checkbox__ib">
-							<input type="checkbox" ' . (in_array($key, $current_values) ? 'checked' : '') . ' name="'.$inputname.'[]" value="' . Html::encode($key) . '" class="checkbox_control">
+							<input type="checkbox" ' . (in_array($key, $current_values) ? 'checked' : '') . ' name="'.$inputname.'[]" value="' . Html::encode($key) . '" class="checkbox_control" '.(!empty($options['readonly'])?'disabled':'').' />
 							<span class="checkbox_label">' . $value . '</span>
 						</label>
 					</div>';
