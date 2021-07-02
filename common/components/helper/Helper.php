@@ -252,7 +252,22 @@ class Helper
 		if(isset($data['attachments']) && is_array($data['attachments'])) // костыль! исправить, не допуская прохождения массивов
 			unset($data['attachments']);
 
-		return $twig->render('index', $data);
+		$render = null;
+
+		try {
+			$render = $twig->render('index', $data);
+		}
+		catch (\Throwable $e)
+		{
+			$render = $e->getMessage();
+		}
+		finally
+		{
+			if ($render!==null)
+				return $render;
+			else
+				return 'Ошибка генерации шаблона';
+		}
 	}
 
 	public static function runContentWidget($content, $page, $recordData=[],$insertAttributes=[])
