@@ -651,22 +651,26 @@ if (empty($modelForm->maxfilesize))
                 if (empty($input->search_inputs))
                     $input->search_inputs = "''";
 
-                echo $form->field($model, $attribute)->widget(Select2::class, [
-                    'data' => $value,
-                    'pluginOptions' => [
-                        'multiple' => false,
-                        'minimumInputLength' => 0,
-                        'placeholder' => 'Выберите запись',
-                        'ajax' => [
-                            'url' => '/collection/record-list',
-                            'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {q:params.term,id:' . $input->id_collection . ',id_column:' . $input->id_collection_column . ', filter:getFilter('.$input->search_inputs.',\''.$arrayGroup.'\')};}')
+                if (empty($input->readonly))
+                    echo $form->field($model, $attribute)->widget(Select2::class, [
+                        'data' => $value,
+                        'pluginOptions' => [
+                            'multiple' => false,
+                            'minimumInputLength' => 0,
+                            'placeholder' => 'Выберите запись',
+                            'ajax' => [
+                                'url' => '/collection/record-list',
+                                'dataType' => 'json',
+                                'data' => new JsExpression('function(params) { return {q:params.term,id:' . $input->id_collection . ',id_column:' . $input->id_collection_column . ', filter:getFilter('.$input->search_inputs.',\''.$arrayGroup.'\')};}')
+                            ],
                         ],
-                    ],
-                    'options' => [
-                        'value' => key($value)
-                    ]
-                ]);
+                        'options' => [
+                            'value' => key($value)
+                        ]
+                    ]);
+                else
+                    echo $form->field($model, $attribute)->dropDownList($value, $options);
+
                 break;
 
             case CollectionColumn::TYPE_COLLECTIONS:
@@ -762,7 +766,7 @@ JS;
                             'options' => [
                                 'id' => $options['id'],
                                 'multiple' => true,
-                                'value' => array_keys($value)
+                                'value' => array_keys($value),
                             ]
                         ]);
                     }

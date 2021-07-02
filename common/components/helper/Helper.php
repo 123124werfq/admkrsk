@@ -259,7 +259,7 @@ class Helper
 		}
 		catch (\Throwable $e)
 		{
-			$render = $e->getMessage();
+			$render = 'Error:'.$e->getMessage();
 		}
 		finally
 		{
