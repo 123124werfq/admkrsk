@@ -43,7 +43,7 @@ $groupClass = '';
 
 if ($input->type == CollectionColumn::TYPE_CHECKBOXLIST || (!empty($options['formtype']) && $options['formtype']=='checkbox'))
     $groupClass .= ' checkboxlist';
-else  if ($input->type == CollectionColumn::TYPE_SELECT)
+else  if ($input->type == CollectionColumn::TYPE_SELECT && empty($input->readonly))
     $groupClass .= ' custom-select';
 
 $clearAttribute = $attribute = "input$input->id_input";
