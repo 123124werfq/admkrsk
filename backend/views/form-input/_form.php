@@ -20,11 +20,14 @@ use yii\web\JsExpression;
     ]); ?>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <?= $form->field($model, 'required')->checkBox()?>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <?= $form->field($model, 'readonly')->checkBox()?>
+        </div>
+        <div class="col-md-4">
+            <?= $form->field($model, 'onlyadmin')->checkBox()?>
         </div>
     </div>
     <div class="row">

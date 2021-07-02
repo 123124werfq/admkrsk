@@ -12,6 +12,10 @@ use kartik\select2\Select2;
 use yii\web\JsExpression;
 use yii\helpers\Url;
 
+// только для админки
+if (!empty($input->onlyadmin) && strpos(Yii::$app->params['backendUrl'],'/'.$_SERVER['SERVER_NAME'])===false)
+    return '';
+
 /** @var FormElement $element */
 $styles = $element->getStyles();
 
