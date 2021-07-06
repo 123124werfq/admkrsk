@@ -321,14 +321,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
 
     public static function renderCustomValue($template,$data)
     {
-        $value = '';
-
-        try {
-            $value = Helper::renderTwig($template,$data);
-        }
-        catch (Exception $e) {
-
-        }
+        $value = Helper::renderTwig($template,$data);
 
         return $value;
     }
