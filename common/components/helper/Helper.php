@@ -184,7 +184,7 @@ class Helper
 
             if (!empty($data['id']))
             {
-            	$media = common\models\Media::find()->where(['id_media'=>$data['id']])->one();
+            	$media = \common\models\Media::find()->where(['id_media'=>$data['id']])->one();
 
 	            if (!empty($media))
 	            	return '<a href="'.$media->getUrl().'" download>'.$media->name.'</a>';
