@@ -174,7 +174,7 @@ class Helper
 	    },['is_safe' => ['html']]);
 	    $twig->addFilter($filter);
 
-	    $filter = new \Twig\TwigFilter('url', function ($data) {
+	    $filter = new \Twig\TwigFilter('link', function ($data) {
 
 	    	if (!is_array($data))
 	    		return '';
