@@ -127,7 +127,6 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
 
             if (!empty($domainPage))
                 return ['site/page', ['page'=>$domainPage]];
-
         }
 
         // ищем из резервированных
