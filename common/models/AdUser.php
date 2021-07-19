@@ -159,7 +159,8 @@ class AdUser extends ActiveRecord
         $login = str_replace('@admkrsk.ru', '', $login);
         $localUser = User::findByUsername($login);
 
-        $userByUsername = AdUser::find()->where(['sn' => $login])->one();
+        //$userByUsername = AdUser::find()->where(['sn' => $login])->one();
+        $userByUsername = AdUser::find()->where("LOWER(sn) ='" . strtolower($login) . "'")->one();
         if ($userByUsername)
             $externalUserId = $userByUsername->createInfo($login);
 
