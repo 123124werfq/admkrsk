@@ -258,6 +258,18 @@ class SiteController extends Controller
 
         $page->createAction();
 
+        $this->view->title = $page->seo_title?:$page->title;
+
+        Yii::$app->view->registerMetaTag([
+            'name' => 'description',
+            'content' => $page->seo_description
+        ]);
+
+        Yii::$app->view->registerMetaTag([
+            'name' => 'keywords',
+            'content' => $page->seo_keywords
+        ]);
+
         return $this->render((empty($blocks))?'page':'blocks',[
             'page'=>$page
         ]);
