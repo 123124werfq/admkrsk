@@ -101,7 +101,7 @@ class ReceptionController extends \yii\web\Controller
 
                             Yii::$app->response->format = Response::FORMAT_JSON;
                             return [
-                                'success'=>$this->render('result', [
+                                'success'=>$this->renderPartial('result', [
                                     'page' => $page,
                                     'fio' => $insertedData['surname'] . " " . $insertedData['name'] . " " . $insertedData['parental_name'],
                                     'number' => $appeal->number_internal,
