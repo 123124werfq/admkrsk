@@ -98,19 +98,25 @@ class ReceptionController extends \yii\web\Controller
                             $integration->created_at = time();
                             $integration->save();
                             */
+
+                            Yii::$app->response->format = Response::FORMAT_JSON;
+                            return [
+                                'success'=>$this->render('result', [
+                                    'page' => $page,
+                                    'fio' => $insertedData['surname'] . " " . $insertedData['name'] . " " . $insertedData['parental_name'],
+                                    'number' => $appeal->number_internal,
+                                    'date' => date( "d.m.Y", $appeal->created_at)
+                                ])
+                            ];
                         }
                     }
                     else
                     {
-                        return $this->render('error');
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        return [
+                            'error'=>"Ошибка отправки, пожалуйста повторите попытку позднее",
+                        ];
                     }
-
-                    return $this->render('result', [
-                        'page' => $page,
-                        'fio' => $insertedData['surname'] . " " . $insertedData['name'] . " " . $insertedData['parental_name'],
-                        'number' => $appeal->number_internal,
-                        'date' => date( "d.m.Y", $appeal->created_at)
-                    ]);
                 }
             }
             else
@@ -137,5 +143,4 @@ class ReceptionController extends \yii\web\Controller
         die();
         return $this->render('result');
     }
-
 }
