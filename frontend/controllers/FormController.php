@@ -50,7 +50,13 @@ class FormController extends \yii\web\Controller
                 	return $this->redirect($url);
             }
             else
-                echo "Данные не сохранены";
+            {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+
+                return [
+                    'error'=>"Ошибка записи, данные не сохранены, пожалуйста повторите попытку позднее",
+                ];
+            }
         }
         else
         {

@@ -69,6 +69,8 @@ $this->registerJs($script, yii\web\View::POS_END);
 	}
 	?>
 
+	<div class="form_error"></div>
+
 	<div class="form-end">
         <div class="form-end_right">
             <input type="submit" class="btn btn__secondary" value="<?=$submitLabel?>">

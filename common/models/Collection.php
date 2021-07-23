@@ -257,7 +257,8 @@ class Collection extends ActiveRecord
         $model->id_collection = $this->id_collection;
         $model->data = $data;
 
-        if ($model->save()) {
+        if ($model->save())
+        {
             return $model;
         }
 

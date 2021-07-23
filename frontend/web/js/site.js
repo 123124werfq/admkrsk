@@ -69,8 +69,8 @@ $(document).ready(function() {
 
         var btn_sbm = $form.find('.form-end input[type="submit"]');
 
-        $form.find('.has-error .help-block').html('');
-        $form.find('.has-error').removeClass('has-error');
+        $form.find('.has-error .help-block, .form_error').html('');
+        $form.find('.has-error, .form_error').removeClass('has-error');
 
         btn_sbm.prop('disabled',true).val('... Ожидайте');
 
@@ -88,6 +88,10 @@ $(document).ready(function() {
             else
             {
                 $.each(data,function(index, value){
+
+                    if ($(".form_"+index).length>0)
+                        $(".form_"+index).addClass('has-error').html(value);
+
                     if ($("."+index+' .help-block').length>0)
                     {
                         $("."+index).addClass('has-error');
@@ -115,6 +119,8 @@ $(document).ready(function() {
             } else {
                 msg = '\n' + jqXHR.responseText;
             }
+
+            $form.find(".form_error").addClass('has-error').html(jqXHR.responseText);
 
             alert(msg);
         });
