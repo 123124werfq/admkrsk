@@ -558,7 +558,11 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
         $record = $record->getArray();
 
-        $output = ['id_record'=>$this->id_record];
+        $output = [
+            'id_record'=>$this->id_record
+            'created_at'=>$this->created_at,
+            'updated_at'=>$this->updated_at,
+        ];
 
         if (!empty($record))
         {
