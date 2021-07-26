@@ -33,14 +33,17 @@ class FormDynamic extends DynamicModel
 
         foreach ($this->inputs as $input)
         {
-            // заполняем данные их ЕСИА
-            if (!Yii::$app->user->isGuest && !empty($input->id_type) && !empty($input->typeOptions->esia) && empty($_POST['FormDynamic']))
+            // заполняем данные их ЕСИА только на фронтенде
+            if (strpos(Yii::$app->params['backendUrl'],'/'.$_SERVER['SERVER_NAME'])===false)
             {
-                $esia = Yii::$app->user->identity->esiainfo;
-                $attr = $input->typeOptions->esia;
+                if (!Yii::$app->user->isGuest && !empty($input->id_type) && !empty($input->typeOptions->esia) && empty($_POST['FormDynamic']))
+                {
+                    $esia = Yii::$app->user->identity->esiainfo;
+                    $attr = $input->typeOptions->esia;
 
-                if (!empty($esia->$attr))
-                    $data[$input->fieldname] = $esia->$attr;
+                    if (!empty($esia->$attr))
+                        $data[$input->fieldname] = $esia->$attr;
+                }
             }
 
             if (!empty($data[$input->fieldname]))
