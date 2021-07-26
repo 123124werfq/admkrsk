@@ -12,7 +12,6 @@ use frontend\components\ApiErrorHandler;
 use common\models\Action;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
-use PhpOffice\PhpWord\IOFactory;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\filters\ContentNegotiator;
@@ -30,8 +29,7 @@ use common\models\User;
 use common\models\EsiaUser;
 use yii\web\ErrorAction;
 use yii\web\NotFoundHttpException;
-use common\models\Workflow;
-use common\models\Smev;
+//use common\models\Smev;
 use yii\web\Response;
 
 /**
@@ -622,64 +620,7 @@ class SiteController extends Controller
         }
     }
 
-
-    public function actionWtest()
-    {
-        $phpWord = new \PhpOffice\PhpWord\PhpWord();
-
-        $section = $phpWord->addSection();
-
-        $section->addText(
-            '"Learn from yesterday, live for today, hope for tomorrow. '
-            . 'The important thing is not to stop questioning." '
-            . '(Albert Einstein)'
-        );
-
-        $section->addText(
-            '"Great achievement is usually born of great sacrifice, '
-            . 'and is never the result of selfishness." '
-            . '(Napoleon Hill)',
-            array('name' => 'Tahoma', 'size' => 10)
-        );
-
-        $fontStyleName = 'oneUserDefinedStyle';
-        $phpWord->addFontStyle(
-            $fontStyleName,
-            array('name' => 'Tahoma', 'size' => 10, 'color' => '1B2232', 'bold' => true)
-        );
-        $section->addText(
-            '"The greatest accomplishment is not in never falling, '
-            . 'but in rising again after you fall." '
-            . '(Vince Lombardi)',
-            $fontStyleName
-        );
-
-        $html = "<h1>ВСЕМ ПРИВЕТ!</h1><p>Это абзац</p><table><tr><td>А</td><td>Это</td><td>Таблица</td></tr></table>";
-
-        //$section2 = $phpWord->addSection();
-        \PhpOffice\PhpWord\Shared\Html::addHtml($section, $html);
-
-        $fontStyle = new \PhpOffice\PhpWord\Style\Font();
-        $fontStyle->setBold(true);
-        $fontStyle->setName('Tahoma');
-        $fontStyle->setSize(13);
-        $myTextElement = $section3->addText('"Believe you can and you\'re halfway there." (Theodor Roosevelt)');
-        $myTextElement->setFontStyle($fontStyle);
-
-        $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
-        $objWriter->save('../runtime/helloWorld.docx');
-    }
-
-    public function actionStest()
-    {
-        $ww = new Workflow;
-        //$res = $ww->makeSign('/var/tmp/p7s/test1.docx');
-        //echo $res;
-        $ww->sendMultipartTest();
-        die();
-    }
-
-    public function actionMsql()
+    /*public function actionMsql()
     {
 
         //$sql = 'EXEC SMEV.get_QueueNumber @lname=:Param1,@fname=:Param2,@mname=:Param3,@docseries=:Param4,@docnumber=:Param5';
@@ -704,7 +645,7 @@ class SiteController extends Controller
 
         var_dump($res);
         die();
-    }
+    }*/
 
     /**
      * @throws NotFoundHttpException
@@ -712,7 +653,7 @@ class SiteController extends Controller
     public function actionFakelogin()
     {
         if (true || YII_ENV_DEV) {
-            $user = User::findOne(8);
+            $user = User::findOne(2415);
 
             Yii::$app->user->login($user, 3600 * 24 * 7);
 
@@ -987,10 +928,9 @@ class SiteController extends Controller
 
     } 
 
-    public function actionSmevtest()
+    /*public function actionSmevtest()
     {
         $smev1 = new Smev;
         $smev1->testMessage();
-    }    
-
+    } */
 }
