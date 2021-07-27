@@ -29,7 +29,7 @@ class FormDynamic extends DynamicModel
 
         $this->form = $form;
         $this->maxfilesize = $form->maxfilesize;
-        $this->inputs = $form->getInputs()->indexBy('id_input')->all();
+        $this->inputs = $form->getInputs()->with('typeOptions')->indexBy('id_input')->all();
 
         foreach ($this->inputs as $input)
         {
@@ -46,7 +46,7 @@ class FormDynamic extends DynamicModel
                 }
             }
 
-            if (!empty($data[$input->fieldname]))
+            if (isset($data[$input->fieldname]))
                 $attributes['input'.$input->id_input] = $data[$input->fieldname];
             else
                 $attributes['input'.$input->id_input] = '';
@@ -90,7 +90,7 @@ class FormDynamic extends DynamicModel
     {
         foreach ($this->inputs as $key => $input)
         {
-            if (isset($data[$input->id_column]))
+            if (isset($data[$input->id_column]) && ((strpos(Yii::$app->params['backendUrl'],'/'.$_SERVER['SERVER_NAME'])===true) || empty($input->typeOptions->esia)))
             {
                 $var = 'input'.$input->id_input;
                 $this->$var = $data[$input->id_column];
