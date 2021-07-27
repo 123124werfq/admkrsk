@@ -95,6 +95,7 @@ $this->params['button-block'][] = Html::a('Удалить', ['delete', 'id' => $
                             'passport_issuer',
                             'passport_issuer_id',
                             'passport_comments',
+                            'passport_date',
                         ],
                     ]) ?>
 
