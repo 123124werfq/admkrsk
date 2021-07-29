@@ -260,10 +260,10 @@ class EsiaUser extends \yii\db\ActiveRecord
     {
         $personInfo = $esia->getPersonInfo();
 
-        $this->fullname = $personInfo['lastName'].' '.$personInfo['firstName'].' '.$personInfo['middleName'];
         $this->first_name = $personInfo['firstName'];
         $this->middle_name = $personInfo['middleName']??null;
         $this->last_name = $personInfo['lastName']??null;
+        $this->fullname = trim($this->last_name.' '.$this->first_name.' '.$this->middle_name);
         $this->birthdate = $personInfo['birthDate']??null;
         $this->birthplace = $personInfo['birthPlace']??null;
         $this->trusted = (string)($personInfo['trusted']??null);
