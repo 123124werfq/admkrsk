@@ -707,9 +707,10 @@ if (empty($modelForm->maxfilesize))
                         $inputs[$clearAttribute . '[]'] = $arrayGroup;
 
                         if (!empty($record))
+                        {
                             $inputs[$attribute . '_id_record[]'] = $record->id_record;
-
-                        echo '<!-- '.$record->id_record.'-->';
+                            echo '<!-- '.$record->id_record.'-->';
+                        }
 
                         echo \frontend\widgets\FormsWidget::widget([
                             'form' => $input->collection->form,
