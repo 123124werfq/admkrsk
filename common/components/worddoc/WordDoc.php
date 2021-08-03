@@ -115,10 +115,14 @@ class WordDoc
                         $rcolumns = $records[0]->collection->columns;
 
                         $records_string = [];
+
                         foreach ($records as $rkey => $record)
                             $records_string[] = WordDoc::convertDataToString($record->getData(true),$rcolumns,true);
 
-                        $template->cloneBlock($alias, 0, true, false, $records_string);
+                        if (!empty($records_string))
+                            $template->cloneBlock($alias, 0, true, false, $records_string);
+                        else
+                            $template->deleteBlock($alias);
                     }
                 }
             }
