@@ -28,6 +28,7 @@ use common\models\User;
 
 use yii\validators\NumberValidator;
 use yii\web\Response;
+use yii\filters\AccessControl;
 
 class ContestController extends Controller
 {
@@ -36,6 +37,21 @@ class ContestController extends Controller
     const gridExperts = 'experts-grid';
     const gridList = 'list-grid';
     const gridArchive = 'archive-grid';
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }
 
     public function actionIndex()
     {
