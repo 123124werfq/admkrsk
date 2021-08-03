@@ -11,6 +11,9 @@ class NavMenuWidget extends Widget
 {
     public function run()
     {
+        if (Yii::$app->user->isGuest)
+            return '';
+
         $menu = require __DIR__ . '/../config/menu.php';
 
         return $this->render('navmenu', [
