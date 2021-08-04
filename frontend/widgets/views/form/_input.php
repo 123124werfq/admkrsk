@@ -707,10 +707,7 @@ if (empty($modelForm->maxfilesize))
                         $inputs[$clearAttribute . '[]'] = $arrayGroup;
 
                         if (!empty($record))
-                        {
                             $inputs[$attribute . '_id_record[]'] = $record->id_record;
-                            echo '<!-- '.$record->id_record.'-->';
-                        }
 
                         echo \frontend\widgets\FormsWidget::widget([
                             'form' => $input->collection->form,
@@ -735,9 +732,8 @@ if (empty($modelForm->maxfilesize))
                                 $value[(string)$id] = $label;
 
 
-                    if (empty($options['formtype']) || $options['formtype']=='select')
+                    if (empty($options['formtype']) || $options['formtype']=='dropdown')
                     {
-
                         if (!empty($options['sortable']))
                         {
 $script = <<< JS

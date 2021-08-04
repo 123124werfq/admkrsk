@@ -155,24 +155,43 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
         if (!empty($ids))
         {
-            $labels = (new \yii\db\Query())
+            /*$labels = (new \yii\db\Query())
                 ->select(['value', 'id_record'])
                 ->from('db_collection_value')
                 ->where([
                     'id_record' => $ids,
                     'id_column'=>$column->input->id_collection_column
-                ])->all();
+                ])->all();*/
+
+            //$collection = Yii::$app->mongodb->getCollection('collection'.$column->id_collection);
+
+            if (is_string($ids))
+                $ids = (int)$ids;
+            else if (is_array($ids))
+                foreach ($ids as $key=>$id)
+                    $ids[$key] = (int)$id;
+
+            $query = new Query();
+            $labels = $query->select(['id_record', 'col'.$column->input->id_collection_column])
+            ->from('collection'.$column->input->id_collection)
+            ->where(['id_record'=>$ids])
+            ->indexBy('id_record')
+            ->all();
 
             $labelsByIndex = [];
 
             foreach ($labels as $lkey => $data)
-                $labelsByIndex[$data['id_record']] = $data['value'];
+                $labelsByIndex[$lkey] = $data['col'.$column->input->id_collection_column];
 
             if (is_array($ids))
+            {
                 foreach ($ids as $key => $id)
                     $mongoLabels[$id] = $labelsByIndex[$id]??'';
+            }
             else
                 $mongoLabels[$ids] = $labelsByIndex[$ids]??'';
+
+            //var_dump($mongoLabels);
         }
 
         return $mongoLabels;
