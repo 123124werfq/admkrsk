@@ -19,7 +19,8 @@ class CollectionSearch extends DynamicModel
 
     public function __construct($collection, $data=null, $config = [])
     {
-        $attributes = [];
+        $attributes = ['id_record'];
+        $this->addRule('id_record', 'number');
 
         $this->collection = $collection;
 
@@ -73,6 +74,10 @@ class CollectionSearch extends DynamicModel
             [
                 'attribute'=>'id_record',
                 'format'=>'raw',
+                'headerOptions'=>
+                    [
+                        'style' => 'min-width:100px; width:100px;'
+                    ],
                 /*'value'=>function($model)
                 {
                     return '<span class="hidehover">'.$model['id_record'].'</span>';
