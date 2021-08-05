@@ -8,6 +8,7 @@ use yii\behaviors\TimestampBehavior;
 use common\behaviors\MailNotifyBehaviour;
 use common\components\softdelete\SoftDeleteTrait;
 use common\modules\log\behaviors\LogBehavior;
+use common\modules\log\models\RecordLog;
 use common\components\helper\Helper;
 use yii\mongodb\Query;
 
@@ -499,6 +500,11 @@ class CollectionRecord extends \yii\db\ActiveRecord
                 $collection->insert($dataMongo);
             else
                 $collection->update(['id_record'=>$this->id_record],$dataMongo);
+
+            $log = new RecordLog;
+            $log->id_record = $this->id_record;
+            $log->data = $dataMongo;
+            $log->save();
 
             // Это надо оптимизировать, перенесено под инсерт потомучто не работает при CREATE / MSD
             $columnsAlias = [];

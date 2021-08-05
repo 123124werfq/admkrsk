@@ -12,6 +12,10 @@ $this->params['breadcrumbs'][] = ['label' => $model->collection->name, 'url' => 
 $this->params['breadcrumbs'][] = $this->title;
 
 $data = $model->getData(true);
+
+$this->params['button-block'][] = Html::a('История', ['history','id'=>$model->id_record],
+            ['class' => 'btn btn-default']);
+
 if ($model->isArchive())
 {
     $this->params['button-block'][] = Html::a('Восстановить из архива', ['restore','id'=>$model->id_record,'id_collection'=>$collection->id_collection],

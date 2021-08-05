@@ -12,6 +12,8 @@ use common\models\CollectionColumn;
 use common\models\Collection;
 use common\models\FormDynamic;
 use common\models\Media;
+use common\modules\log\models\RecordLog;
+
 use yii\base\Exception;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
@@ -95,7 +97,7 @@ class CollectionRecordController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['update','restore'],
+                        'actions' => ['update','restore','history','history-view'],
                         'roles' => ['backend.collection.update', 'backend.entityAccess'],
                         'roleParams' => [
                             'entity_id' => function () {
@@ -440,6 +442,53 @@ class CollectionRecordController extends Controller
         return $this->render('create', [
             'model' => $model,
             'collection'=>$collection,
+        ]);
+    }
+
+    public function actionHistory($id)
+    {
+        $model = $this->findModel($id);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => RecordLog::find()->where(['id_record'=>$id])->orderBy('created_at DESC'),
+            'pagination' => [
+                'pageSize' => 100
+            ],
+        ]);
+
+        return $this->render('history', [
+            'model' => $model,
+            'dataProvider'=>$dataProvider,
+        ]);
+    }
+
+     public function actionHistoryView($id)
+    {
+        $model = RecordLog::findOne((int)$id);
+
+        if (empty($model))
+            throw new NotFoundHttpException('The requested page does not exist.');
+
+        $data = json_decode($model->data,true);
+
+        $id_columns = [];
+        foreach ($data as $key=>$col)
+        {
+            if (strpos($key,'_search')>0)
+                continue;
+
+            $id_column = substr($key, 3);
+
+            if (is_numeric($id_column))
+                $id_columns[] =$id_column;
+        }
+
+        $columns = CollectionColumn::find()->where(['id_column'=>$id_columns])->indexBy('id_column')->all();
+
+        return $this->render('history-view', [
+            'model' => $model,
+            'columns'=>$columns,
+            'data'=>$data,
         ]);
     }
 
