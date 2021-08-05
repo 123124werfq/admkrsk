@@ -181,7 +181,7 @@ class CollectionRecord extends \yii\db\ActiveRecord
             $labelsByIndex = [];
 
             foreach ($labels as $lkey => $data)
-                $labelsByIndex[$lkey] = $data['col'.$column->input->id_collection_column];
+                $labelsByIndex[$lkey] = $data['col'.$column->input->id_collection_column]??'Колонка '.$column->input->id_collection_column.' для поля '.$column->input->id_input.' не найдена';
 
             if (is_array($ids))
             {
