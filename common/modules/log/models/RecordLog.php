@@ -37,7 +37,7 @@ class RecordLog extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'record_log';
+        return 'log_record';
     }
 
     /**
