@@ -10,7 +10,7 @@ use yii\grid\GridView;
 $this->title = 'История изменений '.$model->id_record;
 $this->params['breadcrumbs'][] = ['label' => 'Списки', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->record->collection->name, 'url' => ['collection-record/index','id'=>$model->record->id_collection]];
-$this->params['breadcrumbs'][] = ['label' => $model->id_record, 'url' => ['collection-record/view','id'=>$model->record->id_collection]];
+$this->params['breadcrumbs'][] = ['label' => $model->id_record, 'url' => ['collection-record/view','id'=>$model->record->id_record]];
 ?>
 <div class="ibox">
     <div class="ibox-content">
