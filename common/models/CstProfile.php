@@ -171,6 +171,13 @@ class CstProfile extends \yii\db\ActiveRecord
 
         }
     }
+
+    public function canEditByAdditionalStatus()
+    {
+        if($this->additional_status == "Принято и не подлежит редактированию заявителем" || $this->additional_status == "Заявка отклонена")
+            return false;
+        return true;
+    }
     
 
 }

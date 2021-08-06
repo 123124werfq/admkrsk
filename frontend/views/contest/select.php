@@ -69,7 +69,12 @@ if ($user) {
                                     <?php
                                         } else {
                                     ?>
-                                    <li><a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>&ida=<?=$profile['id_profile']?>">Редактировать заявку от <?= date("d.m.Y H:i", $profile['created_at'])?></a>
+                                    <li>
+                                        <?php if($profile->canEditByAdditionalStatus()) { ?>
+                                            <a href="/contests/select/participant-form?contest=<?=$contest['participant_form']?>&ida=<?=$profile['id_profile']?>">Редактировать заявку от <?= date("d.m.Y H:i", $profile['created_at'])?></a>
+                                        <?php } else { ?>
+                                            <li><s><a href="javascript:">Заявка от <?= date("d.m.Y H:i", $profile['created_at'])?></a></s>редактирование закрыто</li>
+                                        <?php }?>
                                         <?php
                                             if(!empty($profile['additional_status'])){
                                         ?>
