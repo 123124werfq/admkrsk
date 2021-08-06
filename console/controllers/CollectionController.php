@@ -12,7 +12,7 @@ use common\models\FormElement;
 use common\models\FormInput;
 use common\models\FormVisibleInput;
 use common\models\CollectionColumn;
-use common\modules\models\RecordLog;
+use common\modules\log\models\RecordLog;
 
 
 use common\helpers\ProgressHelper;
