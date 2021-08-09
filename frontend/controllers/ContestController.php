@@ -46,7 +46,7 @@ class ContestController extends \yii\web\Controller
 
         $profile = CstProfile::find()->where(['id_user' => Yii::$app->user->id, 'id_profile' => $idprofile])->one();
 
-        if(!$profile->canEditByAdditionalStatus())
+        if(is_object($profile) && !$profile->canEditByAdditionalStatus())
             throw new BadRequestHttpException();
 
         $model = new FormDynamic($form);
