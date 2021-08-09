@@ -45,8 +45,8 @@ class GalleryWidget extends Widget
         if (!empty($this->groupGalleryId))
         {
             $groupGalleries = GalleryGroup::find()
-                ->where(['id' => $this->groupGalleryId])
-                ->with('galleries.medias')
+                ->where(['galleries_groups.gallery_group_id' => $this->groupGalleryId])
+                ->with(['galleries','galleries.medias'])
                 ->one();
 
             return $this->render('gallery/gallery-list', [

@@ -72,7 +72,7 @@ class GalleryGroupController extends Controller
         foreach ($query->limit(10)->all() as $galleryGroup) {
             /* @var GalleryGroup $galleryGroup */
             $results[] = [
-                'id' => $galleryGroup->id,
+                'id' => $galleryGroup->gallery_group_id,
                 'text' => $galleryGroup->name,
             ];
         }
@@ -90,7 +90,7 @@ class GalleryGroupController extends Controller
         $model = new GalleryGroup();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->gallery_group_id]);
         }
 
         return $this->render('create', [
@@ -110,7 +110,7 @@ class GalleryGroupController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->gallery_group_id]);
         }
 
         return $this->render('update', [

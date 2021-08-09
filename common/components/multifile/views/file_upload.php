@@ -31,7 +31,7 @@ if (!empty($attribute))
 $records = json_encode($records);
 
 if (!empty($extensions))
-    $allowedExtensions = 'acceptedFiles: "' . implode(',', $extensions) . '",';
+    $allowedExtensions = 'allowedExtensions: "' . implode(',', $extensions) . '",';
 else
     $allowedExtensions = '';
 

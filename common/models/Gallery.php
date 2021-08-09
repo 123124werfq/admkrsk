@@ -43,6 +43,7 @@ class Gallery extends ActiveRecord
 
     public $access_user_ids;
     public $access_user_group_ids;
+    public $ord;
 
     /**
      * junction table contains galleries groups
@@ -71,7 +72,7 @@ class Gallery extends ActiveRecord
     {
         return [
             [['id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
-            [['id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'ord'], 'integer'],
             [['name'], 'required'],
             [['name'], 'string', 'max' => 255],
 
@@ -148,13 +149,13 @@ class Gallery extends ActiveRecord
      * @throws InvalidConfigException
      * @throws Exception
      */
-    public function updateGroups()
+    /*public function updateGroups()
     {
         if (!$this->galleryGroup) {
             return $this->deleteGroups();
         }
         $oldGroups = $this->getGroups()
-            ->select('id')
+            ->select('gallery_group_id')
             ->asArray()
             ->column();
         $newGroups = array_diff($this->galleryGroup, $oldGroups);
@@ -166,7 +167,7 @@ class Gallery extends ActiveRecord
                 ->batchInsert(static::GALLERIES_GROUPS_JUNCTION,
                     [
                         'gallery_group_id',
-                        'gallery_id',
+                        'id_gallery',
                     ],
                     $batchNewGroups)
                 ->execute();
@@ -178,12 +179,12 @@ class Gallery extends ActiveRecord
             Yii::$app->db->createCommand()
                 ->delete(static::GALLERIES_GROUPS_JUNCTION,
                     [
-                        'gallery_id' => $this->id_gallery,
+                        'id_gallery' => $this->id_gallery,
                         'gallery_group_id' => $removeGroups,
                     ])
                 ->execute();
         }
-    }
+    }*/
 
     /**
      * @return int
@@ -194,7 +195,7 @@ class Gallery extends ActiveRecord
         return Yii::$app->db->createCommand()
             ->delete(static::GALLERIES_GROUPS_JUNCTION,
                 [
-                    'gallery_id' => $this->id_gallery,
+                    'id_gallery' => $this->id_gallery,
                 ])
             ->execute();
     }
@@ -234,8 +235,8 @@ class Gallery extends ActiveRecord
      */
     public function getGroups()
     {
-        return $this->hasMany(GalleryGroup::class, ['id' => 'gallery_group_id'])
-            ->viaTable(static::GALLERIES_GROUPS_JUNCTION, ['gallery_id' => 'id_gallery']);
+        return $this->hasMany(GalleryGroup::class, ['gallery_group_id' => 'gallery_group_id'])
+            ->viaTable(static::GALLERIES_GROUPS_JUNCTION, ['id_gallery' => 'id_gallery']);
     }
 
     public function getMedias()

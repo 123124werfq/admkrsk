@@ -18,7 +18,7 @@ $this->params['button-block'][] = Html::a('Добавить', ['create'], ['clas
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
         'columns' => [
-            'id',
+            'gallery_group_id',
             'name',
             [
                 'class' => 'yii\grid\ActionColumn',

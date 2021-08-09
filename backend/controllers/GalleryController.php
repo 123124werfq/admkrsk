@@ -213,7 +213,7 @@ class GalleryController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->updateGroups();
+            //$model->updateGroups();
             $model->createAction(Action::ACTION_UPDATE);
             return $this->redirect(['index', 'id' => $model->id_gallery]);
         }

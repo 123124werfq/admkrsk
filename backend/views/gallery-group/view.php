@@ -11,21 +11,22 @@ $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Группы галлерей', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 YiiAsset::register($this);
+
+$this->params['action-block'][] = Html::a('Редактировать', ['update', 'id' => $model->gallery_group_id]);
+
+if ($model->isDeleted()) {
+    $this->params['action-block'][] = Html::a('Восстановить', ['undelete', 'id' => $model->gallery_group_id]);
+} else {
+    $this->params['action-block'][] = Html::a('Удалить', ['delete', 'id' => $model->gallery_group_id], [
+        'data' => [
+            'confirm' => 'Вы уверены что хотите удалить этот элемент?',
+            'method' => 'post',
+        ],
+    ]);
+}
+
 ?>
 <div class="gallery-group-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
 
     <?= DetailView::widget([
         'model' => $model,

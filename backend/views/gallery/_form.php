@@ -26,12 +26,10 @@ use kartik\select2\Select2;
             'single' => false,
             'relation' => 'medias',
             'showAuthor' => true,
-            'extensions' => ['jpg', 'jpeg', 'gif', 'png'],
+            'extensions' => ['jpg', 'jpeg', 'gif', 'png', 'mp4'],
             'grouptype' => 1,
             'showPreview' => true
         ]); ?>
-
-        <?= $form->field($model, 'galleryGroup')->widget(GalleryGroupsWidget::class) ?>
 
         <?php if (Yii::$app->user->can('admin.gallery')): ?>
 

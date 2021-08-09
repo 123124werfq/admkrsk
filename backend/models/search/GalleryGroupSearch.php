@@ -17,7 +17,7 @@ class GalleryGroupSearch extends GalleryGroup
     public function rules()
     {
         return [
-            [['id', 'created_at'], 'integer'],
+            [['gallery_group_id', 'created_at'], 'integer'],
             [['name'], 'safe'],
         ];
     }
@@ -58,7 +58,7 @@ class GalleryGroupSearch extends GalleryGroup
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
+            'gallery_group_id' => $this->gallery_group_id,
             'created_at' => $this->created_at,
         ]);
 

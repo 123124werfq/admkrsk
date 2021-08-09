@@ -4,8 +4,12 @@ namespace common\models;
 
 use yii\base\InvalidConfigException;
 use yii\behaviors\TimestampBehavior;
+use common\components\yiinput\RelationBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+
+use common\components\softdelete\SoftDeleteTrait;
+use common\traits\ActionTrait;
 
 /**
  * @property integer $id
@@ -15,6 +19,9 @@ use yii\db\ActiveRecord;
  */
 class GalleryGroup extends ActiveRecord
 {
+    use ActionTrait;
+    use SoftDeleteTrait;
+
     public static function tableName()
     {
         return 'galleries_groups';
@@ -23,7 +30,7 @@ class GalleryGroup extends ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'created_at'], 'integer'],
+            [['created_at'], 'integer'],
             [['name'], 'string'],
         ];
     }
@@ -34,8 +41,13 @@ class GalleryGroup extends ActiveRecord
      */
     public function getGalleries()
     {
-        return $this->hasMany(Gallery::class, ['id_gallery' => 'gallery_id'])
-            ->viaTable(Gallery::GALLERIES_GROUPS_JUNCTION, ['gallery_group_id' => 'id']);
+        return $this->hasMany(Gallery::class, ['id_gallery' => 'id_gallery'])
+                ->viaTable(Gallery::GALLERIES_GROUPS_JUNCTION, ['gallery_group_id' => 'gallery_group_id'])
+                ->join('INNER JOIN', Gallery::GALLERIES_GROUPS_JUNCTION, Gallery::GALLERIES_GROUPS_JUNCTION.'.id_gallery = db_gallery.id_gallery')
+                ->orderBy(['ord' => SORT_ASC]);
+            /*->viaTable(Gallery::GALLERIES_GROUPS_JUNCTION, ['gallery_group_id' => 'gallery_group_id'], function ($query) {
+                $query->orderBy([Gallery::GALLERIES_GROUPS_JUNCTION.'.ord' => SORT_ASC]);
+        })->orderBy('ord');*/
     }
 
     /**
@@ -50,10 +62,10 @@ class GalleryGroup extends ActiveRecord
         foreach ($groups as $galleryGroup) {
             $galleryGroupData = [
                 'text' => $galleryGroup->name,
-                'value' => (string)$galleryGroup->id,
+                'value' => (string)$galleryGroup->gallery_group_id,
             ];
             /** @var GalleryGroup $galleryGroup */
-            if ($galleryGroup->id == $selectGroup) {
+            if ($galleryGroup->gallery_group_id == $selectGroup) {
                 $selectGroupData = $galleryGroupData;
                 continue;
             }
@@ -76,12 +88,24 @@ class GalleryGroup extends ActiveRecord
                 'class' => TimestampBehavior::className(),
                 'updatedAtAttribute' => false,
             ],
+            'yiinput' => [
+                'class' => RelationBehavior::class,
+                'relations'=> [
+                    'galleries'=>[
+                        'modelname'=>'Gallery',
+                        'jtable'=>Gallery::GALLERIES_GROUPS_JUNCTION,
+                        'added'=>false,
+                        'fields_dbl'=>['ord'],
+                    ],
+                ]
+            ],
         ];
     }
 
     public function attributeLabels()
     {
         return [
+            'gallery_group_id'=>'id',
             'name' => 'Название группы'
         ];
     }

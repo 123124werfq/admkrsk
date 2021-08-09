@@ -7,7 +7,7 @@ use yii\helpers\Html;
 
 $this->title = 'Редактировать: ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Группы галерей', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->gallery_group_id]];
 ?>
 <div class="gallery-group-update">
 
