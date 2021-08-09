@@ -12,8 +12,12 @@ use common\models\FormElement;
 use common\models\FormInput;
 use common\models\FormVisibleInput;
 use common\models\CollectionColumn;
+use common\modules\log\models\RecordLog;
+
 
 use common\helpers\ProgressHelper;
+
+use yii\mongodb\Query;
 
 use Yii;
 use yii\console\Controller;
@@ -51,6 +55,77 @@ class CollectionController extends Controller
             foreach ($collection->forms as $key => $form)
                 if ($form->delete())
                         $form->createAction(Action::ACTION_DELETE);
+        }
+    }
+
+    public function actionFullHistory()
+    {
+        $collections = [553,
+                        543,
+                        542,
+                        541,
+                        590,
+                        589,
+                        546,
+                        545,
+                        544,
+                        570,
+                        569,
+                        568,
+                        567,
+                        566,
+                        565,
+                        564,
+                        582,
+                        581,
+                        580,
+                        579,
+                        578,
+                        577,
+                        573,
+                        585,
+                        584,
+                        583,
+                        536,
+                        534,
+                        533,
+                        531,
+                        529,
+                        528,
+                        527,
+                        526,
+                        525,
+                        586,
+                        572,
+                        571,
+                        540,
+                        541,
+                        530];
+
+        foreach ($collections as $key => $id_collection)
+        {
+            $query = new Query();
+            $records = $query->from('collection'.$id_collection)->indexBy('id_record')->all();
+
+            $models = CollectionRecord::find()
+                            ->select(['created_by','created_at','id_record'])
+                            ->where(['id_record'=>array_keys($records)])
+                            ->indexBy('id_record')
+                            ->all();
+
+            foreach ($records as $id_record=>$data)
+            {
+                $log = new RecordLog;
+
+                $log->detachBehavior('ls');
+                $log->detachBehavior('ba');
+
+                $log->id_record = $id_record;
+                $log->created_at = $models[$id_record]->created_at??null;
+                $log->created_by = $models[$id_record]->created_by??null;
+                $log->data = $data;
+                $log->save();
+            }
         }
     }
 
