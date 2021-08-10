@@ -66,7 +66,7 @@ class FormController extends \yii\web\Controller
         }
     }
 
-    public function actionFormCollection($id)
+    public function actionFormCollection($id,$arrayGroup='')
     {
         $input = FormInput::findOne($id);
 
@@ -87,6 +87,7 @@ class FormController extends \yii\web\Controller
 
         return $this->renderAjax('collection_form',[
             'form'=>$activeForm,
+            'arrayGroup'=>$arrayGroup,
             'input'=>$input,
         ]);
     }

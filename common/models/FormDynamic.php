@@ -51,6 +51,9 @@ class FormDynamic extends DynamicModel
             else
                 $attributes['input'.$input->id_input] = '';
 
+            if ($input->type == CollectionColumn::TYPE_COLLECTIONS)
+                $attributes['input'.$input->id_input.'_id_record'] = '';
+
             $this->labels['input'.$input->id_input] = $input->label??'Это поле';
         }
 
@@ -72,6 +75,10 @@ class FormDynamic extends DynamicModel
             switch ($input->type) {
                 case CollectionColumn::TYPE_INTEGER:
                     $this->addRule(['input'.$input->id_input], 'number');
+                    break;
+                case CollectionColumn::TYPE_COLLECTIONS:
+                    $this->addRule(['input'.$input->id_input], 'safe');
+                    $this->addRule(['input'.$input->id_input.'_id_record'], 'safe');
                     break;
                 case CollectionColumn::TYPE_INPUT:
                     $this->addRule(['input'.$input->id_input], 'string');
@@ -365,9 +372,9 @@ class FormDynamic extends DynamicModel
                         {
                             $ids = [];
 
-                            if (!empty($_POST['input'.$input->id_input]) && is_array($_POST['input'.$input->id_input]))
+                            if (!empty($this->$attribute) && is_array($this->$attribute))
                             {
-                                foreach ($_POST['input'.$input->id_input] as $key => $group)
+                                foreach ($this->$attribute as $key => $group)
                                 {
                                     if (!empty($_POST['FormDynamic'][$group]))
                                     {
@@ -379,9 +386,13 @@ class FormDynamic extends DynamicModel
                                             $collectionRecord = null;
                                             $prepareData  = $insertData->prepareData(true);
 
-                                            if (!empty($_POST['input'.$input->id_input.'_id_record'][$key]))
+                                            $id_record_attribute = $attribute.'_id_record';
+
+                                            if (!empty($this->{$id_record_attribute}[$key]))
                                             {
-                                                $collectionRecord = CollectionRecord::findOne((int)$_POST['input'.$input->id_input.'_id_record'][$key]);
+                                            /*if (!empty($_POST[$group]['input'.$input->id_input.'_id_record'][$key]))
+                                            {*/
+                                                $collectionRecord = CollectionRecord::findOne((int)$this->{$id_record_attribute}[$key]);
                                             }
 
                                             if (empty($collectionRecord))

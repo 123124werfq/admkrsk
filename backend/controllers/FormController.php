@@ -380,7 +380,7 @@ class FormController extends Controller
             print_r($formCopy->errors);
     }
 
-    public function actionFormCollection($id)
+    public function actionFormCollection($id,$arrayGroup='')
     {
         $input = FormInput::findOne($id);
 
@@ -402,6 +402,7 @@ class FormController extends Controller
         return $this->renderAjax('collection_form',[
             'form'=>$activeForm,
             'input'=>$input,
+            'arrayGroup'=>$arrayGroup,
         ]);
     }
 

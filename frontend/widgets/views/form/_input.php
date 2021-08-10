@@ -695,23 +695,23 @@ if (empty($modelForm->maxfilesize))
 
                 if (!empty($options['accept_add']))
                 {
-                    echo '<div class="subform-container" id="subforms' . $input->id_input . '">';
+                    echo '<div class="subform-container" id="subforms'.$arrayGroup.$input->id_input . '">';
 
                     if (empty($records))
                         $records = [null];
 
                     foreach ($records as $key => $record)
                     {
-                        $arrayGroup = md5(rand(0, 1000000) . time());
+                        $subArrayGroup = md5(rand(0, 1000000) . time());
 
-                        $inputs[$clearAttribute . '[]'] = $arrayGroup;
+                        $inputs[$inputname . '[]'] = $subArrayGroup;
 
                         if (!empty($record))
-                            $inputs[$attribute . '_id_record[]'] = $record->id_record;
+                            $inputs[str_replace("[$clearAttribute]","[$clearAttribute".'_id_record'."]",$inputname) . '[]'] = $record->id_record;
 
                         echo \frontend\widgets\FormsWidget::widget([
                             'form' => $input->collection->form,
-                            'arrayGroup' => $arrayGroup,
+                            'arrayGroup' => $subArrayGroup,
                             'collectionRecord' => $record,
                             'activeForm' => $form,
                             'inputs' => $inputs,
@@ -720,7 +720,7 @@ if (empty($modelForm->maxfilesize))
                     }
                     echo '</div>';
 
-                    echo '<div class="collections-action-buttons"><a data-id="' . $input->id_input . '" data-group="subforms' . $input->id_input . '" class="btn btn__secondary btn-primary" href="javascript:" onclick="return formCopy(this)">'.(!empty($options['button_label'])?$options['button_label']:'Добавить еще').'</a></div>';
+                    echo '<div class="collections-action-buttons"><a data-id="' . $input->id_input . '" data-arraygroup="'.$arrayGroup.'"  data-group="subforms' .$arrayGroup . $input->id_input . '" class="btn btn__secondary btn-primary" href="javascript:" onclick="return formCopy(this)">'.(!empty($options['button_label'])?$options['button_label']:'Добавить еще').'</a></div>';
                 }
                 else
                 {

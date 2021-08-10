@@ -22,11 +22,13 @@ function formCopy(element)
 {
     var $link = $(element);
 
+    console.log($link.data('arraygroup'));
+
     $.ajax({
         type: "GET",
         dataType: "html",
         url: "/form/form-collection",
-        data: {id:$link.data('id')}
+        data: {id:$link.data('id'),arrayGroup:$link.data('arraygroup')}
     }).done(function(data){
         $("#"+$link.data('group')).append(data);
     });
@@ -120,10 +122,11 @@ function visibleForm(visibleInputs,visibleElements,dom)
             }
         }
 
+        //input:not([readonly=""]), textarea:not([readonly=""]), select:not([readonly=""])
         if (show)
-            $dom.find("#element"+id_element).show().find('input:not([readonly=""]), textarea:not([readonly=""]), select:not([readonly=""])').prop('disabled',false);
+            $dom.find("#element"+id_element).show().find('input:not([type=checkbox][readonly=""]), textarea, select').prop('disabled',false);
         else
-            $dom.find("#element"+id_element).hide().find('input, textarea, select').prop('disabled',true);
+            $dom.find("#element"+id_element).hide().find('input:not([type=checkbox][readonly=""]), textarea, select').prop('disabled',true);
     }
 
     for (var id_vinput in visibleInputs)
