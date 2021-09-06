@@ -57,7 +57,7 @@ class UserController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['create'],
+                        'actions' => ['create','fakelogin'],
                         'roles' => ['backend.user.create', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => User::class,
