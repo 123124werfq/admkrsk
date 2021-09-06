@@ -345,4 +345,11 @@ class UserController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
+
+    public function actionFakelogin($id)
+    {
+        $user = User::findOne($id);
+        Yii::$app->user->login($user, 3600 * 24 * 7);
+        $this->redirect("/");
+    }
 }
