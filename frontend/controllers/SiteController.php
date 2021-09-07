@@ -803,7 +803,7 @@ class SiteController extends Controller
                 $efirm->fullname = $firmInfo['fullName'];
                 $efirm->shortname = $firmInfo['shortName'];
                 $efirm->ogrn = $firmInfo['ogrn'];
-                $efirm->email = $firmInfo['email'];
+                $efirm->email = isset($firmInfo['email'])?$firmInfo['email']:'';
                 $efirm->id_user = $user->id;
                 if(!$efirm->save())
                 {
