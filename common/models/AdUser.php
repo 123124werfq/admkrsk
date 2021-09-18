@@ -157,7 +157,9 @@ class AdUser extends ActiveRecord
 
         // если логин прошел, то ищем пользака в базе, если нет - создаём
         $login = str_replace('@admkrsk.ru', '', $login);
-        $localUser = User::findByUsername($login);
+        //$localUser = User::findByUsername($login);
+
+        $localUser = User::find()->where("LOWER(username) ='" . strtolower($login) . "'")->andWhere(['status' => User::STATUS_ACTIVE])->one();
 
         //$userByUsername = AdUser::find()->where(['sn' => $login])->one();
         $userByUsername = AdUser::find()->where("LOWER(sn) ='" . strtolower($login) . "'")->one();
