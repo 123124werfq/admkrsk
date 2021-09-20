@@ -160,9 +160,9 @@ class AdUser extends ActiveRecord
         //$localUser = User::findByUsername($login);
 
         //$localUser = User::find()->where("LOWER(username) ='" . strtolower($login) . "'")->andWhere(['status' => User::STATUS_ACTIVE])->one();
-        //$localUser = User::find()->where("LOWER(username) ='" . strtolower($login) . "'")->one();
+        $localUser = User::find()->where("LOWER(username) ='" . strtolower($login) . "'")->one();
 
-        $localUser = User::findOne("LOWER(username) ='" . strtolower($login) . "'");
+        //$localUser = User::findOne("LOWER(username) ='" . strtolower($login) . "'");
 
         //$userByUsername = AdUser::find()->where(['sn' => $login])->one();
         $userByUsername = AdUser::find()->where("LOWER(sn) ='" . strtolower($login) . "'")->one();
