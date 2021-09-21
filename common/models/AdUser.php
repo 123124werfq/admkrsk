@@ -157,13 +157,19 @@ class AdUser extends ActiveRecord
 
         // если логин прошел, то ищем пользака в базе, если нет - создаём
         $login = str_replace('@admkrsk.ru', '', $login);
-        $localUser = User::findByUsername($login);
+        //$localUser = User::findByUsername($login);
+
+        //$localUser = User::find()->where("LOWER(username) ='" . strtolower($login) . "'")->andWhere(['status' => User::STATUS_ACTIVE])->one();
+        $localUser = User::find()->where("LOWER(username) ='" . strtolower($login) . "'")->one();
+
+        //$localUser = User::findOne("LOWER(username) ='" . strtolower($login) . "'");
 
         //$userByUsername = AdUser::find()->where(['sn' => $login])->one();
         $userByUsername = AdUser::find()->where("LOWER(sn) ='" . strtolower($login) . "'")->one();
         if ($userByUsername)
             $externalUserId = $userByUsername->createInfo($login);
 
+            
         if ($localUser)
             return Yii::$app->user->login($localUser, 3600 * 24 * 30);
 

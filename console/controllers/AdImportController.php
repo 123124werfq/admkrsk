@@ -250,7 +250,13 @@ if(strpos($attr['name'][0], 'игапова'))
                 echo $i . ". " . $aduser->displayname . " - SKIPPED DUE DUPLICATE SN\n";
                 continue;
             }
-            
+
+            $checkEmailExists = User::find()->where(['email' => ($aduser->sn).'@admkrsk.ru'])->count();
+            if($checkEmailExists)
+            {
+                echo $i . ". " . $aduser->displayname . " - SKIPPED DUE DUPLICATE EMAIL\n";
+                continue;
+            }                       
 
             if($aduser->save() && $alreadyUser)
             {

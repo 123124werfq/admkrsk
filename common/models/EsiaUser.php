@@ -324,10 +324,10 @@ class EsiaUser extends \yii\db\ActiveRecord
         {
             switch ($cinfo['type']){
                 case 'EML':
-                        $this->email = $cinfo['value'];
+                        $this->email = $cinfo['value'] ?? '';
                         break;
                 case 'MBT':
-                        $this->mobile = $cinfo['value'];
+                        $this->mobile = $cinfo['value'] ?? '';
                         break;
             }
         }
