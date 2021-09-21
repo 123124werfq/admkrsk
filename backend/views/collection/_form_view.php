@@ -1,6 +1,8 @@
 <?php
 
 use backend\widgets\UserAccessControl;
+use backend\widgets\UserGroupAccessControl;
+
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
@@ -91,7 +93,10 @@ Yii::$app->params['sidebar'] = $this->render('_twig_options',['columns'=>$model-
     <hr>
     <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'access_user_ids')->widget(UserAccessControl::class) ?>
+    <?= $form->field($model, 'access_user_ids')->label('Пользователи')->widget(UserAccessControl::class) ?>
+
+    <?= $form->field($model,
+        'access_user_group_ids')->label('Группы пользоватей')->widget(UserGroupAccessControl::class) ?>
 <?php endif; ?>
 
 
