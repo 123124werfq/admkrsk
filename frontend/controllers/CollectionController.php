@@ -35,6 +35,8 @@ class CollectionController extends \yii\web\Controller
         if (empty($collection))
             throw new NotFoundHttpException('The requested page does not exist.');
 
+        
+
 		return $this->render('view', [
 			'data' => $data,
 			'columns'=> $collection->getColumns()->indexBy('alias')->all(),
@@ -215,7 +217,7 @@ class CollectionController extends \yii\web\Controller
 
         foreach ($collection as $key => $value)
         {
-            if ($i>30)
+            if ($i>50)
                 break;
 
             if ($q=='' || stripos($value, $q)!==false)
