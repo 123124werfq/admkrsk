@@ -215,7 +215,7 @@ $(document).ready(function() {
     $('body').delegate(".accept-checkbox",'click',function(){
 
         var inputID = $(this).data('id');
-        $("#formdynamic-"+inputID).prop('checked','true').trigger('changeaccept');
+        $(inputID).prop('checked','true').trigger('changeaccept');
         $.fancybox.close();
 
         return false;
