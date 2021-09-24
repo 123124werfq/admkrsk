@@ -238,7 +238,7 @@ class CollectionController extends Controller
      */
     public function actionRecordList($id, $q='', $id_column = null)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
+        /*Yii::$app->response->format = Response::FORMAT_JSON;
 
         $collection = $this->findModel($id);
         $query = $collection->getDataQuery();
@@ -259,7 +259,73 @@ class CollectionController extends Controller
             ];
         }
 
+        return ['results' => $results];*/
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $collection = $this->findModel($id);
+
+        if (empty($collection))
+            throw new NotFoundHttpException('The requested page does not exist.');
+
+        if (empty($_GET['filter']))
+            $collection = $collection->getArray($id_column);
+        else
+        {
+            $filter = (array)$_GET['filter'];
+
+            $orwhere = $where = [];
+
+            $columns = [];
+
+            $data = $collection->getDataQuery();
+
+            foreach ($filter as $idc => $value)
+                if ($value!=='')
+                {
+                    $idc = (int)$idc;
+
+                    if (is_numeric($value))
+                        $data->andWhere(['or',['=','col'.$idc,(string)$value],['=','col'.$idc,(int)$value]]);
+                    else
+                        $data->andWhere(['col'.$idc => $value]);
+                }
+
+
+            $data = $data->select([$id_column])
+            ->getArray();
+
+            $collection = [];
+
+            foreach ($data as $key => $row) {
+                if (is_array($row))
+                    $collection[$key] = implode(' ', $row);
+                else
+                    $collection[$key] = $row;
+            }
+        }
+
+        $i = 0;
+        $results = [];
+
+        foreach ($collection as $key => $value)
+        {
+            if ($i>50)
+                break;
+
+            if ($q=='' || stripos($value, $q)!==false)
+            {
+                $results[] = [
+                    'id' => $key,
+                    'text' => $value,
+                ];
+
+                $i++;
+            }
+        }
+
         return ['results' => $results];
+
     }
 
     public function actionCopy($id,$copydata = true)
