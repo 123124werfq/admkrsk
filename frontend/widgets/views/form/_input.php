@@ -602,7 +602,7 @@ if (empty($modelForm->maxfilesize))
 								' . $options['terms'] . '
 						        <p>
 						        	<center>
-							        	<button data-id="input' . $input->id_input . '" class="btn btn__secondary accept-checkbox">Ознакомлен</button>
+							        	<button data-id="'.$id_input . '" class="btn btn__secondary accept-checkbox">Ознакомлен</button>
 							            <button data-fancybox-close="" class="btn btn-primary">Закрыть</button>
 						            <center>
 						        </p>
