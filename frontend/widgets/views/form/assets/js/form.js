@@ -1,3 +1,98 @@
+function dropzoneBehavior(dom)
+{
+    console.log(dom+" .fileupload");
+    $(dom+" .fileupload").each(function(){
+        var $this = $(this);
+        var form = $this.closest('form');
+        var input_name = $this.data('input');
+        var selector_container = $this.attr('class');
+        selector_container = '.'+selector_container.replace('fileupload ','');
+
+        var new_index = $this.find('.fileupload_item').length+1;
+        var maxFiles = $this.data('maxfiles');
+        var maxFilesize = $this.data('maxfilesize');
+        var acceptedFiles = $this.data('acceptedfiles');
+
+        if (!maxFiles)
+            maxFiles = null;
+
+        if (!maxFilesize)
+            maxFilesize = null;
+
+        if (!acceptedFiles)
+            acceptedFiles = null;
+
+        var uploader = $this.find('.fileupload_dropzone').dropzone({
+            addRemoveLinks: true,
+            url: "/media/upload",
+            dictRemoveFile: '×',
+            dictCancelUpload: '×',
+            maxFiles:maxFiles,
+            maxFilesize:maxFilesize,
+            acceptedFiles:acceptedFiles,
+            resizeWidth: 1920,
+            clickable: selector_container+" .fileupload_control",
+            previewsContainer: selector_container+" .fileupload_list",
+            previewTemplate: '<div class="fileupload_item">\
+                                <div class="fileupload_preview">\
+                                    <div class="fileupload_preview-type">\
+                                        <img data-dz-thumbnail />\
+                                    </div>\
+                                </div>\
+                                <div class="fileupload_item-content">\
+                                    <p class="fileupload_item-name" data-dz-name></p>\
+                                    <div class="fileupload_item-status"><span class="fileupload_item-size" data-dz-size></span>\
+                                        <div class="fileupload_item-progress">\
+                                            <div class="fileupload_progress-bar" data-dz-uploadprogress></div>\
+                                        </div><div class="fileupload_item-progress-value">100%</div>\
+                                        <div class="dz-error-message"><span data-dz-errormessage></span></div>\
+                                    </div>\
+                                </div>\
+                                <div class="fileupload_item-pagecount">\
+                                </div>\
+                            </div>',
+            dictFileTooBig:'Размер файла ({{filesize}}Mb). Максимальный размер: {{maxFilesize}}Mb.',
+            init: function(){
+
+                var plugin = this;
+                this.on("success", function(file, response){
+                    response = JSON.parse(response);
+
+                    $(file.previewElement).append(
+                        '<input type="hidden" name="'+input_name+'['+new_index+'][file_path]" value="'+response.file+'"/>'
+                    );
+                    $(file.previewElement).append(
+                        '<input type="hidden" name="'+input_name+'['+new_index+'][filename]" value="'+response.filename+'"/>'
+                    );
+                    $(file.previewElement).find('.fileupload_item-pagecount').append(
+                        'на <input class="form-control" type="number" step="1" min="1" name="'+input_name+'['+new_index+'][pagecount]" value="" placeholder="л."/> л.'
+                    );
+
+                    if ($(file.previewElement).find('.fileupload_preview-type img').attr('src')==undefined)
+                        $(file.previewElement).find('.fileupload_preview-type').text(response.file.split('.').pop());
+
+                    new_index++;
+                });
+
+                this.on("addedfile", function(file){
+
+                    $(file.previewElement).attr('data-filesize',file.size);
+
+                    var maxtotalsize = form.data('maxfilesize');
+                    var currentSize = recalculateFormSize(form);
+
+                    if ((currentSize+file.size)>maxtotalsize)
+                    {
+                        plugin.removeFile(file);
+                        alert('Вы превысили лимит максимального размера приложенных документов');
+                        recalculateFormSize(form);
+                    }
+                });
+            }
+        });
+    });
+}
+
 function getFilter(settings,group)
 {
     if (settings && settings.length>0)
@@ -18,11 +113,10 @@ function getFilter(settings,group)
         return {};
 }
 
+
 function formCopy(element)
 {
     var $link = $(element);
-
-    console.log($link.data('arraygroup'));
 
     $.ajax({
         type: "GET",
@@ -31,6 +125,7 @@ function formCopy(element)
         data: {id:$link.data('id'),arrayGroup:$link.data('arraygroup')}
     }).done(function(data){
         $("#"+$link.data('group')).append(data);
+        dropzoneBehavior("#"+$link.data('group')+" > div:eq(-1)");
     });
 
     return false;
@@ -203,92 +298,5 @@ $(document).ready(function() {
         return false;
     });
 
-    $(".fileupload").each(function(){
-        var form = $(this).closest('form');
-        var id_input = $(this).data('input');
-        var new_index = $(this).find('.fileupload_item').length+1;
-        var maxFiles = $(this).data('maxfiles');
-        var maxFilesize = $(this).data('maxfilesize');
-        var acceptedFiles = $(this).data('acceptedfiles');
-
-        if (!maxFiles)
-            maxFiles = null;
-
-        if (!maxFilesize)
-            maxFilesize = null;
-
-        if (!acceptedFiles)
-            acceptedFiles = null;
-
-        $(this).addClass('input'+id_input);
-
-        var uploader = $(this).find('.fileupload_dropzone').dropzone({
-            addRemoveLinks: true,
-            url: "/media/upload",
-            dictRemoveFile: '×',
-            dictCancelUpload: '×',
-            maxFiles:maxFiles,
-            maxFilesize:maxFilesize,
-            acceptedFiles:acceptedFiles,
-            resizeWidth: 1920,
-            clickable: ".input"+id_input+" .fileupload_control",
-            previewsContainer: ".input"+id_input+" .fileupload_list",
-            previewTemplate: '<div class="fileupload_item">\
-                                <div class="fileupload_preview">\
-                                    <div class="fileupload_preview-type">\
-                                        <img data-dz-thumbnail />\
-                                    </div>\
-                                </div>\
-                                <div class="fileupload_item-content">\
-                                    <p class="fileupload_item-name" data-dz-name></p>\
-                                    <div class="fileupload_item-status"><span class="fileupload_item-size" data-dz-size></span>\
-                                        <div class="fileupload_item-progress">\
-                                            <div class="fileupload_progress-bar" data-dz-uploadprogress></div>\
-                                        </div><div class="fileupload_item-progress-value">100%</div>\
-                                        <div class="dz-error-message"><span data-dz-errormessage></span></div>\
-                                    </div>\
-                                </div>\
-                                <div class="fileupload_item-pagecount">\
-                                </div>\
-                            </div>',
-            dictFileTooBig:'Размер файла ({{filesize}}Mb). Максимальный размер: {{maxFilesize}}Mb.',
-            init: function(){
-
-                var plugin = this;
-                this.on("success", function(file, response){
-                    response = JSON.parse(response);
-
-                    $(file.previewElement).append(
-                        '<input type="hidden" name="FormDynamic[input'+id_input+']['+new_index+'][file_path]" value="'+response.file+'"/>'
-                    );
-                    $(file.previewElement).append(
-                        '<input type="hidden" name="FormDynamic[input'+id_input+']['+new_index+'][filename]" value="'+response.filename+'"/>'
-                    );
-                    $(file.previewElement).find('.fileupload_item-pagecount').append(
-                        'на <input class="form-control" type="number" step="1" min="1" name="FormDynamic[input'+id_input+']['+new_index+'][pagecount]" value="" placeholder="л."/> л.'
-                    );
-
-                    if ($(file.previewElement).find('.fileupload_preview-type img').attr('src')==undefined)
-                        $(file.previewElement).find('.fileupload_preview-type').text(response.file.split('.').pop());
-
-                    new_index++;
-                });
-
-                this.on("addedfile", function(file){
-
-                    $(file.previewElement).attr('data-filesize',file.size);
-
-                    var maxtotalsize = form.data('maxfilesize');
-                    var currentSize = recalculateFormSize(form);
-
-                    if ((currentSize+file.size)>maxtotalsize)
-                    {
-                        plugin.removeFile(file);
-                        alert('Вы превысили лимит максимального размера приложенных документов');
-                        recalculateFormSize(form);
-                    }
-                });
-            }
-        });
-    });
+    dropzoneBehavior('.ajax-form');
 });

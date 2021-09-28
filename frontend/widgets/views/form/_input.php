@@ -508,14 +508,19 @@ if (empty($modelForm->maxfilesize))
 
                     $medias = Media::find()->where(['id_media' => $id_medias])->all();
                     foreach ($medias as $mkey => $media)
-                        $file_uploaded .= $this->render('_file', ['media' => $media, 'attribute' => $attribute, 'index' => $mkey,'options'=>$options]);
+                        $file_uploaded .= $this->render('_file', [
+                            'media' => $media,
+                            'attribute' => $attribute,
+                            'inputname' => $inputname,
+                            'index' => $mkey,
+                            'options'=>$options]);
                 }
 
                 if (empty($options['filesize']))
                     $options['filesize'] = 10;
 
                 echo '
-				<div data-input="' . $input->id_input . '" class="fileupload" ' . implode(' ', $dataOptions) . '>
+				<div data-input="' . $inputname . '" class="fileupload medias_'.uniqid().'_'.time().'" ' . implode(' ', $dataOptions) . '>
 	                <div class="fileupload_dropzone">
 	                    <div class="fileupload_btn">
 	                        <span class="fileupload_btn-text">Выберите файлы</span>
@@ -567,7 +572,7 @@ if (empty($modelForm->maxfilesize))
 
 
                 echo '
-				<div data-input="' . $input->id_input . '" class="fileupload" ' . implode(' ', $dataOptions) . ' >
+				<div data-input="' . $inputname . '" class="fileupload" ' . implode(' ', $dataOptions) . ' >
 	                <div class="fileupload_dropzone ">
 	                    <div class="fileupload_btn">
 	                        <span class="fileupload_btn-text">Выберите файлы</span>

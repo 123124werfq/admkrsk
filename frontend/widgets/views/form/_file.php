@@ -16,8 +16,8 @@
 		</div>
 	</div>
 	<div class="fileupload_item-pagecount">
-		<input class="form-control" type="number" min="1" step="1" name="FormDynamic[<?=$attribute?>][<?=$index?>][pagecount]" value="<?=!empty($media->pagecount)?$media->pagecount:''?>"/>
+		<input class="form-control" type="number" min="1" step="1" name="<?=$inputname?>[<?=$index?>][pagecount]" value="<?=!empty($media->pagecount)?$media->pagecount:''?>"/>
 	</div>
 	<a class="dz-remove" href="javascript:undefined;" data-dz-remove="">×</a>
-	<input type="hidden" name="FormDynamic[<?=$attribute?>][<?=$index?>][id_media]" value="<?=$media->id_media?>">
+	<input type="hidden" name="<?=$inputname?>[<?=$index?>][id_media]" value="<?=$media->id_media?>">
 </div>
