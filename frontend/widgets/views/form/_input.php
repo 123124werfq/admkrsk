@@ -567,7 +567,12 @@ if (empty($modelForm->maxfilesize))
 
                     $medias = Media::find()->where(['id_media' => $id_medias])->all();
                     foreach ($medias as $mkey => $media)
-                        $file_uploaded .= $this->render('_file', ['media' => $media, 'attribute' => $attribute, 'index' => $mkey,'options'=>$options]);
+                        $file_uploaded .= $this->render('_file', [
+                            'media' => $media,
+                            'attribute' => $attribute,
+                            'inputname' => $inputname,
+                            'index' => $mkey,
+                            'options'=>$options]);
                 }
 
 
