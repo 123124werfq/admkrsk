@@ -577,7 +577,7 @@ if (empty($modelForm->maxfilesize))
 
 
                 echo '
-				<div data-input="' . $inputname . '" class="fileupload" ' . implode(' ', $dataOptions) . ' >
+				<div data-input="' . $inputname . '" class="fileupload medias_'.uniqid().'_'.time().'" ' . implode(' ', $dataOptions) . ' >
 	                <div class="fileupload_dropzone ">
 	                    <div class="fileupload_btn">
 	                        <span class="fileupload_btn-text">Выберите файлы</span>
