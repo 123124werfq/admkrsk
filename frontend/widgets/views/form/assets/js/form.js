@@ -1,12 +1,13 @@
 function dropzoneBehavior(dom)
 {
-    console.log(dom+" .fileupload");
     $(dom+" .fileupload").each(function(){
         var $this = $(this);
         var form = $this.closest('form');
         var input_name = $this.data('input');
         var selector_container = $this.attr('class');
         selector_container = '.'+selector_container.replace('fileupload ','');
+
+        console.log(selector_container);
 
         var new_index = $this.find('.fileupload_item').length+1;
         var maxFiles = $this.data('maxfiles');
