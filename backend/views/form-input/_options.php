@@ -29,6 +29,8 @@
 				case 'checkbox':
 					if ($model->isNewRecord)
 						$value = 1;
+
+					echo Html::hiddenInput("FormInput[options][$key]",'');
 					echo Html::checkBox("FormInput[options][$key]",$value,['style'=>'margin-left:10px;','id'=>'option'.$key]);
 					break;
 				case 'column':
