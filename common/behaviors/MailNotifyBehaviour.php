@@ -72,7 +72,8 @@ class MailNotifyBehaviour extends Behavior
     public function events()
     {
         return [
-            BaseActiveRecord::EVENT_AFTER_UPDATE => 'mailNotify'
+            BaseActiveRecord::EVENT_AFTER_UPDATE => 'mailNotify',
+            BaseActiveRecord::EVENT_AFTER_INSERT => 'mailNotify'
         ];
     }
 
