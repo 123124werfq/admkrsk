@@ -139,7 +139,7 @@ class MediaController extends Controller
     {
         $allowedExtensions = array();
         // max file size in bytes
-        $sizeLimit = 20 * 1024 * 1024;
+        $sizeLimit = 1000 * 1024 * 1024;
 
         $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
 
