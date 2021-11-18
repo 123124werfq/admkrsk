@@ -22,7 +22,7 @@ class AppAsset extends AssetBundle
         "inspinia/css/plugins/jasny/jasny-bootstrap.min.css",
         "inspinia/css/plugins/jsTree/style.min.css",
         "js/jquerybuilder/css/query-builder.default.min.css",
-        "css/admin.css?v=6"
+        "css/admin.css?v=7"
     ];
     public $js = [
         "https://api-maps.yandex.ru/2.1/?lang=ru_RU",
@@ -42,7 +42,7 @@ class AppAsset extends AssetBundle
         "/js/tinymce/plugins/plugins.js",
         "js/jquerybuilder/query-builder.standalone.js",
         "js/jquerybuilder/i18n/query-builder.ru.js",
-        "js/admin.js?v=18",
+        "js/admin.js?v=19",
 
     ];
     public $depends = [

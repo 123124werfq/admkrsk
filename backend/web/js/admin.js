@@ -378,6 +378,30 @@ function addDashboardPin()
   });
 }
 
+function removeDashboardPin()
+{
+  console.log('test');
+  $('.dashboard-unpin').click(function(){
+    if(confirm("Удалить быструю ссылку?"))
+    {
+      $.ajax({
+        url: '/site/deletelink',
+        type: 'post',
+        data: {id: $(this).attr('data-id')},
+        success: function(data)
+        {
+          toastr.success('Сыылка удалена', '');
+        },
+        error:  function(data)
+        {
+          toastr.error('Ошибка при удалении', '');
+        },
+      });      
+      $(this).parent('.partition').remove();
+    }
+  });
+}
+
 
 jQuery(document).ready(function()
 {
@@ -789,5 +813,6 @@ jQuery(document).ready(function()
       }
   }).disableSelection();
 
+  removeDashboardPin();
   addDashboardPin();
 });

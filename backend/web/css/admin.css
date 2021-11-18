@@ -60,7 +60,7 @@ img {max-width: 100%;}
 .break-all {word-break: break-all;}
 
 .partitions {display: flex; justify-content: flex-start; text-align: center; padding: 10px;}
-.partition {display: flex; width: 200px; height: 200px; margin: 0px 20px 20px 0px; background: #fff; align-items: center; justify-content: center;}
+.partition {display: flex; width: 200px; min-height: 100px; margin: 0px 20px 20px 0px; background: #fff; align-items: center; justify-content: center; padding: 10px;}
 
 .options .form-group {margin-bottom: 10px;}
 
@@ -803,7 +803,7 @@ img.main-img {width: 100%;}
     color: #e4292f;
 }
 
-.dashboard-pin{
+.dashboard-pin, .dashboard-unpin{
     display: inline-block;
     margin-left: 10px;
     cursor: pointer;

@@ -12,7 +12,10 @@ $this->title = 'Администрация города Красноярска';
     foreach($links as $link)
     {
 ?>
-<a href="<?=$link->link?>" class="partition"><?=$link->name?></a>
+<div class="partition">
+    <a href="<?=$link->link?>"><?=$link->name?></a> <span class="dashboard-unpin" data-id="<?=$link->id_dashboard?>"><i class="fa fa-times"></i></span>  
+</div>
+
 <?php
     }
 ?>
