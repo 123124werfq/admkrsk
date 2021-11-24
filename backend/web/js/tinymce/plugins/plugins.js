@@ -910,10 +910,11 @@ tinymce.PluginManager.add("map", function(editor, url) {
                 editDialog.onSubmit = function (api) {
                     let editFormId = api.getData().id_collection;
                     form.setAttribute('data-id', editFormId);
-                    form.innerText = 'Карта списка #' + editFormId + '.';
-                    form.ondblclick = function () {
+
+                    form.innerHTML = '<a target="_blank" href="/collection/view?id='+editFormId+'">Карта списка #' + editFormId + '</a>';
+                    /*form.ondblclick = function () {
                         editableForm(form)
-                    };
+                    };*/
                     api.close();
                 };
                 _dialog = editor.windowManager.open(editDialog);
@@ -938,7 +939,7 @@ tinymce.PluginManager.add("map", function(editor, url) {
                 }, ]
             },
             onSubmit: function(api) {
-                editor.insertContent('<map data-key="' + makeid(15) + api.getData().id_collection +'" data-id="' + api.getData().id_collection + '">Карта списка #' + api.getData().id_collection + '.</map>');
+                editor.insertContent('<map data-key="' + makeid(15) + api.getData().id_collection +'" data-id="' + api.getData().id_collection + '"><a href="/collection/view?id='+api.getData().id_collection+'" target="_blank">Карта списка #' + api.getData().id_collection + '</a></map>');
                 setElementsEditable(editor, 'map', editableForm);
                 api.close();
             },

@@ -1,9 +1,14 @@
 gallery, collection, forms, hrreserve, pagenews, faq, searchrecord, map, recordmap {
-	border: 1px solid #ccc; padding: 10px;
+	border: 1px solid #ccc; padding: 20px;
 	margin: 10px 0px;
 	width: 80%;
 	display: block;
 	background: #eee;
+}
+
+gallery:hover, collection:hover, forms:hover, hrreserve:hover, pagenews:hover, faq:hover, searchrecord:hover, map:hover, recordmap:hover {
+	cursor: pointer;
+	background: #ddd;
 }
 
 .accent {padding: 24px;
