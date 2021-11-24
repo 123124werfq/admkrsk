@@ -333,7 +333,7 @@ class Page extends ActiveRecord
         $oldCollectionSettingsKeys = $this->searchCollectionKeys($this->getOldAttribute('content'));
         $newCollectionSettingsKeys = $this->searchCollectionKeys($this->getAttribute('content'));
 
-        $deleteKeys = array_diff($oldCollectionSettingsKeys, $newCollectionSettingsKeys);                        
+        $deleteKeys = array_diff($oldCollectionSettingsKeys, $newCollectionSettingsKeys);
 
         SettingPluginCollection::deleteAll([
             'key' => $deleteKeys,
@@ -348,11 +348,44 @@ class Page extends ActiveRecord
     {
         $collectionSettingsKeys = [];
 
+        /*faq,
+        map[data-id],
+        pagenews[data-id],
+        hrreserve[pagesize],
+        collection[data-id|data-encodedata],
+        gallery[data-id|data-limit|data-type],
+        forms[data-id|data-data],
+        recordmap[data-id]*/
+
+        preg_match_all("#<(faq|map|pagenews|hrreserve|collection|gallery|forms|recordmap)[^>]+>.*?</(faq|map|pagenews|hrreserve|collection|gallery|forms|recordmap)>#ui", $content, $widgets);
+
+        if (!empty($widgets[0]))
+        {
+            foreach ($widgets[0] as $widget)
+            {
+                preg_match_all('/(\w+)=[\'"]([^\'"]*)/', $widget, $values);
+
+                $attributes = [];
+                if (!empty($values[1]) && !empty($values[2]))
+                {
+                    foreach ($values[1] as $index=>$attr)
+                    {
+                        $attributes[$attr] = $values[2][$index]??'';
+                    }
+                }
+
+                var_dump($attributes);
+            }
+        }
+
+        die();
+
         if (!empty($content))
         {
             if (preg_match_all('/data-key=".*"/i', $content, $matches))
             {
-                foreach ($matches[0] as $match) {
+                foreach ($matches[0] as $match)
+                {
                     $key = preg_split('/data-key=/i', $match);
                     $collectionSettingsKeys[] = str_replace('"', '', $key[1]);
                 }

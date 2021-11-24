@@ -1,3 +1,15 @@
+function makeid(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() *
+ charactersLength));
+   }
+   return result;
+}
+
+
 function getTinyContents(editor) {
     /** get iframe nodes */
     let contents = editor.getContainer();
@@ -860,7 +872,7 @@ tinymce.PluginManager.add("map", function(editor, url) {
     }, 100);
 
     let editDialog = {
-        title: 'Изменить форму',
+        title: 'Изменить карту',
         body: {},
         buttons: [
             {
@@ -880,24 +892,25 @@ tinymce.PluginManager.add("map", function(editor, url) {
     function editableForm(form) {
         let formId = form.getAttribute('data-id');
         $.ajax({
-            url: '/form/get-form?form-id=' + formId,
+            url: '/collection/get-collections',
             type: 'get',
             dataType: 'json',
+            data: {map: 1},
             success: function (data) {
                 editDialog.body = {
                     type: 'panel',
                     items: [{
                         type: 'selectbox',
-                        name: 'id_form',
-                        label: 'Форма',
+                        name: 'id_collection',
+                        label: 'Список',
                         items: data,
                         flex: true
                     }]
                 };
                 editDialog.onSubmit = function (api) {
-                    let editFormId = api.getData().id_form;
+                    let editFormId = api.getData().id_collection;
                     form.setAttribute('data-id', editFormId);
-                    form.innerText = 'Форма #' + editFormId + '.';
+                    form.innerText = 'Карта списка #' + editFormId + '.';
                     form.ondblclick = function () {
                         editableForm(form)
                     };
@@ -919,17 +932,14 @@ tinymce.PluginManager.add("map", function(editor, url) {
                 items: [{
                     type: 'selectbox',
                     name: 'id_collection',
-                    label: 'Форма',
+                    label: 'Список',
                     items: _forms,
                     flex: true
                 }, ]
             },
             onSubmit: function(api) {
-                // insert markup
-                editor.insertContent('<map data-id="' + api.getData().id_collection + '">Карта списка #' + api.getData().id_collection + '.</map>');
-
+                editor.insertContent('<map data-key="' + makeid(15) + api.getData().id_collection +'" data-id="' + api.getData().id_collection + '">Карта списка #' + api.getData().id_collection + '.</map>');
                 setElementsEditable(editor, 'map', editableForm);
-                // close the dialog
                 api.close();
             },
             buttons: [{
