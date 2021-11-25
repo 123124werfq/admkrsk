@@ -23,7 +23,8 @@ class HrImportController extends Controller
         ini_set('memory_limit', '1048M');
         $csv = [];
         $subtypes = [];
-        $filePath = Yii::getAlias('@app'). '/assets/HR_Candidate3.csv';
+        //$filePath = Yii::getAlias('@app'). '/assets/HR_Candidate3.csv';
+        $filePath = Yii::getAlias('@app'). '/assets/HR_Candidate4_test.csv';
 
         echo "Reading: ";
         printf( "%c7", ESC );
@@ -109,12 +110,13 @@ class HrImportController extends Controller
             fclose($handle);
         }
 
-        /*
+/*        
         echo "\n".count($csv)."\n";
         var_dump($subtypes);
-       var_dump($csv[0]);
+       //var_dump($csv[0]);
+       var_dump($csv[0]['anketaParsed']);
        die();
-       */
+*/     
 
        $anketaCollection = Collection::findOne(['alias'=>'reserv_anketa']);
        $experienceCollection = Collection::findOne(['alias'=>'reserve_work_experience']);
@@ -125,8 +127,8 @@ class HrImportController extends Controller
        echo "\nImporting: ";
        printf( "%c7", ESC );
 
-       $begin = 21;
-        $end = 2000;
+       $begin = 0;
+        $end = 2;
 
 
        foreach ($csv as $anketa) {
@@ -285,7 +287,19 @@ class HrImportController extends Controller
                 'birthdate'             => strtotime($anketa['anketaParsed']['birthday']??0),
                 'work_expirience'       => $experienceRecords,
                 'additional_education'  => $extraeducationRecords,
-                'education'             => $educationRecords
+                'education'             => $educationRecords,
+
+                'passport_number'       => $anketa['anketaParsed']['docNumber']??'',
+                'passport_seria'        => $anketa['anketaParsed']['docSeries']??'',
+                'passport_date'         => $anketa['anketaParsed']['docOutdate']??'',
+                'passport_out'          => $anketa['anketaParsed']['docGiven']??'',
+
+                '_passport_date'         => $anketa['anketaParsed']['docOutdate']??'',
+                '_passport_out'          => $anketa['anketaParsed']['docGiven']??'',
+
+                'address_text'               => $anketa['anketaParsed']['address']??'',
+                'criminal'              => $anketa['anketaParsed']['criminalRecord']??'',
+                'candidate_id'          => $anketa['candidateId'],
             ];
 
             if(!$this->debug)
@@ -324,6 +338,16 @@ class HrImportController extends Controller
                         $profile->updated_at = strtotime($anketa['modified']);
                         $profile->updateAttributes(['created_at', 'updated_at']);
                     }
+                    else
+                    {
+                        var_dump($profile->getErrors());
+                        die();
+                    }
+                }
+                else
+                {
+                    echo "\nCannot insert record";
+                    die();
                 }
             }
         
