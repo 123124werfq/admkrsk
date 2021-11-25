@@ -291,11 +291,11 @@ class HrImportController extends Controller
 
                 'passport_number'       => $anketa['anketaParsed']['docNumber']??'',
                 'passport_seria'        => $anketa['anketaParsed']['docSeries']??'',
-                'passport_date'         => $anketa['anketaParsed']['docOutdate']??'',
-                'passport_out'          => $anketa['anketaParsed']['docGiven']??'',
+                //'passport_date'         => $anketa['anketaParsed']['docOutdate']??'',
+                //'passport_out'          => $anketa['anketaParsed']['docGiven']??'',
 
-                '_passport_date'         => $anketa['anketaParsed']['docOutdate']??'',
-                '_passport_out'          => $anketa['anketaParsed']['docGiven']??'',
+                'm_passport_date'         => $anketa['anketaParsed']['docOutdate']??'',
+                'm_passport_out'          => $anketa['anketaParsed']['docGiven']??'',
 
                 'address_text'               => $anketa['anketaParsed']['address']??'',
                 'criminal'              => $anketa['anketaParsed']['criminalRecord']??'',
