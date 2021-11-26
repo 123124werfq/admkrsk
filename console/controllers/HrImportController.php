@@ -127,8 +127,8 @@ class HrImportController extends Controller
        echo "\nImporting: ";
        printf( "%c7", ESC );
 
-       $begin = 3;
-        $end = 20000;
+       $begin = 0;
+        $end = 2;
 
 
        foreach ($csv as $anketa) {
@@ -284,15 +284,15 @@ class HrImportController extends Controller
                 'contact_phone_private'         => $anketa['anketaParsed']['phone']??'',
                 '_passport_number'      => $anketa['anketaParsed']['docNumber']??'',
                 '_passport_seria'       => $anketa['anketaParsed']['docSeries']??'',
-                'birthdate'             => strtotime($anketa['anketaParsed']['birthday']??0),
+                'birthdate'             => $anketa['anketaParsed']['birthday']??'',
                 'work_expirience'       => $experienceRecords,
                 'additional_education'  => $extraeducationRecords,
                 'education'             => $educationRecords,
 
                 'passport_number'       => $anketa['anketaParsed']['docNumber']??'',
                 'passport_seria'        => $anketa['anketaParsed']['docSeries']??'',
-                //'passport_date'         => $anketa['anketaParsed']['docOutdate']??'',
-                //'passport_out'          => $anketa['anketaParsed']['docGiven']??'',
+                'passport_date'         => $anketa['anketaParsed']['docOutdate']?strtotime($anketa['anketaParsed']['docOutdate']):'',
+                'passport_out'          => $anketa['anketaParsed']['docGiven']??'',
 
                 'm_passport_date'         => $anketa['anketaParsed']['docOutdate']??'',
                 'm_passport_out'          => $anketa['anketaParsed']['docGiven']??'',
@@ -301,6 +301,8 @@ class HrImportController extends Controller
                 'criminal'              => $anketa['anketaParsed']['criminalRecord']??'',
                 'candidate_id'          => $anketa['candidateId'],
             ];
+
+            var_dump($data); die();
 
             if(!$this->debug)
             {
