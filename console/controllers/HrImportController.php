@@ -302,7 +302,6 @@ class HrImportController extends Controller
                 'candidate_id'          => $anketa['candidateId'],
             ];
 
-            var_dump($data); die();
 
             if(!$this->debug)
             {
