@@ -202,12 +202,16 @@ class SiteController extends Controller
 
     public function actionTest()
     {
-        echo "<pre>";
+        /*echo "<pre>";
         print_r([
             'remoteIp' => Yii::$app->request->getRemoteIP(),
             'userIp' => Yii::$app->request->getUserIP(),
             '_SERVER' => $_SERVER,
-        ]);
+        ]);*/
+
+        $model = new \common\models\CollectionRecordNew();
+        $model->collectionName = 'test';
+
         die();
     }
     

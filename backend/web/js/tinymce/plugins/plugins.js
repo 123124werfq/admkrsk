@@ -105,8 +105,7 @@ function getPageId() {
                     }
 
                 } else {
-                    /** behaviour of create collection */
-                    editor.insertContent('<p><collection'+ ' '+ KEY_ATTRIBUTE_NAME + '=' + value.key +' data-id=' + value.id_collection + ' ' + CONTENT_ATTRIBUTE_NAME  + '="' + value.base64 + '">Список #' + value.id_collection + '.</collection></p>');
+                    editor.insertContent('<p><collection'+ ' '+ KEY_ATTRIBUTE_NAME + '=' + value.key +' data-id=' + value.id_collection + ' ' + CONTENT_ATTRIBUTE_NAME  + '="' + value.base64 + '"><a href="/collection/view?id='+value.id_collection+'">Список #' + value.id_collection + '</a></collection></p>');
                     setEditableCollections();
                 }
 
@@ -269,7 +268,7 @@ tinymce.PluginManager.add("recordmap", function(editor, url) {
                         dataType: 'json',
                         data: $('#redactor-modal form').serialize(),
                         success: function(data) {
-                            editor.insertContent('<recordmap data-id="' + data.id_column_coords + '">Отображение карты #' + data.id_column_coords + '.</recordmap>');
+                            editor.insertContent('<recordmap data-key="' + makeid(15) + data.id_column_coords +'" data-id="' + data.id_column_coords + '"><a href="/collection/view?id='+getUrlVars()['id']+'">Отображение карты, колонка #' + data.id_column_coords + '</a></recordmap>');
                             $('#redactor-modal').modal('hide');
                         }
                     });
@@ -314,7 +313,7 @@ tinymce.PluginManager.add("form", function(editor, url) {
                         dataType: 'json',
                         data: $('#redactor-modal form').serialize(),
                         success: function(data) {
-                            editor.insertContent('<forms data-id="' + data.id_form + '">Форма #' + data.id_form + '.</forms>');
+                            editor.insertContent('<forms data-key="' + makeid(15) + data.id_form +'" data-id="' + data.id_form + '"><a href="/form/view?id='+data.id_form+'">Форма #' + data.id_form + '</a></forms>');
                             $('#redactor-modal').modal('hide');
                         }
                     });
@@ -838,7 +837,7 @@ tinymce.PluginManager.add("faq", function(editor, url) {
                         dataType: 'json',
                         data: $('#redactor-modal form').serialize(),
                         success: function(data) {
-                            editor.insertContent('<p><faq data-id_faq_category="'+data.id_faq_category+'">Вопрос-Ответ #' + data.id_faq_category + '.</faq></p>');
+                            editor.insertContent('<faq data-key="' + makeid(15) + data.id_faq_category +'" data-id_faq_category="'+data.id_faq_category+'">Вопрос-Ответ #' + data.id_faq_category + '.</faq>');
                             $('#redactor-modal').modal('hide');
                         }
                     });
@@ -910,7 +909,6 @@ tinymce.PluginManager.add("map", function(editor, url) {
                 editDialog.onSubmit = function (api) {
                     let editFormId = api.getData().id_collection;
                     form.setAttribute('data-id', editFormId);
-
                     form.innerHTML = '<a target="_blank" href="/collection/view?id='+editFormId+'">Карта списка #' + editFormId + '</a>';
                     /*form.ondblclick = function () {
                         editableForm(form)

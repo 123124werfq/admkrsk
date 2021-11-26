@@ -179,6 +179,24 @@ class FormController extends Controller
         ];
     }
 
+    public function actions()
+    {
+        return [
+            'history' => [
+                'class' => 'backend\modules\log\actions\IndexAction',
+                'modelClass' => Form::class,
+            ],
+            'log' => [
+                'class' => 'backend\modules\log\actions\LogAction',
+                'modelClass' => Form::class,
+            ],
+            'restore' => [
+                'class' => 'backend\modules\log\actions\RestoreAction',
+                'modelClass' => Form::class,
+            ],
+        ];
+    }
+
     /**
      * Lists all Form models.
      * @return mixed

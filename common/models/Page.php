@@ -355,7 +355,7 @@ class Page extends ActiveRecord
         collection[data-id|data-encodedata],
         gallery[data-id|data-limit|data-type],
         forms[data-id|data-data],
-        recordmap[data-id]*/
+        recordmap[data-id]
 
         preg_match_all("#<(faq|map|pagenews|hrreserve|collection|gallery|forms|recordmap)[^>]+>.*?</(faq|map|pagenews|hrreserve|collection|gallery|forms|recordmap)>#ui", $content, $widgets);
 
@@ -378,7 +378,7 @@ class Page extends ActiveRecord
             }
         }
 
-        die();
+        die();*/
 
         if (!empty($content))
         {
