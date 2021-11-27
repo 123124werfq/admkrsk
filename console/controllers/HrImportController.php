@@ -392,7 +392,7 @@ class HrImportController extends Controller
         if (($handle = fopen($filePath, 'r')) !== false) {
             while (($data = fgetcsv($handle, 1000)) !== false) {
 
-                print_r($data); die();
+                //print_r($data); die();
 
                 printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
 
