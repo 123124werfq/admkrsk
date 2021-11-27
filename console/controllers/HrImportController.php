@@ -3,6 +3,7 @@
 namespace console\controllers;
 
 use common\models\Collection;
+use common\models\CollectionRecord;
 use common\models\HrProfile;
 use common\models\Media;
 
@@ -14,7 +15,7 @@ if (!defined('ESC'))
 
 class HrImportController extends Controller
 {
-    private $debug = false;
+    private $debug = true;
     private $cursorArray = array('/','-','\\','|','/','-','\\','|');
 
     public function actionIndex()
@@ -142,6 +143,19 @@ class HrImportController extends Controller
             if($count<$begin)
                 continue;
 
+            // проверяем, есть ли уже запись про этого типа
+            $profileToUpdate = HrProfile::find()->where(['import_candidateid' => $anketa['candidateId']])->one();
+
+            if($profileToUpdate)
+            {
+                echo($profileToUpdate->id_record);
+                $record = CollectionRecord::findOne($profileToUpdate->id_record);
+                var_dump($record->getData());
+            }
+            else
+                echo "\nNOT FOUND\n";
+
+            die();            
             // заполняем подколлекции
             // образование
             $educationRecords = [];
@@ -370,7 +384,7 @@ class HrImportController extends Controller
         ini_set('memory_limit', '1048M');
         $csv = [];
         $subtypes = [];
-        $filePath = Yii::getAlias('@app'). '/assets/HR_Files.csv';
+        $filePath = Yii::getAlias('@app'). '/assets/HR_Files_2.csv';
 
         //echo "\n\n\n\n\n";
         $fileList = [];
@@ -389,7 +403,7 @@ class HrImportController extends Controller
             }
         }
 
-        $sourcePath = Yii::getAlias('@app'). '/assets/hrsource';
+        $sourcePath = Yii::getAlias('@app'). '/assets/hrsource2';
 
 //        echo "\n\n".$sourcePath."\n\n";
 
@@ -405,7 +419,7 @@ class HrImportController extends Controller
             else
                 continue;
 
-            $dir = Yii::getAlias('@app'). '/assets/hrimport/'.$dirname;
+            $dir = Yii::getAlias('@app'). '/assets/hrimport2/'.$dirname;
 
             if(!is_dir($dir))
                 \mkdir($dir);
