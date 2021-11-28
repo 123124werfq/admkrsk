@@ -129,7 +129,7 @@ class HrImportController extends Controller
        printf( "%c7", ESC );
 
        $begin = 0;
-        $end = 10;
+        $end = 2000;
 
 
        foreach ($csv as $anketa) {
