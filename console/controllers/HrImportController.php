@@ -15,7 +15,7 @@ if (!defined('ESC'))
 
 class HrImportController extends Controller
 {
-    private $debug = true;
+    private $debug = false;
     private $cursorArray = array('/','-','\\','|','/','-','\\','|');
 
     public function actionIndex()
@@ -112,6 +112,7 @@ class HrImportController extends Controller
         }
 
 /*        
+// now we are strarting from profile 1280 (and up)
         echo "\n".count($csv)."\n";
         var_dump($subtypes);
        //var_dump($csv[0]);
@@ -152,12 +153,13 @@ class HrImportController extends Controller
             {
                 
                 echo($profileToUpdate->id_record);
+                echo " - UPDATING";
                 $record = CollectionRecord::findOne($profileToUpdate->id_record);
                 //var_dump($record->getData());
             }
             else
             {
-                echo "NOT FOUND";
+                echo "NOT FOUND - CREATING NEW";
             }
 
             // заполняем подколлекции
@@ -323,11 +325,17 @@ class HrImportController extends Controller
 
             if(!$this->debug)
             {
-                $anketaRecord = $anketaCollection->insertRecord($data);
+                if($profileToUpdate)
+                    $anketaRecord = $anketaCollection->updateRecord($profileToUpdate->id_record, $data);
+                else
+                    $anketaRecord = $anketaCollection->insertRecord($data);
 
                 if($anketaRecord)
                 {
-                    $profile = new HrProfile;
+                    if($profileToUpdate)
+                        $profile = $profileToUpdate;
+                    else
+                        $profile = new HrProfile;
 
                     $profile->id_record = $anketaRecord->id_record;
                     $profile->import_author = $anketa['author'];
