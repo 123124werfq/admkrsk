@@ -25,7 +25,7 @@ class HrImportController extends Controller
         $csv = [];
         $subtypes = [];
         //$filePath = Yii::getAlias('@app'). '/assets/HR_Candidate3.csv';
-        $filePath = Yii::getAlias('@app'). '/assets/HR_Candidate4_test.csv';
+        $filePath = Yii::getAlias('@app'). '/assets/HR_Candidate4.csv';
 
         echo "Reading: ";
         printf( "%c7", ESC );
