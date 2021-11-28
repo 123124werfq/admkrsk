@@ -129,7 +129,7 @@ class HrImportController extends Controller
        printf( "%c7", ESC );
 
        $begin = 0;
-        $end = 2;
+        $end = 10;
 
 
        foreach ($csv as $anketa) {
@@ -137,7 +137,7 @@ class HrImportController extends Controller
                 continue;
 
 
-            printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
+            //printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
 
             // для импорта "кусками"
             if($count<$begin)
@@ -146,16 +146,20 @@ class HrImportController extends Controller
             // проверяем, есть ли уже запись про этого типа
             $profileToUpdate = HrProfile::find()->where(['import_candidateid' => $anketa['candidateId']])->one();
 
+            echo "\n ".$anketa['candidateId']." ";
+
             if($profileToUpdate)
             {
+                
                 echo($profileToUpdate->id_record);
                 $record = CollectionRecord::findOne($profileToUpdate->id_record);
-                var_dump($record->getData());
+                //var_dump($record->getData());
             }
             else
-                echo "\nNOT FOUND\n";
+            {
+                echo "NOT FOUND";
+            }
 
-            die();            
             // заполняем подколлекции
             // образование
             $educationRecords = [];
