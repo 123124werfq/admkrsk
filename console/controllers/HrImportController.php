@@ -500,11 +500,11 @@ class HrImportController extends Controller
             //if($profile->id_record != 95438)
             //    continue;
 
-            if($profile->id_record < 89000)
+            if($profile->id_record < 270000)
                 continue;
 
             $dirname = mb_strtoupper($profile->import_candidateid, "UTF8");
-            $dir = Yii::getAlias('@app'). '/assets/hrimport/'.$dirname;
+            $dir = Yii::getAlias('@app'). '/assets/hrimport2/'.$dirname;
             Yii::setAlias('@webroot', Yii::getAlias('@app'));
             if(!is_dir($dir))
                 continue;
@@ -519,13 +519,13 @@ class HrImportController extends Controller
                 $filename = mb_strtolower($fileInfo->getFilename());
 
                 if(in_array($ext, ['jpg', 'png', 'jpeg']))
-                    $photoPath =  '/assets/hrimport/'.$dirname . "/" . $fileInfo->getFilename();
+                    $photoPath =  '/assets/hrimport2/'.$dirname . "/" . $fileInfo->getFilename();
                     
                 if(mb_strpos($filename, 'описание', 0, 'UTF8'))
-                    $descriptionPath = '/assets/hrimport/'.$dirname . "/" . $fileInfo->getFilename();
+                    $descriptionPath = '/assets/hrimport2/'.$dirname . "/" . $fileInfo->getFilename();
 
                 if(empty($descriptionPath) && in_array($ext, ['doc', 'docx']))
-                    $descriptionPath =  '/assets/hrimport/'.$dirname . "/" . $fileInfo->getFilename();
+                    $descriptionPath =  '/assets/hrimport2/'.$dirname . "/" . $fileInfo->getFilename();
             }
             
             if(!empty($descriptionPath) || !empty($photoPath))
