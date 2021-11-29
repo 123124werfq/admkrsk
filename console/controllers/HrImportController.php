@@ -3,6 +3,7 @@
 namespace console\controllers;
 
 use common\models\Collection;
+use common\models\CollectionRecord;
 use common\models\HrProfile;
 use common\models\Media;
 
@@ -23,7 +24,8 @@ class HrImportController extends Controller
         ini_set('memory_limit', '1048M');
         $csv = [];
         $subtypes = [];
-        $filePath = Yii::getAlias('@app'). '/assets/HR_Candidate3.csv';
+        //$filePath = Yii::getAlias('@app'). '/assets/HR_Candidate3.csv';
+        $filePath = Yii::getAlias('@app'). '/assets/HR_Candidate4.csv';
 
         echo "Reading: ";
         printf( "%c7", ESC );
@@ -109,12 +111,14 @@ class HrImportController extends Controller
             fclose($handle);
         }
 
-        /*
+/*        
+// now we are strarting from profile 1280 (and up)
         echo "\n".count($csv)."\n";
         var_dump($subtypes);
-       var_dump($csv[0]);
+       //var_dump($csv[0]);
+       var_dump($csv[0]['anketaParsed']);
        die();
-       */
+*/     
 
        $anketaCollection = Collection::findOne(['alias'=>'reserv_anketa']);
        $experienceCollection = Collection::findOne(['alias'=>'reserve_work_experience']);
@@ -125,7 +129,7 @@ class HrImportController extends Controller
        echo "\nImporting: ";
        printf( "%c7", ESC );
 
-       $begin = 21;
+       $begin = 0;
         $end = 2000;
 
 
@@ -134,11 +138,29 @@ class HrImportController extends Controller
                 continue;
 
 
-            printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
+            //printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
 
             // для импорта "кусками"
             if($count<$begin)
                 continue;
+
+            // проверяем, есть ли уже запись про этого типа
+            $profileToUpdate = HrProfile::find()->where(['import_candidateid' => $anketa['candidateId']])->one();
+
+            echo "\n ".$anketa['candidateId']." ";
+
+            if($profileToUpdate)
+            {
+                
+                echo($profileToUpdate->id_record);
+                echo " - UPDATING";
+                $record = CollectionRecord::findOne($profileToUpdate->id_record);
+                //var_dump($record->getData());
+            }
+            else
+            {
+                echo "NOT FOUND - CREATING NEW";
+            }
 
             // заполняем подколлекции
             // образование
@@ -282,19 +304,38 @@ class HrImportController extends Controller
                 'contact_phone_private'         => $anketa['anketaParsed']['phone']??'',
                 '_passport_number'      => $anketa['anketaParsed']['docNumber']??'',
                 '_passport_seria'       => $anketa['anketaParsed']['docSeries']??'',
-                'birthdate'             => strtotime($anketa['anketaParsed']['birthday']??0),
+                'birthdate'             => $anketa['anketaParsed']['birthday']??'',
                 'work_expirience'       => $experienceRecords,
                 'additional_education'  => $extraeducationRecords,
-                'education'             => $educationRecords
+                'education'             => $educationRecords,
+
+                'passport_number'       => $anketa['anketaParsed']['docNumber']??'',
+                'passport_seria'        => $anketa['anketaParsed']['docSeries']??'',
+                'passport_date'         => $anketa['anketaParsed']['docOutdate']?strtotime($anketa['anketaParsed']['docOutdate']):'',
+                'passport_out'          => $anketa['anketaParsed']['docGiven']??'',
+
+                'm_passport_date'         => $anketa['anketaParsed']['docOutdate']??'',
+                'm_passport_out'          => $anketa['anketaParsed']['docGiven']??'',
+
+                'address_text'               => $anketa['anketaParsed']['address']??'',
+                'criminal'              => $anketa['anketaParsed']['criminalRecord']??'',
+                'candidate_id'          => $anketa['candidateId'],
             ];
+
 
             if(!$this->debug)
             {
-                $anketaRecord = $anketaCollection->insertRecord($data);
+                if($profileToUpdate)
+                    $anketaRecord = $anketaCollection->updateRecord($profileToUpdate->id_record, $data);
+                else
+                    $anketaRecord = $anketaCollection->insertRecord($data);
 
                 if($anketaRecord)
                 {
-                    $profile = new HrProfile;
+                    if($profileToUpdate)
+                        $profile = $profileToUpdate;
+                    else
+                        $profile = new HrProfile;
 
                     $profile->id_record = $anketaRecord->id_record;
                     $profile->import_author = $anketa['author'];
@@ -324,6 +365,16 @@ class HrImportController extends Controller
                         $profile->updated_at = strtotime($anketa['modified']);
                         $profile->updateAttributes(['created_at', 'updated_at']);
                     }
+                    else
+                    {
+                        var_dump($profile->getErrors());
+                        die();
+                    }
+                }
+                else
+                {
+                    echo "\nCannot insert record";
+                    die();
                 }
             }
         
@@ -345,13 +396,15 @@ class HrImportController extends Controller
         ini_set('memory_limit', '1048M');
         $csv = [];
         $subtypes = [];
-        $filePath = Yii::getAlias('@app'). '/assets/HR_Files.csv';
+        $filePath = Yii::getAlias('@app'). '/assets/HR_Files_2.csv';
 
         //echo "\n\n\n\n\n";
         $fileList = [];
 
         if (($handle = fopen($filePath, 'r')) !== false) {
             while (($data = fgetcsv($handle, 1000)) !== false) {
+
+                //print_r($data); die();
 
                 printf("%c8".$this->cursorArray[ (($i++ > 7) ? ($i = 1) : ($i % 8)) ]." %02d", ESC, $count++);
 
@@ -364,7 +417,7 @@ class HrImportController extends Controller
             }
         }
 
-        $sourcePath = Yii::getAlias('@app'). '/assets/hrsource';
+        $sourcePath = Yii::getAlias('@app'). '/assets/hrsource2';
 
 //        echo "\n\n".$sourcePath."\n\n";
 
@@ -380,7 +433,7 @@ class HrImportController extends Controller
             else
                 continue;
 
-            $dir = Yii::getAlias('@app'). '/assets/hrimport/'.$dirname;
+            $dir = Yii::getAlias('@app'). '/assets/hrimport2/'.$dirname;
 
             if(!is_dir($dir))
                 \mkdir($dir);
@@ -447,11 +500,11 @@ class HrImportController extends Controller
             //if($profile->id_record != 95438)
             //    continue;
 
-            if($profile->id_record < 89000)
+            if($profile->id_record < 270000)
                 continue;
 
             $dirname = mb_strtoupper($profile->import_candidateid, "UTF8");
-            $dir = Yii::getAlias('@app'). '/assets/hrimport/'.$dirname;
+            $dir = Yii::getAlias('@app'). '/assets/hrimport2/'.$dirname;
             Yii::setAlias('@webroot', Yii::getAlias('@app'));
             if(!is_dir($dir))
                 continue;
@@ -466,13 +519,13 @@ class HrImportController extends Controller
                 $filename = mb_strtolower($fileInfo->getFilename());
 
                 if(in_array($ext, ['jpg', 'png', 'jpeg']))
-                    $photoPath =  '/assets/hrimport/'.$dirname . "/" . $fileInfo->getFilename();
+                    $photoPath =  '/assets/hrimport2/'.$dirname . "/" . $fileInfo->getFilename();
                     
                 if(mb_strpos($filename, 'описание', 0, 'UTF8'))
-                    $descriptionPath = '/assets/hrimport/'.$dirname . "/" . $fileInfo->getFilename();
+                    $descriptionPath = '/assets/hrimport2/'.$dirname . "/" . $fileInfo->getFilename();
 
                 if(empty($descriptionPath) && in_array($ext, ['doc', 'docx']))
-                    $descriptionPath =  '/assets/hrimport/'.$dirname . "/" . $fileInfo->getFilename();
+                    $descriptionPath =  '/assets/hrimport2/'.$dirname . "/" . $fileInfo->getFilename();
             }
             
             if(!empty($descriptionPath) || !empty($photoPath))
