@@ -3,12 +3,13 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\{CollectionRecord,GridSetting,HrContest,HrExpert,HrProfile,HrProfilePositions,HrReserve,HrResult,HrVote,CollectionColumn};
+use common\models\{CollectionRecord,GridSetting,HrContest,HrExpert,HrProfile,HrProfilePositions,HrReserve,HrResult,HrVote,CollectionColumn,User};
 use backend\models\search\{ProfileSearch,ContestSearch,ExpertSearch};
 use backend\models\forms\{ExpertForm,ContestForm};
 use yii\data\ActiveDataProvider;
 use yii\web\{Controller,NotFoundHttpException,Response};
 use yii\helpers\ArrayHelper;
+use yii\validators\NumberValidator;
 
 class ReserveController extends Controller
 {
@@ -235,6 +236,38 @@ class ReserveController extends Controller
             'customColumns' => $columns,
         ]);
     }
+
+    public function actionUserList($q)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $query = User::find()
+            ->joinWith('adinfo');
+
+        $q = trim($q);
+        if ((new NumberValidator(['integerOnly' => true]))->validate($q)) {
+            $query->andWhere(['id' => $q]);
+        } else {
+            $query->andWhere([
+                'or',
+                ['ilike', 'user.username', $q],
+                ['ilike', 'user.email', $q],
+                ['ilike', 'user.fullname', $q],
+                ['ilike', 'auth_ad_user.name', $q],
+            ]);
+        }
+
+        $results = [];
+        foreach ($query->limit(10)->all() as $user) {
+            /* @var User $user */
+            $results[] = [
+                'id' => $user->id,
+                'text' => $user->getUsername() . ' (' . $user->email . ')',
+            ];
+        }
+
+        return ['results' => $results];
+    }    
 
     public function actionArchived()
     {
@@ -526,6 +559,7 @@ class ReserveController extends Controller
 
         return ['results' => $results];
     }    
+    
 
     /*
     public function actionArchived()
