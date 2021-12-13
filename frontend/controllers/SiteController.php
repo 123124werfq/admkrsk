@@ -194,6 +194,8 @@ class SiteController extends Controller
 
             $this->redirect($logoutUrl);
         }
+        else 
+            return $this->goHome();
 
         Yii::$app->end();
     }
