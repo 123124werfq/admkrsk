@@ -226,7 +226,7 @@ class SiteController extends Controller
             */
             Yii::$app->user->identity->createAction(Action::ACTION_LOGIN_AD);
 
-            return $this->goBack();
+            return $this->redirect('https://t1.admkrsk.ru/reserve/vote');
         } else {
             $model->password = '';
 
