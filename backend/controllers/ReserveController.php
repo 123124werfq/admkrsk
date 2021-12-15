@@ -104,6 +104,12 @@ class ReserveController extends Controller
             return $this->redirect('/reserve/contest');
         }
 
+        /*
+        $contest->notification = "<b>Приглашаем вас принять участие в работе экспертной комиссии кадрового резерва с ".Yii::$app->formatter->asDatetime($contest->begin)." по ".Yii::$app->formatter->asDatetime($contest->end) ."</b><br>";
+        $contest->notification .= "<br>Ссылка на интерфейс голосования <b>(для сотрудников с учетными записями в ActiveDirectory, необходима авторизация)</b>: <a href='https://t1.admkrsk.ru/site/internal-login'>https://t1.admkrsk.ru/site/internal-login<a>";
+        $contest->notification .= "<br>Ссылка на интерфейс голосования <b>(для пользователей ЕСИА, необходима авторизация)</b>: <a href='https://t1.admkrsk.ru/reserve/vote'>https://t1.admkrsk.ru/reserve/vote</a>";
+        */
+        
         return $this->render('create', [
             'model' => $contest
         ]);
