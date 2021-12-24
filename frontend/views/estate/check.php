@@ -31,8 +31,29 @@
                             <td>&nbsp;&nbsp;</td>
                             <td class="ibutton2" valign="top"><br><input type="submit" value="Выбрать"></td>
                         </tr>
+                        <tr class="rform1">
+                            <td colspan=3>
+                                <input name=r1[cadastr_number] placeholder="Кадастровый (условный) номер">   
+                            </td>
+                        </tr>                     
+                        <tr class="rform1">
+                            <td colspan=3>
+                                Категория земель<br>
+                                <select name=r1[area_category] placeholder="Категория земель">
+                                    <option>Земли сельскохозяйственного назначения</option>
+                                    <option>Земли населенных пунктов</option>
+                                    <option>Земли промышленности, энергетики, транспорта, связи, радиовещания, телевидения, информатики, земли для обеспечения космической деятельности, земли обороны, безопасности и земли иного специального назначения</option>
+                                    <option>Земли особо охраняемых территорий и объектов</option>
+                                    <option>Земли лесного фонда</option>
+                                    <option>Земли водного фонда</option>
+                                    <option>Земли запаса</option>
+                                    <option>Не установлена</option>
+                                </select>
+                            </td>
+                        </tr>                     
                         </tbody>
                     </table>
+
                     </form>
                 </div>
 
