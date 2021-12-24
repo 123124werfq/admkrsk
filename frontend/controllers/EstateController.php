@@ -24,6 +24,7 @@ class EstateController extends \yii\web\Controller
     {
         //echo("ESTATE"); die();
 
+        /*
         $request = Yii::$app->request->get('query', null);
 
 
@@ -40,6 +41,8 @@ class EstateController extends \yii\web\Controller
 
         if(!empty($request))
             $result = 'В реестре не содержится информация по запрошенному обращению.';
+        */
+        $result = false;
 
         return $this->render('check', ['page' => $page, 'result' => $result ]);
     }
