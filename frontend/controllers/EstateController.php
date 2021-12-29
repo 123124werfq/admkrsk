@@ -17,13 +17,28 @@ use yii\web\BadRequestHttpException;
 use common\models\ServiceAppeal;
 use common\models\ServiceAppealState;
 
+use common\models\Emgis;
+
 class EstateController extends \yii\web\Controller
 {
 
     public function actionIndex($page = null)
     {
-        //echo("ESTATE"); die();
+        //echo("ESTATE"); 
+        /*
+        $emconnect = new Emgis;
 
+        $cat = $emconnect->CategoryClassificator();
+        $cat2 = $emconnect->EncumbranceClassificator();
+        $cat3 = $emconnect->RightClassificator();
+
+        echo "<pre>";
+        var_dump($cat);
+        var_dump($cat2);
+        var_dump($cat3);
+        echo "</pre>";
+        die();
+        */
         /*
         $request = Yii::$app->request->get('query', null);
 
@@ -45,6 +60,30 @@ class EstateController extends \yii\web\Controller
         $result = false;
 
         return $this->render('check', ['page' => $page, 'result' => $result ]);
+    }
+
+    public function actionTest()
+    {
+        $emconnect = new Emgis;
+
+        $rows = $emconnect->Remedy65Request();
+        echo "<pre>";
+        var_dump($rows);
+        echo "</pre>";
+
+        die();
+
+        $cat = $emconnect->CategoryClassificator();
+        $cat2 = $emconnect->EncumbranceClassificator();
+        $cat3 = $emconnect->RightClassificator();
+
+        echo "<pre>";
+        var_dump($cat);
+        var_dump($cat2);
+        var_dump($cat3);
+        echo "</pre>";
+        die();
+
     }
 
 }

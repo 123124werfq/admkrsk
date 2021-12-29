@@ -25,7 +25,7 @@ class Emgis extends Model
     private function request($params)
     {
         $url = $this->url . "?" . http_build_query($params);
-
+        var_dump($url); 
         try{
             $client = new \GuzzleHttp\Client();
             $jar = new \GuzzleHttp\Cookie\CookieJar;
@@ -42,6 +42,7 @@ class Emgis extends Model
 
             $content = $response->getBody();
 
+echo($content);
             $res = json_decode($content, TRUE);
 
             return $res;
@@ -65,6 +66,39 @@ class Emgis extends Model
 
         return $output;
     }
+
+    private function FieldsList($result)
+    {
+        if(!isset($result['d']['results']))
+            return $result;
+
+        $output = [];
+        foreach ($result['d']['results'] as $item) {
+            if(!isset($item['InternalName']))
+                continue;
+
+            $output[$item['InternalName']] = $item['Title'] ?? $item['InternalName'];
+        }
+
+        return $output;
+
+    }
+
+    private function ItemsList($result, $query = [])
+    {
+        $output = [];
+
+        foreach ($result['d']['results'] as $item) {
+            $output[] = [];
+            foreach ($item as $column => $row) {
+                $output[$column] = $row;
+            }
+        }
+
+        return $output;
+    }
+
+
 
     // классификатор "категория земель"
     public function CategoryClassificator($raw = false)
@@ -121,6 +155,32 @@ class Emgis extends Model
             return $result;
 
         return $this->Classificator($result);
-
     }      
+
+    // сведения о земельных участках
+    public function Remedy65Request($query = [])
+    {
+        /*
+        $params = [
+            "action" => "odata",
+            "bankID" => 2,
+            "r" => "Remedy65/fields",
+        ];
+
+        $fields = $this->FieldsList($this->request($params));
+
+        var_dump($fields);
+        */
+
+        $params = [
+            "action" => "odata",
+            "bankID" => 2,
+            "r" => "Remedy65/items",
+            "\$filter"=> "FunCls1_ClsName%20eq%20Земли%20населенных%20пунктов"
+        ];
+
+        $rows = $this->ItemsList($this->request($params));
+
+        return $rows;
+    }
 }
