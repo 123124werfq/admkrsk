@@ -25,13 +25,17 @@ class EstateController extends \yii\web\Controller
     public function actionIndex($page = null)
     {
         //echo("ESTATE"); 
-        /*
+        
         $emconnect = new Emgis;
 
         $cat = $emconnect->CategoryClassificator();
+        $allowed = $emconnect->AllowedClassificator();
         $cat2 = $emconnect->EncumbranceClassificator();
         $cat3 = $emconnect->RightClassificator();
 
+
+        $data = $emconnect->Remedy65Request();
+        /*
         echo "<pre>";
         var_dump($cat);
         var_dump($cat2);
@@ -59,14 +63,19 @@ class EstateController extends \yii\web\Controller
         */
         $result = false;
 
-        return $this->render('check', ['page' => $page, 'result' => $result ]);
+        return $this->render('check', [
+            'AreaCategories' => $cat,
+            'Allowed' => $allowed, 
+            'page' => $page, 
+            'result' => $result ]);
     }
 
     public function actionTest()
     {
         $emconnect = new Emgis;
 
-        $rows = $emconnect->Remedy65Request();
+        $rows = $emconnect->Remedy1Request();
+        //$rows = $emconnect->AllowedClassificator();
         echo "<pre>";
         var_dump($rows);
         echo "</pre>";

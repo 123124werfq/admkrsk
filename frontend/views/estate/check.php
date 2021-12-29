@@ -40,17 +40,24 @@
                             <td colspan=3>
                                 Категория земель<br>
                                 <select name=r1[area_category] placeholder="Категория земель">
-                                    <option>Земли сельскохозяйственного назначения</option>
-                                    <option>Земли населенных пунктов</option>
-                                    <option>Земли промышленности, энергетики, транспорта, связи, радиовещания, телевидения, информатики, земли для обеспечения космической деятельности, земли обороны, безопасности и земли иного специального назначения</option>
-                                    <option>Земли особо охраняемых территорий и объектов</option>
-                                    <option>Земли лесного фонда</option>
-                                    <option>Земли водного фонда</option>
-                                    <option>Земли запаса</option>
-                                    <option>Не установлена</option>
+                                    <?php foreach ($AreaCategories as $key => $value) { ?>
+                                        <option><?=$value?></option>
+                                    <?php } ?>
+
                                 </select>
                             </td>
-                        </tr>                     
+                        </tr> 
+                        <tr class="rform1">
+                            <td colspan=3>
+                                Вид разрешенного использования<br>
+                                <select name=r1[area_category] placeholder="Вид разрешенного использования">
+                                    <?php foreach ($Allowed as $key => $value) { ?>
+                                        <option><?=$value?></option>
+                                    <?php } ?>
+
+                                </select>
+                            </td>
+                        </tr>                                             
                         </tbody>
                     </table>
 

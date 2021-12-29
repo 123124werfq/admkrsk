@@ -25,7 +25,6 @@ class Emgis extends Model
     private function request($params)
     {
         $url = $this->url . "?" . http_build_query($params);
-        var_dump($url); 
         try{
             $client = new \GuzzleHttp\Client();
             $jar = new \GuzzleHttp\Cookie\CookieJar;
@@ -42,7 +41,6 @@ class Emgis extends Model
 
             $content = $response->getBody();
 
-echo($content);
             $res = json_decode($content, TRUE);
 
             return $res;
@@ -56,7 +54,7 @@ echo($content);
 
     private function Classificator($result)
     {
-        if(!isset($result['d']['results']))
+        if(!isset($result['d']))
             return $result;
 
         $output = [];
@@ -88,10 +86,13 @@ echo($content);
     {
         $output = [];
 
-        foreach ($result['d']['results'] as $item) {
-            $output[] = [];
+        if(!isset($result['d']))
+            return $result;        
+
+        foreach ($result['d']['results'] as $key => $item) {
+            $output[$key] = [];
             foreach ($item as $column => $row) {
-                $output[$column] = $row;
+                $output[$key][$column] = $row;
             }
         }
 
@@ -155,32 +156,109 @@ echo($content);
             return $result;
 
         return $this->Classificator($result);
-    }      
-
-    // сведения о земельных участках
-    public function Remedy65Request($query = [])
+    }   
+    
+    // классификатор "вид разрешенного использования"
+    public function AllowedClassificator($raw = false)
     {
-        /*
-        $params = [
-            "action" => "odata",
-            "bankID" => 2,
-            "r" => "Remedy65/fields",
-        ];
-
-        $fields = $this->FieldsList($this->request($params));
-
-        var_dump($fields);
-        */
-
         $params = [
             "action" => "odata",
             "bankID" => 2,
             "r" => "Remedy65/items",
-            "\$filter"=> "FunCls1_ClsName%20eq%20Земли%20населенных%20пунктов"
+            "\$select" => "Terr_AllowType",
         ];
+
+        $result = $this->request($params);
+
+        if($raw)
+            return $result;
+
+        return $this->Classificator($result);
+    }     
+
+    private function InfoRequest($setname, $filter = "")
+    {
+        $params = [
+            "action" => "odata",
+            "bankID" => 2,
+            "r" => $setname."/fields",
+        ];
+
+        $fields = $this->FieldsList($this->request($params));
+
+        $params = [
+            "action" => "odata",
+            "bankID" => 2,
+            "r" => $setname."/items",
+        ];
+
+        if(!empty($filter))
+            $params = array_merge($params, ["\$filter"=> $filter]);
+
+        $r = $this->request($params);
 
         $rows = $this->ItemsList($this->request($params));
 
-        return $rows;
+        return ["fileds" => $fields, "data" => $rows];
     }
+
+    // сведения о земельных участках
+    public function Remedy65Request($query = [])
+    {
+        return $this->InfoRequest("Remedy65");
+    }
+
+    // сведения о зданиях 
+    public function Remedy2BuildRequest($query = [])
+    {
+        return $this->InfoRequest("Remedy2Build");
+    }
+
+    // сведения о сооружениях 
+    public function Remedy3Request($query = [])
+    {
+        return $this->InfoRequest("Remedy3");
+    }
+
+    // сведения о помещениях 
+    public function Remedy2RoomRequest($query = [])
+    {
+        return $this->InfoRequest("Remedy2Room");
+    }    
+
+    // сведения об объектах незавершенного строительства 
+    public function Remedy4Request($query = [])
+    {
+        return $this->InfoRequest("Remedy4");
+    }
+
+    // сведения о движимом имуществе 
+    public function Remedy5Request($query = [])
+    {
+        return $this->InfoRequest("Remedy5");
+    }  
+    
+    // сведения об акциях 
+    public function Remedy7Request($query = [])
+    {
+        return $this->InfoRequest("Remedy5");
+    }  
+    
+    // сведения о долях в праве собственности на объекты имущсетва 
+    public function Remedy63Request($query = [])
+    {
+        return $this->InfoRequest("Remedy63");
+    }  
+    
+    // сведения об объектах интеллектулаьной собственности
+    public function Remedy75Request($query = [])
+    {
+        return $this->InfoRequest("Remedy75");
+    } 
+    
+    // сведения о предприятиях и учреждениях
+    public function Remedy1Request($query = [])
+    {
+        return $this->InfoRequest("Remedy1");
+    }     
 }
