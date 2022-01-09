@@ -33,14 +33,15 @@ class Emgis extends Model
             ]);
 
             $response = $client->request('GET', $url , [
-                'cookies' => $jar
+                'cookies' => $jar,
+                'expect' => false
             ]);
 
             if($response->getStatusCode() != 200)
                 return ['error' => $response->getStatusCode()];
 
             $content = $response->getBody();
-
+            //var_dump($content);
             $res = json_decode($content, TRUE);
 
             return $res;
@@ -196,6 +197,7 @@ class Emgis extends Model
             $params = array_merge($params, ["\$filter"=> $filter]);
 
         $r = $this->request($params);
+
 
         $rows = $this->ItemsList($this->request($params));
 

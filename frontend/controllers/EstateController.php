@@ -30,16 +30,16 @@ class EstateController extends \yii\web\Controller
 
         $cat = $emconnect->CategoryClassificator();
         $allowed = $emconnect->AllowedClassificator();
-        $cat2 = $emconnect->EncumbranceClassificator();
-        $cat3 = $emconnect->RightClassificator();
+        $encumbrances = $emconnect->EncumbranceClassificator();
+        $rights = $emconnect->RightClassificator();
 
 
         $data = $emconnect->Remedy65Request();
         /*
         echo "<pre>";
-        var_dump($cat);
-        var_dump($cat2);
-        var_dump($cat3);
+        var_dump($allowed);
+        //var_dump($cat2);
+        //var_dump($cat3);
         echo "</pre>";
         die();
         */
@@ -64,8 +64,10 @@ class EstateController extends \yii\web\Controller
         $result = false;
 
         return $this->render('check', [
-            'AreaCategories' => $cat,
-            'Allowed' => $allowed, 
+            'areaCategories' => $cat ?? [],
+            'allowed' => $allowed ?? [], 
+            'rights' => $rights ?? [],
+            'encumbrances' => $encumbrances ?? [], 
             'page' => $page, 
             'result' => $result ]);
     }
@@ -74,7 +76,7 @@ class EstateController extends \yii\web\Controller
     {
         $emconnect = new Emgis;
 
-        $rows = $emconnect->Remedy1Request();
+        $rows = $emconnect->Remedy65Request();
         //$rows = $emconnect->AllowedClassificator();
         echo "<pre>";
         var_dump($rows);
