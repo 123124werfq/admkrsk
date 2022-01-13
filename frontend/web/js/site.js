@@ -421,4 +421,23 @@ $(document).ready(function() {
         $('select').each(function(idx,el){$(el).val(-1);})
         return false;
     });
+
+    if($('#infotype').length >0)
+    {
+        $('.rform1,.rform2,.rform3,.rform4,.rform5,.rform6,.rform7,.rform8,.rform9,.rform10').addClass('hidden');
+        $('.rform1').removeClass('hidden');
+
+        $('#infotype').change(function(){
+            let activeFormClass = '.rform' + $('#infotype').val();
+            $('.rform1,.rform2,.rform3,.rform4,.rform5,.rform6,.rform7,.rform8,.rform9,.rform10').addClass('hidden');
+            $(activeFormClass).removeClass('hidden');
+        });
+
+        $('.compare_method').change(function(){
+            if($(this).val() == 6)
+                $(this).siblings('.compare_value_from, .compare_between').removeClass('hidden');
+            else
+                $(this).siblings('.compare_value_from, .compare_between').addClass('hidden');
+        });
+    }
 })

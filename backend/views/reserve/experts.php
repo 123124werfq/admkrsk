@@ -134,7 +134,7 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
                         'allowClear' => true,
                         'minimumInputLength' => 1,
                         'ajax' => [
-                            'url' => Url::toRoute(['/user/list']),
+                            'url' => Url::toRoute(['/reserve/user-list']),
                             'dataType' => 'json',
                             'data' => new JsExpression('function(params) { return {q:params.term}; }')
                         ],

@@ -27,6 +27,7 @@ use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 use common\models\User;
 use common\models\EsiaUser;
+use common\models\AdUser;
 use yii\web\ErrorAction;
 use yii\web\NotFoundHttpException;
 //use common\models\Smev;
@@ -193,8 +194,46 @@ class SiteController extends Controller
 
             $this->redirect($logoutUrl);
         }
+        else 
+            return $this->goHome();
 
         Yii::$app->end();
+    }
+
+    public function actionInternalLogin()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $model = new LoginForm();
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            /*
+            if (!Yii::$app->user->identity->can('backend')) {
+                $backend = Yii::$app->authManager->getPermission('backend');
+                Yii::$app->authManager->assign($backend, Yii::$app->user->identity->id);
+            }
+            */
+            Yii::$app->user->identity->createAction(Action::ACTION_LOGIN);
+            
+            return $this->goBack();
+        } else if ($model->load(Yii::$app->request->post()) && AdUser::adlogin($model->username, $model->password)) {
+            /*
+            if (!Yii::$app->user->identity->can('backend')) {
+                $backend = Yii::$app->authManager->getPermission('backend');
+                Yii::$app->authManager->assign($backend, Yii::$app->user->identity->id);
+            }
+            */
+            Yii::$app->user->identity->createAction(Action::ACTION_LOGIN_AD);
+
+            return $this->redirect('https://t1.admkrsk.ru/reserve/vote');
+        } else {
+            $model->password = '';
+
+            return $this->render('internallogin', [
+                'model' => $model,
+            ]);
+        }        
     }
 
     /**
@@ -202,6 +241,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
+    /*
     public function actionContact()
     {
         $model = new ContactForm();
@@ -219,12 +259,13 @@ class SiteController extends Controller
             ]);
         }
     }
+    */
 
     /**
      * @param null $page
      * @return string
      * @throws NotFoundHttpException
-     */
+     */    
     public function actionPage($page = null)
     {
         if (empty($page))
@@ -273,26 +314,31 @@ class SiteController extends Controller
         ]);
     }
 
+    
     public function actionFlush()
     {
         Yii::$app->cache->flush();
     }
+
 
     /**
      * Displays about page.
      *
      * @return mixed
      */
+    /*
     public function actionAbout()
     {
         return $this->render('about');
     }
+    */
 
     /**
      * Signs user up.
      *
      * @return mixed
      */
+    /*
     public function actionSignup()
     {
         $model = new SignupForm();
@@ -305,12 +351,14 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+    */
 
     /**
      * Requests password reset.
      *
      * @return mixed
      */
+    /*
     public function actionRequestPasswordReset()
     {
         $model = new PasswordResetRequestForm();
@@ -328,6 +376,7 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+    */
 
     /**
      * Resets password.
@@ -336,6 +385,7 @@ class SiteController extends Controller
      * @return mixed
      * @throws BadRequestHttpException
      */
+    /*
     public function actionResetPassword($token)
     {
         try {
@@ -354,6 +404,7 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+    */
 
     /**
      * Verify email address
@@ -362,6 +413,7 @@ class SiteController extends Controller
      * @return yii\web\Response
      * @throws BadRequestHttpException
      */
+    /*
     public function actionVerifyEmail($token)
     {
         try {
@@ -379,12 +431,14 @@ class SiteController extends Controller
         Yii::$app->session->setFlash('error', 'Sorry, we are unable to verify your account with provided token.');
         return $this->goHome();
     }
+    */
 
     /**
      * Resend verification email
      *
      * @return mixed
      */
+    /*
     public function actionResendVerificationEmail()
     {
         $model = new ResendVerificationEmailForm();
@@ -400,6 +454,7 @@ class SiteController extends Controller
             'model' => $model
         ]);
     }
+    */
 
     public function ssoCallback($client)
     {
@@ -447,6 +502,7 @@ class SiteController extends Controller
         return $this->redirect('/');
     }
 
+    /*
     public function actionTestad1()
     {
         $un = 'web_user';
@@ -619,6 +675,7 @@ class SiteController extends Controller
 
         }
     }
+    */
 
     /*public function actionMsql()
     {
@@ -650,6 +707,7 @@ class SiteController extends Controller
     /**
      * @throws NotFoundHttpException
      */
+    /*
     public function actionFakelogin()
     {
         if (true || YII_ENV_DEV) {
@@ -710,6 +768,7 @@ class SiteController extends Controller
         echo urlencode($url);
         Yii::$app->end();
     }
+    */
 
     public function actionSignin()
     {
@@ -897,6 +956,7 @@ class SiteController extends Controller
         return $this->redirect($backUrl);
     }
 
+    /*
     public function actionTestip(){
         echo(Yii::$app->request->userIP);
         echo('<br>');
@@ -926,7 +986,8 @@ class SiteController extends Controller
          return $this->render('//site/confirmemail_error');
         }
 
-    } 
+    }
+    */ 
 
     /*public function actionSmevtest()
     {

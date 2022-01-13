@@ -153,8 +153,9 @@ use yii\widgets\ActiveForm;
 
             if(empty($model->notification))
             {
-                $model->notification = "Приглашаем вас принять участие в работе экспертной комиссии кадрового резерва с \n ".Yii::$app->formatter->asDatetime($model->begin)." по ".Yii::$app->formatter->asDatetime($model->end);
-                $model->notification .= "\n Ссылка на интерфейс голосования (только для залогиненых): https://t1.admkrsk.ru/reserve/vote";
+                $model->notification = "<b>Приглашаем вас принять участие в работе экспертной комиссии кадрового резерва с ".Yii::$app->formatter->asDatetime($model->begin)." по ".Yii::$app->formatter->asDatetime($model->end) ."</b><br>";
+                $model->notification .= "<br>Ссылка на интерфейс голосования <b>(для сотрудников с учетными записями в ActiveDirectory, необходима авторизация)</b>: <a href='https://t1.admkrsk.ru/site/internal-login'>https://t1.admkrsk.ru/site/internal-login<a>";
+                $model->notification .= "<br>Ссылка на интерфейс голосования <b>(для пользователей ЕСИА, необходима авторизация)</b>: <a href='https://t1.admkrsk.ru/reserve/vote'>https://t1.admkrsk.ru/reserve/vote</a>";            
             }
         ?>
 

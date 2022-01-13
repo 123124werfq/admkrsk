@@ -6,6 +6,9 @@
         <?=frontend\widgets\Breadcrumbs::widget(['page'=>$page])?>
         <div class="row">
             <div class="col-2-third order-xs-1">
+                <?php
+                    if(!empty($user->esiainfo)){
+                ?>
                 <h1 class="h2">Профиль</h1>
                 <p><?=$user->esiainfo->getUsertype()?></p>
                 <div class="content">
@@ -95,6 +98,9 @@
                     <br><br>
 
                 </div>
+                <?php } else { ?>
+                <h1 class="h3">Профиль для сотрудников недоступен</h1>
+                <?php } ?>
             </div>
             <div class="col-third order-xs-0">
                 <?=frontend\widgets\RightMenuWidget::widget(['page'=>$page])?>
