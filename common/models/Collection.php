@@ -258,9 +258,7 @@ class Collection extends ActiveRecord
         $model->data = $data;
 
         if ($model->save())
-        {
             return $model;
-        }
 
         return false;
     }
