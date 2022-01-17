@@ -1,3 +1,10 @@
+<?php
+
+use yii\widgets\LinkPager;
+use yii\data\Pagination;
+
+?>
+
 <div class="main">
     <div class="container">
         <?=frontend\widgets\Breadcrumbs::widget(['page'=>$page])?>
@@ -91,7 +98,7 @@
                                 <select name=area_category placeholder="Категория земель">
                                     <option>не указано</option>
                                     <?php foreach ($areaCategories as $key => $value) { ?>
-                                        <option><?=$value?></option>
+                                        <option <?=(isset($_REQUEST['area_category'])&&$_REQUEST['area_category']==$value)?'selected':''?>><?=$value?></option>
                                     <?php } ?>
 
                                 </select>
@@ -100,14 +107,17 @@
 <!-- Вид разрешенного использования -->                        
                         <tr class="rform1">
                             <td colspan=3>
+                                <input name=allowed_use placeholder="Вид разрешенного использования" value="<?=$_REQUEST['allowed_use']??''?>">   
+                                <!--
                                 Вид разрешенного использования<br>
                                 <select name=allowed_use placeholder="Вид разрешенного использования">
                                     <option>не указано</option>
                                     <?php foreach ($allowed as $key => $value) { ?>
-                                        <option><?=$value?></option>
+                                        <option <?=(isset($_REQUEST['allowed_use'])&&$_REQUEST['allowed_use']==$value)?'selected':''?>><?=$value?></option>
                                     <?php } ?>
 
                                 </select>
+                                -->
                             </td>
                         </tr>  
 <!-- Площадь -->                        
@@ -285,7 +295,7 @@
                                 <select name=other_rights placeholder="Наименование иного вещного права">
                                     <option>не указано</option>
                                     <?php foreach ($rights as $key => $value) { ?>
-                                        <option><?=$value?></option>
+                                        <option <?=(isset($_REQUEST['other_rights'])&&$_REQUEST['other_rights']==$value)?'selected':''?> ><?=$value?></option>
                                     <?php } ?>
 
                                 </select>
@@ -321,7 +331,7 @@
                                 <select name=encumbrance placeholder="Вид ограничения (обременения)">
                                     <option>не указано</option>
                                     <?php foreach ($encumbrances as $key => $value) { ?>
-                                        <option><?=$value?></option>
+                                        <option <?=(isset($_REQUEST['encumbrance'])&&$_REQUEST['encumbrance']==$value)?'selected':''?> ><?=$value?></option>
                                     <?php } ?>
 
                                 </select>
@@ -357,9 +367,55 @@
                     </form>
                 </div>
 
-                <?php if($result){ ?>
-                    <p><?=$result?></p>
+                <?php if($count!=-1){ 
+                    $pagination = new Pagination(['totalCount' => $count, 'pageSize'=>20, 'page' => $_REQUEST['page']??1]);
+                ?>
+                <div>
+                    <h3>Найдено записей: <?=$count?></h3>
+                </div>
+
+                <?=   
+                    LinkPager::widget([
+                        'pagination' => $pagination,
+                    ]); 
+                ?>
+
                 <?php } ?>
+
+                <?php 
+                    if($result && is_array($result['fields']) && is_array($result['data'])){ 
+                    
+                        foreach ($result['data']as $k => $item) {
+                ?>
+                        <div class="itemCard" style="background-color: #F4F7FB !important; margin-bottom: 30px; padding: 10px; padding: 20px; border-radius: 10px;">
+                            <div>
+                                <h2>№ <?= 1 + $k + (20 * ($pagination->page - 1) )?></h2>
+                            </div>
+
+                <?php
+                            foreach ($item as $key => $value) {
+                                if(empty($value))
+                                    continue;   
+                ?>
+                        <div style="background-color: #F4F7FB !important;"><small><?= $result['fields'][$key] ?></small></div>
+                        <div style="background-color: #FFF !important; padding: 5px; margin-bottom: 10px;"><?=$value?></div>
+
+                <?php
+                            }
+                ?>
+                        </div>
+                <?php
+                        }                                        
+                ?>
+                    
+                <?=   
+                    LinkPager::widget([
+                        'pagination' => $pagination,
+                    ]); 
+                ?>                    
+                <?php 
+                    } 
+                ?>
                 <!--
                 <?=$page->content?>
                 -->

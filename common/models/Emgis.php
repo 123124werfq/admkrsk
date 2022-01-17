@@ -22,9 +22,12 @@ class Emgis extends Model
         "j_gee_password" => "F9ubkBkbWkuYWR"
     ];
 
+    public $onpage = 20;
+
     private function request($params)
     {
         $url = $this->url . "?" . http_build_query($params);
+
         try{
             $client = new \GuzzleHttp\Client();
             $jar = new \GuzzleHttp\Cookie\CookieJar;
@@ -60,7 +63,7 @@ class Emgis extends Model
 
         $output = [];
         foreach ($result['d']['results'] as $item) {
-            $output[] = $item['ClsName'] ?? "";
+            $output[] = $item['ClsName'] ?? $item['Terr_AllowType'] ?? "";
         }
 
         return $output;
@@ -177,7 +180,7 @@ class Emgis extends Model
         return $this->Classificator($result);
     }     
 
-    private function InfoRequest($setname, $filter = "")
+    private function InfoRequest($setname, $filter = "", $page=1)
     {
         $params = [
             "action" => "odata",
@@ -191,6 +194,7 @@ class Emgis extends Model
             "action" => "odata",
             "bankID" => 2,
             "r" => $setname."/items",
+            "\$top" => $this->onpage
         ];
 
         if(!empty($filter))
@@ -201,14 +205,33 @@ class Emgis extends Model
 
         $rows = $this->ItemsList($this->request($params));
 
-        return ["fileds" => $fields, "data" => $rows];
+        return ["fields" => $fields, "data" => $rows];
     }
 
-    // сведения о земельных участках
-    public function Remedy65Request($query = [])
+    private function CountRequest($setname, $filter = "")
     {
-        return $this->InfoRequest("Remedy65");
-    }
+        $params = [
+            "action" => "odata",
+            "bankID" => 2,
+            "r" => $setname."/\$count",
+        ];
+
+        if(!empty($filter))
+            $params = array_merge($params, ["\$filter"=> $filter]);
+
+        $r = $this->request($params);
+
+        return (int)$r;
+    }    
+
+    // сведения о земельных участках
+    public function Remedy65Request($query = [], $page = 1)
+    {
+        if(isset($query['count']))
+            return $this->CountRequest("Remedy65", $query['filter']??"");
+        else
+            return $this->InfoRequest("Remedy65", $query['filter']??"");
+    }    
 
     // сведения о зданиях 
     public function Remedy2BuildRequest($query = [])

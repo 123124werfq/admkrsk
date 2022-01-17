@@ -24,8 +24,6 @@ class EstateController extends \yii\web\Controller
 
     public function actionIndex($page = null)
     {
-        //echo("ESTATE"); 
-        
         $emconnect = new Emgis;
 
         $cat = $emconnect->CategoryClassificator();
@@ -33,8 +31,35 @@ class EstateController extends \yii\web\Controller
         $encumbrances = $emconnect->EncumbranceClassificator();
         $rights = $emconnect->RightClassificator();
 
+        $result = false;
+        $count = -1;
 
-        $data = $emconnect->Remedy65Request();
+        if(isset($_REQUEST['infotype']))
+        {
+            switch ((int)$_REQUEST['infotype']) {
+                case 1:
+                    $filter = [];
+                    
+                    if(isset($_REQUEST['area_category']) && $_REQUEST['area_category'] != "не указано" )
+                        $filter[] = "FunCls1_ClsName eq ".$_REQUEST['area_category'];
+                    if(isset($_REQUEST['allowed_use']) && !empty(trim($_REQUEST['allowed_use'])))
+                        $filter[] = "contains(Terr_AllowType,".trim($_REQUEST['allowed_use']).")";                    
+
+                    $filter = implode(" and ", $filter);
+
+                    $count = $emconnect->Remedy65Request(['count' => 1, "filter" => ($filter)]);
+                    $result = $emconnect->Remedy65Request(["filter" => ($filter)]);                    
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+
+        }
+
+//var_dump($result['fileds']); die();
+        //$data = $emconnect->Remedy65Request();
         /*
         echo "<pre>";
         var_dump($allowed);
@@ -61,7 +86,6 @@ class EstateController extends \yii\web\Controller
         if(!empty($request))
             $result = 'В реестре не содержится информация по запрошенному обращению.';
         */
-        $result = false;
 
         return $this->render('check', [
             'areaCategories' => $cat ?? [],
@@ -69,15 +93,17 @@ class EstateController extends \yii\web\Controller
             'rights' => $rights ?? [],
             'encumbrances' => $encumbrances ?? [], 
             'page' => $page, 
-            'result' => $result ]);
+            'result' => $result,
+            'count' => $count
+         ]);
     }
 
     public function actionTest()
     {
         $emconnect = new Emgis;
 
-        $rows = $emconnect->Remedy65Request();
-        //$rows = $emconnect->AllowedClassificator();
+        //$rows = $emconnect->Remedy65Request(['count' => 1]);
+        $rows = $emconnect->AllowedClassificator();
         echo "<pre>";
         var_dump($rows);
         echo "</pre>";
