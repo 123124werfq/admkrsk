@@ -286,26 +286,38 @@ class Emgis extends Model
     }  
     
     // сведения об акциях 
-    public function Remedy7Request($query = [])
+    public function Remedy7Request($query = [], $page = 1)
     {
-        return $this->InfoRequest("Remedy5");
+        if(isset($query['count']))
+            return $this->CountRequest("Remedy7", $query['filter']??"");
+        else
+            return $this->InfoRequest("Remedy7", $query['filter']??"", $page);
     }  
     
     // сведения о долях в праве собственности на объекты имущсетва 
-    public function Remedy63Request($query = [])
+    public function Remedy63Request($query = [], $page = 1)
     {
-        return $this->InfoRequest("Remedy63");
+        if(isset($query['count']))
+            return $this->CountRequest("Remedy63", $query['filter']??"");
+        else
+            return $this->InfoRequest("Remedy63", $query['filter']??"", $page);
     }  
     
     // сведения об объектах интеллектулаьной собственности
-    public function Remedy75Request($query = [])
+    public function Remedy75Request($query = [], $page = 1)
     {
-        return $this->InfoRequest("Remedy75");
+        if(isset($query['count']))
+            return $this->CountRequest("Remedy75", $query['filter']??"");
+        else
+            return $this->InfoRequest("Remedy75", $query['filter']??"", $page);
     } 
     
     // сведения о предприятиях и учреждениях
-    public function Remedy1Request($query = [])
+    public function Remedy1Request($query = [], $page = 1)
     {
-        return $this->InfoRequest("Remedy1");
+        if(isset($query['count']))
+            return $this->CountRequest("Remedy1", $query['filter']??"");
+        else
+            return $this->InfoRequest("Remedy1", $query['filter']??"", $page);
     }     
 }
