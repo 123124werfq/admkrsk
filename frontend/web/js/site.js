@@ -427,7 +427,6 @@ $(document).ready(function() {
         $('.rform1,.rform2,.rform3,.rform4,.rform5,.rform6,.rform7,.rform8,.rform9,.rform10').addClass('hidden');
         
         $('#infotype').change(function(){
-            console.log("CHANGE");
             let activeFormClass = '.rform' + $('#infotype').val();
             $('.rform1,.rform2,.rform3,.rform4,.rform5,.rform6,.rform7,.rform8,.rform9,.rform10').addClass('hidden');
             $(activeFormClass).removeClass('hidden');

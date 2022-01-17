@@ -32,6 +32,7 @@ class EstateController extends \yii\web\Controller
      * 2 - простое поле с включением
      * 3 - выбор диапазона значений 
      * 
+     * 
      */
     private function createFilterEntity($request, $fieldName, $paramName, &$filter, $type = 0)
     {
@@ -223,6 +224,7 @@ class EstateController extends \yii\web\Controller
 
                     $count = $emconnect->Remedy3Request(['count' => 1, "filter" => ($filter)]);
                     $result = $emconnect->Remedy3Request(["filter" => ($filter)], $_REQUEST['page']??1);                    
+                    break;
 
                 // Сведения о помещениях
                 case 4:                    
@@ -265,7 +267,72 @@ class EstateController extends \yii\web\Controller
                     $filter = implode(" and ", $filter);
 
                     $count = $emconnect->Remedy2RoomRequest(['count' => 1, "filter" => ($filter)]);
-                    $result = $emconnect->Remedy2RoomRequest(["filter" => ($filter)], $_REQUEST['page']??1);                    
+                    $result = $emconnect->Remedy2RoomRequest(["filter" => ($filter)], $_REQUEST['page']??1);     
+                    break;
+
+                // Сведения об объектах незавершенного строительства
+                case 5:   
+                    // наименование объекта
+                    $this->createFilterEntity($_REQUEST, 'object_name', 'Name', $filter, 2);
+
+                    // кадастровый номер                    
+                    $this->createFilterEntity($_REQUEST, 'cadastr_number', 'CadNum', $filter);
+
+                    // адрес
+                    $this->createFilterEntity($_REQUEST, 'address', 'BuildAddress', $filter, 2);
+
+                    // реестровый номер                    
+                    $this->createFilterEntity($_REQUEST, 'reestr_number', 'Reestr', $filter);
+
+                    // правообладатель
+                    $this->createFilterEntity($_REQUEST, 'copyright_holder', 'UserBal_Name2', $filter, 2);
+
+                    // наименовнаие иного вещного права
+                    $this->createFilterEntity($_REQUEST, 'other_rights', 'Order_Right_ClsName', $filter, 1);
+
+                    // Документы-основания возникновения иного вещного права
+                    $this->createFilterEntity($_REQUEST, 'other_rights_docs', 'Order_Docum_Name', $filter, 2);
+
+                    $filter = implode(" and ", $filter);
+
+                    $count = $emconnect->Remedy4Request(['count' => 1, "filter" => ($filter)]);
+                    $result = $emconnect->Remedy4Request(["filter" => ($filter)], $_REQUEST['page']??1);     
+                    break;
+
+                // Сведения о движимом имуществе
+                case 6:                    
+                    // наименование объекта
+                    $this->createFilterEntity($_REQUEST, 'object_name', 'Name', $filter, 2);
+
+                    //  марка, модель
+                    $this->createFilterEntity($_REQUEST, 'model', 'Transp_Mark', $filter, 2);
+                
+                    // год выпуска                    
+                    $this->createFilterEntity($_REQUEST, 'year', 'Transp_YearIssue', $filter);
+
+                    // ГРЗ                    
+                    $this->createFilterEntity($_REQUEST, 'regnumber', 'Transp_GosNumber', $filter);
+
+                    // реестровый номер                    
+                    $this->createFilterEntity($_REQUEST, 'reestr_number', 'Reestr', $filter);
+
+                    // Документы-основания возникновения права собственности города Красноярска
+                    $this->createFilterEntity($_REQUEST, 'property_docs', 'Docum_Name', $filter, 2);
+
+                    // правообладатель
+                    $this->createFilterEntity($_REQUEST, 'copyright_holder', 'UserBal_Name2', $filter, 2);
+
+                    // осообо ценное имущество
+                    $this->createFilterEntity($_REQUEST, 'is_valueable', 'IsBlueChip', $filter, 1);
+                    
+                    // Документы-основания определения перечня особо ценного имущества
+                    $this->createFilterEntity($_REQUEST, 'valueable_docs', 'DocumBlue_Name', $filter, 2);
+
+                    $filter = implode(" and ", $filter);
+
+                    $count = $emconnect->Remedy5Request(['count' => 1, "filter" => ($filter)]);
+                    $result = $emconnect->Remedy5Request(["filter" => ($filter)], $_REQUEST['page']??1);     
+                    break;
                 default:
                     # code...
                     break;
@@ -317,7 +384,7 @@ class EstateController extends \yii\web\Controller
     {
         $emconnect = new Emgis;
 
-        $rows = $emconnect->Remedy4Request();
+        $rows = $emconnect->Remedy5Request();
         //$rows = $emconnect->AllowedClassificator();
         echo "<pre>";
         var_dump($rows);

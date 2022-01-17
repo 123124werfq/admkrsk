@@ -277,9 +277,12 @@ class Emgis extends Model
     }
 
     // сведения о движимом имуществе 
-    public function Remedy5Request($query = [])
+    public function Remedy5Request($query = [], $page = 1)
     {
-        return $this->InfoRequest("Remedy5");
+        if(isset($query['count']))
+            return $this->CountRequest("Remedy5", $query['filter']??"");
+        else
+            return $this->InfoRequest("Remedy5", $query['filter']??"", $page);
     }  
     
     // сведения об акциях 

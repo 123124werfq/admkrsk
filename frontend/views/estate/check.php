@@ -30,7 +30,7 @@ switch ($_REQUEST['infotype']??0) {
                 <h1 class="h2">Реестр имущества</h1>
 
                 <div class="filter_layout custom-form">
-                    <form action="">
+                    <form id="emgisform" action="">
                     <table cellpadding="0" cellspacing="0" >
                         <tbody>
                         <tr valign="bottom">
@@ -57,49 +57,43 @@ switch ($_REQUEST['infotype']??0) {
                         <tr class="rform8">
                             <td colspan=3>
                                 Размер доли (в виде правильной дроби)<br>
-                                <input name=property_part_numenator placeholder="" type=number min=1 style="width: 100px !important; display: inline-block;"> / <input name=property_part_denominator placeholder="" type=number min=1  style="width: 100px !important; display: inline-block;"> 
+                                <input name=property_part_numenator placeholder="" type=number min=1 style="width: 100px !important; display: inline-block;" value="<?=$_REQUEST['property_part_numenator']??''?>"> / <input name=property_part_denominator placeholder="" type=number min=1  style="width: 100px !important; display: inline-block;" value="<?=$_REQUEST['property_part_denominator']??''?>"> 
                             </td>
                         </tr>                        
 <!-- Наименование объекта -->                        
                         <tr class="rform2 rform3 rform4 rform5 rform6 rform8">
                             <td colspan=3>
-                                <input name=object_name placeholder="Наименование объекта">   
+                                <input name=object_name placeholder="Наименование объекта" value="<?=$_REQUEST['object_name']??''?>">   
                             </td>
                         </tr>
 <!-- Наименование результата интеллектулаьной собственности -->                        
                         <tr class="rform9">
                             <td colspan=3>
-                                <input name=intelligence_name placeholder="Наименование результата интеллектулаьной собственности">   
+                                <input name=intelligence_name placeholder="Наименование результата интеллектулаьной собственности" value="<?=$_REQUEST['intelligence_name']??''?>">   
                             </td>
                         </tr>
-<!-- Наименование результата интеллектулаьной собственности -->                        
-                        <tr class="rform9">
-                            <td colspan=3>
-                                <input name=intelligence_name placeholder="Наименование результата интеллектулаьной собственности">   
-                            </td>
-                        </tr>                                              
 <!-- Марка, модель -->                        
                         <tr class="rform6">
                             <td colspan=3>
-                                <input name=model placeholder="Марка, модель">   
+                                <input name=model placeholder="Марка, модель" value="<?=$_REQUEST['model']??''?>">   
                             </td>
                         </tr>
 <!-- Год выпуска -->                        
                         <tr class="rform6">
                             <td colspan=3>
-                                <input name=year placeholder="Год выпуска" type=number>   
+                                <input name=year placeholder="Год выпуска" type=number value="<?=$_REQUEST['year']??''?>">   
                             </td>
                         </tr> 
 <!-- Государственный регистрационный знак -->                        
                         <tr class="rform6">
                             <td colspan=3>
-                                <input name=regnumber placeholder="Государственный регистрационный знак">   
+                                <input name=regnumber placeholder="Государственный регистрационный знак" type=number value="<?=$_REQUEST['regnumber']??''?>">   
                             </td>
                         </tr>                                                                         
 <!-- Назначение -->                        
                         <tr class="rform2 rform3 rform4">
                             <td colspan=3>
-                                <input name=appointment placeholder="Назначение">   
+                                <input name=appointment placeholder="Назначение" value="<?=$_REQUEST['appointment']??''?>">   
                             </td>
                         </tr> 
 <!-- Кадастровый (условный) номер -->                        
@@ -159,16 +153,16 @@ switch ($_REQUEST['infotype']??0) {
                             <td>
                                 Общая площадь, кв.м<br>
                                 <select name=total_area_method style="width: 100px;" class="compare_method">
-                                    <option value=1>=</option>
-                                    <option value=2><</option>
-                                    <option value=3>≤</option>
-                                    <option value=4>></option>
-                                    <option value=5>≥</option>
-                                    <option value=6>между</option>
+                                    <option value=1 <?=(isset($_REQUEST['total_area_method'])&&$_REQUEST['total_area_method']==1)?'selected':''?>>=</option>
+                                    <option value=2 <?=(isset($_REQUEST['total_area_method'])&&$_REQUEST['total_area_method']==2)?'selected':''?>><</option>
+                                    <option value=3 <?=(isset($_REQUEST['total_area_method'])&&$_REQUEST['total_area_method']==3)?'selected':''?>>≤</option>
+                                    <option value=4 <?=(isset($_REQUEST['total_area_method'])&&$_REQUEST['total_area_method']==4)?'selected':''?>>></option>
+                                    <option value=5 <?=(isset($_REQUEST['total_area_method'])&&$_REQUEST['total_area_method']==5)?'selected':''?>>≥</option>
+                                    <option value=6 <?=(isset($_REQUEST['total_area_method'])&&$_REQUEST['total_area_method']==6)?'selected':''?>>между</option>
                                 </select> 
-                                <input type=number name=total_area_from class="hidden compare_value_from" style="width: 150px !important; display: inherit;">
-                                <span class="hidden compare_between"> и </span>
-                                <input type=number name=total_area_to class="" style="width: 150px !important; display: inherit;">                                                                 
+                                <input type=number name=total_area_from class="<?=(isset($_REQUEST['total_area_method'])&&$_REQUEST['total_area_method']!=6)?'hidden':''?> compare_value_from" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['total_area_from']??''?>">
+                                <span class="<?=(isset($_REQUEST['total_area_method'])&&$_REQUEST['total_area_method']!=6)?'hidden':''?> compare_between"> и </span>
+                                <input type=number name=total_area_to class="" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['total_area_to']??''?>">                                                                 
                             </td>
                         </tr> 
 <!-- Протяженность -->                        
@@ -176,28 +170,28 @@ switch ($_REQUEST['infotype']??0) {
                             <td>
                             Протяженность, м<br>
                                 <select name=length_method style="width: 100px;" class="compare_method">
-                                    <option value=1>=</option>
-                                    <option value=2><</option>
-                                    <option value=3>≤</option>
-                                    <option value=4>></option>
-                                    <option value=5>≥</option>
-                                    <option value=6>между</option>
+                                    <option value=1 <?=(isset($_REQUEST['length_method'])&&$_REQUEST['length_method']==1)?'selected':''?>>=</option>
+                                    <option value=2 <?=(isset($_REQUEST['length_method'])&&$_REQUEST['length_method']==2)?'selected':''?>><</option>
+                                    <option value=3 <?=(isset($_REQUEST['length_method'])&&$_REQUEST['length_method']==3)?'selected':''?>>≤</option>
+                                    <option value=4 <?=(isset($_REQUEST['length_method'])&&$_REQUEST['length_method']==4)?'selected':''?>>></option>
+                                    <option value=5 <?=(isset($_REQUEST['length_method'])&&$_REQUEST['length_method']==5)?'selected':''?>>≥</option>
+                                    <option value=6 <?=(isset($_REQUEST['length_method'])&&$_REQUEST['length_method']==6)?'selected':''?>>между</option>
                                 </select> 
-                                <input type=number name=length_from class="hidden compare_value_from" style="width: 150px !important; display: inherit;">
-                                <span class="hidden compare_between"> и </span>
-                                <input type=number name=length_to class="" style="width: 150px !important; display: inherit;">                                 
+                                <input type=number name=length_from class="<?=(isset($_REQUEST['length_method'])&&$_REQUEST['length_method']!=6)?'hidden':''?> compare_value_from" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['length_from']??''?>">
+                                <span class="<?=(isset($_REQUEST['length_method'])&&$_REQUEST['length_method']!=6)?'hidden':''?> compare_between"> и </span>
+                                <input type=number name=length_to class="" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['length_to']??''?>">                                 
                             </td>
                         </tr>                          
 <!-- Год ввода в эксплуатацию (завершения строительства) -->                        
                         <tr class="rform2 rform3">
                             <td colspan=3>
-                                <input name=year_start placeholder="Год ввода в эксплуатацию (завершения строительства)" type=number max=2030 min=1980>   
+                                <input name=year_start placeholder="Год ввода в эксплуатацию (завершения строительства)" type=number max=2030 min=1980 value="<?=$_REQUEST['year_start']??''?>">   
                             </td>
                         </tr>
 <!-- Этаж (этажи), на котором расположено помещение -->                        
                         <tr class="rform4">
                             <td colspan=3>
-                                <input name=floor placeholder="Этаж (этажи), на котором расположено помещение">   
+                                <input name=floor placeholder="Этаж (этажи), на котором расположено помещение"  value="<?=$_REQUEST['floor']??''?>">   
                             </td>
                         </tr>
 <!-- Количество, штук -->                        
@@ -290,19 +284,19 @@ switch ($_REQUEST['infotype']??0) {
 <!-- Реестровый номер имущества -->                        
                         <tr class="rform1 rform2 rform3 rform4 rform5 rform6 rform7 rform8 rform9">
                             <td colspan=3>
-                                <input name=reestr_number placeholder="Реестровый номер имущества">   
+                                <input name=reestr_number placeholder="Реестровый номер имущества" value="<?=$_REQUEST['reestr_number']??''?>">   
                             </td>
                         </tr>
 <!-- Документы-основания возникновения права собственности города Красноярска -->                        
                         <tr class="rform6">
                             <td colspan=3>
-                                <input name=property_docs placeholder="Документы-основания возникновения права собственности города Красноярска">   
+                                <input name=property_docs placeholder="Документы-основания возникновения права собственности города Красноярска" value="<?=$_REQUEST['property_docs']??''?>">   
                             </td>
                         </tr>                                             
 <!-- Правообладатель -->                        
                         <tr class="rform1 rform2 rform3 rform4 rform5 rform6 rform7 rform8 rform9">
                             <td colspan=3>
-                                <input name=copyright_holder placeholder="Правообладатель">   
+                                <input name=copyright_holder placeholder="Правообладатель" value="<?=$_REQUEST['copyright_holder']??''?>">   
                             </td>
                         </tr>
 <!-- Наименование иного вещного права -->                                            
@@ -321,7 +315,7 @@ switch ($_REQUEST['infotype']??0) {
 <!-- Документы-основания возникновения иного вещного права -->                        
                         <tr class="rform1 rform2 rform3 rform4 rform5">
                             <td colspan=3>
-                                <input name=other_rights_docs placeholder="Документы-основания возникновения иного вещного права">   
+                                <input name=other_rights_docs placeholder="Документы-основания возникновения иного вещного права" value="<?=$_REQUEST['other_rights_docs']??''?>">   
                             </td>
                         </tr>  
 <!-- Кадастровая стоимость -->                        
@@ -357,24 +351,31 @@ switch ($_REQUEST['infotype']??0) {
 <!-- Документы-основания возникновения ограничения (обременения) -->                        
                         <tr class="rform1 rfrom2 rform4">
                             <td colspan=3>
-                                <input name=encumbrance_docs placeholder="Документы-основания возникновения ограничения (обременения)">   
+                                <input name=encumbrance_docs placeholder="Документы-основания возникновения ограничения (обременения)" value="<?=$_REQUEST['encumbrance_docs']??''?>">   
                             </td>
                         </tr> 
 <!-- Особо ценное имущество -->                        
                         <tr class="rform6">
                             <td colspan=3>
-                                <input name=is_valueable type=checkbox id=is_valueable> <label for=is_valueable>Особо ценное имущество</label>
-                                <br><br>
+                                Особо ценное имущество<br>
+                                <select name=is_valueable placeholder="Особо ценное имущество">
+                                    <option>не указано</option>
+                                    <option value="true" <?=(isset($_REQUEST['is_valueable'])&&$_REQUEST['is_valueable']=="true")?'selected':''?>>да</option>
+                                    <option value="false" <?=(isset($_REQUEST['is_valueable'])&&$_REQUEST['is_valueable']=="false")?'selected':''?>>нет</option>
+                                </select>
                             </td>
-                        </tr>
+                        </tr> 
 <!-- Документы-основания определения перечня особо ценного имущества -->                        
                         <tr class="rform6">
                             <td colspan=3>
-                                <input name=valueable_docs placeholder="Документы-основания определения перечня особо ценного имущества">   
+                                <input name=valueable_docs placeholder="Документы-основания определения перечня особо ценного имущества" value="<?=$_REQUEST['valueable_docs']??''?>">   
                             </td>
                         </tr>                                                  
                         <tr>
-                            <td colspan=3>
+                            <td colspan=2>
+                                <td class="ibutton1" valign="top"><br><input type="button" value="Очистить" onclick='$("#emgisform input").not("[type=submit],[type=button]").val("");'></td>
+                            </td>                            
+                            <td colspan=1>
                                 <td class="ibutton2" valign="top"><br><input type="submit" value="Искать"></td>
                             </td>
                         </tr>                                              
@@ -387,7 +388,7 @@ switch ($_REQUEST['infotype']??0) {
                 <?php if($count!=-1){ 
                     $pagination = new Pagination(['totalCount' => $count, 'pageSize'=>20, 'page' => $_REQUEST['page']??1]);
                 ?>
-                <div style="border-bottom: 1px solid #8F1A1E !important;">
+                <div style="border-bottom: 1px solid #8F1A1E !important; margin-bottom: 10px;">
                     <h4 style="margin-top: 0; margin-bottom: 5px;"><?=$titleSearch?>, найдено записей: <?=$count?></h4>
                 </div>
 
