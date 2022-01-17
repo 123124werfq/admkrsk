@@ -33,14 +33,14 @@ class FormController extends \yii\web\Controller
         {
             $prepare = $model->prepareData(true);
 
-            if ($collection->insertRecord($prepare))
+            if ($newRecords = $collection->insertRecord($prepare))
             {
                 if (Yii::$app->request->isAjax)
                 {
                     Yii::$app->response->format = Response::FORMAT_JSON;
 
                     return [
-                        'success'=>$form->message_success?$form->message_success:'Спасибо, данные отправлены'
+                        'success'=>$form->message_success?$form->renderMessage($newRecords):'Спасибо, данные отправлены'
                     ];
                 }
 
