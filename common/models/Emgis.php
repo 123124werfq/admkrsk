@@ -197,6 +197,11 @@ class Emgis extends Model
             "\$top" => $this->onpage
         ];
 
+        if($page>1)
+        {
+            $params["\$skip"] = $this->onpage * ($page -1);
+        }
+
         if(!empty($filter))
             $params = array_merge($params, ["\$filter"=> $filter]);
 
@@ -215,9 +220,11 @@ class Emgis extends Model
             "bankID" => 2,
             "r" => $setname."/\$count",
         ];
-
+        
         if(!empty($filter))
             $params = array_merge($params, ["\$filter"=> $filter]);
+
+        //var_dump($params);die();
 
         $r = $this->request($params);
 
@@ -230,31 +237,43 @@ class Emgis extends Model
         if(isset($query['count']))
             return $this->CountRequest("Remedy65", $query['filter']??"");
         else
-            return $this->InfoRequest("Remedy65", $query['filter']??"");
+            return $this->InfoRequest("Remedy65", $query['filter']??"", $page);
     }    
 
     // сведения о зданиях 
-    public function Remedy2BuildRequest($query = [])
+    public function Remedy2BuildRequest($query = [], $page = 1)
     {
-        return $this->InfoRequest("Remedy2Build");
+        if(isset($query['count']))
+            return $this->CountRequest("Remedy2Build", $query['filter']??"");
+        else
+            return $this->InfoRequest("Remedy2Build", $query['filter']??"", $page);
     }
 
     // сведения о сооружениях 
-    public function Remedy3Request($query = [])
+    public function Remedy3Request($query = [], $page = 1)
     {
-        return $this->InfoRequest("Remedy3");
+        if(isset($query['count']))
+            return $this->CountRequest("Remedy3", $query['filter']??"");
+        else
+            return $this->InfoRequest("Remedy3", $query['filter']??"", $page);
     }
 
     // сведения о помещениях 
-    public function Remedy2RoomRequest($query = [])
+    public function Remedy2RoomRequest($query = [], $page = 1)
     {
-        return $this->InfoRequest("Remedy2Room");
+        if(isset($query['count']))
+            return $this->CountRequest("Remedy2Room", $query['filter']??"");
+        else
+            return $this->InfoRequest("Remedy2Room", $query['filter']??"", $page);
     }    
 
     // сведения об объектах незавершенного строительства 
-    public function Remedy4Request($query = [])
+    public function Remedy4Request($query = [], $page = 1)
     {
-        return $this->InfoRequest("Remedy4");
+        if(isset($query['count']))
+            return $this->CountRequest("Remedy4", $query['filter']??"");
+        else
+            return $this->InfoRequest("Remedy4", $query['filter']??"", $page);
     }
 
     // сведения о движимом имуществе 

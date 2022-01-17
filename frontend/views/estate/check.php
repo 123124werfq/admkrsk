@@ -3,6 +3,23 @@
 use yii\widgets\LinkPager;
 use yii\data\Pagination;
 
+$titleSearch = "";
+
+switch ($_REQUEST['infotype']??0) {
+    case 1: $titleSearch = "Сведения о земельных участках"; break;
+    case 2: $titleSearch = "Сведения о зданиях"; break;
+    case 3: $titleSearch = "Сведения о сооружениях"; break;
+    case 4: $titleSearch = "Сведения о помещениях"; break;
+    case 5: $titleSearch = "Сведения об объектах незавершенного строительства"; break;
+    case 6: $titleSearch = "Сведения о движимом имуществе"; break;
+    case 7: $titleSearch = "Сведения об акциях (долях)"; break;
+    case 8: $titleSearch = "Сведения о долях в праве собственности на объекты имущества"; break;
+    case 9: $titleSearch = "Сведения о предприятиях, учреждениях"; break;    
+    default:
+        # code...
+        break;
+}
+
 ?>
 
 <div class="main">
@@ -20,16 +37,16 @@ use yii\data\Pagination;
                             <td class="field_filter" width="" nowrap="nowrap">
                                 Тип запроса<br>
                                 <select name=infotype id=infotype>
-                                    <option value=1>Сведения о земельных участках</option>
-                                    <option value=2>Сведения о зданиях</option>
-                                    <option value=3>Сведения о сооружениях</option>
-                                    <option value=4>Сведения о помещениях</option>
-                                    <option value=5>Сведения об объектах незавершенного строительства</option>
-                                    <option value=6>Сведения о движимом имуществе</option>
-                                    <option value=7>Сведения об акциях (долях)</option>
-                                    <option value=8>Сведения о долях в праве собственности на объекты имущества</option>
-                                    <option value=9>Сведения об объектах интеллектуальной собственности</option>
-                                    <option value=10>Сведения о предприятиях, учреждениях</option>
+                                    <option value=1 <?=(isset($_REQUEST['infotype'])&&$_REQUEST['infotype']==1)?'selected':''?>>Сведения о земельных участках</option>
+                                    <option value=2 <?=(isset($_REQUEST['infotype'])&&$_REQUEST['infotype']==2)?'selected':''?>>Сведения о зданиях</option>
+                                    <option value=3 <?=(isset($_REQUEST['infotype'])&&$_REQUEST['infotype']==3)?'selected':''?>>Сведения о сооружениях</option>
+                                    <option value=4 <?=(isset($_REQUEST['infotype'])&&$_REQUEST['infotype']==4)?'selected':''?>>Сведения о помещениях</option>
+                                    <option value=5 <?=(isset($_REQUEST['infotype'])&&$_REQUEST['infotype']==5)?'selected':''?>>Сведения об объектах незавершенного строительства</option>
+                                    <option value=6 <?=(isset($_REQUEST['infotype'])&&$_REQUEST['infotype']==6)?'selected':''?>>Сведения о движимом имуществе</option>
+                                    <option value=7 <?=(isset($_REQUEST['infotype'])&&$_REQUEST['infotype']==7)?'selected':''?>>Сведения об акциях (долях)</option>
+                                    <option value=8 <?=(isset($_REQUEST['infotype'])&&$_REQUEST['infotype']==8)?'selected':''?>>Сведения о долях в праве собственности на объекты имущества</option>
+                                    <option value=9 <?=(isset($_REQUEST['infotype'])&&$_REQUEST['infotype']==9)?'selected':''?>>Сведения об объектах интеллектуальной собственности</option>
+                                    <option value=10 <?=(isset($_REQUEST['infotype'])&&$_REQUEST['infotype']==10)?'selected':''?>>Сведения о предприятиях, учреждениях</option>
                                 </select>
                                 <!--
                                 <input name="query" type="text" title="регистрационный номер, полученный Вами при подаче обращения/запроса информации/обжалования предоставления муниципальной услуги на Официальном сайте администрации города Красноярска, сайте Главы города Красноярска, либо номер, под которым заявка зарегистрирована в администрации города Красноярска" style="width:98%;min-width: 10em;">
@@ -88,7 +105,7 @@ use yii\data\Pagination;
 <!-- Кадастровый (условный) номер -->                        
                         <tr class="rform1 rform2 rform3 rform4 rform5 rform8">
                             <td colspan=3>
-                                <input name=cadastr_number placeholder="Кадастровый (условный) номер">   
+                                <input name=cadastr_number placeholder="Кадастровый (условный) номер" value="<?=$_REQUEST['cadastr_number']??''?>">   
                             </td>
                         </tr> 
 <!-- Категория земель -->                                            
@@ -125,16 +142,16 @@ use yii\data\Pagination;
                             <td>
                                 Площадь, кв.м<br>
                                 <select name=area_method style="width: 100px;" class="compare_method">
-                                    <option value=1>=</option>
-                                    <option value=2><</option>
-                                    <option value=3>≤</option>
-                                    <option value=4>></option>
-                                    <option value=5>≥</option>
-                                    <option value=6>между</option>
+                                    <option value=1 <?=(isset($_REQUEST['area_method'])&&$_REQUEST['area_method']==1)?'selected':''?>>=</option>
+                                    <option value=2 <?=(isset($_REQUEST['area_method'])&&$_REQUEST['area_method']==2)?'selected':''?>><</option>
+                                    <option value=3 <?=(isset($_REQUEST['area_method'])&&$_REQUEST['area_method']==3)?'selected':''?>>≤</option>
+                                    <option value=4 <?=(isset($_REQUEST['area_method'])&&$_REQUEST['area_method']==4)?'selected':''?>>></option>
+                                    <option value=5 <?=(isset($_REQUEST['area_method'])&&$_REQUEST['area_method']==5)?'selected':''?>>≥</option>
+                                    <option value=6 <?=(isset($_REQUEST['area_method'])&&$_REQUEST['area_method']==6)?'selected':''?>>между</option>
                                 </select> 
-                                <input type=number name=area_from class="hidden compare_value_from" style="width: 150px !important; display: inherit;">
-                                <span class="hidden compare_between"> и </span>
-                                <input type=number name=area_to class="" style="width: 150px !important; display: inherit;">                                
+                                <input type=number name=area_from class="<?=(isset($_REQUEST['area_method'])&&$_REQUEST['area_method']!=6)?'hidden':''?> compare_value_from" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['area_from']??''?>">
+                                <span class="<?=(isset($_REQUEST['area_method'])&&$_REQUEST['area_method']!=6)?'hidden':''?> compare_between"> и </span>
+                                <input type=number name=area_to class="" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['area_to']??''?>">                                
                             </td>
                         </tr> 
 <!-- Общая площадь -->                        
@@ -243,7 +260,7 @@ use yii\data\Pagination;
 <!-- Адрес (местоположение) -->                        
                         <tr class="rform1 rform2 rform3 rform4 rform5 rform7 rform8">
                             <td colspan=3>
-                                <input name=address placeholder="Адрес (местоположение)">   
+                                <input name=address placeholder="Адрес (местоположение)" value="<?=$_REQUEST['address']??''?>">   
                             </td>
                         </tr>   
 <!-- Должность руководителя -->                        
@@ -370,8 +387,8 @@ use yii\data\Pagination;
                 <?php if($count!=-1){ 
                     $pagination = new Pagination(['totalCount' => $count, 'pageSize'=>20, 'page' => $_REQUEST['page']??1]);
                 ?>
-                <div>
-                    <h3>Найдено записей: <?=$count?></h3>
+                <div style="border-bottom: 1px solid #8F1A1E !important;">
+                    <h4 style="margin-top: 0; margin-bottom: 5px;"><?=$titleSearch?>, найдено записей: <?=$count?></h4>
                 </div>
 
                 <?=   

@@ -19,8 +19,62 @@ use common\models\ServiceAppealState;
 
 use common\models\Emgis;
 
+ 
 class EstateController extends \yii\web\Controller
 {
+
+    /****
+     * 
+     * type:
+     * 
+     * 0 - простое поле с точным совпадением
+     * 1 - select с пустым знаечнием "не указано"
+     * 2 - простое поле с включением
+     * 3 - выбор диапазона значений 
+     * 
+     */
+    private function createFilterEntity($request, $fieldName, $paramName, &$filter, $type = 0)
+    {
+        switch ($type) {
+            case 0:
+                if(isset($request[$fieldName]) && !empty(trim($request[$fieldName])))
+                    $filter[] = $paramName. " eq ".$request[$fieldName];            
+                break;
+            case 1:
+                if(isset($request[$fieldName]) && $request[$fieldName]!= "не указано")
+                    $filter[] = $paramName. " eq ".$request[$fieldName];            
+                break;
+            case 2:
+                if(isset($request[$fieldName]) && !empty(trim($request[$fieldName])))
+                    $filter[] = "contains(".$paramName. ",".$request[$fieldName].")";            
+                break;
+            case 3:
+                if(isset($request[$fieldName.'_to']) && !empty(trim($request[$fieldName.'_to'])))
+                {
+                    switch ($request[$fieldName.'_method']) {
+                        case 1:
+                            $filter[] = $paramName." eq ". (float)$request[$fieldName.'_to']??0;
+                            break;
+                        case 2:
+                            $filter[] = $paramName." lt ". (float)$request[$fieldName.'_to']??0;
+                            break;                            
+                        case 3:
+                            $filter[] = $paramName." le ". (float)$request[$fieldName.'_to']??0;
+                            break;                            
+                        case 4:
+                            $filter[] = $paramName." gt ". (float)$request[$fieldName.'_to']??0;
+                            break;                            
+                        case 5:
+                            $filter[] = $paramName." ge ". (float)$request[$fieldName.'_to']??0;
+                            break;       
+                        case 6:
+                            $filter[] = $paramName." lt ". (float)$request[$fieldName.'_to']??0 . " and " . $paramName . " gt ". (float)$request[$fieldName.'_from']??0;
+                            break;  
+                    }
+                }                
+        }
+
+    }
 
     public function actionIndex($page = null)
     {
@@ -36,21 +90,182 @@ class EstateController extends \yii\web\Controller
 
         if(isset($_REQUEST['infotype']))
         {
+            $filter = [];
+
             switch ((int)$_REQUEST['infotype']) {
+                //Сведения о земельных участках                
                 case 1:
-                    $filter = [];
-                    
-                    if(isset($_REQUEST['area_category']) && $_REQUEST['area_category'] != "не указано" )
-                        $filter[] = "FunCls1_ClsName eq ".$_REQUEST['area_category'];
-                    if(isset($_REQUEST['allowed_use']) && !empty(trim($_REQUEST['allowed_use'])))
-                        $filter[] = "contains(Terr_AllowType,".trim($_REQUEST['allowed_use']).")";                    
+                    // кадастровый номер                    
+                    $this->createFilterEntity($_REQUEST, 'cadastr_number', 'Terr_CadNumKP', $filter);
+
+                    // категория земель
+                    $this->createFilterEntity($_REQUEST, 'area_category', 'FunCls1_ClsName', $filter, 1);
+
+                    // вид разрешенного использования
+                    $this->createFilterEntity($_REQUEST, 'allowed_use', 'Terr_AllowType', $filter, 2);
+
+                    // площадь
+                    $this->createFilterEntity($_REQUEST, 'area', 'Terr_SquareDoc', $filter, 3);
+
+                    // адрес
+                    $this->createFilterEntity($_REQUEST, 'address', 'Terr_Disposition', $filter, 2);
+
+                    // реестровый номер                    
+                    $this->createFilterEntity($_REQUEST, 'reestr_number', 'Reestr', $filter);
+
+                    // правообладатель
+                    $this->createFilterEntity($_REQUEST, 'copyright_holder', 'Order_User_Name', $filter, 2);
+
+                    // наименовнаие иного вещного права
+                    $this->createFilterEntity($_REQUEST, 'other_rights', 'Order_Right_ClsName', $filter, 1);
+
+                    // Документы-основания возникновения иного вещного права
+                    $this->createFilterEntity($_REQUEST, 'other_rights_docs', 'Order_Docum_Name', $filter, 2);
+
+                    // кадастровая стоимость
+                    $this->createFilterEntity($_REQUEST, 'cadastr_price', 'CostCad', $filter, 3);
+
+                    // вид ограничения
+                    $this->createFilterEntity($_REQUEST, 'encumbrance', 'Limit_Right_ClsName', $filter, 1);
+
+                    // документы-основания возникноваения ограничения
+                    $this->createFilterEntity($_REQUEST, 'encumbrance_docs', 'Limit_Docum_Name', $filter, 2);
 
                     $filter = implode(" and ", $filter);
 
                     $count = $emconnect->Remedy65Request(['count' => 1, "filter" => ($filter)]);
-                    $result = $emconnect->Remedy65Request(["filter" => ($filter)]);                    
+                    $result = $emconnect->Remedy65Request(["filter" => ($filter)], $_REQUEST['page']??1);                    
                     break;
                 
+                // Сведения о зданиях
+                case 2:
+                    // наименование объекта
+                    $this->createFilterEntity($_REQUEST, 'object_name', 'Name', $filter, 2);
+
+                    // назначение
+                    $this->createFilterEntity($_REQUEST, 'appointment', 'RemedyVid_ClsName', $filter, 2);
+
+                    // кадастровый номер                    
+                    $this->createFilterEntity($_REQUEST, 'cadastr_number', 'CondNum', $filter);
+
+                    // общая площадь
+                    $this->createFilterEntity($_REQUEST, 'total_area', 'SquareDoc', $filter, 3);
+
+                    // год ввода в эксплуатацию 
+                    $this->createFilterEntity($_REQUEST, 'year_start', 'ExplDate', $filter);
+
+                    // адрес
+                    $this->createFilterEntity($_REQUEST, 'address', 'Disposition', $filter, 2);
+
+                    // реестровый номер                    
+                    $this->createFilterEntity($_REQUEST, 'reestr_number', 'Reestr', $filter);
+
+                    // правообладатель
+                    $this->createFilterEntity($_REQUEST, 'copyright_holder', 'UserBal_Name2', $filter, 2);
+
+                    // наименовнаие иного вещного права
+                    $this->createFilterEntity($_REQUEST, 'other_rights', 'Order_Right_ClsName', $filter, 1);
+
+                    // Документы-основания возникновения иного вещного права
+                    $this->createFilterEntity($_REQUEST, 'other_rights_docs', 'Order_Docum_Name', $filter, 2);
+
+                    // вид ограничения
+                    $this->createFilterEntity($_REQUEST, 'encumbrance', 'Limit_Right_ClsName', $filter, 1);
+
+                    // документы-основания возникноваения ограничения
+                    $this->createFilterEntity($_REQUEST, 'encumbrance_docs', 'Limit_Docum', $filter, 2);
+
+                    $filter = implode(" and ", $filter);
+
+                    $count = $emconnect->Remedy2BuildRequest(['count' => 1, "filter" => ($filter)]);
+                    $result = $emconnect->Remedy2BuildRequest(["filter" => ($filter)], $_REQUEST['page']??1);                    
+                    break;
+
+                // Сведения о сооружениях
+                case 3:                    
+                    // наименование объекта
+                    $this->createFilterEntity($_REQUEST, 'object_name', 'Name', $filter, 2);
+
+                    // назначение
+                    $this->createFilterEntity($_REQUEST, 'appointment', 'RemedyCls_ClsName', $filter, 2);
+
+                    // кадастровый номер                    
+                    $this->createFilterEntity($_REQUEST, 'cadastr_number', 'CadCondNum', $filter);
+
+                    // общая площадь
+                    $this->createFilterEntity($_REQUEST, 'total_area', 'SPol', $filter, 3);
+
+                    // протяженность
+                    $this->createFilterEntity($_REQUEST, 'length', 'LengthVal', $filter, 3);
+
+                    // год ввода в эксплуатацию 
+                    $this->createFilterEntity($_REQUEST, 'year_start', 'ExplDate', $filter);
+
+                    // адрес
+                    $this->createFilterEntity($_REQUEST, 'address', 'Disposition', $filter, 2);
+
+                    // реестровый номер                    
+                    $this->createFilterEntity($_REQUEST, 'reestr_number', 'Reestr', $filter);
+
+                    // правообладатель
+                    $this->createFilterEntity($_REQUEST, 'copyright_holder', 'UserBal_Name2', $filter, 2);
+
+                    // наименовнаие иного вещного права
+                    $this->createFilterEntity($_REQUEST, 'other_rights', 'Order_Right_ClsName', $filter, 1);
+
+                    // Документы-основания возникновения иного вещного права
+                    $this->createFilterEntity($_REQUEST, 'other_rights_docs', 'Order_Docum_Name', $filter, 2);
+
+                    // вид ограничения
+                    $this->createFilterEntity($_REQUEST, 'encumbrance', 'Limit_Name', $filter, 1);
+
+                    $filter = implode(" and ", $filter);
+
+                    $count = $emconnect->Remedy3Request(['count' => 1, "filter" => ($filter)]);
+                    $result = $emconnect->Remedy3Request(["filter" => ($filter)], $_REQUEST['page']??1);                    
+
+                // Сведения о помещениях
+                case 4:                    
+                    // наименование объекта
+                    $this->createFilterEntity($_REQUEST, 'object_name', 'Name', $filter, 2);
+
+                    // назначение
+                    $this->createFilterEntity($_REQUEST, 'appointment', 'RemedyVid_ClsName', $filter, 2);
+
+                    // кадастровый номер                    
+                    $this->createFilterEntity($_REQUEST, 'cadastr_number', 'CondNum', $filter);
+
+                    // общая площадь
+                    $this->createFilterEntity($_REQUEST, 'total_area', 'SquareDoc', $filter, 3);
+
+                    // этажи                    
+                    $this->createFilterEntity($_REQUEST, 'floor', 'room_FloorNumb', $filter);
+
+                    // адрес
+                    $this->createFilterEntity($_REQUEST, 'address', 'Disposition', $filter, 2);
+
+                    // реестровый номер                    
+                    $this->createFilterEntity($_REQUEST, 'reestr_number', 'Reestr', $filter);
+
+                    // правообладатель
+                    $this->createFilterEntity($_REQUEST, 'copyright_holder', 'UserBal_Name2', $filter, 2);
+
+                    // наименовнаие иного вещного права
+                    $this->createFilterEntity($_REQUEST, 'other_rights', 'Order_Right_ClsName', $filter, 1);
+
+                    // Документы-основания возникновения иного вещного права
+                    $this->createFilterEntity($_REQUEST, 'other_rights_docs', 'Order_Docum_Name', $filter, 2);
+
+                    // вид ограничения
+                    $this->createFilterEntity($_REQUEST, 'encumbrance', 'Limit_Right_ClsName', $filter, 1);
+
+                    // документы-основания возникноваения ограничения
+                    $this->createFilterEntity($_REQUEST, 'encumbrance_docs', 'Limit_Docum', $filter, 2);
+
+                    $filter = implode(" and ", $filter);
+
+                    $count = $emconnect->Remedy2RoomRequest(['count' => 1, "filter" => ($filter)]);
+                    $result = $emconnect->Remedy2RoomRequest(["filter" => ($filter)], $_REQUEST['page']??1);                    
                 default:
                     # code...
                     break;
@@ -102,8 +317,8 @@ class EstateController extends \yii\web\Controller
     {
         $emconnect = new Emgis;
 
-        //$rows = $emconnect->Remedy65Request(['count' => 1]);
-        $rows = $emconnect->AllowedClassificator();
+        $rows = $emconnect->Remedy4Request();
+        //$rows = $emconnect->AllowedClassificator();
         echo "<pre>";
         var_dump($rows);
         echo "</pre>";
