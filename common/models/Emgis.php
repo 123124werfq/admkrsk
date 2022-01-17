@@ -29,7 +29,7 @@ class Emgis extends Model
         $url = $this->url . "?" . http_build_query($params);
 
         try{
-            $client = new \GuzzleHttp\Client();
+            $client = new \GuzzleHttp\Client(['verify' => false ]);
             $jar = new \GuzzleHttp\Cookie\CookieJar;
             $response = $client->request('GET', $this->url . "?" . $this->loginQuery, [
                 'cookies' => $jar
