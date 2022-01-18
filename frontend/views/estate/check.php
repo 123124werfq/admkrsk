@@ -14,14 +14,17 @@ switch ($_REQUEST['infotype']??0) {
     case 6: $titleSearch = "Сведения о движимом имуществе"; break;
     case 7: $titleSearch = "Сведения об акциях (долях)"; break;
     case 8: $titleSearch = "Сведения о долях в праве собственности на объекты имущества"; break;
-    case 9: $titleSearch = "Сведения о предприятиях, учреждениях"; break;    
+    case 9: $titleSearch = "Сведения об объектах интеллектуальной собственности"; break;
+    case 10: $titleSearch = "Сведения о предприятиях, учреждениях"; break;    
     default:
         # code...
         break;
 }
 
 ?>
-
+<style>
+    li.active{color: lightgray; cursor: default; }
+</style>
 <div class="main">
     <div class="container">
         <?=frontend\widgets\Breadcrumbs::widget(['page'=>$page])?>
@@ -66,10 +69,10 @@ switch ($_REQUEST['infotype']??0) {
                                 <input name=object_name placeholder="Наименование объекта" value="<?=$_REQUEST['object_name']??''?>">   
                             </td>
                         </tr>
-<!-- Наименование результата интеллектулаьной собственности -->                        
+<!-- Наименование результата интеллектуальной собственности -->                        
                         <tr class="rform9">
                             <td colspan=3>
-                                <input name=intelligence_name placeholder="Наименование результата интеллектулаьной собственности" value="<?=$_REQUEST['intelligence_name']??''?>">   
+                                <input name=intelligence_name placeholder="Наименование результата интеллектуальной собственности" value="<?=$_REQUEST['intelligence_name']??''?>">   
                             </td>
                         </tr>
 <!-- Марка, модель -->                        
@@ -199,16 +202,16 @@ switch ($_REQUEST['infotype']??0) {
                             <td>
                             Количество, штук<br>
                                 <select name=count_method style="width: 100px;" class="compare_method">
-                                    <option value=1>=</option>
-                                    <option value=2><</option>
-                                    <option value=3>≤</option>
-                                    <option value=4>></option>
-                                    <option value=5>≥</option>
-                                    <option value=6>между</option>
+                                    <option value=1 <?=(isset($_REQUEST['count_method'])&&$_REQUEST['count_method']==1)?'selected':''?>>=</option>
+                                    <option value=2 <?=(isset($_REQUEST['count_method'])&&$_REQUEST['count_method']==2)?'selected':''?>><</option>
+                                    <option value=3 <?=(isset($_REQUEST['count_method'])&&$_REQUEST['count_method']==3)?'selected':''?>>≤</option>
+                                    <option value=4 <?=(isset($_REQUEST['count_method'])&&$_REQUEST['count_method']==4)?'selected':''?>>></option>
+                                    <option value=5 <?=(isset($_REQUEST['count_method'])&&$_REQUEST['count_method']==5)?'selected':''?>>≥</option>
+                                    <option value=6 <?=(isset($_REQUEST['count_method'])&&$_REQUEST['count_method']==6)?'selected':''?>>между</option>
                                 </select> 
-                                <input type=number name=count_from class="hidden compare_value_from" style="width: 150px !important; display: inherit;">
-                                <span class="hidden compare_between"> и </span>
-                                <input type=number name=count_from class="" style="width: 150px !important; display: inherit;">                                                                 
+                                <input type=number name=count_from class="<?=(isset($_REQUEST['count_method'])&&$_REQUEST['count_method']!=6)?'hidden':''?> compare_value_from" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['count_from']??''?>">
+                                <span class="<?=(isset($_REQUEST['count_method'])&&$_REQUEST['count_method']!=6)?'hidden':''?> compare_between"> и </span>
+                                <input type=number name=count_to class="" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['count_to']??''?>">                                                                 
                             </td>
                         </tr>   
 <!-- Доля в уставном капитале, процентов -->                        
@@ -216,16 +219,16 @@ switch ($_REQUEST['infotype']??0) {
                             <td>
                             Доля в уставном капитале, процентов<br>
                                 <select name=part_method style="width: 100px;" class="compare_method">
-                                    <option value=1>=</option>
-                                    <option value=2><</option>
-                                    <option value=3>≤</option>
-                                    <option value=4>></option>
-                                    <option value=5>≥</option>
-                                    <option value=6>между</option>
+                                    <option value=1 <?=(isset($_REQUEST['part_method'])&&$_REQUEST['part_method']==1)?'selected':''?>>=</option>
+                                    <option value=2 <?=(isset($_REQUEST['part_method'])&&$_REQUEST['part_method']==2)?'selected':''?>><</option>
+                                    <option value=3 <?=(isset($_REQUEST['part_method'])&&$_REQUEST['part_method']==3)?'selected':''?>>≤</option>
+                                    <option value=4 <?=(isset($_REQUEST['part_method'])&&$_REQUEST['part_method']==4)?'selected':''?>>></option>
+                                    <option value=5 <?=(isset($_REQUEST['part_method'])&&$_REQUEST['part_method']==5)?'selected':''?>>≥</option>
+                                    <option value=6 <?=(isset($_REQUEST['part_method'])&&$_REQUEST['part_method']==6)?'selected':''?>>между</option>
                                 </select> 
-                                <input type=number name=part_from class="hidden compare_value_from" style="width: 150px !important; display: inherit;">
-                                <span class="hidden compare_between"> и </span>
-                                <input type=number name=part_to class="" style="width: 150px !important; display: inherit;">                                 
+                                <input type=number name=part_from class="<?=(isset($_REQUEST['part_method'])&&$_REQUEST['part_method']!=6)?'hidden':''?> compare_value_from" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['part_from']??''?>">
+                                <span class="<?=(isset($_REQUEST['part_method'])&&$_REQUEST['part_method']!=6)?'hidden':''?> compare_between"> и </span>
+                                <input type=number name=part_to class="" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['part_to']??''?>">                                 
                             </td>
                         </tr> 
 <!-- Номинальная стоимость -->                        
@@ -233,22 +236,22 @@ switch ($_REQUEST['infotype']??0) {
                             <td>
                             Номинальная стоимость<br>
                                 <select name=nominal_price_method style="width: 100px;" class="compare_method">
-                                    <option value=1>=</option>
-                                    <option value=2><</option>
-                                    <option value=3>≤</option>
-                                    <option value=4>></option>
-                                    <option value=5>≥</option>
-                                    <option value=6>между</option>
+                                    <option value=1 <?=(isset($_REQUEST['nominal_price_method'])&&$_REQUEST['nominal_price_method']==1)?'selected':''?>>=</option>
+                                    <option value=2 <?=(isset($_REQUEST['nominal_price_method'])&&$_REQUEST['nominal_price_method']==2)?'selected':''?>><</option>
+                                    <option value=3 <?=(isset($_REQUEST['nominal_price_method'])&&$_REQUEST['nominal_price_method']==3)?'selected':''?>>≤</option>
+                                    <option value=4 <?=(isset($_REQUEST['nominal_price_method'])&&$_REQUEST['nominal_price_method']==4)?'selected':''?>>></option>
+                                    <option value=5 <?=(isset($_REQUEST['nominal_price_method'])&&$_REQUEST['nominal_price_method']==5)?'selected':''?>>≥</option>
+                                    <option value=6 <?=(isset($_REQUEST['nominal_price_method'])&&$_REQUEST['nominal_price_method']==6)?'selected':''?>>между</option>
                                 </select> 
-                                <input type=number name=nominal_price_from class="hidden compare_value_from" style="width: 150px !important; display: inherit;">
-                                <span class="hidden compare_between"> и </span>
-                                <input type=number name=nominal_price_to class="" style="width: 150px !important; display: inherit;">                                
+                                <input type=number name=nominal_price_from class="<?=(isset($_REQUEST['nominal_price_method'])&&$_REQUEST['nominal_price_method']!=6)?'hidden':''?> compare_value_from" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['nominal_price_from']??''?>">
+                                <span class="<?=(isset($_REQUEST['nominal_price_method'])&&$_REQUEST['nominal_price_method']!=6)?'hidden':''?> compare_between"> и </span>
+                                <input type=number name=nominal_price_to class="" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['nominal_price_to']??''?>">                                
                             </td>
                         </tr>  
 <!-- Акционерное общество (эмитент) -->                        
                         <tr class="rform7">
                             <td colspan=3>
-                                <input name=emitent placeholder="Акционерное общество (эмитент)">   
+                                <input name=emitent placeholder="Акционерное общество (эмитент)" value="<?=$_REQUEST['emitent']??''?>">   
                             </td>
                         </tr>                                                                                                                                                                    
 <!-- Адрес (местоположение) -->                        
@@ -260,25 +263,25 @@ switch ($_REQUEST['infotype']??0) {
 <!-- Должность руководителя -->                        
                         <tr class="rform7">
                             <td colspan=3>
-                                <input name=boss_position placeholder="Должность руководителя">   
+                                <input name=boss_position placeholder="Должность руководителя" value="<?=$_REQUEST['boss_position']??''?>">   
                             </td>
                         </tr>
 <!-- Фамилия, имя, отчество руководителя -->                        
                         <tr class="rform7">
                             <td colspan=3>
-                                <input name=boss_name placeholder="Фамилия, имя, отчество руководителя">   
+                                <input name=boss_name placeholder="Фамилия, имя, отчество руководителя" value="<?=$_REQUEST['boss_name']??''?>">   
                             </td>
                         </tr>    
 <!-- Телефон -->                        
                         <tr class="rform7">
                             <td colspan=3>
-                                <input name=boss_phone placeholder="Телефон">   
+                                <input name=boss_phone placeholder="Телефон" value="<?=$_REQUEST['boss_phone']??''?>">   
                             </td>
                         </tr>     
 <!-- Адрес электронной почты -->                        
                         <tr class="rform7">
                             <td colspan=3>
-                                <input name=boss_email placeholder="Адрес электронной почты">   
+                                <input name=boss_email placeholder="Адрес электронной почты" value="<?=$_REQUEST['boss_email']??''?>">   
                             </td>
                         </tr>                                                                   
 <!-- Реестровый номер имущества -->                        
@@ -299,6 +302,12 @@ switch ($_REQUEST['infotype']??0) {
                                 <input name=copyright_holder placeholder="Правообладатель" value="<?=$_REQUEST['copyright_holder']??''?>">   
                             </td>
                         </tr>
+<!-- Срок действия исключительного права -->                        
+                        <tr class="rform9">
+                            <td colspan=3>
+                                <input name=exclusive_period placeholder="Срок действия исключительного права" value="<?=$_REQUEST['exclusive_period']??''?>">   
+                            </td>
+                        </tr>                        
 <!-- Наименование иного вещного права -->                                            
                         <tr class="rform1 rform2 rform3 rform4 rform5">
                             <td colspan=3>
@@ -323,16 +332,16 @@ switch ($_REQUEST['infotype']??0) {
                             <td>
                                 Кадастровая стоимость, руб.<br>
                                 <select name=cadastr_price_method style="width: 100px;" class="compare_method">
-                                    <option value=1>=</option>
-                                    <option value=2><</option>
-                                    <option value=3>≤</option>
-                                    <option value=4>></option>
-                                    <option value=5>≥</option>
-                                    <option value=6>между</option>
+                                    <option value=1 <?=(isset($_REQUEST['cadastr_price_method'])&&$_REQUEST['cadastr_price_method']==1)?'selected':''?>>=</option>
+                                    <option value=2 <?=(isset($_REQUEST['cadastr_price_method'])&&$_REQUEST['cadastr_price_method']==2)?'selected':''?>><</option>
+                                    <option value=3 <?=(isset($_REQUEST['cadastr_price_method'])&&$_REQUEST['cadastr_price_method']==3)?'selected':''?>>≤</option>
+                                    <option value=4 <?=(isset($_REQUEST['cadastr_price_method'])&&$_REQUEST['cadastr_price_method']==4)?'selected':''?>>></option>
+                                    <option value=5 <?=(isset($_REQUEST['cadastr_price_method'])&&$_REQUEST['cadastr_price_method']==5)?'selected':''?>>≥</option>
+                                    <option value=6 <?=(isset($_REQUEST['cadastr_price_method'])&&$_REQUEST['cadastr_price_method']==6)?'selected':''?>>между</option>
                                 </select> 
-                                <input type=number name=cadastr_price_from class="hidden compare_value_from" style="width: 150px !important; display: inherit;">
-                                <span class="hidden compare_between"> и </span>
-                                <input type=number name=cadastr_price_to class="" style="width: 150px !important; display: inherit;">                                
+                                <input type=number name=cadastr_price_from class="<?=(isset($_REQUEST['cadastr_price_method'])&&$_REQUEST['cadastr_price_method']!=6)?'hidden':''?> compare_value_from" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['cadastr_price_from']??''?>">>
+                                <span class="<?=(isset($_REQUEST['cadastr_price_method'])&&$_REQUEST['cadastr_price_method']!=6)?'hidden':''?> compare_between"> и </span>
+                                <input type=number name=cadastr_price_to class="" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['cadastr_price_to']??''?>">>                                
                             </td>
                         </tr>                                                                                                                                                                 
 <!-- Вид ограничения (обременения) -->                                            
@@ -386,7 +395,8 @@ switch ($_REQUEST['infotype']??0) {
                 </div>
 
                 <?php if($count!=-1){ 
-                    $pagination = new Pagination(['totalCount' => $count, 'pageSize'=>20, 'page' => $_REQUEST['page']??1]);
+                    $cpage = ($_REQUEST['page']??1) - 1;
+                    $pagination = new Pagination(['totalCount' => $count, 'pageSize'=>20, 'page' => $cpage]);
                 ?>
                 <div style="border-bottom: 1px solid #8F1A1E !important; margin-bottom: 10px;">
                     <h4 style="margin-top: 0; margin-bottom: 5px;"><?=$titleSearch?>, найдено записей: <?=$count?></h4>
@@ -407,7 +417,7 @@ switch ($_REQUEST['infotype']??0) {
                 ?>
                         <div class="itemCard" style="background-color: #F4F7FB !important; margin-bottom: 30px; padding: 10px; padding: 20px; border-radius: 10px;">
                             <div>
-                                <h2>№ <?= 1 + $k + (20 * ($pagination->page - 1) )?></h2>
+                                <h2>№ <?= 1 + $k + (20 * $pagination->page )?></h2>
                             </div>
 
                 <?php

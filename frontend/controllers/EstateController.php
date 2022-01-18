@@ -333,6 +333,103 @@ class EstateController extends \yii\web\Controller
                     $count = $emconnect->Remedy5Request(['count' => 1, "filter" => ($filter)]);
                     $result = $emconnect->Remedy5Request(["filter" => ($filter)], $_REQUEST['page']??1);     
                     break;
+                
+                // Сведения об акциях
+                case 7:
+                    // количество штук
+                    $this->createFilterEntity($_REQUEST, 'count', 'StockCount', $filter, 3);
+
+                    // доля в уставном капитале
+                    $this->createFilterEntity($_REQUEST, 'part', 'SharePerCent', $filter, 3);
+
+                    // номинальная стоимость
+                    $this->createFilterEntity($_REQUEST, 'nominal_price', 'EquitiesCost', $filter, 3);
+
+                    // эмитент
+                    $this->createFilterEntity($_REQUEST, 'emitent', 'Name', $filter, 2);
+
+                    // адрес
+                    $this->createFilterEntity($_REQUEST, 'address', 'Address', $filter, 2);
+
+                    // должность руководителя
+                    $this->createFilterEntity($_REQUEST, 'boss_position', 'Leader', $filter, 2);
+
+                    // фио руководителя
+                    $this->createFilterEntity($_REQUEST, 'boss_name', 'Boss', $filter, 2);
+
+                    // телефон
+                    $this->createFilterEntity($_REQUEST, 'boss_phone', 'Phone', $filter);
+
+                    // адрес электронной почты
+                    $this->createFilterEntity($_REQUEST, 'boss_email', 'email', $filter);
+
+                    // реестровый номер                    
+                    $this->createFilterEntity($_REQUEST, 'reestr_number', 'Reestr', $filter);
+
+                    // правообладатель
+                    $this->createFilterEntity($_REQUEST, 'copyright_holder', 'UserBal_Name2', $filter, 2);
+
+
+                    $filter = implode(" and ", $filter);
+
+                    $count = $emconnect->Remedy7Request(['count' => 1, "filter" => ($filter)]);
+                    $result = $emconnect->Remedy7Request(["filter" => ($filter)], $_REQUEST['page']??1);     
+                    break;
+
+                // Сведения о долях в праве собственности на объекты имущества
+                case 8:
+                    // Размер доли числитель                    
+                    $this->createFilterEntity($_REQUEST, 'property_part_numenator', 'Share1', $filter);
+
+                    // Размер доли знаменатель                    
+                    $this->createFilterEntity($_REQUEST, 'property_part_denominator', 'Share2', $filter);
+
+                    // наименование объекта
+                    $this->createFilterEntity($_REQUEST, 'object_name', 'Name', $filter, 2);
+
+                    // кадастровый номер                    
+                    $this->createFilterEntity($_REQUEST, 'cadastr_number', 'CondNum', $filter);
+
+                    // общая площадь
+                    $this->createFilterEntity($_REQUEST, 'total_area', 'Spol', $filter, 3);
+
+                    // адрес
+                    $this->createFilterEntity($_REQUEST, 'address', 'Disposition', $filter, 2);
+
+                    // реестровый номер                    
+                    $this->createFilterEntity($_REQUEST, 'reestr_number', 'ReestrOrCondNumber', $filter);
+
+                    // правообладатель
+                    $this->createFilterEntity($_REQUEST, 'copyright_holder', 'UserBal_Name2', $filter, 2);
+
+
+                    $filter = implode(" and ", $filter);
+
+                    $count = $emconnect->Remedy63Request(['count' => 1, "filter" => ($filter)]);
+                    $result = $emconnect->Remedy63Request(["filter" => ($filter)], $_REQUEST['page']??1);     
+                    break;
+
+                // Сведения об объектах интеллектуальной собственности
+                case 9:
+                    // наименование результата интеллектуальной собственности                    
+                    $this->createFilterEntity($_REQUEST, 'intelligence_name', 'Name', $filter, 2);
+
+                    // реестровый номер                    
+                    $this->createFilterEntity($_REQUEST, 'reestr_number', 'ReestrOrCondNumber', $filter);
+
+                    // правообладатель
+                    $this->createFilterEntity($_REQUEST, 'copyright_holder', 'UserBal_Name2', $filter, 2);
+
+                    // срок действия исключитлеьного права
+                    $this->createFilterEntity($_REQUEST, 'exclusive_period', 'ExrightValidity', $filter, 2);
+
+                    $filter = implode(" and ", $filter);
+
+                    $count = $emconnect->Remedy75Request(['count' => 1, "filter" => ($filter)]);
+                    $result = $emconnect->Remedy75Request(["filter" => ($filter)], $_REQUEST['page']??1);     
+                    break;
+                    
+
                 default:
                     # code...
                     break;
@@ -384,7 +481,7 @@ class EstateController extends \yii\web\Controller
     {
         $emconnect = new Emgis;
 
-        $rows = $emconnect->Remedy5Request();
+        $rows = $emconnect->Remedy75Request();
         //$rows = $emconnect->AllowedClassificator();
         echo "<pre>";
         var_dump($rows);
