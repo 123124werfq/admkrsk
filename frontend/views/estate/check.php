@@ -339,9 +339,9 @@ switch ($_REQUEST['infotype']??0) {
                                     <option value=5 <?=(isset($_REQUEST['cadastr_price_method'])&&$_REQUEST['cadastr_price_method']==5)?'selected':''?>>≥</option>
                                     <option value=6 <?=(isset($_REQUEST['cadastr_price_method'])&&$_REQUEST['cadastr_price_method']==6)?'selected':''?>>между</option>
                                 </select> 
-                                <input type=number name=cadastr_price_from class="<?=(isset($_REQUEST['cadastr_price_method'])&&$_REQUEST['cadastr_price_method']!=6)?'hidden':''?> compare_value_from" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['cadastr_price_from']??''?>">>
+                                <input type=number name=cadastr_price_from class="<?=(isset($_REQUEST['cadastr_price_method'])&&$_REQUEST['cadastr_price_method']!=6)?'hidden':''?> compare_value_from" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['cadastr_price_from']??''?>">
                                 <span class="<?=(isset($_REQUEST['cadastr_price_method'])&&$_REQUEST['cadastr_price_method']!=6)?'hidden':''?> compare_between"> и </span>
-                                <input type=number name=cadastr_price_to class="" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['cadastr_price_to']??''?>">>                                
+                                <input type=number name=cadastr_price_to class="" style="width: 150px !important; display: inherit;" value="<?=$_REQUEST['cadastr_price_to']??''?>">                                
                             </td>
                         </tr>                                                                                                                                                                 
 <!-- Вид ограничения (обременения) -->                                            
