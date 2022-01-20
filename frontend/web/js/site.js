@@ -429,7 +429,8 @@ $(document).ready(function() {
         $('#infotype').change(function(){
             let activeFormClass = '.rform' + $('#infotype').val();
             $('.rform1,.rform2,.rform3,.rform4,.rform5,.rform6,.rform7,.rform8,.rform9,.rform10').addClass('hidden');
-            $(activeFormClass).removeClass('hidden');
+            $("#emgisform input").not("[type=submit],[type=button]").val("");
+            $(activeFormClass).removeClass('hidden');            
         });
 
         $('.compare_method').change(function(){
