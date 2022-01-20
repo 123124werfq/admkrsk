@@ -439,7 +439,17 @@ $(document).ready(function() {
                 $(this).siblings('.compare_value_from, .compare_between').addClass('hidden');
         });
 
-        setTimeout("$('#infotype').change()", 100);        
+        setTimeout("$('#infotype').change()", 100);   
+        
+        $('#gotopage').click(function(){
+            let targetPage = $('#topage').val();
+            let url = new URL(location.href);
+            let params = new URLSearchParams(url.search);
+            params.set('page', targetPage);
+
+            location.href = location.origin + location.pathname +  "?" + params.toString();
+        }); 
+
     }
 
 })

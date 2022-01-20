@@ -23,7 +23,7 @@ switch ($_REQUEST['infotype']??0) {
 
 ?>
 <style>
-    li.active{color: lightgray; cursor: default; }
+    li.active a{color: lightgray !important; cursor: default; }
 </style>
 <div class="main">
     <div class="container">
@@ -69,6 +69,12 @@ switch ($_REQUEST['infotype']??0) {
                                 <input name=object_name placeholder="Наименование объекта" value="<?=$_REQUEST['object_name']??''?>">   
                             </td>
                         </tr>
+<!-- Полное наименование -->                        
+                    <tr class="rform10">
+                            <td colspan=3>
+                                <input name=full_name placeholder="Полное наименование" value="<?=$_REQUEST['full_name']??''?>">   
+                            </td>
+                        </tr>                        
 <!-- Наименование результата интеллектуальной собственности -->                        
                         <tr class="rform9">
                             <td colspan=3>
@@ -255,37 +261,55 @@ switch ($_REQUEST['infotype']??0) {
                             </td>
                         </tr>                                                                                                                                                                    
 <!-- Адрес (местоположение) -->                        
-                        <tr class="rform1 rform2 rform3 rform4 rform5 rform7 rform8">
+                        <tr class="rform1 rform2 rform3 rform4 rform5 rform7 rform8 rform10">
                             <td colspan=3>
                                 <input name=address placeholder="Адрес (местоположение)" value="<?=$_REQUEST['address']??''?>">   
                             </td>
-                        </tr>   
+                        </tr>
+<!-- ОГРН -->                           
+                        <tr class="rform10">
+                            <td colspan=3>
+                                <input name=ogrn placeholder="Основной Государственный Регистарционный Номер (ОГРН)" value="<?=$_REQUEST['ogrn']??''?>">   
+                            </td>
+                        </tr>
+<!-- ИНН -->                           
+                        <tr class="rform10">
+                            <td colspan=3>
+                                <input name=inn placeholder="Идентификационный Номер Налогоплательщика (ИНН)" value="<?=$_REQUEST['inn']??''?>">   
+                            </td>
+                        </tr>
+<!-- Учредитель -->                           
+                        <tr class="rform10">
+                            <td colspan=3>
+                                <input name=founder placeholder="Учредитель" value="<?=$_REQUEST['founder']??''?>">   
+                            </td>
+                        </tr>                        
 <!-- Должность руководителя -->                        
-                        <tr class="rform7">
+                        <tr class="rform7 rform10">
                             <td colspan=3>
                                 <input name=boss_position placeholder="Должность руководителя" value="<?=$_REQUEST['boss_position']??''?>">   
                             </td>
                         </tr>
 <!-- Фамилия, имя, отчество руководителя -->                        
-                        <tr class="rform7">
+                        <tr class="rform7 rform10">
                             <td colspan=3>
                                 <input name=boss_name placeholder="Фамилия, имя, отчество руководителя" value="<?=$_REQUEST['boss_name']??''?>">   
                             </td>
                         </tr>    
 <!-- Телефон -->                        
-                        <tr class="rform7">
+                        <tr class="rform7 rform10">
                             <td colspan=3>
                                 <input name=boss_phone placeholder="Телефон" value="<?=$_REQUEST['boss_phone']??''?>">   
                             </td>
                         </tr>     
 <!-- Адрес электронной почты -->                        
-                        <tr class="rform7">
+                        <tr class="rform7 rform10">
                             <td colspan=3>
                                 <input name=boss_email placeholder="Адрес электронной почты" value="<?=$_REQUEST['boss_email']??''?>">   
                             </td>
                         </tr>                                                                   
 <!-- Реестровый номер имущества -->                        
-                        <tr class="rform1 rform2 rform3 rform4 rform5 rform6 rform7 rform8 rform9">
+                        <tr class="rform1 rform2 rform3 rform4 rform5 rform6 rform7 rform8 rform9 rform10">
                             <td colspan=3>
                                 <input name=reestr_number placeholder="Реестровый номер имущества" value="<?=$_REQUEST['reestr_number']??''?>">   
                             </td>
@@ -399,12 +423,19 @@ switch ($_REQUEST['infotype']??0) {
                     $pagination = new Pagination(['totalCount' => $count, 'pageSize'=>20, 'page' => $cpage]);
                 ?>
                 <div style="border-bottom: 1px solid #8F1A1E !important; margin-bottom: 10px;">
-                    <h4 style="margin-top: 0; margin-bottom: 5px;"><?=$titleSearch?>, найдено записей: <?=$count?></h4>
+                    <h4 style="margin-top: 0; margin-bottom: 5px; display: inline;"><?=$titleSearch?>, найдено записей: <?=$count?> </h4>
+                    <?php
+                        if($pagination->pageCount > 1) {
+                    ?>
+                        , стр. <input type=number min=1 max=<?=$pagination->pageCount?>  id="topage" value=<?=$cpage+1?>> <a href="javascript:" id=gotopage>→</a>
+                    <?php } ?>
                 </div>
 
                 <?=   
                     LinkPager::widget([
                         'pagination' => $pagination,
+                        'lastPageLabel' => true,
+                        'firstPageLabel' => true,
                     ]); 
                 ?>
 
@@ -423,7 +454,10 @@ switch ($_REQUEST['infotype']??0) {
                 <?php
                             foreach ($item as $key => $value) {
                                 if(empty($value))
-                                    continue;   
+                                    continue; 
+                                    
+                                if($value === 'false') $value = "нет";
+                                if($value === 'true') $value = "да";
                 ?>
                         <div style="background-color: #F4F7FB !important;"><small><?= $result['fields'][$key] ?></small></div>
                         <div style="background-color: #FFF !important; padding: 5px; margin-bottom: 10px;"><?=$value?></div>
@@ -439,6 +473,8 @@ switch ($_REQUEST['infotype']??0) {
                 <?=   
                     LinkPager::widget([
                         'pagination' => $pagination,
+                        'lastPageLabel' => true,
+                        'firstPageLabel' => true,
                     ]); 
                 ?>                    
                 <?php 

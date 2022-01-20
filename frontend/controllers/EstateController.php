@@ -428,43 +428,49 @@ class EstateController extends \yii\web\Controller
                     $count = $emconnect->Remedy75Request(['count' => 1, "filter" => ($filter)]);
                     $result = $emconnect->Remedy75Request(["filter" => ($filter)], $_REQUEST['page']??1);     
                     break;
-                    
 
-                default:
-                    # code...
+                // Сведения о предприятиях, учреждениях
+                case 10:
+                    // наименование объекта
+                    $this->createFilterEntity($_REQUEST, 'full_name', 'Name', $filter, 2);
+
+                    // адрес
+                    $this->createFilterEntity($_REQUEST, 'address', 'Disposition', $filter, 2);
+
+                    // ОГРН
+                    $this->createFilterEntity($_REQUEST, 'ogrn', 'StateNumb', $filter);
+
+                    // ИНН
+                    $this->createFilterEntity($_REQUEST, 'inn', 'TaxNumb', $filter);
+
+                    // учредитель
+                    $this->createFilterEntity($_REQUEST, 'founder', 'Publish1_ClsName', $filter, 2);
+
+                    // должность руководителя
+                    $this->createFilterEntity($_REQUEST, 'boss_position', 'Leader', $filter, 2);
+
+                    // фио руководителя
+                    $this->createFilterEntity($_REQUEST, 'boss_name', 'Boss', $filter, 2);
+
+                    // телефон
+                    $this->createFilterEntity($_REQUEST, 'boss_phone', 'Phone', $filter);
+
+                    // адрес электронной почты
+                    $this->createFilterEntity($_REQUEST, 'boss_email', 'email', $filter);
+
+                    // реестровый номер                    
+                    $this->createFilterEntity($_REQUEST, 'reestr_number', 'Reestr', $filter);
+
+
+
+                    $filter = implode(" and ", $filter);
+
+                    $count = $emconnect->Remedy1Request(['count' => 1, "filter" => ($filter)]);
+                    $result = $emconnect->Remedy1Request(["filter" => ($filter)], $_REQUEST['page']??1);     
                     break;
             }
 
         }
-
-//var_dump($result['fileds']); die();
-        //$data = $emconnect->Remedy65Request();
-        /*
-        echo "<pre>";
-        var_dump($allowed);
-        //var_dump($cat2);
-        //var_dump($cat3);
-        echo "</pre>";
-        die();
-        */
-        /*
-        $request = Yii::$app->request->get('query', null);
-
-
-        $appeals = ServiceAppeal::find()->where(['number_internal' => $request])->all();
-
-        if($appeals)
-            return $this->render('//service/userhistory', [
-                'page' => $page,
-                'appeals' => $appeals
-            ]);
-
-
-        $result = false;
-
-        if(!empty($request))
-            $result = 'В реестре не содержится информация по запрошенному обращению.';
-        */
 
         return $this->render('check', [
             'areaCategories' => $cat ?? [],
@@ -481,7 +487,7 @@ class EstateController extends \yii\web\Controller
     {
         $emconnect = new Emgis;
 
-        $rows = $emconnect->Remedy75Request();
+        $rows = $emconnect->Remedy1Request();
         //$rows = $emconnect->AllowedClassificator();
         echo "<pre>";
         var_dump($rows);
