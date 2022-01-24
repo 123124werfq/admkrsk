@@ -37,7 +37,7 @@ switch ($_REQUEST['infotype']??0) {
                     <table cellpadding="0" cellspacing="0" >
                         <tbody>
                         <tr valign="bottom">
-                            <td class="field_filter" width="" nowrap="nowrap">
+                            <td class="field_filter" width="" nowrap="nowrap" colspan=3>
                                 Тип запроса<br>
                                 <select name=infotype id=infotype>
                                     <option value=1 <?=(isset($_REQUEST['infotype'])&&$_REQUEST['infotype']==1)?'selected':''?>>Сведения о земельных участках</option>
@@ -405,8 +405,9 @@ switch ($_REQUEST['infotype']??0) {
                             </td>
                         </tr>                                                  
                         <tr>
-                            <td colspan=2>
-                                <td class="ibutton1" valign="top"><br><input type="button" value="Очистить" onclick='$("#emgisform input").not("[type=submit],[type=button]").val("");'></td>
+                            <td colspan=1></td>
+                            <td colspan=1>
+                                <td class="ibutton1" valign="top"><br><input style="width: 100px !important; float: right;" type="button" value="Очистить" onclick='$("#emgisform input").not("[type=submit],[type=button]").val("");'></td>
                             </td>                            
                             <td colspan=1>
                                 <td class="ibutton2" valign="top"><br><input type="submit" value="Искать"></td>
