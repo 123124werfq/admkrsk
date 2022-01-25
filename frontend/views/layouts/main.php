@@ -76,7 +76,7 @@ if (!empty($this->params['page']))
 <?php $this->beginBody() ?>
 
     <?php if (!empty($layouts['header']->state)){
-            echo $this->render('_header', ['bundle' => $bundle,'header'=>$layout_header])?>
+            echo $this->render('_header', ['bundle' => $bundle,'header'=>$layout_header]);
     }?>
     <div class="page">
         <div class="svg-hidden">
@@ -104,7 +104,7 @@ if (!empty($this->params['page']))
         <?=Alert::widget()?>
         <?=$content?>
         <?php if (!empty($layouts['footer']->state)){
-            echo $this->render('_footer', ['bundle' => $bundle,'footer'=>$layout_footer])?>
+            echo $this->render('_footer', ['bundle' => $bundle,'footer'=>$layout_footer]);
         }?>
     </div>
 <?php $this->endBody() ?>
