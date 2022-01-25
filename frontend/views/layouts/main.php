@@ -75,7 +75,7 @@ if (!empty($this->params['page']))
 <body>
 <?php $this->beginBody() ?>
 
-    <?php if (!empty($layouts['header'])->state){
+    <?php if (!empty($layouts['header']->state)){
             echo $this->render('_header', ['bundle' => $bundle,'header'=>$layout_header])?>
     }?>
     <div class="page">
@@ -103,7 +103,7 @@ if (!empty($this->params['page']))
         </div>
         <?=Alert::widget()?>
         <?=$content?>
-        <?php if (!empty($layouts['footer'])->state){
+        <?php if (!empty($layouts['footer']->state)){
             echo $this->render('_footer', ['bundle' => $bundle,'footer'=>$layout_footer])?>
         }?>
     </div>
