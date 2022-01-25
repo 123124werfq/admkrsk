@@ -124,7 +124,7 @@ var_dump($model->client_type);*/
 
         <?= $form->field($model, 'regulations_link')->textarea(['rows' => 6,'class'=>'form-controll redactor']) ?>
 
-        <?= $form->field($model, 'duration_order')->textarea(['rows' => 6]) ?>
+        <?= $form->field($model, 'duration_order')->textarea(['rows' => 6,'class'=>'form-controll redactor']) ?>
 
         <?= $form->field($model, 'availability')->textarea(['rows' => 6]) ?>
 
