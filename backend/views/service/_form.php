@@ -108,7 +108,7 @@ var_dump($model->client_type);*/
 
         <?= $form->field($model, 'client_category')->textarea(['rows' => 6,'class'=>'form-controll redactor']) ?>
 
-        <?= $form->field($model, 'duration')->textarea(['rows' => 6]) ?>
+        <?= $form->field($model, 'duration')->textarea(['rows' => 6,'class'=>'form-controll redactor']) ?>
 
         <?= $form->field($model, 'refuse')->textarea(['rows' => 6,'class'=>'form-controll redactor']) ?>
 
@@ -131,6 +131,8 @@ var_dump($model->client_type);*/
         <?= $form->field($model, 'procedure_information')->textarea(['rows' => 6]) ?>
 
         <?= $form->field($model, 'max_duration_queue')->textarea(['rows' => 6]) ?>
+
+        <?= $form->field($model, 'subject')->textarea(['rows' => 6]) ?>
 
         <h3>Шаблон документа</h3>
 
