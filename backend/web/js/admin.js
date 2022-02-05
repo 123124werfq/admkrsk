@@ -675,6 +675,7 @@ jQuery(document).ready(function()
           },
           success: function(data)
           {
+            tinyMCE.remove();
             $("#CollectionRecord .modal-body").html(data);
             tinymce.init(tinymceConfig);
           }
@@ -698,6 +699,7 @@ jQuery(document).ready(function()
           },
           success: function(data)
           {
+            tinyMCE.remove();
             $("#CollectionRecord .modal-body").html(data);
             tinymce.init(tinymceConfig);
           }
