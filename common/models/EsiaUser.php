@@ -74,6 +74,7 @@ class EsiaUser extends \yii\db\ActiveRecord
     public function getLiving_addr_object()
     {
         $fias = $this->living_addr_fias;
+
         if (empty($fias))
             $fias = $this->register_addr_fias;
 
@@ -83,7 +84,18 @@ class EsiaUser extends \yii\db\ActiveRecord
         $model =  House::find()->where(['houseguid'=>$fias])->one();
 
         if (!empty($model))
-            return $model->getArrayData();
+        {
+            $arrayData = $model->getArrayData();
+
+            if (!empty($this->living_addr))
+            {
+               $address = explode(',',$this->living_addr);
+               if (is_array($address))
+                $arrayData['room'] = array_pop($address);
+            }
+
+            return $arrayData;
+        }
         else
             return false;
     }
@@ -91,6 +103,7 @@ class EsiaUser extends \yii\db\ActiveRecord
     public function getRegister_addr_object()
     {
         $fias = $this->register_addr_fias;
+
         if (empty($fias))
             $fias = $this->living_addr_fias;
 
@@ -100,7 +113,18 @@ class EsiaUser extends \yii\db\ActiveRecord
         $model =  House::find()->where(['houseguid'=>$fias])->one();
 
         if (!empty($model))
-            return $model->getArrayData();
+        {
+            $arrayData = $model->getArrayData();
+
+            if (!empty($this->register_addr))
+            {
+               $address = explode(',',$this->register_addr);
+               if (is_array($address))
+                $arrayData['room'] = array_pop($address);
+            }
+
+            return $arrayData;
+        }
         else
             return false;
     }

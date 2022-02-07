@@ -47,7 +47,9 @@ class FormDynamic extends DynamicModel
             }
 
             if (isset($data[$input->fieldname]))
+            {
                 $attributes['input'.$input->id_input] = $data[$input->fieldname];
+            }
             else
                 $attributes['input'.$input->id_input] = '';
 
