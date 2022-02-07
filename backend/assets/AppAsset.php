@@ -42,7 +42,7 @@ class AppAsset extends AssetBundle
         "/js/tinymce/plugins/plugins.js",
         "js/jquerybuilder/query-builder.standalone.js",
         "js/jquerybuilder/i18n/query-builder.ru.js",
-        "js/admin.js?v=19",
+        "js/admin.js?v=20",
 
     ];
     public $depends = [
