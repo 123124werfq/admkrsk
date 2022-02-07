@@ -90,7 +90,7 @@ class Service extends ActiveRecord
             [['id_situations', 'client_type', 'id_firms'], 'safe'],
             [['reestr_number','ext_url'], 'string', 'max' => 255],
             [['fullname', 'name', 'type'], 'string'],
-            [['test'],'safe'],
+            [['test','subject'],'safe'],
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
             ['access_user_ids', 'each', 'rule' => ['exist', 'targetClass' => User::class, 'targetAttribute' => 'id']],
             ['access_user_group_ids', 'each', 'rule' => ['exist', 'targetClass' => UserGroup::class, 'targetAttribute' => 'id_user_group']],
