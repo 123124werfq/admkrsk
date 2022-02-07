@@ -238,8 +238,8 @@ ul.pagination {text-align: center;}
     cursor: pointer;
     position: absolute;
     display: block;
-    right: 20px;
-    top: 50%;
+    right: 0px;
+    top: 46%;
     margin-top: -5px;
     color: #C7CCD1;
 
