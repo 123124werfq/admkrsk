@@ -707,11 +707,13 @@ class SiteController extends Controller
     /**
      * @throws NotFoundHttpException
      */
-    /*
+/*
     public function actionFakelogin()
     {
         if (true || YII_ENV_DEV) {
-            $user = User::findOne(2415);
+
+            Yii::$app->user->logout();
+            $user = User::findOne(8);
 
             Yii::$app->user->login($user, 3600 * 24 * 7);
 
@@ -719,8 +721,8 @@ class SiteController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }
-
+    }*/
+/*
     public function actionFakelogin2()
     {
         if (true || YII_ENV_DEV) {
