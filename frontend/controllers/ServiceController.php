@@ -375,7 +375,7 @@ class ServiceController extends Controller
                         $wf = new Workflow;
                         $archivePath = $wf->generateArchive($idents['guid'], $attachments, $export_path);
 
-                        var_dump($appeal->service->target);
+                        var_dump($appeal->service->subject);
                         //var_dump($insertedData);
                         die();
 
