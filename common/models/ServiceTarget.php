@@ -100,6 +100,6 @@ class ServiceTarget extends \yii\db\ActiveRecord
 
     public function getForm()
     {
-        return $this->hasOne(Service::class, ['id_form' => 'id_form']);
+        return $this->hasOne(Form::class, ['id_form' => 'id_form']);
     }
 }
