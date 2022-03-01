@@ -684,6 +684,9 @@ XMLPARTS2;
               $sourceText = str_replace('SERVICECODEHERE', $appeal->target->service_code, $sourceText);
               $sourceText = str_replace('REESTRNUMBERHERE', $appeal->target->reestr_number, $sourceText);
 
+              $sourceText = str_replace('SERVICETARGETHERE', $appeal->target->form->fullname, $sourceText);
+              $sourceText = str_replace('SUBJECTHERE', $appeal->service->subject, $sourceText);
+
               $tagparts = explode("/", $appeal->target->reestr_number);
               if(count($tagparts)>=3)
               {
