@@ -375,6 +375,8 @@ class ServiceController extends Controller
                         $wf = new Workflow;
                         $archivePath = $wf->generateArchive($idents['guid'], $attachments, $export_path);
                         // ... тут XML
+                        var_dump($insertedData); die();
+
                         if($archivePath)
                             $toSend = $wf->xopCreate($archivePath, $appeal, $insertedData);
 
