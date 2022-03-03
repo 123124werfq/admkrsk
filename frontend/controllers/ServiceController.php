@@ -376,13 +376,26 @@ class ServiceController extends Controller
                         $wf = new Workflow;
                         $archivePath = $wf->generateArchive($idents['guid'], $attachments, $export_path);
 
+                        $esiaUser = Yii::$app->user->identity->esiainfo;
+
+                        if($esiaUser)
+                        {
+                            $insertedData['snils'] = $esiaUser->snils;
+                            $insertedData['passport_serie'] = $esiaUser->passport_serie;
+                            $insertedData['passport_number'] = $esiaUser->passport_number;
+                            $insertedData['passport_date'] = $esiaUser->passport_date;
+                            $insertedData['passport_issuer'] = $esiaUser->passport_issuer;
+                            $insertedData['mobile'] = $esiaUser->mobile;                            
+                            
+                        }
+
+
                         //var_dump($appeal->target->form->fullname); 
                         //var_dump($appeal->service->subject); // описание (шаблон)
                         //var_dump($insertedData); // все данные из формы
-                        $esiaUser = Yii::$app->user->identity->esiainfo;
                         //$esiaUser = EsiaUser::find()->where(['id_user' => Yii::$app->user->id])->one();
-                        var_dump($esiaUser->snils);
-                        die();
+                        //var_dump($esiaUser->snils);
+                        //die();
 
                         // ... тут XML
                         if($archivePath)

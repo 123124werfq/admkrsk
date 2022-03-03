@@ -685,7 +685,41 @@ XMLPARTS2;
               $sourceText = str_replace('REESTRNUMBERHERE', $appeal->target->reestr_number, $sourceText);
 
               $sourceText = str_replace('SERVICETARGETHERE', $appeal->target->form->fullname, $sourceText);
-              $sourceText = str_replace('SUBJECTHERE', $appeal->service->subject, $sourceText);
+
+              $subjectTemplate = $appeal->service->subject;
+
+              if(!empty($subjectTemplate) && !empty($insdata))
+              {
+                preg_match_all("/{[^}]*}/", $subjectTemplate, $out, PREG_PATTERN_ORDER);
+
+                if(isset($out[0]))
+                {
+                    foreach ($out[0] as $templatename) {
+
+                      $nameparts = explode(".", $templatename);
+
+                      $valToSet = "";
+                      
+                      if(!isset($nameparts[1]) && isset($insdata[$templatename]))
+                      {
+                        $valToSet = $insdata[$templatename];
+                      }
+                      else if(isset($nameparts[1]) && isset($insdata[$nameparts[0]]) && isset($insdata[$nameparts[0]][$nameparts[1]]))
+                      {
+                        $valToSet = $insdata[$nameparts[0]][$nameparts[1]];
+                      }
+                        
+                      if($valToSet != "")
+                      {
+                        $subjectTemplate = str_replace('${'.$templatename.'}', $valToSet, $subjectTemplate);
+                      }
+
+                    }
+                }                
+              }
+              
+              //$sourceText = str_replace('SUBJECTHERE', $appeal->service->subject, $sourceText);
+              $sourceText = str_replace('SUBJECTHERE', $subjectTemplate, $sourceText);
 
               $tagparts = explode("/", $appeal->target->reestr_number);
               if(count($tagparts)>=3)
@@ -700,10 +734,17 @@ XMLPARTS2;
                 if(isset($userData['firstname'])) $sourceText = str_replace('firstname', $userData['firstname'], $sourceText);
                 if(isset($userData['secondname'])) $sourceText = str_replace('secondname', $userData['secondname'], $sourceText);
                 if(isset($userData['middlename'])) $sourceText = str_replace('middlename', $userData['middlename'], $sourceText);
+
                 if(isset($userData['passport_Seria'])) $sourceText = str_replace('{passport_serie}', $userData['passport_Seria'], $sourceText);
                 if(isset($userData['passport_number'])) $sourceText = str_replace('{passport_number}', $userData['passport_number'], $sourceText);
                 if(isset($userData['passport_out'])) $sourceText = str_replace('{passport_issued}', $userData['passport_out'], $sourceText);
                 if(isset($userData['passport_outDate'])) $sourceText = str_replace('{passport_date}', $userData['passport_outDate'], $sourceText);
+
+                if(isset($userData['passport_serie'])) $sourceText = str_replace('{passport_serie}', $userData['passport_serie'], $sourceText);
+                if(isset($userData['passport_number'])) $sourceText = str_replace('{passport_number}', $userData['passport_number'], $sourceText);
+                if(isset($userData['passport_issuer'])) $sourceText = str_replace('{passport_issued}', $userData['passport_issuer'], $sourceText);
+                if(isset($userData['passport_date'])) $sourceText = str_replace('{passport_date}', $userData['passport_date'], $sourceText);
+
                 if(isset($userData['home_address']['country'])) $sourceText = str_replace('{addr_country}', $userData['home_address']['country'], $sourceText);
                 if(isset($userData['home_address']['region'])) $sourceText = str_replace('{addr_region}', $userData['home_address']['region'], $sourceText);
                 if(isset($userData['home_address']['city'])) $sourceText = str_replace('{addr_city}', $userData['home_address']['city'], $sourceText);
@@ -711,12 +752,24 @@ XMLPARTS2;
                 if(isset($userData['home_address']['street'])) $sourceText = str_replace('{addr_street}', $userData['home_address']['street'], $sourceText);
                 if(isset($userData['home_address']['house'])) $sourceText = str_replace('{addr_house}', $userData['home_address']['house'], $sourceText);
                 if(isset($userData['home_address']['postalcode'])) $sourceText = str_replace('{addr_zip}', $userData['home_address']['postalcode'], $sourceText);
+
+                if(isset($userData['fl_reg_address']['country'])) $sourceText = str_replace('{addr_country}', $userData['home_address']['country'], $sourceText);
+                if(isset($userData['fl_reg_address']['region'])) $sourceText = str_replace('{addr_region}', $userData['home_address']['region'], $sourceText);
+                if(isset($userData['fl_reg_address']['city'])) $sourceText = str_replace('{addr_city}', $userData['home_address']['city'], $sourceText);
+                if(isset($userData['fl_reg_address']['district'])) $sourceText = str_replace('{addr_district}', $userData['home_address']['district'], $sourceText);
+                if(isset($userData['fl_reg_address']['street'])) $sourceText = str_replace('{addr_street}', $userData['home_address']['street'], $sourceText);
+                if(isset($userData['fl_reg_address']['house'])) $sourceText = str_replace('{addr_house}', $userData['home_address']['house'], $sourceText);
+                if(isset($userData['fl_reg_address']['postalcode'])) $sourceText = str_replace('{addr_zip}', $userData['home_address']['postalcode'], $sourceText);
+
                 if(isset($userData['fl_phone'])) $sourceText = str_replace('{phone}', $userData['fl_phone'], $sourceText);
+
+                if(isset($userData['snils'])) $sourceText = str_replace('{snils}', $userData['snils'], $sourceText);
+                if(isset($userData['mobile'])) $sourceText = str_replace('{phone}', $userData['mobile'], $sourceText);
               }
             }
           
             // удаляем то, чего не нашлось
-            $sourceText = str_replace(['{phone}','firstname','secondname','middlename','{passport_serie}','{passport_number}','{passport_issued}','{passport_date}','{addr_country}','{addr_region}','{addr_city}','{addr_district}','{addr_street}','{addr_house}','{addr_zip}'], '', $sourceText);
+            $sourceText = str_replace(['{addr_street_code}','{addr_city_code}','{addr_region_code}','{phone}','firstname','secondname','middlename','{passport_serie}','{passport_number}','{passport_issued}','{passport_date}','{addr_country}','{addr_region}','{addr_city}','{addr_district}','{addr_street}','{addr_house}','{addr_zip}'], '', $sourceText);
 
             $tempPath = str_replace('.xml', '_temp.xml', $sourcePath); // формирум файл, который будем подписывать
             file_put_contents($tempPath,$sourceText);
