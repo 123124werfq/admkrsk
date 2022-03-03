@@ -12,6 +12,7 @@ use common\models\ServiceAppealState;
 use common\models\ServiceRubric;
 use common\models\FormDynamic;
 use common\models\ServiceCounter;
+use common\models\EsiaUser;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -378,7 +379,9 @@ class ServiceController extends Controller
                         //var_dump($appeal->target->form->fullname); 
                         //var_dump($appeal->service->subject); // описание (шаблон)
                         //var_dump($insertedData); // все данные из формы
-                        //die();
+                        $esiaUser = EsiaUser::find()->where(['id_user' => Yii::$app->user->id])->one();
+                        var_dump($esiaUser->snils);
+                        die();
 
                         // ... тут XML
                         if($archivePath)
