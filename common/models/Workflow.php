@@ -753,13 +753,13 @@ XMLPARTS2;
                 if(isset($userData['home_address']['house'])) $sourceText = str_replace('{addr_house}', $userData['home_address']['house'], $sourceText);
                 if(isset($userData['home_address']['postalcode'])) $sourceText = str_replace('{addr_zip}', $userData['home_address']['postalcode'], $sourceText);
 
-                if(isset($userData['fl_reg_address']['country'])) $sourceText = str_replace('{addr_country}', $userData['home_address']['country'], $sourceText);
-                if(isset($userData['fl_reg_address']['region'])) $sourceText = str_replace('{addr_region}', $userData['home_address']['region'], $sourceText);
-                if(isset($userData['fl_reg_address']['city'])) $sourceText = str_replace('{addr_city}', $userData['home_address']['city'], $sourceText);
-                if(isset($userData['fl_reg_address']['district'])) $sourceText = str_replace('{addr_district}', $userData['home_address']['district'], $sourceText);
-                if(isset($userData['fl_reg_address']['street'])) $sourceText = str_replace('{addr_street}', $userData['home_address']['street'], $sourceText);
-                if(isset($userData['fl_reg_address']['house'])) $sourceText = str_replace('{addr_house}', $userData['home_address']['house'], $sourceText);
-                if(isset($userData['fl_reg_address']['postalcode'])) $sourceText = str_replace('{addr_zip}', $userData['home_address']['postalcode'], $sourceText);
+                if(isset($userData['fl_reg_address']['country'])) $sourceText = str_replace('{addr_country}', $userData['fl_reg_address']['country'], $sourceText);
+                if(isset($userData['fl_reg_address']['region'])) $sourceText = str_replace('{addr_region}', $userData['fl_reg_address']['region'], $sourceText);
+                if(isset($userData['fl_reg_address']['city'])) $sourceText = str_replace('{addr_city}', $userData['fl_reg_address']['city'], $sourceText);
+                if(isset($userData['fl_reg_address']['district'])) $sourceText = str_replace('{addr_district}', $userData['fl_reg_address']['district'], $sourceText);
+                if(isset($userData['fl_reg_address']['street'])) $sourceText = str_replace('{addr_street}', $userData['fl_reg_address']['street'], $sourceText);
+                if(isset($userData['fl_reg_address']['house'])) $sourceText = str_replace('{addr_house}', $userData['fl_reg_address']['house'], $sourceText);
+                if(isset($userData['fl_reg_address']['postalcode'])) $sourceText = str_replace('{addr_zip}', $userData['fl_reg_address']['postalcode'], $sourceText);
 
                 if(isset($userData['fl_phone'])) $sourceText = str_replace('{phone}', $userData['fl_phone'], $sourceText);
 
