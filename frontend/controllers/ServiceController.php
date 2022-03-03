@@ -377,8 +377,8 @@ class ServiceController extends Controller
 
                         //var_dump($appeal->target->form->fullname); 
                         //var_dump($appeal->service->subject); // описание (шаблон)
-                        //var_dump($insertedData); // все данные из формы
-                        //die();
+                        var_dump($insertedData); // все данные из формы
+                        die();
 
                         // ... тут XML
                         if($archivePath)
