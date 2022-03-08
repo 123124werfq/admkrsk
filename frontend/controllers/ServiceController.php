@@ -385,8 +385,11 @@ class ServiceController extends Controller
                             $insertedData['passport_number'] = $esiaUser->passport_number;
                             $insertedData['passport_date'] = $esiaUser->passport_date;
                             $insertedData['passport_issuer'] = $esiaUser->passport_issuer;
-                            $insertedData['mobile'] = $esiaUser->mobile;                            
-                            $insertedData['esiaid'] = Yii::$app->user->identity->email;
+                            $insertedData['mobile'] = $esiaUser->mobile;   
+                            
+                            $eparts = explode("@", Yii::$app->user->identity->email);
+                            
+                            $insertedData['esiaid'] = "esia#".$eparts[0]."@gosuslugi.ru";
                         }
 
 

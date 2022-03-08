@@ -725,7 +725,7 @@ XMLPARTS2;
               }
 
               $subjectFooter = "\n\nДата и время запроса услуги на Сайте: " . date("d.m.Y h:i");
-              $subjectFooter .= "\nРегистрационный номер запроса услуги на Сайте: ".$appeal->number_internal;
+              $subjectFooter .= "\nРегистрационный номер запроса услуги на Сайте: ".$appeal->number_common;
               $subjectFooter .= "\nЛогин пользователя на Сайте: " . $insdata['esiaid']??"-";
               $subjectFooter .= "\nУровень достоверности: Подтвержденная учетная запись ЕСИА физического лица, аутентификация по логину и паролю.";
 
