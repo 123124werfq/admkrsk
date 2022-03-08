@@ -711,17 +711,25 @@ XMLPARTS2;
                         $valToSet = $insdata[$nameparts[0]][$nameparts[1]];
                       }
 
-                      var_dump($templatename);
-                      var_dump($valToSet);
-                        
                       if($valToSet != "")
                       {
                         $subjectTemplate = str_replace('${'.$templatename.'}', $valToSet, $subjectTemplate);
+                      }
+                      else
+                      {
+                        $subjectTemplate = str_replace('${'.$templatename.'}', " - ", $subjectTemplate);
                       }
 
                     }
                 }                
               }
+
+              $subjectFooter = "\n\nДата и время запроса услуги на Сайте: " . date("d.m.Y h:i");
+              $subjectFooter .= "\nРегистрационный номер запроса услуги на Сайте: ".$appeal->number_internal;
+              $subjectFooter .= "\nЛогин пользователя на Сайте: " . $insdata['esiaid']??"-";
+              $subjectFooter .= "\nУровень достоверности: Подтвержденная учетная запись ЕСИА физического лица, аутентификация по логину и паролю.";
+
+              $subjectTemplate .= $subjectFooter;
 
               var_dump($subjectTemplate);
               die();
