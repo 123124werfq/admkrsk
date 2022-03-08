@@ -730,9 +730,6 @@ XMLPARTS2;
               $subjectFooter .= "\nУровень достоверности: Подтвержденная учетная запись ЕСИА физического лица, аутентификация по логину и паролю.";
 
               $subjectTemplate .= $subjectFooter;
-
-              var_dump($subjectTemplate);
-              die();
               
               //$sourceText = str_replace('SUBJECTHERE', $appeal->service->subject, $sourceText);
               $sourceText = str_replace('SUBJECTHERE', $subjectTemplate, $sourceText);
