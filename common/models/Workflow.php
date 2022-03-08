@@ -708,6 +708,9 @@ XMLPARTS2;
                       {
                         $valToSet = $insdata[$nameparts[0]][$nameparts[1]];
                       }
+
+                      var_dump($templatename);
+                      var_dump($valToSet);
                         
                       if($valToSet != "")
                       {
@@ -717,6 +720,9 @@ XMLPARTS2;
                     }
                 }                
               }
+
+              var_dump($subjectTemplate);
+              die();
               
               //$sourceText = str_replace('SUBJECTHERE', $appeal->service->subject, $sourceText);
               $sourceText = str_replace('SUBJECTHERE', $subjectTemplate, $sourceText);
