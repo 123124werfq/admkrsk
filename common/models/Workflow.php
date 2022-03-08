@@ -696,6 +696,8 @@ XMLPARTS2;
                 {
                     foreach ($out[0] as $templatename) {
 
+                      $templatename = str_replace(["{", "}"], "", $templatename);
+
                       $nameparts = explode(".", $templatename);
 
                       $valToSet = "";
