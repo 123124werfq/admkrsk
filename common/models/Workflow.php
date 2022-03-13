@@ -747,7 +747,7 @@ XMLPARTS2;
                 $sourceText = $this->flToUl($sourceText);
               }
 
-              echo $sourceText; die();
+              //echo $sourceText; die();
 
               if(!empty($insdata))
               {
