@@ -740,6 +740,15 @@ XMLPARTS2;
                 $tagstring = "Input_{$tagparts[0]}_{$tagparts[1]}_{$tagparts[2]}FL";
                 $sourceText = str_replace('TAGSERVICEHERE', $tagstring, $sourceText);
               }
+
+              // FL -> UL
+              if(isset($insdata['is_fl']) && $insdata['is_fl'] == false)
+              {
+                $sourceText = $this->flToUl($sourceText);
+              }
+
+              echo $sourceText; die();
+
               if(!empty($insdata))
               {
                 //$userData = json_decode($appeal->data, true);
@@ -856,6 +865,35 @@ MTMOARCH;
 
         return file_put_contents($output, $result)?$output:false;
     }
+
+    protected function flToUl($template)
+    {
+      $flPatterns = [
+        '/<FL_FIO.*\/>/i',
+        '/<FL_PASSPORT.*\/>/i',
+      ];
+
+      $template = preg_replace($flPatterns, "", $template);
+
+      $ulInfo = <<<ULINFO
+
+      <UL_Name>ULNAMEHERE</UL_Name>
+      <UL_INN>ULINNHERE</UL_INN>
+      <UL_OGRN>ULOGRNHERE</UL_OGRN>
+      <UL_ADR1 ADR_Country="{addr_country}" ADR_Region_Code="{addr_region_code}" ADR_Region="{addr_region}" ADR_City_Code="{addr_city_code}" ADR_City="{addr_city}" ADR_City_District="{addr_district}" ADR_Street_Code="{addr_street_code}" ADR_Street="{addr_street}" ADR_House="{addr_house}" ADR_Zip="{addr_zip}" />
+      <UL_ADR2 ADR_Country="{addr_country2}" ADR_Region_Code="{addr_region_code2}" ADR_Region="{addr_region2}" ADR_City_Code="{addr_city_code2}" ADR_City="{addr_city2}" ADR_City_District="{addr_district2}" ADR_Street_Code="{addr_street_code2}" ADR_Street="{addr_street2}" ADR_House="{addr_house2}" ADR_Zip="{addr_zip2}" />
+      <TrustedPerson LastName="firstname" FirstName="secondname" MiddleName="middlename" />
+      <UL_ChiefJob>ULCHIEFHERE</UL_ChiefJob>
+      
+ULINFO;
+
+      $template = str_replace("<FL_SNILS>{snils}</FL_SNILS>", $ulInfo, $template );
+
+      $template = str_replace("FL_", "UL_", $template);
+
+      return $template;
+    }
+
 
     protected function fillRequestTemplate(array $params)
     {
