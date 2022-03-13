@@ -392,10 +392,15 @@ class ServiceController extends Controller
                             $insertedData['esiaid'] = "esia#".$eparts[0]."@gosuslugi.ru";
                         }
 
+                        $insertedData['is_fl'] = true;
+
+                        if(isset($insertedData["category"]) && $insertedData["category"] != "Физическое лицо") 
+                            $insertedData['is_fl'] = false;
+
 
                         //var_dump($appeal->target->form->fullname); 
                         //var_dump($appeal->service->subject); // описание (шаблон)
-                        var_dump($insertedData["category"]); // все данные из формы
+                        var_dump($insertedData["is_fl"]); // все данные из формы
                         //$esiaUser = EsiaUser::find()->where(['id_user' => Yii::$app->user->id])->one();
                         //var_dump($esiaUser->snils);
                         die();
