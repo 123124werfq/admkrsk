@@ -14,6 +14,8 @@
             <li><a href="javascript:" data-action="3">Скопировать</a></li>
             <li><a href="javascript:" data-action="4">Удалить</a></li>
         </ul>
+
+        <label class="ml-3"><input id="for_all" type="checkbox" name="for_all"/> применить для всех в выборке</label>
       </div>
 		</form>
 	</div>
