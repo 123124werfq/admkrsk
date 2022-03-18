@@ -135,6 +135,10 @@ class CollectionColumnController extends Controller
 
         foreach ($records as $id_record => $data)
         {
+            // пропускаем заархивированные записи
+            if (!empty($data['is_archive']))
+                continue;
+
             $modelRecord = CollectionRecord::findOne($id_record);
 
             $columns = Helper::getTwigVars($model->template);

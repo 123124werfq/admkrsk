@@ -416,14 +416,19 @@ jQuery(document).ready(function()
       {
         var ids = [];
 
+        var for_all = false;
+
         $('input[name="selection[]"]:checked').each(function(i){
             ids.push($(this).val());
         });
 
+        if ($("#for_all").is(":checked"))
+          for_all = true;
+
         $.ajax({
-            url: document.location,
+            url: document.location+'&'+$("#collection_grid thead input").serialize(),
             type: 'post',
-            data: {ids:ids,action:$link.data('action')},
+            data: {ids:ids,action:$link.data('action'),for_all:for_all},
             success: function(data)
             {
               $.pjax.reload({container: '#collection_grid', async: false});

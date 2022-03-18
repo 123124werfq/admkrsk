@@ -12,6 +12,7 @@ use common\models\ServiceAppealState;
 use common\models\ServiceRubric;
 use common\models\FormDynamic;
 use common\models\ServiceCounter;
+use common\models\EsiaUser;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -374,6 +375,36 @@ class ServiceController extends Controller
 
                         $wf = new Workflow;
                         $archivePath = $wf->generateArchive($idents['guid'], $attachments, $export_path);
+
+                        $esiaUser = Yii::$app->user->identity->esiainfo;
+
+                        if($esiaUser)
+                        {
+                            $insertedData['snils'] = $esiaUser->snils;
+                            $insertedData['passport_serie'] = $esiaUser->passport_serie;
+                            $insertedData['passport_number'] = $esiaUser->passport_number;
+                            $insertedData['passport_date'] = $esiaUser->passport_date;
+                            $insertedData['passport_issuer'] = $esiaUser->passport_issuer;
+                            $insertedData['mobile'] = $esiaUser->mobile;   
+                            
+                            $eparts = explode("@", Yii::$app->user->identity->email);
+                            
+                            $insertedData['esiaid'] = "esia#".$eparts[0]."@gosuslugi.ru";
+                        }
+
+                        $insertedData['is_fl'] = true;
+
+                        if(isset($insertedData["category"]) && $insertedData["category"] != "Физическое лицо") 
+                            $insertedData['is_fl'] = false;
+
+
+                        //var_dump($appeal->target->form->fullname); 
+                        //var_dump($appeal->service->subject); // описание (шаблон)
+                        //var_dump($insertedData); // все данные из формы
+                        //$esiaUser = EsiaUser::find()->where(['id_user' => Yii::$app->user->id])->one();
+                        //var_dump($esiaUser->snils);
+                        //die();
+
                         // ... тут XML
                         if($archivePath)
                             $toSend = $wf->xopCreate($archivePath, $appeal, $insertedData);

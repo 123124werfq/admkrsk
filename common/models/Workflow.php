@@ -684,12 +684,71 @@ XMLPARTS2;
               $sourceText = str_replace('SERVICECODEHERE', $appeal->target->service_code, $sourceText);
               $sourceText = str_replace('REESTRNUMBERHERE', $appeal->target->reestr_number, $sourceText);
 
+              $sourceText = str_replace('SERVICETARGETHERE', $appeal->target->form->fullname, $sourceText);
+
+              $subjectTemplate = $appeal->service->subject;
+
+              if(!empty($subjectTemplate) && !empty($insdata))
+              {
+                preg_match_all("/{[^}]*}/", $subjectTemplate, $out, PREG_PATTERN_ORDER);
+
+                if(isset($out[0]))
+                {
+                    foreach ($out[0] as $templatename) {
+
+                      $templatename = str_replace(["{", "}"], "", $templatename);
+
+                      $nameparts = explode(".", $templatename);
+
+                      $valToSet = "";
+                      
+                      if(!isset($nameparts[1]) && isset($insdata[$templatename]))
+                      {
+                        $valToSet = $insdata[$templatename];
+                      }
+                      else if(isset($nameparts[1]) && isset($insdata[$nameparts[0]]) && isset($insdata[$nameparts[0]][$nameparts[1]]))
+                      {
+                        $valToSet = $insdata[$nameparts[0]][$nameparts[1]];
+                      }
+
+                      if($valToSet != "")
+                      {
+                        $subjectTemplate = str_replace('${'.$templatename.'}', $valToSet, $subjectTemplate);
+                      }
+                      else
+                      {
+                        $subjectTemplate = str_replace('${'.$templatename.'}', " - ", $subjectTemplate);
+                      }
+
+                    }
+                }                
+              }
+
+              $subjectFooter = "\n\nДата и время запроса услуги на Сайте: " . date("d.m.Y h:i");
+              $subjectFooter .= "\nРегистрационный номер запроса услуги на Сайте: ".$appeal->number_common;
+              $subjectFooter .= "\nЛогин пользователя на Сайте: " . $insdata['esiaid']??"-";
+              $subjectFooter .= "\nУровень достоверности: Подтвержденная учетная запись ЕСИА физического лица, аутентификация по логину и паролю.";
+
+              $subjectTemplate .= $subjectFooter;
+              
+              //$sourceText = str_replace('SUBJECTHERE', $appeal->service->subject, $sourceText);
+              $sourceText = str_replace('SUBJECTHERE', $subjectTemplate, $sourceText);
+
               $tagparts = explode("/", $appeal->target->reestr_number);
               if(count($tagparts)>=3)
               {
                 $tagstring = "Input_{$tagparts[0]}_{$tagparts[1]}_{$tagparts[2]}FL";
                 $sourceText = str_replace('TAGSERVICEHERE', $tagstring, $sourceText);
               }
+
+              // FL -> UL
+              if(isset($insdata['is_fl']) && $insdata['is_fl'] == false)
+              {
+                $sourceText = $this->flToUl($sourceText);
+              }
+
+              //echo $sourceText; die();
+
               if(!empty($insdata))
               {
                 //$userData = json_decode($appeal->data, true);
@@ -697,23 +756,79 @@ XMLPARTS2;
                 if(isset($userData['firstname'])) $sourceText = str_replace('firstname', $userData['firstname'], $sourceText);
                 if(isset($userData['secondname'])) $sourceText = str_replace('secondname', $userData['secondname'], $sourceText);
                 if(isset($userData['middlename'])) $sourceText = str_replace('middlename', $userData['middlename'], $sourceText);
+
                 if(isset($userData['passport_Seria'])) $sourceText = str_replace('{passport_serie}', $userData['passport_Seria'], $sourceText);
                 if(isset($userData['passport_number'])) $sourceText = str_replace('{passport_number}', $userData['passport_number'], $sourceText);
                 if(isset($userData['passport_out'])) $sourceText = str_replace('{passport_issued}', $userData['passport_out'], $sourceText);
                 if(isset($userData['passport_outDate'])) $sourceText = str_replace('{passport_date}', $userData['passport_outDate'], $sourceText);
-                if(isset($userData['home_address']['country'])) $sourceText = str_replace('{addr_country}', $userData['home_address']['country'], $sourceText);
-                if(isset($userData['home_address']['region'])) $sourceText = str_replace('{addr_region}', $userData['home_address']['region'], $sourceText);
-                if(isset($userData['home_address']['city'])) $sourceText = str_replace('{addr_city}', $userData['home_address']['city'], $sourceText);
-                if(isset($userData['home_address']['district'])) $sourceText = str_replace('{addr_district}', $userData['home_address']['district'], $sourceText);
-                if(isset($userData['home_address']['street'])) $sourceText = str_replace('{addr_street}', $userData['home_address']['street'], $sourceText);
-                if(isset($userData['home_address']['house'])) $sourceText = str_replace('{addr_house}', $userData['home_address']['house'], $sourceText);
-                if(isset($userData['home_address']['postalcode'])) $sourceText = str_replace('{addr_zip}', $userData['home_address']['postalcode'], $sourceText);
+
+                if(isset($userData['passport_serie'])) $sourceText = str_replace('{passport_serie}', $userData['passport_serie'], $sourceText);
+                if(isset($userData['passport_number'])) $sourceText = str_replace('{passport_number}', $userData['passport_number'], $sourceText);
+                if(isset($userData['passport_issuer'])) $sourceText = str_replace('{passport_issued}', $userData['passport_issuer'], $sourceText);
+                if(isset($userData['passport_date'])) $sourceText = str_replace('{passport_date}', $userData['passport_date'], $sourceText);
+
+                if(isset($userData['home_address']))
+                {                
+                  if(isset($userData['home_address']['country'])) $sourceText = str_replace('{addr_country}', $userData['home_address']['country'], $sourceText);
+                  if(isset($userData['home_address']['region'])) $sourceText = str_replace('{addr_region}', $userData['home_address']['region'], $sourceText);
+                  if(isset($userData['home_address']['city'])) $sourceText = str_replace('{addr_city}', $userData['home_address']['city'], $sourceText);
+                  if(isset($userData['home_address']['district'])) $sourceText = str_replace('{addr_district}', $userData['home_address']['district'], $sourceText);
+                  if(isset($userData['home_address']['street'])) $sourceText = str_replace('{addr_street}', $userData['home_address']['street'], $sourceText);
+                  if(isset($userData['home_address']['house'])) $sourceText = str_replace('{addr_house}', $userData['home_address']['house'], $sourceText);
+                  if(isset($userData['home_address']['postalcode'])) $sourceText = str_replace('{addr_zip}', $userData['home_address']['postalcode'], $sourceText);
+                }
+
+                if(isset($userData['fl_reg_address']))
+                {                 
+                  if(isset($userData['fl_reg_address']['country'])) $sourceText = str_replace('{addr_country}', $userData['fl_reg_address']['country'], $sourceText);
+                  if(isset($userData['fl_reg_address']['region'])) $sourceText = str_replace('{addr_region}', $userData['fl_reg_address']['region'], $sourceText);
+                  if(isset($userData['fl_reg_address']['city'])) $sourceText = str_replace('{addr_city}', $userData['fl_reg_address']['city'], $sourceText);
+                  if(isset($userData['fl_reg_address']['district'])) $sourceText = str_replace('{addr_district}', $userData['fl_reg_address']['district'], $sourceText);
+                  if(isset($userData['fl_reg_address']['street'])) $sourceText = str_replace('{addr_street}', $userData['fl_reg_address']['street'], $sourceText);
+                  if(isset($userData['fl_reg_address']['house'])) $sourceText = str_replace('{addr_house}', $userData['fl_reg_address']['house'], $sourceText);
+                  if(isset($userData['fl_reg_address']['postalcode'])) $sourceText = str_replace('{addr_zip}', $userData['fl_reg_address']['postalcode'], $sourceText);
+                }
+
                 if(isset($userData['fl_phone'])) $sourceText = str_replace('{phone}', $userData['fl_phone'], $sourceText);
+
+                if(isset($userData['snils'])) $sourceText = str_replace('{snils}', $userData['snils'], $sourceText);
+                if(isset($userData['mobile'])) $sourceText = str_replace('{phone}', $userData['mobile'], $sourceText);
+
+                // для организаций
+                if(isset($userData['orgName'])) $sourceText = str_replace('ULNAMEHERE', $userData['orgName'], $sourceText);
+                if(isset($userData['ul_inn'])) $sourceText = str_replace('ULINNHERE', $userData['ul_inn'], $sourceText);
+                if(isset($userData['ogrn'])) $sourceText = str_replace('ULOGRNHERE', $userData['ogrn'], $sourceText);
+                if(isset($userData['position'])) $sourceText = str_replace('ULCHIEFHERE', $userData['position'], $sourceText);
+                if(isset($userData['ul_phone'])) $sourceText = str_replace('{phone}', $userData['ul_phone'], $sourceText);
+
+                if(isset($userData['ul_realAddr']))
+                {
+                  if(isset($userData['ul_realAddr']['country'])) $sourceText = str_replace('{addr_country}', $userData['ul_realAddr']['country'], $sourceText);
+                  if(isset($userData['ul_realAddr']['region'])) $sourceText = str_replace('{addr_region}', $userData['ul_realAddr']['region'], $sourceText);
+                  if(isset($userData['ul_realAddr']['city'])) $sourceText = str_replace('{addr_city}', $userData['ul_realAddr']['city'], $sourceText);
+                  if(isset($userData['ul_realAddr']['district'])) $sourceText = str_replace('{addr_district}', $userData['ul_realAddr']['district'], $sourceText);
+                  if(isset($userData['ul_realAddr']['street'])) $sourceText = str_replace('{addr_street}', $userData['ul_realAddr']['street'], $sourceText);
+                  if(isset($userData['ul_realAddr']['house'])) $sourceText = str_replace('{addr_house}', $userData['ul_realAddr']['house'], $sourceText);
+                  if(isset($userData['ul_realAddr']['postalcode'])) $sourceText = str_replace('{addr_zip}', $userData['ul_realAddr']['postalcode'], $sourceText);
+                }
+
+                if(isset($userData['ul_jurAddr']))
+                {
+                  if(isset($userData['ul_jurAddr']['country'])) $sourceText = str_replace('{addr_country2}', $userData['ul_jurAddr']['country'], $sourceText);
+                  if(isset($userData['ul_jurAddr']['region'])) $sourceText = str_replace('{addr_region2}', $userData['ul_jurAddr']['region'], $sourceText);
+                  if(isset($userData['ul_jurAddr']['city'])) $sourceText = str_replace('{addr_city2}', $userData['ul_jurAddr']['city'], $sourceText);
+                  if(isset($userData['ul_jurAddr']['district'])) $sourceText = str_replace('{addr_district2}', $userData['ul_jurAddr']['district'], $sourceText);
+                  if(isset($userData['ul_jurAddr']['street'])) $sourceText = str_replace('{addr_street2}', $userData['ul_jurAddr']['street'], $sourceText);
+                  if(isset($userData['ul_jurAddr']['house'])) $sourceText = str_replace('{addr_house2}', $userData['ul_jurAddr']['house'], $sourceText);
+                  if(isset($userData['ul_jurAddr']['postalcode'])) $sourceText = str_replace('{addr_zip2}', $userData['ul_jurAddr']['postalcode'], $sourceText);
+                }
+
               }
             }
           
             // удаляем то, чего не нашлось
-            $sourceText = str_replace(['{phone}','firstname','secondname','middlename','{passport_serie}','{passport_number}','{passport_issued}','{passport_date}','{addr_country}','{addr_region}','{addr_city}','{addr_district}','{addr_street}','{addr_house}','{addr_zip}'], '', $sourceText);
+            $sourceText = str_replace(['{addr_street_code}','{addr_city_code}','{addr_region_code}','{phone}','firstname','secondname','middlename','{passport_serie}','{passport_number}','{passport_issued}','{passport_date}','{addr_country}','{addr_region}','{addr_city}','{addr_district}','{addr_street}','{addr_house}','{addr_zip}'], '', $sourceText);
+            $sourceText = str_replace(['{addr_street_code2}','{addr_city_code2}','{addr_region_code2}','{addr_country2}','{addr_region2}','{addr_city2}','{addr_district2}','{addr_street2}','{addr_house2}','{addr_zip2}', 'orgName', 'ul_inn', 'ogrn', 'position', 'ul_phone'], '', $sourceText);
 
             $tempPath = str_replace('.xml', '_temp.xml', $sourcePath); // формирум файл, который будем подписывать
             file_put_contents($tempPath,$sourceText);
@@ -787,6 +902,35 @@ MTMOARCH;
 
         return file_put_contents($output, $result)?$output:false;
     }
+
+    protected function flToUl($template)
+    {
+      $flPatterns = [
+        '/<FL_FIO.*\/>/i',
+        '/<FL_PASSPORT.*\/>/i',
+      ];
+
+      $template = preg_replace($flPatterns, "", $template);
+
+      $ulInfo = <<<ULINFO
+
+      <UL_Name>ULNAMEHERE</UL_Name>
+      <UL_INN>ULINNHERE</UL_INN>
+      <UL_OGRN>ULOGRNHERE</UL_OGRN>
+      <UL_ADR1 ADR_Country="{addr_country}" ADR_Region_Code="{addr_region_code}" ADR_Region="{addr_region}" ADR_City_Code="{addr_city_code}" ADR_City="{addr_city}" ADR_City_District="{addr_district}" ADR_Street_Code="{addr_street_code}" ADR_Street="{addr_street}" ADR_House="{addr_house}" ADR_Zip="{addr_zip}" />
+      <UL_ADR2 ADR_Country="{addr_country2}" ADR_Region_Code="{addr_region_code2}" ADR_Region="{addr_region2}" ADR_City_Code="{addr_city_code2}" ADR_City="{addr_city2}" ADR_City_District="{addr_district2}" ADR_Street_Code="{addr_street_code2}" ADR_Street="{addr_street2}" ADR_House="{addr_house2}" ADR_Zip="{addr_zip2}" />
+      <TrustedPerson LastName="firstname" FirstName="secondname" MiddleName="middlename" />
+      <UL_ChiefJob>ULCHIEFHERE</UL_ChiefJob>
+      
+ULINFO;
+
+      $template = str_replace("<FL_SNILS>{snils}</FL_SNILS>", $ulInfo, $template );
+
+      $template = str_replace("FL_", "UL_", $template);
+
+      return $template;
+    }
+
 
     protected function fillRequestTemplate(array $params)
     {
