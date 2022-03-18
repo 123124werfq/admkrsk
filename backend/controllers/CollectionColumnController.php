@@ -172,13 +172,20 @@ class CollectionColumnController extends Controller
         return $this->redirect(['index','id'=>$id]);
     }
 
-    public function actionList($q='',$id_collection)
+    public function actionList($q='',$id_collection,$onlytext=0)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $collection = $this->findModelCollection($id_collection);
 
         $query = $collection->getColumns();
+
+        if ($onlytext)
+            $query->andWhere(['in','type',[
+                CollectionColumn::TYPE_INPUT,
+                CollectionColumn::TYPE_INTEGER,
+                CollectionColumn::TYPE_CUSTOM,
+            ]);
 
         if (!empty($q))
             $query->andWhere(['or',['ilike', 'name', $q], ['ilike', 'alias', $q]]);

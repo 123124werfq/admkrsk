@@ -103,7 +103,7 @@ use yii\web\JsExpression;
                 'ajax' => [
                     'url' => '/collection-column/list',
                     'dataType' => 'json',
-                    'data' => new JsExpression('function(params) {return {q:params.term,id_collection:$("#forminput-id_collection").val()}}')
+                    'data' => new JsExpression('function(params) {return {q:params.term,onlytext:1,id_collection:$("#forminput-id_collection").val()}}')
                 ],
             ],
             'options' => [
