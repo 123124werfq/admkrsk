@@ -185,7 +185,7 @@ class CollectionColumnController extends Controller
                 CollectionColumn::TYPE_INPUT,
                 CollectionColumn::TYPE_INTEGER,
                 CollectionColumn::TYPE_CUSTOM,
-            ]);
+            ]]);
 
         if (!empty($q))
             $query->andWhere(['or',['ilike', 'name', $q], ['ilike', 'alias', $q]]);
