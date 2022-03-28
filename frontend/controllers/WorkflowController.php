@@ -341,7 +341,43 @@ MTMOARCH;
 
         $input = trim($input);
 
-        $xmlArray = self::xmlToArray($input);
+        if(empty($input))
+        {
+            echo "Empty input"; 
+            die();
+        }
+
+        // check if input has MTOM 
+        $mimeMarkerPos = strpos($input, "--MIME_boundary");
+        if($mimeMarkerPos > 0)
+        {
+            $parts = explode("--MIME_boundary", $input);
+
+            if(!isset($parts[1]))
+            {
+                echo "Mailformed MTOM"; 
+                die();                
+            }
+
+            $content = explode("Content-Transfer-Encoding: binary", $parts[1]);
+        
+            if(isset($content[1]))
+            {                
+                $xmlArray = self::xmlToArray(trim($content[1]));
+            }
+            else
+            {
+                echo "Mailformed MTOM"; 
+                die();                   
+            }
+        }
+        else
+        {
+            $xmlArray = self::xmlToArray($input);
+        }
+
+        //$xmlArray = self::xmlToArray($input);
+        //var_dump($xmlArray['v25pushEventRequest']['revMessage']); die();
 
         if(isset($xmlArray['v25pushEventRequest']['smevMessage']))
         {
@@ -374,6 +410,98 @@ MTMOARCH;
                 }
             }
 
+        }
+        else if(isset($xmlArray['v25pushEventRequest']['revMessage']))
+        {
+            $caseNum =  $xmlArray['v25pushEventRequest']['revMessage']['revCaseNumber'];
+            $statusInfo = $xmlArray['v25pushEventRequest']['revMessageData']['revAppData'];
+            $statusCode = $xmlArray['v25pushEventRequest']['revMessageData']['revAppData']['event']['orderStatusEvent']['statusCode']['techCode'];
+
+            if(isset($xmlArray['v25pushEventRequest']['revMessageData']['revAppData']['orgRegNum']))
+            {
+                $regNum = $xmlArray['v25pushEventRequest']['revMessageData']['revAppData']['orgRegNum'];
+            }
+
+            $appeal = ServiceAppeal::find()->where("number_internal='$caseNum'")->one();
+
+            if($appeal)
+            {
+                $appeal->number_system = $regNum;
+                $appeal->updateAttributes(['number_system']);
+
+                $unixDate = strtotime($statusInfo['eventDate']);
+                $as = ServiceAppealState::find()->where("id_appeal=$appeal->id_appeal")->andWhere("state='$statusCode'")->andWhere("date=$unixDate")->one();
+
+                if(!$as)
+                {
+                    $as = new ServiceAppealState;
+                    $as->id_appeal = $appeal->id_appeal;
+                    $as->state = $statusCode;
+                    $as->date = $unixDate;
+                    $as->save();
+                }
+            }
+
+            // сохраняем файл(ы)
+            if($statusCode == 3)
+            {
+                $savePath = Yii::getAlias('@runtime')."/inlet/$caseNum";
+                if (!file_exists( $savePath))
+                {
+                    mkdir($savePath, 0777);
+                }
+                
+                $parts = explode("--MIME_boundary", $input);
+                foreach ($parts as $part) {
+                    if(!strpos($part, "Content-Transfer-Encoding:"))
+                        continue;
+
+                    if(strpos($part, "Content-Transfer-Encoding: binary"))
+                    {
+                        $content = explode("Content-Transfer-Encoding: binary", $part);
+        
+                        if(isset($content[1]))
+                        {
+                            $content = trim($content[1]);
+                            $pathXML = $savePath . "/status" . date("Ymdhi") . ".xml";
+        
+                            file_put_contents($pathXML, $content);
+                        }
+        
+                    }
+                    else if(strpos($part, "Content-Transfer-Encoding: base64"))
+                    {
+                        $content = explode("Content-Transfer-Encoding: base64", $part);
+        
+                        if(isset($content[1]))
+                        {
+                            $content = trim($content[1]);
+                            $pathZIP = $savePath . "/archive" . date("Ymdhi") . ".zip";
+        
+                            file_put_contents($pathZIP, base64_decode($content));
+
+                            $unpackPath = $savePath . "/archive";
+                            if (!file_exists( $unpackPath))
+                            {
+                                mkdir($unpackPath, 0777);
+                            }                            
+
+                            exec("unzip -o $pathZIP -x -d $unpackPath");  
+                            
+                            $unpackedFiles = scandir($unpackPath);
+                            foreach ($unpackedFiles as $filename) {
+                                $ext = pathinfo($filename, PATHINFO_EXTENSION);
+                                if($ext == 'zip')
+                                {
+                                    echo $unpackPath."/".$filename; die();
+                                }
+                            }
+                        }
+        
+                    }            
+                }                
+
+            }            
         }
 
     }
