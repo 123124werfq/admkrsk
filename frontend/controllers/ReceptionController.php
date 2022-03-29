@@ -22,7 +22,7 @@ class ReceptionController extends \yii\web\Controller
 {
     public function actionRequest()
     {
-        echo "request"; die();
+        //echo "request"; die();
         return $this->render('index');
     }
 
