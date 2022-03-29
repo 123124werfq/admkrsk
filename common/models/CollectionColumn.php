@@ -889,7 +889,17 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 return json_decode($value,true);
                 break;
             case self::TYPE_COLLECTION:
-            case self::TYPE_COLLECTIONS:
+                
+                if (is_array($value))
+                {                    
+                    return implode("",$value);
+                }
+                else
+                    return $value;
+
+                break;
+            case
+             self::TYPE_COLLECTIONS:
                 if (is_array($value))
                 {
                     var_dump($value);

@@ -156,16 +156,6 @@ class CollectionRecord extends \yii\db\ActiveRecord
 
         if (!empty($ids))
         {
-            /*$labels = (new \yii\db\Query())
-                ->select(['value', 'id_record'])
-                ->from('db_collection_value')
-                ->where([
-                    'id_record' => $ids,
-                    'id_column'=>$column->input->id_collection_column
-                ])->all();*/
-
-            //$collection = Yii::$app->mongodb->getCollection('collection'.$column->id_collection);
-
             if (is_string($ids))
                 $ids = (int)$ids;
             else if (is_array($ids))
@@ -173,11 +163,14 @@ class CollectionRecord extends \yii\db\ActiveRecord
                     $ids[$key] = (int)$id;
 
             $query = new Query();
+
+            $id_source_collection = (!empty($column->input->collection->id_parent_collection))?$column->input->collection->id_parent_collection:$column->input->id_collection;
+
             $labels = $query->select(['id_record', 'col'.$column->input->id_collection_column])
-            ->from('collection'.$column->input->id_collection)
-            ->where(['id_record'=>$ids])
-            ->indexBy('id_record')
-            ->all();
+                ->from('collection'.$id_source_collection)
+                ->where(['id_record'=>$ids])
+                ->indexBy('id_record')
+                ->all();
 
             $labelsByIndex = [];
 

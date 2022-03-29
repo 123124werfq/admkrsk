@@ -455,13 +455,13 @@ class ServiceController extends Controller
                                     'service_date' => date("d.m.Y", $appeal->created_at),
                                     'service_fio' => Yii::$app->user->identity->username
                                 ]):$this->renderPartial('_result',[
-                                'number'=> isset($appeal->number_internal)?$appeal->number_internal:false,
-                                'number_common' => $appeal->number_common,
-                                'service'=>$service,
-                                'page' => $page,
-                                'date' => date("d.m.Y", $appeal->created_at),
-                                'fio' => Yii::$app->user->identity->username
-                            ])
+                                    'number'=> isset($appeal->number_internal)?$appeal->number_internal:false,
+                                    'number_common' => $appeal->number_common,
+                                    'service'=>$service,
+                                    'page' => $page,
+                                    'date' => date("d.m.Y", $appeal->created_at),
+                                    'fio' => Yii::$app->user->identity->username
+                                ])
                         ];
                    }
                 }
