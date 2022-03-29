@@ -398,12 +398,13 @@ MTMOARCH;
 
             $appeal = ServiceAppeal::find()->where("number_internal='$caseNum'")->one();
 
-            //var_dump( $appeal);
-
             if($appeal)
             {
-                $appeal->number_system = $regNum;
-                $appeal->updateAttributes(['number_system']);
+                if(!empty($regNum))
+                {
+                    $appeal->number_system = $regNum;            
+                    $appeal->updateAttributes(['number_system']);
+                }
 
                 $unixDate = strtotime($statusInfo['eventDate']);
                 $as = ServiceAppealState::find()->where("id_appeal=$appeal->id_appeal")->andWhere("state='$statusCode'")->andWhere("date=$unixDate")->one();
@@ -439,8 +440,11 @@ MTMOARCH;
 
             if($appeal)
             {
-                $appeal->number_system = $regNum;
-                $appeal->updateAttributes(['number_system']);
+                if(!empty($regNum))
+                {
+                    $appeal->number_system = $regNum;            
+                    $appeal->updateAttributes(['number_system']);
+                }
 
                 $unixDate = strtotime($statusInfo['eventDate']);
                 $as = ServiceAppealState::find()->where("id_appeal=$appeal->id_appeal")->andWhere("state='$statusCode'")->andWhere("date=$unixDate")->one();
