@@ -18,7 +18,7 @@
                             <th width="25%">Номер и дата запроса</th>
                             <th width="50%">Услуга</th>
                             <th width="25%">Состояние заявки</th>
-                            <th>Оценка рассмотрения заявки на предоставление услуги</th>
+                            <!--th>Оценка рассмотрения заявки на предоставление услуги</th-->
                         </tr>  
                         </thead>           
                         <?php foreach ($appeals as $appeal){  ?>
@@ -32,8 +32,18 @@
                                 Номер: <?=$appeal->number_system?><br>
                                 Дата регистрации: <?=$appeal->statusDate?><br>
                             </td>
-                            <td><?=$appeal->statusName?></td>
                             <td>
+                                <!--<?=$appeal->statusName?>-->
+                                <?php
+                                    foreach ($appeal->states as $status) {
+                                        echo "Дата события: " . date("d-m-Y", $status->date);
+                                        echo "<br>";
+                                        echo $status->statusName();
+                                        echo "<br>";
+                                    }
+                                ?>
+                            </td>
+                            <!--td>
                                 <?php 
                                     if($page){
                                 ?>
@@ -45,7 +55,7 @@
                                     <option>1</option>
                                 </select>
                                     <?php } ?>
-                            </td>
+                            </td-->
                         </tr>
                         <?php }?>
                     </table>
