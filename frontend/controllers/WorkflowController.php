@@ -394,11 +394,12 @@ MTMOARCH;
 
             $appeal = ServiceAppeal::find()->where("number_internal='$caseNum'")->one();
 
-            var_dump( $appeal);
+            //var_dump( $appeal);
 
             if($appeal)
             {
                 $appeal->number_system = $regNum;
+                var_dump($regNum);
                 $appeal->updateAttributes(['number_system']);
 
                 $unixDate = strtotime($statusInfo['eventDate']);
