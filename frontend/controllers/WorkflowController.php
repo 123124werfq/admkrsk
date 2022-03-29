@@ -385,12 +385,16 @@ MTMOARCH;
             $statusInfo = $xmlArray['v25pushEventRequest']['smevMessageData']['smevAppData'];
             $statusCode = $xmlArray['v25pushEventRequest']['smevMessageData']['smevAppData']['event']['orderStatusEvent']['statusCode']['techCode'];
 
+            $regNum = "";
+
             if(isset($xmlArray['v25pushEventRequest']['smevMessageData']['smevAppData']['orgRegNum']))
             {
                 $regNum = $xmlArray['v25pushEventRequest']['smevMessageData']['smevAppData']['orgRegNum'];
             }
 
             $appeal = ServiceAppeal::find()->where("number_internal='$caseNum'")->one();
+
+            var_dump( $appeal);
 
             if($appeal)
             {
@@ -406,7 +410,8 @@ MTMOARCH;
                     $as->id_appeal = $appeal->id_appeal;
                     $as->state = $statusCode;
                     $as->date = $unixDate;
-                    $as->save();
+                    $res = $as->save();
+                    var_dump($res);
                 }
             }
 
@@ -417,12 +422,16 @@ MTMOARCH;
             $statusInfo = $xmlArray['v25pushEventRequest']['revMessageData']['revAppData'];
             $statusCode = $xmlArray['v25pushEventRequest']['revMessageData']['revAppData']['event']['orderStatusEvent']['statusCode']['techCode'];
 
+            $regNum = "";
+
             if(isset($xmlArray['v25pushEventRequest']['revMessageData']['revAppData']['orgRegNum']))
             {
                 $regNum = $xmlArray['v25pushEventRequest']['revMessageData']['revAppData']['orgRegNum'];
             }
 
             $appeal = ServiceAppeal::find()->where("number_internal='$caseNum'")->one();
+
+            var_dump( $appeal);
 
             if($appeal)
             {
@@ -438,7 +447,8 @@ MTMOARCH;
                     $as->id_appeal = $appeal->id_appeal;
                     $as->state = $statusCode;
                     $as->date = $unixDate;
-                    $as->save();
+                    $res = $as->save();
+                    var_dump($res);
                 }
             }
 

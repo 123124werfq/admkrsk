@@ -197,4 +197,9 @@ class ServiceAppeal extends \yii\db\ActiveRecord
         return date("d.m.Y", $as->date);
 
     }
+
+    public function getStates()
+    {
+        return $this->hasMany(ServiceAppealState::class, ['id_appeal' => 'id_appeal']);
+    }
 }
