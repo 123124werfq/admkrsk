@@ -539,4 +539,36 @@ MTMOARCH;
         file_put_contents($path,file_get_contents('php://input'), FILE_APPEND);
         file_put_contents($path,"\n", FILE_APPEND);
     }
+
+    public function actionArchive()
+    {
+        if(!isset($_GET['s']))
+            die();
+
+        $caseNum = $_GET['s'];
+        $caseNum = "TEST91439B40B52A4F1E8E7DF820EFD2";
+
+        $savePath = Yii::getAlias('@runtime')."/inlet/$caseNum/archive";
+        if(!is_dir($savePath))
+        {            
+            die();
+        }
+
+        $unpackedFiles = scandir($savePath);
+        foreach ($unpackedFiles as $filename) {
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            if($ext == 'zip')
+            {
+                $archivePath =  $savePath."/".$filename;
+            }
+        }        
+
+        header($_SERVER['SERVER_PROTOCOL'].' 200 OK');
+        header("Content-Type: application/zip");
+        header("Content-Transfer-Encoding: Binary");
+        header("Content-Length: ".filesize($archivePath));
+        header("Content-Disposition: attachment; filename=\"".basename($archivePath)."\"");
+        readfile($archivePath);
+        exit;
+    }
 }

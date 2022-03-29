@@ -40,6 +40,11 @@
                                         echo "<br>";
                                         echo $status->statusName();
                                         echo "<br><br>";
+
+                                        if($status->state == "3")
+                                        {
+                                            echo "<a href='/workflow/archive?s={$appeal->number_internal}'>Скачать архив</a>";
+                                        }
                                     }
                                 ?>
                             </td>
