@@ -385,11 +385,15 @@ MTMOARCH;
             $statusInfo = $xmlArray['v25pushEventRequest']['smevMessageData']['smevAppData'];
             $statusCode = $xmlArray['v25pushEventRequest']['smevMessageData']['smevAppData']['event']['orderStatusEvent']['statusCode']['techCode'];
 
-            $regNum = "";
+            
 
             if(isset($xmlArray['v25pushEventRequest']['smevMessageData']['smevAppData']['orgRegNum']))
             {
                 $regNum = $xmlArray['v25pushEventRequest']['smevMessageData']['smevAppData']['orgRegNum'];
+            }
+            else
+            {
+                $regNum = "";
             }
 
             $appeal = ServiceAppeal::find()->where("number_internal='$caseNum'")->one();
@@ -399,7 +403,6 @@ MTMOARCH;
             if($appeal)
             {
                 $appeal->number_system = $regNum;
-                var_dump($regNum); die();
                 $appeal->updateAttributes(['number_system']);
 
                 $unixDate = strtotime($statusInfo['eventDate']);
@@ -423,16 +426,16 @@ MTMOARCH;
             $statusInfo = $xmlArray['v25pushEventRequest']['revMessageData']['revAppData'];
             $statusCode = $xmlArray['v25pushEventRequest']['revMessageData']['revAppData']['event']['orderStatusEvent']['statusCode']['techCode'];
 
-            $regNum = "";
-
             if(isset($xmlArray['v25pushEventRequest']['revMessageData']['revAppData']['orgRegNum']))
             {
                 $regNum = $xmlArray['v25pushEventRequest']['revMessageData']['revAppData']['orgRegNum'];
             }
+            else
+            {
+                $regNum = "";
+            }
 
             $appeal = ServiceAppeal::find()->where("number_internal='$caseNum'")->one();
-
-            var_dump( $appeal);
 
             if($appeal)
             {
