@@ -399,7 +399,7 @@ MTMOARCH;
             if($appeal)
             {
                 $appeal->number_system = $regNum;
-                var_dump($regNum);
+                var_dump($regNum); die();
                 $appeal->updateAttributes(['number_system']);
 
                 $unixDate = strtotime($statusInfo['eventDate']);
