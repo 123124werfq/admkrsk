@@ -39,7 +39,7 @@
                                         echo "Дата события: " . date("d-m-Y", $status->date);
                                         echo "<br>";
                                         echo $status->statusName();
-                                        echo "<br>";
+                                        echo "<br><br>";
                                     }
                                 ?>
                             </td>
