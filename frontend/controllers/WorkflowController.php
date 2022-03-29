@@ -546,7 +546,6 @@ MTMOARCH;
             die();
 
         $caseNum = $_GET['s'];
-        $caseNum = "TEST91439B40B52A4F1E8E7DF820EFD2";
 
         $savePath = Yii::getAlias('@runtime')."/inlet/$caseNum/archive";
         if(!is_dir($savePath))
