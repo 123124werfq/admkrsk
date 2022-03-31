@@ -128,11 +128,13 @@ if (!Yii::$app->user->isGuest)
                     </span>
                     <div class="dropdown-menu">
                         <?php if (!Yii::$app->user->isGuest): ?>
-                            <a class="dropdown-menu_item" href="https://lk.admkrsk.ru">Личный&nbsp;кабинет</a>
                             <?php if(!strpos(Yii::$app->request->hostName, 'ants.') ){ ?>
+                            <a class="dropdown-menu_item" href="https://lk.admkrsk.ru">Личный&nbsp;кабинет</a>
                             <a class="dropdown-menu_item" href="https://services.admkrsk.ru/userhistory">Мои&nbsp;запросы&nbsp;услуг</a>
                             <a class="dropdown-menu_item" href="https://lk.admkrsk.ru/personal/appeal">Мои&nbsp;обращения</a>
                             <a class="dropdown-menu_item" href="https://t1.admkrsk.ru/reception/request">Написать&nbsp;обращение</a>
+                            <?php } else { ?>
+                            <a class="dropdown-menu_item" href="/personal">Личный&nbsp;кабинет</a>
                             <?php } ?>
                             <?= Html::a('Выйти', ['site/logout'], ['class' => 'dropdown-menu_item', 'data' => ['method' => 'post']]) ?>
                         <?php else: ?>
