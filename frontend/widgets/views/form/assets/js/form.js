@@ -188,9 +188,7 @@ function visibleForm(visibleInputs,visibleElements,dom)
 
     function getValue(id_input)
     {
-        var input = $dom.find("#"+input_prefix+id_input+", .formdynamic-input"+id_input+" input[name*='input"+id_input+"']");
-
-        console.log(input);
+        var input = $dom.find("#"+input_prefix+id_input+", .formdynamic-input"+id_input+" input[name*='input"+id_input+"']:checked");
 
         if (input.is(':checkbox'))
         {
@@ -201,8 +199,6 @@ function visibleForm(visibleInputs,visibleElements,dom)
         }
         else
             var val = input.val();
-
-        console.log(val);
 
         return val;
     }
@@ -224,9 +220,18 @@ function visibleForm(visibleInputs,visibleElements,dom)
 
         //input:not([readonly=""]), textarea:not([readonly=""]), select:not([readonly=""])
         if (show)
-            $dom.find("#element"+id_element).show().find('input:not([type=checkbox][readonly=""]), textarea, select').prop('disabled',false);
+        {
+            let show_element = $dom.find("#element"+id_element);
+
+            show_element.show();
+
+            if (show_element.is(":visible"))
+                find('input:not([type=checkbox][readonly=""]), textarea, select').prop('disabled',false);
+        }
         else
+        {
             $dom.find("#element"+id_element).hide().find('input:not([type=checkbox][readonly=""]), textarea, select').prop('disabled',true);
+        }
     }
 
     for (var id_vinput in visibleInputs)
