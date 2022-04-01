@@ -221,12 +221,9 @@ function visibleForm(visibleInputs,visibleElements,dom)
         //input:not([readonly=""]), textarea:not([readonly=""]), select:not([readonly=""])
         if (show)
         {
-            let show_element = $dom.find("#element"+id_element);
-
-            show_element.show();
-
-            if (show_element.is(":visible"))
-                show_element.find('input:not([type=checkbox][readonly=""]), textarea, select').prop('disabled',false);
+            let show_element = $dom.find("#element"+id_element).show();    
+            
+            show_element.find('input:not([type=checkbox][readonly=""]), textarea:visible, select:visible').prop('disabled',false);
         }
         else
         {
