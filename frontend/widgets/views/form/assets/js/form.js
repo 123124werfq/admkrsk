@@ -190,6 +190,8 @@ function visibleForm(visibleInputs,visibleElements,dom)
     {
         var input = $dom.find("#"+input_prefix+id_input+", .formdynamic-input"+id_input+" input[name*='input"+id_input+"']");
 
+        console.log(input);
+
         if (input.is(':checkbox'))
         {
             if (input.is(':checked'))
@@ -199,6 +201,8 @@ function visibleForm(visibleInputs,visibleElements,dom)
         }
         else
             var val = input.val();
+
+        console.log(val);
 
         return val;
     }
