@@ -57,9 +57,6 @@ $defaultColumns = [
        'value' => function ($model) {
             return (!empty($model->service))?$model->service->reestr_number:'';
         },
-        'value' => function ($model) {
-            return (!empty($model->form))?$model->form->name:'';
-        },
         'filter' => Select2::widget([
             'model' => $searchModel,
             'attribute' => 'id_service',
