@@ -77,7 +77,18 @@ class WordDoc
                     }
                 }
                 else 
-                    $template->setValue($alias."/", $value);
+                {
+                    $values = json_decode($col->input->values);
+
+                    if (!empty($values))
+                        foreach ($values as $row)
+                        {
+                            if (!empty($row['alias']))
+                                $template->setValue($alias.'.'.$row['alias'], '');
+                        }
+
+                    $template->setValue($alias, '');
+                }
             }
             else if (isset($stringData[$alias.'_file']) && $columns[$alias]->type==CollectionColumn::TYPE_IMAGE)
             {
@@ -129,10 +140,7 @@ class WordDoc
                 }
             }
             else
-            {
-                //$template->setValue($alias, $value);
-                $template->setValue($alias."/", $value);
-            }
+                $template->setValue($alias, $value);
         }
 
         $export_path = $root."/runtime/templates/".time().md5(serialize($data)).'_out.docx';
