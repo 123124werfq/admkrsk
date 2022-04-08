@@ -67,7 +67,7 @@ $defaultColumns = [
             'pluginOptions' => [
                 'allowClear' => true,
                 'minimumInputLength' => 0,
-                'placeholder' => 'Выберите форму',
+                'placeholder' => 'Выберите услугу',
             ],
         ]),
    ],
