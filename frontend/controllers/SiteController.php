@@ -191,6 +191,7 @@ class SiteController extends Controller
         {
             $esia = User::openId();
             $logoutUrl = $esia->buildLogoutUrl(Yii::$app->homeUrl);
+            $logoutUrl = $esia->buildLogoutUrl("https://lk.admkrsk.ru");
 
             $this->redirect($logoutUrl);
         }
@@ -707,7 +708,7 @@ class SiteController extends Controller
     /**
      * @throws NotFoundHttpException
      */
-/*
+
     public function actionFakelogin()
     {
         if (true || YII_ENV_DEV) {
@@ -721,7 +722,7 @@ class SiteController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }*/
+    }
 /*
     public function actionFakelogin2()
     {
@@ -996,4 +997,70 @@ class SiteController extends Controller
         $smev1 = new Smev;
         $smev1->testMessage();
     } */
+
+    public function actionRtest()
+    {
+        $path = Yii::getAlias('@runtime')."/inlet/services.log";
+        $inlet = file_get_contents($path);
+        $parts = explode("--MIME_boundary", $inlet);
+
+        $decodedDocs = [];
+        foreach ($parts as $part) {
+            if(!strpos($part, "Content-Transfer-Encoding:"))
+                continue;            
+
+            if(strpos($part, "Content-Transfer-Encoding: binary"))
+            {
+                $content = explode("Content-Transfer-Encoding: binary", $part);
+
+                if(isset($content[1]))
+                {
+                    $content = trim($content[1]);
+                    $path = Yii::getAlias('@runtime')."/inlet/ststus" . date("Ymdhi") . ".xml";
+
+                    file_put_contents($path, $content);
+                }
+
+            }
+            else if(strpos($part, "Content-Transfer-Encoding: base64"))
+            {
+                $content = explode("Content-Transfer-Encoding: base64", $part);
+
+                if(isset($content[1]))
+                {
+                    $content = trim($content[1]);
+                    $path = Yii::getAlias('@runtime')."/inlet/ststus" . date("Ymdhi") . ".zip";
+
+                    file_put_contents($path, base64_decode($content));
+
+                }
+
+            }            
+        }
+
+        //echo count($parts);
+        die();
+
+$str = <<<'EOD'
+Прошу подготовить градостроительный план земельного участ-ка  с кадастровым номером ${kadastr}, расположенного по адресу: г. Красноярск, ул. ${landAddr.street}.
+Реквизиты решения об утверждении проекта межевания терри-тории и (или) схемы расположения земельного участка или земель-ных участков на кадастровом плане территории с указанием условно-го номера образуемого земельного участка*:
+${props}
+Результат предоставления Услуги ${check_result}
+
+EOD;
+
+    preg_match_all("/{[^}]*}/", $str, $out, PREG_PATTERN_ORDER);
+    
+    var_dump($out);
+
+    if(isset($out[0]))
+    {
+        foreach ($out[0] as $key => $templatename) {
+            
+        }
+    }
+
+    die();
+
+    }
 }
