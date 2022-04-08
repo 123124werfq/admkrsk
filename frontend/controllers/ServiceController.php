@@ -348,7 +348,7 @@ class ServiceController extends Controller
                    if ($state->save())
                    {
                         $appeal->state = $state->state;
-                        $appeal->number_internal = substr('TEST'.strtoupper(str_replace('-','',$idents['guid'])),0,32); // пока такой внутренний номер
+                        $appeal->number_internal = substr(strtoupper(str_replace('-','',$idents['guid'])),0,32); // пока такой внутренний номер
 
                         $numberCounter = ServiceCounter::find()->where(['service_number' => $appeal->target->reestr_number])->one();
                         if(!$numberCounter)
