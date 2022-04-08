@@ -35,7 +35,8 @@ $defaultColumns = [
             'data' => ArrayHelper::map(\common\models\Form::find()->where(['is_template'=>0])->all(), 'id_form', 'name'),
             'pluginOptions' => [
                 'allowClear' => true,
-                'minimumInputLength' => 1,
+                'minimumInputLength' => 0,
+                'placeholder' => 'Выберите форму',
             ],
         ]),
    ],
