@@ -46,7 +46,7 @@ $defaultColumns = [
         },
         'filter' => Select2::widget([
             'model' => $searchModel,
-            'attribute' => 'id_city',
+            'attribute' => 'id_service',
             'data' => ArrayHelper::map(Service::find()->orderBy('reestr_number ASC')->all(),'id_service','reestr_number'),
             'pluginOptions' => [
                 'allowClear' => true,
