@@ -90,7 +90,7 @@ if (!Yii::$app->user->isGuest)
             </a>
 
             <div class="gosbar__right-block">
-                <?php if(!strpos(Yii::$app->request->hostName, 'ants.') ){ ?>
+                <?php if(!strpos(Yii::$app->request->hostName, 'ants.') && !strpos(Yii::$app->request->hostName, 'k.') && !strpos(Yii::$app->request->hostName, 'vices.') ){ ?>
                 <form id="top-search" action="/search"><input class="header-search" name="q"></form>
                 <a href="/search" class="gosbar_btn">
                     <span class="material-icons gosbar-icon" id="gosbar-search-go">search</span>
