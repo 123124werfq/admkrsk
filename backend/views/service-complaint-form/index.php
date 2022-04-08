@@ -57,9 +57,19 @@ $defaultColumns = [
        'value' => function ($model) {
             return (!empty($model->service))?$model->service->reestr_number:'';
         },
-        
-
-       'filter' => ArrayHelper::map(Service::find()->orderBy('reestr_number ASC')->all(),'id_service','reestr_number'),
+        'value' => function ($model) {
+            return (!empty($model->form))?$model->form->name:'';
+        },
+        'filter' => Select2::widget([
+            'model' => $searchModel,
+            'attribute' => 'id_service',
+            'data' => ArrayHelper::map(Service::find()->orderBy('reestr_number ASC')->all(),'id_service','reestr_number'),
+            'pluginOptions' => [
+                'allowClear' => true,
+                'minimumInputLength' => 0,
+                'placeholder' => 'Выберите форму',
+            ],
+        ]),
    ],
 ];
 
