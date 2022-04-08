@@ -77,7 +77,6 @@ class WordDoc
                             $i++;
                         }
                     }
-                    /
                     catch(\Exception $e) {
                      
                     }
