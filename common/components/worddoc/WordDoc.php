@@ -65,16 +65,34 @@ class WordDoc
 
                 if (!empty($value))
                 {
-                    $template->cloneRow($alias.'.'.key($value[0]), count($value));
+                    try {
+                        $template->cloneRow($alias.'.'.key($value[0]), count($value));
 
-                    $i = 1;
-                    foreach ($value as $rkey => $row)
-                    {
-                        foreach ($row as $tkey => $td)
-                            $template->setValue($alias.".".$tkey."#$i", $td);
+                        $i = 1;
+                        foreach ($value as $rkey => $row)
+                        {
+                            foreach ($row as $tkey => $td)
+                                $template->setValue($alias.".".$tkey."#$i", $td);
 
-                        $i++;
+                            $i++;
+                        }
                     }
+                    catch(\Exception $e) {
+                     
+                    }
+                }
+                else 
+                {
+                    $values = json_decode($columns[$alias]->input->values,true);
+
+                    if (!empty($values))
+                        foreach ($values as $row)
+                        {
+                            if (!empty($row['alias']))
+                                $template->setValue($alias.'.'.$row['alias'], '');
+                        }
+
+                    $template->setValue($alias, '');
                 }
             }
             else if (isset($stringData[$alias.'_file']) && $columns[$alias]->type==CollectionColumn::TYPE_IMAGE)
