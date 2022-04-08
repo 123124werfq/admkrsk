@@ -477,23 +477,23 @@ class Workflow extends Model
                 if($ext == 'zip')
                     $ext = 'gz';
 
-                $tpath = Yii::getAlias('@runtime') . $this->path . "req_" . $guid . "." . $ext;
+                $tpath = Yii::getAlias('@runtime') . $this->path . "req_" . $guid . "_" . $key . "." . $ext;
 
                 file_put_contents($tpath, $tfile);
 
                 if (is_file($tpath)) {
-                    $zip->addFile($tpath, 'req_' . $guid . "." . $ext);
+                    $zip->addFile($tpath, 'req_' . $guid . "_" . $key . "." . $ext);
 
                     if($signFname = $this->makeSign($tpath))
                     {
-                      $path_parts = pathinfo($signFname);                
+                      $path_parts = pathinfo($signFname);                 
                       $zip->addFile($signFname, $path_parts['basename']);
                     }
 
                     $filesToUnlink[] = $tpath;
 
                     $dg = $this->generateDigestForFile($tpath);
-                    $fn = "req_" . $guid . "." . $ext;
+                    $fn = "req_" . $guid . "_". $key . "." . $ext;
                     $afn = "Приложение_" . "_". $key . "_" . $guid . "." . $ext;
 
                     $xmlParts[] = <<<XMLPARTS1

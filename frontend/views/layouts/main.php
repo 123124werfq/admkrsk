@@ -101,6 +101,20 @@ if (!empty($this->params['page']))
                 </filter>
             </svg>
         </div>
+        <?php 
+            if($_SERVER['SERVER_NAME'] == 'lk.admkrsk.ru' || $_SERVER['SERVER_NAME'] == 'services.admkrsk.ru'  || $_SERVER['SERVER_NAME'] == 'appeals.admkrsk.ru') {
+                $oldlink = "https://www.admkrsk.ru/login/default.aspx";
+
+                if($_SERVER['SERVER_NAME'] == 'services.admkrsk.ru')
+                    $oldlink = "http://www.admkrsk.ru/administration/singlewindow";
+
+                if($_SERVER['SERVER_NAME'] == 'appeals.admkrsk.ru')
+                    $oldlink = "http://www.admkrsk.ru/reception/Pages/default.aspx";                
+        ?>
+        <div style="text-align:  center;padding: 10px;background-color: lightblue;">
+            Добро пожаловать на бета-версию официального сайта администрации города Красноярска! Для перехода на актуальную версию сайта нажмите <a href="<?=$oldlink?>">сюда</>.
+        </div>
+        <?php } ?>    
         <?=Alert::widget()?>
         <?=$content?>
         <?php if (!empty($layouts['footer']->state)){
