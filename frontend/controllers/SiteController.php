@@ -803,7 +803,8 @@ class SiteController extends Controller
 
         $roles = $esia->getRolesInfo();
 
-        $backUrl = Yii::$app->session->get('backUrl', '/');
+        //$backUrl = Yii::$app->session->get('backUrl', '/');
+        $backUrl = Yii::$app->session->get('backUrl', 'https://lk.admkrsk.ru');
 
         $user = User::findByOid($oid);
         if ($user) {
