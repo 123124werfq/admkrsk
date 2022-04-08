@@ -78,7 +78,7 @@ class WordDoc
                 }
                 else 
                 {
-                    $values = json_decode($col->input->values);
+                    $values = json_decode($columns[$alias]->input->values);
 
                     if (!empty($values))
                         foreach ($values as $row)
