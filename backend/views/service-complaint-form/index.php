@@ -23,9 +23,21 @@ GridAsset::register($this);
 $defaultColumns = [
    'id_appeal' => 'id_appeal',
    'form.name' => [
-       'attribute' => 'form.name',
+       'attribute' => 'id_form',
        'label' => 'Форма',
        'format' => 'text',
+       'value' => function ($model) {
+            return (!empty($model->form))?$model->form->name:'';
+        },
+        'filter' => Select2::widget([
+            'model' => $searchModel,
+            'attribute' => 'id_form',
+            'data' => ArrayHelper::map(\common\models\Form::find()->where(['is_template'=>0])->all(), 'id_form', 'name'),
+            'pluginOptions' => [
+                'allowClear' => true,
+                'minimumInputLength' => 1,
+            ],
+        ]),
    ],
    'firm.lineValue' => [
        'attribute' => 'firm.lineValue',
@@ -44,16 +56,7 @@ $defaultColumns = [
        'value' => function ($model) {
             return (!empty($model->service))?$model->service->reestr_number:'';
         },
-        'filter' => Select2::widget([
-            'model' => $searchModel,
-            'attribute' => 'id_service',
-            'data' => ArrayHelper::map(Service::find()->orderBy('reestr_number ASC')->all(),'id_service','reestr_number'),
-            'pluginOptions' => [
-                'allowClear' => true,
-                'minimumInputLength' => 1,
-                'placeholder' => 'Выберите город',
-            ],
-        ]),
+        
 
        'filter' => ArrayHelper::map(Service::find()->orderBy('reestr_number ASC')->all(),'id_service','reestr_number'),
    ],
