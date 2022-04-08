@@ -3,6 +3,7 @@
 use backend\assets\GridAsset;
 use backend\controllers\ServiceComplaintFormController;
 use common\models\GridSetting;
+use common\models\Service;
 use common\models\ServiceComplaintForm;
 use yii\helpers\Html;
 use yii\grid\GridView;
@@ -35,9 +36,13 @@ $defaultColumns = [
        'format' => 'text',
    ],
    'service.reestr_number' => [
-       'attribute' => 'service.reestr_number',
+       'attribute' => 'id_service',
        'label' => 'Услуга',
        'format' => 'text',
+       'value' => function ($model) {
+            return (!empty($model->service))?$model->service->reestr_number:'';
+        },
+       'filter' => ArrayHelper::map(Service::find()->all(),'id_service','reestr_number'),
    ],
 ];
 
@@ -80,7 +85,7 @@ $this->params['button-block'][] = Html::a('Добавить', ['create'], ['clas
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-//        'filterModel' => $searchModel,
+        'filterModel' => $searchModel,
         'columns' => array_merge(array_values($gridColumns), [
             [
                 'class' => 'yii\grid\ActionColumn',
