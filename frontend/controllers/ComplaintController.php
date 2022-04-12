@@ -49,7 +49,7 @@ class ComplaintController extends \yii\web\Controller
         ]);
     }
 
-    public function actionCreate($id_firm, $id_category, $page=null)
+    public function actionCreateOld($id_firm, $id_category, $page=null)
     {
     	$form = ServiceComplaintForm::find()
     				->with(['form'])
@@ -91,7 +91,7 @@ class ComplaintController extends \yii\web\Controller
     	]);
     }
 
-    public function actionCreateNew($id_firm, $id_category, $page=null)
+    public function actionCreate($id_firm, $id_category, $page=null)
     {
     	$form = ServiceComplaintForm::find()
     				->with(['form'])
