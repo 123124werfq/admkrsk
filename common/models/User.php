@@ -570,7 +570,8 @@ class User extends ActiveRecord implements IdentityInterface
             'clientId' => '236403241',
             'privateKeyPath' => Yii::getAlias('@app') . '/assets/admkrsk-new.pem',
             'certPath' => Yii::getAlias('@app') . '/assets/admkrsk-new.pem',
-            'redirectUrl' => 'https://t1.admkrsk.ru/site/signin',
+            //'redirectUrl' => 'https://t1.admkrsk.ru/site/signin',
+            'redirectUrl' => 'https://lk.admkrsk.ru/site/signin',
             'portalUrl' => 'https://esia.gosuslugi.ru/',
             'scope' => ['fullname', 'birthdate', 'mobile', 'contacts', 'snils', 'inn', 'id_doc', 'birthplace', 'medical_doc', 'residence_doc', 'email', 'usr_org', 'usr_avt'],
 //            'scope' => ['fullname', 'birthdate', 'gender', 'snils', 'inn', 'id_doc', 'birthplace', 'medical_doc', 'residence_doc', 'email', 'mobile', 'contacts', 'usr_org', 'usr_avt', 'org_shortname', 'org_fullname', 'org_type', 'org_ogrn', 'org_inn', 'org_leg', 'org_kpp', 'org_ctts', 'org_addrs']
