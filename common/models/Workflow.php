@@ -691,13 +691,13 @@ XMLPARTS2;
               if($rnumParts[0] == "50" && isset($rnumParts[1]) && isset($rnumParts[2]))
               {
                 $appeal->target->reestr_number = $rnumParts[0] . "/" . $rnumParts[1] . "/" . $rnumParts[2];
-                $serviceComplainTarget = "<ServiceTarget>досудебное обжалование (общий порядок)</ServiceTarget>";
+                $serviceComplainTarget = "досудебное обжалование (общий порядок)";
                 if(isset($rnumParts[3]) && $rnumParts[3] != "1")
                 {
-                  $serviceComplainTarget = "<ServiceTarget>«досудебное обжалование (сокращённый срок)»</ServiceTarget>";
+                  $serviceComplainTarget = "досудебное обжалование (сокращённый срок)";
                 }
+                $appeal->target->form->fullname = $serviceComplainTarget;
 
-                $sourceText = str_replace('<ServiceTarget/>', $serviceComplainTarget, $sourceText);
               }
 
               $sourceText = str_replace('REESTRNUMBERHERE', $appeal->target->reestr_number, $sourceText);
