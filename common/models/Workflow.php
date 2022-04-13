@@ -682,6 +682,24 @@ XMLPARTS2;
               $sourceText = str_replace('REQDATEHERE', date("d-m-Y"), $sourceText);
               $sourceText = str_replace('CASENUMBERHERE', $appeal->number_internal, $sourceText);
               $sourceText = str_replace('SERVICECODEHERE', $appeal->target->service_code, $sourceText);
+
+              // в случае, если это обжалование, что в суффиксе будет содержаться его тип
+              // но сам суффикс мы отбросим
+
+              $rnumParts = explode("/", $appeal->target->reestr_number);
+
+              if($rnumParts[0] == "50" && isset($rnumParts[1]) && isset($rnumParts[2]))
+              {
+                $appeal->target->reestr_number = $rnumParts[0] . "/" . $rnumParts[1] . "/" . $rnumParts[2];
+                $serviceComplainTarget = "<ServiceTarget>досудебное обжалование (общий порядок)</ServiceTarget>";
+                if(isset($rnumParts[3]) && $rnumParts[3] != "1")
+                {
+                  $serviceComplainTarget = "<ServiceTarget>«досудебное обжалование (сокращённый срок)»</ServiceTarget>";
+                }
+
+                $sourceText = str_replace('<ServiceTarget/>', $serviceComplainTarget, $sourceText);
+              }
+
               $sourceText = str_replace('REESTRNUMBERHERE', $appeal->target->reestr_number, $sourceText);
 
               $sourceText = str_replace('SERVICETARGETHERE', $appeal->target->form->fullname, $sourceText);

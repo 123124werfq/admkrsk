@@ -241,7 +241,7 @@ class ComplaintController extends \yii\web\Controller
                             $integration->status = Integration::STATUS_ERROR;
 
 
-                        $integration->description = ' Запрос услуги ' . $appeal->number_internal;
+                        $integration->description = ' Обжалование ' . $appeal->number_internal;
 
                         $integration->data = json_encode([
                             'appeal' => $appeal->number_internal ?? null,
