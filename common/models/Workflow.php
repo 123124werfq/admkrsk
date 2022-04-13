@@ -728,7 +728,11 @@ XMLPARTS2;
                       {
                         $valToSet = $insdata[$nameparts[0]][$nameparts[1]];
                       }
-var_dump($valToSet); die();
+
+                      if(is_array($valToSet))
+                      {
+                        var_dump($valToSet); die();
+                      }
                       if($valToSet != "")
                       {
                         $subjectTemplate = str_replace('${'.$templatename.'}', $valToSet, $subjectTemplate);
