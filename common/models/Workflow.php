@@ -731,7 +731,7 @@ XMLPARTS2;
 
                       if(is_array($valToSet))
                       {
-                        var_dump($valToSet); die();
+                        $valToSet = implode(",", $valToSet);
                       }
                       if($valToSet != "")
                       {
