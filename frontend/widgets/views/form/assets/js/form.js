@@ -223,11 +223,12 @@ function visibleForm(visibleInputs,visibleElements,dom)
         {
             let show_element = $dom.find("#element"+id_element).show();    
             
-            show_element.find('input:not([type=checkbox][readonly=""]):visible, textarea:visible, select:visible').prop('disabled',false);
+//            show_element.find('input:not([type=checkbox][readonly=""]):visible, textarea:visible, .custom-select:visible select, select:visible').prop('disabled',false);
+            show_element.find('input[type=hidden], input:visible, textarea:visible, .radio:visible input, .custom-select:visible select, select:visible').filter(':not([type=checkbox][readonly])').prop('disabled',false);
         }
         else
         {
-            $dom.find("#element"+id_element).hide().find('input:not([type=checkbox][readonly=""]), textarea, select').prop('disabled',true);
+            $dom.find("#element"+id_element).hide().find('input:not([type=checkbox][readonly]), textarea, select').prop('disabled',true);
         }
     }
 

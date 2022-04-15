@@ -6,7 +6,7 @@ use yii\web\AssetBundle;
 class FormAssets extends AssetBundle
 {
     public $js = [
-        'js/form.js?v=6'
+        'js/form.js?v=7'
     ];
 
     public $css = [
