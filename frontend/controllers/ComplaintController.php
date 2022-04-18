@@ -200,6 +200,11 @@ class ComplaintController extends \yii\web\Controller
                             $eparts = explode("@", Yii::$app->user->identity->email);
                             
                             $insertedData['esiaid'] = "esia#".$eparts[0]."@gosuslugi.ru";
+
+                            if(isset($insertedData['municService']) && isset($insertedData['num']))
+                            {
+                                $insertedData['municService'] = $insertedData['num'];
+                            }
                         }
 
                         $insertedData['is_fl'] = true;
