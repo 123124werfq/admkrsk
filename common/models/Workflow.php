@@ -683,21 +683,26 @@ XMLPARTS2;
               $sourceText = str_replace('CASENUMBERHERE', $appeal->number_internal, $sourceText);
               $sourceText = str_replace('SERVICECODEHERE', $appeal->target->service_code, $sourceText);
 
-              // в случае, если это обжалование, что в суффиксе будет содержаться его тип
-              // но сам суффикс мы отбросим
+              // если это услуга с подформами и/или по районам
 
               $rnumParts = explode("/", $appeal->target->reestr_number);
 
-              if($rnumParts[0] == "50" && isset($rnumParts[1]) && isset($rnumParts[2]))
+              if(isset($rnumParts[3]))
               {
                 $appeal->target->reestr_number = $rnumParts[0] . "/" . $rnumParts[1] . "/" . $rnumParts[2];
+              }
+
+              // в случае, если это обжалование, что в суффиксе будет содержаться его тип
+              // но сам суффикс мы отбросим
+
+              if($rnumParts[0] == "50" && isset($rnumParts[1]) && isset($rnumParts[2]))
+              {
                 $serviceComplainTarget = "досудебное обжалование (общий порядок)";
                 if(isset($rnumParts[3]) && $rnumParts[3] != "1")
                 {
                   $serviceComplainTarget = "досудебное обжалование (сокращённый срок)";
                 }
                 $appeal->target->form->fullname = $serviceComplainTarget;
-
               }
 
               $sourceText = str_replace('REESTRNUMBERHERE', $appeal->target->reestr_number, $sourceText);
@@ -705,6 +710,22 @@ XMLPARTS2;
               $sourceText = str_replace('SERVICETARGETHERE', $appeal->target->form->fullname, $sourceText);
 
               $subjectTemplate = $appeal->service->subject;
+
+              // если несколько форм, то потенциально может быть несколько сабджектов
+              if(isset($rnumParts[3]))
+              {
+                $stparts = explode("###", $subjectTemplate);
+                if(is_numeric($rnumParts[3]) && isset($stparts[ $rnumParts[3] - 1]))
+                {
+                  $subjectTemplate = $stparts[ $rnumParts[3] - 1];
+                }
+                else
+                {
+                  $subjectTemplate = $stparts[0];
+                }
+              }
+
+              
 
               if(!empty($subjectTemplate) && !empty($insdata))
               {
