@@ -215,10 +215,10 @@ class ComplaintController extends \yii\web\Controller
 
                         //var_dump($appeal->target->form->fullname); 
                         //var_dump($appeal->service->subject); // описание (шаблон)
-                        var_dump($insertedData); // все данные из формы
+                        //var_dump($insertedData); // все данные из формы
                         //$esiaUser = EsiaUser::find()->where(['id_user' => Yii::$app->user->id])->one();
                         //var_dump($esiaUser->snils);
-                        die();
+                        //die();
 
                         // ... тут XML
                         if($archivePath)
