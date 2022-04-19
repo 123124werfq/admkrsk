@@ -7,8 +7,9 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Login';
+$this->title = 'Вход';
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['page'] = $page;
 ?>
 <div class="main">
     <div class="container">
@@ -32,14 +33,14 @@ $this->params['breadcrumbs'][] = $this->title;
     		    </div>
 
     			<div class="content">
-    			    <p>​​​​После авторизации в Личном кабинете жителя города с использованием ЕСИА&nbsp;у вас появятся возможности:</p>
+    			    <p>    После авторизации в Личном кабинете жителя города с использованием ЕСИА&nbsp;у вас появятся возможности:</p>
     				<p>- просмотра статуса обращений;<br>- подачи заявок на предоставление муниципальных&nbsp;	услуг, получения информации по зарегистрированным заявкам;<br>- заполнения и редактирования интерактивной анкеты кандидата для включения в резерв управленческих кадров администрации города.</p>
     				<p>
     				   <strong>Авторизация на сайте без использования&nbsp;ЕСИА в ближайшее время будет прекращена.</strong></p>
     				<p>
-    				   <strong>​Рекомендуем использовать для авторизации на сайте ЕСИА (www.gosuslugi.ru).​</strong></p>
+    				   <strong> Рекомендуем использовать для авторизации на сайте ЕСИА (www.gosuslugi.ru). </strong></p>
     				<p>
-    				   <strong><a href="https://www.youtube.com/watch?v=J2VH7o-q5L8" target="_blank">Как зарегистрироваться в ЕСИА​</a></strong>
+    				   <strong><a href="https://www.youtube.com/watch?v=J2VH7o-q5L8" target="_blank">Как зарегистрироваться в ЕСИА </a></strong>
     				</p>
     				<br>
     			</div>
