@@ -167,6 +167,19 @@ class SiteController extends Controller
 
             $url = $esia->buildUrl();
 
+            if (empty($page))
+            {
+                $domain = \yii\helpers\Url::base(true);
+                $domainPage = Page::find()
+                        ->where(['is_partition' => true])
+                        ->andWhere(['partition_domain'=>\yii\helpers\Url::base(true)])
+                        ->one();
+
+                if (!empty($domainPage))
+                    $page = $domainPage;                
+            }
+
+
             return $this->render('login', [
                 'model' => $model,
                 'esiaurl' => $url,
