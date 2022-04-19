@@ -135,7 +135,7 @@ class SiteController extends Controller
      * @throws InvalidConfigurationException
      * @throws SignFailException
      */
-    public function actionLogin()
+    public function actionLogin($page = null)
     {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
@@ -169,7 +169,8 @@ class SiteController extends Controller
 
             return $this->render('login', [
                 'model' => $model,
-                'esiaurl' => $url
+                'esiaurl' => $url,
+                'page'=>$page,
             ]);
         }
     }
