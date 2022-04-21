@@ -117,7 +117,10 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
             // проверяем по зарезервированным путям
             $route = $this->findRouteByURL($domain);
             if (!empty($route))
+            {
+                Yii::$app->view->params['page'] = $route['page'];
                 return [$route['route'], ['page'=>$route['page']]];
+            }
 
             // ищем страницу по домену
             $domainPage = Page::find()
@@ -132,8 +135,10 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
         // ищем из резервированных
         if ($route = $this->findRouteByURL($fullUrl))
         {
+            Yii::$app->view->params['page'] = $route['page'];
+            
             if ($route['page']->noguest && Yii::$app->user->isGuest)
-                return ['site/login',[]];
+                return ['site/login',['page'=>$route['page']]];
 
             return [$route['route'], ['page'=>$route['page']]];
         }
@@ -154,7 +159,7 @@ class NewsUrlRule extends BaseObject implements UrlRuleInterface
         //$this->makeLayout($page);
 
         if ($page->noguest && Yii::$app->user->isGuest)
-            return ['site/login',[]];
+            return ['site/login',['page'=>$page]];
 
         // проверяем новостная ли эта страница
         $news_count = News::find()->where(['id_page'=>$page->id_page])->count();

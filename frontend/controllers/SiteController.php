@@ -135,7 +135,7 @@ class SiteController extends Controller
      * @throws InvalidConfigurationException
      * @throws SignFailException
      */
-    public function actionLogin()
+    public function actionLogin($page = null)
     {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
@@ -167,9 +167,23 @@ class SiteController extends Controller
 
             $url = $esia->buildUrl();
 
+            if (empty($page))
+            {
+                $domain = \yii\helpers\Url::base(true);
+                $domainPage = Page::find()
+                        ->where(['is_partition' => true])
+                        ->andWhere(['partition_domain'=>\yii\helpers\Url::base(true)])
+                        ->one();
+
+                if (!empty($domainPage))
+                    $page = $domainPage;                
+            }
+
+
             return $this->render('login', [
                 'model' => $model,
-                'esiaurl' => $url
+                'esiaurl' => $url,
+                'page'=>$page,
             ]);
         }
     }
