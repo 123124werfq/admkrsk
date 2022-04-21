@@ -35,16 +35,11 @@ $this->params['breadcrumbs'][] = $this->title;
     			    <p>​​​​После авторизации в Личном кабинете жителя города с использованием ЕСИА&nbsp;у вас появятся возможности:</p>
     				<p>- просмотра статуса обращений;<br>- подачи заявок на предоставление муниципальных&nbsp;	услуг, получения информации по зарегистрированным заявкам;<br>- заполнения и редактирования интерактивной анкеты кандидата для включения в резерв управленческих кадров администрации города.</p>
     				<p>
-    				   <strong>Авторизация на сайте без использования&nbsp;ЕСИА в ближайшее время будет прекращена.</strong></p>
-    				<p>
-    				   <strong>​Рекомендуем использовать для авторизации на сайте ЕСИА (www.gosuslugi.ru).​</strong></p>
-    				<p>
     				   <strong><a href="https://www.youtube.com/watch?v=J2VH7o-q5L8" target="_blank">Как зарегистрироваться в ЕСИА​</a></strong>
     				</p>
     				<br>
     			</div>
 
-                <p>Регистрация в Единой системе идентификации и аутентификации (ЕСИА)</p>
                 <p>Авторизация через портал государственных услуг Российской Федерации (www.gosuslugi.ru)</p>
                 <input type="image" name="ctl00$PlaceHolderMain$LoginESIAImageButton" id="ctl00_PlaceHolderMain_LoginESIAImageButton" class="image" src="http://www.admkrsk.ru/Style%20Library/res/images/gosuslugi_logo-esia.png">
     			<table id="ctl00_PlaceHolderMain_signInControl" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;">
