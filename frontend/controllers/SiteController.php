@@ -1078,4 +1078,14 @@ EOD;
     die();
 
     }
+
+    public function actionFloodsed()
+    {
+        $outputFolder = '/var/www/admkrsk/frontend/runtime/tmp/';
+        $files = scandir($outputFolder, SCANDIR_SORT_DESCENDING);
+        $newest_file = $files[0];
+
+        echo $newest_file;
+        die();
+    }
 }
