@@ -33,6 +33,8 @@ use yii\web\NotFoundHttpException;
 //use common\models\Smev;
 use yii\web\Response;
 
+use common\models\Workflow;
+
 /**
  * Site controller
  */
@@ -1085,7 +1087,15 @@ EOD;
         $files = scandir($outputFolder, SCANDIR_SORT_DESCENDING);
         $newest_file = $files[0];
 
-        echo $newest_file;
+        //echo $newest_file;
+
+        $wf = new Workflow;
+        $rawResult = $wf->sendServiceMultipartMessage($outputFolder.$newest_file);
+
+        $opres = strpos($rawResult, "ACCEPT");
+
+        echo time() . "<br>Accept: " . $opres;
+
         die();
     }
 }
