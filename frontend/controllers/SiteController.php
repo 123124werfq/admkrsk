@@ -1094,7 +1094,9 @@ EOD;
 
         $opres = strpos($rawResult, "ACCEPT");
 
-        echo time() . "<br>Accept: " . $opres;
+        echo time() . "<br>Accept: " . $opres ."<br>";
+
+        echo "<pre>" . htmlspecialchars($rawResult) . "</pre>";
 
         die();
     }
