@@ -267,18 +267,15 @@ class CollectionSearch extends DynamicModel
 
                 $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias)
                 {
-                    if (!empty($model[$col_alias.'_search']))
-                    {                        
-                        if (is_array($model[$col_alias]))
-                        {
-                            $services = Service::find()->where(['id_service'=>$model[$col_alias]])->all();
-                            $links = [];
-                            
-                            foreach ($services as $key => $sevice)
-                                $links[] = '<a data-pjax="0" target="_blank" href="/service/view?id='.$sevice->id_service.'">'.$sevice->fullName.'</a>';
+                    if (is_array($model[$col_alias]))
+                    {
+                        $services = Service::find()->where(['id_service'=>$model[$col_alias]])->all();
+                        $links = [];
+                        
+                        foreach ($services as $key => $sevice)
+                            $links[] = '<a data-pjax="0" target="_blank" href="/service/view?id='.$sevice->id_service.'">'.$sevice->fullName.'</a>';
 
-                            return implode('<br>', $links);
-                        }
+                        return implode('<br>', $links);
                     }
                 };
 

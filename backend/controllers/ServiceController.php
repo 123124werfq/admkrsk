@@ -279,15 +279,15 @@ class ServiceController extends Controller
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $query = Service::find()
-
+        $query = Service::find();
                     
-        $query->andWhere([
-            'or'
-            ['ilike', 'reestr_number', $q]
-            ['ilike', 'name', $q]
-            ['ilike', 'fullname', $q]
-        ]);
+        if (!empty($q))
+            $query->andWhere([
+                'or'
+                ['ilike', 'reestr_number', $q]
+                ['ilike', 'name', $q]
+                ['ilike', 'fullname', $q]
+            ]);
 
         $results = [];
 
