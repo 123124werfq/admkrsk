@@ -284,8 +284,8 @@ class ServiceController extends Controller
         if (!empty($q))
             $query->andWhere([
                 'or',
-                ['ilike', 'reestr_number', $q]
-                ['ilike', 'name', $q]
+                ['ilike', 'reestr_number', $q],
+                ['ilike', 'name', $q],
                 ['ilike', 'fullname', $q]
             ]);
 
