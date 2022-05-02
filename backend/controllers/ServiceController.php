@@ -291,7 +291,7 @@ class ServiceController extends Controller
 
         $results = [];
 
-        foreach ($query->limit(20)->all() as $data)
+        foreach ($query->limit(20)->orderBy('reestr_number ASC')->all() as $data)
             $results[] = [
                 'id' => $data->id_service,
                 'text' => $data->reestr_number,
