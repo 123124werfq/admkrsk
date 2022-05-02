@@ -4,6 +4,7 @@ namespace common\models\collection;
 
 use common\models\CollectionColumn;
 use common\models\Media;
+use common\models\Service;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\base\DynamicModel ;
@@ -237,6 +238,50 @@ class CollectionSearch extends DynamicModel
 
                     return implode(',', $output);
                 };
+            }
+            else if ($col->type==CollectionColumn::TYPE_SERVICES)
+            {
+                $dataProviderColumns[$col_alias]['format'] = 'raw';
+
+                $dataProviderColumns[$col_alias]['filter'] =
+                Select2::widget([
+                    'name' => 'CollectionSearch['.$col_alias.']',
+                    'value' => '',
+                    'data' => [],
+                    'pluginOptions' => [
+                        'multiple' => false,
+                        'allowClear' => true,
+                        'minimumInputLength' => 0,
+                        'placeholder' => 'Начните ввод',
+                        'ajax' => [
+                            'url'=> '/service/list',
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(params) { return {q:params.term};}')
+                        ],
+                    ],
+                    'id'=>$col_alias.'_filter',
+                    'options'=>[
+                        'prompt'=>'Выберите услугу'
+                    ]
+                ]);
+
+                $dataProviderColumns[$col_alias]['value'] = function($model) use ($col_alias)
+                {
+                    if (!empty($model[$col_alias.'_search']))
+                    {                        
+                        if (is_array($model[$col_alias]))
+                        {
+                            $services = Service::find()->where(['id_service'=>$model[$col_alias]])->all();
+                            $links = [];
+                            
+                            foreach ($services as $key => $sevice)
+                                $links[] = '<a data-pjax="0" target="_blank" href="/service/view?id='.$sevice->id_service.'">'.$sevice->fullName.'</a>';
+
+                            return implode('<br>', $links);
+                        }
+                    }
+                };
+
             }
             else if ($col->type==CollectionColumn::TYPE_COLLECTIONS)
             {

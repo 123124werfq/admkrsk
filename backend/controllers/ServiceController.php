@@ -38,7 +38,7 @@ class ServiceController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index','make-doc'],
+                        'actions' => ['index','make-doc','list'],
                         'roles' => ['backend.service.index', 'backend.entityAccess'],
                         'roleParams' => [
                             'class' => Service::class,
@@ -273,6 +273,31 @@ class ServiceController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionList($q = '', $partition = 0, $type = null)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $query = Service::find()
+
+                    
+        $query->andWhere([
+            'or'
+            ['ilike', 'reestr_number', $q]
+            ['ilike', 'name', $q]
+            ['ilike', 'fullname', $q]
+        ]);
+
+        $results = [];
+
+        foreach ($query->limit(20)->all() as $data)
+            $results[] = [
+                'id' => $data->id_service,
+                'text' => $data->fullname,
+            ];
+
+        return ['results' => $results];
     }
 
 }
