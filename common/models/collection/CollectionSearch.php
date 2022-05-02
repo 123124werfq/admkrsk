@@ -273,7 +273,7 @@ class CollectionSearch extends DynamicModel
                         $links = [];
                         
                         foreach ($services as $key => $sevice)
-                            $links[] = '<a data-pjax="0" target="_blank" href="/service/view?id='.$sevice->id_service.'">'.$sevice->fullname.'</a>';
+                            $links[] = '<a data-pjax="0" target="_blank" href="/service/view?id='.$sevice->id_service.'">'.$sevice->reestr_number.'</a>';
 
                         return implode('<br>', $links);
                     }
