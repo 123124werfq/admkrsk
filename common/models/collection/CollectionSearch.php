@@ -40,6 +40,8 @@ class CollectionSearch extends DynamicModel
                 case CollectionColumn::TYPE_INTEGER:
                 case CollectionColumn::TYPE_COLLECTION:
                 case CollectionColumn::TYPE_COLLECTIONS:
+                case CollectionColumn::TYPE_SERVICE:
+                case CollectionColumn::TYPE_SERVICES:
                     $this->addRule(['col'.$column->id_column], 'number');
                     break;
                 case CollectionColumn::TYPE_INPUT:
