@@ -294,7 +294,7 @@ class ServiceController extends Controller
         foreach ($query->limit(20)->all() as $data)
             $results[] = [
                 'id' => $data->id_service,
-                'text' => $data->fullname,
+                'text' => $data->reestr_number,
             ];
 
         return ['results' => $results];
