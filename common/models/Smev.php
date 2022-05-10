@@ -73,7 +73,7 @@ class Smev extends Model
                             <ns:serviceTargetCode>10000569524</ns:serviceTargetCode>
                             <ns:userSelectedRegion>00000000000</ns:userSelectedRegion>
                             <ns:orderNumber>2022</ns:orderNumber>
-                            <ns:requestDate>2017-09-10T10:49:45</ns:requestDate>
+                            <ns:requestDate>2022-05-10T10:49:45</ns:requestDate>
                             <ns:orderUrl>http://ext.system.com/orders/1</ns:orderUrl>
                             <ns:statusHistoryList> 
                                 <ns:statusHistory>
@@ -132,11 +132,30 @@ class Smev extends Model
         return $client;
     }
 
+    private function getGUID(){
+        if (function_exists('com_create_guid')){
+            return com_create_guid();
+        }else{
+            mt_srand((double)microtime()*10000);//optional for php 4.2.0 and up.
+            $charid = strtoupper(md5(uniqid(rand(), true)));
+            $hyphen = chr(45);// "-"
+            $uuid = chr(123)// "{"
+                .substr($charid, 0, 8).$hyphen
+                .substr($charid, 8, 4).$hyphen
+                .substr($charid,12, 4).$hyphen
+                .substr($charid,16, 4).$hyphen
+                .substr($charid,20,12)
+                .chr(125);// "}"
+            return $uuid;
+        }
+    } 
+
     public function testMessage()
     {
         $cl = $this->connect();
 
-        $clientId = 'a6fc378d-c555-4485-8841-3137e9337791';
+        //$clientId = 'a6fc378d-c555-4485-8841-3137e9337791';
+        $clientId = $this->getGUID();
 
         $primaryContent     = new MessagePrimaryContent($this->testRequest);
         $content            = new Content($primaryContent, null, null);
