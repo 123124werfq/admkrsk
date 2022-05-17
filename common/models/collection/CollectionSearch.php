@@ -319,7 +319,12 @@ class CollectionSearch extends DynamicModel
                         {
                             $links = [];
                             foreach ($model[$col_alias] as $key => $id_record)
-                                $links[] = '<a data-pjax="0" target="_blank" href="/collection-record/view?id='.$id_record.'">'.$labels[$id_record].'</a>';
+                            {
+                                if (is_array($labels[$id_record]))
+                                    $links[] = '<a data-pjax="0" target="_blank" href="/collection-record/view?id='.$id_record.'">'.json_encode($labels[$id_record]).'</a>';
+                                else 
+                                    $links[] = '<a data-pjax="0" target="_blank" href="/collection-record/view?id='.$id_record.'">'.$labels[$id_record].'</a>';
+                            }
 
                             return implode('<br>', $links);
                         }

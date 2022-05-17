@@ -112,7 +112,6 @@ if ($model->alias == 'institution')
               ]) ?>
               <?= GridView::widget([
                   'filterModel' => $searchModel,
-                  //'filterSelector'=>'123',
                   'dataProvider' => $dataProvider,
                   'columns'=>$columns,
                   'tableOptions'=>[
