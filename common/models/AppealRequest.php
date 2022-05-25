@@ -42,7 +42,7 @@ class AppealRequest extends \yii\db\ActiveRecord
         return [
             [['id_record', 'is_anonimus', 'id_user', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
             [['id_record', 'is_anonimus', 'id_user', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
-            [['comment', 'number_internal', 'number_system', 'number_common'], 'string'],
+            [['comment', 'number_internal', 'number_system', 'number_common', 'data'], 'string'],
         ];
     }
 
@@ -60,6 +60,7 @@ class AppealRequest extends \yii\db\ActiveRecord
             'number_internal' => 'Number Internal',
             'number_system' => 'Number System',
             'number_common' => 'Number Common',
+            'data' => '',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',

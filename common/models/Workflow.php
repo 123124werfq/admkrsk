@@ -28,7 +28,7 @@ class Workflow extends Model
     static protected function xmlToArray($xml)
     {
         $response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $xml);
-        $xml = new SimpleXMLElement($response);
+        $xml = new \SimpleXMLElement($response);
         $body = $xml->xpath('//SBody')[0];
         $res = json_decode(json_encode((array)$body), TRUE);
         return $res;
@@ -96,7 +96,7 @@ class Workflow extends Model
 
             if(curl_exec($curl) === false)
             {
-                $this->error = curl_error($url);
+                $this->error = curl_error($curl);
                 curl_close($curl);
                 return false;
             }
@@ -144,7 +144,7 @@ class Workflow extends Model
 
             if(curl_exec($curl) === false)
             {
-                $this->error = curl_error($url);
+                $this->error = curl_error($curl);
                 curl_close($curl);
                 return false;
             }
@@ -184,7 +184,7 @@ class Workflow extends Model
 
             if(curl_exec($curl) === false)
             {
-                $this->error = curl_error($url);
+                $this->error = curl_error($curl);
                 curl_close($curl);
                 return false;
             }
@@ -341,9 +341,17 @@ class Workflow extends Model
     }
 
 
-    public function sendAppealMessage($appealRecord)
+    public function sendAppealMessage(AppealRequest $appealRecord)
     {
-        return $this->sendPost($appealRecord->toString(), $this->sendAppealURL);
+        $record = CollectionRecord::findOne($appealRecord->id_record);
+
+        $opres = $this->generateServiceRequest($record);
+
+        if($this->debug)
+            return true;
+
+        return $this->sendPost($opres, $this->sendServiceURL);      
+        //return $this->sendPost($appealRecord->toString(), $this->sendAppealURL);
     }
 
     public function getAppealMessage($raw)
