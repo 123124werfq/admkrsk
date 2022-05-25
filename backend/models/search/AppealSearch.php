@@ -53,7 +53,7 @@ class AppealSearch extends AppealRequest
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['id_appeal'=>SORT_DESC]]
+            'sort'=> ['defaultOrder' => ['id_request'=>SORT_DESC]]
         ]);
 
         $this->load($params);
