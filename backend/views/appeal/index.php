@@ -15,8 +15,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'columns' => [
             'id_request:text:#',
-            'target.internal_number',
-            'target.description',
+            //'target.internal_number',
+            //'target.description',
             //'data:ntext',
             //'archive',
             'created_at:date:Создано',
@@ -27,9 +27,9 @@ $this->params['breadcrumbs'][] = $this->title;
             //'deleted_by',
             //'id_record',
             //'id_collection',
-            //'number_internal:ntext',
-            //'number_system',
-            //'number_common',
+            'number_internal:ntext',
+            'number_system',
+            'number_common',
             //'id_target:ntext',
             [
                 'class' => 'yii\grid\ActionColumn',
