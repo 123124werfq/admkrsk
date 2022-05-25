@@ -16,10 +16,17 @@ class AppealSearch extends AppealRequest
      */
     public function rules()
     {
+        /*
         return [
-            [['id_request', 'id_user', 'is_anonimus', 'date', 'archive', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_record', 'id_collection', 'number_system', 'number_common'], 'integer'],
+            [['id_request', 'id_user', 'is_anonimus', 'id_service', 'date', 'archive', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_record', 'id_collection', 'number_system', 'number_common'], 'integer'],
             [['state', 'data', 'number_internal', 'id_target'], 'safe'],
         ];
+        */
+        return [
+            [['id_request',  'id_user', 'is_anonimus',  'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_record', 'number_system', 'number_common'], 'integer'],
+            [['number_internal'], 'safe'],
+        ];
+
     }
 
     /**
