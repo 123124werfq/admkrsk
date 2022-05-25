@@ -62,7 +62,7 @@ class AppealSearch extends AppealRequest
             'id_request' => $this->id_appeal,
             'id_user' => $this->id_user,
             'is_anonimus' => $this->is_anonimus,
-            'id_service' => $this->id_service,
+            //'id_service' => $this->id_service,
             'date' => $this->date,
             'archive' => $this->archive,
             'created_at' => $this->created_at,
