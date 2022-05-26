@@ -63,7 +63,7 @@ class ReceptionController extends \yii\web\Controller
                         'guid' => Service::generateGUID()
                      ];
      
-                     $appeal->data = json_encode($idents); // ToDo: добавить поле data в таблицу!
+                     //$appeal->data = json_encode($idents); // ToDo: добавить поле data в таблицу!
 
                     if ($appeal->save())
                     {
