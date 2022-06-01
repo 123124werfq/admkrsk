@@ -18,7 +18,7 @@ class CollectionQuery extends \yii\mongodb\Query
     public $pagesize=30;
     public $ids = [];
     public $keyAsAlias;
-
+    public $showArchive=false;
     public $id_columns_search = [];
 
     public static function getQuery($id_collection)
@@ -33,7 +33,7 @@ class CollectionQuery extends \yii\mongodb\Query
         
         if (!empty($archiveColumn))
         {
-            if (strpos($query->collection->filters,'col'.$archiveColumn->id_column)==false)
+            if ($this->showArchive==false && strpos($query->collection->options,'col'.$archiveColumn->id_column)==false)
             {
                 $attr = "col".$archiveColumn->id_column;
                 $query->andWhere(['or',['=',$attr,null],[$attr=>0]]);
