@@ -30,11 +30,14 @@ class CollectionQuery extends \yii\mongodb\Query
         //$query->andWhere(['=','date_delete',null]);
 
         $archiveColumn = $query->collection->getArchiveColumn();
-
+        
         if (!empty($archiveColumn))
         {
-            $attr = "col".$archiveColumn->id_column;
-            $query->andWhere(['or',['=',$attr,null],[$attr=>0]]);
+            if (strpos($query->collection->filters,'col'.$archiveColumn->id_column)==false)
+            {
+                $attr = "col".$archiveColumn->id_column;
+                $query->andWhere(['or',['=',$attr,null],[$attr=>0]]);
+            }
         }
 
         if (!empty($pagesize))
@@ -225,7 +228,6 @@ class CollectionQuery extends \yii\mongodb\Query
 
     public function getObjects($keyAsAlias=false)
     {
-        //$this->getArray
         foreach ($this->columns as $key => $col)
             $emptyRow[$this->keyAsAlias?$col->alias:$col->id_column] = '';
     }
