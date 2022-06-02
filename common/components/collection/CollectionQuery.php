@@ -33,11 +33,11 @@ class CollectionQuery extends \yii\mongodb\Query
         
         if (!empty($archiveColumn))
         {
-            if ($showArchive==false && strpos($query->collection->options,'col'.$archiveColumn->id_column)==false)
-            {
+            /*if ($showArchive==false && strpos($query->collection->options,'col'.$archiveColumn->id_column)==false)
+            {*/
                 $attr = "col".$archiveColumn->id_column;
                 $query->andWhere(['or',['=',$attr,null],[$attr=>0]]);
-            }
+            //}
         }
 
         if (!empty($pagesize))

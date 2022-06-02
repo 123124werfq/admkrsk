@@ -476,10 +476,10 @@ class Collection extends ActiveRecord
             $id_collection = $this->id_collection;
         }
 
-        $query = CollectionQuery::getQuery($id_collection);
-
         if (!is_array($options))
             $options = json_decode($this->options, true);
+
+        $query = CollectionQuery::getQuery($id_collection);
 
         $id_cols_search = $id_cols = [];
 

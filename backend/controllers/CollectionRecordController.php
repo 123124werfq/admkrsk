@@ -189,7 +189,8 @@ class CollectionRecordController extends Controller
     public function makeAction($model,$type,$dataProvider)
     {
         // добавляем фильтр по ID
-        if ($ids = Yii::$app->request->post('ids',[]) && empty($_POST['for_all']))
+        $ids = Yii::$app->request->post('ids',[]);
+        if (!empty($ids) && (empty($_POST['for_all']) || $_POST['for_all']=='false'))
         {
             foreach ($ids as $key => $value)
                 $ids[$key] = (int)$value;
