@@ -479,7 +479,10 @@ class Collection extends ActiveRecord
         if (!is_array($options))
             $options = json_decode($this->options, true);
 
-        $query = CollectionQuery::getQuery($id_collection);
+        if (is_array($options))
+            $string_options = json_encode($options);
+        
+        $query = CollectionQuery::getQuery($id_collection,$string_options);
 
         $id_cols_search = $id_cols = [];
 
@@ -510,7 +513,11 @@ class Collection extends ActiveRecord
 
         if (!empty($options['filters']) && !is_array($options['filters']))
         {
-            $query->where(json_decode($options['filters'],true));
+            $filters = json_decode($options['filters'],true);
+
+            //var_dump($filters);
+            if (!empty($filters))
+                $query->andWhere(json_decode($options['filters'],true));
         }
 
         return $query;

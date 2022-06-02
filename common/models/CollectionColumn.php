@@ -490,6 +490,17 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     ]
                   ];
                 break;
+            case self::TYPE_ARCHIVE:
+                $type = 'integer';
+                $operators = [
+                   'equal',
+                   'not_equal',                   
+                   'is_empty',
+                   'is_not_empty',
+                   'is_null',
+                   'is_not_null'
+                ];
+                break;
             case self::TYPE_CHECKBOX:
                 $operators = [
                     'is_empty',

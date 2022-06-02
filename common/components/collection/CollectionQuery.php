@@ -21,7 +21,7 @@ class CollectionQuery extends \yii\mongodb\Query
     
     public $id_columns_search = [];
 
-    public static function getQuery($id_collection,$showArchive=false)
+    public static function getQuery($id_collection,$options=false)
     {
         $query = new CollectionQuery;
         $query->collection = Collection::findOneWithDeleted($id_collection);
@@ -33,11 +33,19 @@ class CollectionQuery extends \yii\mongodb\Query
         
         if (!empty($archiveColumn))
         {
-            /*if ($showArchive==false && strpos($query->collection->options,'col'.$archiveColumn->id_column)==false)
-            {*/
+            $hideArchive = true;
+            
+            if (!empty($query->collection->options))            
+                $hideArchive = (strpos($query->collection->options,'col'.$archiveColumn->id_column)==false);
+
+            if ($hideArchive && !empty($options))            
+                $hideArchive = (strpos($options,'col'.$archiveColumn->id_column)==false);            
+
+            if ($hideArchive)
+            {                
                 $attr = "col".$archiveColumn->id_column;
                 $query->andWhere(['or',['=',$attr,null],[$attr=>0]]);
-            //}
+            }
         }
 
         if (!empty($pagesize))
