@@ -484,7 +484,8 @@ class Collection extends ActiveRecord
         
         $query = CollectionQuery::getQuery($id_collection,$string_options);
 
-        $id_cols_search = $id_cols = [];
+        $id_cols = [];
+        $id_cols_search = $search_columns;
 
         if (!empty($options['columns'])) {
 

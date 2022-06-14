@@ -175,25 +175,23 @@ class CollectionQuery extends \yii\mongodb\Query
         {
             if (!in_array($col->id_column, $this->id_columns_search))
                 $emptyRow[$this->keyAsAlias?$col->alias:$col->id_column] = '';
-        }
-
+        }        
+        
         foreach ($this->all() as $key => $record)
         {
             $output[$record['id_record']] = $emptyRow;
 
             foreach ($record as $vkey => $value)
             {
-
                 $id_column = str_replace('col', '', $vkey);
 
-                if (!isset($this->columns[$id_column])) //|| in_array($id_column, $this->id_columns_search)
+                if (!isset($this->columns[$id_column]))// || in_array($id_column, $this->id_columns_search))
                     continue;
 
                 if (!empty($value))
                 {
                     if (isset($record['col'.$id_column.'_search']))
                     {
-
                         if (!is_array($value))
                             $value = [$value];
 
