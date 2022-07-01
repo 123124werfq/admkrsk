@@ -577,7 +577,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 return [
                     "$this->alias.name" => 'Название файла (Строка)',
                     "$this->alias.size" => 'Размер файла (Число байт)',
-                    "$this->alias.url" => 'Путь до файла (Строка)',
+                    "$this->alias|url" => 'Путь до файла (url)',
                 ];
             case self::TYPE_COLLECTION:
             case self::TYPE_COLLECTIONS:
