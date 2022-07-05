@@ -152,14 +152,14 @@ class SiteController extends Controller
             $model->password = '';
 
             // получаем УРЛ для входа через ЕСИА
-            if (!file_exists(Yii::getAlias('@app') . '/assets/admkrsk2021.pem')) {
+            if (!file_exists(Yii::getAlias('@app') . '/assets/cert2022-new.pem')) {
                 return $this->goBack();
             }
 
             $esia = User::openId();
             $esia->setSigner(new CliSignerPKCS7(
-                Yii::getAlias('@app'). '/assets/admkrsk2021.pem',
-                Yii::getAlias('@app'). '/assets/admkrsk2021.pem',
+                Yii::getAlias('@app'). '/assets/cert2022-new.pem',
+                Yii::getAlias('@app'). '/assets/cert2022-new.pem',
                 'CdtDblGfh1',//'T%52gs]CPJ',
                 Yii::getAlias('@runtime')
             ));
@@ -800,8 +800,8 @@ class SiteController extends Controller
 
         $esia = User::openId();
         $esia->setSigner(new CliSignerPKCS7(
-            Yii::getAlias('@app'). '/assets/admkrsk2021.pem',
-            Yii::getAlias('@app'). '/assets/admkrsk2021.pem',
+            Yii::getAlias('@app'). '/assets/cert2022-new.pem',
+            Yii::getAlias('@app'). '/assets/cert2022-new.pem',
             'CdtDblGfh1',//'T%52gs]CPJ',
             Yii::getAlias('@runtime')
         ));

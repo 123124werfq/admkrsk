@@ -568,8 +568,8 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $config = new Config([
             'clientId' => '236403241',
-            'privateKeyPath' => Yii::getAlias('@app') . '/assets/admkrsk-new.pem',
-            'certPath' => Yii::getAlias('@app') . '/assets/admkrsk-new.pem',
+            'privateKeyPath' => Yii::getAlias('@app') . '/assets/cert2022-new.pem', // '/assets/admkrsk-new.pem',
+            'certPath' => Yii::getAlias('@app') . '/assets/cert2022-new.pem', // '/assets/admkrsk-new.pem',
             //'redirectUrl' => 'https://t1.admkrsk.ru/site/signin',
             'redirectUrl' => 'https://lk.admkrsk.ru/site/signin',
             'portalUrl' => 'https://esia.gosuslugi.ru/',
