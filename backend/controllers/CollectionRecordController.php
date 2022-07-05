@@ -188,8 +188,10 @@ class CollectionRecordController extends Controller
 
     public function makeAction($model,$type,$dataProvider)
     {
-        // добавляем фильтр по ID
-        if ($ids = Yii::$app->request->post('ids',[]) && empty($_POST['for_all']))
+        // добавляем фильтр по ID0
+
+        $ids = Yii::$app->request->post('ids',[]);
+        if (!empty($ids) && (empty($_POST['for_all']) || $_POST['for_all']=='false'))
         {
             foreach ($ids as $key => $value)
                 $ids[$key] = (int)$value;
@@ -228,7 +230,7 @@ class CollectionRecordController extends Controller
 
                 foreach ($records as $key => $data)
                     $collection->update(['id_record'=>$data['id_record']],['col'.$archiveColumn->id_column=>1]
-                );
+            );
 
                 break;
             case 3: // copy

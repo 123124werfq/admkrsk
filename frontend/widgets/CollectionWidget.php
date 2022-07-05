@@ -137,7 +137,6 @@ class CollectionWidget extends \yii\base\Widget
 
         if ($this->template!='table' && !empty($model->template_element))
         {
-
             $columns_alias = Helper::getTwigVars($model->template_element);
 
             if (!empty($columns_alias))
@@ -152,8 +151,13 @@ class CollectionWidget extends \yii\base\Widget
         // уникальный хэш для виджета PJAX, paginatinon и тп. переделать на более короткий
         $unique_hash = hash('joaat', $this->id_collection.serialize($this->columns));
 
+
+        $search_select_columns = [];
+        if (!empty($this->group))
+            $search_select_columns = [$this->group];
+
         // mongo query
-        $query = $model->getDataQueryByOptions($this->columns);
+        $query = $model->getDataQueryByOptions($this->columns,$search_select_columns);
 
         // страница
         $p = (int)Yii::$app->request->get('p',1);

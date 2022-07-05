@@ -192,6 +192,24 @@ class Helper
 	    },['is_safe' => ['html']]);
 	    $twig->addFilter($filter);
 
+	    $filter = new \Twig\TwigFilter('url', function ($data) {
+
+	    	if (!is_array($data))
+	    		return '';
+
+            if (!is_array($data) || empty($data))
+                return '';
+
+            if (!empty($data['id']))
+            {
+            	$media = \common\models\Media::find()->where(['id_media'=>$data['id']])->one();
+
+	            if (!empty($media))
+	            	return $media->getUrl();
+            }
+	    },['is_safe' => ['html']]);
+	    $twig->addFilter($filter);
+
 	    $filter = new \Twig\TwigFilter('schedule_string', function ($value) {
 	    	//$ths = json_decode($data, true);
 
