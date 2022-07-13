@@ -537,12 +537,17 @@ class SiteController extends Controller
         echo $givenName . " " . $surname . " " . $ldapObject['department'][0] . " " . $ldapObject['description'][0] . " ";
         var_dump(implode(unpack('C*', $ldapObject['objectsid'][0])));
     }
+    */
 
     public function actionTestad2()
     {
 
-        $ldaprdn = 'web_user@admkrsk.ru';     // ldap rdn или dn
-        $ldappass = 'PaO5q#3ows';  // ассоциированный пароль
+        //$ldaprdn = 'web_user@admkrsk.ru';     // ldap rdn или dn
+        //$ldappass = 'PaO5q#3ows';  // ассоциированный пароль
+
+
+        $ldaprdn = 'konovalova@admkrsk.ru';     // ldap rdn или dn
+        $ldappass = '171988';  // ассоциированный пароль
 
         // соединение с сервером
         $ldapconn = ldap_connect("10.24.0.7")
@@ -563,6 +568,7 @@ class SiteController extends Controller
         }
     }
 
+    /*
     public function actionTestad3()
     {
         set_time_limit(30);
