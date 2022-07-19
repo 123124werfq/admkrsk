@@ -200,16 +200,22 @@ if(strpos($attr['name'][0], 'игапова'))
                 continue;
             }
 
-            if(!isset($attr['email']) && !isset($attr['mail'][0]))
+            if(!isset($attr['email']) && !isset($attr['mail']))
             {
                 if($flag)  echo "[no email] - SKIPPED\n";
                 continue;
             }
 
             if(isset($attr['email']))
+            {
+                echo $attr['email'][0] . "\n";
                 $alreadyUser = AdUser::find()->where(['email' => $attr['email'][0]])->one();
+            }
             if(isset($attr['mail']))
+            {
+                echo $attr['mail'][0] . "\n";
                 $alreadyUser = AdUser::find()->where(['email' => $attr['mail'][0]])->one();
+            }
 
             if($alreadyUser)
             {
