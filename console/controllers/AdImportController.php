@@ -322,7 +322,8 @@ if(strpos($attr['name'][0], 'игапова'))
 
     public function actionTakeone($src = 0)
     {
-        $target = 'sam@admkrsk.ru';
+        //$target = 'sam@admkrsk.ru';
+        $target = "Zharkov@admkrsk.ru";
 
         $this->mydap_start(
             'web_user@admkrsk.ru', // Active Directory search user
