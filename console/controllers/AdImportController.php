@@ -213,7 +213,7 @@ if(strpos($attr['name'][0], 'игапова'))
 
             if($alreadyUser)
             {
-                echo $alreadyUser->name ." [already there]  - UPDATE\n";
+                echo $i . ". " . $alreadyUser->name . " : " . $attr['mail'][0] . " [already there]  - UPDATE\n";
                 //continue; теперь не пропускаем имеющиеся записи, а обновляем их
                 $aduser = $alreadyUser;
             }
@@ -247,14 +247,14 @@ if(strpos($attr['name'][0], 'игапова'))
 
             if(!$alreadyUser && $checkaduser)
             {
-                echo $i . ". " . $aduser->displayname . " - SKIPPED DUE DUPLICATE SN\n";
+                $aduser->displayname . " - SKIPPED DUE DUPLICATE SN\n";
                 continue;
             }
 
             $checkEmailExists = User::find()->where(['email' => ($aduser->sn).'@admkrsk.ru'])->count();
             if($checkEmailExists)
             {
-                echo $i . ". " . $aduser->displayname . " - SKIPPED DUE DUPLICATE EMAIL\n";
+                $aduser->displayname . " - SKIPPED DUE DUPLICATE EMAIL " . (($aduser->sn).'@admkrsk.ru') .  "\n";
                 continue;
             }                       
 
