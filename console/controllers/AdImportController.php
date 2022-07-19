@@ -200,7 +200,7 @@ if(strpos($attr['name'][0], 'игапова'))
                 continue;
             }
 
-            if(!isset($attr['email']) && !isset($attr['mail']))
+            if(!isset($attr['email']) && !isset($attr['mail'][0]))
             {
                 if($flag)  echo "[no email] - SKIPPED\n";
                 continue;
