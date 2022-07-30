@@ -173,6 +173,62 @@ class Smev extends Model
                         </ns:order>			
                     </ns:orders>
                 </ns:CreateOrdersRequest>
+            </ns:ElkOrderRequest>'; 
+
+    private $testRequest_my2 = '
+            <ns:ElkOrderRequest env="DEV" xmlns:ns="http://epgu.gosuslugi.ru/elk/order/3.1.0">
+                <ns:CreateOrdersRequest>
+                    <ns:orders>
+                        <ns:order>
+                            <ns:userId>1000412965</ns:userId>
+                            <ns:eServiceCode>10000012285</ns:eServiceCode>
+                            <ns:serviceTargetCode>10000569524</ns:serviceTargetCode>
+                            <ns:userSelectedRegion>00000000000</ns:userSelectedRegion>
+                            <ns:orderNumber>2022</ns:orderNumber>
+                            <ns:requestDate>2022-05-10T10:49:45</ns:requestDate>
+                            <ns:orderUrl>http://ext.system.com/orders/1</ns:orderUrl>
+                            <ns:statusHistoryList> 
+                                <ns:statusHistory>
+                                    <ns:status>1</ns:status>
+                                    <ns:statusExtId>21022</ns:statusExtId>
+                                    <ns:statusDate>2017-09-10T10:49:45</ns:statusDate>
+                                </ns:statusHistory>
+                                <ns:statusHistory>
+                                    <ns:status>3</ns:status>
+                                    <ns:statusExtId>21072</ns:statusExtId>
+                                    <ns:statusDate>2017-09-15T10:00:00</ns:statusDate>
+                                    <ns:statusComment>Документы готовы</ns:statusComment>
+                                    <ns:attachments>
+                                        <ns:attachment>
+                                            <ns:FSuuid>265bdb70-b991-11e7-ba7c-a4db30d23ddc</ns:FSuuid>
+                                        </ns:attachment>
+                                        <ns:attachment>
+                                            <ns:FSuuid>887bdb70-b991-11e7-ba7c-a4db30d23ddc</ns:FSuuid>
+                                        </ns:attachment>							
+                                    </ns:attachments>
+                                </ns:statusHistory>
+                            </ns:statusHistoryList>
+                        </ns:order>
+                        <ns:order>
+                            <ns:user>
+                                <ns:snils>062-160-930 30</ns:snils>
+                                <ns:lastName>Богданов</ns:lastName>
+                                <ns:firstName>Константин</ns:firstName>
+                                <ns:middleName>Валериевич</ns:middleName>
+                            </ns:user>
+                            <ns:serviceTargetCode>10000569543</ns:serviceTargetCode>
+                            <ns:userSelectedRegion>00000000000</ns:userSelectedRegion>
+                            <ns:orderNumber>2027</ns:orderNumber>
+                            <ns:requestDate>2017-09-10T15:43:45</ns:requestDate>
+                            <ns:statusHistoryList> 
+                                <ns:statusHistory>
+                                    <ns:status>1</ns:status>
+                                    <ns:statusDate>2017-09-10T15:43:45</ns:statusDate>
+                                </ns:statusHistory>
+                            </ns:statusHistoryList>
+                        </ns:order>			
+                    </ns:orders>
+                </ns:CreateOrdersRequest>
             </ns:ElkOrderRequest>';            
 
     // эталонный запрос на передачу статуса
@@ -322,7 +378,7 @@ class Smev extends Model
 
         $clientId = $this->getGUID();
 
-        $primaryContent     = new MessagePrimaryContent($this->testRequest_my);
+        $primaryContent     = new MessagePrimaryContent($this->testRequest_m2y);
         $content            = new Content($primaryContent, null, null);
         $reqCoontent        = new RequestContentType($content);
         $reqMeta            = new RequestMetadataType($clientId , null, null, null, null, true, null, null, null);
