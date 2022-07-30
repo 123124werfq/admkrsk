@@ -119,6 +119,145 @@ class Smev extends Model
                 </ns:CreateOrdersRequest>
             </ns:ElkOrderRequest>';
 
+    private $testRequest_my = '
+            <ns:ElkOrderRequest env="EPGU" xmlns:ns="http://epgu.gosuslugi.ru/elk/order/3.1.0">
+                <ns:CreateOrdersRequest>
+                    <ns:orders>
+                        <ns:order>
+                            <ns:userId>1000412965</ns:userId>
+                            <ns:eServiceCode>10000012285</ns:eServiceCode>
+                            <ns:serviceTargetCode>10000569524</ns:serviceTargetCode>
+                            <ns:userSelectedRegion>00000000000</ns:userSelectedRegion>
+                            <ns:orderNumber>9001</ns:orderNumber>
+                            <ns:requestDate>2022-07-30T10:48:40</ns:requestDate>
+                            <ns:orderUrl>http://ext.system.com/orders/1</ns:orderUrl>
+                            <ns:statusHistoryList> 
+                                <ns:statusHistory>
+                                    <ns:status>1</ns:status>
+                                    <ns:statusExtId>21022</ns:statusExtId>
+                                    <ns:statusDate>2022-07-30T10:48:40</ns:statusDate>
+                                </ns:statusHistory>
+                                <ns:statusHistory>
+                                    <ns:status>3</ns:status>
+                                    <ns:statusExtId>21072</ns:statusExtId>
+                                    <ns:statusDate>2022-07-30T10:52:40</ns:statusDate>
+                                    <ns:statusComment>Документы готовы</ns:statusComment>
+                                    <ns:attachments>
+                                        <ns:attachment>
+                                            <ns:FSuuid>265bdb70-b991-11e7-ba7c-a4db40d23ddc</ns:FSuuid>
+                                        </ns:attachment>
+                                        <ns:attachment>
+                                            <ns:FSuuid>887bdb70-b991-11e7-ba7c-a4db40d23ddc</ns:FSuuid>
+                                        </ns:attachment>							
+                                    </ns:attachments>
+                                </ns:statusHistory>
+                            </ns:statusHistoryList>
+                        </ns:order>
+                        <ns:order>
+                            <ns:user>
+                                 <ns:snils>062-160-930 30</ns:snils>
+                                 <ns:lastName>Богданов</ns:lastName>
+                                 <ns:firstName>Константин</ns:firstName>
+                                 <ns:middleName>Валериевич</ns:middleName>
+                              </ns:user>
+                            <ns:serviceTargetCode>10000569543</ns:serviceTargetCode>
+                            <ns:userSelectedRegion>00000000000</ns:userSelectedRegion>
+                            <ns:orderNumber>9001</ns:orderNumber>
+                            <ns:requestDate>2022-07-30T10:48:40</ns:requestDate>
+                            <ns:statusHistoryList> 
+                                <ns:statusHistory>
+                                    <ns:status>1</ns:status>
+                                    <ns:statusDate>2022-07-30T10:48:40</ns:statusDate>
+                                </ns:statusHistory>
+                            </ns:statusHistoryList>
+                        </ns:order>			
+                    </ns:orders>
+                </ns:CreateOrdersRequest>
+            </ns:ElkOrderRequest>';            
+
+    // эталонный запрос на передачу статуса
+    private $testRequest2 = '<?xml version="1.0" encoding="UTF-8"?>
+            <ns:ElkOrderRequest env="EPGU" xmlns:ns="http://epgu.gosuslugi.ru/elk/order/3.2.0">
+                <ns:UpdateOrdersRequest>
+                    <ns:orders>
+                        <ns:order>
+                            <ns:elkOrderNumber>10000001</ns:elkOrderNumber>
+                            <ns:statusHistoryList> 
+                                <ns:statusHistory>
+                                    <ns:status>1</ns:status>
+                                    <ns:statusExtId>21022</ns:statusExtId>
+                                    <ns:statusDate>2017-09-10T10:49:45</ns:statusDate>
+                                </ns:statusHistory>
+                                <ns:statusHistory>
+                                    <ns:status>3</ns:status>
+                                    <ns:statusExtId>21072</ns:statusExtId>
+                                    <ns:statusDate>2017-09-15T10:00:00</ns:statusDate>
+                                    <ns:statusComment>Документы готовы</ns:statusComment>
+                                    <ns:attachments>
+                                        <ns:attachment>
+                                            <ns:FSuuid>92d337ca-6869-11e7-9b64-0242ac110012</ns:FSuuid>
+                                        </ns:attachment>
+                                        <ns:attachment>
+                                            <ns:FSuuid>92d337ca-6869-11e7-9b64-0242ac110015</ns:FSuuid>
+                                        </ns:attachment>                            
+                                    </ns:attachments>                       
+                                </ns:statusHistory>
+                            </ns:statusHistoryList>
+                        </ns:order>
+                        <ns:order>
+                            <ns:elkOrderNumber>10000002</ns:elkOrderNumber>
+                            <ns:equeueEvent>
+                                <ns:equeueInvitation>
+                                    <ns:organizationData>
+                                        <ns:organizationId>0000000000000000000</ns:organizationId>
+                                    </ns:organizationData>  
+                                    <ns:startDate>2019-08-11</ns:startDate>
+                                    <ns:endDate>2019-12-11</ns:endDate>
+                                </ns:equeueInvitation>   
+                            </ns:equeueEvent>
+                            <ns:statusHistoryList> 
+                                <ns:statusHistory>
+                                    <ns:status>1</ns:status>
+                                    <ns:statusDate>2017-09-13T15:43:45</ns:statusDate>
+                                </ns:statusHistory>
+                                <ns:statusHistory>
+                                    <ns:status>3</ns:status>
+                                    <ns:statusDate>2017-09-14T15:43:45</ns:statusDate>
+                                </ns:statusHistory>
+                            </ns:statusHistoryList>
+                        </ns:order>
+                        <ns:order>
+                            <ns:elkOrderNumber>10000003</ns:elkOrderNumber>
+                            <ns:equeueEvent>
+                                <ns:equeueClosed></ns:equeueClosed>   
+                            </ns:equeueEvent>
+                            <ns:statusHistoryList> 
+                                <ns:statusHistory>
+                                    <ns:status>1</ns:status>
+                                    <ns:statusDate>2017-09-10T15:43:45</ns:statusDate>
+                                </ns:statusHistory>
+                                <ns:statusHistory>
+                                    <ns:status>3</ns:status>
+                                    <ns:statusDate>2017-09-14T15:43:45</ns:statusDate>
+                                </ns:statusHistory>
+                            </ns:statusHistoryList>
+                        </ns:order>
+                        <ns:order>
+                            <ns:elkOrderNumber>10000004</ns:elkOrderNumber>
+                            <ns:equeueEvent>
+                                <ns:equeueInvitation>
+                                    <ns:organizationData>
+                                        <ns:organizationId>0000000000000000000</ns:organizationId>
+                                    </ns:organizationData>  
+                                    <ns:startDate>2019-08-15</ns:startDate>
+                                    <ns:endDate>2019-09-15</ns:endDate>
+                                </ns:equeueInvitation>   
+                            </ns:equeueEvent>
+                        </ns:order>         
+                    </ns:orders>
+                </ns:UpdateOrdersRequest>
+            </ns:ElkOrderRequest>';
+
     // для ответа
     private $testResponse = '';
 
@@ -176,5 +315,33 @@ class Smev extends Model
         $res = $cl->Send($message);
         var_dump($res);
     }
+
+    public function testMessageEpgu()
+    {
+        $cl = $this->connect([], 'http://10.24.0.75:7575/ws?wsdl');
+
+        $clientId = $this->getGUID();
+
+        $primaryContent     = new MessagePrimaryContent($this->testRequest_my);
+        $content            = new Content($primaryContent, null, null);
+        $reqCoontent        = new RequestContentType($content);
+        $reqMeta            = new RequestMetadataType($clientId , null, null, null, null, true, null, null, null);
+        $rq                 = new RequestMessageType('CreateOrdersRequest', $reqMeta, $reqCoontent);
+
+        $respMeta               = new ResponseMetadataType('48135eb7-20d6-4dea-8b1b-9895d058eff5', $clientId );
+        $primaryContentInput    = new MessagePrimaryContent($this->testResponse);
+        $respInput              = new Content($primaryContentInput,null, null);
+        $respStatus             = new Status(null, null, null);
+        $respContent = new ResponseContentType($respInput, $respStatus);
+        $resp = new ResponseMessageType('CreateOrdersResponse', $respMeta, $respContent);
+
+//        $message = new ClientMessage(240501, $rq, $resp);
+        $message = new ClientMessage(240501, $rq, null);
+
+       // $cl->Send($message);
+
+        $res = $cl->Send($message);
+        var_dump($res);
+    }    
 
 }
