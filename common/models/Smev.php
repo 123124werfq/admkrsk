@@ -378,7 +378,7 @@ class Smev extends Model
 
         $clientId = $this->getGUID();
 
-        $primaryContent     = new MessagePrimaryContent($this->testRequest_m2y);
+        $primaryContent     = new MessagePrimaryContent($this->testRequest_my2);
         $content            = new Content($primaryContent, null, null);
         $reqCoontent        = new RequestContentType($content);
         $reqMeta            = new RequestMetadataType($clientId , null, null, null, null, true, null, null, null);
