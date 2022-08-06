@@ -181,6 +181,9 @@ class Form extends \yii\db\ActiveRecord
         else if (!empty($this->service->template))
             $media = $this->service->template;
 
+        if (empty($media))
+            return false;
+        
         $url = $media->getUrl();
 
         $arrContextOptions=array(

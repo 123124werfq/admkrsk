@@ -490,6 +490,17 @@ class CollectionColumn extends \yii\db\ActiveRecord
                     ]
                   ];
                 break;
+            case self::TYPE_ARCHIVE:
+                $type = 'integer';
+                $operators = [
+                   'equal',
+                   'not_equal',                   
+                   'is_empty',
+                   'is_not_empty',
+                   'is_null',
+                   'is_not_null'
+                ];
+                break;
             case self::TYPE_CHECKBOX:
                 $operators = [
                     'is_empty',
@@ -566,7 +577,7 @@ class CollectionColumn extends \yii\db\ActiveRecord
                 return [
                     "$this->alias.name" => 'Название файла (Строка)',
                     "$this->alias.size" => 'Размер файла (Число байт)',
-                    "$this->alias.url" => 'Путь до файла (Строка)',
+                    "$this->alias|url" => 'Путь до файла (url)',
                 ];
             case self::TYPE_COLLECTION:
             case self::TYPE_COLLECTIONS:

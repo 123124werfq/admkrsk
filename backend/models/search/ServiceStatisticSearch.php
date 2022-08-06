@@ -49,7 +49,7 @@ class ServiceStatisticSearch extends Integration
     {
         //var_dump($params); die();
         $sql = "select *, st.reestr_number, st.name as target_name from(
-                    select sa.id_appeal, sa.id_service, sa.id_target, sa.number_internal, sa.number_system , MAX(sas.\"date\") as resdate, max(sas.state) as resstate, string_agg(sas.state,'→') as state_history from service_appeal sa 
+                    select sa.id_appeal, sa.id_service, sa.id_target, sa.number_internal, sa.number_system , MAX(sas.\"date\") as resdate, max(sas.state) as resstate, string_agg(sas.state,'→' order by sas.id_state) as state_history from service_appeal sa 
                     left join service_appeal_state sas on sas.id_appeal = sa.id_appeal 
                     group by sa.id_appeal
                     ) t1 

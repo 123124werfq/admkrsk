@@ -18,6 +18,10 @@ use yii\web\BadRequestHttpException;
 use yii\widgets\ActiveForm;
 use yii\web\Response;
 
+use common\models\Workflow;
+use common\models\Integration;
+use common\models\Service;
+
 class ReceptionController extends \yii\web\Controller
 {
     public function actionRequest()
@@ -55,6 +59,12 @@ class ReceptionController extends \yii\web\Controller
 
                     $appeal->id_record = $record->id_record;
 
+                    $idents = [
+                        'guid' => Service::generateGUID()
+                     ];
+     
+                     $appeal->data = json_encode($idents); // ToDo: добавить поле data в таблицу!
+
                     if ($appeal->save())
                     {
                         $state = new AppealState;
@@ -67,8 +77,7 @@ class ReceptionController extends \yii\web\Controller
                             $appeal->number_internal = "ВП-".date("Y")."-".str_pad($appeal->id_request, 6, '0', STR_PAD_LEFT);
                             $appeal->updateAttributes(['state', 'number_internal']);
 
-                            // запрос к СЭД
-                            /*
+                            // запрос к СЭД                            
                             $attachments = $record->getAllMedias();
 
                             $export_path = $record->collection->form->makeDoc($record);
@@ -77,7 +86,7 @@ class ReceptionController extends \yii\web\Controller
                             $wf->generateArchive($idents['guid'], $attachments, $export_path);
 
                             // ... тут XML
-                            $opres = $wf->sendServiceMessage($appeal);
+                            $opres = $wf->sendAppealMessage($appeal);
                             $integration = new Integration;
                             $integration->system = Integration::SYSTEM_SED;
                             $integration->direction = Integration::DIRECTION_OUTPUT;
@@ -97,7 +106,7 @@ class ReceptionController extends \yii\web\Controller
 
                             $integration->created_at = time();
                             $integration->save();
-                            */
+                            
 
                             Yii::$app->response->format = Response::FORMAT_JSON;
                             return [

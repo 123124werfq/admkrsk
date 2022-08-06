@@ -16,10 +16,17 @@ class AppealSearch extends AppealRequest
      */
     public function rules()
     {
+        /*
         return [
             [['id_request', 'id_user', 'is_anonimus', 'id_service', 'date', 'archive', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_record', 'id_collection', 'number_system', 'number_common'], 'integer'],
             [['state', 'data', 'number_internal', 'id_target'], 'safe'],
         ];
+        */
+        return [
+            [['id_request',  'id_user', 'is_anonimus',  'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'id_record', 'number_system', 'number_common'], 'integer'],
+            [['number_internal'], 'safe'],
+        ];
+
     }
 
     /**
@@ -46,7 +53,7 @@ class AppealSearch extends AppealRequest
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['id_appeal'=>SORT_DESC]]
+            'sort'=> ['defaultOrder' => ['id_request'=>SORT_DESC]]
         ]);
 
         $this->load($params);
@@ -59,29 +66,26 @@ class AppealSearch extends AppealRequest
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id_request' => $this->id_appeal,
+            'id_request' => $this->id_request,
             'id_user' => $this->id_user,
             'is_anonimus' => $this->is_anonimus,
-            'id_service' => $this->id_service,
-            'date' => $this->date,
-            'archive' => $this->archive,
+            //'id_service' => $this->id_service,
+            //'date' => $this->date,
+            //'archive' => $this->archive,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,
             'updated_by' => $this->updated_by,
             'deleted_at' => $this->deleted_at,
             'deleted_by' => $this->deleted_by,
-            'id_record' => $this->id_record,
-            'id_collection' => $this->id_collection,
+            //'id_record' => $this->id_record,
+            //'id_collection' => $this->id_collection,
             'number_internal' => $this->number_internal,
             'number_system' => $this->number_system,
             'number_common' => $this->number_common,
         ]);
 
-        $query->andFilterWhere(['ilike', 'state', $this->state])
-            ->andFilterWhere(['ilike', 'data', $this->data])
-            ->andFilterWhere(['ilike', 'number_internal', $this->number_internal])
-            ->andFilterWhere(['ilike', 'id_target', $this->id_target]);
+        $query->andFilterWhere(['ilike', 'number_internal', $this->number_internal]);
 
         return $dataProvider;
     }

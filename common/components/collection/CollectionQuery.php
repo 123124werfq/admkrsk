@@ -18,10 +18,10 @@ class CollectionQuery extends \yii\mongodb\Query
     public $pagesize=30;
     public $ids = [];
     public $keyAsAlias;
-
+    
     public $id_columns_search = [];
 
-    public static function getQuery($id_collection)
+    public static function getQuery($id_collection,$options=false)
     {
         $query = new CollectionQuery;
         $query->collection = Collection::findOneWithDeleted($id_collection);
@@ -30,11 +30,22 @@ class CollectionQuery extends \yii\mongodb\Query
         //$query->andWhere(['=','date_delete',null]);
 
         $archiveColumn = $query->collection->getArchiveColumn();
-
+        
         if (!empty($archiveColumn))
         {
-            $attr = "col".$archiveColumn->id_column;
-            $query->andWhere(['or',['=',$attr,null],[$attr=>0]]);
+            $hideArchive = true;
+            
+            if (!empty($query->collection->options))            
+                $hideArchive = (strpos($query->collection->options,'col'.$archiveColumn->id_column)==false);
+
+            if ($hideArchive && !empty($options))            
+                $hideArchive = (strpos($options,'col'.$archiveColumn->id_column)==false);            
+
+            if ($hideArchive)
+            {                
+                $attr = "col".$archiveColumn->id_column;
+                $query->andWhere(['or',['=',$attr,null],[$attr=>0]]);
+            }
         }
 
         if (!empty($pagesize))
@@ -164,25 +175,23 @@ class CollectionQuery extends \yii\mongodb\Query
         {
             if (!in_array($col->id_column, $this->id_columns_search))
                 $emptyRow[$this->keyAsAlias?$col->alias:$col->id_column] = '';
-        }
-
+        }        
+        
         foreach ($this->all() as $key => $record)
         {
             $output[$record['id_record']] = $emptyRow;
 
             foreach ($record as $vkey => $value)
             {
-
                 $id_column = str_replace('col', '', $vkey);
 
-                if (!isset($this->columns[$id_column])) //|| in_array($id_column, $this->id_columns_search)
+                if (!isset($this->columns[$id_column]))// || in_array($id_column, $this->id_columns_search))
                     continue;
 
                 if (!empty($value))
                 {
                     if (isset($record['col'.$id_column.'_search']))
                     {
-
                         if (!is_array($value))
                             $value = [$value];
 
@@ -225,7 +234,6 @@ class CollectionQuery extends \yii\mongodb\Query
 
     public function getObjects($keyAsAlias=false)
     {
-        //$this->getArray
         foreach ($this->columns as $key => $col)
             $emptyRow[$this->keyAsAlias?$col->alias:$col->id_column] = '';
     }
