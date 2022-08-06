@@ -2,7 +2,7 @@
     use yii\helpers\Html;
 ?>
 <div class="directions">
-<?php foreach ($menu->links as $key => $link) {?>
+<?php foreach ($menu->activeLinks as $key => $link) {?>
     <div class="directions_item">
         <div class="directions_img">
             <img class="directions_img-picture" src="<?=(!empty($link->id_media))?$link->makeThumb(['w'=>64,'h'=>70]):''?>" alt="" width="64" height="70" alt="<?=Html::encode($link->label)?>">

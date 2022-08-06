@@ -20,7 +20,7 @@
 
                     <?php if (!empty($menu)){?>
                     <div class="present-situations">
-                        <?php foreach ($menu->links as $key => $link) {?>
+                        <?php foreach ($menu->activeLinks as $key => $link) {?>
                         <div class="situations_item situations_item__wide">
                             <div class="situations_img situations_img__bg">
                                 <img class="situations_img-picture" src="<?=$link->makeThumb(['w'=>64,'h'=>70])?>" alt="" width="64" height="70" alt="">

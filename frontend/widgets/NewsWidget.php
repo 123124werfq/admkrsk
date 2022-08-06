@@ -65,7 +65,7 @@ class NewsWidget extends \yii\base\Widget
 
         $tabs = [];
 
-        foreach ($menu->links as $key => $link)
+        foreach ($menu->activeLinks as $key => $link)
         {
             if (!empty($link->id_page))
             {
