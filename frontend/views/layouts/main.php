@@ -111,7 +111,7 @@ if (!empty($this->params['page']))
                 if($_SERVER['SERVER_NAME'] == 'appeals.admkrsk.ru')
                     $oldlink = "http://www.admkrsk.ru/reception/Pages/default.aspx";                
         ?>
-        <div style="text-align:  center;padding: 10px;background-color: lightblue;">
+        <div style="text-align:  center;padding: 10px;background-color: lightblue;" data-name="<?=$_SERVER['SERVER_NAME']?>">
             Добро пожаловать на бета-версию официального сайта администрации города Красноярска! Для перехода на актуальную версию сайта нажмите <a href="<?=$oldlink?>">сюда</>.
         </div>
         <?php } ?>    
