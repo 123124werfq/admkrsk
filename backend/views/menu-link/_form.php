@@ -64,7 +64,7 @@ else
             'single'=>true,
             'relation'=>'media',
             //'records'=>[$value_model->media],
-            'extensions'=>['jpg','jpeg','gif','png'],
+            'extensions'=>['jpg','jpeg','gif','png','svg'],
             'grouptype'=>1,
             'showPreview'=>true
         ]);?>
