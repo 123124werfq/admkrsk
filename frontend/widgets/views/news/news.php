@@ -11,7 +11,7 @@
                 <div class="smart-menu-tabs smart-menu-tabs__right slide-hover tab-controls tab-controls__invert tab-controls__responsive">
                     <div class="tab-controls-holder">
                         <span class="slide-hover-line"></span>
-                        <?php foreach ($menu->links as $key => $link) {?>
+                        <?php foreach ($menu->activeLinks as $key => $link) {?>
                             <div class="smart-menu-tabs_item tab-control <?=$key==0?'tab-control__active':''?> slide-hover-item" data-href="#tabnews<?=$link->id_link?>"><a  class="smart-menu-tabs_control"><?=$link->label?></a></div>
                         <?php }?>
                     </div>
@@ -20,7 +20,7 @@
         </div>
         <div class="press-content">
             <?php
-            foreach ($menu->links as $key => $link) {
+            foreach ($menu->activeLinks as $key => $link) {
                 $tab = $tabs[$link->id_link];
             ?>
             <div class="news tab-content <?=($key==0)?'active':''?>" id="tabnews<?=$link->id_link?>">

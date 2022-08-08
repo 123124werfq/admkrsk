@@ -3,13 +3,13 @@
         <div class="smart-menu-tabs slide-hover tab-controls tab-controls__responsive">
             <div class="tab-controls-holder">
                 <span class="slide-hover-line"></span>
-                <?php foreach ($menu->links as $key => $link) {?>
+                <?php foreach ($menu->activeLinks as $key => $link) {?>
                 	<div class="smart-menu-tabs_item tab-control <?=$key==0?'tab-control__active':''?> slide-hover-item" data-href="#tabs<?=$menu->id_menu?>-tab<?=$key?>"><a  class="smart-menu-tabs_control"><?=$link->label?></a></div>
                 <?php }?>
             </div>
         </div>
         <div class="smart-menu-content">
-            <?php foreach ($menu->links as $key => $link) {?>
+            <?php foreach ($menu->activeLinks as $key => $link) {?>
             <div id="tabs<?=$menu->id_menu?>-tab<?=$key?>" class="tab-content <?=$key==0?'active':''?>">
             	<?php
             		if (!empty($link->template))

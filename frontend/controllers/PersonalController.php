@@ -38,7 +38,7 @@ class PersonalController extends \yii\web\Controller
     {
        $smev = new Smev;
 
-       $smev->testMessage();
+       $smev->testMessageEpgu();
 
     }
 

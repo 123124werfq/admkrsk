@@ -207,13 +207,19 @@ if(strpos($attr['name'][0], 'игапова'))
             }
 
             if(isset($attr['email']))
+            {
+                //echo $attr['email'][0] . "\n";
                 $alreadyUser = AdUser::find()->where(['email' => $attr['email'][0]])->one();
+            }
             if(isset($attr['mail']))
+            {
+                //echo $attr['mail'][0] . "\n";
                 $alreadyUser = AdUser::find()->where(['email' => $attr['mail'][0]])->one();
+            }
 
             if($alreadyUser)
             {
-                echo $alreadyUser->name ." [already there]  - UPDATE\n";
+                echo $i . ". " . $alreadyUser->name . " : " . $attr['mail'][0] . " [already there]  - UPDATE\n";
                 //continue; теперь не пропускаем имеющиеся записи, а обновляем их
                 $aduser = $alreadyUser;
             }
@@ -247,14 +253,14 @@ if(strpos($attr['name'][0], 'игапова'))
 
             if(!$alreadyUser && $checkaduser)
             {
-                echo $i . ". " . $aduser->displayname . " - SKIPPED DUE DUPLICATE SN\n";
+                $aduser->displayname . " - SKIPPED DUE DUPLICATE SN\n";
                 continue;
             }
 
             $checkEmailExists = User::find()->where(['email' => ($aduser->sn).'@admkrsk.ru'])->count();
             if($checkEmailExists)
             {
-                echo $i . ". " . $aduser->displayname . " - SKIPPED DUE DUPLICATE EMAIL\n";
+                $aduser->displayname . " - SKIPPED DUE DUPLICATE EMAIL " . (($aduser->sn).'@admkrsk.ru') .  "\n";
                 continue;
             }                       
 
@@ -322,7 +328,8 @@ if(strpos($attr['name'][0], 'игапова'))
 
     public function actionTakeone($src = 0)
     {
-        $target = 'sam@admkrsk.ru';
+        //$target = 'sam@admkrsk.ru';
+        $target = "Zharkov@admkrsk.ru";
 
         $this->mydap_start(
             'web_user@admkrsk.ru', // Active Directory search user
