@@ -3,7 +3,7 @@
 ?>
 <div class="regions clearfix">
   <?php foreach ($menu->activeLinks as $key => $link) {?>
-  <div class="region-item">
+  <div class="region-item" data-id="<?=$link->id_link?>">
       <div class="region-item-holder">
           <a href="<?=$link->getUrl()?>" class="region-item_main">
               <h3 class="region-item_title"><?=Html::encode($link->label)?></h3>
