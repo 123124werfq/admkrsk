@@ -44,7 +44,7 @@ class FiasImportJob extends Job implements RetryableJobInterface
         $client = new SoapClient('https://fias.nalog.ru/WebServices/Public/DownloadService.asmx?WSDL');
 
         try {
-            $response = $client->GetAllDownloadFileInfo();
+            /*$response = $client->GetAllDownloadFileInfo();
 
             $updates = ArrayHelper::map($response->GetAllDownloadFileInfoResult->DownloadFileInfo, 'VersionId', function (\StdClass $object) {
                 return [
@@ -65,9 +65,9 @@ class FiasImportJob extends Job implements RetryableJobInterface
                 $updates = [array_pop($updates)];
             }
 
-            foreach ($updates as $update) {
+            foreach ($updates as $update) {*/
                 $this->fiasUpdate($update);
-            }
+            //}
         } catch (SoapFault $exception) {
             $updateHistory = new FiasUpdateHistory(['text' => $exception->getMessage()]);
             $updateHistory->save();
@@ -108,17 +108,17 @@ class FiasImportJob extends Job implements RetryableJobInterface
      */
     private function fiasUpdate($update)
     {
-        $updateHistory = new FiasUpdateHistory($update);
+        /*$updateHistory = new FiasUpdateHistory($update);
 
         FileHelper::createDirectory(Yii::getAlias('@runtime/fias_update'));
 
         $file = $this->downloadFile($updateHistory);
 
         $path = $this->extractFile($file);
-
+*/
         $this->updateData($path);
 
-        $updateHistory->save();
+        //$updateHistory->save();
     }
 
     /**
