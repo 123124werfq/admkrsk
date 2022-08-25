@@ -180,7 +180,7 @@ class FiasImportJob extends Job implements RetryableJobInterface
      */
     private function importDbf($filename)
     {
-        if (!$db = @dbase_open($filename, 0)) {
+        if (!$db = @\dbase_open($filename, 0)) {
             Console::stderr("Не удалось открыть DBF файл: '$filename'\n");
             return 1;
         }
