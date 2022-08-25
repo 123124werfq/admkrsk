@@ -115,7 +115,10 @@ class FiasImportJob extends Job implements RetryableJobInterface
         $file = $this->downloadFile($updateHistory);
 
         $path = $this->extractFile($file);
+
+
 */
+        $path = Yii::getAlias('@runtime/fias_update');
         $this->updateData($path);
 
         //$updateHistory->save();
