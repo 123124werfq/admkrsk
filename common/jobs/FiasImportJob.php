@@ -41,7 +41,7 @@ class FiasImportJob extends Job implements RetryableJobInterface
     {
         $this->_lastVersion = FiasUpdateHistory::find()->max('version');
 
-        $client = new SoapClient('https://fias.nalog.ru/WebServices/Public/DownloadService.asmx?WSDL');
+        //$client = new SoapClient('https://fias.nalog.ru/WebServices/Public/DownloadService.asmx?WSDL');
 
         try {
             /*$response = $client->GetAllDownloadFileInfo();
