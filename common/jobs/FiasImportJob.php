@@ -64,9 +64,9 @@ class FiasImportJob extends Job implements RetryableJobInterface
             } else {
                 $updates = [array_pop($updates)];
             }
-
+    
             foreach ($updates as $update) {*/
-                $this->fiasUpdate($update);
+                $this->fiasUpdate('');//$update);
             //}
         } catch (SoapFault $exception) {
             $updateHistory = new FiasUpdateHistory(['text' => $exception->getMessage()]);
@@ -115,8 +115,6 @@ class FiasImportJob extends Job implements RetryableJobInterface
         $file = $this->downloadFile($updateHistory);
 
         $path = $this->extractFile($file);
-
-
 */
         $path = Yii::getAlias('@runtime/fias_update');
         $this->updateData($path);
