@@ -88,27 +88,7 @@ $defaultColumns = [
             else
                 return '<span class="badge badge-secondary">Удалено</span>';
         },
-    ],
-    'readyness2:prop' => [
-        'label' => 'Готовность к проверке 2',
-        'format' => 'html',
-        'value' => function ($model) {
-            $model = CstProfile::findOne($model['id_profile']);
-            $rr = $model->getRecord()->one();
-            if($rr)
-            {
-                $record = $model->getRecord()->one()->getData(true);
-
-                $readyness = !empty($record['ready']);
-
-                $message = $readyness?'<span class="badge badge-primary">Готово к проверке</span>':'<span class="badge badge-danger">Не готово к проверке</span>';
-
-                return $message;
-            }
-            else
-                return '<span class="badge badge-secondary">Удалено</span>';
-        },
-    ],    
+    ],   
     'comment:prop' => [
         'label' => 'Комментарий',
         'format' => 'html',
@@ -121,7 +101,7 @@ $defaultColumns = [
     ],
 ];
 
-list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
+[$gridColumns, $visibleColumns] = GridSetting::getGridColumns(
     $defaultColumns,
     $customColumns,
     CstProfile::class
