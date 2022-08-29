@@ -69,7 +69,7 @@ $defaultColumns = [
             return $pmod->getStatename(true).$extra;
         },
     ],
-    [
+    'readyness:prop' => [
         'label' => 'Готовность',
         'format' => 'html',
         'value' => function ($model) {
@@ -107,9 +107,9 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
     CstProfile::class
 );
 
-var_dump($gridColumns);
+//var_dump($gridColumns);
 
-var_dump($visibleColumns);
+//var_dump($visibleColumns);
 
 ?>
 
