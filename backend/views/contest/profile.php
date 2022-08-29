@@ -70,7 +70,7 @@ $defaultColumns = [
         },
     ],
     'readyness:prop' => [
-        'label' => 'Готовность',
+        'label' => 'Готовность к проверке',
         'format' => 'html',
         'value' => function ($model) {
             $model = CstProfile::findOne($model['id_profile']);
