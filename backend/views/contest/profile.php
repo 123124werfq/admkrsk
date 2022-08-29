@@ -101,11 +101,13 @@ $defaultColumns = [
     ],
 ];
 
-[$gridColumns, $visibleColumns] = GridSetting::getGridColumns(
+list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
     $defaultColumns,
     $customColumns,
     CstProfile::class
 );
+
+$gridColumns = $defaultColumns;
 
 //var_dump($gridColumns);
 
