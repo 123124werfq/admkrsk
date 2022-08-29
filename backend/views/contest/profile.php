@@ -107,7 +107,12 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
     CstProfile::class
 );
 
+var_dump($gridColumns);
+
+var_dump($visibleColumns);
+
 ?>
+
 
 <div id="accordion">
     <h3 id="grid-setting">Настройки таблицы</h3>
