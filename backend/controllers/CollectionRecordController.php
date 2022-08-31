@@ -217,7 +217,7 @@ class CollectionRecordController extends Controller
                     if ($newRecord->save())
                     {
                         $collection->update(['id_record'=>$data['id_record']],['col'.$archiveColumn->id_column=>1]);
-                        Yii::$app->db->createCommand()->update('db_collection_record',['is_archive'=>1],['id_record'=>$data['id_record']])->execute();
+                        Yii::$app->db->createCommand()->update('db_collection_record',['is_archive'=>1],['id_record'=>$data['id_record']])->execute();                        
 
                         unset($data['_id']);
                         $data['id_record'] = $newRecord->id_record;
