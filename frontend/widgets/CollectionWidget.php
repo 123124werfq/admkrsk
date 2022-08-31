@@ -458,6 +458,7 @@ class CollectionWidget extends \yii\base\Widget
 
                 'show_download'=>$this->show_download,
                 'show_on_map'=>(!empty($this->show_on_map) && !empty($model->id_column_map))?1:0,
+                'setting'=>$setting,
             ]);
         }
 
