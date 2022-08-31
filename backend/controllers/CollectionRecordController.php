@@ -191,6 +191,7 @@ class CollectionRecordController extends Controller
         // добавляем фильтр по ID0
 
         $ids = Yii::$app->request->post('ids',[]);
+        
         if (!empty($ids) && (empty($_POST['for_all']) || $_POST['for_all']=='false'))
         {
             foreach ($ids as $key => $value)
@@ -211,16 +212,17 @@ class CollectionRecordController extends Controller
                 foreach ($records as $key => $data)
                 {
                     $newRecord = new CollectionRecord;
-                    $newRecord->id_collection = $model->id_collection;
+                    $newRecord->id_collection = $model->id_collection;                    
 
                     if ($newRecord->save())
                     {
+                        $collection->update(['id_record'=>$data['id_record']],['col'.$archiveColumn->id_column=>1]);
+                        Yii::$app->db->createCommand()->update('db_collection_record',['is_archive'=>1],['id_record'=>$data['id_record']])->execute();
+
                         unset($data['_id']);
                         $data['id_record'] = $newRecord->id_record;
                         $collection->insert($data);
                     }
-
-                    $collection->update(['id_record'=>$data['id_record']],['col'.$archiveColumn->id_column=>1]);
                 }
 
                 break;
@@ -229,8 +231,9 @@ class CollectionRecordController extends Controller
                 $archiveColumn = $model->makeArchiveColumn();
 
                 foreach ($records as $key => $data)
-                    $collection->update(['id_record'=>$data['id_record']],['col'.$archiveColumn->id_column=>1]
-            );
+                    $collection->update(['id_record'=>$data['id_record']],['col'.$archiveColumn->id_column=>1]);
+
+                Yii::$app->db->createCommand()->update('db_collection_record',['is_archive'=>1],['id_record'=>$ids])->execute();
 
                 break;
             case 3: // copy
