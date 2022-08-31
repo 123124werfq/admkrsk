@@ -15,6 +15,7 @@
 	'unique_hash'=>$unique_hash,
 	'search_columns'=>$search_columns,
 	'pagesize'=>$pagesize,
+	'page'=>$page,
 	'show_download'=>$show_download,
 	'setting'=>$setting,
 	'id_collection'=>$id_collection,

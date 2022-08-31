@@ -10,6 +10,7 @@
 	'show_download'=>$show_download,
 	'setting'=>$setting,
 	'id_collection'=>$id_collection,
+	'page'=>$page,
 ])?>
 
 <?php Pjax::begin([
