@@ -229,7 +229,47 @@ class Smev extends Model
                         </ns:order>			
                     </ns:orders>
                 </ns:CreateOrdersRequest>
-            </ns:ElkOrderRequest>';            
+            </ns:ElkOrderRequest>';
+            
+    private $testRequest_my3 = '        
+            <ElkOrderRequest:ElkOrderRequest xmlns:ElkOrderRequest="http://epgu.gosuslugi.ru/elk/order/3.1.0" xmlns="http://epgu.gosuslugi.ru/elk/order/3.1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" env="PROD">
+                <CreateOrdersRequest>
+                    <orders>
+                        <order>
+                            <user>
+                                <snils>062-160-930 30</snils>
+                                <lastName>БОГДАНОВ</lastName>
+                                <firstName>КОНСТАНТИН</firstName
+                                ><middleName>ВАЛЕРИЕВИЧ</middleName>
+                            </user>
+                            <serviceTargetCode>2400000010001141393</serviceTargetCode>
+                            <userSelectedRegion>00000000000</userSelectedRegion>
+                            <orderNumber>Д-1640-цн-999</orderNumber>
+                            <requestDate>2022-08-10T18:59:43Z</requestDate>
+                            <statusHistoryList>
+                                <statusHistory>
+                                    <status>1</status>
+                                    <statusDate>2022-08-10T21:59:27Z</statusDate>
+                                    <statusComment>Зарегистрирован
+                                        Юр. лицо места регистрации:Муниципальное казенное учреждение "Центр недвижимости"
+                                        Дата регистрации:2022-08-10
+                                        Срок исполнения, указанный при регистрации:2022-08-20
+                                    </statusComment>
+                                </statusHistory>
+                                <statusHistory>
+                                    <status>1</status>
+                                    <statusDate>2022-08-10T21:59:31Z</statusDate>
+                                    <statusComment>Зарегистрирован
+                                        Юр. лицо места регистрации:Муниципальное казенное учреждение "Центр недвижимости"
+                                        Дата регистрации:2022-08-10
+                                        Срок исполнения, указанный при регистрации:2022-08-20
+                                    </statusComment>
+                                </statusHistory>
+                            </statusHistoryList>
+                        </order>
+                    </orders>
+                </CreateOrdersRequest>
+            </ElkOrderRequest:ElkOrderRequest>';
 
     // эталонный запрос на передачу статуса
     private $testRequest2 = '<?xml version="1.0" encoding="UTF-8"?>
@@ -378,13 +418,13 @@ class Smev extends Model
 
         $clientId = $this->getGUID();
 
-        $primaryContent     = new MessagePrimaryContent($this->testRequest);
+        $primaryContent     = new MessagePrimaryContent($this->testRequest_my3);
         $content            = new Content($primaryContent, null, null);
         $reqCoontent        = new RequestContentType($content);
-        $reqMeta            = new RequestMetadataType($clientId , null, null, null, null, true, null, null, null);
+        $reqMeta            = new RequestMetadataType($clientId , null, null, null, null, false, null, null, null);
         $rq                 = new RequestMessageType('CreateOrdersRequest', $reqMeta, $reqCoontent);
 
-        $respMeta               = new ResponseMetadataType('48135eb7-20d6-4dea-8b1b-9895d058eff5', $clientId );
+        $respMeta               = new ResponseMetadataType('48135eb7-20d6-4dea-8b1b-9895d058eff6', $clientId );
         $primaryContentInput    = new MessagePrimaryContent($this->testResponse);
         $respInput              = new Content($primaryContentInput,null, null);
         $respStatus             = new Status(null, null, null);

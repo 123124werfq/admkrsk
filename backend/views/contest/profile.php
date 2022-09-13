@@ -69,8 +69,8 @@ $defaultColumns = [
             return $pmod->getStatename(true).$extra;
         },
     ],
-    [
-        'label' => 'Готовность',
+    'readyness:prop' => [
+        'label' => 'Готовность к проверке',
         'format' => 'html',
         'value' => function ($model) {
             $model = CstProfile::findOne($model['id_profile']);
@@ -88,7 +88,7 @@ $defaultColumns = [
             else
                 return '<span class="badge badge-secondary">Удалено</span>';
         },
-    ],
+    ],   
     'comment:prop' => [
         'label' => 'Комментарий',
         'format' => 'html',
@@ -107,7 +107,14 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
     CstProfile::class
 );
 
+$gridColumns = $defaultColumns;
+
+//var_dump($gridColumns);
+
+//var_dump($visibleColumns);
+
 ?>
+
 
 <div id="accordion">
     <h3 id="grid-setting">Настройки таблицы</h3>

@@ -112,7 +112,7 @@ class SMEVServiceAdapterService extends \SoapClient
      * @param string $wsdl The wsdl file to use
      * @access public
      */
-    public function __construct(array $options = array(), $wsdl = 'http://10.24.0.75:8575/ws?wsdl')
+    public function __construct(array $options = array(), $wsdl = 'http://10.24.0.75:7575/ws?wsdl')
     {
       foreach (self::$classmap as $key => $value) {
         if (!isset($options['classmap'][$key])) {

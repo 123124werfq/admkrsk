@@ -11,22 +11,16 @@
 	$i=1;
 ?>
 
-<?=$this->render('_search',['unique_hash'=>$unique_hash,'search_columns'=>$search_columns,'pagesize'=>$pagesize])?>
+<?=$this->render('_search',[
+	'unique_hash'=>$unique_hash,
+	'search_columns'=>$search_columns,
+	'pagesize'=>$pagesize,
+	'page'=>$page,
+	'show_download'=>$show_download,
+	'setting'=>$setting,
+	'id_collection'=>$id_collection,
+])?>
 
-<div class="collection-controls">
-	<?php if (!empty($show_download) && !empty($setting)){?>
-		<a href="/collection/download?key=<?=$setting->key?>&id_page=<?=$page->id_page?>">Скачать</a>
-	<?php }?>
-	<?php if (!empty($show_on_map)){?>
-		<a class="showonmap" data-hash="<?=$unique_hash?>" data-id="<?=$id_collection?>" data-column="<?=$show_on_map?>" href="javascript:">Показать на карте</a>
-	<?php }?>
-</div>
-
-<?php if (!empty($show_on_map)){?>
-<div class="collection-map">
-	<div id="map<?=$unique_hash?>"></div>
-</div>
-<?php }?>
 <?php Pjax::begin([
 	'id' => $unique_hash,
 	'timeout'=>5000

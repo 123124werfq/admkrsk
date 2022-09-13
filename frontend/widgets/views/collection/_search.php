@@ -21,3 +21,18 @@
  	<?php }?>
  	<?=Html::dropDownList('ps','',[$pagesize=>$pagesize,20=>20,30=>30,50=>50],['class'=>'form-control pagesize']);?>
 </form>
+
+<div class="collection-controls">
+	<?php if (!empty($show_download) && !empty($setting)){?>
+		<a href="/collection/download?key=<?=$setting->key?>&id_page=<?=$page->id_page?>">Скачать</a>
+	<?php }?>
+	<?php if (!empty($show_on_map)){?>
+		<a class="showonmap" data-hash="<?=$unique_hash?>" data-id="<?=$id_collection?>" data-column="<?=$show_on_map?>" href="javascript:">Показать на карте</a>
+	<?php }?>
+</div>
+
+<?php if (!empty($show_on_map)){?>
+<div class="collection-map">
+	<div id="map<?=$unique_hash?>"></div>
+</div>
+<?php }?>

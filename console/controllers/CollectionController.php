@@ -58,6 +58,25 @@ class CollectionController extends Controller
         }
     }
 
+    public function actionArchive()
+    {
+        $columns = CollectionColumn::find()->where(['type'=>CollectionColumn::TYPE_ARCHIVE])->all();
+
+        foreach ($columns as $col)
+        {
+            $result = Yii::$app->mongodb->getCollection('collection'.$col->id_collection)->find(['col'.$col->id_column=>1])->toArray();
+
+            if (!empty($result))
+                foreach ($result as $record)
+                {
+                    Yii::$app->db->createCommand()->update('db_collection_record',['is_archive'=>1],['id_record'=>$record['id_record']])->execute();
+
+                    echo $record['id_record']."\r\n";
+                }
+            
+        }
+    }
+
     public function actionFullHistory()
     {
         $collections = [553,

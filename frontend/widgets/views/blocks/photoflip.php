@@ -22,7 +22,7 @@
                             $menu = Menu::findOne($blockVars['menu']->value);
 
                             if (!empty($menu))
-                                foreach ($menu->links as $key => $link) {?>
+                                foreach ($menu->activeLinks as $key => $link) {?>
                                 <li class="gid-menu_item"><a href="<?=(!empty($link->id_page))?$link->page->getUrl():$link->url?>" class="gid-menu_link"><?=$link->label?></a></li>
                         <?php }?>
                     </ul>

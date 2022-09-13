@@ -102,16 +102,16 @@ if (!empty($this->params['page']))
             </svg>
         </div>
         <?php 
-            if($_SERVER['SERVER_NAME'] == 'lk.admkrsk.ru' || $_SERVER['SERVER_NAME'] == 'services.admkrsk.ru'  || $_SERVER['SERVER_NAME'] == 'appeals.admkrsk.ru') {
+            if($_SERVER['HTTP_HOST'] == 'lk.admkrsk.ru' || $_SERVER['HTTP_HOST'] == 'services.admkrsk.ru'  || $_SERVER['HTTP_HOST'] == 'appeals.admkrsk.ru') {
                 $oldlink = "https://www.admkrsk.ru/login/default.aspx";
 
-                if($_SERVER['SERVER_NAME'] == 'services.admkrsk.ru')
+                if($_SERVER['HTTP_HOST'] == 'services.admkrsk.ru')
                     $oldlink = "http://www.admkrsk.ru/administration/singlewindow";
 
-                if($_SERVER['SERVER_NAME'] == 'appeals.admkrsk.ru')
+                if($_SERVER['HTTP_HOST'] == 'appeals.admkrsk.ru')
                     $oldlink = "http://www.admkrsk.ru/reception/Pages/default.aspx";                
         ?>
-        <div style="text-align:  center;padding: 10px;background-color: lightblue;">
+        <div style="text-align:  center;padding: 10px;background-color: lightblue;" data-name="<?=$_SERVER['HTTP_HOST']?>">
             Добро пожаловать на бета-версию официального сайта администрации города Красноярска! Для перехода на актуальную версию сайта нажмите <a href="<?=$oldlink?>">сюда</>.
         </div>
         <?php } ?>    

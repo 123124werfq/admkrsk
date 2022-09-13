@@ -125,6 +125,11 @@ class MenuLink extends \yii\db\ActiveRecord
         return $this->hasMany(MenuLink::className(), ['id_parent' => 'id_link'])->orderBy('ord ASC');
     }
 
+    public function getActiveChilds()
+    {
+        return $this->hasMany(MenuLink::className(), ['id_parent' => 'id_link'])->andWhere(['state'=>1])->orderBy('ord ASC');
+    }
+
     public function getParent()
     {
         return $this->hasMany(MenuLink::className(), ['id_link' => 'id_parent']);

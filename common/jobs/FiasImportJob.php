@@ -41,10 +41,10 @@ class FiasImportJob extends Job implements RetryableJobInterface
     {
         $this->_lastVersion = FiasUpdateHistory::find()->max('version');
 
-        $client = new SoapClient('https://fias.nalog.ru/WebServices/Public/DownloadService.asmx?WSDL');
+        //$client = new SoapClient('https://fias.nalog.ru/WebServices/Public/DownloadService.asmx?WSDL');
 
         try {
-            $response = $client->GetAllDownloadFileInfo();
+            /*$response = $client->GetAllDownloadFileInfo();
 
             $updates = ArrayHelper::map($response->GetAllDownloadFileInfoResult->DownloadFileInfo, 'VersionId', function (\StdClass $object) {
                 return [
@@ -64,10 +64,10 @@ class FiasImportJob extends Job implements RetryableJobInterface
             } else {
                 $updates = [array_pop($updates)];
             }
-
-            foreach ($updates as $update) {
-                $this->fiasUpdate($update);
-            }
+    
+            foreach ($updates as $update) {*/
+                $this->fiasUpdate('');//$update);
+            //}
         } catch (SoapFault $exception) {
             $updateHistory = new FiasUpdateHistory(['text' => $exception->getMessage()]);
             $updateHistory->save();
@@ -108,17 +108,18 @@ class FiasImportJob extends Job implements RetryableJobInterface
      */
     private function fiasUpdate($update)
     {
-        $updateHistory = new FiasUpdateHistory($update);
+        /*$updateHistory = new FiasUpdateHistory($update);
 
         FileHelper::createDirectory(Yii::getAlias('@runtime/fias_update'));
 
         $file = $this->downloadFile($updateHistory);
 
         $path = $this->extractFile($file);
-
+*/
+        $path = Yii::getAlias('@runtime/fias_update');
         $this->updateData($path);
 
-        $updateHistory->save();
+        //$updateHistory->save();
     }
 
     /**
@@ -179,7 +180,7 @@ class FiasImportJob extends Job implements RetryableJobInterface
      */
     private function importDbf($filename)
     {
-        if (!$db = @dbase_open($filename, 0)) {
+        if (!$db = @\dbase_open($filename, 0)) {
             Console::stderr("Не удалось открыть DBF файл: '$filename'\n");
             return 1;
         }

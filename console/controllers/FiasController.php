@@ -51,7 +51,7 @@ class FiasController extends Controller
 
             FiasImportJob::saveJobId($jobId);
 
-            $this->stdout('Запущено обновление fias' . PHP_EOL);
+            $this->stdout('Запущено обновление fias ID:'. $jobId . PHP_EOL);
         } else {
             $this->stdout('Обновление fias уже выполняется' . PHP_EOL);
         }
