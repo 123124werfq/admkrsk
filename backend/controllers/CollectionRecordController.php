@@ -40,7 +40,7 @@ class CollectionRecordController extends Controller
                         'allow' => true,
                         'actions' => ['institution-import'],
                         'roles' => ['backend.collection.update', 'backend.entityAccess'],
-                        'roleParams' => [
+                        /*'roleParams' => [
                             'entity_id' => function () {
                                 if (($collection = Collection::findOne(['alias' => 'institution'])) !== null) {
                                     return $collection->id_collection;
@@ -48,7 +48,13 @@ class CollectionRecordController extends Controller
                                 return null;
                             },
                             'class' => Collection::class,
-                        ],
+                        ],*/
+                        'roleParams' => function ($rule) {
+                            return [
+                                'entity_id' => (($collection = Collection::findOne(['alias' => 'institution'])) !== null)?$collection->id_collection:null,
+                                'class' => Collection::class,
+                            ];
+                        },
                     ],
                     [
                         'allow' => true,
@@ -63,29 +69,23 @@ class CollectionRecordController extends Controller
                         'allow' => true,
                         'actions' => ['download-doc','all-doc'],
                         'roles' => ['backend.collection.view', 'backend.entityAccess'],
-                        'roleParams' => [
-                            'entity_id' => function () {
-                                if (($collectionRecord = $this->findModel(Yii::$app->request->get('id'))) !== null) {
-                                    return $collectionRecord->id_collection;
-                                }
-                                return null;
-                            },
-                            'class' => Collection::class,
-                        ],
+                        'roleParams' => function ($rule) {
+                            return [
+                                'entity_id' => (($collectionRecord = $this->findModel(Yii::$app->request->get('id'))) !== null)?$collectionRecord->id_collection:null,
+                                'class' => Collection::class,
+                            ];
+                        },
                     ],
                     [
                         'allow' => true,
                         'actions' => ['view'],
                         'roles' => ['backend.collection.view', 'backend.entityAccess'],
-                        'roleParams' => [
-                            'entity_id' => function () {
-                                if (($collectionRecord = $this->findModel(Yii::$app->request->get('id'))) !== null) {
-                                    return $collectionRecord->id_collection;
-                                }
-                                return null;
-                            },
-                            'class' => Collection::class,
-                        ],
+                        'roleParams' => function ($rule) {
+                            return [
+                                'entity_id' => (($collectionRecord = $this->findModel(Yii::$app->request->get('id'))) !== null)?$collectionRecord->id_collection:null,
+                                'class' => Collection::class,
+                            ];
+                        },
                     ],
                     [
                         'allow' => true,
@@ -99,29 +99,23 @@ class CollectionRecordController extends Controller
                         'allow' => true,
                         'actions' => ['update','restore','history','history-view'],
                         'roles' => ['backend.collection.update', 'backend.entityAccess'],
-                        'roleParams' => [
-                            'entity_id' => function () {
-                                if (($collectionRecord = $this->findModel(Yii::$app->request->get('id'))) !== null) {
-                                    return $collectionRecord->id_collection;
-                                }
-                                return null;
-                            },
-                            'class' => Collection::class,
-                        ],
+                        'roleParams' => function ($rule) {
+                            return [
+                                'entity_id' => (($collectionRecord = $this->findModel(Yii::$app->request->get('id'))) !== null)?$collectionRecord->id_collection:null,
+                                'class' => Collection::class,
+                            ];
+                        },
                     ],
                     [
                         'allow' => true,
                         'actions' => ['delete'],
                         'roles' => ['backend.collection.delete', 'backend.entityAccess'],
-                        'roleParams' => [
-                            'entity_id' => function () {
-                                if (($collectionRecord = $this->findModel(Yii::$app->request->get('id'))) !== null) {
-                                    return $collectionRecord->id_collection;
-                                }
-                                return null;
-                            },
-                            'class' => Collection::class,
-                        ],
+                        'roleParams' => function ($rule) {
+                            return [
+                                'entity_id' => (($collectionRecord = $this->findModel(Yii::$app->request->get('id'))) !== null)?$collectionRecord->id_collection:null,
+                                'class' => Collection::class,
+                            ];
+                        },
                     ],
                 ],
             ],
