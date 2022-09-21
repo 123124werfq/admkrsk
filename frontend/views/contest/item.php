@@ -38,6 +38,7 @@ use common\models\CollectionColumn;
                     if(isset($contest['vote_type']) && $contest['vote_type']=='Баллы')
                     {
                 ?>
+                    <div>
                     <a class="btn btn__border" style="float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=1">1</a>&nbsp;
                     <a class="btn btn__border" style="float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=2">2</a>&nbsp;
                     <a class="btn btn__border" style="float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=3">3</a>&nbsp;
@@ -48,6 +49,7 @@ use common\models\CollectionColumn;
                     <a class="btn btn__border" style="float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=8">8</a>&nbsp;
                     <a class="btn btn__border" style="float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=9">9</a>&nbsp;
                     <a class="btn btn__border" style="float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=10">10</a>&nbsp;
+                    </div>
                 <?php
                     } else {
                 ?>
@@ -70,6 +72,7 @@ use common\models\CollectionColumn;
                     if(isset($contest['vote_type']) && $contest['vote_type']=='Баллы')
                     {
                 ?>
+                    <div>
                     <a class="btn btn__border" style="float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=1">1</a>&nbsp;
                     <a class="btn btn__border" style="float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=2">2</a>&nbsp;
                     <a class="btn btn__border" style="float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=3">3</a>&nbsp;
@@ -80,6 +83,7 @@ use common\models\CollectionColumn;
                     <a class="btn btn__border" style="float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=8">8</a>&nbsp;
                     <a class="btn btn__border" style="float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=9">9</a>&nbsp;
                     <a class="btn btn__border" style="float:right;" href="/contest/item/<?=$collectionRecord->id_record?>?vote=10">10</a>&nbsp;
+                    </div>
                 <?php
                     } else {
                 ?>
