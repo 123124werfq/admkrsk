@@ -120,7 +120,7 @@ class ContestController extends Controller
         if(!$contestCollection)
             throw new BadRequestHttpException();
 
-        $allContests = $contestCollection->getDataQuery()->getArray(true);
+        $allContests = $contestCollection->getDataQuery(true)->getArray(true);
 
         //print_r($allContests); die();
 
