@@ -45,7 +45,7 @@ $defaultColumns = [
         'format' => 'html',
         'value' => function ($model) {
             $badge = ($model['updated_at'] == $model['created_at']) ? "<span class='badge badge-danger'>Новая</span><br>" : "";
-            return $badge . " " . date("d-m-Y H:i", $model['updated_at'] ? $model['updated_at'] : $model['created_at']);
+            return date("d-m-Y H:i", $model['updated_at'] ? $model['updated_at'] : $model['created_at']);
         },
     ],    
     'contest:prop' => [
@@ -68,33 +68,13 @@ $defaultColumns = [
             $pmod = CstProfile::findOne($model['id_profile']);
             return $pmod->getStatename(true).$extra;
         },
-    ],
-    'readyness:prop' => [
-        'label' => 'Готовность к проверке',
-        'format' => 'html',
-        'value' => function ($model) {
-            $model = CstProfile::findOne($model['id_profile']);
-            $rr = $model->getRecord()->one();
-            if($rr)
-            {
-                $record = $model->getRecord()->one()->getData(true);
-
-                $readyness = !empty($record['ready']);
-
-                $message = $readyness?'<span class="badge badge-primary">Готово к проверке</span>':'<span class="badge badge-danger">Не готово к проверке</span>';
-
-                return $message;
-            }
-            else
-                return '<span class="badge badge-secondary">Удалено</span>';
-        },
-    ],   
+    ], 
     'comment:prop' => [
         'label' => 'Комментарий',
         'format' => 'html',
         'value' => function ($model) {
             $model = CstProfile::findOne($model['id_profile']);
-            $message = empty($model->comment)?("<a href='/contest/view?id={$model->id_profile}'>Редактировать комментарий</a>"):(htmlspecialchars(strip_tags($model->comment))."<br><a href='/contest/view?id={$model->id_profile}''>Редактировать комментарий</a>");
+            $message = empty($model->comment)?"":htmlspecialchars(strip_tags($model->comment));
 
             return $message;
         },
