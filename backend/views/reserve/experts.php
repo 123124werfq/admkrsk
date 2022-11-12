@@ -29,7 +29,28 @@ $defaultColumns = [
     'fio:prop' => [
         'label' => 'ФИО',
         'value' => function ($model) {
-            return $model->user->getUsername();
+            $badge = "";
+            $desc = "";
+            if (!empty($model->user->id_ad_user)) {
+                $desc = $model->user->getAdinfo()->one()->description;
+                if (empty($desc)) {
+                    $desc = $model->user->getAdinfo()->one()->company;
+                }
+                $badge .= ' <span class="badge badge-warning">AD</span>';
+            }
+            if (!empty($model->user->id_esia_user)) {
+                $badge .= ' <span class="badge badge-primary">ЕСИА</span>';
+            }
+
+            if (!empty($model->user->id_ad_user) && !empty($model->user->id_esia_user)) {
+                $badge .= ' <em>связан с пользователем ' . $model->user->esiainfo->fullname . '</em>';
+            }
+
+            $badge .= '<br/><small>' . $desc . '</small>';
+
+            return $badge;
+
+            //return $model->user->getUsername() . " " . ;
         }
     ],
     'date-create:prop' => [
@@ -41,6 +62,22 @@ $defaultColumns = [
             'class' => 'datepicker form-control',
         ],
     ],
+    'state:prop' => [
+        'label' => 'Использовать при выборе',
+        'value' => function ($model) {
+            $out = "";
+            if($model->state == 1)
+            {
+                $out = '<span class="badge badge-success">ДА</span> <a class="btn btn-danger btn-sm" href="/reserve/standby?id?='.$model->id_expert.'">скрыть</a>';
+            }
+            else
+            {
+                $out = '<span class="badge badge-warning">НЕТ</span> <a class="btn btn-danger btn-sm" href="/reserve/activate?id?='.$model->id_expert.'">показать</a>';
+            }
+
+            return $model->user->getUsername();
+        }
+    ]
 ];
 
 list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
@@ -116,7 +153,8 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
 
 <div id="user_group-users" class="row form-group">
     <div class="col-md-1">
-        <h3>Пользователи</h3>
+        <h3>Добавить эксперта: </h3>
+        <small>выбор из всех пользвоателей</small>
     </div>
     <div class="col-md-6">
         <div class="row">

@@ -210,6 +210,32 @@ class ReserveController extends Controller
         return $this->redirect('/reserve/experts');
     }
 
+    public function actionActivate($id)
+    {
+        $expert = HrExpert::findOne((int)$_GET['id']);
+
+        if ($expert)
+        {
+            $expert->status = 1;
+            $expert->save();
+        }
+
+        return $this->redirect('/reserve/experts');
+    }    
+
+    public function actionStandby($id)
+    {
+        $expert = HrExpert::findOne((int)$_GET['id']);
+
+        if ($expert)
+        {
+            $expert->status = 0;
+            $expert->save();
+        }
+
+        return $this->redirect('/reserve/experts');
+    }    
+
     public function actionDismiss()
     {
         $expert = HrExpert::findOne((int)$_GET['id']);
