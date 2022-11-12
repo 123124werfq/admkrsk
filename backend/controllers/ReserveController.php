@@ -216,7 +216,7 @@ class ReserveController extends Controller
 
         if ($expert)
         {
-            $expert->status = 1;
+            $expert->state = 1;
             $expert->save();
         }
 
@@ -229,7 +229,7 @@ class ReserveController extends Controller
 
         if ($expert)
         {
-            $expert->status = 0;
+            $expert->state = 0;
             $expert->save();
         }
 
