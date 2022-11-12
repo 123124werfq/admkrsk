@@ -152,7 +152,7 @@ list($gridColumns, $visibleColumns) = GridSetting::getGridColumns(
 </div>
 
 <div id="user_group-users" class="row form-group">
-    <div class="col-md-1">
+    <div class="col-md-2">
         <h3>Добавить эксперта: </h3>
         <small>выбор из всех пользвоателей</small>
     </div>
