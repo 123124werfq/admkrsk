@@ -49,9 +49,7 @@ $defaultColumns = [
 
             $badge .= '<br/><small>' . $desc . '</small>';
 
-            return $badge;
-
-            //return $model->user->getUsername() . " " . ;
+            return $model->user->getUsername() . " " . $badge;
         }
     ],
     'date-create:prop' => [
