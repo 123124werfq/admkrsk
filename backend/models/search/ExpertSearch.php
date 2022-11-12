@@ -44,7 +44,7 @@ class ExpertSearch extends HrExpert
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['state' => SORT_DESC], 'id_expert' => SORT_DESC],
+            'sort'=> ['defaultOrder' => ['state' => SORT_DESC, 'id_expert' => SORT_DESC]],
         ]);
 
         $this->load($params);
