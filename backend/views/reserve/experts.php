@@ -28,6 +28,7 @@ $defaultColumns = [
     'id_expert' => 'id_expert:integer:ID',
     'fio:prop' => [
         'label' => 'ФИО',
+        'format' => 'raw',
         'value' => function ($model) {
             $badge = "";
             $desc = "";
@@ -64,6 +65,7 @@ $defaultColumns = [
     ],
     'state:prop' => [
         'label' => 'Использовать при выборе',
+        'format' => 'raw',
         'value' => function ($model) {
             $out = "";
             if($model->state == 1)
@@ -75,7 +77,7 @@ $defaultColumns = [
                 $out = '<span class="badge badge-warning">НЕТ</span> <a class="btn btn-danger btn-sm" href="/reserve/activate?id?='.$model->id_expert.'">показать</a>';
             }
 
-            return $model->user->getUsername();
+            return $out;
         }
     ]
 ];
