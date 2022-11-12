@@ -68,11 +68,11 @@ $defaultColumns = [
             $out = "";
             if($model->state == 1)
             {
-                $out = '<span class="badge badge-primary">ДА</span> <a href="/reserve/standby?id?='.$model->id_expert.'">скрыть</a>';
+                $out = '<span class="badge badge-primary">ДА</span> <a href="/reserve/standby?id='.$model->id_expert.'">скрыть</a>';
             }
             else
             {
-                $out = '<span class="badge badge-warning">НЕТ</span> <a href="/reserve/activate?id?='.$model->id_expert.'">показать</a>';
+                $out = '<span class="badge badge-warning">НЕТ</span> <a href="/reserve/activate?id='.$model->id_expert.'">показать</a>';
             }
 
             return $out;
