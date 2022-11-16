@@ -68,7 +68,7 @@ class HrProfile extends \yii\db\ActiveRecord
     {
         return [
             [['id_user', 'id_record', 'reserve_date', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
-            [['id_user', 'id_record', 'reserve_date', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['id_user', 'id_record', 'reserve_date', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'secondary_status', 'preselected'], 'integer'],
             [['state'], 'string'],
             [['import_author', 'import_candidateid', 'import_timestamp'], 'safe']
         ];

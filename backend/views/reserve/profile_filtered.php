@@ -19,6 +19,28 @@ GridAsset::register($this);
 
 $defaultColumns = [
     'id_profile' => 'id_profile:integer:ID',
+    'preselected:prop' => [
+        'attribute' => 'preselected',
+        'label' => 'Выбрано',
+        'format' => 'raw',
+        'value' => function ($model) {
+            $out = "";
+            if($model['preselected'] == 1)
+            {
+                $out = '<span class="badge badge-primary">ДА</span> <a href="/reserve/prstandby?id='.$model['id_profile'].'">выкл</a>';
+            }
+            else
+            {
+                $out = '<span class="badge badge-warning">НЕТ</span> <a href="/reserve/practivate?id='.$model['id_profile'].'">вкл</a>';
+            }
+
+            return $out;
+        },
+        'filter' => [
+            0 => 'Нет',
+            1 => 'Да'
+        ]
+    ],     
     'surname:text:Фамилия' ,
     'name:text:Имя',
     'patronic:text:Отчество',
@@ -49,6 +71,7 @@ $defaultColumns = [
             return date("d-m-Y H:i", $model['updated_at'] ? $model['updated_at'] : $model['created_at']).$badge;
         },
     ],
+    /*
     'plist:raw:Должности' => [
         'label' => 'Должности',
         'attribute' => 'plist',
@@ -56,6 +79,7 @@ $defaultColumns = [
         'filter' => $positions
 
     ],
+    */
     'status:prop' => [
         'attribute' => 'status',
         'label' => 'Статус',
@@ -71,6 +95,21 @@ $defaultColumns = [
             HrProfile::STATE_ARCHIVED => HrProfile::namedState(HrProfile::STATE_ARCHIVED),
         ]
     ],
+    'secondary_status:prop' => [
+        'attribute' => 'secondary_status',
+        'label' => 'Доп. статус',
+        'format' => 'html',
+        'value' => function ($model) {
+            return HrProfile::namedState($model['secondary_status'], true);
+        },
+        'filter' => [
+            HrProfile::STATE_ACTIVE => HrProfile::namedState(HrProfile::STATE_ACTIVE),
+            HrProfile::STATE_RESERVED => HrProfile::namedState(HrProfile::STATE_RESERVED),
+            HrProfile::STATE_HIRED => HrProfile::namedState(HrProfile::STATE_HIRED),
+            HrProfile::STATE_BANNED => HrProfile::namedState(HrProfile::STATE_BANNED),
+            HrProfile::STATE_ARCHIVED => HrProfile::namedState(HrProfile::STATE_ARCHIVED),
+        ]
+    ],    
     /*
     'target:prop' => [
         'label' => 'Целевые должности',

@@ -26,6 +26,23 @@ GridAsset::register($this);
 
 $defaultColumns = [
     'id_expert' => 'id_expert:integer:ID',
+    'state:prop' => [
+        'label' => 'Выбрано',
+        'format' => 'raw',
+        'value' => function ($model) {
+            $out = "";
+            if($model->state == 1)
+            {
+                $out = '<span class="badge badge-primary">ДА</span> <a href="/reserve/standby?id='.$model->id_expert.'">выкл</a>';
+            }
+            else
+            {
+                $out = '<span class="badge badge-warning">НЕТ</span> <a href="/reserve/activate?id='.$model->id_expert.'">вкл</a>';
+            }
+
+            return $out;
+        }
+    ],    
     'fio:prop' => [
         'label' => 'ФИО',
         'format' => 'raw',
@@ -60,23 +77,6 @@ $defaultColumns = [
         'filterInputOptions' => [
             'class' => 'datepicker form-control',
         ],
-    ],
-    'state:prop' => [
-        'label' => 'Использовать при выборе',
-        'format' => 'raw',
-        'value' => function ($model) {
-            $out = "";
-            if($model->state == 1)
-            {
-                $out = '<span class="badge badge-primary">ДА</span> <a href="/reserve/standby?id='.$model->id_expert.'">скрыть</a>';
-            }
-            else
-            {
-                $out = '<span class="badge badge-warning">НЕТ</span> <a href="/reserve/activate?id='.$model->id_expert.'">показать</a>';
-            }
-
-            return $out;
-        }
     ]
 ];
 

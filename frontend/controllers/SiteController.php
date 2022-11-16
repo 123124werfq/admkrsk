@@ -996,11 +996,12 @@ class SiteController extends Controller
         echo('</pre><br>');
         die();
     }
+    */
 
     public function actionMailtest()
     {
         try {
-            $res = Yii::$app->mailer->compose('confirm', ['code' => 666 ])
+            $res = Yii::$app->mailer->compose('confirm', ['code' => 668 ])
                 ->setFrom('ssp@admkrsk.ru')
                 ->setTo(['kosyag@gmail.com'])
                 ->setSubject("Confirm Your Email Address")
@@ -1013,7 +1014,7 @@ class SiteController extends Controller
         }
 
     }
-    */ 
+    
 
     /*public function actionSmevtest()
     {

@@ -47,7 +47,7 @@ class ReserveController extends Controller
                 $positions[$i+1] = $positionsRaw[$i]['val'];
             }
 
-        return $this->render('profile_filtered', [
+            return $this->render('profile_filtered', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'customColumns' => $columns,
@@ -110,8 +110,10 @@ class ReserveController extends Controller
         $contest->notification .= "<br>Ссылка на интерфейс голосования <b>(для пользователей ЕСИА, необходима авторизация)</b>: <a href='https://t1.admkrsk.ru/reserve/vote'>https://t1.admkrsk.ru/reserve/vote</a>";
         */
         
+        
+
         return $this->render('create', [
-            'model' => $contest
+            'model' => $contest,
         ]);
     }
 
@@ -234,7 +236,33 @@ class ReserveController extends Controller
         }
 
         return $this->redirect('/reserve/experts');
-    }    
+    }
+
+    public function actionPractivate()
+    {
+        $profile = HrProfile::findOne((int)$_GET['id']);
+
+        if ($profile)
+        {
+            $profile->preselected = 1;
+            $profile->save();
+        }
+
+        return $this->redirect('/reserve/profile?ProfileSearch%5Bpreselected%5D=1');
+    }     
+    
+    public function actionPrstandby()
+    {
+        $profile = HrProfile::findOne((int)$_GET['id']);
+
+        if ($profile)
+        {
+            $profile->preselected = 0;
+            $profile->save();
+        }
+
+        return $this->redirect('/reserve/profile?ProfileSearch%5Bpreselected%5D=0');
+    } 
 
     public function actionDismiss()
     {
