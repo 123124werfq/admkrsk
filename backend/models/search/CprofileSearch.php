@@ -45,7 +45,7 @@ class CprofileSearch extends CstProfile
      * @return ActiveDataProvider
      * @throws InvalidConfigException
      */
-    public function search($params)
+    public function search($params, $archived = false)
     {
         /*
         $query = CstProfile::find();
@@ -69,18 +69,25 @@ class CprofileSearch extends CstProfile
             throw new BadRequestHttpException();
 
         $contests = $contestCollection->getDataQuery()->getArray(true);
+
+        $archivedCondition = " and cr.is_archive != 1";
+
+        if($archived)
+        {
+            $archivedCondition = " and cr.is_archive = 1";
+        }
         
         if(isset($contests[$this->id_contest]))
             $sql = "SELECT cp.*, id_record FROM cst_profile cp 
                 LEFT JOIN form_form ff ON cp.id_record_contest = ff.id_collection
                 left join db_collection_record cr on cr.id_record = cp.id_record_anketa 
-                WHERE ff.alias = '{$contests[$this->id_contest]['participant_form']}' and cr.created_by is not null and cr.deleted_at is null";
+                WHERE ff.alias = '{$contests[$this->id_contest]['participant_form']}' and cr.created_by is not null and cr.deleted_at is null " . $archivedCondition;
         else
         {
             //$sql = "SELECT * FROM cst_profile cp";
             $sql = "SELECT cp.*, id_record FROM cst_profile cp 
                 left join db_collection_record cr on cr.id_record = cp.id_record_anketa 
-                WHERE cr.created_by is not null and cr.deleted_at is null";
+                WHERE cr.created_by is not null and cr.deleted_at is null " . $archivedCondition;
         }
 
         $count = Yii::$app->db->createCommand("SELECT COUNT(*) FROM ($sql) t1")->queryScalar();

@@ -40,7 +40,9 @@ class ContestForm extends HrContest
             'experts' => 'Эксперты',
             'moderator' => 'Модератор',
             'profiles' => 'Анкеты',
-            'notification' => 'Текст нотификации'
+            'notification' => 'Текст нотификации',
+            'positions' => 'Должности',
+            'protocol_date' => 'Дата протокола'
         ];
     }
 

@@ -48,9 +48,9 @@ class HrContest extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_user', 'begin', 'end', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'default', 'value' => null],
-            [['id_user', 'begin', 'end', 'state', 'notification_sent','created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
-            [['title', 'notification'], 'string'],
+            [['id_user', 'begin', 'end', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'protocol_date'], 'default', 'value' => null],
+            [['id_user', 'begin', 'end', 'state', 'notification_sent','created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'protocol_date'], 'integer'],
+            [['title', 'notification', 'positions'], 'string'],
         ];
     }
 

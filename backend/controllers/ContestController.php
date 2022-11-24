@@ -101,6 +101,49 @@ class ContestController extends Controller
         ]);
     }
 
+    public function actionArchived()
+    {
+        $searchModel = new CprofileSearch();
+        $searchModel->id_contest =  Yii::$app->request->get('cont', 0);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, true);
+        $grid = GridSetting::findOne([
+            'class' => static::gridProfile,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $columns = null;
+        if ($grid) {
+            $columns = json_decode($grid->settings, true);
+        }
+
+
+        $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();
+        if(!$contestCollection)
+            throw new BadRequestHttpException();
+
+        $allContests = $contestCollection->getDataQuery(true)->getArray(true);
+
+        //print_r($allContests); die();
+
+        if(isset($_GET['cont']) && isset($allContests[(int)$_GET['cont']]) && !empty($allContests[(int)$_GET['cont']]['participant_form'])) 
+        {
+            $formname = $allContests[(int)$_GET['cont']]['participant_form'];
+            $sql_form = "select id_collection from form_form where alias ='".$formname."'";
+            $fcol_id = Yii::$app->db->createCommand($sql_form)->queryScalar();
+        }
+
+        $_SESSION['fparams'] = serialize($_GET);
+        
+
+        return $this->render('archived', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'customColumns' => $columns,
+            'allContests' => $allContests,
+            'activecontest' => isset($_GET['cont'])?(int)$_GET['cont']:0,
+            'contestid' => isset($fcol_id)?(int)$fcol_id:-1
+        ]);
+    }    
+
     public function actionContest()
     {
         $contestCollection = Collection::find()->where(['alias'=>'contests_list'])->one();

@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 GridAsset::register($this);
 
 $defaultColumns = [
-    'id_profile' => 'id_profile:integer:ID',
+    'id_profile' => 'id_profile:integer:ID', 
     'usr:prop' => [
         'label' => 'Пользователь',
         'format' => 'html',
@@ -52,6 +52,14 @@ $defaultColumns = [
             return $model->getStatename(true);
         },
     ],
+    'secondary_status:prop' => [
+        'label' => 'Доп.cтатус',
+        'format' => 'html',
+        'value' => function ($model) {
+            return $model->getStatename(true);
+        },
+    ],  
+    /*
     'target:prop' => [
         'label' => 'Целевые должности',
         'format' => 'html',
@@ -72,6 +80,7 @@ $defaultColumns = [
             return implode("<br>", $output);
         },
     ],
+    */
     'date-in-reserve:prop' => [
         'label' => 'Дата включения в кадровый резерв',
         'value' => function ($model) {

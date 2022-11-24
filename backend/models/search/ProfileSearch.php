@@ -19,6 +19,8 @@ class ProfileSearch extends HrProfile
     public $plist;
     public $status;
     public $usr;
+    public $preselected;
+    public $secondary_status;
     /**
      * {@inheritdoc}
      */
@@ -26,9 +28,11 @@ class ProfileSearch extends HrProfile
     {
         return [
             [['id_profile'], 'integer'],
+            [['preselected'], 'integer'],
             [['surname'], 'string'],
             [['plist'], 'string'],
             [['status'], 'integer'],
+            [['secondary_status'], 'integer'],
             [['usr'], 'safe']
         ];
     }
@@ -83,6 +87,12 @@ class ProfileSearch extends HrProfile
                            
         $this->load($params);
 
+        if(isset($this->preselected) && ($this->preselected === 0 || $this->preselected == 1))
+        {
+            $sql .= " and preselected=".$this->preselected;
+        }
+
+
         if(!empty($this->surname))
             $sql .= " and lower(surname) like('%".mb_strtolower(addslashes($this->surname), "UTF8")."%')";
 
@@ -113,6 +123,16 @@ class ProfileSearch extends HrProfile
         }
         else
             $sql .= " and (state<>'".HrProfile::STATE_ARCHIVED."' or state is null)";
+
+        if(!empty($this->secondary_status) || $this->secondary_status=='0')
+        {
+            if($this->secondary_status == HrProfile::STATE_ACTIVE)
+                $sql .= " and (secondary_status='".(int)$this->secondary_status."' or secondary_status is null)";
+            else
+                $sql .= " and secondary_status='".(int)$this->secondary_status."'";
+        }
+        else
+            $sql .= " and (secondary_status<>'".HrProfile::STATE_ARCHIVED."' or secondary_status is null)";            
         
 
 //echo $sql; die();
@@ -126,20 +146,30 @@ class ProfileSearch extends HrProfile
                 'pageSize' => 20,
             ],
             'sort' => [
-                'defaultOrder'=> ['id_profile'=>SORT_DESC],
+                'defaultOrder'=> ['id_profile'=>SORT_DESC, 'preselected' => SORT_DESC],
                 'attributes' => [
-                    'id_profile',
+                    'id_profile',                    
                     'updated_at',
                     'created_at' => [
                         'asc' => ['created_at' => SORT_ASC],
                         'desc' => ['created_at' => SORT_DESC],
                         'default' => SORT_ASC
                     ],
+                    'preselected' => [
+                        'asc' => ['preselected' => SORT_ASC],
+                        'desc' => ['preselected' => SORT_DESC],
+                        'default' => SORT_DESC
+                    ],                    
                     'status' => [
                         'asc' => ['state' => SORT_ASC],
                         'desc' => ['state' => SORT_DESC],
                         'default' => SORT_ASC
                     ],
+                    'secondary_status' => [
+                        'asc' => ['secondary_status' => SORT_ASC],
+                        'desc' => ['stsecondary_statusate' => SORT_DESC],
+                        'default' => SORT_ASC
+                    ],                    
                     'surname' => [
                         'asc' => ['state' => SORT_ASC],
                         'desc' => ['state' => SORT_DESC],

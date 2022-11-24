@@ -287,7 +287,7 @@ class ContestController extends \yii\web\Controller
                             $count++;
                             $profileData = CollectionRecord::findOne($profile->id_record_anketa);
 
-                            if($profileData)
+                            if($profileData && !$profileData->isArchiveLive())
                             {
                                 $profileData = $profileData->getData(true);
                                 //var_dump($profileData); die();

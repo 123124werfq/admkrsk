@@ -363,6 +363,18 @@ return [
                     'menu.hrProfile' => ['class' => HrProfile::class],
                 ],
             ],
+            'reserve/experts' => [
+                'title' => 'Эксперты',
+                'roles' => [
+                    'menu.hrProfile' => ['class' => HrProfile::class],
+                ],
+            ],
+            'collection-record/index?id=73' => [
+                'title' => 'Должности <i class="fa fa-external-link"></i>',
+                'roles' => [
+                    'menu.hrProfile' => ['class' => HrProfile::class],
+                ],
+            ],
             'reserve/contest' => [
                 'title' => 'Голосования',
                 'roles' => [
@@ -375,12 +387,6 @@ return [
                     'menu.hrProfile' => ['class' => HrProfile::class],
                 ],
             ],
-            'reserve/experts' => [
-                'title' => 'Эксперты',
-                'roles' => [
-                    'menu.hrProfile' => ['class' => HrProfile::class],
-                ],
-            ],
             'reserve/list' => [
                 'title' => 'Резерв',
                 'roles' => [
@@ -388,7 +394,7 @@ return [
                 ],
             ],
             'reserve/archived' => [
-                'title' => 'Архив',
+                'title' => 'Архив анкет',
                 'roles' => [
                     'menu.hrProfile' => ['class' => HrProfile::class],
                 ],
