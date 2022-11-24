@@ -4051,7 +4051,7 @@ a.sitemap_header:hover {
     max-width: 100%;
 }
 .gid-slider {
-    opacity: 0.7;
+    opacity: 1;
     max-height: 650px;
 }
 .gid-slider.slick-dotted.slick-slider {
