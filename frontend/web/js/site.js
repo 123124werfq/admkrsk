@@ -55,12 +55,7 @@ function addInput(block)
     return false;
 }
 
-$(document).ready(function() {
-
-    $(".content.searchable table").each(function(){
-        if (!$(this).parent().hasClass('table-responsive'))
-            $(this).parent().addClass('table-responsive');
-    });
+$(document).ready(function() {    
 
     $(".ajax-form").on('beforeSubmit', function (event) {
         event.preventDefault();
@@ -165,6 +160,11 @@ $(document).ready(function() {
             }
         });
     }
+
+    $(".content.searchable table").each(function(){
+        if (!$(this).parent().hasClass('table-responsive'))
+            $(this).parent().addClass('table-responsive');
+    });
 
     $("body").delegate('.showonmap','click',function(){
         if($('#map'+$(this).data('hash')+':visible').length)
