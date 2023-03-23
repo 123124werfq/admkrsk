@@ -124,7 +124,8 @@ class ContestController extends \yii\web\Controller
             if($form->id_collection == $tprofile->id_record_contest)
             {
                 $rr = $tprofile->getRecord()->one();
-                if($rr)
+                //if($rr)
+                if($rr && !$rr->isArchiveLive())
                     $total_ord++;
             }
         }
