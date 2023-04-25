@@ -394,7 +394,7 @@ $(document).ready(function() {
             $('#top-search').submit();
     });
 
-    if((location.href.indexOf('services')>0) && ($('.form-inside').length))
+    if((location.href.indexOf('services')>0 || location.href.indexOf('grants')>0) && ($('.form-inside').length))
     {
         $('.form-inside').before("<div class=countdown></div>");
         intervalcd = setInterval(function() {
