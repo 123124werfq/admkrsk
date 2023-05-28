@@ -30,7 +30,7 @@ class AppAsset extends AssetBundle
         'js/moment-with-locales.min.js',
         'js/jquery.daterangepicker.min.js',
         'js/main.js',
-        'js/site.js?v=25',
+        'js/site.js?v=26',
     ];
     public $depends = [
         'yii\web\YiiAsset',

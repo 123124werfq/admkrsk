@@ -410,7 +410,26 @@ $(document).ready(function() {
                 $('.countdown').text((""+parseInt(cdtimer/60)).padStart(2, "0")+":"+(""+parseInt(cdtimer%60)).padStart(2, "0"))
 
         }, 1000);
+    } 
+    else if($("[data-timer-duration]").length > 0 && $("[data-timer-duration]").attr('data-timer-duration') > 0)
+    {
+        cdtimer = parseInt($("[data-timer-duration]").attr('data-timer-duration')) * 60;
+        $('.form-inside').before("<div class=countdown></div>");
+        intervalcd = setInterval(function() {
+            cdtimer--;
+
+            if(cdtimer<0)
+            {
+                clearInterval(intervalcd);
+                alert('Сессия истекла. Необходимо повторно осуществить логин с помощью ЕСИА');
+                $("[href='/site/logout']").click();
+            }
+            else
+                $('.countdown').text((""+parseInt(cdtimer/60)).padStart(2, "0")+":"+(""+parseInt(cdtimer%60)).padStart(2, "0"))
+
+        }, 1000);        
     }
+
 
     $('#allPosOn').click(function(){
         $('select').each(function(idx,el){$(el).val(1);})

@@ -67,6 +67,10 @@ use common\models\Box;
 
     <?= $form->field($model, 'maxfilesize')->textInput(['type' => 'number'])->hint('вввод в мегабайтах') ?>
 
+    <?= $form->field($model, 'timer_duration')->textInput(['type' => 'number'])->hint('0 для отключения') ?>
+
+    <?= $form->field($model, 'button_caption')->textInput(['maxlength' => true])->hint('по умолчанию "Отправить"') ?>
+
     <?= $form->field($model, 'captcha')->dropDownList([
             $model::CAPTCHA_NO=>'Без каптчи',
             $model::CAPTCHA_YES=>'Требовать ввод каптчи',

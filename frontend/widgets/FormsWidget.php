@@ -66,6 +66,11 @@ class FormsWidget extends \yii\base\Widget
 
         FormAssets::register($this->getView());
 
+        if (!empty($this->form->button_caption))
+            $submitLabel = $this->form->button_caption;
+        else
+            $submitLabel = $this->submitLabel;
+
         return $this->render('form/'.$this->template,[
         	'form'=>$this->form,
             'model'=>$model,
@@ -74,7 +79,7 @@ class FormsWidget extends \yii\base\Widget
             'action'=>$this->action,
             'arrayGroup'=>$this->arrayGroup,
             'activeForm'=>$this->activeForm,
-            'submitLabel'=>$this->submitLabel,
+            'submitLabel'=>$submitLabel,
         ]);
     }
 }

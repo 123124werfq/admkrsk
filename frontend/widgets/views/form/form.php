@@ -46,6 +46,7 @@ $this->registerJs($script, yii\web\View::POS_END);
 			'enctype'=>'multipart/form-data',
 			'class'=>'ajax-form',
 			'data-maxfilesize'=>($form->maxfilesize)?$form->maxfilesize*1024*1024:10*1024*1024,
+			'data-timer-duration' => $form->timer_duration
 		]
 	]); ?>
 

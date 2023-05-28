@@ -62,10 +62,10 @@ class Form extends \yii\db\ActiveRecord
         return [
             [['id_collection','id_page', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_box','maxfilesize'], 'default', 'value' => null],
             [['state'], 'default', 'value' => 1],
-            [['id_collection', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_page','id_box','state','is_template','maxfilesize','captcha'], 'integer'],
+            [['id_collection', 'id_service', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by','id_page','id_box','state','is_template','maxfilesize','captcha', 'timer_duration'], 'integer'],
             [['alias'], 'unique'],
             [['name'], 'required'],
-            [['message_success'], 'string'],
+            [['message_success', 'button_caption'], 'string'],
             [['client_type'], 'safe'],
             [['name','url','fullname','alias'], 'string', 'max' => 255],
             [['access_user_ids', 'access_user_group_ids'], 'each', 'rule' => ['integer']],
@@ -100,6 +100,8 @@ class Form extends \yii\db\ActiveRecord
             'updated_by' => 'Кем отредактирована',
             'deleted_at' => 'Удалена',
             'deleted_by' => 'Кем удалена',
+            'timer_duration' => 'Длительность таймера, мин',
+            'button_caption' => 'Надпись на кнопке'
         ];
     }
 
