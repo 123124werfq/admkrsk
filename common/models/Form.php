@@ -212,6 +212,25 @@ class Form extends \yii\db\ActiveRecord
         return $this->makeDocByData($data,$addData);
     }
 
+    public function makeXmlByData($data,$addData=[])
+    {
+        $root = Yii::getAlias('@app');
+        $export_path = $root."/runtime/templates/".time().md5(serialize($data)).'_out.xml';
+
+        $contentXml = "<values></values>";
+
+        file_put_contents($export_path, $contentXml);
+
+        return $export_path;
+    }
+
+    public function makeXml($collectionRecord, $addData=[])
+    {
+        $data = $collectionRecord->getData(true);
+
+        return $this->makeXmlByData($data,$addData);
+    }    
+
     public function needCaptcha()
     {
         if ($this->captcha == self::CAPTCHA_YES || ($this->captcha == self::CAPTCHA_AUTH && Yii::$app->user->isGuest))

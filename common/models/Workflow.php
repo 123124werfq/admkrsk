@@ -453,7 +453,7 @@ class Workflow extends Model
       return $result?$resultPath:false;
     }
 
-    public function generateArchive($guid, $attachments = [], $formFile = false)
+    public function generateArchive($guid, $attachments = [], $formFile = false, $formXml = false)
     {
         $zip_path = Yii::getAlias('@runtime') . $this->path . 'req_' . $guid. '.zip';
 
@@ -548,6 +548,40 @@ XMLPARTS1;
 XMLPARTS2; 
                 }
             }
+
+            if(file_exists($formXml))
+            {
+                $tfile = file_get_contents($formXml);
+                $docPath = Yii::getAlias('@runtime') . $this->path . "req_" . $guid . ".xml";
+
+                file_put_contents($docPath, $tfile);
+
+                if (is_file($docPath)) {
+                    $zip->addFile($docPath, 'req_' . $guid . ".xml");
+
+                    if($signFname = $this->makeSign($docPath))
+                    {
+                      $path_parts = pathinfo($signFname);                
+                      $zip->addFile($signFname, $path_parts['basename']);
+                      $filesToUnlink[] = $signFname;
+                    }
+
+                    $filesToUnlink[] = $docPath;
+
+                    $dg = $this->generateDigestForFile($docPath);
+                    $fn = "req_" . $guid . ".xml";
+                    $afn = "Форма_" . $guid . ".xml";
+
+                    $xmlParts[] = <<<XMLPARTS3
+      <rev:AppliedDocument>
+        <rev:Name>$afn</rev:Name>
+        <rev:URL>/$fn</rev:URL>
+        <rev:DigestValue>$dg</rev:DigestValue>
+        <Description>ЗАЯВЛЕНИЕ</Description>
+      </rev:AppliedDocument>                    
+XMLPARTS3; 
+                }
+            }            
 
             $masterAuthPath = '/var/www/admkrsk/common/config/master.auth';
             if(file_exists($masterAuthPath))

@@ -372,9 +372,10 @@ class ServiceController extends Controller
                         $attachments = $record->getAllMedias();
 
                         $export_path = $record->collection->form->makeDoc($record, ['number_internal' => (string)$appeal->number_internal, 'date' => date("d.m.Y", $appeal->date)]);
+                        $export_path_xml = $record->collection->form->makeXml($record, ['number_internal' => (string)$appeal->number_internal, 'date' => date("d.m.Y", $appeal->date)]);
 
                         $wf = new Workflow;
-                        $archivePath = $wf->generateArchive($idents['guid'], $attachments, $export_path);
+                        $archivePath = $wf->generateArchive($idents['guid'], $attachments, $export_path, $export_path_xml);
 
                         $esiaUser = Yii::$app->user->identity->esiainfo;
 
