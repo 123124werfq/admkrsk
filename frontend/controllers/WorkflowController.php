@@ -258,7 +258,8 @@ class WorkflowController extends \yii\web\Controller
 
     public function actionXopcreate()
     {
-        $source = Yii::getAlias('@app').'/assets/template_attachment_2.xml';
+//        $source = Yii::getAlias('@app').'/assets/template_attachment_2.xml';
+        $source = Yii::getAlias('@app').'/assets/template_attachment_ref.xml';
 //        $source = Yii::getAlias('@app').'/assets/example.xml';
         $xmlPath = Yii::getAlias('@app').'/assets/signed'.time().'.xml';
         $output = Yii::getAlias('@app').'/assets/tosend'.time().'.txt';
