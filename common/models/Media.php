@@ -116,7 +116,10 @@ class Media extends \yii\db\ActiveRecord
         if (parent::beforeSave($insert))
         {
             if (empty($this->hash))
-                $this->hash = hash('joaat', time().$this->name.$this->extension.$this->size);
+            {
+                $name = mb_substr($this->name, 0, mb_strrpos($this->name, '.'));
+                $this->hash = hash('joaat', time().$this->name.$this->extension.$this->size).'_'.str_replace('.'.$this->extension, '', $name);
+            }
         }
 
         return true;
