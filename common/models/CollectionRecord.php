@@ -760,6 +760,29 @@ class CollectionRecord extends \yii\db\ActiveRecord
         return $output;
     }
 
+    public function getAllMediasWithHash()
+    {
+        $output = [];
+
+        foreach ($this->collection->columns as $key => $column)
+        {
+            if ($column->type == CollectionColumn::TYPE_FILE || $column->type == CollectionColumn::TYPE_IMAGE)
+            {
+                $medias = $this->getMedia($column->id_column);
+
+                if (!empty($medias))
+                    foreach ($medias as $key => $media)
+                    {
+                        $hkey = empty($media->hash)?$key:$media->hash;
+                        $hkey = str_replace(" ", "_", $hkey);
+                        $output[$hkey] = $media->getUrl();
+                    }
+            }
+        }
+
+        return $output;
+    }
+
     public function getMedia($id_column, $firstElement=false)
     {
         if (empty($this->loadData))

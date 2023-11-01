@@ -369,7 +369,8 @@ class ServiceController extends Controller
                         $appeal->updateAttributes(['state', 'number_internal', 'number_common']);
 
                         // запрос к СЭД
-                        $attachments = $record->getAllMedias();
+                        //$attachments = $record->getAllMedias();
+                        $attachments = $record->getAllMediasWithHash();
 
                         $export_path = $record->collection->form->makeDoc($record, ['number_internal' => (string)$appeal->number_internal, 'date' => date("d.m.Y", $appeal->date)]);
                         $export_path_xml = $record->collection->form->makeXml($record, ['number_internal' => (string)$appeal->number_internal, 'date' => date("d.m.Y", $appeal->date)]);

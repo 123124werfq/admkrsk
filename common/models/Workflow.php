@@ -485,12 +485,14 @@ class Workflow extends Model
                 if($ext == 'zip')
                     $ext = 'gz';
 
-                $tpath = Yii::getAlias('@runtime') . $this->path . "req_" . $guid . "_" . $key . "." . $ext;
+                //$tpath = Yii::getAlias('@runtime') . $this->path . "req_" . $guid . "_" . $key . "." . $ext;
+                $tpath = Yii::getAlias('@runtime') . $this->path . "req_" .  $key . "." . $ext;
 
                 file_put_contents($tpath, $tfile);
 
                 if (is_file($tpath)) {
-                    $zip->addFile($tpath, 'req_' . $guid . "_" . $key . "." . $ext);
+                    //$zip->addFile($tpath, 'req_' . $guid . "_" . $key . "." . $ext);
+                    $zip->addFile($tpath, 'req_' . $key . "." . $ext);
 
                     if($signFname = $this->makeSign($tpath))
                     {
@@ -501,8 +503,10 @@ class Workflow extends Model
                     $filesToUnlink[] = $tpath;
 
                     $dg = $this->generateDigestForFile($tpath);
-                    $fn = "req_" . $guid . "_". $key . "." . $ext;
-                    $afn = "Приложение_" . "_". $key . "_" . $guid . "." . $ext;
+                    //$fn = "req_" . $guid . "_". $key . "." . $ext;
+                    $fn = "req_" . $key . "." . $ext;
+                    //$afn = "Приложение_" . "_". $key . "_" . $guid . "." . $ext;
+                    $afn = "Приложение_" . $key .  "." . $ext;
 
                     $xmlParts[] = <<<XMLPARTS1
 <rev:AppliedDocument>
